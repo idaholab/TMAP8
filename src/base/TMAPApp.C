@@ -1,0 +1,50 @@
+#include "TMAPApp.h"
+#include "Moose.h"
+#include "AppFactory.h"
+#include "ModulesApp.h"
+#include "MooseSyntax.h"
+
+template <>
+InputParameters
+validParams<TMAPApp>()
+{
+  InputParameters params = validParams<MooseApp>();
+  return params;
+}
+
+TMAPApp::TMAPApp(InputParameters parameters) : MooseApp(parameters)
+{
+  TMAPApp::registerAll(_factory, _action_factory, _syntax);
+}
+
+TMAPApp::~TMAPApp() {}
+
+void
+TMAPApp::registerAll(Factory & f, ActionFactory & af, Syntax & s)
+{
+  ModulesApp::registerAll(f, af, s);
+  Registry::registerObjectsTo(f, {"TMAPApp"});
+  Registry::registerActionsTo(af, {"TMAPApp"});
+
+  /* register custom execute flags, action syntax, etc. here */
+}
+
+void
+TMAPApp::registerApps()
+{
+  registerApp(TMAPApp);
+}
+
+/***************************************************************************************************
+ *********************** Dynamic Library Entry Points - DO NOT MODIFY ******************************
+ **************************************************************************************************/
+extern "C" void
+TMAPApp__registerAll(Factory & f, ActionFactory & af, Syntax & s)
+{
+  TMAPApp::registerAll(f, af, s);
+}
+extern "C" void
+TMAPApp__registerApps()
+{
+  TMAPApp::registerApps();
+}
