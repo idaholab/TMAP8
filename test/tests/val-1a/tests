@@ -1,0 +1,7 @@
+[Tests]
+  [exo]
+    type = Exodiff
+    input = val-1a.i
+    exodiff = val-1a_out.e
+  []
+[]
