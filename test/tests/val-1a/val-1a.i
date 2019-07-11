@@ -72,29 +72,35 @@ pressure_unit=1 # number of pressure units in a Pascal
     diffusivity = ${fparse 1.58e-4*exp(-308000/(8.314*temperature))*length_unit^2}
     boundary = 'left'
     execute_on = 'initial nonlinear linear timestep_end'
-    outputs = 'console'
+    outputs = ''
   []
   [scale_flux]
     type = ScalePostprocessor
     scaling_factor = -1
     value = flux
     execute_on = 'initial nonlinear linear timestep_end'
-    outputs = 'console exodus'
+    outputs = 'console csv exodus'
   []
-  [scalar]
-    type = ScalarVariable
-    variable = v
+  [rhs_timestep]
+    type = PressureReleaseFluxIntegral
+    variable = u
+    boundary = 'right'
+    diffusivity = ${fparse 1.58e-4*exp(-308000/(8.314*temperature))*length_unit^2}
+    surface_area = ${fparse 2.16e-6*length_unit^2}
+    volume = ${fparse 5.2e-11*length_unit^3}
+    concentration_to_pressure_conversion_factor = ${fparse kb*length_unit^3*temperature*pressure_unit}
+    outputs = 'console'
   []
-  [scale_v]
+  [rhs_aggregate]
+    type = CumulativeValuePostprocessor
+    postprocessor = 'rhs_timestep'
+    outputs = 'console'
+  []
+  [rhs_release]
     type = ScalePostprocessor
-    value = scalar
-    scaling_factor = ${fparse 1/(initial_pressure*pressure_unit)}
-  []
-  [fr]
-    type = DifferencePostprocessor
-    value1 = 1
-    value2 = scale_v
-    outputs = 'csv console exodus'
+    value = rhs_aggregate
+    scaling_factor = ${fparse 1./(initial_pressure*pressure_unit)}
+    outputs = 'console csv exodus'
   []
 []
 
