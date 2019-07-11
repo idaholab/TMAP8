@@ -3,5 +3,6 @@
     type = Exodiff
     input = val-1a.i
     exodiff = val-1a_out.e
+    cli_args = 'Executioner/dt=10 Executioner/scheme=implicit-euler'
   []
 []
