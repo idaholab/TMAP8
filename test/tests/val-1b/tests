@@ -1,0 +1,8 @@
+[Tests]
+  [exo]
+    type = Exodiff
+    input = val-1b.i
+    exodiff = val-1b_out.e
+    cli_args = 'Executioner/dt=10 Mesh/nx=100'
+  []
+[]

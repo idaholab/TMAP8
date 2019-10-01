@@ -1,0 +1,8 @@
+[Tests]
+  [exo]
+    type = Exodiff
+    input = 'val-1c.i'
+    exodiff = val-1c_out.e
+    cli_args = 'Executioner/dt=5'
+  []
+[]
