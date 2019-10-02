@@ -9,7 +9,7 @@
 
 #include "TrappingNodalKernel.h"
 
-registerMooseObject("MooseApp", TrappingNodalKernel);
+registerMooseObject("TMAPApp", TrappingNodalKernel);
 
 template <>
 InputParameters
@@ -18,7 +18,13 @@ validParams<TrappingNodalKernel>()
   InputParameters params = validParams<NodalKernel>();
   params.addRequiredParam<Real>("alpha_t", "The trapping rate coefficient");
   params.addRequiredParam<Real>("N", "The atomic number density of the host material");
-  params.addRequiredParam<Real>("Ct0", "The concentration of trapping sites");
+  params.addRequiredParam<Real>("Ct0",
+                                "The fraction of host sites that can contribute to trapping");
+  params.addParam<Real>(
+      "trap_per_free",
+      1.,
+      "An estimate for the ratio of the concentration magnitude of trapped species to free "
+      "species. Setting a value for this can be helpful in producing a well-scaled matrix");
   params.addRequiredCoupledVar(
       "mobile", "The variable representing the mobile concentration of solute particles");
   params.addCoupledVar("other_trapped_concentration_variables",
@@ -32,7 +38,8 @@ TrappingNodalKernel::TrappingNodalKernel(const InputParameters & parameters)
     _N(getParam<Real>("N")),
     _Ct0(getParam<Real>("Ct0")),
     _mobile_conc(coupledValue("mobile")),
-    _last_node(nullptr)
+    _last_node(nullptr),
+    _trap_per_free(getParam<Real>("trap_per_free"))
 {
   _n_other_concs = coupledComponents("other_trapped_concentration_variables");
 
@@ -55,11 +62,11 @@ TrappingNodalKernel::TrappingNodalKernel(const InputParameters & parameters)
 Real
 TrappingNodalKernel::computeQpResidual()
 {
-  auto empty_trapping_sites = _Ct0;
+  auto empty_trapping_sites = _Ct0 * _N;
   for (const auto & trap_conc : _trapped_concentrations)
-    empty_trapping_sites -= (*trap_conc)[_qp];
+    empty_trapping_sites -= (*trap_conc)[_qp] * _trap_per_free;
 
-  return -_alpha_t * empty_trapping_sites * _mobile_conc[_qp] / _N;
+  return -_alpha_t * empty_trapping_sites * _mobile_conc[_qp] / (_N * _trap_per_free);
 }
 
 void
@@ -70,20 +77,20 @@ TrappingNodalKernel::ADHelper()
 
   _last_node = _current_node;
 
-  LocalDN empty_trapping_sites = _Ct0;
+  LocalDN empty_trapping_sites = _Ct0 * _N;
   size_t i = 0;
   for (const auto & trap_conc : _trapped_concentrations)
   {
     LocalDN trap_conc_dn = (*trap_conc)[_qp];
     trap_conc_dn.derivatives().insert(_var_numbers[i]) = 1.;
-    empty_trapping_sites -= trap_conc_dn;
+    empty_trapping_sites -= trap_conc_dn * _trap_per_free;
     ++i;
   }
   LocalDN mobile_conc = _mobile_conc[_qp];
 
   mobile_conc.derivatives().insert(_var_numbers.back()) = 1.;
 
-  _jacobian = -_alpha_t * empty_trapping_sites * mobile_conc / _N;
+  _jacobian = -_alpha_t * empty_trapping_sites * mobile_conc / (_N * _trap_per_free);
 }
 
 Real

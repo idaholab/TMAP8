@@ -23,15 +23,9 @@ typedef DualNumber<Real, DynamicSparseNumberArray<Real, unsigned int>> LocalDN;
 template <>
 InputParameters validParams<TrappingNodalKernel>();
 
-/**
- * Represents the rate in a simple ODE of du/dt = rate
- */
 class TrappingNodalKernel : public NodalKernel
 {
 public:
-  /**
-   * Constructor initializes the rate
-   */
   TrappingNodalKernel(const InputParameters & parameters);
 
 protected:
@@ -47,6 +41,7 @@ protected:
   std::vector<const VariableValue *> _trapped_concentrations;
   std::vector<unsigned int> _var_numbers;
   const Node * _last_node;
+  const Real _trap_per_free;
   LocalDN _jacobian;
 
 private:
