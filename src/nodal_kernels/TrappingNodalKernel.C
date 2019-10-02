@@ -9,7 +9,7 @@
 
 #include "TrappingNodalKernel.h"
 
-registerMooseObject("MooseApp", TrappingNodalKernel);
+registerMooseObject("TMAPApp", TrappingNodalKernel);
 
 template <>
 InputParameters
@@ -18,7 +18,8 @@ validParams<TrappingNodalKernel>()
   InputParameters params = validParams<NodalKernel>();
   params.addRequiredParam<Real>("alpha_t", "The trapping rate coefficient");
   params.addRequiredParam<Real>("N", "The atomic number density of the host material");
-  params.addRequiredParam<Real>("Ct0", "The concentration of trapping sites");
+  params.addRequiredParam<Real>("Ct0",
+                                "The fraction of host sites that can contribute to trapping");
   params.addRequiredCoupledVar(
       "mobile", "The variable representing the mobile concentration of solute particles");
   params.addCoupledVar("other_trapped_concentration_variables",
@@ -55,7 +56,7 @@ TrappingNodalKernel::TrappingNodalKernel(const InputParameters & parameters)
 Real
 TrappingNodalKernel::computeQpResidual()
 {
-  auto empty_trapping_sites = _Ct0;
+  auto empty_trapping_sites = _Ct0 * _N;
   for (const auto & trap_conc : _trapped_concentrations)
     empty_trapping_sites -= (*trap_conc)[_qp];
 
@@ -70,7 +71,7 @@ TrappingNodalKernel::ADHelper()
 
   _last_node = _current_node;
 
-  LocalDN empty_trapping_sites = _Ct0;
+  LocalDN empty_trapping_sites = _Ct0 * _N;
   size_t i = 0;
   for (const auto & trap_conc : _trapped_concentrations)
   {

@@ -1,0 +1,8 @@
+[Tests]
+  [diffusion_limited]
+    type = Exodiff
+    input = val-1d-diffusion.i
+    exodiff = val-1d-diffusion_out.e
+    cli_args = 'Mesh/nx=20 Executioner/num_steps=3'
+  []
+[]
