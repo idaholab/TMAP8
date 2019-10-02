@@ -41,6 +41,7 @@ protected:
   std::vector<const VariableValue *> _trapped_concentrations;
   std::vector<unsigned int> _var_numbers;
   const Node * _last_node;
+  const Real _trap_per_free;
   LocalDN _jacobian;
 
 private:
