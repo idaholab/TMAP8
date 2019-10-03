@@ -1,0 +1,10 @@
+[Tests]
+  [lm_ncp]
+    input = ncp-lm.i
+    type = Exodiff
+    exodiff = ncp-lm_out.e
+    requirement = 'The system shall be able to solve a positively constrained system of ODEs using NCP and have a non-singular matrix'
+    absent_out = '[1-9]+[0-9]* of 22 singular values'
+    expect_out = '0 of 22 singular values'
+  []
+[]
