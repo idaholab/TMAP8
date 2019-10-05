@@ -30,4 +30,5 @@ protected:
 private:
   const unsigned int _v_var;
   const VariableValue & _v;
+  const Real _u_mult;
 };
