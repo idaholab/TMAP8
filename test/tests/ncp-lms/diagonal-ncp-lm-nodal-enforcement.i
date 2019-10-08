@@ -117,11 +117,14 @@ dt=1
     lm_variable = lm
     extra_vector_tags = 'rest'
   []
+[]
+
+[NodalKernels]
   [positive_constraint]
-    type = RequirePositiveNCP
+    type = RequirePositiveNCPNodalKernel
+    extra_vector_tags = positive
     variable = lm
     v = u
-    extra_vector_tags = positive
   []
 []
 
@@ -166,10 +169,6 @@ dt=1
   []
 []
 
-[Debug]
-  show_var_residual_norms = true
-[]
-
 [Postprocessors]
   [active_lm]
     type = LMActiveSetSize
@@ -184,4 +183,8 @@ dt=1
     value = -1e-12
     comparator = 'less'
   []
+[]
+
+[Debug]
+  show_var_residual_norms = true
 []

@@ -22,4 +22,5 @@ private:
   const VariableSecond & _second_v;
   const VariablePhiSecond & _second_v_phi;
   const Real _lm_sign;
+  const Real _diffusivity;
 };

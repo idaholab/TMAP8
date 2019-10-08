@@ -4,12 +4,16 @@ l=10
   type = GeneratedMesh
   dim = 1
   xmax = ${l}
-  nx = ${l}
+  nx = 100
+  elem_type = EDGE3
 []
 
 [Variables]
-  [u][]
-  [lm][]
+  [u]
+    order = SECOND
+  []
+  [lm]
+  []
 []
 
 [ICs]
@@ -20,26 +24,53 @@ l=10
   []
 []
 
-[NodalKernels]
+[Kernels]
   [time]
-    type = TimeDerivativeNodalKernel
+    type = TimeDerivative
+    variable = u
+  []
+  [diff]
+    type = Diffusion
     variable = u
   []
   [ffn]
-    type = UserForcingFunctionNodalKernel
+    type = BodyForce
     variable = u
     function = '-1'
   []
   [lm_coupled_force]
-    type = CoupledForceNodalKernel
+    type = CoupledForce
     variable = u
     v = lm
   []
+[]
+
+[NodalKernels]
   [positive_constraint]
     type = RequirePositiveNCPNodalKernel
     variable = lm
     v = u
+    exclude_boundaries = 'left right'
   []
+[]
+
+
+[BCs]
+  [left]
+    type = DirichletBC
+    boundary = left
+    value = ${l}
+    variable = u
+  []
+  [right]
+    type = DirichletBC
+    boundary = right
+    value = 0
+    variable = u
+  []
+[]
+
+[NodalKernels]
 []
 
 [Preconditioning]
@@ -54,8 +85,8 @@ l=10
   num_steps = ${l}
   solve_type = NEWTON
   petsc_options = '-pc_svd_monitor'
-  petsc_options_iname = '-pc_type'
-  petsc_options_value = 'svd'
+  petsc_options_iname = '-pc_type -snes_linesearch_type'
+  petsc_options_value = 'svd      basic'
 []
 
 [Outputs]

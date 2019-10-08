@@ -30,4 +30,6 @@ protected:
 private:
   const unsigned int _v_var;
   const VariableValue & _v;
+
+  std::set<BoundaryID> _bnd_ids;
 };

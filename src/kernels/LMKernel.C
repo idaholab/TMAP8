@@ -161,7 +161,7 @@ LMKernel<compute_stage>::computeADOffDiagJacobian()
     {
       test_ptr = &_lm_test;
       residuals = &weak_lm_residuals;
-      sign = -1;
+      sign *= _lm_sign;
     }
     else
       continue;

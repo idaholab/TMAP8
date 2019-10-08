@@ -90,3 +90,19 @@ l=10
 [Debug]
   show_var_residual_norms = true
 []
+
+[Postprocessors]
+  [active_lm]
+    type = LMActiveSetSize
+    variable = lm
+    execute_on = 'nonlinear timestep_end'
+    value = 1e-12
+  []
+  [violations]
+    type = LMActiveSetSize
+    variable = u
+    execute_on = 'nonlinear timestep_end'
+    value = -1e-12
+    comparator = 'less'
+  []
+[]
