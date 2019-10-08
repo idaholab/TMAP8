@@ -1,10 +1,12 @@
 l=10
+nx=100
+num_steps=10
 
 [Mesh]
   type = GeneratedMesh
   dim = 1
   xmax = ${l}
-  nx = 100
+  nx = ${nx}
 []
 
 [Variables]
@@ -80,11 +82,10 @@ l=10
 
 [Executioner]
   type = Transient
-  num_steps = ${l}
+  num_steps = ${num_steps}
   solve_type = NEWTON
-  petsc_options = '-pc_svd_monitor'
-  petsc_options_iname = '-pc_type -snes_linesearch_type'
-  petsc_options_value = 'svd      basic'
+  petsc_options_iname = '-snes_max_linear_solve_fail -ksp_max_it -pc_factor_levels -snes_linesearch_type'
+  petsc_options_value = '0                           30          16                basic'
 []
 
 [Outputs]
