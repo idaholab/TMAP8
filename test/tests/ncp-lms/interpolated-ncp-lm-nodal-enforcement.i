@@ -49,7 +49,7 @@ nx=100
 
 [NodalKernels]
   [positive_constraint]
-    type = RequirePositiveNCPNodalKernel
+    type = LowerBoundNodalKernel
     variable = lm
     v = u
     exclude_boundaries = 'left right'
@@ -100,13 +100,13 @@ nx=100
 
 [Postprocessors]
   [active_lm]
-    type = LMActiveSetSize
+    type = GreaterThanLessThanPostprocessor
     variable = lm
     execute_on = 'nonlinear timestep_end'
     value = 1e-12
   []
   [violations]
-    type = LMActiveSetSize
+    type = GreaterThanLessThanPostprocessor
     variable = u
     execute_on = 'nonlinear timestep_end'
     value = -1e-12

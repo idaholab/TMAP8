@@ -121,7 +121,7 @@ dt=1
 
 [NodalKernels]
   [positive_constraint]
-    type = RequirePositiveNCPNodalKernel
+    type = LowerBoundNodalKernel
     extra_vector_tags = positive
     variable = lm
     v = u
@@ -171,13 +171,13 @@ dt=1
 
 [Postprocessors]
   [active_lm]
-    type = LMActiveSetSize
+    type = GreaterThanLessThanPostprocessor
     variable = lm
     execute_on = 'nonlinear timestep_end'
     value = 1e-12
   []
   [violations]
-    type = LMActiveSetSize
+    type = GreaterThanLessThanPostprocessor
     variable = u
     execute_on = 'nonlinear timestep_end'
     value = -1e-12
