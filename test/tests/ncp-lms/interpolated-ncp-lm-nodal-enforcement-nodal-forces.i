@@ -7,12 +7,10 @@ num_steps=10
   dim = 1
   xmax = ${l}
   nx = ${nx}
-  elem_type = EDGE3
 []
 
 [Variables]
   [u]
-    order = SECOND
   []
   [lm]
   []
@@ -40,17 +38,22 @@ num_steps=10
     variable = u
     function = '-1'
   []
-  [lm_coupled_force]
-    type = CoupledForce
+[]
+
+[NodalKernels]
+  [positive_constraint]
+    type = LowerBoundNodalKernel
+    variable = lm
+    v = u
+    exclude_boundaries = 'left right'
+  []
+  [forces]
+    type = CoupledForceNodalKernel
     variable = u
     v = lm
   []
-  [positive_constraint]
-    type = RequirePositiveNCP
-    variable = lm
-    v = u
-  []
 []
+
 
 [BCs]
   [left]
@@ -81,12 +84,16 @@ num_steps=10
   type = Transient
   num_steps = ${num_steps}
   solve_type = NEWTON
-  petsc_options_iname = '-snes_max_linear_solve_fail -ksp_max_it -pc_factor_levels'
-  petsc_options_value = '0                           30          16'
+  petsc_options_iname = '-snes_max_linear_solve_fail -ksp_max_it -pc_factor_levels -snes_linesearch_type'
+  petsc_options_value = '0                           30          16                basic'
 []
 
 [Outputs]
   exodus = true
+  [dof]
+    type = DOFMap
+    execute_on = 'initial'
+  []
 []
 
 [Debug]
@@ -104,7 +111,7 @@ num_steps=10
     type = GreaterThanLessThanPostprocessor
     variable = u
     execute_on = 'nonlinear timestep_end'
-    value = -1e-12
+    value = -1e-8
     comparator = 'less'
   []
 []

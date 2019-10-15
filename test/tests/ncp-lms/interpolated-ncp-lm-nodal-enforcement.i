@@ -1,6 +1,6 @@
 l=10
-nx=100
 num_steps=10
+nx=100
 
 [Mesh]
   type = GeneratedMesh
@@ -45,12 +45,17 @@ num_steps=10
     variable = u
     v = lm
   []
+[]
+
+[NodalKernels]
   [positive_constraint]
-    type = RequirePositiveNCP
+    type = LowerBoundNodalKernel
     variable = lm
     v = u
+    exclude_boundaries = 'left right'
   []
 []
+
 
 [BCs]
   [left]
@@ -81,8 +86,8 @@ num_steps=10
   type = Transient
   num_steps = ${num_steps}
   solve_type = NEWTON
-  petsc_options_iname = '-snes_max_linear_solve_fail -ksp_max_it -pc_factor_levels'
-  petsc_options_value = '0                           30          16'
+  petsc_options_iname = '-snes_max_linear_solve_fail -ksp_max_it -pc_factor_levels -snes_linesearch_type'
+  petsc_options_value = '0                           30          16                basic'
 []
 
 [Outputs]

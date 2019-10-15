@@ -24,13 +24,20 @@ dt=1
     order = SECOND
   []
   [lm]
+    order = SECOND
   []
 []
 
 [AuxVariables]
-  [positive][]
-  [diffusion_lm][]
-  [rest_lm][]
+  [positive]
+    order = SECOND
+  []
+  [diffusion_lm]
+    order = SECOND
+  []
+  [rest_lm]
+    order = SECOND
+  []
   [diffusion_primal]
     order = SECOND
   []
@@ -117,11 +124,27 @@ dt=1
     lm_variable = lm
     extra_vector_tags = 'rest'
   []
+[]
+
+[NodalKernels]
+  [forces]
+    type = CoupledForceNodalKernel
+    variable = u
+    v = lm
+    extra_vector_tags = 'rest'
+  []
+  [corresponding_lm_portion]
+    type = ReactionNodalKernel
+    variable = lm
+    coeff = 1
+    extra_vector_tags = 'rest'
+  []
   [positive_constraint]
-    type = RequirePositiveNCP
+    type = LowerBoundNodalKernel
+    extra_vector_tags = positive
     variable = lm
     v = u
-    extra_vector_tags = positive
+    # exclude_boundaries = 'left right'
   []
 []
 
@@ -166,10 +189,6 @@ dt=1
   []
 []
 
-[Debug]
-  show_var_residual_norms = true
-[]
-
 [Postprocessors]
   [active_lm]
     type = GreaterThanLessThanPostprocessor
@@ -184,4 +203,8 @@ dt=1
     value = -1e-12
     comparator = 'less'
   []
+[]
+
+[Debug]
+  show_var_residual_norms = true
 []

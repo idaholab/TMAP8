@@ -46,7 +46,7 @@ LMKernel<compute_stage>::computeResidual()
   precalculateResidual();
 
   for (_qp = 0; _qp < _qrule->n_points(); _qp++)
-    strong_residuals[_qp] = precomputeQpResidual() * _ad_JxW[_qp] * _ad_coord[_qp];
+    strong_residuals[_qp] = this->precomputeQpResidual() * _ad_JxW[_qp] * _ad_coord[_qp];
 
   // Primal residual
   prepareVectorTag(_assembly, _var.number());
@@ -82,7 +82,7 @@ LMKernel<compute_stage>::computeJacobian()
   precalculateResidual();
 
   for (_qp = 0; _qp < _qrule->n_points(); _qp++)
-    strong_residuals[_qp] = precomputeQpResidual() * _ad_JxW[_qp] * _ad_coord[_qp];
+    strong_residuals[_qp] = this->precomputeQpResidual() * _ad_JxW[_qp] * _ad_coord[_qp];
 
   // Primal on-diagonal Jacobian
   prepareMatrixTag(_assembly, _var.number(), _var.number());
@@ -131,7 +131,7 @@ LMKernel<compute_stage>::computeADOffDiagJacobian()
   precalculateResidual();
   for (_qp = 0; _qp < _qrule->n_points(); _qp++)
   {
-    auto value = precomputeQpResidual() * _ad_JxW[_qp] * _ad_coord[_qp];
+    auto value = this->precomputeQpResidual() * _ad_JxW[_qp] * _ad_coord[_qp];
 
     for (_i = 0; _i < _test.size(); ++_i)
       weak_primal_residuals[_i] += _test[_i][_qp] * value;
@@ -161,7 +161,7 @@ LMKernel<compute_stage>::computeADOffDiagJacobian()
     {
       test_ptr = &_lm_test;
       residuals = &weak_lm_residuals;
-      sign = -1;
+      sign *= _lm_sign;
     }
     else
       continue;

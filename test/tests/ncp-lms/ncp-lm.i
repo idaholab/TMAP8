@@ -36,7 +36,7 @@ l=10
     v = lm
   []
   [positive_constraint]
-    type = RequirePositiveNCPNodalKernel
+    type = LowerBoundNodalKernel
     variable = lm
     v = u
   []
@@ -64,4 +64,20 @@ l=10
 
 [Debug]
   show_var_residual_norms = true
+[]
+
+[Postprocessors]
+  [active_lm]
+    type = GreaterThanLessThanPostprocessor
+    variable = lm
+    execute_on = 'nonlinear timestep_end'
+    value = 1e-12
+  []
+  [violations]
+    type = GreaterThanLessThanPostprocessor
+    variable = u
+    execute_on = 'nonlinear timestep_end'
+    value = -1e-12
+    comparator = 'less'
+  []
 []
