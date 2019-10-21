@@ -10,11 +10,20 @@ Pht_left=3
 Ph2_right=0
 Pt2_right=0
 Pht_right=0
+d_h=1
+d_t=1
 
 [Mesh]
   type = GeneratedMesh
   dim = 1
   nx = 20
+[]
+
+[Problem]
+  type = ReferenceResidualProblem
+  extra_tag_vectors = 'ref'
+  solution_variables = 'h t'
+  reference_vector = ref
 []
 
 [Variables]
@@ -26,20 +35,24 @@ Pht_right=0
   [time_h]
     type = TimeDerivative
     variable = h
+    extra_vector_tags = ref
   []
   [diff_h]
     type = MatDiffusion
     variable = h
-    diffusivity = 1
+    diffusivity = ${d_h}
+    extra_vector_tags = ref
   []
   [time_t]
     type = TimeDerivative
     variable = t
+    extra_vector_tags = ref
   []
   [diff_t]
     type = MatDiffusion
     variable = t
-    diffusivity = 1
+    diffusivity = ${d_t}
+    extra_vector_tags = ref
   []
 []
 
@@ -159,20 +172,21 @@ Pht_right=0
     type = SideFluxAverage
     variable = h
     boundary = right
-    diffusivity = 1
+    diffusivity = ${d_h}
   []
   [downstream_t_flux]
     type = SideFluxAverage
     variable = t
     boundary = right
-    diffusivity = 1
+    diffusivity = ${d_t}
   []
 []
 
 [Executioner]
   type = Transient
   solve_type = NEWTON
-  num_steps = 5
+  num_steps = 1000
+  steady_state_detection = true
   dt = .1
 []
 
