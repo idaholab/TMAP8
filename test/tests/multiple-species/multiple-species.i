@@ -10,6 +10,8 @@ Pht_left=3
 Ph2_right=0
 Pt2_right=0
 Pht_right=0
+d_h=1
+d_t=1
 
 [Mesh]
   type = GeneratedMesh
@@ -38,7 +40,7 @@ Pht_right=0
   [diff_h]
     type = MatDiffusion
     variable = h
-    diffusivity = 1
+    diffusivity = ${d_h}
     extra_vector_tags = ref
   []
   [time_t]
@@ -49,7 +51,7 @@ Pht_right=0
   [diff_t]
     type = MatDiffusion
     variable = t
-    diffusivity = 1
+    diffusivity = ${d_t}
     extra_vector_tags = ref
   []
 []
@@ -170,13 +172,13 @@ Pht_right=0
     type = SideFluxAverage
     variable = h
     boundary = right
-    diffusivity = 1
+    diffusivity = ${d_h}
   []
   [downstream_t_flux]
     type = SideFluxAverage
     variable = t
     boundary = right
-    diffusivity = 1
+    diffusivity = ${d_t}
   []
 []
 
