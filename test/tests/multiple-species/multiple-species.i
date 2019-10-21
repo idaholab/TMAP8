@@ -154,6 +154,21 @@ Pht_right=0
   []
 []
 
+[Postprocessors]
+  [downstream_h_flux]
+    type = SideFluxAverage
+    variable = h
+    boundary = right
+    diffusivity = 1
+  []
+  [downstream_t_flux]
+    type = SideFluxAverage
+    variable = t
+    boundary = right
+    diffusivity = 1
+  []
+[]
+
 [Executioner]
   type = Transient
   solve_type = NEWTON
