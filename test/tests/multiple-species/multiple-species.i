@@ -17,6 +17,13 @@ Pht_right=0
   nx = 20
 []
 
+[Problem]
+  type = ReferenceResidualProblem
+  extra_tag_vectors = 'ref'
+  solution_variables = 'h t'
+  reference_vector = ref
+[]
+
 [Variables]
   [h][]
   [t][]
@@ -26,20 +33,24 @@ Pht_right=0
   [time_h]
     type = TimeDerivative
     variable = h
+    extra_vector_tags = ref
   []
   [diff_h]
     type = MatDiffusion
     variable = h
     diffusivity = 1
+    extra_vector_tags = ref
   []
   [time_t]
     type = TimeDerivative
     variable = t
+    extra_vector_tags = ref
   []
   [diff_t]
     type = MatDiffusion
     variable = t
     diffusivity = 1
+    extra_vector_tags = ref
   []
 []
 
@@ -172,7 +183,8 @@ Pht_right=0
 [Executioner]
   type = Transient
   solve_type = NEWTON
-  num_steps = 5
+  num_steps = 1000
+  steady_state_detection = true
   dt = .1
 []
 
