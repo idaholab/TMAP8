@@ -1,18 +1,19 @@
 #include "CoupledForceLM.h"
 
-registerADMooseObject("TMAPApp", CoupledForceLM);
+registerMooseObject("TMAPApp", CoupledForceLM);
 
-defineADValidParams(
-    CoupledForceLM,
-    LMKernel,
-    params.addRequiredCoupledVar("v", "The coupled variable which provides the force");
-    params.addParam<Real>("coef",
-                          1.0,
-                          "Coefficent ($\\sigma$) multiplier for the coupled force term."););
+InputParameters
+CoupledForceLM::validParams()
+{
+  auto params = LMKernel::validParams();
+  params.addRequiredCoupledVar("v", "The coupled variable which provides the force");
+  params.addParam<Real>(
+      "coef", 1.0, "Coefficent ($\\sigma$) multiplier for the coupled force term.");
+  return params;
+}
 
-template <ComputeStage compute_stage>
-CoupledForceLM<compute_stage>::CoupledForceLM(const InputParameters & parameters)
-  : LMKernel<compute_stage>(parameters),
+CoupledForceLM::CoupledForceLM(const InputParameters & parameters)
+  : LMKernel(parameters),
     _v_var(coupled("v")),
     _v(adCoupledValue("v")),
     _coef(getParam<Real>("coef"))
@@ -22,9 +23,8 @@ CoupledForceLM<compute_stage>::CoupledForceLM(const InputParameters & parameters
                "consider using Reaction or somethig similar");
 }
 
-template <ComputeStage compute_stage>
 ADReal
-CoupledForceLM<compute_stage>::precomputeQpResidual()
+CoupledForceLM::precomputeQpResidual()
 {
   return -_coef * _v[_qp];
 }

@@ -1,20 +1,18 @@
 #include "TimeDerivativeLM.h"
-
 #include "Function.h"
 
-registerADMooseObject("TMAPApp", TimeDerivativeLM);
+registerMooseObject("TMAPApp", TimeDerivativeLM);
 
-defineADValidParams(TimeDerivativeLM, LMTimeKernel, );
-
-template <ComputeStage compute_stage>
-TimeDerivativeLM<compute_stage>::TimeDerivativeLM(const InputParameters & parameters)
-  : LMTimeKernel<compute_stage>(parameters)
+InputParameters
+TimeDerivativeLM::validParams()
 {
+  return LMTimeKernel::validParams();
 }
 
-template <ComputeStage compute_stage>
+TimeDerivativeLM::TimeDerivativeLM(const InputParameters & parameters) : LMTimeKernel(parameters) {}
+
 ADReal
-TimeDerivativeLM<compute_stage>::precomputeQpResidual()
+TimeDerivativeLM::precomputeQpResidual()
 {
   return _u_dot[_qp];
 }

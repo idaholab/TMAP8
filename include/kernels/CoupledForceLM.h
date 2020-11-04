@@ -2,23 +2,17 @@
 
 #include "LMKernel.h"
 
-template <ComputeStage>
-class CoupledForceLM;
-
-declareADValidParams(CoupledForceLM);
-
-template <ComputeStage compute_stage>
-class CoupledForceLM : public LMKernel<compute_stage>
+class CoupledForceLM : public LMKernel
 {
 public:
   CoupledForceLM(const InputParameters & parameters);
 
+  static InputParameters validParams();
+
 protected:
-  virtual ADReal precomputeQpResidual() override;
+  ADReal precomputeQpResidual() override;
 
   const unsigned int _v_var;
   const ADVariableValue & _v;
   const Real _coef;
-
-  usingLMKernelMembers;
 };

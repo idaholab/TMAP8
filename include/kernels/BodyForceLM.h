@@ -2,20 +2,15 @@
 
 #include "LMKernel.h"
 
-template <ComputeStage>
-class BodyForceLM;
-class Function;
-
-declareADValidParams(BodyForceLM);
-
-template <ComputeStage compute_stage>
-class BodyForceLM : public LMKernel<compute_stage>
+class BodyForceLM : public LMKernel
 {
 public:
   BodyForceLM(const InputParameters & parameters);
 
+  static InputParameters validParams();
+
 protected:
-  virtual ADReal precomputeQpResidual() override;
+  ADReal precomputeQpResidual() override;
 
   /// Scale factor
   const Real & _scale;
@@ -25,7 +20,4 @@ protected:
 
   /// Optional Postprocessor value
   const PostprocessorValue & _postprocessor;
-
-  usingLMKernelMembers;
-  using KernelBase::_q_point;
 };

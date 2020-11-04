@@ -2,19 +2,13 @@
 
 #include "LMTimeKernel.h"
 
-template <ComputeStage>
-class TimeDerivativeLM;
-
-declareADValidParams(TimeDerivativeLM);
-
-template <ComputeStage compute_stage>
-class TimeDerivativeLM : public LMTimeKernel<compute_stage>
+class TimeDerivativeLM : public LMTimeKernel
 {
 public:
   TimeDerivativeLM(const InputParameters & parameters);
 
-protected:
-  virtual ADReal precomputeQpResidual() override;
+  static InputParameters validParams();
 
-  usingLMTimeKernelMembers;
+protected:
+  ADReal precomputeQpResidual() override;
 };
