@@ -1,8 +1,10 @@
-#include "TMAPApp.h"
-#include "Moose.h"
-#include "AppFactory.h"
-#include "ModulesApp.h"
-#include "MooseSyntax.h"
+/********************************************************/
+/*             DO NOT MODIFY THIS HEADER                */
+/* TMAP8: Tritium Migration Analysis Program, Version 8 */
+/*                                                      */
+/*    Copyright 2021 Battelle Energy Alliance, LLC      */
+/*               ALL RIGHTS RESERVED                    */
+/********************************************************/
 
 template <>
 InputParameters
