@@ -21,6 +21,9 @@ validParams<TMAPApp>()
   // Do not use legacy DirichletBC, that is, set DirichletBC default for preset = true
   params.set<bool>("use_legacy_dirichlet_bc") = false;
 
+  // Set material property output to occur on TIMESTEP_END and INITIAL by default
+  params.set<bool>("use_legacy_material_output") = false;
+
   return params;
 }
 
