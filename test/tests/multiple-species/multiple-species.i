@@ -22,7 +22,6 @@ d_t=1
 [Problem]
   type = ReferenceResidualProblem
   extra_tag_vectors = 'ref'
-  solution_variables = 'h t'
   reference_vector = ref
 []
 

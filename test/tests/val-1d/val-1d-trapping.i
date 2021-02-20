@@ -15,7 +15,6 @@ epsilon=10000
   type = ReferenceResidualProblem
   extra_tag_vectors = 'ref'
   reference_vector = 'ref'
-  solution_variables = 'mobile trapped'
 []
 
 [Variables]
