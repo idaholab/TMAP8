@@ -1,11 +1,11 @@
-# TMAAP8
+# TMAP8
 Tritium Migration Analysis Program (TMAP8)
 
 TMAP8 is a MOOSE application for solving 0-1D scalar diffusion-reactive transport. It contains unique custom syntax for 0D or 1D geometric/algebraic entities that make it more usable for 0-1D transport than standard MOOSE syntax.
 
 
 ### Other Software
-Idaho National Laboratory is a cutting edge research facility which is a constantly producing high quality research and software. Feel free to take a look at our other software and scientific offerings at:
+Idaho National Laboratory is a cutting edge research facility which is constantly producing high quality research and software. Feel free to take a look at our other software and scientific offerings at:
 
 [Primary Technology Offerings Page](https://www.inl.gov/inl-initiatives/technology-deployment)
 
