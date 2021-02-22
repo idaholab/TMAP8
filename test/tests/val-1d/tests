@@ -3,7 +3,7 @@
     type = Exodiff
     input = val-1d-diffusion.i
     exodiff = val-1d-diffusion_out.e
-    cli_args = 'Mesh/nx=20 Executioner/num_steps=3'
+    cli_args = "Mesh/nx=20 Executioner/num_steps=300 Postprocessors/active='' Outputs/out/execute_on='final'"
   []
   [trapping_limited]
     type = Exodiff

@@ -142,6 +142,7 @@ epsilon=10000
   automatic_scaling = true
   verbose = true
   compute_scaling_once = false
+  l_tol = 1e-11
 []
 
 [Outputs]
