@@ -14,11 +14,10 @@
 
 registerMooseObject("TMAPApp", EnclosureSinkScalarKernel);
 
-template <>
 InputParameters
-validParams<EnclosureSinkScalarKernel>()
+EnclosureSinkScalarKernel::validParams()
 {
-  InputParameters params = validParams<ODEKernel>();
+  InputParameters params = ODEKernel::validParams();
   params.addRequiredParam<PostprocessorName>(
       "flux", "Name of the Postprocessor whose value will be the flux");
   params.addRequiredParam<Real>("surface_area", "The surface area of the structure");

@@ -10,11 +10,10 @@
 
 registerMooseObject("TMAPApp", LMDiffusion);
 
-template <>
 InputParameters
-validParams<LMDiffusion>()
+LMDiffusion::validParams()
 {
-  InputParameters params = validParams<Kernel>();
+  InputParameters params = Kernel::validParams();
   params.addRequiredCoupledVar("v", "The coupled variable from which to pull the Laplacian");
   params.addParam<Real>("lm_sign", 1, "The sign of the lagrange multiplier in the primal equation");
   params.addParam<Real>("diffusivity", 1, "The value of the diffusivity");

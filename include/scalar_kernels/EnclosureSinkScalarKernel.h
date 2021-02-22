@@ -10,15 +10,12 @@
 
 #include "ODEKernel.h"
 
-class EnclosureSinkScalarKernel;
-
-template <>
-InputParameters validParams<EnclosureSinkScalarKernel>();
-
 class EnclosureSinkScalarKernel : public ODEKernel
 {
 public:
   EnclosureSinkScalarKernel(const InputParameters & parameters);
+
+  static InputParameters validParams();
 
 protected:
   Real computeQpResidual() final;

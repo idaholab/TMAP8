@@ -16,16 +16,14 @@ using MetaPhysicL::DualNumber;
 using MetaPhysicL::DynamicSparseNumberArray;
 
 // Forward Declarations
-class TrappingNodalKernel;
 typedef DualNumber<Real, DynamicSparseNumberArray<Real, unsigned int>> LocalDN;
-
-template <>
-InputParameters validParams<TrappingNodalKernel>();
 
 class TrappingNodalKernel : public NodalKernel
 {
 public:
   TrappingNodalKernel(const InputParameters & parameters);
+
+  static InputParameters validParams();
 
 protected:
   Real computeQpResidual() override;

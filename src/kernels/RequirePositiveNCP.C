@@ -10,11 +10,10 @@
 
 registerMooseObject("TMAPApp", RequirePositiveNCP);
 
-template <>
 InputParameters
-validParams<RequirePositiveNCP>()
+RequirePositiveNCP::validParams()
 {
-  InputParameters params = validParams<Kernel>();
+  InputParameters params = Kernel::validParams();
   params.addRequiredCoupledVar("v", "The coupled variable we require to be non-negative");
   params.addParam<Real>("coef", 1., "A multiplier for the residual");
   return params;

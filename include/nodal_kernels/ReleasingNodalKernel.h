@@ -10,16 +10,12 @@
 
 #include "NodalKernel.h"
 
-// Forward Declarations
-class ReleasingNodalKernel;
-
-template <>
-InputParameters validParams<ReleasingNodalKernel>();
-
 class ReleasingNodalKernel : public NodalKernel
 {
 public:
   ReleasingNodalKernel(const InputParameters & parameters);
+
+  static InputParameters validParams();
 
 protected:
   Real computeQpResidual() override;
