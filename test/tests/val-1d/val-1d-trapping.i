@@ -15,7 +15,6 @@ epsilon=10000
   type = ReferenceResidualProblem
   extra_tag_vectors = 'ref'
   reference_vector = 'ref'
-  solution_variables = 'mobile trapped'
 []
 
 [Variables]
@@ -99,13 +98,13 @@ epsilon=10000
 
 [BCs]
   [left]
-    type = PresetBC
+    type = DirichletBC
     variable = mobile
     value = ${fparse 3.1622e18 / cl}
     boundary = left
   []
   [right]
-    type = PresetBC
+    type = DirichletBC
     variable = mobile
     value = 0
     boundary = right

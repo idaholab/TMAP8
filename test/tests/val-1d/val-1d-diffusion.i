@@ -11,7 +11,6 @@ cl=3.1622e18
   type = ReferenceResidualProblem
   extra_tag_vectors = 'ref'
   reference_vector = 'ref'
-  solution_variables = 'mobile trapped'
 []
 
 [Variables]

@@ -10,11 +10,10 @@
 
 registerMooseObject("TMAPApp", ScaledCoupledTimeDerivative);
 
-template <>
 InputParameters
-validParams<ScaledCoupledTimeDerivative>()
+ScaledCoupledTimeDerivative::validParams()
 {
-  InputParameters params = validParams<CoupledTimeDerivative>();
+  InputParameters params = CoupledTimeDerivative::validParams();
   params.addParam<Real>("factor", 1, "The factor by which to scale");
   return params;
 }

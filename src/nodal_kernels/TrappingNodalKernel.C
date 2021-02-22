@@ -10,11 +10,10 @@
 
 registerMooseObject("TMAPApp", TrappingNodalKernel);
 
-template <>
 InputParameters
-validParams<TrappingNodalKernel>()
+TrappingNodalKernel::validParams()
 {
-  InputParameters params = validParams<NodalKernel>();
+  InputParameters params = NodalKernel::validParams();
   params.addRequiredParam<Real>("alpha_t", "The trapping rate coefficient");
   params.addRequiredParam<Real>("N", "The atomic number density of the host material");
   params.addRequiredParam<Real>("Ct0",

@@ -10,16 +10,12 @@
 
 #include "Kernel.h"
 
-// Forward Declarations
-class RequirePositiveNCP;
-
-template <>
-InputParameters validParams<RequirePositiveNCP>();
-
 class RequirePositiveNCP : public Kernel
 {
 public:
   RequirePositiveNCP(const InputParameters & parameters);
+
+  static InputParameters validParams();
 
 protected:
   virtual Real computeQpResidual() override;

@@ -10,16 +10,12 @@
 
 #include "AuxKernel.h"
 
-// Forward Declarations
-class EmptySitesAux;
-
-template <>
-InputParameters validParams<EmptySitesAux>();
-
 class EmptySitesAux : public AuxKernel
 {
 public:
   EmptySitesAux(const InputParameters & parameters);
+
+  static InputParameters validParams();
 
 protected:
   virtual Real computeValue() override;

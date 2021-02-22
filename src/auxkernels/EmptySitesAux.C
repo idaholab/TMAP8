@@ -10,11 +10,10 @@
 
 registerMooseObject("MooseApp", EmptySitesAux);
 
-template <>
 InputParameters
-validParams<EmptySitesAux>()
+EmptySitesAux::validParams()
 {
-  InputParameters params = validParams<AuxKernel>();
+  InputParameters params = AuxKernel::validParams();
   params.addRequiredParam<Real>("N", "The atomic number density of the host material");
   params.addRequiredParam<Real>("Ct0",
                                 "The fraction of host sites that can contribute to trapping");
