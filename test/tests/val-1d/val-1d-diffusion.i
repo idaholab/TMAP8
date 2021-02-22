@@ -111,8 +111,11 @@ cl=3.1622e18
 []
 
 [Outputs]
-  exodus = true
   csv = true
+  [out]
+    type = Exodus
+    execute_on = 'initial timestep_end'
+  []
   [dof]
     type = DOFMap
     execute_on = initial
