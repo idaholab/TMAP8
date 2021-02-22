@@ -10,11 +10,10 @@
 
 registerMooseObject("TMAPApp", ReleasingNodalKernel);
 
-template <>
 InputParameters
-validParams<ReleasingNodalKernel>()
+ReleasingNodalKernel::validParams()
 {
-  InputParameters params = validParams<NodalKernel>();
+  InputParameters params = NodalKernel::validParams();
   params.addRequiredParam<Real>("alpha_r", "The release rate coefficient");
   params.addRequiredCoupledVar("temp", "The temperature");
   params.addRequiredParam<Real>("trapping_energy", "The trapping energy in units of Kelvin");

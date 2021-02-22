@@ -11,16 +11,12 @@
 // MOOSE includes
 #include "SideIntegralVariablePostprocessor.h"
 
-// Forward Declarations
-class PressureReleaseFluxIntegral;
-
-template <>
-InputParameters validParams<PressureReleaseFluxIntegral>();
-
 class PressureReleaseFluxIntegral : public SideIntegralVariablePostprocessor
 {
 public:
   PressureReleaseFluxIntegral(const InputParameters & parameters);
+
+  static InputParameters validParams();
 
 protected:
   virtual Real computeQpIntegral() override;

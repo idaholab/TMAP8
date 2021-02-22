@@ -10,16 +10,12 @@
 
 #include "CoupledTimeDerivative.h"
 
-// Forward Declaration
-class ScaledCoupledTimeDerivative;
-
-template <>
-InputParameters validParams<ScaledCoupledTimeDerivative>();
-
 class ScaledCoupledTimeDerivative : public CoupledTimeDerivative
 {
 public:
   ScaledCoupledTimeDerivative(const InputParameters & parameters);
+
+  static InputParameters validParams();
 
 protected:
   virtual Real computeQpResidual() override;

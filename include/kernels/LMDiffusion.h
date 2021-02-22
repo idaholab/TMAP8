@@ -10,15 +10,12 @@
 
 #include "Kernel.h"
 
-class LMDiffusion;
-
-template <>
-InputParameters validParams<LMDiffusion>();
-
 class LMDiffusion : public Kernel
 {
 public:
   LMDiffusion(const InputParameters & parameters);
+
+  static InputParameters validParams();
 
 protected:
   virtual Real computeQpResidual() override;
