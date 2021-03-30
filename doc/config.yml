@@ -8,13 +8,19 @@ Content:
             - css/*
             - contrib/**
             - media/**
-
 Renderer:
     type: MooseDocs.base.MaterializeRenderer
     name: TMAP
-
 Extensions:
     MooseDocs.extensions.appsyntax:
         executable: ${ROOT_DIR}
         includes:
             - include
+    MooseDocs.extensions.sqa:
+        active: true
+        categories:
+            framework: !include ${MOOSE_DIR}/framework/doc/sqa_framework.yml
+            tmap: !include ${ROOT_DIR}/doc/sqa_tmap.yml
+        reports: !include ${ROOT_DIR}/doc/sqa_reports.yml
+    MooseDocs.extensions.template:
+        active: true
