@@ -4,6 +4,4 @@ specs:
     - tests
 dependencies:
     - framework
-repos:
-    default: https://github.com/idaholab/TMAP8.git (push)
 reports: !include ${ROOT_DIR}/doc/sqa_reports.yml
