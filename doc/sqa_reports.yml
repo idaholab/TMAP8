@@ -2,6 +2,7 @@ Applications:
     tmap:
         app_types:
             - TMAPApp
+        exe_name: tmap
         content_directory: ${ROOT_DIR}/doc/content
         remove:
             - ${MOOSE_DIR}/framework/doc/remove.yml

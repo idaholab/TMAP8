@@ -8,6 +8,9 @@ Extensions:
         name: TMAP8
         repo: https://github.com/idaholab/TMAP8
         menu:
+            Documentation:
+              TMAP8-only Syntax: syntax/tmap_only.md
+              Complete Code Syntax: syntax/index.md
             Software Quality: sqa/index.md
     MooseDocs.extensions.appsyntax:
         executable: ${ROOT_DIR}
