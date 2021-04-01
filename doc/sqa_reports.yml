@@ -1,0 +1,27 @@
+Applications:
+    tmap:
+        app_types:
+            - TMAPApp
+        exe_name: tmap
+        content_directory: ${ROOT_DIR}/doc/content
+        remove:
+            - ${MOOSE_DIR}/framework/doc/remove.yml
+        log_default: WARNING
+        show_warning: false
+
+Documents:
+    software_requirements_specification: sqa/tmap_srs.md
+    software_design_description: sqa/tmap_sdd.md
+    software_test_plan: sqa/tmap_stp.md
+    requirements_traceablity_matrix: sqa/tmap_rtm.md
+    verification_validation_report: sqa/tmap_vvr.md
+    failure_analysis_report: sqa/tmap_far.md
+    log_default: WARNING
+    show_warning: false
+
+Requirements:
+    tmap:
+        directories:
+            - ${ROOT_DIR}/test
+        log_default: WARNING
+        show_warning: false
