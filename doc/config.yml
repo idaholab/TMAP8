@@ -1,20 +1,34 @@
 Content:
-    TMAP:
-        root_dir: ${ROOT_DIR}/doc/content
-    moose:
-        root_dir: ${MOOSE_DIR}/framework/doc/content
-        content:
-            - js/*
-            - css/*
-            - contrib/**
-            - media/**
-
+    - ${ROOT_DIR}/doc/content
+    - ${MOOSE_DIR}/framework/doc/content
 Renderer:
     type: MooseDocs.base.MaterializeRenderer
-    name: TMAP
-
 Extensions:
+    MooseDocs.extensions.navigation:
+        name: TMAP8
+        repo: https://github.com/idaholab/TMAP8
+        menu:
+            Documentation:
+              TMAP8-only Syntax: syntax/tmap_only.md
+              Complete Code Syntax: syntax/index.md
+            Software Quality: sqa/index.md
     MooseDocs.extensions.appsyntax:
         executable: ${ROOT_DIR}
         includes:
             - include
+        remove:
+            framework: !include ${MOOSE_DIR}/framework/doc/remove.yml
+    MooseDocs.extensions.common:
+        shortcuts: !include ${MOOSE_DIR}/framework/doc/globals.yml
+    MooseDocs.extensions.acronym:
+        acronyms: !include ${MOOSE_DIR}/framework/doc/acronyms.yml
+    MooseDocs.extensions.sqa:
+        active: true
+        categories:
+            framework: !include ${MOOSE_DIR}/framework/doc/sqa_framework.yml
+            tmap: !include ${ROOT_DIR}/doc/sqa_tmap.yml
+        repos:
+            default: https://github.com/idaholab/TMAP8
+        reports: !include ${ROOT_DIR}/doc/sqa_reports.yml
+    MooseDocs.extensions.template:
+        active: true
