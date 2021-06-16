@@ -9,6 +9,13 @@
     cli_args = 'Executioner/dt=5 Mesh/nx=10 Outputs/file_base=ver-1a_test_out'
     requirement = 'The system shall be able to model species diffusion through a structure, originating from a depleting source enclosure.'
   []
+  [ver-1a_comp]
+    type = Exodiff
+    input = component-ver-1a.i
+    exodiff = component-ver-1a_out.e
+    cli_args = 'Executioner/dt=10 Executioner/scheme=implicit-euler'
+    detail = 'The system shall be able to model species diffusion through a structure, originating from a depleting source enclosure using component syntax.'
+  []
   [ver-1a_heavy]
     type = Exodiff
     input = ver-1a.i
@@ -19,7 +26,7 @@
   [ver-1a_heavy_csvdiff]
     type = CSVDiff
     input = ver-1a.i
-    should_execute = False  # this test relies on the output files from ver-1a_heavy, so it shouldn't be run twice
+    should_execute = False # this test relies on the output files from ver-1a_heavy, so it shouldn't be run twice
     csvdiff = ver-1a_csv.csv
     requirement = 'The system shall be able to model species diffusion through a structure, originating from a depleting source enclosure, with the fine mesh and timestep required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution.'
     heavy = true
