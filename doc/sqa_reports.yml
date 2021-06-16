@@ -21,7 +21,8 @@ Documents:
 
 Requirements:
     tmap:
+        working_dirs:
+            - ${ROOT_DIR}/doc/content
+            - ${MOOSE_DIR}/framework/doc/content
         directories:
             - ${ROOT_DIR}/test
-        log_default: WARNING
-        show_warning: false
