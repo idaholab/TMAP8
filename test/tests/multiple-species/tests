@@ -1,4 +1,6 @@
 [Tests]
+  design = 'DissociationFluxBC.md UnaryRecombinationBC.md BinaryRecombinationBC.md'
+  issues = '#13'
   [exo]
     type = Exodiff
     input = multiple-species.i
