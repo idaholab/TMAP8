@@ -1,20 +1,19 @@
 # EquilibriumBC
 
-!alert construction title=Undocumented Class
-The EquilibriumBC has not been documented. The content listed below should be used as a starting point for
-documenting the class, which includes the typical automatic documentation associated with a
-MooseObject; however, what is contained is ultimately determined by what is necessary to make the
-documentation clear for users.
-
 !syntax description /BCs/EquilibriumBC
 
 ## Overview
 
-!! Replace these lines with information regarding the EquilibriumBC object.
+This class strongly enforces the Dirichlet boundary condition
 
-## Example Input File Syntax
+\begin{equation}
+C_i = KP_i^p
+\end{equation}
 
-!! Describe and include an example of how to use the EquilibriumBC object.
+where $C_i$, represented by the `variable` parameter, is the concentration of
+specie $i$ in a diffusion structure, $P_i$ is the partial pressure of specie
+$i$ in the gas phase in the enclosure adjacent to the diffusion structure, $K$
+is a solubility constant, and $p$ is the exponent of the solution law.
 
 !syntax parameters /BCs/EquilibriumBC
 

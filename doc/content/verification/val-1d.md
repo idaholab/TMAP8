@@ -1,4 +1,14 @@
-# Trapping test
+# val-1d
+
+This reproduces the val-1d verification test from TMAP4. We examine two
+different regimes, one where diffusion is the rate-limiting step, and one where
+trapping is the rate-limiting step.
+
+## Diffusion-limited
+
+## Trapping-limited
+
+### Notes
 
 The trapping test features some oscillations in the solution for whatever
 reason. In order for the oscillations to not take over the simulation, it seems
