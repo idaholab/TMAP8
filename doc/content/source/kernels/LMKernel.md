@@ -42,8 +42,8 @@ u &\geq 0\\
 \lambda u &= 0
 \end{align}
 
-Examining [eq:conditions] it's clear that positive values of $\lambda$ (required
-by [eq:conditions]) will introduce a source in the primal equation. $\lambda$
+Examining [!eqref](eq:conditions) it's clear that positive values of $\lambda$ (required
+by [!eqref](eq:conditions)) will introduce a source in the primal equation. $\lambda$
 will "automatically" adjust itself such that $u$ never drops below zero.  When
 $u < \lambda$ the LM is no longer present in its own residual equation and we
 have a saddle point problem. However, by adding the strong form of the species

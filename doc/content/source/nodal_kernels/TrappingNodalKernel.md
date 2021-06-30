@@ -15,7 +15,7 @@ where $\alpha_t$ is the trapping rate coefficient, which has dimensions of
 concentration of empty trapping sites, and $C_s$ is the concentration of the
 mobile species.
 
-As outlined in [content/index.md#scaling] it is important to scale different
+As outlined in [index.md#scaling exact=True] it is important to scale different
 specie numerical concentrations to the same order of magnitude in order to have
 robust (non)linear solves. Unfortunately, incorporation of scaling tends to
 obfuscate residual-computing objects a bit, including
