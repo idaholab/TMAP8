@@ -35,12 +35,14 @@ equation will be a nonlinear complimentarity problem (NCP) function of the form
 
 This NCP function ensures the following conditions:
 
-\begin{align}
+\begin{equation}
+\begin{aligned}
 \label{eq:conditions}
 \lambda &\geq 0\\
 u &\geq 0\\
 \lambda u &= 0
-\end{align}
+\end{aligned}
+\end{equation}
 
 Examining [!eqref](eq:conditions) it's clear that positive values of $\lambda$ (required
 by [!eqref](eq:conditions)) will introduce a source in the primal equation. $\lambda$
