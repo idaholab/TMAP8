@@ -1,20 +1,20 @@
 # EnclosureSinkScalarKernel
 
-!alert construction title=Undocumented Class
-The EnclosureSinkScalarKernel has not been documented. The content listed below should be used as a starting point for
-documenting the class, which includes the typical automatic documentation associated with a
-MooseObject; however, what is contained is ultimately determined by what is necessary to make the
-documentation clear for users.
-
 !syntax description /ScalarKernels/EnclosureSinkScalarKernel
 
 ## Overview
 
-!! Replace these lines with information regarding the EnclosureSinkScalarKernel object.
+This object implements the residual
 
-## Example Input File Syntax
+\begin{equation}
+\frac{\Gamma A}{V} \zeta
+\end{equation}
 
-!! Describe and include an example of how to use the EnclosureSinkScalarKernel object.
+where $\Gamma$ is the flux of the specie exiting the enclosure and entering the
+structure, $A$ is the surface area of the structure contacting the enclosure,
+$V$ is the enclosure volume, and $\zeta$ is a conversion factor from
+concentration to pressure units. The units of the returned residual are
+pressure/time.
 
 !syntax parameters /ScalarKernels/EnclosureSinkScalarKernel
 

@@ -67,7 +67,7 @@ pressure_unit=1 # number of pressure units in a Pascal
 
 [Postprocessors]
   [flux]
-    type = SideFluxIntegral
+    type = SideDiffusiveFluxIntegral
     variable = u
     diffusivity = ${fparse 1.58e-4*exp(-308000/(8.314*temperature))*length_unit^2}
     boundary = 'left'

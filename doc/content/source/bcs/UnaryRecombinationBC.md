@@ -1,20 +1,17 @@
 # UnaryRecombinationBC
 
-!alert construction title=Undocumented Class
-The UnaryRecombinationBC has not been documented. The content listed below should be used as a starting point for
-documenting the class, which includes the typical automatic documentation associated with a
-MooseObject; however, what is contained is ultimately determined by what is necessary to make the
-documentation clear for users.
-
 !syntax description /BCs/UnaryRecombinationBC
 
 ## Overview
 
-!! Replace these lines with information regarding the UnaryRecombinationBC object.
+This class implements a weak form corresponding to
 
-## Example Input File Syntax
+\begin{equation}
+\int_{\Omega} \psi_i K_r u^2 d\Omega
+\end{equation}
 
-!! Describe and include an example of how to use the UnaryRecombinationBC object.
+where $K_r$ is the recombination coefficient specified with the `Kr` parameter and
+$u$ corresponds to the `variable` parameter.
 
 !syntax parameters /BCs/UnaryRecombinationBC
 

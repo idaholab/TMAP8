@@ -1,20 +1,19 @@
 # DissociationFluxBC
 
-!alert construction title=Undocumented Class
-The DissociationFluxBC has not been documented. The content listed below should be used as a starting point for
-documenting the class, which includes the typical automatic documentation associated with a
-MooseObject; however, what is contained is ultimately determined by what is necessary to make the
-documentation clear for users.
-
 !syntax description /BCs/DissociationFluxBC
 
 ## Overview
 
-!! Replace these lines with information regarding the DissociationFluxBC object.
+This class implements a weak form corresponding to
 
-## Example Input File Syntax
+\begin{equation}
+- \int_{\Omega} \psi_i K_d v d\Omega
+\end{equation}
 
-!! Describe and include an example of how to use the DissociationFluxBC object.
+where $K_d$ is a dissociation coefficient specified with the `Kd` parameter, and
+$v$ is the coupled variable specified with the `v` parameter that is
+dissociating at the boundary to create the species corresponding to the
+`variable` parameter.
 
 !syntax parameters /BCs/DissociationFluxBC
 

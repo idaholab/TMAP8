@@ -1,20 +1,19 @@
 # BinaryRecombinationBC
 
-!alert construction title=Undocumented Class
-The BinaryRecombinationBC has not been documented. The content listed below should be used as a starting point for
-documenting the class, which includes the typical automatic documentation associated with a
-MooseObject; however, what is contained is ultimately determined by what is necessary to make the
-documentation clear for users.
-
 !syntax description /BCs/BinaryRecombinationBC
 
 ## Overview
 
-!! Replace these lines with information regarding the BinaryRecombinationBC object.
+This class implements a weak form corresponding to
 
-## Example Input File Syntax
+\begin{equation}
+\int_{\Omega} \psi_i K_r uv d\Omega
+\end{equation}
 
-!! Describe and include an example of how to use the BinaryRecombinationBC object.
+where $K_r$ is the recombination coefficient specified with the `Kr` parameter,
+$u$ corresponds to `variable` and $v$ is a coupled variable specified by the `v`
+parameter. As the name states, this class is meant to model binary recombination
+reactions occuring at a boundary.
 
 !syntax parameters /BCs/BinaryRecombinationBC
 

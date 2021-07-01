@@ -1,14 +1,20 @@
 [Tests]
+  design = 'TrappingNodalKernel.md ReleasingNodalKernel.md'
+  issues = '#12'
   [diffusion_limited]
     type = Exodiff
     input = val-1d-diffusion.i
     exodiff = val-1d-diffusion_out.e
     cli_args = "Mesh/nx=20 Executioner/num_steps=300 Postprocessors/active='' Outputs/out/execute_on='final'"
+    requirement = 'The system shall be able to model a breakthrough problem where diffusion is the rate limiting process.'
+    verification = 'val-1d.md'
   []
   [trapping_limited]
     type = Exodiff
     input = val-1d-trapping.i
     exodiff = val-1d-trapping_out.e
     cli_args = 'Executioner/num_steps=10'
+    requirement = 'The system shall be able to model a breakthrough problem where trapping is the rate limiting process.'
+    verification = 'val-1d.md'
   []
 []
