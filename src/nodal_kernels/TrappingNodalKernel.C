@@ -14,7 +14,9 @@ InputParameters
 TrappingNodalKernel::validParams()
 {
   InputParameters params = NodalKernel::validParams();
-  params.addRequiredParam<Real>("alpha_t", "The trapping rate coefficient");
+  params.addRequiredParam<Real>("alpha_t",
+                                "The trapping rate coefficient. This has units of 1/time (e.g. no "
+                                "number densities are involved)");
   params.addRequiredParam<Real>("N", "The atomic number density of the host material");
   params.addRequiredParam<Real>("Ct0",
                                 "The fraction of host sites that can contribute to trapping");

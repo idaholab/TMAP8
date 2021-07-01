@@ -1,20 +1,23 @@
 # ReleasingNodalKernel
 
-!alert construction title=Undocumented Class
-The ReleasingNodalKernel has not been documented. The content listed below should be used as a starting point for
-documenting the class, which includes the typical automatic documentation associated with a
-MooseObject; however, what is contained is ultimately determined by what is necessary to make the
-documentation clear for users.
-
 !syntax description /NodalKernels/ReleasingNodalKernel
 
 ## Overview
 
-!! Replace these lines with information regarding the ReleasingNodalKernel object.
+This object implements a residual of the form
 
-## Example Input File Syntax
+\begin{equation}
+\alpha_r C_t
+\end{equation}
 
-!! Describe and include an example of how to use the ReleasingNodalKernel object.
+where $C_t$ is the concentration of trapped species, and where $\alpha_r$ is the releasing rate
+coefficient, which may be a function of temperature as shown below
+
+\begin{equation}
+\alpha_r = \alpha_{r0} \exp(-\epsilon / T)
+\end{equation}
+
+where both $\epsilon$, the trap energy, and $T$ are expressed in Kelvin.
 
 !syntax parameters /NodalKernels/ReleasingNodalKernel
 

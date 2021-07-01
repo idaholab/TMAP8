@@ -37,6 +37,9 @@ PressureReleaseFluxIntegral::PressureReleaseFluxIntegral(const InputParameters &
     _concentration_to_pressure_conversion_factor(
         getParam<Real>("concentration_to_pressure_conversion_factor"))
 {
+  if (_mesh.dimension() != 1)
+    mooseError("The PressureReleaseFluxIntegral object is currently coded with the assumption that "
+               "structures are one-dimensional and enclosures are 0-dimensional.");
 }
 
 Real

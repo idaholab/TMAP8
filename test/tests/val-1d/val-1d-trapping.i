@@ -26,6 +26,7 @@ epsilon=10000
   [empty_sites][]
   [scaled_empty_sites][]
   [trapped_sites][]
+  [total_sites][]
 []
 
 [AuxKernels]
@@ -48,6 +49,12 @@ epsilon=10000
     type = NormalizationAux
     normal_factor = ${trap_per_free}
     source_variable = trapped
+  []
+  [total_sites]
+    variable = total_sites
+    type = ParsedAux
+    function = 'trapped_sites + empty_sites'
+    args = 'trapped_sites empty_sites'
   []
 []
 
@@ -113,7 +120,7 @@ epsilon=10000
 
 [Postprocessors]
   [outflux]
-    type = SideFluxAverage
+    type = SideDiffusiveFluxAverage
     boundary = 'right'
     diffusivity = 1
     variable = mobile

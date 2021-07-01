@@ -1,8 +1,11 @@
 [Tests]
+  design = 'EnclosureSinkScalarKernel.md PressureReleaseFluxIntegral.md EquilibriumBC.md'
+  issues = '#12'
   [exo]
     type = Exodiff
     input = val-1a.i
     exodiff = val-1a_out.e
     cli_args = 'Executioner/dt=10 Executioner/scheme=implicit-euler'
+    requirement = 'The system shall be able to model species, originating from a depleting source enclosure, diffusion through a structure.'
   []
 []

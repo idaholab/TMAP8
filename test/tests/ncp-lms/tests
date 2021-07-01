@@ -1,4 +1,6 @@
 [Tests]
+  design = 'LowerBoundNodalKernel.md'
+  issues = '#14'
   [lm_ncp]
     input = ncp-lm.i
     type = Exodiff
@@ -6,26 +8,6 @@
     requirement = 'The system shall be able to solve a positively constrained system of ODEs using NCP and have a non-singular matrix'
     absent_out = '[1-9]+[0-9]* of 22 singular values'
     expect_out = '0 of 22 singular values'
-    custom_cmp = nodal.cmp
-  []
-  [interpolated_lm_ncp]
-    input = interpolated-ncp-lm.i
-    type = Exodiff
-    exodiff = interpolated-ncp-lm_out.e
-    requirement = 'The system shall be able to solve a positively constrained PDE using elemental NCP and have a non-singular matrix'
-    absent_out = '[1-9]+[0-9]* of 21 singular values'
-    expect_out = '0 of 21 singular values'
-    cli_args = 'Mesh/elem_type=EDGE2 Variables/u/order=FIRST Variables/lm/family=MONOMIAL Variables/lm/order=CONSTANT nx=10 num_steps=10 -pc_type svd -pc_svd_monitor'
-    custom_cmp = elemental.cmp
-  []
-  [diagonal_lm_ncp]
-    input = diagonal-ncp-lm.i
-    type = Exodiff
-    exodiff = diagonal-ncp-lm_out.e
-    requirement = 'The system shall be able to solve a positively constrained PDE using elemental NCP, have diagonal components for the LM variable because of PSPG-type stabilization, and have a non-singular matrix'
-    absent_out = '[1-9]+[0-9]* of 32 singular values'
-    expect_out = '0 of 32 singular values'
-    cli_args = "Postprocessors/active='' nx=10 num_steps=5 -pc_type svd -pc_svd_monitor"
     custom_cmp = nodal.cmp
   []
   [diagonal_lm_ncp_nodal_enforcement]
@@ -37,14 +19,6 @@
     expect_out = '0 of 32 singular values'
     cli_args = 'nx=10 num_steps=5 -pc_type svd -pc_svd_monitor'
     custom_cmp = nodal.cmp
-  []
-  [diagonal_lm_ncp_no_amg]
-    input = diagonal-ncp-lm.i
-    type = RunException
-    prereq = diagonal_lm_ncp
-    cli_args = '-pc_type hypre -pc_hypre_type boomeramg -ksp_converged_reason'
-    expect_err = 'Linear solve did not converge due to DIVERGED_ITS'
-    requirement = 'Elemental enforcement of the positivity constraint shall not be solvable using algebraic multi-grid'
   []
   [diagonal_lm_ncp_nodal_amg]
     input = diagonal-ncp-lm-nodal-enforcement.i
