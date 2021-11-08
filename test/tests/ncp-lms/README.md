@@ -145,6 +145,27 @@ Postprocessor Values:
 |   1.000000e+01 |   5.800000e+01 |   3.400000e+01 |
 +----------------+----------------+----------------+
 
+EDIT 11-07-2021 (cticenhour, see issue #16)
+Removal of PETSc option `-snes_max_linear_solve_fail 0` from input leads to the
+following revised postprocessor output, but fixes failing threaded testing (failed
+to converge by 5th timestep):
+
++----------------+----------------+----------------+
+| time           | active_lm      | violations     |
++----------------+----------------+----------------+
+|   0.000000e+00 |   0.000000e+00 |   0.000000e+00 |
+|   1.000000e+00 |   3.000000e+00 |   0.000000e+00 |
+|   2.000000e+00 |   1.200000e+01 |   9.000000e+00 |
+|   3.000000e+00 |   2.100000e+01 |   1.800000e+01 |
+|   4.000000e+00 |   3.100000e+01 |   3.000000e+01 |
+|   5.000000e+00 |   3.900000e+01 |   3.700000e+01 |
+|   6.000000e+00 |   4.600000e+01 |   4.100000e+01 |
+|   7.000000e+00 |   5.100000e+01 |   4.600000e+01 |
+|   8.000000e+00 |   5.400000e+01 |   5.100000e+01 |
+|   9.000000e+00 |   5.600000e+01 |   5.700000e+01 |
+|   1.000000e+01 |   5.800000e+01 |   4.900000e+01 |
++----------------+----------------+----------------+
+
 ## diagonal-ncp-lm-nodal-enforcement-nodal-forces.i I
 
 - Second order primal, second order LM
