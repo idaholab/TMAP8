@@ -156,8 +156,8 @@ dt=1
   dt = ${dt}
   dtmin = ${dt}
   solve_type = NEWTON
-  petsc_options_iname = '-ksp_max_it -pc_factor_levels'
-  petsc_options_value = '30          16'
+  petsc_options_iname = '-snes_max_linear_solve_fail -ksp_max_it -pc_factor_levels -ksp_gmres_restart'
+  petsc_options_value = '0                           60          16                60'
 []
 
 [Outputs]
