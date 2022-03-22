@@ -1,12 +1,93 @@
 # val-1d
 
-This reproduces the val-1d verification test from TMAP4. We examine two
-different regimes, one where diffusion is the rate-limiting step, and one where
-trapping is the rate-limiting step.
+# Permeation Problem with Trapping
+
+## Test Description
+
+This validation problem is taken from [!cite](longhurst1992verification). It models permeation through a membrane with a constant source in which traps are operative. The breakthrough time may have one of two limiting values depending on whether the trapping is in the effective diffusivity or strong-trapping regime. A trapping parameter is defined by:
+
+\begin{equation}
+  \label{eqn:zeta}
+    \zeta = \frac{\lambda^2 \nu}{\rho D_o} exp \left( \frac{E_d - \epsilon}{kT} \right) + \frac{c}{\rho}
+\end{equation}
+
+where
+
+$\lambda$ = lattice parameter
+
+$\nu$ = Debye frequency ($\approx$ $10^{13} \; s^{-1}$)
+
+$\rho$ = trapping site fraction
+
+$D_o$ = diffusivity pre-exponential
+
+$E_d$ = diffusion activation energy
+
+$\epsilon$ = trap energy
+
+$k$ = Boltzmann's constant
+
+$T$ = temperature
+
+$c$ = dissolved gas atom fraction
+
+The discriminant for which regime is dominant is the ratio of $\zeta$ to c/$\rho$. If $\zeta$ > c/$\rho$ then the effective diffusivity regime applies, and the permeation transient is identical to the standard diffusion transient but with the diffusivity replaced by an effective diffusivity.
+
+\begin{equation}
+\label{eqn:Deff}
+    D_eff = \frac{D}{1 + \frac{1}{\zeta}}
+\end{equation}
+
+In this limit, the breakthrough time, defined as the intersection of the steepest tangent to the diffusion transient with the time axis, will be
+
+\begin{equation}
+\label{eqn:tau_be}
+    \tau_{b_e} = \frac{l^2}{2 \; \pi^2 \; D_eff}
+\end{equation}
+
+where $l$ is the thickness of the slab and D is the diffusivity of the gas through the material. The permeation transient is then given by
+
+
+\begin{equation}
+\label{eqn:Jp}
+    J_p = \frac{c_o D}{l} \Bigg\{ 1 + 2 \sum_{m=1}^{\infty} \left[ (-1)^m \exp \left( -m^2 \frac{t}{2 \; \tau_{b_e}} \right) \right] \Bigg\}
+\end{equation}
+
+
+[!cite](longhurst2005verification) where $\tau_{b_e}$ is defined in [eqn:tau_be]
+
+In the deep-trapping limit, $\zeta$ < c/$\rho$, and no permeation occurs until essentially all the traps have been filled. Then permeation rapidly turns on to its state value. The breakthrough time is given by
+
+\begin{equation}
+\label{eqn:tau_bd}
+    \tau_{b_d} = \frac{l^2 \rho}{2 \; c_o \; D}
+\end{equation}
+
+where $c_o$ is the steady dissolved gas concentration at the upstream (x = 0) side.
+
+Using TMAP8 we examine these two different regimes, one where diffusion is the rate-limiting step, and one where trapping is the rate-limiting step. The upstream-side starting concentration of 0.0001 atom fraction, a diffusivity of 1 $m^2$/s, a trapping site fraction of 0.1, $\lambda^2 = 10^{-15} \; m^2$, and a temperature of 1000 K is considered.
+
 
 ## Diffusion-limited
 
+For the effective diffusivity limit, we selected $\epsilon/k = 100 K$ to give $\zeta = 90.48 c/\rho$. The comparison results are presented in [val-1d_comparison_diffusion].
+
+!media figures/val-1d_comparison_diffusion.png
+    style=width:50%;margin-bottom:2%
+    id=val-1d_comparison_diffusion
+    caption=Permeation history of a slab subject to effective-diffusivity limit trapping.
+
 ## Trapping-limited
+
+For the deep trapping limit we took $\epsilon/k = 10000 K$ to give $\zeta = 0.04533 c/\rho$.  The comparison results are presented in [val-1d_comparison_trapping].
+
+!media figures/val-1d_comparison_trapping.png
+    style=width:50%;margin-bottom:2%
+    id=val-1d_comparison_trapping
+    caption=Permeation transient in a slab subject to strong trapping.
+
+
+
 
 ### Notes
 
@@ -23,3 +104,5 @@ summarized below:
 
 The oscillations in the permeation graph go away with increasing fineness in the
 mesh and in `dt`.
+
+!bibtex bibliography

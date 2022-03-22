@@ -27,3 +27,9 @@ effectively changing the concentration of the trapped specie from being measured
 in #/volume to k#/volume where 'k' indicates kilo. After this transformation,
 the numerical concentrations of the trapped and mobile species are on the same
 order of magnitude.
+
+## [Validation](verification/val-list.md)
+
+Several problems originally developed for the TMAP4 code have been used for the
+validation of the TMAP8 code. These validation cases can be found
+[here](verification/val-list.md).
