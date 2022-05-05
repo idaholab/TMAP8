@@ -10,6 +10,13 @@
   [../]
 []
 
+[AuxVariables]
+  [./flux_x]
+    order = FIRST
+    family = MONOMIAL
+  [../]
+[]
+
 [Kernels]
   [./diff]
     type = Diffusion
@@ -18,6 +25,16 @@
   [./time]
     type = TimeDerivative
     variable = u
+  [../]
+[]
+
+[AuxKernels]
+  [./flux_x]
+    type = DiffusionFluxAux
+    diffusivity = ${fparse 1.0}
+    variable = flux_x
+    diffusion_variable = u
+    component = x
   [../]
 []
 
@@ -48,9 +65,14 @@
 []
 
 [Postprocessors]
-  [point]
+  [conc_point1]
     type = PointValue
     variable = u
+    point = '.2 0 0'
+  []
+  [flux_point2]
+    type = PointValue
+    variable = flux_x
     point = '.2 0 0'
   []
 []
