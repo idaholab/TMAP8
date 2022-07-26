@@ -55,7 +55,7 @@ To compile TMAP8, first make sure that the conda MOOSE environment is activated
 (*and be sure to do this any time that a new Terminal window is opened*):
 
 ```bash
-conda activate moose
+mamba activate moose
 ```
 
 Then navigate to the TMAP8 clone directory and download the MOOSE submodule:
