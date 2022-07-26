@@ -1,35 +1,61 @@
 !config navigation breadcrumbs=False scrollspy=False
 
-# TMAP8
+# TMAP8 class=center style=font-weight:600;font-size:350%
 
-TMAP8 is a MOOSE-based implementation of the Tritium Migration Analysis
-Program. It performs system-level mass and thermal transport calculations
-related to tritium migration.
+# Tritium Migration Analysis Program, Version 8 class=center style=font-weight:200;font-size:200%
 
-## Scaling id=scaling
+!style halign=center
+TMAP8 is an application for performing system-level mass and thermal transport
+calculations related to tritium migration. It is based on the
+[MOOSE framework](https://mooseframework.inl.gov), and builds on the framework
+and modules for many of its capabilities.
 
-Dimensions in TMAP simulations can have dramatically different scales,
-e.g. number densities can be of order Avogadro's number while length and time
-scales are closer to unity when using SI units. Morever, multiple species,
-whether different chemical species or the same chemical species in different
-phases (e.g. solute vs. trapped), can have significantly different concentration
-levels. In order to have robust nonlinear and linear solves, we often have to
-perform scaling operations to bring different quantities closer to order unity.
+!row!
+!col! small=12 medium=4 large=4 icon=get_app
+## [Getting Started](getting_started/installation.md) class=center style=font-weight:200;font-size:150%;
 
-One example of scaling is exemplified by the `trap_per_free` parameter that is
-present in the [TrappingNodalKernel.md] object (as well as other objects in
-TMAP8). Trapping concentrations may be larger than solute concentrations for a
-given chemical specie. However, for a good multiphysics multivariable solve, we
-want the numerical concentrations of the two species to be about the same. If
-for instance, the concentration of the trapped specie is roughly 1000 times
-larger than the mobile specie, we can specify `trapped_per_free = 1000`. This is
-effectively changing the concentration of the trapped specie from being measured
-in #/volume to k#/volume where 'k' indicates kilo. After this transformation,
-the numerical concentrations of the trapped and mobile species are on the same
-order of magnitude.
+!style halign=center
+Quickly learn how to obtain the TMAP8 source code, compile an executable, and
+run simulations with these instructions.
+!col-end!
 
-## [Validation](verification/val-list.md)
+!col! small=12 medium=4 large=4 icon=settings
 
+## [Code Reference](syntax/index.md) class=center style=font-weight:200;font-size:150%;
+
+!style halign=center
+TMAP8 provides capabilities that can be applied to a wide variety of problems.
+The Code Reference provides detailed documentation of specific code features.
+General user notes on TMAP8 can also be found [here](getting_started/user_notes.md).
+!col-end!
+
+!col! small=12 medium=4 large=4 icon=assessment
+## [Validation](verification/val-list.md) class=center style=font-weight:200;font-size:150%;
+
+!style halign=center
 Several problems originally developed for the TMAP4 code have been used for the
-validation of the TMAP8 code. These validation cases can be found
-[here](verification/val-list.md).
+validation of TMAP8. These validation cases can be found here.
+!col-end!
+!row-end!
+
+## TMAP8 is built on MOOSE style=clear:both;
+
+!style halign=left
+TMAP8 is based on [MOOSE]. It is an extremely flexible environment that permits
+the solution of coupled physics problems of varying size and dimensionality. These
+can be solved using computer hardware appropriate for the model size, ranging from
+laptops and workstations to large high performance computers.
+
+!media large_media/framework/inl_blue.png style=float:right;width:30%;margin-left:30px;
+
+Code reliability is a central principle in code development, and this project
+employs a well-defined development and testing strategy.  Code changes are only
+merged into the repository after both a manual code review and the automated
+regression test system have been completed.  The testing process and status of
+TMAP8 is available at [civet.inl.gov](https://civet.inl.gov/repo/530/).
+
+TMAP8 and MOOSE are developed at Idaho National Laboratory by a team of
+computer scientists and engineers and is supported by various funding agencies,
+including the [United States Department of Energy](http://energy.gov).  Development
+of these codes is ongoing at [INL](https://www.inl.gov) and by collaborators
+throughout the world.

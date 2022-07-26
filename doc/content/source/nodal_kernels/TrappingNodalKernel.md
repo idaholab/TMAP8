@@ -15,10 +15,10 @@ where $\alpha_t$ is the trapping rate coefficient, which has dimensions of
 concentration of empty trapping sites, and $C_s$ is the concentration of the
 mobile species.
 
-As outlined in [index.md#scaling exact=True], it is important to scale different
-specie numerical concentrations to the same order of magnitude in order to have
-robust (non)linear solves. Unfortunately, incorporation of scaling tends to
-obfuscate residual-computing objects a bit, including
+As outlined in [getting_started/user_notes.md#scaling exact=True], it is important
+to scale different specie numerical concentrations to the same order of magnitude
+in order to have robust (non)linear solves. Unfortunately, incorporation of scaling
+tends to obfuscate residual-computing objects a bit, including
 `TrappingNodalKernel`. Hopefully we can make things clear here, however. Let's
 imagine that the trapped concentration is 1000 times greater than the mobile
 concentration. We can bring the trapped concentration to the same numerical
