@@ -1,7 +1,8 @@
 # Complete TMAP8 Input File Syntax
 
 Listed below are all the reference pages for both TMAP8 specific code and the
-MOOSE code that can be used in the TMAP8 input file.
+MOOSE code that can be used in the TMAP8 input file. To limit this output to
+only available TMAP8 objects, please see [this page](tmap_only.md).
 
 Click the blue links in the class names shown below to view the detailed
 description, the class purpose, theoretical models, input file examples, and
