@@ -31,7 +31,7 @@ $T$ = temperature
 
 $c$ = dissolved gas atom fraction
 
-The discriminant for which regime is dominant is the ratio of $\zeta$ to c/$\rho$. If $\zeta$ > c/$\rho$ then the effective diffusivity regime applies, and the permeation transient is identical to the standard diffusion transient but with the diffusivity replaced by an effective diffusivity.
+The discriminant for which regime is dominant is the ratio of $\zeta$ to c/$\rho$. If $\zeta$ $\gg$ c/$\rho$ then the effective diffusivity regime applies, and the permeation transient is identical to the standard diffusion transient but with the diffusivity replaced by an effective diffusivity.
 
 \begin{equation}
 \label{eqn:Deff}
@@ -56,7 +56,7 @@ where $l$ is the thickness of the slab and D is the diffusivity of the gas throu
 
 [!cite](longhurst2005verification) where $\tau_{b_e}$ is defined in [eqn:tau_be]
 
-In the deep-trapping limit, $\zeta$ < c/$\rho$, and no permeation occurs until essentially all the traps have been filled. Then permeation rapidly turns on to its state value. The breakthrough time is given by
+In the deep-trapping limit, $\zeta$ $\approx$ c/$\rho$, and no permeation occurs until essentially all the traps have been filled. Then permeation rapidly turns on to its state value. The breakthrough time is given by
 
 \begin{equation}
 \label{eqn:tau_bd}
@@ -70,7 +70,7 @@ Using TMAP8 we examine these two different regimes, one where diffusion is the r
 
 ## Diffusion-limited
 
-For the effective diffusivity limit, we selected $\epsilon/k = 100 K$ to give $\zeta = 90.48 c/\rho$. The comparison results are presented in [val-1d_comparison_diffusion].
+For the effective diffusivity limit, we selected $\epsilon/k = 100 K$ to give $\zeta = 91.47 c/\rho$. The comparison results are presented in [val-1d_comparison_diffusion].
 
 !media figures/val-1d_comparison_diffusion.png
     style=width:50%;margin-bottom:2%
@@ -79,7 +79,7 @@ For the effective diffusivity limit, we selected $\epsilon/k = 100 K$ to give $\
 
 ## Trapping-limited
 
-For the deep trapping limit we took $\epsilon/k = 10000 K$ to give $\zeta = 0.04533 c/\rho$.  The comparison results are presented in [val-1d_comparison_trapping].
+For the deep trapping limit we took $\epsilon/k = 10000 K$ to give $\zeta = 1.00454 c/\rho$.  The comparison results are presented in [val-1d_comparison_trapping].
 
 !media figures/val-1d_comparison_trapping.png
     style=width:50%;margin-bottom:2%

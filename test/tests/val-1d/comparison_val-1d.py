@@ -36,7 +36,7 @@ epsilon = k * epsilon_k_ratio #epsilon: trap energy
 c = 0.0001              # dissolved gas atom fraction
 zeta = ((lambdaa**2) * nu * np.exp((Ed - epsilon) / (k * T)) / (rho * D_o)) + (c / rho)
 
-D = D_o * np.exp((epsilon - Ed) / (k * T))                 # diffusivity (m^2/s)
+D = 1.0                 # diffusivity (m^2/s)
 D_eff = D / (1 + (1/zeta))   # Effective diffusivity (m^2/s)
 
 l = 1                   # slab thickness (m)
