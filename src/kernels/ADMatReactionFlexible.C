@@ -22,7 +22,8 @@ ADMatReactionFlexible::validParams()
   params.addCoupledVar("vs",
                        "Set this to make vs a list of coupled variables, otherwise it will use the "
                        "kernel's nonlinear variable for v");
-  params.addClassDescription("Kernel to add -coeff*L*vs, where coeff=coefficient, L=reaction rate, vs=variables");
+  params.addClassDescription(
+      "Kernel to add -coeff*L*vs, where coeff=coefficient, L=reaction rate, vs=variables");
   params.addParam<MaterialPropertyName>("mob_name", "L", "The reaction rate used with the kernel");
   params.addParam<Real>("coeff", 1., "A coefficient for multiplying the reaction term");
   return params;
@@ -42,18 +43,17 @@ ADReal
 ADMatReactionFlexible::computeQpResidual()
 {
 
-  if (_num_vs == 0 )
+  if (_num_vs == 0)
+  {
+    return -_coeff * _mob[_qp] * _test[_i][_qp];
+  }
+  else
+  {
+    Real prod_vs = 1.0;
+    for (unsigned int b = 0; b < _num_vs; ++b)
     {
-      return -_coeff * _mob[_qp] * _test[_i][_qp];
+      prod_vs *= (*_vs[b])[_qp];
     }
-    else
-    {
-      Real prod_vs = 1.0;
-      for (unsigned int b = 0; b < _num_vs; ++b)
-      {
-        prod_vs *= (*_vs[b])[_qp];
-      }
-      return -_coeff * _mob[_qp] * _test[_i][_qp] * prod_vs;
-    }
-
+    return -_coeff * _mob[_qp] * _test[_i][_qp] * prod_vs;
+  }
 }

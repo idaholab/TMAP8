@@ -31,8 +31,8 @@ protected:
    * (For constrained Allen-Cahn problems, v = lambda
    * where lambda is the Lagrange multiplier)
    */
-   const unsigned int _num_vs;
-   const std::vector<const VariableValue *> _vs;
+  const unsigned int _num_vs;
+  const std::vector<const VariableValue *> _vs;
   // std::vector<const ADVariableValue &> _vs;
   // const ADVariableValue & _v;
 
