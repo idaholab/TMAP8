@@ -1,0 +1,10 @@
+[Tests]
+  [./ad_mat_reaction_flexible]
+    type = 'Exodiff'
+    input = 'ad_mat_reaction_flexible_test.i'
+    exodiff = 'ad_mat_reaction_flexible_test_out.e'
+    issues = '#23'
+    design = '/ADMatReactionFlexible.md'
+    requirement = 'The system shall compute the reaction contribution in the material.'
+  [../]
+[]
