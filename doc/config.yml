@@ -1,6 +1,8 @@
 Content:
     - ${ROOT_DIR}/doc/content
     - ${MOOSE_DIR}/framework/doc/content
+    - ${MOOSE_DIR}/modules/heat_conduction/doc/content
+    - ${MOOSE_DIR}/modules/ray_tracing/doc/content
 Renderer:
     type: MooseDocs.base.MaterializeRenderer
 Extensions:
@@ -15,7 +17,7 @@ Extensions:
             Documentation:
               TMAP8-only Syntax: syntax/tmap_only.md
               Complete Code Syntax: syntax/index.md
-            Software Quality: sqa/index.md
+            Software Quality: /sqa/index.md
     MooseDocs.extensions.appsyntax:
         executable: ${ROOT_DIR}
         includes:
@@ -31,6 +33,8 @@ Extensions:
         categories:
             framework: !include ${MOOSE_DIR}/framework/doc/sqa_framework.yml
             tmap: !include ${ROOT_DIR}/doc/sqa_tmap.yml
+            heat_conduction: !include ${MOOSE_DIR}/modules/heat_conduction/doc/sqa_heat_conduction.yml
+            ray_tracing: !include ${MOOSE_DIR}/modules/ray_tracing/doc/sqa_ray_tracing.yml
         repos:
             default: https://github.com/idaholab/TMAP8
         reports: !include ${ROOT_DIR}/doc/sqa_reports.yml
