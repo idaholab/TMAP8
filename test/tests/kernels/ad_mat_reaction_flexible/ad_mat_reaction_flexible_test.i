@@ -6,38 +6,38 @@
 []
 
 [Variables]
-  [./c1]
+  [./c_a]
   [../]
-  [./c2]
+  [./c_b]
   [../]
 []
 
 [ICs]
-  [c1_IC]
+  [c_a_IC]
     type = ConstantIC
-    variable = c1
+    variable = c_a
     value = 1
   []
-  [c2_IC]
+  [c_b_IC]
     type = ConstantIC
-    variable = c2
+    variable = c_b
     value = 1
   []
 []
 
 [Kernels]
-  [./timeDerivative_c1]
+  [./timeDerivative_c_a]
     type     = ADTimeDerivative
-    variable = c1
+    variable = c_a
   [../]
-  [./timeDerivative_c2]
+  [./timeDerivative_c_b]
     type     = TimeDerivative
-    variable = c2
+    variable = c_b
   [../]
   [./MatReaction]
     type     = ADMatReactionFlexible
-    variable = c2
-    vs = 'c1'
+    variable = c_b
+    vs = 'c_a'
     coeff = 0.5
     mob_name = K
   [../]
@@ -52,15 +52,15 @@
 []
 
 [BCs]
-  [./c1_neumann] # No flux on the sides
+  [./c_a_neumann] # No flux on the sides
     type = NeumannBC
-    variable = c1
+    variable = c_a
     boundary = 'left right bottom top'
     value = 0
   [../]
-  [./c2_neumann] # No flux on the sides
+  [./c_b_neumann] # No flux on the sides
     type = NeumannBC
-    variable = c2
+    variable = c_b
     boundary = 'left right bottom top'
     value = 0
   [../]
