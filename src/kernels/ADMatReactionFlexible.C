@@ -24,8 +24,12 @@ ADMatReactionFlexible::validParams()
                        "kernel's nonlinear variable for v");
   params.addClassDescription(
       "Kernel to add -coeff*L*vs, where coeff=coefficient, L=reaction rate, vs=variables");
-  params.addParam<MaterialPropertyName>("reaction_rate_name", "K", "The reaction rate used with the kernel");
-  params.addParam<Real>("coeff", 1., "A coefficient for multiplying the reaction term. It can be used to include the stoichiometry of a reaction for specific species.");
+  params.addParam<MaterialPropertyName>(
+      "reaction_rate_name", "K", "The reaction rate used with the kernel");
+  params.addParam<Real>("coeff",
+                        1.,
+                        "A coefficient for multiplying the reaction term. It can be used to "
+                        "include the stoichiometry of a reaction for specific species.");
   return params;
 }
 
