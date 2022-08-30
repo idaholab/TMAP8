@@ -13,7 +13,7 @@
 
 /**
  * This kernel adds to the residual a contribution of \f$ - coeff*L*vs \f$ where
- * coeff is a simple coefficient, \f$ L \f$ is a material property and \f$ vs \f$
+ * coeff is a simple coefficient, \f$ K \f$ is a material property and \f$ vs \f$
  * is the multiplication of several variables (nonlinear or coupled).
  */
 class ADMatReactionFlexible : public ADKernel

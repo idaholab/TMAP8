@@ -23,7 +23,7 @@ ADMatReactionFlexible::validParams()
                        "Set this to make vs a list of coupled variables, otherwise it will use the "
                        "kernel's nonlinear variable for v");
   params.addClassDescription(
-      "Kernel to add -coeff*L*vs, where coeff=coefficient, L=reaction rate, vs=variables");
+      "Kernel to add -coeff*K*vs, where coeff=coefficient, K=reaction rate, vs=variables product");
   params.addParam<MaterialPropertyName>(
       "reaction_rate_name", "K", "The reaction rate used with the kernel");
   params.addParam<Real>("coeff",
