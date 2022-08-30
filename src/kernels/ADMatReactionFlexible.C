@@ -46,9 +46,7 @@ ADReal
 ADMatReactionFlexible::computeQpResidual()
 {
   if (_num_vs == 0)
-  {
     return -_coeff * _reaction_rate[_qp] * _test[_i][_qp];
-  }
   else
   {
     Real prod_vs = 1.0;

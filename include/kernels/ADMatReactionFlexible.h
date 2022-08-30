@@ -37,6 +37,10 @@ protected:
   /// Reaction rate
   const ADMaterialProperty<Real> & _reaction_rate;
 
-  /// An optional input-file supplied coefficient
+  /**
+   * An optional input-file supplied coefficient for multiplying the reaction
+   * term. It can be used to include the stoichiometry of a reaction for specific
+   * species.
+   */
   const Real _coeff;
 };
