@@ -24,7 +24,7 @@ public:
   ADMatReactionFlexible(const InputParameters & parameters);
 
 protected:
-  virtual ADReal computeQpResidual();
+  virtual ADReal computeQpResidual() override;
 
   /**
    * Kernel variable (can be nonlinear or coupled variable)
@@ -33,11 +33,9 @@ protected:
    */
   const unsigned int _num_vs;
   const std::vector<const VariableValue *> _vs;
-  // std::vector<const ADVariableValue &> _vs;
-  // const ADVariableValue & _v;
 
   /// Reaction rate
-  const ADMaterialProperty<Real> & _mob;
+  const ADMaterialProperty<Real> & _reaction_rate;
 
   /// An optional input-file supplied coefficient
   const Real _coeff;

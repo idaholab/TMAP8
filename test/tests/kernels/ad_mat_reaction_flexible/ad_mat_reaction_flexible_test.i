@@ -6,10 +6,10 @@
 []
 
 [Variables]
-  [./c_a]
-  [../]
-  [./c_b]
-  [../]
+  [c_a]
+  []
+  [c_b]
+  []
 []
 
 [ICs]
@@ -26,44 +26,44 @@
 []
 
 [Kernels]
-  [./timeDerivative_c_a]
+  [timeDerivative_c_a]
     type     = ADTimeDerivative
     variable = c_a
-  [../]
-  [./timeDerivative_c_b]
+  []
+  [timeDerivative_c_b]
     type     = TimeDerivative
     variable = c_b
-  [../]
-  [./MatReaction]
+  []
+  [MatReaction]
     type     = ADMatReactionFlexible
     variable = c_b
     vs = 'c_a'
     coeff = 0.5
-    mob_name = K
-  [../]
+    reaction_rate_name = K
+  []
 []
 
 [Materials]
-  [./K]
+  [K]
     type = ADParsedMaterial
     f_name = 'K'
     function = '10'
-  [../]
+  []
 []
 
 [BCs]
-  [./c_a_neumann] # No flux on the sides
+  [c_a_neumann] # No flux on the sides
     type = NeumannBC
     variable = c_a
     boundary = 'left right bottom top'
     value = 0
-  [../]
-  [./c_b_neumann] # No flux on the sides
+  []
+  [c_b_neumann] # No flux on the sides
     type = NeumannBC
     variable = c_b
     boundary = 'left right bottom top'
     value = 0
-  [../]
+  []
 []
 
 [Executioner]
@@ -71,10 +71,11 @@
   scheme               = bdf2
   nl_rel_tol           = 1e-10
 
-  solve_type = 'PJFNK'
+  solve_type = 'NEWTON'
 
-  petsc_options_iname  = '-pc_factor_levels -pc_factor_mat_ordering_type'
-  petsc_options_value  = '20 rcm'
+  petsc_options = '-snes_ksp_ew'
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = 'lu'
 
   start_time      = 0.0
   end_time        = 1.
