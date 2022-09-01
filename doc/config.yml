@@ -17,6 +17,7 @@ Extensions:
             Documentation:
               TMAP8-only Syntax: syntax/tmap_only.md
               Complete Code Syntax: syntax/index.md
+              TMAP8 Tutorial Slides: tutorial/index.md
             Software Quality: /sqa/index.md
     MooseDocs.extensions.appsyntax:
         executable: ${ROOT_DIR}
