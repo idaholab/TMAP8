@@ -1,8 +1,8 @@
-# val-1b
+# ver-1b
 
 # Diffusion Problem with Constant Source Boundary Condition
 
-This validation problem is taken from [!cite](longhurst1992verification). Diffusion of tritium through a semi-infinite SiC layer is modeled with a constant
+This verification problem is taken from [!cite](longhurst1992verification). Diffusion of tritium through a semi-infinite SiC layer is modeled with a constant
 source located on one boundary. No solubility or traping is included. The
 concentration as a function of time and position is given by:
 
@@ -11,25 +11,25 @@ C = C_o \; erfc \left(\frac{x}{2\sqrt{Dt}}\right)
 \end{equation}
 
 Comparison of the TMAP8 results and the analytical solution is shown in
-[val-1b_comparison_time] as a function of time at
+[ver-1b_comparison_time] as a function of time at
 x = 0.2 mm. For simplicity, both the diffusion coefficient and the initial
 concentration were set to unity. The TMAP8 code predictions match very well with
 the analytical solution.
 
-!media figures/val-1b_comparison_time.png
+!media figures/ver-1b_comparison_time.png
     style=width:50%;margin-bottom:2%
-    id=val-1b_comparison_time
+    id=ver-1b_comparison_time
     caption=Comparison of concentration as function of time at x\=0.2m calculated
      through TMAP8 and analytically
 
 As a second check, the concentration as a function of position at a given time
 t = 25s, from TMAP8 was compared with the analytical solution as shown in
-[val-1b_comparison_dist]. The predicted concentration profile from TMAP8 is in
+[ver-1b_comparison_dist]. The predicted concentration profile from TMAP8 is in
 good agreement with the analytical solution.
 
-!media figures/val-1b_comparison_dist.png
+!media figures/ver-1b_comparison_dist.png
     style=width:50%;margin-bottom:2%
-    id=val-1b_comparison_dist
+    id=ver-1b_comparison_dist
     caption=Comparison of concentration as function of distance from the source
     at t\=25sec calculated through TMAP8 and analytically
 
@@ -47,9 +47,9 @@ taken as unity, and the distance, x, was taken as 0.5 in this comparison.
 TMAP8 initially under predicts but the results match well subsequently. Comparison
 results are shown in []
 
-!media figures/val-1b_comparison_flux.png
+!media figures/ver-1b_comparison_flux.png
     style=width:50%;margin-bottom:2%
-    id=val-1b_comparison_flux
+    id=ver-1b_comparison_flux
     caption=Comparison of flux as function of time at x\=0.5m calculated through
     TMAP8 and analytically
 

@@ -1,8 +1,8 @@
-# val-1c
+# ver-1c
 
 # Diffusion Problem with Partially Preloaded Slab
 
-This validation problem is taken from [!cite](longhurst1992verification). Diffusion of tritium through a semi-infinite SiC layer is modeled with an initial
+This verification problem is taken from [!cite](longhurst1992verification). Diffusion of tritium through a semi-infinite SiC layer is modeled with an initial
 loading of 1 atom/m{^3} in the first 10 m of a 2275-m slab. Solubility is unity
 and no traping is included. The analytical solution is given by:
 
@@ -27,12 +27,12 @@ C = \frac{C_o}{2} \; erf \left( \frac{h}{\sqrt{Dt}} \right)
 
 A comparison of the mobile species concentration values at x = 0 m, 10 m and
 12.5 m calculated through TMAP8 and analytically is shown in
-[val-1c_comparison_time]. The TMAP8 calculations are found to be in good agreement
+[ver-1c_comparison_time]. The TMAP8 calculations are found to be in good agreement
 with the analytical solution.
 
-!media figures/val-1c_comparison_time.png
+!media figures/ver-1c_comparison_time.png
     style=width:50%;margin-bottom:2%
-    id=val-1c_comparison_time
+    id=ver-1c_comparison_time
     caption=Comparison of concentration as function of time at x\=0 m, 10 m and 12 m
     calculated through TMAP8 and analytically
 

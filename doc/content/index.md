@@ -30,11 +30,11 @@ General user notes on TMAP8 can also be found [here](getting_started/user_notes.
 !col-end!
 
 !col! small=12 medium=4 large=4 icon=assessment
-## [Validation](verification/val-list.md) class=center style=font-weight:200;font-size:150%;
+## [Verification & Validation](verification/ver-list.md) class=center style=font-weight:200;font-size:150%;
 
 !style halign=center
 Several problems originally developed for the TMAP4 code have been used for the
-validation of TMAP8. These validation cases can be found here.
+verification of TMAP8. These V&V cases can be found here.
 !col-end!
 !row-end!
 

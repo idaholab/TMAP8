@@ -32,5 +32,5 @@ ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()
-plt.savefig('val-1fa_comparison_temperature.png', bbox_inches='tight');
+plt.savefig('ver-1fa_comparison_temperature.png', bbox_inches='tight');
 plt.close(fig)

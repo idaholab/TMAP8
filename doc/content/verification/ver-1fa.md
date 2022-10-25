@@ -1,4 +1,4 @@
-# val-1fa
+# ver-1fa
 
 # Heat Conduction with Heat Generation
 
@@ -22,12 +22,12 @@ where:
 The slab is assumed to have a density of 1 kg/m$^3$ and a specific heat capabity of 1 J/kg-K.
 
 Comparison of the temperature computed through TMAP8 and calculated analytically is shown in
-[val-1fa_comparison_temperature]. The TMAP8 code predictions match very well with
+[ver-1fa_comparison_temperature]. The TMAP8 code predictions match very well with
 the analytical solution.
 
-!media figures/val-1fa_comparison_temperature.png
+!media figures/ver-1fa_comparison_temperature.png
     style=width:60%;margin-bottom:2%
-    id=val-1fa_comparison_temperature
+    id=ver-1fa_comparison_temperature
     caption=Comparison of temperature along the slab calculated
      through TMAP8 and analytically
 

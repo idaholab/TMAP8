@@ -33,10 +33,10 @@ like [Paraview](http://www.paraview.org/download/).
 ## TMAP8 Examples and Tests
 
 !style halign=left
-In general the validation examples located within the `test/tests` directory are meant
+In general the verification and validation examples located within the `test/tests` directory are meant
 to be a showcase of "production" TMAP8 capability. Users are encouraged to start there
 when learning TMAP8 and setting up new simulations. Documentation for the validation
-examples can be found [on the TMAP8 validation page](verification/val-list.md). The
+examples can be found [on the TMAP8 verification and validation page](verification/ver-list.md). The
 `test/tests` directory also holds *all* TMAP8 regression, verification, and validation
 tests for both complete and in-progress capability. These files *should not* be modified,
 so that periodic tests of TMAP8 function can be performed successfully. If modification of

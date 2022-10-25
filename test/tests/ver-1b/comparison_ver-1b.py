@@ -33,7 +33,7 @@ ax.set_ylim(bottom=0)
 plt.grid(b=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()
-plt.savefig('val-1b_comparison_time.png', bbox_inches='tight');
+plt.savefig('ver-1b_comparison_time.png', bbox_inches='tight');
 plt.close(fig)
 
 
@@ -65,7 +65,7 @@ ax.set_ylim(bottom=0)
 plt.grid(b=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()
-plt.savefig('val-1b_comparison_dist.png', bbox_inches='tight');
+plt.savefig('ver-1b_comparison_dist.png', bbox_inches='tight');
 plt.close(fig)
 #================== Comparison of flux as a function of time ===================
 
@@ -96,5 +96,5 @@ ax.set_ylim(bottom=0)
 plt.grid(b=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()
-plt.savefig('val-1b_comparison_flux.png', bbox_inches='tight');
+plt.savefig('ver-1b_comparison_flux.png', bbox_inches='tight');
 plt.close(fig)

@@ -3,8 +3,8 @@
   issues = '#12'
   [exo]
     type = Exodiff
-    input = 'val-1c.i'
-    exodiff = val-1c_out.e
+    input = 'ver-1c.i'
+    exodiff = ver-1c_out.e
     cli_args = 'Executioner/dt=5'
     requirement = 'The system shall be able to model species permeation into an unloaded portion of a slab from a p-loaded portion.'
   []

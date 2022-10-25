@@ -60,7 +60,7 @@ ax = fig.add_subplot(gs[0])
 analytical_permeation = Jp
 ax.plot(analytical_time,analytical_permeation,label=r"Analytical",c='k', linestyle='--')
 
-tmap_sol = pd.read_csv("./gold/val-1d-diffusion_out.csv")
+tmap_sol = pd.read_csv("./gold/ver-1d-diffusion_out.csv")
 tmap_time = tmap_sol['time']
 tmap_perm = tmap_sol['scaled_outflux']
 ax.plot(tmap_time,tmap_perm,label=r"TMAP8",c='tab:gray')
@@ -73,7 +73,7 @@ ax.set_ylim(bottom=0)
 plt.grid(b=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()
-plt.savefig('val-1d_comparison_diffusion.png', bbox_inches='tight');
+plt.savefig('ver-1d_comparison_diffusion.png', bbox_inches='tight');
 plt.close(fig)
 
 #========================= Trapping limited ====================================
@@ -83,7 +83,7 @@ analytical_sol = [0, 3.2e18] # Adding numbers according to the range of axis
                              # to show the line for analytically calculated
                              # breakthrough time.
 
-tmap_sol = pd.read_csv("./gold/val-1d-trapping_out.csv")
+tmap_sol = pd.read_csv("./gold/ver-1d-trapping_out.csv")
 tmap_time = tmap_sol['time']
 tmap_perm = tmap_sol['scaled_outflux']
 
@@ -101,5 +101,5 @@ ax.legend(loc="best")
 plt.grid(b=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()
-plt.savefig('val-1d_comparison_trapping.png', bbox_inches='tight');
+plt.savefig('ver-1d_comparison_trapping.png', bbox_inches='tight');
 plt.close(fig)
