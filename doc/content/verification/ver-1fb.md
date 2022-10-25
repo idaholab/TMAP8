@@ -1,4 +1,4 @@
-# val-1fb
+# ver-1fb
 
 # Thermal Transient in a Slab
 
@@ -10,10 +10,10 @@ T(x,t) = T_o \;+\; (T_1-T_o)\Bigg\{1-\frac{x}{L}-\frac{2}{L}\sum_{m=1}^{\infty} 
 
 where:
 
-    
+
     $T$ : temperature in the slab (K)
 
-    
+
     $x$ : distance across the slab (m)
 
     $t$ : time (seconds)
@@ -26,7 +26,7 @@ where:
 
     $\lambda_m$ : $\frac{m\pi}{L}$
 
-    $\alpha$ : thermal diffusivity (1.0 m$^2$/s) where 
+    $\alpha$ : thermal diffusivity (1.0 m$^2$/s) where
 
 \begin{equation}
 \alpha = \frac{k}{\rho C_p}
@@ -34,14 +34,14 @@ where:
 
 $k$ is the thermal conductivity, $\rho$ is the density and $C_p$ is the specific heat capacity of the slab material.
 
-# 
+#
 
 
-Comparison of the temperature distribution in the slab, computed through TMAP8 and calculated analytically, is shown in [val-1fb_comparison_temperature]. The TMAP8 code predictions match very well with the analytical solution.
+Comparison of the temperature distribution in the slab, computed through TMAP8 and calculated analytically, is shown in [ver-1fb_comparison_temperature]. The TMAP8 code predictions match very well with the analytical solution.
 
-!media figures/val-1fb_comparison_temperature.png
+!media figures/ver-1fb_comparison_temperature.png
     style=width:60%;margin-bottom:2%
-    id=val-1fb_comparison_temperature
+    id=ver-1fb_comparison_temperature
     caption=Comparison of temperature distribution in the slab calculated
      through TMAP8 and analytically
 

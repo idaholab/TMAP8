@@ -3,9 +3,9 @@
   issues = '#12'
   [heat_conduction_generation]
     type = Exodiff
-    input = val-1fa.i
-    exodiff = val-1fa_out.e
+    input = ver-1fa.i
+    exodiff = ver-1fa_out.e
     requirement = 'The system shall be able to model heat conduction in a slab that has heat generation'
-    verification = 'val-1fa.md'
+    verification = 'ver-1fa.md'
   []
 []
