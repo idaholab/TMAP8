@@ -5,6 +5,6 @@
     exodiff = 'ad_mat_coupled_annihilation_test_out.e'
     issues = '#35'
     design = '/ADMatCoupledDefectAnnihilation.md'
-    requirement = 'The system shall compute the annihilation contribution in the material.'
+    requirement = 'The system shall compute the annihilation of variable c_b towards its equilibrium concentration in the material.'
   []
 []

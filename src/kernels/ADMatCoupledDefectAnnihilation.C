@@ -12,17 +12,17 @@
 #include "MooseVariable.h"
 #include "NonlinearSystem.h"
 
-registerMooseObject("MooseApp", ADMatCoupledDefectAnnihilation);
+registerMooseObject("TMAPApp", ADMatCoupledDefectAnnihilation);
 
 InputParameters
 ADMatCoupledDefectAnnihilation::validParams()
 {
   InputParameters params = ADKernel::validParams();
+  params.addClassDescription("Kernel to add K*v*(u0-u), where K=annihilation rate, u=variable, "
+                             "u0=equilibrium, v=coupled variable");
   params.addCoupledVar("v",
                        "Set this to make v a coupled variable, otherwise it will use the "
                        "kernel's nonlinear variable for v");
-  params.addClassDescription(
-      "Kernel to add K*v*(c0-c), where K=annihilation rate, u=variable, v=coupled variable");
   params.addParam<MaterialPropertyName>(
       "eq_concentration",
       "u_0",
@@ -31,8 +31,8 @@ ADMatCoupledDefectAnnihilation::validParams()
       "annihilation_rate", "K", "The annihilation rate used with the kernel");
   params.addParam<Real>("coeff",
                         1.,
-                        "A coefficient for multiplying the The annihilation rate. It can be used "
-                        "for sensitivity analysis.");
+                        "A coefficient for multiplying the annihilation rate. It can be used for "
+                        "sensitivity analysis.");
   return params;
 }
 
