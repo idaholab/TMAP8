@@ -1,0 +1,10 @@
+[Tests]
+  [ad_mat_coupled_annihilation]
+    type = 'Exodiff'
+    input = 'ad_mat_coupled_annihilation_test.i'
+    exodiff = 'ad_mat_coupled_annihilation_test_out.e'
+    issues = '#35'
+    design = '/ADMatCoupledDefectAnnihilation.md'
+    requirement = 'The system shall compute the annihilation of a concentration variable towards its equilibrium in the material.'
+  []
+[]
