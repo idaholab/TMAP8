@@ -12,16 +12,16 @@
 #include "ADKernel.h"
 
 /**
- * This kernel adds to the residual a contribution of \f$ K*(u0-u)*v \f$ where \f$ K \f$ is a material
- * property, \f$ u \f$ is a variable (nonlinear or coupled), \f$ u0 \f$ is its equilibrium value, and
- * \f$ v \f$ is a coupled variable.
+ * This kernel adds to the residual a contribution of \f$ K*(u0-u)*v \f$ where \f$ K \f$ is a
+ * material property, \f$ u \f$ is a variable (nonlinear or coupled), \f$ u0 \f$ is its equilibrium
+ * value, and \f$ v \f$ is a coupled variable.
  */
 class ADMatCoupledDefectAnnihilation : public ADKernel
 {
 public:
   static InputParameters validParams();
 
-  ADMatCoupledDefectAnnihilation(const InputParameters &parameters);
+  ADMatCoupledDefectAnnihilation(const InputParameters & parameters);
 
 protected:
   virtual ADReal computeQpResidual();
@@ -31,13 +31,13 @@ protected:
    * (For constrained Allen-Cahn problems, v = lambda
    * where lambda is the Lagrange multiplier)
    */
-  const ADVariableValue &_v;
+  const ADVariableValue & _v;
 
   /// equilibrium value for variable
-  const ADMaterialProperty<Real> &_u_0;
+  const ADMaterialProperty<Real> & _u_0;
 
   /// Reaction rate
-  const ADMaterialProperty<Real> &_K;
+  const ADMaterialProperty<Real> & _K;
 
   /// Coefficient used optionally (usefull for sensitivity analysis)
   const Real _coeff;
