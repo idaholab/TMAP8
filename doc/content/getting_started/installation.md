@@ -85,6 +85,39 @@ number of physical and virtual cores on the workstation being used to build TMAP
 If TMAP8 is working correctly, all active tests will pass. This indicates that
 TMAP8 is ready to be used and further developed.
 
+## Update TMAP8
+
+TMAP8 (and the underlying MOOSE Framework) is under heavy development and is updated on a continuous
+basis. Therefore, it is important that the local copy of TMAP8 be periodically updated to obtain new
+capabilities, improvements, and bugfixes. Weekly updates are recommended as, at minimum, the MOOSE
+submodule within TMAP8 is updated up to several times a week.
+
+If the MOOSE conda environment is being used, you should update both the environment +and+ your copy
+of TMAP8 together. To check for a conda environment update, perform the following commands.
+
+```bash
+mamba activate moose
+mamba update --all
+```
+
+This assumes that your MOOSE-based development environment is named `moose`. To update your TMAP8
+repository, use the following commands.
+
+```bash
+cd ~/projects/TMAP8
+git fetch upstream
+git rebase upstream/main
+```
+
+This assumes that your copy of TMAP8 is stored in `~/projects` and that the [idaholab/TMAP8](https://github.com/idaholab/TMAP8)
+git remote is labeled `upstream`. Use `git remote -v` in the TMAP8 repository location to check for
+this and change the commands as necessary. Finally, TMAP8 can be re-compiled and re-tested.
+
+```bash
+make -j8
+./run_tests -j8
+```
+
 ## Troubleshooting
 
 !style halign=left
