@@ -116,6 +116,8 @@ this and change the commands as necessary. Finally, TMAP8 can be re-compiled and
 ```bash
 make -j8
 ./run_tests -j8
+```
+
 ## Troubleshooting
 
 !style halign=left
