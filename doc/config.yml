@@ -11,10 +11,11 @@ Content:
     - ${MOOSE_DIR}/modules/ray_tracing/doc/content
     - ${MOOSE_DIR}/modules/solid_properties/doc/content
     - ${MOOSE_DIR}/modules/misc/doc/content
-    modules:
+    - modules:
         root_dir: ${MOOSE_DIR}/modules/doc/content
         content:
             - media/*
+            - application_usage/command_line_usage.md
 Renderer:
     type: MooseDocs.base.MaterializeRenderer
 Extensions:
