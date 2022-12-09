@@ -1,8 +1,21 @@
 Content:
     - ${ROOT_DIR}/doc/content
     - ${MOOSE_DIR}/framework/doc/content
+    - ${MOOSE_DIR}/modules/scalar_transport/doc/content
+    - ${MOOSE_DIR}/modules/chemical_reactions/doc/content
+    - ${MOOSE_DIR}/modules/navier_stokes/doc/content
+    - ${MOOSE_DIR}/modules/thermal_hydraulics/doc/content
+    - ${MOOSE_DIR}/modules/fluid_properties/doc/content
     - ${MOOSE_DIR}/modules/heat_conduction/doc/content
+    - ${MOOSE_DIR}/modules/rdg/doc/content
     - ${MOOSE_DIR}/modules/ray_tracing/doc/content
+    - ${MOOSE_DIR}/modules/solid_properties/doc/content
+    - ${MOOSE_DIR}/modules/misc/doc/content
+    - modules:
+        root_dir: ${MOOSE_DIR}/modules/doc/content
+        content:
+            - media/*
+            - application_usage/command_line_usage.md
 Renderer:
     type: MooseDocs.base.MaterializeRenderer
 Extensions:
@@ -36,6 +49,12 @@ Extensions:
             tmap: !include ${ROOT_DIR}/doc/sqa_tmap.yml
             heat_conduction: !include ${MOOSE_DIR}/modules/heat_conduction/doc/sqa_heat_conduction.yml
             ray_tracing: !include ${MOOSE_DIR}/modules/ray_tracing/doc/sqa_ray_tracing.yml
+            navier_stokes: !include ${MOOSE_DIR}/modules/navier_stokes/doc/sqa_navier_stokes.yml
+            thermal_hydraulics: !include ${MOOSE_DIR}/modules/thermal_hydraulics/doc/sqa_thermal_hydraulics.yml
+            fluid_properties: !include ${MOOSE_DIR}/modules/fluid_properties/doc/sqa_fluid_properties.yml
+            rdg: !include ${MOOSE_DIR}/modules/rdg/doc/sqa_rdg.yml
+            solid_properties: !include ${MOOSE_DIR}/modules/solid_properties/doc/sqa_solid_properties.yml
+            misc: !include ${MOOSE_DIR}/modules/misc/doc/sqa_misc.yml
         repos:
             default: https://github.com/idaholab/TMAP8
         reports: !include ${ROOT_DIR}/doc/sqa_reports.yml
