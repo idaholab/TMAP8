@@ -53,6 +53,7 @@ Extensions:
             thermal_hydraulics: !include ${MOOSE_DIR}/modules/thermal_hydraulics/doc/sqa_thermal_hydraulics.yml
             fluid_properties: !include ${MOOSE_DIR}/modules/fluid_properties/doc/sqa_fluid_properties.yml
             rdg: !include ${MOOSE_DIR}/modules/rdg/doc/sqa_rdg.yml
+            scalar_transport: !include ${MOOSE_DIR}/modules/scalar_transport/doc/sqa_scalar_transport.yml
             solid_properties: !include ${MOOSE_DIR}/modules/solid_properties/doc/sqa_solid_properties.yml
             misc: !include ${MOOSE_DIR}/modules/misc/doc/sqa_misc.yml
         repos:
