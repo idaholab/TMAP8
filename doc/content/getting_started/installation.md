@@ -65,6 +65,17 @@ cd ~/projects/TMAP8
 git submodule update --init moose
 ```
 
+!alert! tip title=Thermochimica library (optional)
+To have access to the optional thermochemistry library Thermochimica [!cite](piro2013) provided within
+the MOOSE [modules/chemical_reactions/index.md], check out the corresponding submodule by performing
+the following before building:
+
+```bash
+cd ~/projects/TMAP8/moose
+git submodule update --init --checkout modules/chemical_reactions/contrib/thermochimica
+```
+!alert-end!
+
 !alert note
 The copy of MOOSE provided with TMAP8 has been fully tested against the current
 TMAP8 version, and is guaranteed to work with all current TMAP8 tests.
