@@ -3,6 +3,7 @@
   dim = 1
   nx = 1000
   xmax = 99e-6
+  allow_renumbering = false
 []
 
 [Variables]
@@ -13,7 +14,7 @@
 [Functions]
   [diffusivity_value]
     type = ParsedFunction
-    value = 'if(x<33e-6, 1.274e-7, 2.622e-11)'
+    expression = 'if(x<33e-6, 1.274e-7, 2.622e-11)'
   []
 []
 
@@ -57,14 +58,6 @@
 #   []
 # []
 
-[Postprocessors]
-  [conc_point1]
-    type = PointValue
-    variable = u
-    point = '48.75e-6 0 0'
-  []
-[]
-
 [Executioner]
   type = Transient
   # end_time = 5000 # for obtaining steady-state solution
@@ -75,7 +68,9 @@
   petsc_options_iname = '-pc_type -pc_hypre_type'
   petsc_options_value = 'hypre boomeramg'
   scheme = 'crank-nicolson'
-  nl_rel_tol = 1e-9
+  nl_rel_tol = 1e-50
+  nl_abs_tol = 1e-12
+  abort_on_solve_fail = true
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 0.1
@@ -85,9 +80,4 @@
 
 [Outputs]
   exodus = true
-  [csv]
-    # interval = 10 # can be used while obtaining steady-state solution
-    type = CSV
-  []
-  perf_graph = true
 []

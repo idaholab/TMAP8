@@ -2,9 +2,11 @@
   design = 'Diffusion.md TimeDerivative.md DirichletBC.md'
   issues = '#12'
   [csv]
-    type = CSVDiff
+    type = Exodiff
     input = ver-1e.i
-    csvdiff = ver-1e_csv.csv
-    requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary conditions.'
+    exodiff = ver-1e_out.e
+    requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition.'
+    exodiff_opts = '-match_ids'
+    map = False
   []
 []
