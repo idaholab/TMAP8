@@ -1,8 +1,6 @@
-# val-1e
+# ver-1e
 
 # Diffusion in a composite layer
-
-# Depleting Source Problem
 
 ## Test Description
 

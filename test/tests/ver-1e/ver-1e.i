@@ -58,6 +58,18 @@
 #   []
 # []
 
+# Used to obtain varying concentration with time at a
+# point in SiC layer 15.75 micrometer away from the
+# PyC-SiC interface
+
+# [Postprocessors]
+#   [conc_point1]
+#     type = PointValue
+#     variable = u
+#     point = '48.75e-6 0 0'
+#   []
+# []
+
 [Executioner]
   type = Transient
   # end_time = 5000 # for obtaining steady-state solution
@@ -68,7 +80,8 @@
   petsc_options_iname = '-pc_type -pc_hypre_type'
   petsc_options_value = 'hypre boomeramg'
   scheme = 'crank-nicolson'
-  nl_rel_tol = 1e-50
+  nl_rel_tol = 1e-50 # Make this really tight so that our absolute tolerance criterion is the one
+  # we must meet
   nl_abs_tol = 1e-12
   abort_on_solve_fail = true
   [TimeStepper]
