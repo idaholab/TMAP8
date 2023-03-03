@@ -12,11 +12,10 @@
 #include "ModulesApp.h"
 #include "MooseSyntax.h"
 
-template <>
 InputParameters
-validParams<TMAPApp>()
+TMAPApp::validParams()
 {
-  InputParameters params = validParams<MooseApp>();
+  InputParameters params = MooseApp::validParams();
 
   // Set material property output to occur on TIMESTEP_END and INITIAL by default
   params.set<bool>("use_legacy_material_output") = false;
