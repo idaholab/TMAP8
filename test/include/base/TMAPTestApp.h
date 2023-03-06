@@ -10,16 +10,13 @@
 
 #include "MooseApp.h"
 
-class TMAPTestApp;
-
-template <>
-InputParameters validParams<TMAPTestApp>();
-
 class TMAPTestApp : public MooseApp
 {
 public:
   TMAPTestApp(InputParameters parameters);
   virtual ~TMAPTestApp();
+
+  static InputParameters validParams();
 
   static void registerApps();
   static void registerAll(Factory & f, ActionFactory & af, Syntax & s, bool use_test_objs = false);
