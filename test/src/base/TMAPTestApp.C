@@ -13,11 +13,10 @@
 #include "MooseSyntax.h"
 #include "ModulesApp.h"
 
-template <>
 InputParameters
-validParams<TMAPTestApp>()
+TMAPTestApp::validParams()
 {
-  InputParameters params = validParams<TMAPApp>();
+  InputParameters params = TMAPApp::validParams();
   return params;
 }
 
