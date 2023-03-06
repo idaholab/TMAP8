@@ -16,6 +16,7 @@ Content:
         content:
             - media/*
             - application_usage/command_line_usage.md
+            - application_usage/restart_recover.md
 Renderer:
     type: MooseDocs.base.MaterializeRenderer
 Extensions:
