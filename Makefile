@@ -43,7 +43,7 @@ RICHARDS                    := no
 SCALAR_TRANSPORT            := yes
 SOLID_PROPERTIES            := yes
 STOCHASTIC_TOOLS            := no
-TENSOR_MECHANICS            := no
+TENSOR_MECHANICS            := yes
 THERMAL_HYDRAULICS          := yes
 XFEM                        := no
 
