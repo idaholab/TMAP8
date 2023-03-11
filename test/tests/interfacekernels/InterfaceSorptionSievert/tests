@@ -2,7 +2,7 @@
   design = 'InterfaceSorptionSievert.md'
   [non_ad]
     issues = '#50'
-    requirement = 'TMAP8 shall have the capability to enforce interfacial conditions based on the Sievert law in isotherm conditions.'
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions.'
     type = 'Exodiff'
     input = 'interface_sorption_Sievert.i'
     exodiff = 'interface_sorption_Sievert_out.e'
@@ -10,7 +10,7 @@
   []
   [non_ad_penalty]
     issues = '#50'
-    requirement = 'TMAP8 shall have the capability to enforce interfacial conditions based on the Sievert law in isotherm conditions using penalty-enforced flux balance.'
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using penalty-enforced flux balance.'
     type = 'Exodiff'
     input = 'interface_sorption_Sievert.i'
     cli_args = 'InterfaceKernels/interface/use_flux_penalty=true
@@ -21,7 +21,7 @@
   []
   [ad]
     issues = '#50'
-    requirement = 'TMAP8 shall have the capability to enforce interfacial conditions based on the Sievert law in isotherm conditions using automatic differentiation.'
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using automatic differentiation.'
     type = 'Exodiff'
     input = 'interface_sorption_Sievert.i'
     cli_args = 'Kernels/u1/type=ADMatDiffusion
@@ -39,7 +39,7 @@
   []
   [ad_penalty]
     issues = '#50'
-    requirement = 'TMAP8 shall have the capability to enforce interfacial conditions based on the Sievert law in isotherm conditions using automatic differentiation and penalty-enforced flux balance.'
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using automatic differentiation and penalty-enforced flux balance.'
     type = 'Exodiff'
     input = 'interface_sorption_Sievert.i'
     cli_args = 'Kernels/u1/type=ADMatDiffusion

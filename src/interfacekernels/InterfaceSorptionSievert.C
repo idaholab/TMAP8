@@ -16,7 +16,8 @@ InputParameters
 InterfaceSorptionSievertTempl<is_ad>::validParams()
 {
   InputParameters params = InterfaceKernelParent<is_ad>::validParams();
-  params.addClassDescription("Computes Sievert's law at interface between solid and gas.");
+  params.addClassDescription(
+      "Computes Sievert's law at interface between solid and gas in isothermal conditions.");
   params.addRequiredParam<Real>("K0",
                                 "The pre-exponential factor for the Arrhenius law for the "
                                 "solubility $K$ for the relationship $C_i = KP_i^p$");
@@ -152,8 +153,8 @@ InterfaceSorptionSievertTempl<false>::computeQpJacobian(Moose::DGJacobianType ty
 template <>
 Real InterfaceSorptionSievertTempl<true>::computeQpJacobian(Moose::DGJacobianType /*type*/)
 {
-  mooseError("In ADInterfaceSorptionSievert: computeQpJacobian incorrectly called from within "
-             "AD calculation");
+  mooseError(name() ": in ADInterfaceSorptionSievert, computeQpJacobian incorrectly called from "
+                    "within AD calculation");
 }
 
 template class InterfaceSorptionSievertTempl<false>;
