@@ -35,7 +35,7 @@ HEAT_CONDUCTION             := yes
 LEVEL_SET                   := no
 MISC                        := yes
 NAVIER_STOKES               := yes
-PHASE_FIELD                 := no
+PHASE_FIELD                 := yes
 POROUS_FLOW                 := no
 RAY_TRACING                 := yes
 RDG                         := yes
@@ -43,7 +43,7 @@ RICHARDS                    := no
 SCALAR_TRANSPORT            := yes
 SOLID_PROPERTIES            := yes
 STOCHASTIC_TOOLS            := no
-TENSOR_MECHANICS            := no
+TENSOR_MECHANICS            := yes
 THERMAL_HYDRAULICS          := yes
 XFEM                        := no
 
