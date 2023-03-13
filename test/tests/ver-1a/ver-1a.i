@@ -1,21 +1,21 @@
-temperature=2.373e3
-initial_pressure=1e6
-kb=1.38e-23
-length_unit=1e6 # number of length units in a meter
-pressure_unit=1 # number of pressure units in a Pascal
+temperature = 2.373e3
+initial_pressure = 1e6
+kb = 1.38e-23
+length_unit = 1e6 # number of length units in a meter
+pressure_unit = 1 # number of pressure units in a Pascal
 
 [Mesh]
   type = GeneratedMesh
   dim = 1
   nx = 10
-  xmax = ${fparse 3.3e-5 * length_unit}
+  xmax = '${fparse 3.3e-5 * length_unit}'
 []
 
 [Kernels]
   [diff]
     type = MatDiffusion
     variable = u
-    diffusivity = ${fparse 1.58e-4*exp(-308000/(8.314*temperature))*length_unit^2}
+    diffusivity = '${fparse 1.58e-4*exp(-308000/(8.314*temperature))*length_unit^2}'
   []
   [time]
     type = TimeDerivative
@@ -32,9 +32,9 @@ pressure_unit=1 # number of pressure units in a Pascal
     type = EnclosureSinkScalarKernel
     variable = v
     flux = scale_flux
-    surface_area = ${fparse 2.16e-6*length_unit^2}
-    volume = ${fparse 5.2e-11*length_unit^3}
-    concentration_to_pressure_conversion_factor = ${fparse kb*length_unit^3*temperature*pressure_unit}
+    surface_area = '${fparse 2.16e-6*length_unit^2}'
+    volume = '${fparse 5.2e-11*length_unit^3}'
+    concentration_to_pressure_conversion_factor = '${fparse kb*length_unit^3*temperature*pressure_unit}'
   []
 []
 
@@ -50,7 +50,7 @@ pressure_unit=1 # number of pressure units in a Pascal
     variable = u
     enclosure_scalar_var = v
     boundary = 'left'
-    K = ${fparse 7.244e22/(temperature * length_unit^3 * pressure_unit)}
+    Ko = '${fparse 7.244e22/(temperature * length_unit^3 * pressure_unit)}'
     temp = ${temperature}
   []
 []
@@ -61,7 +61,7 @@ pressure_unit=1 # number of pressure units in a Pascal
   [v]
     family = SCALAR
     order = FIRST
-    initial_condition = ${fparse initial_pressure*pressure_unit}
+    initial_condition = '${fparse initial_pressure*pressure_unit}'
   []
 []
 
@@ -69,7 +69,7 @@ pressure_unit=1 # number of pressure units in a Pascal
   [flux]
     type = SideDiffusiveFluxIntegral
     variable = u
-    diffusivity = ${fparse 1.58e-4*exp(-308000/(8.314*temperature))*length_unit^2}
+    diffusivity = '${fparse 1.58e-4*exp(-308000/(8.314*temperature))*length_unit^2}'
     boundary = 'left'
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = ''
@@ -85,10 +85,10 @@ pressure_unit=1 # number of pressure units in a Pascal
     type = PressureReleaseFluxIntegral
     variable = u
     boundary = 'right'
-    diffusivity = ${fparse 1.58e-4*exp(-308000/(8.314*temperature))*length_unit^2}
-    surface_area = ${fparse 2.16e-6*length_unit^2}
-    volume = ${fparse 5.2e-11*length_unit^3}
-    concentration_to_pressure_conversion_factor = ${fparse kb*length_unit^3*temperature*pressure_unit}
+    diffusivity = '${fparse 1.58e-4*exp(-308000/(8.314*temperature))*length_unit^2}'
+    surface_area = '${fparse 2.16e-6*length_unit^2}'
+    volume = '${fparse 5.2e-11*length_unit^3}'
+    concentration_to_pressure_conversion_factor = '${fparse kb*length_unit^3*temperature*pressure_unit}'
     outputs = 'console'
   []
   [rhs_aggregate]
@@ -99,7 +99,7 @@ pressure_unit=1 # number of pressure units in a Pascal
   [rhs_release]
     type = ScalePostprocessor
     value = rhs_aggregate
-    scaling_factor = ${fparse 1./(initial_pressure*pressure_unit)}
+    scaling_factor = '${fparse 1./(initial_pressure*pressure_unit)}'
     outputs = 'console csv exodus'
   []
 []

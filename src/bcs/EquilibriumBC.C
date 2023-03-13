@@ -15,30 +15,37 @@ EquilibriumBC::validParams()
 {
   auto params = ADNodalBC::validParams();
   params.addRequiredParam<Real>(
-      "K", "The equilibrium coefficient $K$ for the relationship $C_i = KP_i^p$");
-  params.addParam<Real>("p", 1, "The exponent $p$ in the relationship $C_i = KP_i^p$");
-  params.addRequiredCoupledVar("enclosure_scalar_var", "The coupled enclosure variable");
-  params.addRequiredParam<Real>("temp", "The temperature");
+      "Ko", "The solubility coefficient $Ko$ for the relationship $C_i = Ko exp{-Ea/RT} P_i^p$");
+  params.addParam<Real>(
+      "activation_energy",
+      0.0,
+      "The activation energy $Ea$ for the relationship $C_i = Ko exp{-Ea/RT} P_i^p$");
+  params.addParam<Real>(
+      "p", 1.0, "The exponent $p$ in the relationship $C_i = Ko exp{-Ea/RT} P_i^p$");
+  params.addRequiredCoupledVar(
+      "enclosure_scalar_var",
+      "The coupled enclosure variable $P_i$ in the relationship $C_i = Ko exp{-Ea/RT} P_i^p$");
+  params.addRequiredCoupledVar("temp", "The temperature");
   params.addParam<Real>(
       "var_scaling_factor", 1, "The number of atoms that compose our arbitrary unit for quantity");
-  params.addParam<Real>("penalty", 1e6, "The penalty factor for enforcing value matching");
   return params;
 }
 
 EquilibriumBC::EquilibriumBC(const InputParameters & parameters)
   : ADNodalBC(parameters),
-    _K(getParam<Real>("K")), // To-do: use an interface material
+    _Ko(getParam<Real>("Ko")),
+    _Ea(getParam<Real>("activation_energy")),
     _p(getParam<Real>("p")),
     _enclosure_var(adCoupledScalarValue("enclosure_scalar_var")),
-    _temp(getParam<Real>("temp")),
-    _kb(1.38e-23),
-    _var_scaling_factor(getParam<Real>("var_scaling_factor")),
-    _penalty(getParam<Real>("penalty"))
+    _T(adCoupledValue("temp")),
+    _R(8.314),
+    _var_scaling_factor(getParam<Real>("var_scaling_factor"))
 {
 }
 
 ADReal
 EquilibriumBC::computeQpResidual()
 {
-  return /*_penalty * */ (_u /*[_qp]*/ - _K * std::pow(_enclosure_var[0], _p));
+  ADReal K = _Ko * std::exp(-1.0 * _Ea / (_R * _T[0]));
+  return (_u * _var_scaling_factor - K * std::pow(_enclosure_var[0], _p));
 }
