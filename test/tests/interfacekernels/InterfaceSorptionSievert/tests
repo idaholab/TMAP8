@@ -1,0 +1,59 @@
+[Tests]
+  design = 'InterfaceSorptionSievert.md'
+  [non_ad]
+    issues = '#50'
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions.'
+    type = 'Exodiff'
+    input = 'interface_sorption_Sievert.i'
+    exodiff = 'interface_sorption_Sievert_out.e'
+    abs_zero = 1e-7
+  []
+  [non_ad_penalty]
+    issues = '#50'
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using penalty-enforced flux balance.'
+    type = 'Exodiff'
+    input = 'interface_sorption_Sievert.i'
+    cli_args = 'InterfaceKernels/interface/use_flux_penalty=true
+                InterfaceKernels/interface/flux_penalty=1e5'
+    exodiff = 'interface_sorption_Sievert_out.e'
+    prereq = non_ad
+    abs_zero = 1e-7
+  []
+  [ad]
+    issues = '#50'
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using automatic differentiation.'
+    type = 'Exodiff'
+    input = 'interface_sorption_Sievert.i'
+    cli_args = 'Kernels/u1/type=ADMatDiffusion
+                Kernels/u2/type=ADMatDiffusion
+                Kernels/temp/type=ADHeatConduction
+                InterfaceKernels/interface/type=ADInterfaceSorptionSievert
+                Materials/properties_1/type=ADGenericConstantMaterial
+                Materials/properties_1/type=ADGenericConstantMaterial
+                Materials/properties_2/type=ADGenericConstantMaterial
+                Postprocessors/flux_inner/type=ADSideDiffusiveFluxIntegral
+                Postprocessors/flux_outer/type=ADSideDiffusiveFluxIntegral'
+    exodiff = 'interface_sorption_Sievert_out.e'
+    prereq = non_ad
+    abs_zero = 1e-7
+  []
+  [ad_penalty]
+    issues = '#50'
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using automatic differentiation and penalty-enforced flux balance.'
+    type = 'Exodiff'
+    input = 'interface_sorption_Sievert.i'
+    cli_args = 'Kernels/u1/type=ADMatDiffusion
+                Kernels/u2/type=ADMatDiffusion
+                Kernels/temp/type=ADHeatConduction
+                InterfaceKernels/interface/type=ADInterfaceSorptionSievert
+                InterfaceKernels/interface/use_flux_penalty=true
+                InterfaceKernels/interface/flux_penalty=1e5
+                Materials/properties_1/type=ADGenericConstantMaterial
+                Materials/properties_2/type=ADGenericConstantMaterial
+                Postprocessors/flux_inner/type=ADSideDiffusiveFluxIntegral
+                Postprocessors/flux_outer/type=ADSideDiffusiveFluxIntegral'
+    exodiff = 'interface_sorption_Sievert_out.e'
+    prereq = ad
+    abs_zero = 1e-7
+  []
+[]
