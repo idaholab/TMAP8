@@ -151,10 +151,12 @@ InterfaceSorptionSievertTempl<false>::computeQpJacobian(Moose::DGJacobianType ty
 }
 
 template <>
-Real InterfaceSorptionSievertTempl<true>::computeQpJacobian(Moose::DGJacobianType /*type*/)
+Real
+InterfaceSorptionSievertTempl<true>::computeQpJacobian(Moose::DGJacobianType /*type*/)
 {
-  mooseError(name() ": in ADInterfaceSorptionSievert, computeQpJacobian incorrectly called from "
-                    "within AD calculation");
+  mooseError(name(),
+             ": in ADInterfaceSorptionSievert, computeQpJacobian incorrectly called from "
+             "within AD calculation");
 }
 
 template class InterfaceSorptionSievertTempl<false>;
