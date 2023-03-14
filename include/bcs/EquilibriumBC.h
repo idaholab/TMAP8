@@ -20,21 +20,24 @@ public:
 protected:
   ADReal computeQpResidual() override;
 
-  /// The equilibrium coefficient
-  const Real _K;
+  /// The solubility coefficient
+  const Real _Ko;
 
+  /// The solubility activation energy (J)
+  const Real _Ea;
+
+  /// The exponent of the solution law
   const Real _p;
 
   /// The enclosure variable
   const ADVariableValue & _enclosure_var;
 
-  const Real _temp;
+  /// The temperature (K)
+  const ADVariableValue & _T;
 
-  /// Boltzmann's constant
-  const Real _kb;
+  /// Ideal gas constant (J/K-mol)
+  const Real _R;
 
   /// The number of atoms that compose our arbitrary unit for quantity
   const Real _var_scaling_factor;
-
-  const Real _penalty;
 };
