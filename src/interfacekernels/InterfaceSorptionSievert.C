@@ -7,6 +7,7 @@
 /************************************************************/
 
 #include "InterfaceSorptionSievert.h"
+#include "PhysicalConstants.h"
 
 registerMooseObject("TMAPApp", InterfaceSorptionSievert);
 registerMooseObject("TMAPApp", ADInterfaceSorptionSievert);
@@ -81,7 +82,7 @@ InterfaceSorptionSievertTempl<is_ad>::computeQpResidual(Moose::DGResidualType ty
   const GenericReal<is_ad> u_neighbor =
       std::max(small, _unit_scale_neighbor * _neighbor_value[_qp]);
   const GenericReal<is_ad> temperature_limited = std::max(small, _T[_qp]);
-  const auto R = 8.31446261815324; // ideal gas constant (W/(m2-K))
+  const auto R = PhysicalConstants::ideal_gas_constant; // ideal gas constant (W/(m2-K))
 
   GenericReal<is_ad> r = 0; // residual
 
@@ -117,7 +118,7 @@ InterfaceSorptionSievertTempl<false>::computeQpJacobian(Moose::DGJacobianType ty
   const Real small = 1.0e-20;
   const Real u_neighbor = std::max(small, _unit_scale_neighbor * _neighbor_value[_qp]);
   const Real temperature_limited = std::max(small, _T[_qp]);
-  const auto R = 8.31446261815324; // ideal gas constant (W/(m2-K))
+  const auto R = PhysicalConstants::ideal_gas_constant; // ideal gas constant (W/(m2-K))
 
   Real jac = 0; // jacobian
 
