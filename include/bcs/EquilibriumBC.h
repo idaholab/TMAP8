@@ -35,9 +35,6 @@ protected:
   /// The temperature (K)
   const ADVariableValue & _T;
 
-  /// Ideal gas constant (J/K-mol)
-  const Real _R;
-
   /// The number of atoms that compose our arbitrary unit for quantity
   const Real _var_scaling_factor;
 };
