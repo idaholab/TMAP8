@@ -7,6 +7,7 @@
 /************************************************************/
 
 #include "EquilibriumBC.h"
+#include "PhysicalConstants.h"
 
 registerMooseObject("TMAPApp", EquilibriumBC);
 
@@ -38,7 +39,6 @@ EquilibriumBC::EquilibriumBC(const InputParameters & parameters)
     _p(getParam<Real>("p")),
     _enclosure_var(adCoupledScalarValue("enclosure_scalar_var")),
     _T(adCoupledValue("temp")),
-    _R(8.314),
     _var_scaling_factor(getParam<Real>("var_scaling_factor"))
 {
 }
@@ -46,6 +46,6 @@ EquilibriumBC::EquilibriumBC(const InputParameters & parameters)
 ADReal
 EquilibriumBC::computeQpResidual()
 {
-  ADReal K = _Ko * std::exp(-1.0 * _Ea / (_R * _T[0]));
+  ADReal K = _Ko * std::exp(-1.0 * _Ea / (PhysicalConstants::ideal_gas_constant * _T[0]));
   return (_u * _var_scaling_factor - K * std::pow(_enclosure_var[0], _p));
 }
