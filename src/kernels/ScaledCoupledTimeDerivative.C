@@ -8,7 +8,7 @@
 
 #include "ScaledCoupledTimeDerivative.h"
 
-registerMooseObject("TMAPApp", ScaledCoupledTimeDerivative);
+registerMooseObject("TMAP8App", ScaledCoupledTimeDerivative);
 
 InputParameters
 ScaledCoupledTimeDerivative::validParams()

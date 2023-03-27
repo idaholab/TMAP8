@@ -12,7 +12,7 @@
 #include "Assembly.h"
 #include "MooseVariableScalar.h"
 
-registerMooseObject("TMAPApp", EnclosureSinkScalarKernel);
+registerMooseObject("TMAP8App", EnclosureSinkScalarKernel);
 
 InputParameters
 EnclosureSinkScalarKernel::validParams()
