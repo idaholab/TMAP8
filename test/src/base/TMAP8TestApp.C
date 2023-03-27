@@ -6,44 +6,44 @@
 /*                   ALL RIGHTS RESERVED                    */
 /************************************************************/
 
-#include "TMAPTestApp.h"
-#include "TMAPApp.h"
+#include "TMAP8TestApp.h"
+#include "TMAP8App.h"
 #include "Moose.h"
 #include "AppFactory.h"
 #include "MooseSyntax.h"
 #include "ModulesApp.h"
 
 InputParameters
-TMAPTestApp::validParams()
+TMAP8TestApp::validParams()
 {
-  InputParameters params = TMAPApp::validParams();
+  InputParameters params = TMAP8App::validParams();
   return params;
 }
 
-TMAPTestApp::TMAPTestApp(InputParameters parameters) : MooseApp(parameters)
+TMAP8TestApp::TMAP8TestApp(InputParameters parameters) : MooseApp(parameters)
 {
-  TMAPTestApp::registerAll(
+  TMAP8TestApp::registerAll(
       _factory, _action_factory, _syntax, getParam<bool>("allow_test_objects"));
 }
 
-TMAPTestApp::~TMAPTestApp() {}
+TMAP8TestApp::~TMAP8TestApp() {}
 
 void
-TMAPTestApp::registerAll(Factory & f, ActionFactory & af, Syntax & s, bool use_test_objs)
+TMAP8TestApp::registerAll(Factory & f, ActionFactory & af, Syntax & s, bool use_test_objs)
 {
-  TMAPApp::registerAll(f, af, s);
+  TMAP8App::registerAll(f, af, s);
   if (use_test_objs)
   {
-    Registry::registerObjectsTo(f, {"TMAPTestApp"});
-    Registry::registerActionsTo(af, {"TMAPTestApp"});
+    Registry::registerObjectsTo(f, {"TMAP8TestApp"});
+    Registry::registerActionsTo(af, {"TMAP8TestApp"});
   }
 }
 
 void
-TMAPTestApp::registerApps()
+TMAP8TestApp::registerApps()
 {
-  registerApp(TMAPApp);
-  registerApp(TMAPTestApp);
+  registerApp(TMAP8App);
+  registerApp(TMAP8TestApp);
 }
 
 /***************************************************************************************************
@@ -51,12 +51,12 @@ TMAPTestApp::registerApps()
  **************************************************************************************************/
 // External entry point for dynamic application loading
 extern "C" void
-TMAPTestApp__registerAll(Factory & f, ActionFactory & af, Syntax & s)
+TMAP8TestApp__registerAll(Factory & f, ActionFactory & af, Syntax & s)
 {
-  TMAPTestApp::registerAll(f, af, s);
+  TMAP8TestApp::registerAll(f, af, s);
 }
 extern "C" void
-TMAPTestApp__registerApps()
+TMAP8TestApp__registerApps()
 {
-  TMAPTestApp::registerApps();
+  TMAP8TestApp::registerApps();
 }

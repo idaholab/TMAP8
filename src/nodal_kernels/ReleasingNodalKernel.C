@@ -8,7 +8,7 @@
 
 #include "ReleasingNodalKernel.h"
 
-registerMooseObject("TMAPApp", ReleasingNodalKernel);
+registerMooseObject("TMAP8App", ReleasingNodalKernel);
 
 InputParameters
 ReleasingNodalKernel::validParams()

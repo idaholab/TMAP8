@@ -50,7 +50,7 @@ Extensions:
         active: true
         categories:
             framework: !include ${MOOSE_DIR}/framework/doc/sqa_framework.yml
-            tmap: !include ${ROOT_DIR}/doc/sqa_tmap.yml
+            tmap8: !include ${ROOT_DIR}/doc/sqa_tmap8.yml
             heat_conduction: !include ${MOOSE_DIR}/modules/heat_conduction/doc/sqa_heat_conduction.yml
             ray_tracing: !include ${MOOSE_DIR}/modules/ray_tracing/doc/sqa_ray_tracing.yml
             navier_stokes: !include ${MOOSE_DIR}/modules/navier_stokes/doc/sqa_navier_stokes.yml

@@ -8,7 +8,7 @@
 
 #include "TrappingNodalKernel.h"
 
-registerMooseObject("TMAPApp", TrappingNodalKernel);
+registerMooseObject("TMAP8App", TrappingNodalKernel);
 
 InputParameters
 TrappingNodalKernel::validParams()

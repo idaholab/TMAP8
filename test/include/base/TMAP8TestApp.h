@@ -10,14 +10,14 @@
 
 #include "MooseApp.h"
 
-class TMAPApp : public MooseApp
+class TMAP8TestApp : public MooseApp
 {
 public:
-  TMAPApp(InputParameters parameters);
-  virtual ~TMAPApp();
+  TMAP8TestApp(InputParameters parameters);
+  virtual ~TMAP8TestApp();
 
   static InputParameters validParams();
 
   static void registerApps();
-  static void registerAll(Factory & f, ActionFactory & af, Syntax & s);
+  static void registerAll(Factory & f, ActionFactory & af, Syntax & s, bool use_test_objs = false);
 };
