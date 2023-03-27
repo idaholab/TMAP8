@@ -12,7 +12,7 @@
 #include "MooseVariable.h"
 #include "NonlinearSystem.h"
 
-registerMooseObject("TMAPApp", ADMatCoupledDefectAnnihilation);
+registerMooseObject("TMAP8App", ADMatCoupledDefectAnnihilation);
 
 InputParameters
 ADMatCoupledDefectAnnihilation::validParams()

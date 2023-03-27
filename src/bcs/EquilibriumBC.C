@@ -9,7 +9,7 @@
 #include "EquilibriumBC.h"
 #include "PhysicalConstants.h"
 
-registerMooseObject("TMAPApp", EquilibriumBC);
+registerMooseObject("TMAP8App", EquilibriumBC);
 
 InputParameters
 EquilibriumBC::validParams()

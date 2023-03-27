@@ -1,1 +1,1 @@
-!template load file=sqa/app_index.md.template app=TMAPApp category=tmap
+!template load file=sqa/app_index.md.template app=TMAP8App category=tmap8

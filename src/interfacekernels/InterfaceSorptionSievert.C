@@ -9,8 +9,8 @@
 #include "InterfaceSorptionSievert.h"
 #include "PhysicalConstants.h"
 
-registerMooseObject("TMAPApp", InterfaceSorptionSievert);
-registerMooseObject("TMAPApp", ADInterfaceSorptionSievert);
+registerMooseObject("TMAP8App", InterfaceSorptionSievert);
+registerMooseObject("TMAP8App", ADInterfaceSorptionSievert);
 
 template <bool is_ad>
 InputParameters

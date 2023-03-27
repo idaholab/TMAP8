@@ -8,7 +8,7 @@
 
 #include "PressureReleaseFluxIntegral.h"
 
-registerMooseObject("TMAPApp", PressureReleaseFluxIntegral);
+registerMooseObject("TMAP8App", PressureReleaseFluxIntegral);
 
 InputParameters
 PressureReleaseFluxIntegral::validParams()

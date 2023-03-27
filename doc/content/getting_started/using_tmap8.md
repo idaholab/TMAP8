@@ -4,13 +4,13 @@
 
 !style halign=left
 After TMAP8 is installed and tested, you should now be able to run input files
-using the `tmap-opt` executable located at `~/projects/TMAP8`. Input files
+using the `tmap8-opt` executable located at `~/projects/TMAP8`. Input files
 demonstrating the capabilities of TMAP8 can be found in `~/projects/test/tests`.
 Any input file (say, one called `example_input.i`) can be run with the following
 basic syntax:
 
 ```bash
-~/projects/TMAP8/tmap-opt -i example_input.i
+~/projects/TMAP8/tmap8-opt -i example_input.i
 ```
 
 Information about the simulation and its progress will then be displayed on the
@@ -18,7 +18,7 @@ screen. If a log file of the iterative solution process is also desired, the
 console output can be sent to a text file:
 
 ```bash
-~/projects/TMAP8/tmap-opt -i example_input.i --color off 2>&1 | tee log.txt
+~/projects/TMAP8/tmap8-opt -i example_input.i --color off 2>&1 | tee log.txt
 ```
 
 !alert note

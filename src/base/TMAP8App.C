@@ -6,14 +6,14 @@
 /*                   ALL RIGHTS RESERVED                    */
 /************************************************************/
 
-#include "TMAPApp.h"
+#include "TMAP8App.h"
 #include "Moose.h"
 #include "AppFactory.h"
 #include "ModulesApp.h"
 #include "MooseSyntax.h"
 
 InputParameters
-TMAPApp::validParams()
+TMAP8App::validParams()
 {
   InputParameters params = MooseApp::validParams();
 
@@ -23,39 +23,39 @@ TMAPApp::validParams()
   return params;
 }
 
-TMAPApp::TMAPApp(InputParameters parameters) : MooseApp(parameters)
+TMAP8App::TMAP8App(InputParameters parameters) : MooseApp(parameters)
 {
-  TMAPApp::registerAll(_factory, _action_factory, _syntax);
+  TMAP8App::registerAll(_factory, _action_factory, _syntax);
 }
 
-TMAPApp::~TMAPApp() {}
+TMAP8App::~TMAP8App() {}
 
 void
-TMAPApp::registerAll(Factory & f, ActionFactory & af, Syntax & s)
+TMAP8App::registerAll(Factory & f, ActionFactory & af, Syntax & s)
 {
   ModulesApp::registerAll(f, af, s);
-  Registry::registerObjectsTo(f, {"TMAPApp"});
-  Registry::registerActionsTo(af, {"TMAPApp"});
+  Registry::registerObjectsTo(f, {"TMAP8App"});
+  Registry::registerActionsTo(af, {"TMAP8App"});
 
   /* register custom execute flags, action syntax, etc. here */
 }
 
 void
-TMAPApp::registerApps()
+TMAP8App::registerApps()
 {
-  registerApp(TMAPApp);
+  registerApp(TMAP8App);
 }
 
 /***************************************************************************************************
  *********************** Dynamic Library Entry Points - DO NOT MODIFY ******************************
  **************************************************************************************************/
 extern "C" void
-TMAPApp__registerAll(Factory & f, ActionFactory & af, Syntax & s)
+TMAP8App__registerAll(Factory & f, ActionFactory & af, Syntax & s)
 {
-  TMAPApp::registerAll(f, af, s);
+  TMAP8App::registerAll(f, af, s);
 }
 extern "C" void
-TMAPApp__registerApps()
+TMAP8App__registerApps()
 {
-  TMAPApp::registerApps();
+  TMAP8App::registerApps();
 }
