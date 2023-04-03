@@ -1,29 +1,31 @@
-endtime = 199060.0
+endtime = 170000
 scale = 1e20
 
 [Mesh]
   [cmg]
     type = CartesianMeshGenerator
-    dim = 2
-    dx = '1e-9 1e-9 1e-9 1e-9 1e-9 1e-9 1e-9 1e-9 1e-9 1e-9 1e-9 1e-9 1e-9 1e-9 1e-9 1e-9 1e-9 1e-9
-          1e-9 1e-8 1e-7 1e-6 1e-5 1.888e-5 1.888e-5 1.888e-5 1.888e-5 1.888e-5 1.888e-5 1.888e-5 1.888e-5 1.888e-5 1.888e-5'
-    dy = '0.2e-4'
-    subdomain_id = '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-                    1 1 1 1 1 1 1 1 1 1 1 1 1 1 1'
-  []
-  [subdomain_id]
-    input = cmg
-    type = SubdomainBoundingBoxGenerator
-    bottom_left = '18e-9  0 0'
-    top_right = '1.99929e-4  0 0' # sum of all dx's
-    block_id = 1
+    dim = 1
+    #     0    1    2    3    4    5    6    7    8    9    10   11   12   13   14   15   16   17
+    dx = '3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9
+          1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5'
+    #     18   19   20   21   22   23   24   25   26   27   28   29   30   31   32   33   34   35
+    subdomain_id = '0 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0
+                    1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1'
+    #               18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35'
   []
   [interface]
     type = SideSetsBetweenSubdomainsGenerator
-    input = subdomain_id
+    input = cmg
     primary_block = '0' #BeO
     paired_block = '1' # Be
     new_boundary = 'interface'
+  []
+  [interface_other_side]
+    type = SideSetsBetweenSubdomainsGenerator
+    input = interface
+    primary_block = '1' #BeO
+    paired_block = '0' # Be
+    new_boundary = 'interface_other'
   []
 []
 
@@ -85,7 +87,7 @@ scale = 1e20
     type = ADPenaltyInterfaceDiffusion
     variable = conc_BeO
     neighbor_var = conc_Be
-    penalty = 1e-6
+    penalty = 1e2
     jump_prop_name = solubility_ratio
     boundary = 'interface'
   []
@@ -204,7 +206,6 @@ scale = 1e20
     boundary = interface
     concentration_primary = conc_BeO
     concentration_secondary = conc_Be
-    output_properties = 'solubility_ratio solubility_ratio_primary solubility_ratio_secondary'
   []
 []
 
@@ -215,20 +216,66 @@ scale = 1e20
     boundary = left
     diffusivity = diffusivity_BeO_nonAD
   []
-  [solubility_ratio]
-    type = ElementalVariableValue
-    variable = solubility_ratio
-    elementid = 17
+  [diff_Be]
+    type = ElementAverageValue
+    block = 1
+    variable = diffusivity_Be
   []
-  [solubility_ratio_primary]
-    type = ElementalVariableValue
-    variable = solubility_ratio_primary
-    elementid = 17
+  [diff_BeO]
+    type = ElementAverageValue
+    block = 0
+    variable = diffusivity_BeO
   []
-  [solubility_ratio_secondary]
-    type = ElementalVariableValue
-    variable = solubility_ratio_secondary
-    elementid = 17
+  [sol_Be]
+    type = ElementAverageValue
+    block = 1
+    variable = solubility_Be
+  []
+  [sol_BeO]
+    type = ElementAverageValue
+    block = 0
+    variable = solubility_BeO
+  []
+  [gold_solubility_ratio]
+    type = ParsedPostprocessor
+    function = 'sol_BeO / sol_Be'
+    pp_names = 'sol_BeO sol_Be'
+  []
+  [BeO_interface]
+    type = SideAverageValue
+    boundary = interface
+    variable = conc_BeO
+  []
+  [Be_interface]
+    type = SideAverageValue
+    boundary = interface_other
+    variable = conc_Be
+  []
+  [variable_ratio]
+    type = ParsedPostprocessor
+    function = 'BeO_interface / Be_interface'
+    pp_names = 'BeO_interface Be_interface'
+  []
+  [dt]
+    type = TimestepSize
+  []
+  [h0]
+    type = AverageElementSize
+    block = 0
+  []
+  [h1]
+    type = AverageElementSize
+    block = 1
+  []
+  [Fo0]
+    type = ParsedPostprocessor
+    function = 'diff_BeO * dt / h0^2'
+    pp_names = 'dt h0 diff_BeO'
+  []
+  [Fo1]
+    type = ParsedPostprocessor
+    function = 'diff_Be * dt / h1^2'
+    pp_names = 'dt h1 diff_Be'
   []
 []
 
@@ -242,31 +289,35 @@ scale = 1e20
 [Executioner]
   type = Transient
   scheme = bdf2
-  solve_type = PJFNK
-  petsc_options_iname = '-pc_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap'
-  petsc_options_value = 'asm         101   preonly   ilu      1'
+  solve_type = NEWTON
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = 'lu'
   nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
+  nl_abs_tol = 1e-7
   l_tol = 1e-4
-  dtmax = 600
   end_time = ${endtime}
   automatic_scaling = true
-  compute_scaling_once = false
+  line_search = 'none'
 
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 1
-    optimal_iterations = 30
-    iteration_window = 9
-    growth_factor = 2.0
+    optimal_iterations = 4
+    growth_factor = 1.1
     cutback_factor = 0.5
   []
+[]
+
+[Debug]
+  show_var_residual_norms = true
 []
 
 [Outputs]
   # execute_on = FINAL
   # exodus = true
+  checkpoint = true
   csv = true
+  hide = 'BeO_interface Be_interface sol_Be sol_BeO diff_BeO diff_Be dt h0 h1'
   [exodus]
     type = Exodus
     output_material_properties = true
