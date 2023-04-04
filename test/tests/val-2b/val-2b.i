@@ -87,7 +87,7 @@ scale = 1e20
     type = ADPenaltyInterfaceDiffusion
     variable = conc_BeO
     neighbor_var = conc_Be
-    penalty = 1e2
+    penalty = 1e-5
     jump_prop_name = solubility_ratio
     boundary = 'interface'
   []
