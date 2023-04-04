@@ -10,7 +10,7 @@
 #include "SolubilityRatioMaterial.h"
 #include "TwoMaterialPropertyInterface.h"
 
-registerMooseObject("TMAPApp", SolubilityRatioMaterial);
+registerMooseObject("TMAP8App", SolubilityRatioMaterial);
 
 InputParameters
 SolubilityRatioMaterial::validParams()
@@ -34,8 +34,8 @@ SolubilityRatioMaterial::SolubilityRatioMaterial(const InputParameters & paramet
     _solubility_secondary_name(getParam<std::string>("solubility_secondary")),
     _solubility_primary(getADMaterialPropertyByName<Real>(_solubility_primary_name)),
     _solubility_secondary(getNeighborADMaterialPropertyByName<Real>(_solubility_secondary_name)),
-//    _solubility_primary(getADMaterialProperty<Real>("solubility_primary")),
-//    _solubility_secondary(getNeighborADMaterialProperty<Real>("solubility_secondary")),
+    //    _solubility_primary(getADMaterialProperty<Real>("solubility_primary")),
+    //    _solubility_secondary(getNeighborADMaterialProperty<Real>("solubility_secondary")),
     _concentration_primary(adCoupledValue("concentration_primary")),
     _concentration_secondary(adCoupledNeighborValue("concentration_secondary")),
     _jump(declareADProperty<Real>("solubility_ratio"))
@@ -47,7 +47,9 @@ SolubilityRatioMaterial::computeQpProperties()
 {
   mooseAssert(_neighbor_elem, "Neighbor elem is NULL!");
   //*  _jump[_qp] = _concentration_primary[_qp] - _concentration_secondary[_qp];
-  //  _jump[_qp] = _concentration_primary[_qp]*(_solubility_secondary[_qp]/_solubility_primary[_qp] - 1);
-    _jump[_qp] = _concentration_primary[_qp]/_solubility_primary[_qp] - _concentration_secondary[_qp]/_solubility_secondary[_qp];
-    //_jump[_qp] = 0.0;
+  //  _jump[_qp] = _concentration_primary[_qp]*(_solubility_secondary[_qp]/_solubility_primary[_qp]
+  //  - 1);
+  _jump[_qp] = _concentration_primary[_qp] / _solubility_primary[_qp] -
+               _concentration_secondary[_qp] / _solubility_secondary[_qp];
+  //_jump[_qp] = 0.0;
 }
