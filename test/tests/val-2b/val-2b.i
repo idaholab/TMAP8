@@ -1,17 +1,30 @@
-endtime = 170000
+endtime = 197860
 scale = 1e20
 
 [Mesh]
   [cmg]
     type = CartesianMeshGenerator
     dim = 1
+    # #     0    1    2    3    4    5    6    7    8    9    10   11   12   13   14   15   16   17
+    # dx = '3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9
+    #       1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5'
+    # #     18   19   20   21   22   23   24   25   26   27   28   29   30   31   32   33   34   35
+
     #     0    1    2    3    4    5    6    7    8    9    10   11   12   13   14   15   16   17
-    dx = '3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9 3e-9
-          1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5 1e-5'
-    #     18   19   20   21   22   23   24   25   26   27   28   29   30   31   32   33   34   35
+    dx = '0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9
+          0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9
+        0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5
+        0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5'
+    #     18   19   20   21   22   23   24   25   26   27   28   29   30   31   32   33   34   35   36   37
+
     subdomain_id = '0 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0
-                    1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1'
-    #               18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35'
+                    0 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0
+                    1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
+                    1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1'
+    #               18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37'
+
+    #                 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1'
+    # #               18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35'
   []
   [interface]
     type = SideSetsBetweenSubdomainsGenerator
@@ -87,7 +100,7 @@ scale = 1e20
     type = ADPenaltyInterfaceDiffusion
     variable = conc_BeO
     neighbor_var = conc_Be
-    penalty = 1e-5
+    penalty = 0.15
     jump_prop_name = solubility_ratio
     boundary = 'interface'
   []
@@ -148,14 +161,17 @@ scale = 1e20
 [Functions]
   [temp_bc_func]
     type = ParsedFunction
-    value = 'if(t<180000.0, 773.0, if(t<183600, 773.0-((1-exp(-(t-180000)/2700))*642.3), 300.0+3.0*(t-183600)/60))'
+    # value = 'if(t<180000.0, 773.0, if(t<183600, 773.0-((1-exp(-(t-180000)/2700))*642.3), 300.0+3.0*(t-183600)/60))'
+    value = 'if(t<180000.0, 773.0, if(t<182400.0, 773.0-((1-exp(-(t-180000)/2700))*475), 300+0.05*(t-182400)))'
   []
 
   [diffusivity_BeO_func]
     type = ParsedFunction
     vars = 'T'
     vals = 'temp_bc_func'
-    value = 'if(t<183600, 1.40e-4*exp(-24408/T), 7e-5*exp(-24408/T))'
+    # value = 'if(t<183600, 1.40e-4*exp(-24408/T), 7e-5*exp(-24408/T))'
+    # value = 'if(t<182400, 1.40e-4*exp(-24408/T), 7e-5*exp(-24408/T))' # Paul's
+    value = 'if(t<182400, 1.40e-4*exp(-24408/T), 7e-5*exp(-27000/T))' # TMAP7
   []
 
   [diffusivity_Be_func]
@@ -167,7 +183,9 @@ scale = 1e20
 
   [enclosure_pressure_func]
     type = ParsedFunction
-    value = 'if(t<180000.0, 13300.0, if(t<183600.0, 1e-6, 0.001))'
+    # value = 'if(t<180000.0, 13300.0, if(t<183600.0, 1e-6, 0.001))'
+    value = 'if(t<180015.0, 13300.000001, if(t<182400.0, 1e-6, 0.001))' # Paul's
+
   []
 
   [solubility_BeO_func]
@@ -182,6 +200,11 @@ scale = 1e20
     vars = 'T'
     vals = 'temp_bc_func'
     value = '7.156e27 * exp(-11606/T)/${scale}'
+  []
+
+  [max_time_step_size_func]
+    type = ParsedFunction
+    expression = 'if(t < 170000, 10000, 100)'
   []
 []
 
@@ -215,6 +238,11 @@ scale = 1e20
     variable = conc_BeO
     boundary = left
     diffusivity = diffusivity_BeO_nonAD
+  []
+  [Temp]
+    type = ElementAverageValue
+    block = 1
+    variable = temp
   []
   [diff_Be]
     type = ElementAverageValue
@@ -277,6 +305,12 @@ scale = 1e20
     function = 'diff_Be * dt / h1^2'
     pp_names = 'dt h1 diff_Be'
   []
+  [max_time_step_size_pp]
+    type = FunctionValuePostprocessor
+    function = max_time_step_size_func
+    execute_on = 'INITIAL TIMESTEP_END'
+    outputs = none
+  []
 []
 
 [Preconditioning]
@@ -305,6 +339,8 @@ scale = 1e20
     optimal_iterations = 4
     growth_factor = 1.1
     cutback_factor = 0.5
+
+    timestep_limiting_postprocessor = max_time_step_size_pp
   []
 []
 
