@@ -1,0 +1,10 @@
+[Tests]
+  design = 'EquilibriumBC.md'
+  issues = '#12'
+  [csv]
+    type = CSVDiff
+    input = val-2b.i
+    csvdiff = val-2b_out.csv
+    requirement = 'The system shall be able to model diffusion of deuterium in beryllium sample'
+  []
+[]
