@@ -336,9 +336,9 @@ scale = 1e20
   []
 []
 
-[Debug]
-  show_var_residual_norms = true
-[]
+# [Debug]
+#   show_var_residual_norms = true
+# []
 
 [Outputs]
   # execute_on = FINAL
