@@ -95,7 +95,7 @@ scale = 1e20
     variable = conc_BeO
     neighbor_var = conc_Be
     # penalty = 0.09 # for figure generation
-    penalty = 0.1
+    penalty = 0.06 # to avoid cutting time-step on civet testing
     jump_prop_name = solubility_ratio
     boundary = 'interface'
   []
