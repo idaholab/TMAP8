@@ -18,6 +18,8 @@ InputParameters
 EnclosureSinkScalarKernel::validParams()
 {
   InputParameters params = ODEKernel::validParams();
+  params.addClassDescription("Implements the residual describing a sink term for an enclosure with "
+                             "species exiting into a structure.");
   params.addRequiredParam<PostprocessorName>(
       "flux", "Name of the Postprocessor whose value will be the flux");
   params.addRequiredParam<Real>("surface_area", "The surface area of the structure");

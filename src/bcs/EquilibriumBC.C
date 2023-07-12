@@ -15,6 +15,8 @@ InputParameters
 EquilibriumBC::validParams()
 {
   auto params = ADNodalBC::validParams();
+  params.addClassDescription("Enforces a species equilibrium condition between an enclosure and an "
+                             "adjacent diffusion structure.");
   params.addRequiredParam<Real>(
       "Ko", "The solubility coefficient $Ko$ for the relationship $C_i = Ko exp{-Ea/RT} P_i^p$");
   params.addParam<Real>(
