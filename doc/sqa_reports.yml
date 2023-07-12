@@ -6,7 +6,7 @@ Applications:
         content_directory: ${ROOT_DIR}/doc/content
         remove:
             - ${MOOSE_DIR}/framework/doc/remove.yml
-        log_default: WARNING
+        log_default: ERROR
         show_warning: false
 
 Documents:

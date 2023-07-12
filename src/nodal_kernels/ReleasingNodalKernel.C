@@ -14,6 +14,8 @@ InputParameters
 ReleasingNodalKernel::validParams()
 {
   InputParameters params = NodalKernel::validParams();
+  params.addClassDescription(
+      "Implements a residual describing the release of trapped species in a material.");
   params.addRequiredParam<Real>("alpha_r", "The release rate coefficient");
   params.addRequiredCoupledVar("temp", "The temperature");
   params.addRequiredParam<Real>("trapping_energy", "The trapping energy in units of Kelvin");

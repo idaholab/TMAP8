@@ -223,3 +223,7 @@ peacock_tmp_diff.exo
 *.e.diff
 
 *.ipynb
+
+# Generated resource files
+unit/tmap8-unit.yaml
+tmap8.yaml
