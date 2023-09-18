@@ -3,7 +3,7 @@
   issues = '#12'
   [binary_reaction_same_concentrations]
     type = Exodiff
-    input = ver-1g_same_conc.I
+    input = ver-1g_same_conc.i
     exodiff = ver-1g_same_conc_out.e
     requirement = 'The system shall be able to model chemical reaction between two species with same concentrations and calculate the concentrations of reactants and product as a function of time'
     verification = 'ver-1g.md'
