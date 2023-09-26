@@ -6,7 +6,7 @@ Content:
     - ${MOOSE_DIR}/modules/navier_stokes/doc/content
     - ${MOOSE_DIR}/modules/thermal_hydraulics/doc/content
     - ${MOOSE_DIR}/modules/fluid_properties/doc/content
-    - ${MOOSE_DIR}/modules/heat_conduction/doc/content
+    - ${MOOSE_DIR}/modules/heat_transfer/doc/content
     - ${MOOSE_DIR}/modules/rdg/doc/content
     - ${MOOSE_DIR}/modules/ray_tracing/doc/content
     - ${MOOSE_DIR}/modules/solid_properties/doc/content
@@ -51,7 +51,7 @@ Extensions:
         categories:
             framework: !include ${MOOSE_DIR}/framework/doc/sqa_framework.yml
             tmap8: !include ${ROOT_DIR}/doc/sqa_tmap8.yml
-            heat_conduction: !include ${MOOSE_DIR}/modules/heat_conduction/doc/sqa_heat_conduction.yml
+            heat_transfer: !include ${MOOSE_DIR}/modules/heat_transfer/doc/sqa_heat_transfer.yml
             ray_tracing: !include ${MOOSE_DIR}/modules/ray_tracing/doc/sqa_ray_tracing.yml
             navier_stokes: !include ${MOOSE_DIR}/modules/navier_stokes/doc/sqa_navier_stokes.yml
             thermal_hydraulics: !include ${MOOSE_DIR}/modules/thermal_hydraulics/doc/sqa_thermal_hydraulics.yml
