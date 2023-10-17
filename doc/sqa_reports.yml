@@ -24,6 +24,6 @@ Requirements:
         working_dirs:
             - ${ROOT_DIR}/doc/content
             - ${MOOSE_DIR}/framework/doc/content
-            - ${MOOSE_DIR}/modules/heat_conduction/doc/content
+            - ${MOOSE_DIR}/modules/heat_transfer/doc/content
         directories:
             - ${ROOT_DIR}/test
