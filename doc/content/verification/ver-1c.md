@@ -3,7 +3,7 @@
 # Diffusion Problem with Partially Preloaded Slab
 
 This verification problem is taken from [!cite](longhurst1992verification). Diffusion of tritium through a semi-infinite SiC layer is modeled with an initial
-loading of 1 atom/m{^3} in the first 10 m of a 2275-m slab. Solubility is unity
+loading of 1 atom/m{^3} in the first 10 m of a 2275-m slab. Diffusivity is unity
 and no traping is included. The analytical solution is given by:
 
 \begin{equation}
