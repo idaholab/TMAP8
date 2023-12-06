@@ -8,7 +8,7 @@ This verification problem is taken from [!cite](longhurst1992verification). A si
 A + B \Rightarrow AB
 \end{equation}
 
-is modelled in a functional enclosure. The reaction rate, R, is positive if the species AB is being produced in the reaction and negative if it is being consumed. The forward rate coefficient, K, for the reaction has no spatial or time dependence. The reaction rate is:
+is modeled in a functional enclosure. The reaction rate, R, is positive if the species AB is being produced in the reaction and negative if it is being consumed. The forward rate coefficient, K, for the reaction has no spatial or time dependence. The reaction rate is:
 
 \begin{equation}
 R = K C_A C_B
@@ -32,9 +32,9 @@ where $C_{A_o}$ and $C_{B_o}$ are the initial concentrations of A and B, respect
 C_{AB} = C_{A_o} - \frac{1}{\frac{1}{C_{A_o}} + Kt}
 \end{equation}
 
-For verification of the TMAP code two cases were considered: (a) the initial concentrations of A and B are equal (b) the initial concentrations of A and B are different
+For this verification exercise, two cases were considered: (a) the initial concentrations of A and B are equal and (b) the initial concentrations of A and B are different.
 
-For case A, the initial concentrations of A and B were 2.43 x 10$^{-4}$ atoms / $\mu$m$^3$ (equivalent to 1 $\mu$Pa pressure assuming ideal gas law), and the reaction rate (K) is 4.14 x 10$^3$ $\mu$m$^3$ / atom.s. For case B, the initial concentration of A was same as in case (a) while the initial concentration of B is 1.215 x 10$^{-4}$ atoms / $\mu$m$^3$.
+For case A, the initial concentrations of A and B were 2.43 x 10$^{-4}$ atoms / $\mu$m$^3$ (equivalent to 1 $\mu$Pa pressure assuming ideal gas law), and the reaction rate (K) is 4.14 x 10$^3$ $\mu$m$^3$ / atom$\cdot$s. For case B, the initial concentration of A was same as in case (a) while the initial concentration of B is 1.215 x 10$^{-4}$ atoms / $\mu$m$^3$.
 
 A comparison of the concentration of AB as a function of time is plotted in [ver-1g_comparison_equal_conc] and [ver-1g_comparison_diff_conc] for the case A and case B, respectively. The TMAP8 calculations are found to be in good agreement with the analytical solution.
 

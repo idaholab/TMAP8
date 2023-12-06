@@ -5,14 +5,14 @@
     type = Exodiff
     input = ver-1g_same_conc.i
     exodiff = ver-1g_same_conc_out.e
-    requirement = 'The system shall be able to model chemical reaction between two species with same concentrations and calculate the concentrations of reactants and product as a function of time'
+    requirement = 'The system shall be able to model a chemical reaction between two species with the same concentrations and calculate the concentrations of reactants and product as a function of time'
     verification = 'ver-1g.md'
   []
   [binary_reaction_diff_concentrations]
     type = Exodiff
     input = ver-1g_diff_conc.i
     exodiff = ver-1g_diff_conc_out.e
-    requirement = 'The system shall be able to model chemical reaction between two species with different concentrations and calculate the concentrations of reactants and product as a function of time'
+    requirement = 'The system shall be able to model a chemical reaction between two species with different concentrations and calculate the concentrations of reactants and product as a function of time'
     verification = 'ver-1g.md'
   []
 []
