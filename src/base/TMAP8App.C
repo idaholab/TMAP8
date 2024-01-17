@@ -33,7 +33,8 @@ TMAP8App::~TMAP8App() {}
 void
 TMAP8App::registerAll(Factory & f, ActionFactory & af, Syntax & s)
 {
-  ModulesApp::registerAll(f, af, s);
+  ModulesApp::registerAllObjects<TMAP8App>(_factory, _action_factory, _syntax);
+
   Registry::registerObjectsTo(f, {"TMAP8App"});
   Registry::registerActionsTo(af, {"TMAP8App"});
 
@@ -44,6 +45,7 @@ void
 TMAP8App::registerApps()
 {
   registerApp(TMAP8App);
+  ModulesApp::registerApps();
 }
 
 /***************************************************************************************************
