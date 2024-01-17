@@ -42,8 +42,8 @@ TMAP8TestApp::registerAll(Factory & f, ActionFactory & af, Syntax & s, bool use_
 void
 TMAP8TestApp::registerApps()
 {
-  registerApp(TMAP8App);
   registerApp(TMAP8TestApp);
+  TMAP8App::registerApps();
 }
 
 /***************************************************************************************************
