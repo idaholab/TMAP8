@@ -35,7 +35,7 @@ Deuterium diffusion measurements in BeO were made by [!cite](fowler1977tritium).
 | Solubility in BeO     | 5.00x10$^{20}$ exp(9377.7/T)  | 5.00x10$^{20}$ exp(9377.7/T)  |
 
 
-The model applies 13.3 kPa of D$_2$ for 50 hours followed by evacuation to 1 $\mu$Pa and cool down with a 45 minute time constant for one hour. The deuterium concentrations in the sample have a complex distribution that results from first charging the sample and then discharging it during the cool down. This problem is then restarted with different equations to simulate thermal desorption in the 1 $\mu$Pa environment. That begins at 300 K and goes to 1073 K. Again, the concentration profiles in both the substrate beryllium and the oxide film have a peculiar interaction because of the activation energies involved, but the flux from the sample gives a good fit to the experimental data as shown in [val-2b_comparison].
+The model applies 13.3 kPa of D$_2$ for 50 hours and 15 seconds followed by evacuation to 1 $\mu$Pa and cool down with a 45 minute time constant for one hour (the cooldown phase starts after 50 hours). The deuterium concentrations in the sample have a complex distribution that results from first charging the sample and then discharging it during the cool down. This problem is then restarted with different equations to simulate thermal desorption in the 1 $\mu$Pa environment. That begins at 300 K and goes to 1073 K. Again, the concentration profiles in both the substrate beryllium and the oxide film have a peculiar interaction because of the activation energies involved, but the flux from the sample gives a good fit to the experimental data as shown in [val-2b_comparison].
 
 
 ## Results
