@@ -6,7 +6,7 @@
 #   Nucl. Fusion 61 (2021) https://doi.org/10.1088/1741-4326/abbf35
 
 #The mesh is completely ignored, but TMAP will complain without it. If high-fidelity
-# models of specific components are required, the scalar variables can be coupled to 
+# models of specific components are required, the scalar variables can be coupled to
 # "Field" variables which can vary spatially across the mesh, or could be co-ordinated
 # with sub-apps.
 
@@ -68,10 +68,10 @@
 # will be lost to the scrape-off-layer (SOL) and
 # recycled.
 
-#TES - tritium extraction system pulls tritium from 
+#TES - tritium extraction system pulls tritium from
 # the blanket
 
-#CPS - Coolant purification system pulls tritium from 
+#CPS - Coolant purification system pulls tritium from
 # the coolant
 #
 #An ODE is defined in TMAP8 such that all of the terms must
@@ -83,7 +83,7 @@
 # in Appendix A of the paper (A.1-A.13), with negation
 # on the ParsedODEKernels due to moving the terms to the
 # left hand side.
-# 
+#
 
 
 [ScalarKernels]
@@ -209,9 +209,9 @@
   []
 []
 
-#These postprocessors define the constants referenced in 
+#These postprocessors define the constants referenced in
 # the equations above. The value of any of these constants
-# could be informed by more detailed models (using sub-apps 
+# could be informed by more detailed models (using sub-apps
 # and transfers), but it is important that the postprocessor
 # is evaluated Before the executioner attempts to solve the
 # ODE, which is not the default behavior.
@@ -436,8 +436,8 @@
   hide = 'tbz T_CPS T_DIV texo T_FCU T_FW T_HX T_ISS tsto T_TES T_VAC
           '
   #T_01_BZ T_02_TES T_03_FW T_04_DIV T_05_HX T_06_CPS T_07_vacuum T_08_FCU T_09_ISS T_10_exhaust T_11_storage
-  #tdecay tritium_burn_fraction tritium_burn_rate tritium_fueling_efficiency TBR 
-  #residence1 residence2 residence3 residence4 residence5 residence6 residence7 residence8 residence9 residence10 
+  #tdecay tritium_burn_fraction tritium_burn_rate tritium_fueling_efficiency TBR
+  #residence1 residence2 residence3 residence4 residence5 residence6 residence7 residence8 residence9 residence10
   #        BZ_HX_leak_fraction CPS_FW_leak_fraction CPS_efficiency FCU_STO_fraction HX_CPS_leak_fraction HX_EXO_leak_fraction HX_FW_leak_fraction ISS_EXO_leak_fraction P_DIV_leak_fraction P_FW_leak_fraction TES_efficiency
   exodus = true
 []
