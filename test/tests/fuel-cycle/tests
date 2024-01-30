@@ -1,8 +1,9 @@
 [Tests]
+  issues = '#82'
   [Abdou2021]
-    type = RunApp
+    type = Exodiff
     input = 'fuel_cycle.i'
-    check_input = True
-    method = opt
+    exodiff = 'fuel_cycle_out.e'
+    requirement = 'The system shall faithfully reproduce a consistent solution to an ODE system of equations.'
   []
 []
