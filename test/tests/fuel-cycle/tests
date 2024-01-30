@@ -1,5 +1,6 @@
 [Tests]
   issues = '#82'
+  design = 'ParsedODEKernel.md'
   [Abdou2021]
     type = Exodiff
     input = 'fuel_cycle.i'
