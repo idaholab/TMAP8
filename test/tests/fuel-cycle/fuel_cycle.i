@@ -5,7 +5,7 @@
 #   & C Day & A Loarte & L R Baylor & P Humrickhouse & T F Fuerst & S Cho
 #   Nucl. Fusion 61 (2021) https://doi.org/10.1088/1741-4326/abbf35
 
-#The mesh is completely ignored, but TMAP will complain without it. If high-fidelity
+# The mesh is completely ignored, but TMAP/MOOSE will complain without it. If high-fidelity
 # models of specific components are required, the scalar variables can be coupled to
 # "Field" variables which can vary spatially across the mesh, or could be co-ordinated
 # with sub-apps.
@@ -21,7 +21,7 @@
   ny = 10
 []
 
-#One variable for each inventory of tritium is generated. All variables
+# One variable for each inventory of tritium is generated. All variables
 # are defined as "SCALAR", meaning that they are a single value and are
 # disconnected from any specific geometry
 
@@ -64,26 +64,25 @@
 
 []
 
-#Tritium burn fraction is going to be small, much
+# Tritium burn fraction is going to be small. Much
 # will be lost to the scrape-off-layer (SOL) and
 # recycled.
 
-#TES - tritium extraction system pulls tritium from
+# TES - tritium extraction system pulls tritium from
 # the blanket
 
-#CPS - Coolant purification system pulls tritium from
+# CPS - Coolant purification system pulls tritium from
 # the coolant
-#
-#An ODE is defined in TMAP8 such that all of the terms must
+
+# An ODE is defined in TMAP8 such that all of the terms must
 # be on the left hand side. The terms can be split
-# across multiple "ScalarKernels" which are additive
-# so we have one ODETimeDerivative for each tritium
+# across multiple "ScalarKernels", which are additive,
+# so that we have one ODETimeDerivative for each tritium
 # inventory and a ParsedODEKernel for the rest of the
 # terms. These equations should reflect those described
 # in Appendix A of the paper (A.1-A.13), with negation
 # on the ParsedODEKernels due to moving the terms to the
 # left hand side.
-#
 
 
 [ScalarKernels]
@@ -209,7 +208,7 @@
   []
 []
 
-#These postprocessors define the constants referenced in
+# These postprocessors define the constants referenced in
 # the equations above. The value of any of these constants
 # could be informed by more detailed models (using sub-apps
 # and transfers), but it is important that the postprocessor

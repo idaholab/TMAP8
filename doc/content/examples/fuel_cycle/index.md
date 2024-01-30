@@ -1,10 +1,10 @@
 # Fuel Cycle
 
-This demonstration is to re-create the tritium fuel cycle model described by [!cite](Abdou2021). First, we instantiate a mesh
+This demonstration re-creates the tritium fuel cycle model described by [!cite](Abdou2021). First, we instantiate a mesh
 
 !listing test/tests/fuel-cycle/fuel_cycle.i link=false block=Mesh
 
-For our purposes this does nothing, but we need to have something as a placeholder to run the rest of the simulation.
+For our purposes this does nothing, but MOOSE requires a defined mesh as a placeholder to run the rest of the simulation.
 
 Next, we need to define our system. Following the convention in [!cite](Abdou2021), we have 11 modeled systems, each with
 their own ODE and tritium inventory:
