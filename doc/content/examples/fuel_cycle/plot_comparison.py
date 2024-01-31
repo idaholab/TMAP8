@@ -1,6 +1,7 @@
 import pandas as pd
-import numpy as np
+import timeit
 import scipy.constants as scc
+import numpy as np
 import matplotlib.pyplot as plt
 df = pd.read_csv('../../../../test/tests/fuel-cycle/fuel_cycle_out.csv')
 bz_pts = np.genfromtxt('abdou2021bz.csv')
@@ -28,10 +29,10 @@ ax.set_xscale('log')
 ax.set_xlim(1e-1,1e4)
 ax.set_ylim(1e-3,1e4)
 ax.set_xlabel('Time (Days)')
-ax.scatter(*bz_pts.T,s=1,alpha=0.1)
-ax.scatter(*tes_pts.T,s=1,c='C1',alpha=0.1)
-ax.scatter(*iss_pts.T,s=1,c='C2',alpha=0.1)
-ax.scatter(*sto_pts.T,s=1,c='C3',alpha=0.1)
+ax.plot(*bz_pts.T,alpha=0.5)
+ax.plot(*tes_pts.T,c='C1',alpha=0.5)
+ax.plot(*iss_pts.T,c='C2',alpha=0.5)
+ax.plot(*sto_pts.T,c='C3',alpha=0.5)
 ax.legend(ncols=3)
 ax.set_ylabel('Tritium inventory [kg]')
 fig.savefig('../figures/fuel_cycle_abdou_03.png',dpi=300)
