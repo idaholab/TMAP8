@@ -132,8 +132,8 @@ Assumptions
 
 
 
-We compare our results with those from the black lines in [!cite](Abdou2021) Figure 3 in [!ref](comparison). The shaded regions are estimates of the values shown in the paper,
-and the lines are the results from the model. There is fairly good agreement, though some of the individual inventories, in particular the
+We compare our results with those from the black lines in [!cite](Abdou2021) Figure 3 in [!ref](comparison). The lighter lines are estimates of the values shown in the paper,
+and the darker lines are the results from the model. There is fairly good agreement, though some of the individual inventories, in particular the
 the isotope separation system, which is sensitive to the residence times assumed for the inner fuel cycle, is smaller than expected. This may be due to a different partitioning
 of residence time between the systems than was assumed above.
 
