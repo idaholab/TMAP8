@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 import scipy.constants as scc
 import matplotlib.pyplot as plt
-import scipy.signal as scs
-import skimage
 df = pd.read_csv('../../../../test/tests/fuel-cycle/fuel_cycle_out.csv')
 bz_pts = np.genfromtxt('abdou2021bz.csv')
 tes_pts = np.genfromtxt('abdou2021tes.csv')
@@ -21,13 +19,10 @@ linestyles = {'T_02_TES':'--',
               'T_01_BZ':':',
               'T_11_storage':'-',
               'T_09_ISS':'-.'}
-df.plot("time",x_keys[0],label=x_keys[0],ax=ax,ls=linestyles[x_keys[0]])
 x_keys = [x for x in x_keys if x in ['T_11_storage','T_01_BZ','T_09_ISS','T_02_TES']]
 y_keys = [y for y in df.keys() if 'T_' in y and y not in x_keys]
-for i in range(1,len(x_keys)):
-    df.plot("time",x_keys[i],ax=ax,c='C{:d}'.format(i%10),label=x_keys[i],ls=linestyles[x_keys[i]])
-for i in y_keys:
-    pass#df.plot('time',i,ax=ax)
+for i, x_key in enumerate(x_keys):
+    df.plot("time",x_key ,ax=ax,c='C{:d}'.format(i%10),label=x_key ,ls=linestyles[x_key])
 ax.set_yscale('log')
 ax.set_xscale('log')
 ax.set_xlim(1e-1,1e4)
