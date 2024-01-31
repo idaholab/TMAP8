@@ -12,13 +12,10 @@
 
 [Mesh]
   type = GeneratedMesh
-  dim = 2
+  dim = 1
   xmin = 0
   xmax = 1
-  ymin = 0
-  ymax = 1
-  nx = 10
-  ny = 10
+  nx = 5
 []
 
 # One variable for each inventory of tritium is generated. All variables
@@ -53,15 +50,15 @@
   []
   [T_09_ISS]
     family = SCALAR
+    initial_condition = 0
   []
   [T_10_exhaust]
     family = SCALAR
   []
   [T_11_storage]
     family = SCALAR
-    initial_condition = 113.1
+    initial_condition = 220.9250
   []
-
 []
 
 # Tritium burn fraction is going to be small. Much
@@ -274,12 +271,12 @@
         # this is the required Tritium Breeding Ratio (TBR)
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = 1.05
+    value = 1.511145
   []
   [residence1] #BZ
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = 864000 #10 days, Abdou
+    value = 86400 #1 day, Abdou
     #value = 8640-86400 EXOTIC-6-7-8
   []
   [residence10] #EXO
@@ -312,7 +309,7 @@
   [residence6] #CPS
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = 8640000 #Abdou 1,4
+    value = 864000 #Abdou 1,4
     #value 864000 (analysis case)
   []
   [residence7] #Vac
@@ -323,7 +320,7 @@
   [residence8] #FCU
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = 14400 # 4 hours as per "reasonable approx" Abdou
+    value =  4680 # 4 hours as per "reasonable approx" Abdou
     #value = 1.3 h Day
     #value = 5 h Coleman
     #value = 8640 Abdou
@@ -332,7 +329,7 @@
   [residence9] #ISS
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = 0.95
+    value = 7920
   []
   [tdecay]
     type = ConstantPostprocessor
@@ -416,16 +413,25 @@
     values = 'tbz T_TES T_FW T_DIV T_HX T_CPS T_VAC T_FCU T_ISS texo tsto'
   []
 []
-
+#[Functions]
+#  [catch_five_year]
+#    type = PiecewiseLinear
+#    x = '0 157678999 157681001 864000000.0'
+#    y = '0 0 1 1'
+#  []
+#[]
 [Executioner]
   type = Transient
   start_time = 0
   dtmin = 1
-  end_time = 886400000
+  end_time = 864000000.0
   [TimeStepper]
     type = IterationAdaptiveDT
-    growth_factor = 1.2
+    growth_factor = 1.4
     dt = 5
+    #timestep_limiting_function = 'catch_five_year'
+    #max_function_change = 0.5
+    #force_step_every_function_point = true
   []
   solve_type = 'PJFNK'
   nl_rel_tol = 1e-08
@@ -439,4 +445,6 @@
   #residence1 residence2 residence3 residence4 residence5 residence6 residence7 residence8 residence9 residence10
   #        BZ_HX_leak_fraction CPS_FW_leak_fraction CPS_efficiency FCU_STO_fraction HX_CPS_leak_fraction HX_EXO_leak_fraction HX_FW_leak_fraction ISS_EXO_leak_fraction P_DIV_leak_fraction P_FW_leak_fraction TES_efficiency
   exodus = true
+  csv = true
+  console = false
 []

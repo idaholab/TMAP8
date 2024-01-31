@@ -1,6 +1,6 @@
 [Tests]
   issues = '#82'
-  design = 'ParsedODEKernel.md'
+  design = 'ParsedODEKernel.md ODETimeDerivative.md'
   [Abdou2021]
     type = Exodiff
     input = 'fuel_cycle.i'
