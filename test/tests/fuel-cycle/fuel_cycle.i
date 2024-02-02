@@ -417,13 +417,13 @@
 # inventory. As such, it may be necessary to force the simulation to
 # record a timestep at exactly five years, or whatever doubling time
 # is wanted, to dial in the tritium breeding ratio. This can be done
-# using the IterationAdaptiveDT settings commented out below along 
+# using the IterationAdaptiveDT settings commented out below along
 # with this function.
 #
 # [Functions]
 #   [catch_five_year]
 #     type = PiecewiseLinear
-#     x = '0 157678999 157681001 864000000.0' 
+#     x = '0 157678999 157681001 864000000.0'
 #     y = '0 0 1 1'
 #   []
 # []
@@ -438,7 +438,7 @@
     growth_factor = 1.4
     dt = 5
     #timestep_limiting_function = 'catch_five_year'
-    #max_function_change = 0.5 
+    #max_function_change = 0.5
     #force_step_every_function_point = true
   []
   solve_type = 'PJFNK'
