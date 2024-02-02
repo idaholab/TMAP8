@@ -55,7 +55,7 @@
   []
   [T_11_storage]
     family = SCALAR
-    initial_condition = 220.9250
+    initial_condition = 225.4215
   []
 []
 
@@ -127,79 +127,82 @@
   []
   [I1] # Breeding Zone
     type = ParsedODEKernel
-    expression = '-(tritium_burn_rate * TBR + (1 - TES_efficiency)*T_02_TES/residence2 - T_01_BZ/residence1 - T_01_BZ*tdecay)'
+    expression = '-(tritium_burn_rate * TBR + (1 - TES_efficiency)*T_02_TES/residence2 - T_01_BZ/residence1 - T_01_BZ*epsilon1/residence1 - T_01_BZ*tdecay)'
     variable = 'T_01_BZ'
     coupled_variables = 'T_02_TES'
-    postprocessors = 'TBR tritium_burn_rate TES_efficiency residence1 residence2 tdecay'
+    postprocessors = 'TBR tritium_burn_rate TES_efficiency residence1 residence2 tdecay epsilon1'
   []
   [I2] #Tritium Extraction System
     type = ParsedODEKernel
-    expression = '-((1 - BZ_HX_leak_fraction)*T_01_BZ/residence1 - T_02_TES/residence2 - T_02_TES*tdecay)'
+    expression = '-((1 - BZ_HX_leak_fraction)*T_01_BZ/residence1 - T_02_TES/residence2 - T_02_TES*epsilon2/residence2 - T_02_TES*tdecay)'
     variable = 'T_02_TES'
     coupled_variables = 'T_01_BZ'
-    postprocessors = 'BZ_HX_leak_fraction residence1 residence2 tdecay'
+    postprocessors = 'BZ_HX_leak_fraction residence1 residence2 tdecay epsilon2'
   []
   [I3] #First Wall
     type = ParsedODEKernel
-    expression = '-(P_FW_leak_fraction*tritium_burn_rate /tritium_burn_fraction / tritium_fueling_efficiency + HX_FW_leak_fraction * (1 - HX_CPS_leak_fraction) * (1 - HX_EXO_leak_fraction) * T_05_HX/residence5 + CPS_FW_leak_fraction * (1 - CPS_efficiency) * T_06_CPS/residence6 - T_03_FW/residence3 - T_03_FW*tdecay)'
+    expression = '-(P_FW_leak_fraction*tritium_burn_rate /tritium_burn_fraction / tritium_fueling_efficiency + HX_FW_leak_fraction * (1 - HX_CPS_leak_fraction) * (1 - HX_EXO_leak_fraction) 
+                  * T_05_HX/residence5 + CPS_FW_leak_fraction * (1 - CPS_efficiency) * T_06_CPS/residence6 - T_03_FW/residence3 - T_03_FW*epsilon3/residence3 - T_03_FW*tdecay)'
     variable = 'T_03_FW'
     coupled_variables = 'T_05_HX T_06_CPS'
-    postprocessors = 'P_FW_leak_fraction tritium_burn_rate tritium_burn_fraction tritium_fueling_efficiency HX_FW_leak_fraction HX_CPS_leak_fraction HX_EXO_leak_fraction residence5 CPS_FW_leak_fraction CPS_efficiency residence6 residence3 tdecay'
+    postprocessors = 'P_FW_leak_fraction tritium_burn_rate tritium_burn_fraction tritium_fueling_efficiency HX_FW_leak_fraction HX_CPS_leak_fraction HX_EXO_leak_fraction residence5 CPS_FW_leak_fraction CPS_efficiency residence6 residence3 tdecay epsilon3'
   []
   [I4] #Divertor
     type = ParsedODEKernel
-    expression = '-(P_DIV_leak_fraction * tritium_burn_rate/tritium_burn_fraction / tritium_fueling_efficiency + (1-HX_FW_leak_fraction)*(1-HX_CPS_leak_fraction)*(1-HX_EXO_leak_fraction)* T_05_HX/residence5 + (1-CPS_FW_leak_fraction)*(1 - CPS_efficiency) * T_06_CPS/residence6 - T_04_DIV/residence4 - T_04_DIV*tdecay)'
+    expression = '-(P_DIV_leak_fraction * tritium_burn_rate/tritium_burn_fraction / tritium_fueling_efficiency + (1-HX_FW_leak_fraction)*
+                  (1-HX_CPS_leak_fraction)*(1-HX_EXO_leak_fraction)* T_05_HX/residence5 + (1-CPS_FW_leak_fraction)*(1 - CPS_efficiency) * T_06_CPS/residence6  - T_04_DIV*epsilon4/residence4 - T_04_DIV/residence4 - T_04_DIV*tdecay)'
     variable = 'T_04_DIV'
     coupled_variables = 'T_06_CPS T_05_HX'
-    postprocessors = 'P_DIV_leak_fraction tritium_burn_rate tritium_burn_fraction tritium_fueling_efficiency HX_FW_leak_fraction HX_CPS_leak_fraction HX_EXO_leak_fraction residence5 CPS_FW_leak_fraction CPS_efficiency residence6 residence4 tdecay'
+    postprocessors = 'P_DIV_leak_fraction tritium_burn_rate tritium_burn_fraction tritium_fueling_efficiency HX_FW_leak_fraction HX_CPS_leak_fraction HX_EXO_leak_fraction residence5 CPS_FW_leak_fraction CPS_efficiency residence6 residence4 tdecay epsilon4'
   []
   [I5] #Heat eXchanger
     type = ParsedODEKernel
-    expression = '-(BZ_HX_leak_fraction * T_01_BZ/residence1 + T_03_FW/residence3 + T_04_DIV/residence4 - T_05_HX/residence5 -T_05_HX*tdecay)'
+    expression = '-(BZ_HX_leak_fraction * T_01_BZ/residence1 + T_03_FW/residence3 + T_04_DIV/residence4 - T_05_HX/residence5 - T_05_HX*epsilon5/residence5 -T_05_HX*tdecay)'
     variable = 'T_05_HX'
     coupled_variables = 'T_01_BZ T_03_FW T_04_DIV'
-    postprocessors = 'BZ_HX_leak_fraction residence1 residence3 residence4 residence5 tdecay'
+    postprocessors = 'BZ_HX_leak_fraction residence1 residence3 residence4 residence5 tdecay epsilon5'
   []
   [I6] #Coolant Purification System
     type = ParsedODEKernel
-    expression = '-(HX_CPS_leak_fraction * (1 - HX_EXO_leak_fraction)*T_05_HX/residence5 - T_06_CPS/residence6 - T_06_CPS*tdecay)'
+    expression = '-(HX_CPS_leak_fraction * (1 - HX_EXO_leak_fraction)*T_05_HX/residence5 - T_06_CPS/residence6 - T_06_CPS*epsilon6/residence6 - T_06_CPS*tdecay)'
     variable = 'T_06_CPS'
     coupled_variables = 'T_05_HX'
-    postprocessors = 'HX_CPS_leak_fraction HX_EXO_leak_fraction residence5 residence6 tdecay'
+    postprocessors = 'HX_CPS_leak_fraction HX_EXO_leak_fraction residence5 residence6 tdecay epsilon6'
   []
   [I7] #Vacuum Pump
     type = ParsedODEKernel
-    expression = '-((1-tritium_burn_fraction*tritium_fueling_efficiency - P_FW_leak_fraction - P_DIV_leak_fraction)*tritium_burn_rate/(tritium_burn_fraction * tritium_fueling_efficiency) - T_07_vacuum/residence7 - T_07_vacuum*tdecay)'
+    expression = '-((1-tritium_burn_fraction*tritium_fueling_efficiency - P_FW_leak_fraction - P_DIV_leak_fraction)*
+                  tritium_burn_rate/(tritium_burn_fraction * tritium_fueling_efficiency) - T_07_vacuum/residence7 - T_07_vacuum*epsilon7/residence7 - T_07_vacuum*tdecay)'
     variable = 'T_07_vacuum'
-    postprocessors = 'tritium_burn_rate tritium_fueling_efficiency P_FW_leak_fraction P_DIV_leak_fraction tritium_burn_fraction residence7 tdecay'
+    postprocessors = 'tritium_burn_rate tritium_fueling_efficiency P_FW_leak_fraction P_DIV_leak_fraction tritium_burn_fraction residence7 tdecay epsilon7'
   []
   [I8] #Fuel clean-up
     type = ParsedODEKernel
-    expression = '-(T_07_vacuum/residence7 - T_08_FCU/residence8 - T_08_FCU*tdecay)'
+    expression = '-(T_07_vacuum/residence7 - T_08_FCU/residence8 - T_08_FCU*epsilon8/residence8 - T_08_FCU*tdecay)'
     variable = 'T_08_FCU'
-    postprocessors = 'residence7 residence8 tdecay'
+    postprocessors = 'residence7 residence8 tdecay epsilon8'
     coupled_variables = 'T_07_vacuum'
   []
   [I9] #Isotope Separation System
     type = ParsedODEKernel
-    expression = '-((1-FCU_STO_fraction)*T_08_FCU/residence8 + T_10_exhaust/residence10 + TES_efficiency*T_02_TES/residence2 + CPS_efficiency*T_06_CPS/residence6 - T_09_ISS/residence9 - T_09_ISS*tdecay)'
+    expression = '-((1-FCU_STO_fraction)*T_08_FCU/residence8 + T_10_exhaust/residence10 + TES_efficiency*T_02_TES/residence2 + CPS_efficiency*T_06_CPS/residence6 - T_09_ISS/residence9 - T_09_ISS*epsilon9/residence9 - T_09_ISS*tdecay)'
     variable = 'T_09_ISS'
     coupled_variables = 'T_08_FCU T_10_exhaust T_02_TES T_06_CPS'
-    postprocessors = 'FCU_STO_fraction residence8 residence10 TES_efficiency residence2 CPS_efficiency residence6 residence9 tdecay'
+    postprocessors = 'FCU_STO_fraction residence8 residence10 TES_efficiency residence2 CPS_efficiency residence6 residence9 tdecay epsilon9'
   []
   [I10] #Exhaust and Water Detritiation System (EXO)
     type = ParsedODEKernel
-    expression = '-(HX_EXO_leak_fraction * T_05_HX/residence5 + ISS_EXO_leak_fraction*T_09_ISS/residence9 - T_10_exhaust/residence10 - T_10_exhaust*tdecay)'
+    expression = '-(HX_EXO_leak_fraction * T_05_HX/residence5 + ISS_EXO_leak_fraction*T_09_ISS/residence9 - T_10_exhaust/residence10 - T_10_exhaust*epsilon10/residence10 - T_10_exhaust*tdecay)'
     variable = 'T_10_exhaust'
     coupled_variables = 'T_05_HX T_09_ISS'
-    postprocessors = 'HX_EXO_leak_fraction residence5 ISS_EXO_leak_fraction residence9 residence10 tdecay'
+    postprocessors = 'HX_EXO_leak_fraction residence5 ISS_EXO_leak_fraction residence9 residence10 tdecay epsilon10'
   []
   [I11] #Storage and Management (STO)
     type = ParsedODEKernel
     expression = '-(FCU_STO_fraction * T_08_FCU/residence8 + (1-ISS_EXO_leak_fraction)*T_09_ISS/residence9 - tritium_burn_rate/tritium_burn_fraction/tritium_fueling_efficiency - T_11_storage*tdecay)'
     variable = 'T_11_storage'
     coupled_variables = 'T_08_FCU T_09_ISS'
-    postprocessors = 'FCU_STO_fraction residence8 ISS_EXO_leak_fraction residence9 tritium_burn_rate tritium_burn_fraction tritium_fueling_efficiency tdecay' #Residence is really (1+epsilon)/tau - (1 + non_radiological losses)/residence time
+    postprocessors = 'FCU_STO_fraction residence8 ISS_EXO_leak_fraction residence9 tritium_burn_rate tritium_burn_fraction tritium_fueling_efficiency tdecay'
   []
 []
 
@@ -269,19 +272,68 @@
         # this is the required Tritium Breeding Ratio (TBR)
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = 1.511145
+    value = 1.9247
+  []
+  [epsilon1] #BZ
+    type = ConstantPostprocessor
+    execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
+    value = 0
+  []
+  [epsilon2] #TES
+    type = ConstantPostprocessor
+    execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
+    value = 1e-4
+  []
+  [epsilon3] #FW
+    type = ConstantPostprocessor
+    execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
+    value = 0
+  []
+  [epsilon4] #DIV
+    type = ConstantPostprocessor
+    execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
+    value = 0
+  []
+  [epsilon5] #HX
+    type = ConstantPostprocessor
+    execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
+    value = 1e-4
+  []
+  [epsilon6] #CPS
+    type = ConstantPostprocessor
+    execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
+    value = 1e-4
+  []
+  [epsilon7] #Vac
+    type = ConstantPostprocessor
+    execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
+    value = 1e-4
+  []
+  [epsilon8] #FCU
+    type = ConstantPostprocessor
+    execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
+    value =  1e-4
+  []
+  [epsilon9] #ISS
+    type = ConstantPostprocessor
+    execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
+    value = 1e-4
+  []
+  [epsilon10] #EXO
+    type = ConstantPostprocessor
+    execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
+    value = 1e-4
+  []
+  [epsilon11] #STO
+    type = ConstantPostprocessor
+    execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
+    value = 0
   []
   [residence1] #BZ
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
     value = 86400 #1 day, Abdou
     #value = 8640-86400 EXOTIC-6-7-8
-  []
-  [residence10] #EXO
-    type = ConstantPostprocessor
-    execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = 3600 # Day et al
-    #value = 72000 #Coleman et al
   []
   [residence2] #TES
     type = ConstantPostprocessor
@@ -313,13 +365,14 @@
   [residence7] #Vac
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = 1800 # 30 minutes (20-30 minutes)
+    value = 1
+    #value = 1800 # 30 minutes (20-30 minutes)
   []
   [residence8] #FCU
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value =  4680 # 1.3 hours as per Day
-    #value = 1.3 h Day
+    value =  1
+    #value = 4680 # 1.3 h as per Day
     #value = 5 h Coleman
     #value = 8640 Abdou
     #value = 86400 Abdou
@@ -327,7 +380,14 @@
   [residence9] #ISS
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = 7920
+    value = 14400 
+    #value = 7920 #(for four hour overall residence time in inner loop)
+  []
+  [residence10] #EXO
+    type = ConstantPostprocessor
+    execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
+    value = 3600 # Day et al
+    #value = 72000 #Coleman et al
   []
   [tdecay]
     type = ConstantPostprocessor
@@ -420,13 +480,13 @@
 # using the IterationAdaptiveDT settings commented out below along
 # with this function.
 #
-# [Functions]
-#   [catch_five_year]
-#     type = PiecewiseLinear
-#     x = '0 157678999 157681001 864000000.0'
-#     y = '0 0 1 1'
-#   []
-# []
+ [Functions]
+   [catch_five_year]
+     type = PiecewiseLinear
+     x = '0 157680000 157680100 864000000.0'
+     y = '0 0 1 1'
+   []
+ []
 
 [Executioner]
   type = Transient
@@ -437,9 +497,9 @@
     type = IterationAdaptiveDT
     growth_factor = 1.4
     dt = 5
-    #timestep_limiting_function = 'catch_five_year'
+    timestep_limiting_function = 'catch_five_year'
     #max_function_change = 0.5
-    #force_step_every_function_point = true
+    force_step_every_function_point = true
   []
   solve_type = 'PJFNK'
   nl_rel_tol = 1e-08
