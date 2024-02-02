@@ -45,7 +45,6 @@ void
 TMAP8App::registerApps()
 {
   registerApp(TMAP8App);
-  ModulesApp::registerApps();
 }
 
 /***************************************************************************************************
