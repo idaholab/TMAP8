@@ -15,7 +15,7 @@
   dim = 1
   xmin = 0
   xmax = 1
-  nx = 5
+  nx = 1
 []
 
 # One variable for each inventory of tritium is generated. All variables
@@ -25,7 +25,6 @@
 [Variables]
   [T_01_BZ]
     family = SCALAR
-    initial_condition = 0
   []
   [T_02_TES]
     family = SCALAR
@@ -36,13 +35,13 @@
   [T_04_DIV]
     family = SCALAR
   []
-  [T_05_HX] #HX
+  [T_05_HX]
     family = SCALAR
   []
-  [T_06_CPS] #CPS
+  [T_06_CPS]
     family = SCALAR
   []
-  [T_07_vacuum] #FCU
+  [T_07_vacuum]
     family = SCALAR
   []
   [T_08_FCU]
@@ -50,7 +49,6 @@
   []
   [T_09_ISS]
     family = SCALAR
-    initial_condition = 0
   []
   [T_10_exhaust]
     family = SCALAR
@@ -209,7 +207,7 @@
 # the equations above. The value of any of these constants
 # could be informed by more detailed models (using sub-apps
 # and transfers), but it is important that the postprocessor
-# is evaluated Before the executioner attempts to solve the
+# is evaluated before the executioner attempts to solve the
 # ODE, which is not the default behavior.
 [Postprocessors]
   [BZ_HX_leak_fraction] #f_{1-5}
@@ -309,8 +307,8 @@
   [residence6] #CPS
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = 864000 #Abdou 1,4
-    #value 864000 (analysis case)
+    value = 864000 #Abdou analysis case
+    #value 8640000 Abdou 1,4
   []
   [residence7] #Vac
     type = ConstantPostprocessor
@@ -320,7 +318,7 @@
   [residence8] #FCU
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value =  4680 # 4 hours as per "reasonable approx" Abdou
+    value =  4680 # 1.3 hours as per Day
     #value = 1.3 h Day
     #value = 5 h Coleman
     #value = 8640 Abdou
@@ -353,7 +351,7 @@
   []
   # These postprocessors exist to sum up the tritium inventory
   #  across the entirety of the system
-  [tbz]
+  [T_BZ]
     type = ScalarVariable
     variable = T_01_BZ
     execute_on = TIMESTEP_END
@@ -398,28 +396,21 @@
     variable = T_09_ISS
     execute_on = TIMESTEP_END
   []
-  [texo]
+  [T_EXO]
     type = ScalarVariable
     variable = T_10_exhaust
     execute_on = TIMESTEP_END
   []
-  [tsto]
+  [T_STO]
     type = ScalarVariable
     variable = T_11_storage
     execute_on = TIMESTEP_END
   []
   [total_tritium]
     type = SumPostprocessor
-    values = 'tbz T_TES T_FW T_DIV T_HX T_CPS T_VAC T_FCU T_ISS texo tsto'
+    values = 'T_BZ T_TES T_FW T_DIV T_HX T_CPS T_VAC T_FCU T_ISS T_EXO T_STO'
   []
 []
-#[Functions]
-#  [catch_five_year]
-#    type = PiecewiseLinear
-#    x = '0 157678999 157681001 864000000.0'
-#    y = '0 0 1 1'
-#  []
-#[]
 [Executioner]
   type = Transient
   start_time = 0
@@ -438,12 +429,8 @@
   nl_abs_tol = 1e-14
 []
 [Outputs]
-  hide = 'tbz T_CPS T_DIV texo T_FCU T_FW T_HX T_ISS tsto T_TES T_VAC
+  hide = 'T_BZ T_CPS T_DIV T_EXO T_FCU T_FW T_HX T_ISS T_STO T_TES T_VAC
           '
-  #T_01_BZ T_02_TES T_03_FW T_04_DIV T_05_HX T_06_CPS T_07_vacuum T_08_FCU T_09_ISS T_10_exhaust T_11_storage
-  #tdecay tritium_burn_fraction tritium_burn_rate tritium_fueling_efficiency TBR
-  #residence1 residence2 residence3 residence4 residence5 residence6 residence7 residence8 residence9 residence10
-  #        BZ_HX_leak_fraction CPS_FW_leak_fraction CPS_efficiency FCU_STO_fraction HX_CPS_leak_fraction HX_EXO_leak_fraction HX_FW_leak_fraction ISS_EXO_leak_fraction P_DIV_leak_fraction P_FW_leak_fraction TES_efficiency
   exodus = true
   csv = true
   console = false
