@@ -480,13 +480,13 @@
 # using the IterationAdaptiveDT settings commented out below along
 # with this function.
 #
- [Functions]
-   [catch_five_year]
-     type = PiecewiseLinear
-     x = '0 157680000 157680100 864000000.0'
-     y = '0 0 1 1'
-   []
- []
+#[Functions]
+#  [catch_five_year]
+#    type = PiecewiseLinear
+#    x = '0 157680000 157680100 864000000.0'
+#    y = '0 0 1 1'
+#  []
+#[]
 
 [Executioner]
   type = Transient
@@ -497,9 +497,9 @@
     type = IterationAdaptiveDT
     growth_factor = 1.4
     dt = 5
-    timestep_limiting_function = 'catch_five_year'
+    #timestep_limiting_function = 'catch_five_year'
     #max_function_change = 0.5
-    force_step_every_function_point = true
+    #force_step_every_function_point = true
   []
   solve_type = 'PJFNK'
   nl_rel_tol = 1e-08
