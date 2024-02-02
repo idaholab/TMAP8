@@ -1,6 +1,10 @@
 # Fuel Cycle
 
-This demonstration re-creates the tritium fuel cycle model described by [!cite](Abdou2021). First, we instantiate a mesh
+This demonstration re-creates the tritium fuel cycle model described by [!cite](Abdou2021). 
+
+### Generating the Input File
+
+First, we instantiate a mesh
 
 !listing test/tests/fuel-cycle/fuel_cycle.i link=false block=Mesh
 
@@ -78,6 +82,7 @@ their own ODE and tritium inventory:
 \frac{dI_{11}}{dt} = f_{8-11}\frac{I_8}{\tau_8} + (1-f_{9-10})\frac{I_9}{\tau_9} - \frac{\dot{N}^{-}}{\eta_f f_b} - I_{11}\lambda
 \end{equation}
 
+For an interpretation of these equations and explanations about the notations, readers should refer to [!cite](Abdou2021) (Appendix).
 We instantiate the variables in the typical [`Variables`](/syntax/Variables) block, making sure to set the [!param](/Variables/family) attribute to `SCALAR` for each variable.
 The default initial condition is zero.
 
@@ -87,7 +92,7 @@ Next we initiate the [`ScalarKernels`](/syntax/ScalarKernels) block. We can mode
 and the other terms can be lumped in [`ParsedODEKernel`](/syntax/ScalarKernels/ParsedODEKernel) objects. We should have one [`ODETimeDerivative`](/syntax/ScalarKernels/ODETimeDerivative)
  and one (or more) [`ParsedODEKernel`](/syntax/ScalarKernels/ParsedODEKernel) object(s) per equation above. Internally, TMAP8 will sum the contributions of each object, so we need to
 negate the [`ParsedODEKernel`](/syntax/ScalarKernels/ParsedODEKernel) equation from its representation above (move it to the left hand side). We use [`Postprocessors`](/syntax/Postprocessors)
-to re-use the recurring variables
+to re-use the recurring variables.
 
 !listing test/tests/fuel-cycle/fuel_cycle.i link=false block=ScalarKernels
 
@@ -108,13 +113,13 @@ With these blocks set, we can now run the simulation and track tritium inventory
 Implementing a high-fidelity model to replace the default values of specific postprocessors or to more accurately model
 specific components is an exercise left for a later date.
 
-### Comparing Results against literature
+### Comparing Results Against Literature
 
-In order to compare against [!cite](Abdou2021), we need to make a few assumptions. First, we set the residence times and other parameters to the values listed in Tables 1-3
-(the underlined if there are multiple options). Here we also assume that the "Fuel clean-up and isotope separation system" total residence time of 4 hours as specified in the
+In order to compare against [!cite](Abdou2021), we need to make a few assumptions. First, we set the residence times and other parameters to the values listed in Tables 1-3 of [!cite](Abdou2021)
+(the underlined value if there are multiple options). Here we also assume that the "Fuel clean-up and isotope separation system" total residence time of 4 hours as specified in the
 paper is broken down into 0.5 hour for the vacuum pump, 1.3 hours for the fuel clean-up system and another 2.2 hours for the isotope separation system.
 
-Targeting the black lines of Figure 3, We also need to determine the appropriate reserve inventory $\frac{\dot{N}^-}{\eta_f f_b}t_r q$, which, given $q=0.25$ and
+Targeting the black lines of Figure 3 of [!cite](Abdou2021), we also need to determine the appropriate reserve inventory $\frac{\dot{N}^-}{\eta_f f_b}t_r q$, which, given $q=0.25$ and
  $t_r=1\ \text{day}$ comes out to 127.5 kg. With this constraint, we can determine the relevant TBR to obtain a doubling time of 5 years, and iterating by hand, a value of 1.511145 yields a
 doubling time of 5 years to three decimal places if `T_11_storage` is given an initial condition of 220.925 as shown in [!ref](assumptions).
 
@@ -124,20 +129,20 @@ Assumptions
 !table id=assumptions caption=Assumptions and iterated conditions used for this example.
 | Parameter | Value |
 | --- | --- |
-| `residence7` | 1800 s |
-| `residence8` | 4680 s |
-| `residence9` | 7920 s |
+| `residence7` ($\tau_5$) | 1800 s |
+| `residence8` ($\tau_8$) | 4680 s |
+| `residence9` ($\tau_9$) | 7920 s |
 | `TBR` | 1.511145 |
-| `T_11_storage` | 220.925 kg |
+| Initial value for `T_11_storage` | 220.925 kg |
 
 
 
-We compare our results with those from the black lines in [!cite](Abdou2021) Figure 3 in [!ref](comparison). The lighter lines are estimates of the values shown in the paper,
+We compare our results with those from the black lines in Figure 3 from [!cite](Abdou2021) in [!ref](comparison). The lighter lines are estimates of the values shown in the paper,
 and the darker lines are the results from the model. There is fairly good agreement, though some of the individual inventories, in particular the
 the isotope separation system, which is sensitive to the residence times assumed for the inner fuel cycle, is smaller than expected. This may be due to a different partitioning
 of residence time between the systems than was assumed above.
 
-!media examples/figures/fuel_cycle_abdou_03.png id=comparison caption=Tritium inventories of specific systems as a function of time. Shaded regions are best estimate of Figure 3 in [!cite](Abdou2021)
+!media examples/figures/fuel_cycle_abdou_03.png id=comparison caption=Tritium inventories of specific systems as a function of time. Shaded regions are best estimate of Figure 3 in [!cite](Abdou2021).
 lines are model results.
 
 !listing test/tests/fuel-cycle/fuel_cycle.i

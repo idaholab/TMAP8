@@ -5,6 +5,6 @@
     type = Exodiff
     input = 'fuel_cycle.i'
     exodiff = 'fuel_cycle_out.e'
-    requirement = 'The system shall faithfully reproduce a consistent solution to an ODE system of equations modeling the tritium fuel cycle.'
+    requirement = 'The system shall reproduce a consistent solution to an ODE system of equations modeling the tritium fuel cycle.'
   []
 []
