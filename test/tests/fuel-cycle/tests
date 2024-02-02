@@ -2,9 +2,9 @@
   issues = '#82'
   design = 'ParsedODEKernel.md ODETimeDerivative.md'
   [Abdou2021]
-    type = Exodiff
+    type = CSVDiff
     input = 'fuel_cycle.i'
-    exodiff = 'fuel_cycle_out.e'
+    csvdiff = 'fuel_cycle_out.csv'
     requirement = 'The system shall reproduce a consistent solution to an ODE system of equations modeling the tritium fuel cycle.'
   []
 []

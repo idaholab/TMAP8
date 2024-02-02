@@ -411,6 +411,23 @@
     values = 'T_BZ T_TES T_FW T_DIV T_HX T_CPS T_VAC T_FCU T_ISS T_EXO T_STO'
   []
 []
+
+# The tritium breeding ratio is not directly given in the paper,
+# but is specified as a "five year" doubling time from the initial
+# inventory. As such, it may be necessary to force the simulation to
+# record a timestep at exactly five years, or whatever doubling time
+# is wanted, to dial in the tritium breeding ratio. This can be done
+# using the IterationAdaptiveDT settings commented out below along 
+# with this function.
+#
+# [Functions]
+#   [catch_five_year]
+#     type = PiecewiseLinear
+#     x = '0 157678999 157681001 864000000.0' 
+#     y = '0 0 1 1'
+#   []
+# []
+
 [Executioner]
   type = Transient
   start_time = 0
@@ -421,7 +438,7 @@
     growth_factor = 1.4
     dt = 5
     #timestep_limiting_function = 'catch_five_year'
-    #max_function_change = 0.5
+    #max_function_change = 0.5 
     #force_step_every_function_point = true
   []
   solve_type = 'PJFNK'
@@ -429,9 +446,7 @@
   nl_abs_tol = 1e-14
 []
 [Outputs]
-  hide = 'T_BZ T_CPS T_DIV T_EXO T_FCU T_FW T_HX T_ISS T_STO T_TES T_VAC
-          '
-  exodus = true
+  hide = 'T_BZ T_CPS T_DIV T_EXO T_FCU T_FW T_HX T_ISS T_STO T_TES T_VAC'
   csv = true
   console = false
 []
