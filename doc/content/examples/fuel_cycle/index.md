@@ -123,9 +123,6 @@ Targeting the black lines of Figure 3 of [!cite](Abdou2021), we also need to det
  $t_r=1\ \text{day}$ comes out to 127.5 kg. With this constraint, we can determine the relevant TBR to obtain a doubling time of 5 years, and iterating by hand, a value of 1.9247 yields a
 doubling time of 5 years to three decimal places if `T_11_storage` is given an initial condition of 225.4215 as shown in [!ref](assumptions).
 
-Assumptions
-
-
 !table id=assumptions caption=Assumptions and iteratively obtained conditions used for this example.
 | Parameter | Value |
 | --- | --- |
