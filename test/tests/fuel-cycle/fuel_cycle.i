@@ -141,7 +141,7 @@
   []
   [I3] #First Wall
     type = ParsedODEKernel
-    expression = '-(P_FW_leak_fraction*tritium_burn_rate /tritium_burn_fraction / tritium_fueling_efficiency + HX_FW_leak_fraction * (1 - HX_CPS_leak_fraction) * (1 - HX_EXO_leak_fraction) 
+    expression = '-(P_FW_leak_fraction*tritium_burn_rate /tritium_burn_fraction / tritium_fueling_efficiency + HX_FW_leak_fraction * (1 - HX_CPS_leak_fraction) * (1 - HX_EXO_leak_fraction)
                   * T_05_HX/residence5 + CPS_FW_leak_fraction * (1 - CPS_efficiency) * T_06_CPS/residence6 - T_03_FW/residence3 - T_03_FW*epsilon3/residence3 - T_03_FW*tdecay)'
     variable = 'T_03_FW'
     coupled_variables = 'T_05_HX T_06_CPS'
@@ -380,7 +380,7 @@
   [residence9] #ISS
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = 14400 
+    value = 14400
     #value = 7920 #(for four hour overall residence time in inner loop)
   []
   [residence10] #EXO
