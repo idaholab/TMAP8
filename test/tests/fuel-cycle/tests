@@ -1,0 +1,10 @@
+[Tests]
+  issues = '#82'
+  design = 'ParsedODEKernel.md ODETimeDerivative.md'
+  [Abdou2021]
+    type = CSVDiff
+    input = 'fuel_cycle.i'
+    csvdiff = 'fuel_cycle_out.csv'
+    requirement = 'The system shall reproduce a consistent solution to an ODE system of equations modeling the tritium fuel cycle.'
+  []
+[]
