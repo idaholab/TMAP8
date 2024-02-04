@@ -10,10 +10,10 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol = pd.read_csv("./ver-1a_csv.csv")
+tmap8_prediction = pd.read_csv("./ver-1a_csv.csv")
 analytical_sol = pd.read_csv("./analytical.csv")
-tmap_time = tmap_sol['time']
-tmap_fr = tmap_sol['rhs_release']
+tmap_time = tmap8_prediction['time']
+tmap_fr = tmap8_prediction['released_fraction']
 analytical_time = analytical_sol['time(s)']
 analytical_fr = analytical_sol['frac_rel']
 
