@@ -205,7 +205,7 @@ ax.set_xlim(right=140)
 ax.set_ylim(bottom=0)
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
-plt.savefig('comparison_analytical_TMAP4_release_fraction.png', bbox_inches='tight');
+plt.savefig('ver-1a_comparison_analytical_TMAP4_release_fraction.png', bbox_inches='tight');
 plt.close(fig)
 
 # Plot figure for verification of release fraction as determined in TMAP7 (SiC inner layer)
@@ -222,7 +222,7 @@ ax.set_xlim(right=140)
 ax.set_ylim(bottom=0)
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
-plt.savefig('comparison_analytical_TMAP7_release_fraction.png', bbox_inches='tight');
+plt.savefig('ver-1a_comparison_analytical_TMAP7_release_fraction.png', bbox_inches='tight');
 plt.close(fig)
 
 # Plot figure for verification of flux as determined in TMAP7 (SiC outer layer)
@@ -239,5 +239,5 @@ ax.set_xlim(right=140)
 ax.set_ylim(bottom=0)
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
-plt.savefig('comparison_analytical_TMAP7_flux.png', bbox_inches='tight');
+plt.savefig('ver-1a_comparison_analytical_TMAP7_flux.png', bbox_inches='tight');
 plt.close(fig)
