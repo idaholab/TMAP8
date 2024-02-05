@@ -1,21 +1,48 @@
-temperature = 2.373e3
-initial_pressure = 1e6
-kb = 1.38e-23
-length_unit = 1e6 # number of length units in a meter
-pressure_unit = 1 # number of pressure units in a Pascal
+# Verification Problem #1a from TMAP4/TMAP7 V&V document
+# Tritium diffusion through SiC layer with depleting source at 2100 C.
+# No Sorret effect, solubility, or trapping included.
+
+# Physical Constants
+kb = 1.38e-23 # Boltzmann constant J/K - note that we use the same number of digits as in TMAP7
+R = 8.314 # Gas constant J/mol/K - note that we use the same number of digits as in TMAP4
+
+# Data used in TMAP4/TMAP7 case
+length_unit = 1e6 # conversion from meters to microns
+temperature = 2373 # K
+initial_pressure = 1e6 # Pa
+volume_enclosure = '${fparse 5.20e-11*length_unit^3}' # microns^3
+surface_area = '${fparse 2.16e-6*length_unit^2}' # microns^2
+diffusivity_SiC = '${fparse 1.58e-4*exp(-308000.0/(R*temperature))*length_unit^2}' # microns^2/s
+solubility_constant = '${fparse  7.244e22/(temperature * length_unit^3)}' # atoms/microns^3*Pa = atoms*s^2/m^2/kg
+slab_thickness = '${fparse  3.30e-5*length_unit}' # microns
+
+# Useful equations/conversions
+concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_unit^3}' # J = Pa*microns^3
 
 [Mesh]
   type = GeneratedMesh
   dim = 1
   nx = 10
-  xmax = '${fparse 3.3e-5 * length_unit}'
+  xmax = '${slab_thickness}'
+[]
+
+[Variables]
+  # concentration in the SiC layer in atoms/microns^3
+  [u]
+  []
+  # pressure of the enclosure in Pa
+  [v]
+    family = SCALAR
+    order = FIRST
+    initial_condition = '${fparse initial_pressure}'
+  []
 []
 
 [Kernels]
   [diff]
     type = MatDiffusion
     variable = u
-    diffusivity = '${fparse 1.58e-4*exp(-308000/(8.314*temperature))*length_unit^2}'
+    diffusivity = '${diffusivity_SiC}'
   []
   [time]
     type = TimeDerivative
@@ -31,75 +58,72 @@ pressure_unit = 1 # number of pressure units in a Pascal
   [flux_sink]
     type = EnclosureSinkScalarKernel
     variable = v
-    flux = scale_flux
-    surface_area = '${fparse 2.16e-6*length_unit^2}'
-    volume = '${fparse 5.2e-11*length_unit^3}'
-    concentration_to_pressure_conversion_factor = '${fparse kb*length_unit^3*temperature*pressure_unit}'
+    flux = scaled_flux_enclorure_surface
+    surface_area = '${surface_area}'
+    volume = '${volume_enclosure}'
+    concentration_to_pressure_conversion_factor = '${concentration_to_pressure_conversion_factor}'
   []
 []
 
 [BCs]
+  # The concentration on the outer boundary of the SiC layer is kept at 0
   [right]
     type = DirichletBC
     value = 0
     variable = u
     boundary = 'right'
   []
+  # The surface of the slab in contact with the source is assumed to be in equilibrium with the source enclosure
   [left]
     type = EquilibriumBC
     variable = u
     enclosure_scalar_var = v
     boundary = 'left'
-    Ko = '${fparse 7.244e22/(temperature * length_unit^3 * pressure_unit)}'
+    Ko = '${solubility_constant}'
     temp = ${temperature}
   []
 []
 
-[Variables]
-  [u]
-  []
-  [v]
-    family = SCALAR
-    order = FIRST
-    initial_condition = '${fparse initial_pressure*pressure_unit}'
-  []
-[]
-
 [Postprocessors]
-  [flux]
+  # flux of tritium through the surface of SiC layer in contact with enclosure
+  [flux_enclorure_surface]
     type = SideDiffusiveFluxIntegral
     variable = u
-    diffusivity = '${fparse 1.58e-4*exp(-308000/(8.314*temperature))*length_unit^2}'
+    diffusivity = '${diffusivity_SiC}'
     boundary = 'left'
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = ''
   []
-  [scale_flux]
+  # scale the flux to get inward direction
+  [scaled_flux_enclorure_surface]
     type = ScalePostprocessor
     scaling_factor = -1
-    value = flux
+    value = flux_enclorure_surface
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = 'console csv exodus'
   []
-  [rhs_timestep]
+  # integral of the tritium flux through outer surface of SiC layer
+  [integral_release_flux]
     type = PressureReleaseFluxIntegral
     variable = u
     boundary = 'right'
-    diffusivity = '${fparse 1.58e-4*exp(-308000/(8.314*temperature))*length_unit^2}'
-    surface_area = '${fparse 2.16e-6*length_unit^2}'
-    volume = '${fparse 5.2e-11*length_unit^3}'
-    concentration_to_pressure_conversion_factor = '${fparse kb*length_unit^3*temperature*pressure_unit}'
+    diffusivity = '${diffusivity_SiC}'
+    surface_area = '${surface_area}'
+    volume = '${volume_enclosure}'
+    concentration_to_pressure_conversion_factor = '${concentration_to_pressure_conversion_factor}'
     outputs = 'console'
   []
-  [rhs_aggregate]
+  # commulative sum of rhs_timestep over time (i.e. cummulative amount released)
+  [commulative_release]
     type = CumulativeValuePostprocessor
-    postprocessor = 'rhs_timestep'
+    postprocessor = 'integral_release_flux'
     outputs = 'console'
   []
-  [rhs_release]
+  # released fraction
+  [released_fraction]
     type = ScalePostprocessor
-    value = rhs_aggregate
-    scaling_factor = '${fparse 1./(initial_pressure*pressure_unit)}'
+    value = 'commulative_release'
+    scaling_factor = '${fparse 1./(initial_pressure)}'
     outputs = 'console csv exodus'
   []
 []
@@ -117,12 +141,8 @@ pressure_unit = 1 # number of pressure units in a Pascal
   petsc_options_iname = '-pc_type -mat_mffd_err'
   petsc_options_value = 'lu       1e-5'
   line_search = 'bt'
-  scheme = 'crank-nicolson'
+  scheme = 'bdf2'
   timestep_tolerance = 1e-8
-[]
-
-[Debug]
-  show_var_residual_norms = true
 []
 
 [Outputs]
