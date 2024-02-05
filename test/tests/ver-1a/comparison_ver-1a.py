@@ -13,7 +13,7 @@ ax = fig.add_subplot(gs[0])
 tmap8_prediction = pd.read_csv("./ver-1a_csv.csv")
 analytical_solution = pd.read_csv("./analytical.csv")
 tmap_time = tmap8_prediction['time']
-tmap_release_fraction = tmap8_prediction['released_fraction']
+tmap_release_fraction = tmap8_prediction['released_fraction_right']
 analytical_time = analytical_solution['time(s)']
 analytical_release_fraction = analytical_solution['frac_rel']
 

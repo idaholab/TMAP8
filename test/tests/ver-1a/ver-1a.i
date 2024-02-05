@@ -59,7 +59,7 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
   [flux_sink]
     type = EnclosureSinkScalarKernel
     variable = v
-    flux = scaled_flux_enclorure_surface
+    flux = scaled_flux_enclosure_surface_left
     surface_area = '${surface_area}'
     volume = '${volume_enclosure}'
     concentration_to_pressure_conversion_factor = '${concentration_to_pressure_conversion_factor}'
@@ -86,8 +86,17 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
 []
 
 [Postprocessors]
+  # flux of tritium through the outer SiC surface - compare to TMAP7
+  [flux_enclosure_surface_right]
+    type = SideDiffusiveFluxIntegral
+    variable = u
+    diffusivity = '${diffusivity_SiC}'
+    boundary = 'right'
+    execute_on = 'initial nonlinear linear timestep_end'
+    outputs = 'console csv exodus'
+  []
   # flux of tritium through the surface of SiC layer in contact with enclosure
-  [flux_enclorure_surface]
+  [flux_enclosure_surface_left]
     type = SideDiffusiveFluxIntegral
     variable = u
     diffusivity = '${diffusivity_SiC}'
@@ -96,15 +105,15 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
     outputs = ''
   []
   # scale the flux to get inward direction
-  [scaled_flux_enclorure_surface]
+  [scaled_flux_enclosure_surface_left]
     type = ScalePostprocessor
     scaling_factor = -1
-    value = flux_enclorure_surface
+    value = flux_enclosure_surface_left
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = 'console csv exodus'
   []
   # integral of the tritium flux through outer surface of SiC layer
-  [integral_release_flux]
+  [integral_release_flux_right]
     type = PressureReleaseFluxIntegral
     variable = u
     boundary = 'right'
@@ -114,17 +123,41 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
     concentration_to_pressure_conversion_factor = '${concentration_to_pressure_conversion_factor}'
     outputs = 'console'
   []
-  # commulative sum of rhs_timestep over time (i.e. cummulative amount released)
-  [commulative_release]
+  # commulative sum of integral_release_flux_right over time (i.e. cummulative amount released)
+  [commulative_release_right]
     type = CumulativeValuePostprocessor
-    postprocessor = 'integral_release_flux'
+    postprocessor = 'integral_release_flux_right'
     outputs = 'console'
   []
-  # released fraction
-  [released_fraction]
+  # released fraction based on outer layer flux - compare to TMAP4
+  [released_fraction_right]
     type = ScalePostprocessor
-    value = 'commulative_release'
+    value = 'commulative_release_right'
     scaling_factor = '${fparse 1./(initial_pressure)}'
+    outputs = 'console csv exodus'
+  []
+  # integral of the tritium flux through outer surface of SiC layer
+  [integral_release_flux_left]
+    type = PressureReleaseFluxIntegral
+    variable = u
+    boundary = 'left'
+    diffusivity = '${diffusivity_SiC}'
+    surface_area = '${surface_area}'
+    volume = '${volume_enclosure}'
+    concentration_to_pressure_conversion_factor = '${concentration_to_pressure_conversion_factor}'
+    outputs = 'console'
+  []
+  # commulative sum of integral_release_flux_left over time (i.e. cummulative amount released)
+  [commulative_release_left]
+    type = CumulativeValuePostprocessor
+    postprocessor = 'integral_release_flux_left'
+    outputs = 'console'
+  []
+  # released fraction based on inner layer flux (-1 to make it positive) - compare to TMAP7
+  [released_fraction_left]
+    type = ScalePostprocessor
+    value = 'commulative_release_left'
+    scaling_factor = '${fparse -1./(initial_pressure)}'
     outputs = 'console csv exodus'
   []
 []
