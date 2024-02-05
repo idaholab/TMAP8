@@ -46,6 +46,7 @@ STOCHASTIC_TOOLS            := no
 TENSOR_MECHANICS            := yes
 THERMAL_HYDRAULICS          := yes
 XFEM                        := no
+FUSION                      := yes
 
 include $(MOOSE_DIR)/modules/modules.mk
 ###############################################################################
