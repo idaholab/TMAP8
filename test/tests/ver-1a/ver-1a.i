@@ -14,7 +14,7 @@ initial_pressure = 1e6 # Pa
 volume_enclosure = '${fparse 5.20e-11*length_unit^3}' # microns^3
 surface_area = '${fparse 2.16e-6*length_unit^2}' # microns^2
 diffusivity_SiC = '${fparse 1.58e-4*exp(-308000.0/(R*temperature))*length_unit^2}' # microns^2/s
-solubility_constant = '${fparse  7.244e22/(temperature * length_unit^3)}' # atoms/microns^3*Pa = atoms*s^2/m^2/kg
+solubility_constant = '${fparse  7.244e22/(temperature * length_unit^3)}' # atoms/microns^3/Pa = atoms*s^2/m^2/kg
 slab_thickness = '${fparse  3.30e-5*length_unit}' # microns
 
 # Useful equations/conversions
@@ -59,7 +59,7 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
   [flux_sink]
     type = EnclosureSinkScalarKernel
     variable = v
-    flux = scaled_flux_enclosure_surface_left
+    flux = scaled_flux_surface_left
     surface_area = '${surface_area}'
     volume = '${volume_enclosure}'
     concentration_to_pressure_conversion_factor = '${concentration_to_pressure_conversion_factor}'
@@ -87,7 +87,7 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
 
 [Postprocessors]
   # flux of tritium through the outer SiC surface - compare to TMAP7
-  [flux_enclosure_surface_right]
+  [flux_surface_right]
     type = SideDiffusiveFluxIntegral
     variable = u
     diffusivity = '${diffusivity_SiC}'
@@ -96,7 +96,7 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
     outputs = 'console csv exodus'
   []
   # flux of tritium through the surface of SiC layer in contact with enclosure
-  [flux_enclosure_surface_left]
+  [flux_surface_left]
     type = SideDiffusiveFluxIntegral
     variable = u
     diffusivity = '${diffusivity_SiC}'
@@ -105,10 +105,10 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
     outputs = ''
   []
   # scale the flux to get inward direction
-  [scaled_flux_enclosure_surface_left]
+  [scaled_flux_surface_left]
     type = ScalePostprocessor
     scaling_factor = -1
-    value = flux_enclosure_surface_left
+    value = flux_surface_left
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = 'console csv exodus'
   []
