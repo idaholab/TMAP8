@@ -23,7 +23,7 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 10
+  nx = 150
   xmax = '${slab_thickness}'
 []
 
