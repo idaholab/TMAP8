@@ -4,8 +4,8 @@
   [exo]
     type = Exodiff
     input = ver-1a.i
-    exodiff = ver-1a_out.e
-    cli_args = 'Executioner/dt=5'
+    exodiff = ver-1a_test_out.e
+    cli_args = 'Executioner/dt=5 Outputs/file_base=ver-1a_test_out'
     requirement = 'The system shall be able to model species, originating from a depleting source enclosure, diffusion through a structure.'
   []
 []

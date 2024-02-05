@@ -2,9 +2,10 @@
 # Tritium diffusion through SiC layer with depleting source at 2100 C.
 # No Sorret effect, solubility, or trapping included.
 
-# Physical Constants
-kb = 1.38e-23 # Boltzmann constant J/K - note that we use the same number of digits as in TMAP7
-R = 8.314 # Gas constant J/mol/K - note that we use the same number of digits as in TMAP4
+# Physical Constants note that we do NOT use the same number of digits as in TMAP4/TMAP7.
+# This is to be consistent with PhysicalConstant.h
+kb = 1.380649e-23 # Boltzmann constant J/K
+R = 8.31446261815324 # Gas constant J/mol/K
 
 # Data used in TMAP4/TMAP7 case
 length_unit = 1e6 # conversion from meters to microns
