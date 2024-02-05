@@ -13,6 +13,6 @@
     input = ver-1a.i
     exodiff = ver-1a_out.e
     requirement = 'The system shall be able to model species, originating from a depleting source enclosure, diffusion through a structure, with the fine mesh and timestep required to match the analytical solution.'
-    valgrind = 'HEAVY'
+    heavy = true
   []
 []
