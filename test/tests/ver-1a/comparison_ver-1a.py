@@ -35,11 +35,12 @@ def get_roots_TMAP4(L, alpha_max, step=0.0001):
     roots = alphas[idx]
     return roots
 
-# taken from https://mooseframework.inl.gov/TMAP8/verification/ver-1a.html#longhurst1992verification
 def analytical_expression_fractional_release_TMAP4(t,P_0, D, S, V, T, A, l):
     """
     Analytical expression for the fractional release given by TMAP4 report
 
+    Taken from the TMAP4 V&V Report (https://doi.org/10.2172/10174725)
+    
     Args:
         t (float, ndarray): time (s)
         P_0 (float): initial presure (Pa)
@@ -94,8 +95,9 @@ def analytical_expression_fractional_release_TMAP7(t, P_0, D, S, V, T, A, l):
     FR = 1 - P(t) / P_0
     where P(t) is the pressure at time t and P_0 is the initial pressure
 
-    Taken from https://inldigitallibrary.inl.gov/sites/sti/sti/4215153.pdf
+    Taken from the TMAP7 V&V Report (https://doi.org/10.2172/952009)
     Equations 2, 3, 4, and 5
+
     Note: in the report, the expression of FR is given as P(T)/P_0, but it shown as 1 - P(t)/P_0 in the graph (Figure 1)
     Args:
         t (float, ndarray): time (s)
@@ -120,7 +122,8 @@ def analytical_expression_flux(t, P_0, D, S, V, T, A, l):
     """
     value of the flux at the external surface (not in contact with enclosure)
     J = -D * dc/dx
-    Taken from https://inldigitallibrary.inl.gov/sites/sti/sti/4215153.pdf
+
+    Taken from the TMAP7 V&V Report (https://doi.org/10.2172/952009)
     Equations 3 and 7
 
     Args:

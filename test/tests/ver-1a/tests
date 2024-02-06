@@ -1,18 +1,19 @@
 [Tests]
   design = 'EnclosureSinkScalarKernel.md PressureReleaseFluxIntegral.md EquilibriumBC.md'
+  verification = 'ver-1a.md`
   issues = '#12 #75'
   [ver-1a]
     type = Exodiff
     input = ver-1a.i
     exodiff = ver-1a_test_out.e
     cli_args = 'Executioner/dt=5 Mesh/nx=10 Outputs/file_base=ver-1a_test_out'
-    requirement = 'The system shall be able to model species, originating from a depleting source enclosure, diffusion through a structure.'
+    requirement = 'The system shall be able to model species diffusion through a structure, originating from a depleting source enclosure.'
   []
   [ver-1a_heavy]
     type = Exodiff
     input = ver-1a.i
     exodiff = ver-1a_out.e
-    requirement = 'The system shall be able to model species, originating from a depleting source enclosure, diffusion through a structure, with the fine mesh and timestep required to match the analytical solution.'
+    requirement = 'The system shall be able to model species diffusion through a structure, originating from a depleting source enclosure, with the fine mesh and timestep required to match the analytical solution.'
     heavy = true
   []
 []

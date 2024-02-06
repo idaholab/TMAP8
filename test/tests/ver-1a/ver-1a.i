@@ -1,8 +1,9 @@
 # Verification Problem #1a from TMAP4/TMAP7 V&V document
 # Tritium diffusion through SiC layer with depleting source at 2100 C.
-# No Sorret effect, solubility, or trapping included.
+# No Soret effect, solubility, or trapping included.
 
-# Physical Constants note that we do NOT use the same number of digits as in TMAP4/TMAP7.
+# Physical Constants
+# Note that we do NOT use the same number of digits as in TMAP4/TMAP7.
 # This is to be consistent with PhysicalConstant.h
 kb = 1.380649e-23 # Boltzmann constant J/K
 R = 8.31446261815324 # Gas constant J/mol/K
@@ -123,8 +124,8 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
     concentration_to_pressure_conversion_factor = '${concentration_to_pressure_conversion_factor}'
     outputs = 'console'
   []
-  # commulative sum of integral_release_flux_right over time (i.e. cummulative amount released)
-  [commulative_release_right]
+  # cumulative sum of integral_release_flux_right over time (i.e. cumulative amount released)
+  [cumulative_release_right]
     type = CumulativeValuePostprocessor
     postprocessor = 'integral_release_flux_right'
     outputs = 'console'
@@ -132,7 +133,7 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
   # released fraction based on outer layer flux - compare to TMAP4
   [released_fraction_right]
     type = ScalePostprocessor
-    value = 'commulative_release_right'
+    value = 'cumulative_release_right'
     scaling_factor = '${fparse 1./(initial_pressure)}'
     outputs = 'console csv exodus'
   []
