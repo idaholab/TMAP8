@@ -40,7 +40,7 @@ def analytical_expression_fractional_release_TMAP4(t,P_0, D, S, V, T, A, l):
     Analytical expression for the fractional release given by TMAP4 report
 
     Taken from the TMAP4 V&V Report (https://doi.org/10.2172/10174725)
-    
+
     Args:
         t (float, ndarray): time (s)
         P_0 (float): initial presure (Pa)
