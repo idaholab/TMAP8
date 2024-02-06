@@ -141,7 +141,6 @@ Again, be aware of the typos in [!cite](ambrosek2008verification) and the differ
 
 ## Comments on verification input file versus test file
 
-!alert note  title=Verification input file versus test file
-It is important to note that the input file used to reproduce these results and the input file used as test in TMAP8 are different. Indeed, the input file `~/projects/TMAP8/test/tests/ver-1a/ver-1a.i` has a fine mesh and uses small time steps to accurately match the analytical solutions and reproduce the figures above. To limit the computational costs of the tests, however, the tests run a version of the file with a coarser mesh and larger time steps.
+It is important to note that the input file used to reproduce these results and the input file used as test in TMAP8 are different. Indeed, the input file `~/projects/TMAP8/test/tests/ver-1a/ver-1a.i` has a fine mesh and uses small time steps to accurately match the analytical solutions and reproduce the figures above. To limit the computational costs of the tests, however, the tests run a version of the file with a coarser mesh and larger time steps. More information about the changes can be found in `~/projects/TMAP8/test/tests/ver-1a/tests`.
 
 !bibtex bibliography
