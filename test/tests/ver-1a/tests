@@ -1,6 +1,6 @@
 [Tests]
   design = 'EnclosureSinkScalarKernel.md PressureReleaseFluxIntegral.md EquilibriumBC.md'
-  verification = 'ver-1a.md`
+  verification = 'ver-1a.md'
   issues = '#12 #75'
   [ver-1a]
     type = Exodiff

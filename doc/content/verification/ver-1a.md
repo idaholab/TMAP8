@@ -18,7 +18,7 @@ This is one of the original problems introduced in [!cite](longhurst1992verifica
     id=ver-1a_schematic
     caption= Schematic of the verification 1a case and illustration of the quantities used for verification.
 
-!table id=ver-1a_set_up_values caption=Values of material properties and case geometry with $R$, the gas constant, as defined in [PhysicalConstants](/source/utils/PhysicalConstants.md optional=True).
+!table id=ver-1a_set_up_values caption=Values of material properties and case geometry with $R$, the gas constant, as defined in [PhysicalConstants](/source/utils/PhysicalConstants.md).
 | Parameter | Description                | Value                                  | Units      |
 | --------- | -------------------------- | -------------------------------------- | ---------- |
 | $V$       | Enclosure volume           | 5.20e-11                               | m$^3$      |
@@ -49,7 +49,7 @@ with
     \phi = \frac{\text{source concentration}}{\text{layer concentration}} = \frac{1}{S k_b T},
 \end{equation}
 
-where the layer concentration is that at the interface with the source ($\phi$ is constant in time), $k_b$ is the Boltzmann constant as defined in [PhysicalConstants](/source/utils/PhysicalConstants.md optional=True), and the $\alpha_n$ are the roots of
+where the layer concentration is that at the interface with the source ($\phi$ is constant in time), $k_b$ is the Boltzmann constant as defined in [PhysicalConstants](/source/utils/PhysicalConstants.md), and the $\alpha_n$ are the roots of
 
 \begin{equation}
     \alpha_n = \frac{L}{tan \ \alpha_n}.
