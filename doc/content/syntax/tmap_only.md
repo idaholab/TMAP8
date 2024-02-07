@@ -11,4 +11,6 @@ Click the blue icon link shown to the right of each main class type heading
 (e.g. Adaptivity) to see a more detailed description of the class type purpose
 within TMAP8.
 
+!include physical_constants_alert.md
+
 !syntax complete groups=TMAP8App
