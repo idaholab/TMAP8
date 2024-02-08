@@ -12,7 +12,7 @@ Content:
     - ${MOOSE_DIR}/modules/solid_properties/doc/content
     - ${MOOSE_DIR}/modules/misc/doc/content
     - ${MOOSE_DIR}/modules/phase_field/doc/content
-    - ${MOOSE_DIR}/modules/tensor_mechanics/doc/content
+    - ${MOOSE_DIR}/modules/solid_mechanics/doc/content
     - modules:
         root_dir: ${MOOSE_DIR}/modules/doc/content
         content:
@@ -68,7 +68,7 @@ Extensions:
             solid_properties: !include ${MOOSE_DIR}/modules/solid_properties/doc/sqa_solid_properties.yml
             misc: !include ${MOOSE_DIR}/modules/misc/doc/sqa_misc.yml
             phase_field: !include ${MOOSE_DIR}/modules/phase_field/doc/sqa_phase_field.yml
-            tensor_mechanics: !include ${MOOSE_DIR}/modules/tensor_mechanics/doc/sqa_tensor_mechanics.yml
+            solid_mechanics: !include ${MOOSE_DIR}/modules/solid_mechanics/doc/sqa_solid_mechanics.yml
         repos:
             default: https://github.com/idaholab/TMAP8
         reports: !include ${ROOT_DIR}/doc/sqa_reports.yml
