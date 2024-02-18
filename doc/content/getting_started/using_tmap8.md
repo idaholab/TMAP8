@@ -30,17 +30,19 @@ Many test input files also create an output file with the name format
 selected for output. These results are best viewed using a visualization tool
 like [Paraview](http://www.paraview.org/download/).
 
-## TMAP8 Examples and Tests
+## TMAP8 Tests, Verification and Validation Cases, and Examples
 
 !style halign=left
-In general the verification and validation examples located within the `test/tests` directory are meant
+In general the input files for verification, validation, and example cases located within the `test/tests` directory are meant
 to be a showcase of "production" TMAP8 capability. Users are encouraged to start there
-when learning TMAP8 and setting up new simulations. Documentation for the validation
-examples can be found [on the TMAP8 verification and validation page](verification/ver-list.md). The
-`test/tests` directory also holds *all* TMAP8 regression, verification, and validation
+when learning TMAP8 and setting up new simulations. Documentation for the verification and validation
+cases can be found [on the TMAP8 verification and validation page](verification/ver-list.md), and documentation for the example
+cases can be found [on the TMAP8 example page](examples/index.md).
+
+The `test/tests` directory holds *all* TMAP8 regression, verification, validation, and example
 tests for both complete and in-progress capability. These files *should not* be modified,
 so that periodic tests of TMAP8 function can be performed successfully. If modification of
-example inputs is desired, they should be copied and run elsewhere.
+tests, verification and validation cases, or examples inputs is desired, they should be copied and run elsewhere.
 
 As TMAP8 is developed and more capabilities are added, the tests directory will continue to
 grow. If you feel that you have added important new functionality, please create a test for

@@ -6,7 +6,7 @@
 In order to install TMAP8, the MOOSE developer environment must be installed. The
 installation procedure depends on your operating system, so click on the MOOSE
 website link below that corresponds to your operation system/platform and follow
-the instructions to the conda installation step named "Cloning MOOSE". Then,
+the instructions until you are done with the step named "Install MOOSE" (note that you do not need to follow the steps from the section titled "Cloning MOOSE" and below). Then,
 return to this page and continue with Step Two.
 
 - [Linux and MacOS](https://mooseframework.inl.gov/getting_started/installation/conda.html)
@@ -117,7 +117,7 @@ repository, use the following commands.
 ```bash
 cd ~/projects/TMAP8
 git fetch upstream
-git rebase upstream/main
+git rebase upstream/devel
 ```
 
 This assumes that your copy of TMAP8 is stored in `~/projects` and that the [idaholab/TMAP8](https://github.com/idaholab/TMAP8)
