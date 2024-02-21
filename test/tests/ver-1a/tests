@@ -16,4 +16,12 @@
     requirement = 'The system shall be able to model species diffusion through a structure, originating from a depleting source enclosure, with the fine mesh and timestep required to match the analytical solution.'
     heavy = true
   []
+  [ver-1a_comparison]
+    type = RunCommand
+    command = 'python3 comparison_ver-1a.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1a, modeling species diffusion through a structure, originating from a depleting source enclosure.'
+    heavy = true
+    prereq = ver-1a_heavy
+    required_python_packages = 'matplotlib numpy pandas'
+  []
 []
