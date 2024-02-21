@@ -5,7 +5,7 @@
 !style halign=left
 In order to install TMAP8, the MOOSE developer environment must be installed. The
 installation procedure depends on your operating system, so click on the MOOSE
-website link below that corresponds to your operation system/platform and follow
+website link below that corresponds to your operating system/platform and follow
 the instructions until you are done with the step named "Install MOOSE" (note that
 you do not need to follow the steps from the section titled "Cloning MOOSE" and below). Then,
 return to this page and continue with Step Two.
@@ -118,15 +118,17 @@ branch (`upstream/main`):
 
 ```bash
 cd ~/projects/TMAP8
+git checkout main
 git fetch upstream
 git rebase upstream/main
 ```
 
-To update your TMAP8 repository as a TMAP8 developer who changes the code, use the following commands,
+To update your TMAP8 repository as a TMAP8 developer who regularly makes modifications to the code, use the following commands,
 which provide developers with the `devel` branch:
 
 ```bash
 cd ~/projects/TMAP8
+git checkout devel
 git fetch upstream
 git rebase upstream/devel
 ```
