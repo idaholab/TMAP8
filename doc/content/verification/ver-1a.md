@@ -64,10 +64,11 @@ The expression in Eq. (1) of [!cite](longhurst1992verification) writes $-\alpha_
 
 [ver-1a_comparison_analytical_TMAP4_release_fraction] shows the comparison of the TMAP8 calculation and the analytical solution provided in [!cite](longhurst1992verification). There is agreement between the two plots.
 
-!media figures/ver-1a_comparison_analytical_TMAP4_release_fraction.png
-    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=ver-1a_comparison_analytical_TMAP4_release_fraction
-    caption=Comparison of TMAP8 calculation with the analytical solution for the release fraction from [!cite](longhurst1992verification).
+!media comparison_ver-1a.py
+       image_name=ver-1a_comparison_analytical_TMAP4_release_fraction.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1a_comparison_analytical_TMAP4_release_fraction
+       caption=Comparison of TMAP8 calculation with the analytical solution for the release fraction from [!cite](longhurst1992verification).
 
 ## Verification of the release fraction on the inner surface of the SiC slab (TMAP7)
 
@@ -111,10 +112,11 @@ which leads to
 
 [ver-1a_comparison_analytical_TMAP7_release_fraction] shows the comparison of the TMAP8 calculation and the analytical solution for release fraction provided in [!cite](ambrosek2008verification). There is agreement between the two plots.
 
-!media figures/ver-1a_comparison_analytical_TMAP7_release_fraction.png
-    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=ver-1a_comparison_analytical_TMAP7_release_fraction
-    caption=Comparison of TMAP8 calculation with the analytical solution for the release fraction from [!cite](ambrosek2008verification).
+!media comparison_ver-1a.py
+       image_name=ver-1a_comparison_analytical_TMAP7_release_fraction.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1a_comparison_analytical_TMAP7_release_fraction
+       caption=Comparison of TMAP8 calculation with the analytical solution for the release fraction from [!cite](ambrosek2008verification).
 
 ## Verification of the tritium flux at the outer surface of the SiC slab (TMAP7)
 
@@ -134,10 +136,11 @@ Again, be aware of the typos in [!cite](ambrosek2008verification) and the differ
 
 [ver-1a_comparison_analytical_TMAP7_flux] shows the comparison of the TMAP8 calculation and the analytical solution for flux at the outer surface of the SiC slab in [!cite](ambrosek2008verification). There is agreement between the two plots.
 
-!media figures/ver-1a_comparison_analytical_TMAP7_flux.png
-    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=ver-1a_comparison_analytical_TMAP7_flux
-    caption=Comparison of TMAP8 calculation with the analytical solution for the release fraction from [!cite](ambrosek2008verification).
+!media comparison_ver-1a.py
+       image_name=ver-1a_comparison_analytical_TMAP7_flux.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1a_comparison_analytical_TMAP7_flux
+       caption=Comparison of TMAP8 calculation with the analytical solution for the release fraction from [!cite](ambrosek2008verification).
 
 ## Comments on verification input file versus test file
 
