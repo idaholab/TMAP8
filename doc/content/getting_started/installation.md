@@ -5,8 +5,9 @@
 !style halign=left
 In order to install TMAP8, the MOOSE developer environment must be installed. The
 installation procedure depends on your operating system, so click on the MOOSE
-website link below that corresponds to your operation system/platform and follow
-the instructions to the conda installation step named "Cloning MOOSE". Then,
+website link below that corresponds to your operating system/platform and follow
+the instructions until you are done with the step named "Install MOOSE" (note that
+you do not need to follow the steps from the section titled "Cloning MOOSE" and below). Then,
 return to this page and continue with Step Two.
 
 - [Linux and MacOS](https://mooseframework.inl.gov/getting_started/installation/conda.html)
@@ -112,15 +113,27 @@ mamba update --all
 ```
 
 This assumes that your MOOSE-based development environment is named `moose`. To update your TMAP8
-repository, use the following commands.
+repository as a TMAP8 user, use the following commands, which provide general users the most stable
+branch (`upstream/main`):
 
 ```bash
 cd ~/projects/TMAP8
+git checkout main
 git fetch upstream
 git rebase upstream/main
 ```
 
-This assumes that your copy of TMAP8 is stored in `~/projects` and that the [idaholab/TMAP8](https://github.com/idaholab/TMAP8)
+To update your TMAP8 repository as a TMAP8 developer who regularly makes modifications to the code, use the following commands,
+which provide developers with the `devel` branch:
+
+```bash
+cd ~/projects/TMAP8
+git checkout devel
+git fetch upstream
+git rebase upstream/devel
+```
+
+Both sets of instructions assume that your copy of TMAP8 is stored in `~/projects` and that the [idaholab/TMAP8](https://github.com/idaholab/TMAP8)
 git remote is labeled `upstream`. Use `git remote -v` in the TMAP8 repository location to check for
 this and change the commands as necessary. Finally, TMAP8 can be re-compiled and re-tested.
 
