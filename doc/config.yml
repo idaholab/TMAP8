@@ -35,8 +35,14 @@ Extensions:
               TMAP8-only Syntax: syntax/tmap_only.md
               Complete Code Syntax: syntax/index.md
               TMAP8 Tutorial Slides: tutorial/index.md
+              V&V: /verification/ver-list.md
               Examples: /examples/index.md
             Software Quality: /sqa/index.md
+            Help:
+              TMAP8 Issues Page: https://github.com/idaholab/TMAP8/issues
+              TMAP8 Discussion Forum: https://github.com/idaholab/TMAP8/discussions
+              MOOSE FAQ page: https://mooseframework.inl.gov/help/faq/index.html
+              MOOSE Discussion Forum: https://github.com/idaholab/moose/discussions
     MooseDocs.extensions.appsyntax:
         executable: ${ROOT_DIR}
         includes:
