@@ -7,7 +7,7 @@
 This verification case consists of an enclosure containing a finite concentration of atoms which
 are allowed to thermally diffuse through a SiC layer over time. No Soret effects, solubility, or trapping effects are included.
 
-This is one of the original problems introduced in [!cite](longhurst1992verification) for TMAP4 and adapted in [!cite](ambrosek2008verification) for TMAP7. Note, however, that the verification cases for TMAP4 and TMAP7, although using the exact same set up, use different quantities to verify their implementation (see [ver-1a_comparison_analytical_TMAP4_release_fraction],  [ver-1a_comparison_analytical_TMAP7_release_fraction], and [ver-1a_comparison_analytical_TMAP7_flux]). In TMAP8, for completeness, we perform verification on all these quantities and show agreement with analytical solutions from both TMAP4 and TMAP7.
+This is one of the original problems introduced in [!cite](longhurst1992verification) for TMAP4 and adapted in [!cite](ambrosek2008verification) for TMAP7. Note, however, that the verification cases for TMAP4 and TMAP7, although using the exact same set up, use different quantities to verify their implementation (see [ver-1a_comparison_analytical_TMAP4_release_fraction], [ver-1a_comparison_analytical_TMAP7_release_fraction], and [ver-1a_comparison_analytical_TMAP7_flux]). In TMAP8, for completeness, we perform verification on all these quantities and show agreement with analytical solutions from both TMAP4 and TMAP7.
 
 ## Case Set up
 
@@ -49,7 +49,7 @@ with
     \phi = \frac{\text{source concentration}}{\text{layer concentration}} = \frac{1}{S k_b T},
 \end{equation}
 
-where the "layer concentration" is the concentration quantity at the interface with the source ($\phi$ is constant in time), $k_b$ is the Boltzmann constant (as defined in [PhysicalConstants](source/utils/PhysicalConstants.md)), and $\alpha_n$ are the roots of
+where the "source concentration" is the concentration in the enclosure ($P(t)/k_b/T$) with $k_b$ is the Boltzmann constant (as defined in [PhysicalConstants](source/utils/PhysicalConstants.md)), and "layer concentration" is the concentration in the slab at the interface with the enclosure ($S P(t)$). $\phi$ is constant in time. $\alpha_n$ are the roots of
 
 \begin{equation}
     \alpha_n = \frac{L}{tan \ \alpha_n}.
@@ -104,7 +104,7 @@ which leads to
 \end{equation}
 
 !alert warning title=Typos in [!cite](ambrosek2008verification)
-1. The units and expression (the order exponent being 29 instead of 19) of the solubility provided in [!cite](ambrosek2008verification) have typos. The correct values and units are provided above in [ver-1a_set_up_values].
+1. The units and expression of the solubility provided in [!cite](ambrosek2008verification) have typos. The correct values and units are provided above in [ver-1a_set_up_values]. The value provided in [!cite](ambrosek2008verification) is $S=3.053 \times 10^{\bold{\underline{29}}}$ kg $\cdot$ m $^2$/s$^2$ instead of $S=7.244\times 10^{22} / T = 3.053 \times 10^{\bold{\underline{19}}}$ 1/m$^3$/Pa when $T=2373$ K.
 2. The release fraction in [!cite](ambrosek2008verification) is described as $P(t)/P_0$ in their Eq. (5) but is actually plotted as $1-(P(t)/P_0)$ in Figure 1 of that report.
 3. Not a typo, per se, but a potential source of confusion for users is that in [!cite](ambrosek2008verification), $x=0$ represents the surface not exposed to the enclosure (where $c=0$), and $x=l$ represents the surface exposed to the enclosure. In the TMAP8 documentation, we have kept this convention to correspond to the TMAP7 case, but note that the TMAP8 input file fixes $x=0$ at the enclosure surface and $x=l$ for the outer surface.
 
