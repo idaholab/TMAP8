@@ -49,7 +49,7 @@ with
     \phi = \frac{\text{source concentration}}{\text{layer concentration}} = \frac{1}{S k_b T},
 \end{equation}
 
-where the layer concentration is that at the interface with the source ($\phi$ is constant in time), $k_b$ is the Boltzmann constant as defined in [PhysicalConstants](source/utils/PhysicalConstants.md), and the $\alpha_n$ are the roots of
+where the "layer concentration" is the concentration quantity at the interface with the source ($\phi$ is constant in time), $k_b$ is the Boltzmann constant (as defined in [PhysicalConstants](source/utils/PhysicalConstants.md)), and $\alpha_n$ are the roots of
 
 \begin{equation}
     \alpha_n = \frac{L}{tan \ \alpha_n}.
@@ -83,7 +83,7 @@ where $P(t)$ is the pressure at the surface of the enclosure over time.
 To derive $FR(t)$, [!cite](ambrosek2008verification) first reference the analytical solution for an analogous heat transfer problem [!cite](Carslaw1959conduction), which provides the solute concentration profile in the membrane as
 
 \begin{equation}
-    C(x,t) = 2 S P_0 L' \sum_{n=1}^{\infty} \frac{\exp \left(-\alpha_{n}^2 D t\right) \sin (\alpha_{n} x)}{(l(\alpha_{n}^2 + L'^2)+L') \sin (\alpha_{n} l)},
+    C(x,t) = 2 S P_0 L' \sum_{n=1}^{\infty} \frac{\exp \left(-\alpha_{n}^2 D t\right) \sin (\alpha_{n} x)}{[l(\alpha_{n}^2 + L'^2)+L'] \sin (\alpha_{n} l)},
 \end{equation}
 where $x=l$ is the position of the surface in contact with the enclosure, and $x=0$ is the position of the outer surface (as defined in [!cite](ambrosek2008verification) - see note below),
 \begin{equation}
@@ -96,7 +96,7 @@ and $\alpha_n$ are the roots of
 
 By linking the concentration on the surface of the slab in contact with the enclosure ($x=l$ as used in [!cite](ambrosek2008verification)) with the pressure of the enclosure, Henry's law provides
 \begin{equation}
-    P(t) = \frac{C(0,t)}{S} = 2 P_0 L' \sum_{n=1}^{\infty} \frac{\exp \left(-\alpha_{n}^2 D t\right)}{l(\alpha_{n}^2 + L'^2)+L'},
+    P(t) = \frac{C(l,t)}{S} = 2 P_0 L' \sum_{n=1}^{\infty} \frac{\exp \left(-\alpha_{n}^2 D t\right)}{l(\alpha_{n}^2 + L'^2)+L'},
 \end{equation}
 which leads to
 \begin{equation}
@@ -105,8 +105,8 @@ which leads to
 
 !alert warning title=Typos in [!cite](ambrosek2008verification)
 1. The units and expression (the order exponent being 29 instead of 19) of the solubility provided in [!cite](ambrosek2008verification) have typos. The correct values and units are provided above in [ver-1a_set_up_values].
-2. The release fraction in [!cite](ambrosek2008verification) is described as $P(t)/P_0$ in Eq. (5) but is actually plotted as $1-(P(t)/P_0)$ in Figure 1.
-3. Not a typo per say, but a potential source of confusion for users is that in [!cite](ambrosek2008verification), $x=0$ represents the surface not exposed to the enclosure (where $c=0$), and $x=l$ represents the surface exposed to the enclosure. In the TMAP8 documentation, we have kept this convention to correspond to the TMAP7 case, but note that the TMAP8 input file fixes $x=0$ at the enclosure surface and $x=l$ for the outer surface.
+2. The release fraction in [!cite](ambrosek2008verification) is described as $P(t)/P_0$ in their Eq. (5) but is actually plotted as $1-(P(t)/P_0)$ in Figure 1 of that report.
+3. Not a typo, per se, but a potential source of confusion for users is that in [!cite](ambrosek2008verification), $x=0$ represents the surface not exposed to the enclosure (where $c=0$), and $x=l$ represents the surface exposed to the enclosure. In the TMAP8 documentation, we have kept this convention to correspond to the TMAP7 case, but note that the TMAP8 input file fixes $x=0$ at the enclosure surface and $x=l$ for the outer surface.
 
 ### Results
 
@@ -125,7 +125,7 @@ which leads to
 In [!cite](ambrosek2008verification), i.e., TMAP7, the verification test also tests the model's accuracy in determining the tritium flux across the outer surface of the SiC slab. Using the expression of the concentration provided above, the flux on the outer surface of the SiC slab can be derived as
 
 \begin{equation}
-    J(t) = D \frac{\partial C(x,t)}{\partial x}\Bigr|_{\substack{x=0}} = 2 S P_0 L' D \sum_{n=1}^{\infty} \frac{\exp \left(-\alpha_{n}^2 D t\right) \alpha_{n}}{(l(\alpha_{n}^2 + L'^2)+L') \sin (\alpha_{n} l)},
+    J(t) = D \frac{\partial C(x,t)}{\partial x}\Bigr|_{\substack{x=0}} = 2 S P_0 L' D \sum_{n=1}^{\infty} \frac{\exp \left(-\alpha_{n}^2 D t\right) \alpha_{n}}{[l(\alpha_{n}^2 + L'^2)+L'] \sin (\alpha_{n} l)},
 \end{equation}
 which can be compared to TMAP8 predictions.
 
@@ -144,6 +144,6 @@ Again, be aware of the typos in [!cite](ambrosek2008verification) and the differ
 
 ## Comments on verification input file versus test file
 
-It is important to note that the input file used to reproduce these results and the input file used as test in TMAP8 are different. Indeed, the input file `~/projects/TMAP8/test/tests/ver-1a/ver-1a.i` has a fine mesh and uses small time steps to accurately match the analytical solutions and reproduce the figures above. To limit the computational costs of the tests, however, the tests run a version of the file with a coarser mesh and larger time steps. More information about the changes can be found in `~/projects/TMAP8/test/tests/ver-1a/tests`.
+It is important to note that the input file used to reproduce these results and the input file used as test in TMAP8 are different. Indeed, the input file [/ver-1a.i] has a fine mesh and uses small time steps to accurately match the analytical solutions and reproduce the figures above. To limit the computational costs of the tests, however, the tests run a version of the file with a coarser mesh and larger time steps. More information about the changes can be found in the test specification file for this case [/ver-1a/tests].
 
 !bibtex bibliography
