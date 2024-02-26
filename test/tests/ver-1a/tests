@@ -1,11 +1,36 @@
 [Tests]
   design = 'EnclosureSinkScalarKernel.md PressureReleaseFluxIntegral.md EquilibriumBC.md'
-  issues = '#12'
-  [exo]
+  verification = 'ver-1a.md'
+  issues = '#12 #75'
+  [ver-1a]
+    type = Exodiff
+    input = ver-1a.i
+    exodiff = ver-1a_test_out.e
+    cli_args = 'Executioner/dt=5 Mesh/nx=10 Outputs/file_base=ver-1a_test_out'
+    requirement = 'The system shall be able to model species diffusion through a structure, originating from a depleting source enclosure.'
+  []
+  [ver-1a_heavy]
     type = Exodiff
     input = ver-1a.i
     exodiff = ver-1a_out.e
-    cli_args = 'Executioner/dt=10 Executioner/scheme=implicit-euler'
-    requirement = 'The system shall be able to model species, originating from a depleting source enclosure, diffusion through a structure.'
+    requirement = 'The system shall be able to model species diffusion through a structure, originating from a depleting source enclosure, with the fine mesh and timestep required to match the analytical solution.'
+    heavy = true
+  []
+  [ver-1a_heavy_csvdiff]
+    type = CSVDiff
+    input = ver-1a.i
+    should_execute = False  # this test relies on the output files from ver-1a_heavy, so it shouldn't be run twice
+    csvdiff = ver-1a_csv.csv
+    requirement = 'The system shall be able to model species diffusion through a structure, originating from a depleting source enclosure, with the fine mesh and timestep required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution.'
+    heavy = true
+    prereq = ver-1a_heavy
+  []
+  [ver-1a_comparison]
+    type = RunCommand
+    command = 'python3 comparison_ver-1a.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1a, modeling species diffusion through a structure, originating from a depleting source enclosure.'
+    heavy = true
+    prereq = ver-1a_heavy_csvdiff
+    required_python_packages = 'matplotlib numpy pandas os git'
   []
 []
