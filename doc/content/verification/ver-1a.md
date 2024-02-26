@@ -49,7 +49,7 @@ with
     \phi = \frac{\text{source concentration}}{\text{layer concentration}} = \frac{1}{S k_b T},
 \end{equation}
 
-where the "source concentration" is the concentration in the enclosure ($P(t)/k_b/T$) with $k_b$ is the Boltzmann constant (as defined in [PhysicalConstants](source/utils/PhysicalConstants.md)), and "layer concentration" is the concentration in the slab at the interface with the enclosure ($S P(t)$). $\phi$ is constant in time. $\alpha_n$ are the roots of
+where the "source concentration" is the concentration in the enclosure ($P(t)/k_b/T$), $k_b$ is the Boltzmann constant (as defined in [PhysicalConstants](source/utils/PhysicalConstants.md)), and "layer concentration" is the concentration in the slab at the interface with the enclosure ($S P(t)$). $\phi$ is constant in time. $\alpha_n$ are the roots of
 
 \begin{equation}
     \alpha_n = \frac{L}{tan \ \alpha_n}.
