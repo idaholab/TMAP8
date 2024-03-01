@@ -37,7 +37,7 @@ In general the input files for verification, validation, and example cases locat
 to be a showcase of "production" TMAP8 capability. Users are encouraged to start there
 when learning to use TMAP8 and setting up new simulations. Documentation for the verification and validation
 cases can be found [on the TMAP8 verification and validation page](verification/ver-list.md), and documentation for the example
-cases can be found [on the TMAP8 example page](examples/index.md).
+cases can be found [on the TMAP8 example page](examples/tmap_index.md).
 
 The `test/tests` directory holds *all* TMAP8 regression, verification, validation, and example
 tests for both complete and in-progress capability. These files *should not* be modified,
