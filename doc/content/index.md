@@ -33,7 +33,7 @@ General user notes on TMAP8 can also be found [here](getting_started/user_notes.
 ## [Verification & Validation](verification/ver-list.md) class=center style=font-weight:200;font-size:150%;
 
 !style halign=center
-Several problems originally developed for the TMAP4 code have been used for the
+Several problems originally developed for the TMAP4 and TMAP7 codes have been used for the
 verification of TMAP8. These V&V cases can be found here.
 !col-end!
 !row-end!
@@ -41,12 +41,12 @@ verification of TMAP8. These V&V cases can be found here.
 ## TMAP8 is built on MOOSE style=clear:both;
 
 !style halign=left
-TMAP8 is based on [MOOSE]. It is an extremely flexible environment that permits
-the solution of coupled physics problems of varying size and dimensionality. These
-can be solved using computer hardware appropriate for the model size, ranging from
+TMAP8 is based on [MOOSE], an extremely flexible framework and simulation environment
+that permits the solution of coupled physics problems of varying size and dimensionality.
+These can be solved using computer hardware appropriate for the model size, ranging from
 laptops and workstations to large high performance computers.
 
-!media large_media/framework/inl_blue.png style=float:right;width:30%;margin-left:30px;
+!media large_media/framework/inl_blue.png style=float:right;width:20%;margin-left:30px;
 
 Code reliability is a central principle in code development, and this project
 employs a well-defined development and testing strategy.  Code changes are only
