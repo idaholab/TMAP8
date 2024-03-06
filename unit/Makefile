@@ -25,23 +25,34 @@ include $(FRAMEWORK_DIR)/build.mk
 include $(FRAMEWORK_DIR)/moose.mk
 
 ################################## MODULES ####################################
-# set desired physics modules equal to 'yes' to enable them
-CHEMICAL_REACTIONS        := no
-CONTACT                   := no
-FLUID_PROPERTIES          := no
-HEAT_CONDUCTION           := no
-MISC                      := no
-NAVIER_STOKES             := no
-PHASE_FIELD               := no
-RDG                       := no
-RICHARDS                  := no
-SOLID_MECHANICS           := no
-STOCHASTIC_TOOLS          := no
-SOLID_MECHANICS           := no
-XFEM                      := no
-POROUS_FLOW               := no
-LEVEL_SET                 := no
-include           $(MOOSE_DIR)/modules/modules.mk
+# To use certain physics included with MOOSE, set variables below to
+# yes as needed.  Or set ALL_MODULES to yes to turn on everything (overrides
+# other set variables).
+
+ALL_MODULES                 := no
+
+CHEMICAL_REACTIONS          := yes
+CONTACT                     := no
+EXTERNAL_PETSC_SOLVER       := no
+FLUID_PROPERTIES            := yes
+FUNCTIONAL_EXPANSION_TOOLS  := no
+HEAT_TRANSFER               := yes
+LEVEL_SET                   := no
+MISC                        := yes
+NAVIER_STOKES               := yes
+PHASE_FIELD                 := yes
+POROUS_FLOW                 := no
+RAY_TRACING                 := yes
+RDG                         := yes
+RICHARDS                    := no
+SCALAR_TRANSPORT            := yes
+SOLID_PROPERTIES            := yes
+STOCHASTIC_TOOLS            := no
+SOLID_MECHANICS             := yes
+THERMAL_HYDRAULICS          := yes
+XFEM                        := no
+
+include $(MOOSE_DIR)/modules/modules.mk
 ###############################################################################
 
 # Extra stuff for GTEST

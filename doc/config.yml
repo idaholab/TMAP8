@@ -74,3 +74,5 @@ Extensions:
         reports: !include ${ROOT_DIR}/doc/sqa_reports.yml
     MooseDocs.extensions.template:
         active: true
+    MooseDocs.extensions.bibtex:
+        duplicates: !include ${MOOSE_DIR}/modules/doc/duplicate_bibs.yml
