@@ -1,3 +1,9 @@
+For [SQA](sqa/index.md) purposes, TMAP8 undergoes verification and validation. Verification consists of comparing TMAP8 predictions against analytical solutions in different conditions, which are often simple cases. Validation consists of comparing TMAP8 predictions against experimental data.
+
+Note that in addition to monitoring TMAP8 performances in verification and validation cases, the effects of changes made to TMAP8 are tracked. A series of automated tests help identify any changes in TMAP8's predictions, therefore ensuring stability and robustness.
+
+TMAP8 also contains [example cases](examples/index.md), which showcase how TMAP8 can be used.
+
 # List of verification cases
 
 | Case    | Title                                                                  |
