@@ -72,22 +72,24 @@
 
 [Executioner]
   type = Transient
-  # end_time = 5000 # for obtaining steady-state solution
-  # dtmax = 2.0 # for obtaining steady-state solution
-  end_time = 50
-  dtmax = 0.2
+  end_time = 5000 # for obtaining steady-state solution
+  dtmax = 2.0 # for obtaining steady-state solution
+  # end_time = 50
+  # dtmax = 0.2
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_hypre_type'
   petsc_options_value = 'hypre boomeramg'
-  scheme = 'crank-nicolson'
+  scheme = 'bdf2'
   nl_rel_tol = 1e-50 # Make this really tight so that our absolute tolerance criterion is the one
   # we must meet
   nl_abs_tol = 1e-12
   abort_on_solve_fail = true
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 0.1
+    dt = 1e-4
     optimal_iterations = 4
+    growth_factor = 1.25
+    cutback_factor = 0.8
   []
 []
 
