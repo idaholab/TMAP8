@@ -123,7 +123,7 @@ cd ~/projects/TMAP8
 git checkout main
 git fetch upstream
 git rebase upstream/main
-git submodule update --init moose
+git submodule update moose
 ```
 
 To update your TMAP8 repository as a TMAP8 developer who regularly makes modifications to the code, use the following commands,
@@ -134,7 +134,7 @@ cd ~/projects/TMAP8
 git checkout devel
 git fetch upstream
 git rebase upstream/devel
-git submodule update --init moose
+git submodule update moose
 ```
 
 Both sets of instructions assume that your copy of TMAP8 is stored in `~/projects` and that the [idaholab/TMAP8](https://github.com/idaholab/TMAP8)
