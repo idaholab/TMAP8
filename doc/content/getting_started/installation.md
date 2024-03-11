@@ -104,19 +104,19 @@ basis. Therefore, it is important that the local copy of TMAP8 be periodically u
 capabilities, improvements, and bugfixes. Weekly updates are recommended as, at minimum, the MOOSE
 submodule within TMAP8 is updated up to several times a week.
 
-!alert note title=Always Update TMAP8 and the Conda packages together.
-There is a tight dependency between libraries being provided by Conda, and what libraries TMAP8 depends on. Therefore, when you update one you should always update the other.
+!alert note title=Always update TMAP8 and the Conda packages together.
+There is a tight dependency between the libraries and applications provided by Conda, and the submodules that TMAP8 depends on. Therefore, when you update one, you should always update the other.
 
 To update your conda environment, perform the following commands (assuming that your MOOSE-based development environment is named `moose`):
 
-``` bash
+!package! code
 conda activate base
 conda env remove -n moose
-conda create -n moose moose-dev=2024.03.05
+conda create -n moose moose-dev=__MOOSE_DEV__
 conda activate moose
-```
+!package-end!
 
-To update your TMAP8 repository as a TMAP8 user, use the following commands, which provide general users the most stable branch (`upstream/main`):
+To update your TMAP8 repository as a TMAP8 user, use the following commands, which provide to general users the content of the most stable branch (`upstream/main`):
 
 ```bash
 cd ~/projects/TMAP8
