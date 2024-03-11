@@ -56,7 +56,7 @@ To compile TMAP8, first make sure that the conda MOOSE environment is activated
 (*and be sure to do this any time that a new Terminal window is opened*):
 
 ```bash
-mamba activate moose
+conda activate moose
 ```
 
 Then navigate to the TMAP8 clone directory and download the MOOSE submodule:
@@ -104,23 +104,26 @@ basis. Therefore, it is important that the local copy of TMAP8 be periodically u
 capabilities, improvements, and bugfixes. Weekly updates are recommended as, at minimum, the MOOSE
 submodule within TMAP8 is updated up to several times a week.
 
-If the MOOSE conda environment is being used, you should update both the environment +and+ your copy
-of TMAP8 together. To check for a conda environment update, perform the following commands.
+!alert note title=Always update TMAP8 and the Conda packages together.
+There is a tight dependency between the libraries and applications provided by Conda, and the submodules that TMAP8 depends on. Therefore, when you update one, you should always update the other.
 
-```bash
-mamba activate moose
-mamba update --all
-```
+To update your conda environment, perform the following commands (assuming that your MOOSE-based development environment is named `moose`):
 
-This assumes that your MOOSE-based development environment is named `moose`. To update your TMAP8
-repository as a TMAP8 user, use the following commands, which provide general users the most stable
-branch (`upstream/main`):
+!package! code
+conda activate base
+conda env remove -n moose
+conda create -n moose moose-dev=__MOOSE_DEV__
+conda activate moose
+!package-end!
+
+To update your TMAP8 repository as a TMAP8 user, use the following commands, which provide to general users the content of the most stable branch (`upstream/main`):
 
 ```bash
 cd ~/projects/TMAP8
 git checkout main
 git fetch upstream
 git rebase upstream/main
+git submodule update moose
 ```
 
 To update your TMAP8 repository as a TMAP8 developer who regularly makes modifications to the code, use the following commands,
@@ -131,6 +134,7 @@ cd ~/projects/TMAP8
 git checkout devel
 git fetch upstream
 git rebase upstream/devel
+git submodule update moose
 ```
 
 Both sets of instructions assume that your copy of TMAP8 is stored in `~/projects` and that the [idaholab/TMAP8](https://github.com/idaholab/TMAP8)
