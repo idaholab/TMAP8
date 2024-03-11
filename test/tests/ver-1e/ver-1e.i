@@ -47,35 +47,35 @@
 
 # Used while obtaining steady-state solution
 #
-# [VectorPostprocessors]
-#   [line]
-#     type = LineValueSampler
-#     start_point = '0 0 0'
-#     end_point = '99e-6 0 0'
-#     num_points = 199
-#     sort_by = 'x'
-#     variable = u
-#   []
-# []
+[VectorPostprocessors]
+  [line]
+    type = LineValueSampler
+    start_point = '0 0 0'
+    end_point = '99e-6 0 0'
+    num_points = 1000
+    sort_by = 'x'
+    variable = u
+    outputs = vector_postproc
+  []
+[]
 
 # Used to obtain varying concentration with time at a
 # point in SiC layer 15.75 micrometer away from the
 # PyC-SiC interface
 
-# [Postprocessors]
-#   [conc_point1]
-#     type = PointValue
-#     variable = u
-#     point = '48.75e-6 0 0'
-#   []
-# []
+[Postprocessors]
+  [conc_point1]
+    type = PointValue
+    variable = u
+    point = '48.75e-6 0 0'
+    outputs = 'csv'
+  []
+[]
 
 [Executioner]
   type = Transient
-  end_time = 5000 # for obtaining steady-state solution
-  dtmax = 2.0 # for obtaining steady-state solution
-  # end_time = 50
-  # dtmax = 0.2
+  end_time = 5000
+  dtmax = 2
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_hypre_type'
   petsc_options_value = 'hypre boomeramg'
@@ -95,4 +95,12 @@
 
 [Outputs]
   exodus = true
+  [csv]
+    type = CSV
+  []
+  [vector_postproc]
+    type = CSV
+    sync_times = 5000
+    sync_only = true
+  []
 []
