@@ -56,7 +56,7 @@ To compile TMAP8, first make sure that the conda MOOSE environment is activated
 (*and be sure to do this any time that a new Terminal window is opened*):
 
 ```bash
-mamba activate moose
+conda activate moose
 ```
 
 Then navigate to the TMAP8 clone directory and download the MOOSE submodule:
@@ -123,6 +123,7 @@ cd ~/projects/TMAP8
 git checkout main
 git fetch upstream
 git rebase upstream/main
+git submodule update --init moose
 ```
 
 To update your TMAP8 repository as a TMAP8 developer who regularly makes modifications to the code, use the following commands,
@@ -133,6 +134,7 @@ cd ~/projects/TMAP8
 git checkout devel
 git fetch upstream
 git rebase upstream/devel
+git submodule update --init moose
 ```
 
 Both sets of instructions assume that your copy of TMAP8 is stored in `~/projects` and that the [idaholab/TMAP8](https://github.com/idaholab/TMAP8)
