@@ -91,7 +91,10 @@
 []
 
 [Outputs]
-  exodus = true
+  [exodus]
+    type = Exodus
+    file_base = 'ver-1b_out'
+  []
   [csv]
     type = CSV
     interval = 10
