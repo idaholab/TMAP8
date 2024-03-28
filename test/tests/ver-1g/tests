@@ -15,4 +15,28 @@
     requirement = 'The system shall be able to model a chemical reaction between two species with different concentrations and calculate the concentrations of reactants and product as a function of time'
     verification = 'ver-1g.md'
   []
+  [binary_reaction_same_concentrations_csv_diff]
+    type = CSVDiff
+    input = ver-1g_same_conc.i
+    should_execute = False # this test relies on the output files from binary_reaction_same_concentrations, so it shouldn't be run twice
+    csvdiff = ver-1g_same_conc_out.csv
+    requirement = 'The system shall be able to model a chemical reaction between two species with the same concentrations and calculate the concentrations of reactants and product as a function of time, with the fine mesh and time step required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution over time.'
+    prereq = binary_reaction_same_concentrations
+  []
+  [binary_reaction_diff_concentrations_csv_diff]
+    type = CSVDiff
+    input = ver-1g_diff_conc.i
+    should_execute = False # this test relies on the output files from binary_reaction_same_concentrations, so it shouldn't be run twice
+    csvdiff = ver-1g_diff_conc_out.csv
+    requirement = 'The system shall be able to model a chemical reaction between two species with different concentrations and calculate the concentrations of reactants and product as a function of time, with the fine mesh and time step required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution over time.'
+    prereq = binary_reaction_diff_concentrations
+  []
+  [ver-1g_comparison]
+    type = RunCommand
+    command = 'python3 comparison_ver-1g.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a chemical reaction between two species with same or different concentrations.'
+    heavy = true
+    prereq = 'binary_reaction_same_concentrations binary_reaction_diff_concentrations'
+    required_python_packages = 'matplotlib numpy pandas os git'
+  []
 []
