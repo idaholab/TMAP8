@@ -77,8 +77,8 @@
   end_time = 5000
   dtmax = 10
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_hypre_type'
-  petsc_options_value = 'hypre boomeramg'
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = 'lu'
   scheme = 'bdf2'
   nl_rel_tol = 1e-50 # Make this really tight so that our absolute tolerance criterion is the one
   # we must meet
