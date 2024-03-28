@@ -1,11 +1,44 @@
 [Tests]
   design = 'Diffusion.md TimeDerivative.md DirichletBC.md'
   issues = '#12'
-  [exo]
-    type = Exodiff
-    input = ver-1b.i
-    exodiff = ver-1b_out.e
-    cli_args = 'Executioner/dt=10 Mesh/nx=100'
-    requirement = 'The system shall be able to model transient diffusion through a slab with a constant concentration boundary condition as the species source.'
-  []
+    [ver-1b]
+      type = Exodiff
+      input = ver-1b.i
+      exodiff = ver-1b_test_out.e
+      cli_args = 'Executioner/dt=10 Mesh/nx=100 Outputs/exodus/file_base=ver-1b_test_out'
+      requirement = 'The system shall be able to model transient diffusion through a slab with a constant concentration boundary condition as the species source.'
+    []
+    [ver-1b_heavy]
+      type = Exodiff
+      input = ver-1b.i
+      exodiff = ver-1b_out.e
+      heavy = true
+      requirement = 'The system shall be able to model transient diffusion through a slab with a constant concentration boundary condition as the species source with the fine mesh and time step required to match the analytical solution.'
+    []
+    [ver-1b_heavy_csvdiff]
+      type = CSVDiff
+      input = ver-1b.i
+      should_execute = False  # this test relies on the output files from ver-1b_heavy, so it shouldn't be run twice
+      csvdiff = ver-1b_csv.csv
+      requirement = 'The system shall be able to model transient diffusion through a slab with a constant concentration boundary condition as the species source, with the fine mesh and time step required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution over time.'
+      heavy = true
+      prereq = ver-1b_heavy
+    []
+    [ver-1b_heavy_lineplot]
+      type = CSVDiff
+      input = ver-1b.i
+      should_execute = False  # this test relies on the output files from ver-1b_heavy, so it shouldn't be run twice
+      csvdiff = ver-1b_vector_postproc_line_0250.csv
+      requirement = 'The system shall be able to model transient diffusion through a slab with a constant concentration boundary condition as the species source, with the fine mesh and timestep required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution for the profile concentration.'
+      heavy = true
+      prereq = ver-1b_heavy
+    []
+    [ver-1b_comparison]
+      type = RunCommand
+      command = 'python3 comparison_ver-1b.py'
+      requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1b, modeling transient diffusion through a slab with a constant concentration boundary condition as the species source.'
+      heavy = true
+      prereq = ver-1b_heavy
+      required_python_packages = 'matplotlib numpy pandas os git'
+    []
 []
