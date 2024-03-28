@@ -11,7 +11,7 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol = pd.read_csv("./gold/u_vs_t.csv")
+tmap_sol = pd.read_csv("./gold/ver-1b_csv.csv")
 tmap_time = tmap_sol['time']
 tmap_conc = tmap_sol['conc_point1']
 
@@ -30,7 +30,7 @@ ax.legend(loc="best")
 ax.set_xlim(left=0)
 ax.set_xlim(right=45)
 ax.set_ylim(bottom=0)
-plt.grid(b=True, which='major', color='0.65', linestyle='--', alpha=0.3)
+plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()
 plt.savefig('ver-1b_comparison_time.png', bbox_inches='tight');
@@ -43,7 +43,7 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol = pd.read_csv("./gold/u_vs_x.csv")
+tmap_sol = pd.read_csv("./gold/ver-1b_vector_postproc_line_0250.csv")
 tmap_distance = tmap_sol['x']
 tmap_conc = tmap_sol['u']
 
@@ -62,7 +62,7 @@ ax.legend(loc="best")
 ax.set_xlim(left=0)
 ax.set_xlim(right=50)
 ax.set_ylim(bottom=0)
-plt.grid(b=True, which='major', color='0.65', linestyle='--', alpha=0.3)
+plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()
 plt.savefig('ver-1b_comparison_dist.png', bbox_inches='tight');
@@ -73,7 +73,7 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol = pd.read_csv("./gold/u_vs_t.csv")
+tmap_sol = pd.read_csv("./gold/ver-1b_csv.csv")
 tmap_time = tmap_sol['time']
 tmap_flux = tmap_sol['flux_point2']
 
@@ -93,7 +93,7 @@ ax.legend(loc="best")
 ax.set_xlim(left=0)
 ax.set_xlim(right=45)
 ax.set_ylim(bottom=0)
-plt.grid(b=True, which='major', color='0.65', linestyle='--', alpha=0.3)
+plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()
 plt.savefig('ver-1b_comparison_flux.png', bbox_inches='tight');

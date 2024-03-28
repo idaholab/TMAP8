@@ -1,7 +1,7 @@
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 10000
+  nx = 5000
   xmax = 200
 []
 
@@ -57,10 +57,11 @@
   [line]
     type = LineValueSampler
     start_point = '0 0 0'
-    end_point = '2 0 0'
-    num_points = 41
+    end_point = '50 0 0'
+    num_points = 51
     sort_by = 'x'
     variable = u
+    outputs = 'vector_postproc'
   []
 []
 
@@ -69,11 +70,13 @@
     type = PointValue
     variable = u
     point = '.2 0 0'
+    outputs = 'csv'
   []
   [flux_point2]
     type = PointValue
     variable = flux_x
-    point = '.2 0 0'
+    point = '.5 0 0'
+    outputs = 'csv'
   []
 []
 
@@ -82,17 +85,24 @@
   end_time = 50
   dt = .1
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_hypre_type'
-  petsc_options_value = 'hypre boomeramg'
-  l_tol = 1e-8
-  scheme = 'crank-nicolson'
+  petsc_options_iname = '-pc_type '
+  petsc_options_value = 'lu '
+  scheme = 'bdf2'
 []
 
 [Outputs]
-  exodus = true
+  [exodus]
+    type = Exodus
+    file_base = 'ver-1b_out'
+  []
   [csv]
     type = CSV
     interval = 10
+  []
+  [vector_postproc]
+    type = CSV
+    sync_times = '25'
+    sync_only = true
   []
   perf_graph = true
 []
