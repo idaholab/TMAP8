@@ -11,7 +11,7 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol = pd.read_csv("ver-1b_csv.csv")
+tmap_sol = pd.read_csv("./gold/ver-1b_csv.csv")
 tmap_time = tmap_sol['time']
 tmap_conc = tmap_sol['conc_point1']
 
@@ -43,7 +43,7 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol = pd.read_csv("ver-1b_vector_postproc_line_0250.csv")
+tmap_sol = pd.read_csv("./gold/ver-1b_vector_postproc_line_0250.csv")
 tmap_distance = tmap_sol['x']
 tmap_conc = tmap_sol['u']
 
@@ -73,7 +73,7 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol = pd.read_csv("ver-1b_csv.csv")
+tmap_sol = pd.read_csv("./gold/ver-1b_csv.csv")
 tmap_time = tmap_sol['time']
 tmap_flux = tmap_sol['flux_point2']
 

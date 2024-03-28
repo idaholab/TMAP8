@@ -13,14 +13,14 @@
       input = ver-1b.i
       exodiff = ver-1b_out.e
       heavy = true
-      requirement = 'The system shall be able to model transient diffusion through a slab with a constant concentration boundary condition as the species source.'
+      requirement = 'The system shall be able to model transient diffusion through a slab with a constant concentration boundary condition as the species source with the fine mesh and time step required to match the analytical solution.'
     []
     [ver-1b_heavy_csvdiff]
       type = CSVDiff
       input = ver-1b.i
       should_execute = False  # this test relies on the output files from ver-1b_heavy, so it shouldn't be run twice
       csvdiff = ver-1b_csv.csv
-      requirement = 'The system shall be able to model transient diffusion through a slab with a constant concentration boundary condition as the species source, with the fine mesh and timestep required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution.'
+      requirement = 'The system shall be able to model transient diffusion through a slab with a constant concentration boundary condition as the species source, with the fine mesh and time step required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution over time.'
       heavy = true
       prereq = ver-1b_heavy
     []
@@ -29,7 +29,7 @@
       input = ver-1b.i
       should_execute = False  # this test relies on the output files from ver-1b_heavy, so it shouldn't be run twice
       csvdiff = ver-1b_vector_postproc_line_0250.csv
-      requirement = 'The system shall be able to model transient diffusion through a slab with a constant concentration boundary condition as the species source, with the fine mesh and timestep required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution.'
+      requirement = 'The system shall be able to model transient diffusion through a slab with a constant concentration boundary condition as the species source, with the fine mesh and timestep required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution for the profile concentration.'
       heavy = true
       prereq = ver-1b_heavy
     []
