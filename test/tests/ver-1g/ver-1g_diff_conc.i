@@ -8,30 +8,12 @@
     initial_condition = 2.43e-4 # units: number of atoms / micrometer^3
   []
   [c_b]
-    initial_condition = 1.225e-4
+    initial_condition = 1.215e-4
   []
   [c_ab]
     initial_condition = 0
   []
 []
-
-# [ICs]
-#   [c_a_IC]
-#     type = ConstantIC
-#     variable = c_a
-#     value = 2.43e-4 # units: number of atoms / micrometer^3
-#   []
-#   [c_b_IC]
-#     type = ConstantIC
-#     variable = c_b
-#     value = 1.215e-4
-#   []
-#   [c_ab_IC]
-#     type = ConstantIC
-#     variable = c_ab
-#     value = 0
-#   []
-# []
 
 [Kernels]
   [timeDerivative_c_a]
