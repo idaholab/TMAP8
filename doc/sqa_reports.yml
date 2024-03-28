@@ -10,12 +10,27 @@ Applications:
         show_warning: false
 
 Documents:
+    software_quality_plan: sqa/inl_records.md#software_quality_plan
+    enterprise_architecture_entry: sqa/inl_records.md#enterprise_architecture_entry
+    safety_software_determination: sqa/inl_records.md#safety_software_determination
+    quality_level_determination: sqa/inl_records.md#quality_level_determination
+    configuration_management_plan: sqa/inl_records.md#configuration_management_plan
+    asset_management_plan: sqa/inl_records.md#asset_management_plan
+    verification_validation_plan: sqa/inl_records.md#verification_and_validation_plan
     software_requirements_specification: sqa/tmap8_srs.md
     software_design_description: sqa/tmap8_sdd.md
     software_test_plan: sqa/tmap8_stp.md
     requirements_traceability_matrix: sqa/tmap8_rtm.md
     verification_validation_report: sqa/tmap8_vvr.md
     failure_analysis_report: sqa/tmap8_far.md
+    software_library_list: sqa/tmap8_sll.md
+    communication_and_contact_information: sqa/tmap8_cci.md
+    software_coding_standards: sqa/tmap8_scs.md
+    user_manual: sqa/user_manual.md
+    theory_manual: sqa/theory_manual.md
+    working_dirs:
+        - ${ROOT_DIR}/doc/content
+        - ${MOOSE_DIR}/framework/doc/content
     log_default: WARNING
     show_warning: false
 
@@ -25,5 +40,20 @@ Requirements:
             - ${ROOT_DIR}/doc/content
             - ${MOOSE_DIR}/framework/doc/content
             - ${MOOSE_DIR}/modules/heat_transfer/doc/content
+            - ${MOOSE_DIR}/modules/phase_field/doc/content
+            - ${MOOSE_DIR}/modules/scalar_transport/doc/content
+            - ${MOOSE_DIR}/modules/solid_mechanics/doc/content
+            - ${MOOSE_DIR}/modules/solid_properties/doc/content
+            - ${MOOSE_DIR}/modules/fluid_properties/doc/content
+            - ${MOOSE_DIR}/modules/navier_stokes/doc/content
+            - ${MOOSE_DIR}/modules/chemical_reactions/doc/content
+            - ${MOOSE_DIR}/modules/thermal_hydraulics/doc/content
+            - ${MOOSE_DIR}/modules/misc/doc/content
+            - ${MOOSE_DIR}/modules/fluid_properties/doc/content # pulled in by navier_stokes
+            - ${MOOSE_DIR}/modules/ray_tracing/doc/content      # pulled in by heat_transfer
+            - ${MOOSE_DIR}/modules/rdg/doc/content              # pulled in by navier_stokes
         directories:
             - ${ROOT_DIR}/test
+        log_testable: WARNING
+        show_warning: false
+        include_non_testable: true
