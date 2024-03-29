@@ -18,9 +18,9 @@ tmap_concAB = tmap_sol['conc_ab']
 ax.plot(tmap_time, tmap_concAB, label=r"TMAP8", c='tab:gray')
 
 analytical_time = np.linspace(0.0, 40, 100)
-concA_o = 2.43e-4
-concB_o = 1.215e-4
-K = 4.14e3
+concA_o = 2.43e-4 # atoms / microns^3
+concB_o = 1.215e-4 # atoms / microns^3
+K = 4.14e3 # molecule.m^3/atom^2/s
 
 exponential_term = np.exp(K * analytical_time *
                           (concB_o - concA_o))
@@ -54,8 +54,8 @@ tmap_concAB = tmap_sol['conc_ab']
 ax.plot(tmap_time, tmap_concAB, label=r"TMAP8", c='tab:gray')
 
 analytical_time = np.linspace(0.0, 40, 100)
-concA_o = 2.43e-4
-K = 4.14e3
+concA_o = 2.43e-4 # atoms / microns^3 (which is equal to concB_o)
+K = 4.14e3 # molecule.m^3/atom^2/s
 
 analytical_concAB = concA_o - 1 / (1/concA_o + K*analytical_time)
 
