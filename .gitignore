@@ -227,3 +227,6 @@ peacock_tmp_diff.exo
 # Generated resource files
 unit/tmap8-unit.yaml
 tmap8.yaml
+
+# Generated image files
+doc/**/ver-1a_comparison_*.png
