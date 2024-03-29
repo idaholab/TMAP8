@@ -4,10 +4,10 @@
 !! system-scope-begin
 
 TMAP8 is an application for performing system-level, engineering scale (i.e., at the scale of centimeters and meters), and microstructure-scale (i.e., at the scale of microns) mass and thermal transport calculations related to tritium migration. These models often include highly coupled
-systems of equations related to heat conduction, scalar transport, thermal hydraulics, mechanics, amongst others. Material models are also included to support these simulations, and they themselves are often dependent on simulation variables: temperature,
+systems of equations related to heat conduction, scalar transport, thermal hydraulics, and mechanics, amongst others. Material models are also included to support these simulations, and they themselves are often dependent on simulation variables: temperature,
 irradiation flux, etc. While many models within TMAP8 are performed
 at the system-level or engineering scale, the [syntax/MultiApps/index.md]
-can be leveraged to allow for multiscale coupling to the micro- and nano-scale species behavior. This allows for not higher fidelity modeling.
+can be leveraged to allow for multiscale coupling to the micro- and nano-scale species behavior. This allows for higher fidelity modeling.
 
 !! system-scope-finish
 !template-end!
@@ -19,9 +19,9 @@ The purpose of TMAP8 is to simulate tritium transport and inventory at different
 !template-end!
 
 !template! item key=assumptions-and-dependencies
-{{app}} has no constraints on hardware and software beyond those of the MOOSE framework and modules listed in their respective SRS documents, which are accessible through the links at the beginning of this document.
+{{app}} has no constraints on hardware and software beyond those of the MOOSE framework and modules listed in their respective [!ac](SRS) documents, which are accessible through the links at the beginning of this document.
 
-{{app}} provides access to a number of code objects that perform computations such as material behavior and boundary conditions. These objects each make their own physics-based assumptions, such as the units of the inputs and outputs. Those assumptions are described in the documentation for those individual objects.
+{{app}} provides access to a number of code objects that perform computations, such as material behavior and boundary conditions. These objects each make their own physics-based assumptions, such as the units of the inputs and outputs. Those assumptions are described in the documentation for those individual objects.
 !template-end!
 
 !template! item key=user-characteristics

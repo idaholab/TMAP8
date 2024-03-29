@@ -18,4 +18,4 @@ testing system, [CIVET](https://civet.inl.gov), that is triggered when
 you submit a pull request will check your code and provide information on the
 changes needed to conform to the code style (if any).
 
-TMAP8 development adheres to the software coding standard of the MOOSE Framework as described in [the MOOSE standard](sqa/framework_scs.md)..
+TMAP8 development adheres to the software coding standard of the MOOSE Framework as described in [the MOOSE standard](sqa/framework_scs.md).

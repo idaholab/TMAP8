@@ -1,3 +1,7 @@
 !template load file=sqa/app_vvr.md.template app=TMAP8App category=tmap8
 
-The verification and validation test cases and the associated documentation for TMAP8 is available on the [V&V page](verification/ver-list.md).
+!template! item key=introduction
+The [!ac](VVR) for {{app}} provides evidence that {{app}} fulfills its intended purpose. All
+verification and validation test cases and their associated documentation for {{app}} is also
+available on the [V&V page](verification/ver-list.md).
+!template-end!

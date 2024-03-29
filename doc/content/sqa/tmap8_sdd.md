@@ -2,8 +2,8 @@
 
 !template! item key=introduction
 Many of the phenomena related to tritium transport depend on the solutions of multiple
-physics models, which can be described by partial differential equations that provide spatially and
-temporally varying values of solution variables. These models for individual physics often depend on
+physics models, which can be described by partial differential equations that provide spatially- and
+temporally-varying values of solution variables. These models for individual physics often depend on
 each other. {{app}} relies on the MOOSE framework to solve these physics models, accounting for the
 couplings that may occur between them. This document describes the system design of {{app}}.
 !template-end!
@@ -19,7 +19,7 @@ with no additional dependencies.
 
 !template! item key=design-stakeholders
 Stakeholders for {{app}} include several of the funding sources including [!ac](DOE) and [!ac](INL).
-However, Since {{app}} is an open-source project, several universities, companies, and foreign governments
+However, since {{app}} is an open-source project, several universities, companies, and foreign governments
 have an interest in the development and maintenance of the {{app}} project.
 !template-end!
 
@@ -41,7 +41,7 @@ of {{app}} is provided by the MOOSE modules that it builds on.
 !template! item key=system-structure
 {{app}} relies on the MOOSE framework to provide the core functionality of solving multiphysics problems
 using the finite element method. It also relies on the MOOSE modules for much of its core functionality.
-A summary listing of the current modules required for complete TMAP8 operation are shown below:
+A summary listing of the current modules required for complete {{app}} operation are shown below:
 
 - [Heat Transfer](heat_transfer/index.md)
 - [Miscellaneous Module](misc/index.md)
@@ -55,8 +55,8 @@ A summary listing of the current modules required for complete TMAP8 operation a
 - [Thermal Hydraulics](thermal_hydraulics/index.md)
 
 The structure of {{app}} is based on defining C++ classes that derive from classes in the MOOSE framework
-or modules that provide functionality that is specifically tailored to the structural degradation
-problem. By using the interfaces defined in MOOSE base classes for these classes, {{app}} is able to
+or modules that provide functionality that is specifically tailored to tritium migration
+problems. By using the interfaces defined in MOOSE base classes for these classes, {{app}} is able to
 rely on MOOSE to execute these models at the appropriate times during the simulation and use their
 results in the desired ways.
 !template-end!
