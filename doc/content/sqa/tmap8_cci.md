@@ -1,7 +1,7 @@
 !template load file=app_cci.md.template app=TMAP8 category=tmap8
 
 !template item key=general-communication
-Please use the [{{app}} Discussion forum](https://github.com/idaholab/{{category}}/discussions) Discussion forum for all questions and inquires.
+Please use the [{{app}} Discussion forum](https://github.com/idaholab/{{category}}/discussions) for all questions and inquires.
 
 !template item key=problem-reporting
 If you are having a problem with a specific release of {{app}} please contact the team
