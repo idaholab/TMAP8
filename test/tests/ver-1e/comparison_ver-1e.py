@@ -16,7 +16,7 @@ tmap_sol = pd.read_csv("./gold/ver-1e_csv.csv")
 tmap_time = tmap_sol['time']
 tmap_conc = tmap_sol['conc_point1']
 
-#Analytical solution
+# Analytical solution
 t = np.expand_dims(tmap_time,axis=0)
 x = 15.75e-6
 c0 = 50.7079            # concentration at the PyC free surface (moles/um^3)
@@ -27,7 +27,7 @@ D_SiC = 2.622e-11       # diffusivity in SiC (m^2/s)
 
 k = sqrt(D_PyC/D_SiC)
 
-#Calculate lambda values for analytical solution
+# Calculate lambda values for analytical solution
 lambda_range = np.arange(1e-12,1e5,1e-4)
 f = 1/tan(lambda_range*a)
 g = 1/tan(k*l*lambda_range)/k
