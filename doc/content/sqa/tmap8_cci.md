@@ -1,4 +1,4 @@
-!template load file=app_cci.md.template app=TMAP8App category=tmap8
+!template load file=app_cci.md.template app=TMAP8 category=tmap8
 
 !template item key=general-communication
 Please use the [{{app}} Discussion forum](https://github.com/idaholab/{{category}}/discussions) Discussion forum for all questions and inquires.

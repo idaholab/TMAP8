@@ -1,4 +1,4 @@
-!template load file=app_scs.md.template app=TMAP8App category=tmap8
+!template load file=app_scs.md.template app=TMAP8 category=tmap8
 
 ## Clang Format
 

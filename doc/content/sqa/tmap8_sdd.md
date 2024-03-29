@@ -1,4 +1,4 @@
-!template load file=sqa/app_sdd.md.template app=TMAP8App category=tmap8
+!template load file=sqa/app_sdd.md.template app=TMAP8 category=tmap8
 
 !template! item key=introduction
 Many of the phenomena related to tritium transport depend on the solutions of multiple
@@ -34,7 +34,7 @@ the base classes defined by the MOOSE framework and the modules that it depends 
 partial differential equations for heat conduction, tritium diffusion, surface reactions, and other phenomena. It also provides
 specialized `Material` classes that define the constitutive behavior of materials of interest for
 diffusion, solubility, trapping, resolution, reactivity, permeation, and other physical properties. In addition, it provides miscellaneous `BC` and
-`InterfaceKernel` classes to facilitate various aspects of these simulations, such as plasma exposure, surface reactions, transfer of species acros enclosures, among others. Much of the functionality
+`InterfaceKernel` classes to facilitate various aspects of these simulations, such as plasma exposure, surface reactions, transfer of species across enclosures, among others. Much of the functionality
 of {{app}} is provided by the MOOSE modules that it builds on.
 !template-end!
 
