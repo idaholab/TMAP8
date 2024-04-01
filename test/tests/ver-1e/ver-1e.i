@@ -1,8 +1,11 @@
+T_PyC = ${units 33 mum -> m}
+T_SiC = ${units 66 mum -> m}
+D_ver = ${units 15.75 mum -> m}
 [Mesh]
   type = GeneratedMesh
   dim = 1
   nx = 1000
-  xmax = 99e-6
+  xmax = ${fparse ${T_PyC} + ${T_SiC} }
   allow_renumbering = false
 []
 
@@ -14,7 +17,7 @@
 [Functions]
   [diffusivity_value]
     type = ParsedFunction
-    expression = 'if(x<33e-6, 1.274e-7, 2.622e-11)'
+    expression = 'if(x< ${units 33 mum -> m}, 1.274e-7, 2.622e-11)'
   []
 []
 
@@ -51,8 +54,8 @@
   [line]
     type = LineValueSampler
     start_point = '0 0 0'
-    end_point = '99e-6 0 0'
-    num_points = 1000
+    end_point = '${Mesh/xmax} 0 0'
+    num_points = ${Mesh/nx}
     sort_by = 'x'
     variable = u
     outputs = vector_postproc
@@ -61,21 +64,13 @@
 
 [Postprocessors]
   # Used to obtain varying concentration with time at a
-  # point in SiC layer 8 micrometer away from PyC boundary,
-  # as used in TMAP4 verification case 1e
-  [conc_TMAP4]
+  # point in SiC layer 'x' um from IPyC/SiC boundary
+  # x = 8 um for TMAP4 verification case,
+  # x = 15.75 um for TMAP7 verification case
+  [conc_at_x]
     type = PointValue
     variable = u
-    point = '41.0e-6 0 0'
-    outputs = 'csv'
-  []
-  # Used to obtain varying concentration with time at a
-  # point in SiC layer 15.75 micrometer away from the
-  # PyC-SiC interface, as used in TMAP7 verification case 1e
-  [conc_TMAP7]
-    type = PointValue
-    variable = u
-    point = '48.75e-6 0 0'
+    point = '${fparse ${T_PyC} + ${D_ver}} 0 0'
     outputs = 'csv'
   []
 []

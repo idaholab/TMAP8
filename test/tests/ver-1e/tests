@@ -10,39 +10,68 @@
     exodiff_opts = '-match_ids'
     map = False
   []
-  [ver-1e_heavy]
+  [ver-1e_TMAP4_heavy]
     type = Exodiff
     input = ver-1e.i
-    exodiff = ver-1e_exodus.e
+    exodiff = TMAP4.e
     heavy = true
-    requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition as the species source, with the fine mesh and time step required to match the analytical solution'
+    cli_args = 'T_SiC=63e-6 D_ver=8e-6 Outputs/exodus/file_base=TMAP4 Outputs/csv/file_base=TMAP4 Outputs/vector_postproc/file_base=TMAP4_vector_postproc'
+    requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition as the species source, with the fine mesh and time step required to match the analytical solution for the TMAP4 verification case.'
     exodiff_opts = '-match_ids'
     map = False
   []
-  [ver-1e_heavy_csvdiff]
-    type = CSVDiff
+  [ver-1e_TMAP7_heavy]
+    type = Exodiff
     input = ver-1e.i
-    should_execute = False  # this test relies on the output files from ver-1e_heavy, so it shouldn't be run twice
-    csvdiff = ver-1e_csv.csv
-    requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition as the species source, with the fine mesh and time step required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution over time.'
+    exodiff = TMAP7.e
     heavy = true
-    prereq = ver-1e_heavy
+    cli_args = 'T_SiC=66e-6 D_ver=15.75e-6 Outputs/exodus/file_base=TMAP7 Outputs/csv/file_base=TMAP7 Outputs/vector_postproc/file_base=TMAP7_vector_postproc'
+    requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition as the species source, with the fine mesh and time step required to match the analytical solution for the TMAP7 verification case.'
+    exodiff_opts = '-match_ids'
+    map = False
   []
-  [ver-1e_heavy_lineplot]
+  [ver-1e_TMAP4_heavy_csvdiff]
     type = CSVDiff
     input = ver-1e.i
     should_execute = False  # this test relies on the output files from ver-1e_heavy, so it shouldn't be run twice
-    csvdiff = ver-1e_vector_postproc_line_0548.csv
-    requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition as the species source, with the fine mesh and timestep required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution for the profile concentration.'
+    csvdiff = TMAP4.csv
+    requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition as the species source, with the fine mesh and time step required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution over time  for the TMAP4 verification case.'
     heavy = true
-    prereq = ver-1e_heavy
+    prereq = ver-1e_TMAP4_heavy
+  []
+  [ver-1e_TMAP7_heavy_csvdiff]
+    type = CSVDiff
+    input = ver-1e.i
+    should_execute = False  # this test relies on the output files from ver-1e_heavy, so it shouldn't be run twice
+    csvdiff = TMAP7.csv
+    requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition as the species source, with the fine mesh and time step required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution over time for the TMAP7 verification case.'
+    heavy = true
+    prereq = ver-1e_TMAP7_heavy
+  []
+  [ver-1e_TMAP4_heavy_lineplot]
+    type = CSVDiff
+    input = ver-1e.i
+    should_execute = False  # this test relies on the output files from ver-1e_heavy, so it shouldn't be run twice
+    csvdiff = TMAP4_vector_postproc_line_0548.csv
+    requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition as the species source, with the fine mesh and timestep required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution for the profile concentration for the TMAP4 verification case.'
+    heavy = true
+    prereq = ver-1e_TMAP4_heavy
+  []
+  [ver-1e_TMAP7_heavy_lineplot]
+    type = CSVDiff
+    input = ver-1e.i
+    should_execute = False  # this test relies on the output files from ver-1e_heavy, so it shouldn't be run twice
+    csvdiff = TMAP7_vector_postproc_line_0548.csv
+    requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition as the species source, with the fine mesh and timestep required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution for the profile concentration for the TMAP7 verification case.'
+    heavy = true
+    prereq = ver-1e_TMAP7_heavy
   []
   [ver-1e_comparison]
     type = RunCommand
     command = 'python3 comparison_ver-1e.py'
-    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1e, modeling transient diffusion through a composite slab with a constant concentration boundary condition as the species source.'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1e, modeling transient diffusion through a composite slab with a constant concentration boundary condition as the species source for both the TMAP4 and TMAP7 verification cases.'
     heavy = true
-    prereq = ver-1e_heavy
+    prereq = 'ver-1e_TMAP4_heavy ver-1e_TMAP7_heavy'
     required_python_packages = 'matplotlib numpy pandas os git'
   []
 []
