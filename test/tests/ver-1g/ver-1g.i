@@ -1,12 +1,12 @@
 ## Run this file with one of three input files to simulate various verification cases
-## 1. equal_conc.i        -> TMAP4 and TMAP7 equal concentration case
-## 2. diff_conc_TMAP4.i  -> TMAP4 different concentration case
-## 3. diff_conc_TMAP7.i  -> TMAP7 different concentration case
+## a. equal_conc.i        -> TMAP4 and TMAP7 equal concentration case
+## b. diff_conc_TMAP4.i  -> TMAP4 different concentration case
+## c. diff_conc_TMAP7.i  -> TMAP7 different concentration case
 ## Example: ~/projects/TMAP8/tmap8-opt -i ver-1g.i equal_conc.i
 
-R = 8.314462 # Gas constant (https://physics.nist.gov/cgi-bin/cuu/Value?r)
+R = 8.31446261815324 # Gas constant (from PhysicalConstants.h - https://physics.nist.gov/cgi-bin/cuu/Value?r)
 T = '${units 25 degC -> K}' # Temperature
-Na = 6.02214076E23 # Avogadro's constant (https://physics.nist.gov/cgi-bin/cuu/Value?na)
+Na = 6.02214076E23 # Avogadro's constant (from PhysicalConstants.h - https://physics.nist.gov/cgi-bin/cuu/Value?na)
 
 [Mesh]
     type = GeneratedMesh
@@ -63,7 +63,7 @@ Na = 6.02214076E23 # Avogadro's constant (https://physics.nist.gov/cgi-bin/cuu/V
     [K]
         type = ADParsedMaterial
         f_name = 'K'
-        function = '4.14e3' # units: molecule.micrometer^3/atom.second
+        function = '4.14e3' # units: molecule.micrometer^3/atom/second
     []
 []
 
