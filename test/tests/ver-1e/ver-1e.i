@@ -59,12 +59,20 @@
   []
 []
 
-# Used to obtain varying concentration with time at a
-# point in SiC layer 15.75 micrometer away from the
-# PyC-SiC interface
-
 [Postprocessors]
-  [conc_point1]
+  # Used to obtain varying concentration with time at a
+  # point in SiC layer 8 micrometer away from PyC boundary,
+  # as used in TMAP4 verification case 1e
+  [conc_TMAP4]
+    type = PointValue
+    variable = u
+    point = '41.0e-6 0 0'
+    outputs = 'csv'
+  []
+  # Used to obtain varying concentration with time at a
+  # point in SiC layer 15.75 micrometer away from the
+  # PyC-SiC interface, as used in TMAP7 verification case 1e
+  [conc_TMAP7]
     type = PointValue
     variable = u
     point = '48.75e-6 0 0'

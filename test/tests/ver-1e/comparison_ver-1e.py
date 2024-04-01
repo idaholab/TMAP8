@@ -13,12 +13,16 @@ gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
 tmap_sol = pd.read_csv("./gold/ver-1e_csv.csv")
-tmap_time = tmap_sol['time']
-tmap_conc = tmap_sol['conc_point1']
+idx = 0#np.where(tmap_sol['time'] >= 0.2)[0][0]
 
-# Analytical solution
+tmap_time = tmap_sol['time'][idx:]
+tmap_conc_tmap4 = tmap_sol['conc_TMAP4'][idx:]
+tmap_conc_tmap7 = tmap_sol['conc_TMAP7'][idx:]
+
+ax.plot(tmap_time, tmap_conc_tmap4, label=r"TMAP8", c='tab:gray')
+ax.plot(tmap_time, tmap_conc_tmap7, label=r"TMAP8", c='tab:gray')
+
 t = np.expand_dims(tmap_time,axis=0)
-x = 15.75e-6
 c0 = 50.7079            # concentration at the PyC free surface (moles/um^3)
 a  = 33e-6              # thickness of the PyC layer (um)
 l  = 66e-6              # thickness of the SiC layer (um)
@@ -26,22 +30,41 @@ D_PyC = 1.274e-7        # diffusivity in PyC (m^2/s)
 D_SiC = 2.622e-11       # diffusivity in SiC (m^2/s)
 
 k = sqrt(D_PyC/D_SiC)
-
+print(k,l,a)
 # Calculate lambda values for analytical solution
-lambda_range = np.arange(1e-12,1e5,1e-4)
+lambda_range = np.arange(1e-12,1e4,1e-4)
 f = 1/tan(lambda_range*a)
 g = 1/tan(k*l*lambda_range)/k
 idx = np.where(np.diff(np.sign(f+g)))
 lambdas = np.expand_dims(lambda_range[idx][::2],axis=0)
 
+# TMAP 4 Analytical solution
+x = 8e-6
 summation = (sin(a*lambdas)*sin(k*l*lambdas)*sin(k*(l-x)*lambdas)/(lambdas*( a*sin(k*l*lambdas)*sin(k*l*lambdas) + l*sin(a*lambdas)*sin(a*lambdas) ) ) )*exp(-D_PyC*np.power(lambdas,2)*t.transpose() )
 sums = np.sum(summation,axis=1)
 
 analytical_conc = c0*(D_PyC*(l-x)/(l*D_PyC + a*D_SiC)  - 2*sums)*np.ones(sums.shape)
 
-ax.plot(tmap_time, tmap_conc, label=r"TMAP8", c='tab:gray')
+RMSE = np.sqrt(np.mean((tmap_conc_tmap4-analytical_conc)**2))
+err_percent = RMSE*100/np.mean(analytical_conc)
+print(err_percent)
+
 ax.plot(tmap_time, analytical_conc,
-        label=r"Analytical", c='k', linestyle='--')
+        label=r"Analytical TMAP4", c='k', linestyle='--')
+
+# TMAP 7 Analytical solution
+x = 15.75e-6
+summation = (sin(a*lambdas)*sin(k*l*lambdas)*sin(k*(l-x)*lambdas)/(lambdas*( a*sin(k*l*lambdas)*sin(k*l*lambdas) + l*sin(a*lambdas)*sin(a*lambdas) ) ) )*exp(-D_PyC*np.power(lambdas,2)*t.transpose() )
+sums = np.sum(summation,axis=1)
+
+analytical_conc = c0*(D_PyC*(l-x)/(l*D_PyC + a*D_SiC)  - 2*sums)*np.ones(sums.shape)
+
+RMSE = np.sqrt(np.mean((tmap_conc_tmap7-analytical_conc)**2))
+err_percent = RMSE*100/np.mean(analytical_conc)
+print(err_percent)
+
+ax.plot(tmap_time, analytical_conc,
+        label=r"Analytical TMAP7", c='g', linestyle='--')
 
 
 ax.set_xlabel(u'Time (s)')
