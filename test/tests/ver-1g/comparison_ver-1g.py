@@ -16,13 +16,13 @@ ax = fig.add_subplot(gs[0])
 tmap_sol = pd.read_csv("./gold/diff_conc_TMAP4_out.csv")
 tmap_time = tmap_sol['time']
 tmap_concAB = tmap_sol['conc_ab']
-ax.plot(tmap_time, tmap_concAB, linewidth = 1.5, label=r"TMAP8 (TMAP4 case)", c='tab:brown')
+ax.plot(tmap_time, tmap_concAB, linewidth = 2, label=r"TMAP8 (TMAP4 case)", c='tab:brown')
 
 #TMAP7 case
 tmap_sol = pd.read_csv("./gold/diff_conc_TMAP7_out.csv")
 tmap_time = tmap_sol['time']
 tmap_concAB = tmap_sol['conc_ab']
-ax.plot(tmap_time, tmap_concAB, linewidth = 1.5, label=r"TMAP8 (TMAP7 case)", c='tab:gray')
+ax.plot(tmap_time, tmap_concAB, linewidth = 2, label=r"TMAP8 (TMAP7 case)", c='tab:gray')
 
 def get_conc_from_pressure(P):
     R = 8.31446261815324        # Gas constant (from PhysicalConstants.h - https://physics.nist.gov/cgi-bin/cuu/Value?r)
@@ -42,20 +42,20 @@ def get_concAB_diff(analytical_time,P_A0,P_B0):
         (1 - exponential_term) / (1 - (concB_o / concA_o) * exponential_term)
     return analytical_concAB
 
-analytical_time = np.linspace(0.0, 40, 20)
+analytical_time = np.linspace(0.0, 40, 40)
 
 #TMAP4
 P_A0 = 1E-6                 # Pressure (Pa)
 P_B0 = 1E-7                 # Pressure (Pa)
 
-ax.plot(analytical_time, get_concAB_diff(analytical_time,P_A0,P_B0), 'b^',
+ax.plot(analytical_time, get_concAB_diff(analytical_time,P_A0,P_B0), '--', c='tab:cyan', dashes=(5,5),
            label=r"Analytical TMAP4")
 
 #TMAP7
 P_A0 = 1E-6                 # Pressure (Pa)
 P_B0 = 5E-7                 # Pressure (Pa)
 
-ax.plot(analytical_time, get_concAB_diff(analytical_time,P_A0,P_B0), 'ko',
+ax.plot(analytical_time, get_concAB_diff(analytical_time,P_A0,P_B0), 'k--', dashes=(5,5),
            label=r"Analytical TMAP7")
 
 ax.set_xlabel(u'Time (seconds)')
@@ -87,10 +87,10 @@ def get_concAB_equal(analytical_time,P_A0):
     analytical_concAB = concA_o - 1 / (1/concA_o + K*analytical_time)
     return analytical_concAB
 
-analytical_time = np.linspace(0.0, 40, 20)
+analytical_time = np.linspace(0.0, 40, 40)
 P_A0 = 1E-6                 # Pressure (Pa) (which is equal to P_B0)
 
-ax.plot(analytical_time, get_concAB_equal(analytical_time,P_A0), 'ko',
+ax.plot(analytical_time, get_concAB_equal(analytical_time,P_A0), 'k--', dashes=(5,5),
            label=r"Analytical")
 
 ax.set_xlabel(u'Time (seconds)')
