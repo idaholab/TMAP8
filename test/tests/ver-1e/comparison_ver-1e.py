@@ -54,7 +54,7 @@ analytical_conc_tmap4 = c0*(D_PyC*(l-x)/(l*D_PyC + a*D_SiC)  - 2*sums)*np.ones(s
 idx = np.where(tmap_time_tmap4>=t0)[0]
 RMSE = np.sqrt(np.mean((tmap_conc_tmap4[idx]-analytical_conc_tmap4[idx])**2))
 err_percent = RMSE*100/np.mean(analytical_conc_tmap4[idx])
-ax.text(5,40, 'R = %.2f '%err_percent+'% \n(TMAP4)',fontweight='bold')
+ax.text(5,40, 'RMSPE = %.2f '%err_percent+'% \n(TMAP4)',fontweight='bold')
 
 ax.plot(tmap_time_tmap4, analytical_conc_tmap4,
         label=r"Analytical (TMAP4 case)", c='k', linestyle='--', dashes=(5,5))
@@ -80,7 +80,7 @@ analytical_conc_tmap7 = c0*(D_PyC*(l-x)/(l*D_PyC + a*D_SiC)  - 2*sums)*np.ones(s
 idx = np.where(tmap_time_tmap7>=t0)[0]
 RMSE = np.sqrt(np.mean((tmap_conc_tmap7[idx]-analytical_conc_tmap7[idx])**2))
 err_percent = RMSE*100/np.mean(analytical_conc_tmap7[idx])
-ax.text(15, 25, 'R = %.2f '%err_percent+'% \n(TMAP7)',fontweight='bold')
+ax.text(15, 25, 'RMSPE = %.2f '%err_percent+'% \n(TMAP7)',fontweight='bold')
 
 ax.plot(tmap_time_tmap7, analytical_conc_tmap7,
         label=r"Analytical (TMAP7 case)", c='tab:cyan', linestyle='--', dashes=(5,5))
@@ -154,7 +154,7 @@ analytical_conc_tmap4 = (x<a)*PyC_conc+(x>=a)*SiC_conc
 
 RMSE = np.sqrt(np.mean((tmap_conc_tmap4-analytical_conc_tmap4)**2))
 err_percent = RMSE*100/np.mean(analytical_conc_tmap4)
-ax.text(50, 15, 'R = %.2f '%err_percent+'% \n(TMAP4)',fontweight='bold')
+ax.text(50, 15, 'RMSPE = %.2f '%err_percent+'% \n(TMAP4)',fontweight='bold')
 
 # TMAP 7 Analytical solution
 c0 = 50.7079            # concentration at the PyC free surface (moles/m^3)
@@ -170,9 +170,8 @@ analytical_conc_tmap7 = (x<a)*PyC_conc+(x>=a)*SiC_conc
 
 RMSE = np.sqrt(np.mean((tmap_conc_tmap7-analytical_conc_tmap7)**2))
 err_percent = RMSE*100/np.mean(analytical_conc_tmap7)
-ax.text(80, 25, 'R = %.2f '%err_percent+'% \n(TMAP7)',fontweight='bold')
+ax.text(80, 25, 'RMSPE = %.2f '%err_percent+'% \n(TMAP7)',fontweight='bold')
 
-# ax.plot(tmap_distance_microns, tmap_conc, label=r"TMAP8 (TMAP4 case)", c='tab:gray')
 ax.plot(tmap_distance_tmap4_microns, analytical_conc_tmap4,
         label=r"Analytical (TMAP4 case)", c='k', linestyle='--', dashes=(5,5))
 ax.plot(tmap_distance_tmap7_microns, analytical_conc_tmap7,

@@ -4,7 +4,7 @@
 
 ## Test Description
 
-This verification problem is taken from [!cite](longhurst1992verification, ambrosek2008verification). In this problem a composite structure of PyC and SiC is modeled with a constant concentration boundary condition of the free surface of PyC and zero concentration boundary condition on the free surface of the SiC. The steady state solution for the PyC is given as:
+This verification problem is taken from [!cite](longhurst1992verification, ambrosek2008verification). In this problem, a composite structure of PyC and SiC is modeled with a constant concentration boundary condition of the free surface of PyC and zero concentration boundary condition on the free surface of the SiC. The steady state solution for the PyC is given as:
 
 \begin{equation}
 \label{eqn:steady_state_pyc}
@@ -45,9 +45,13 @@ $k$ = $\sqrt{\frac{D_{PyC}}{D_{SiC}}}$
 
 and $\lambda_n$ are the roots of
 
-$\frac{1}{tan(\lambda a)} + \frac{1}{k \; tan(k l \lambda)} = 0$
+\begin{equation}
+\label{eqn:roots}
+    \frac{1}{tan(\lambda a)} + \frac{1}{k \; tan(k l \lambda)} = 0.
+\end{equation}
 
-NOTE: The above expression for the roots of $\lambda$ is obtained from [!cite](longhurst1992verification). The equation presented in [!cite](ambrosek2008verification) has a typographical error and gives incorrect results.
+!alert warning title=Typo in [!cite](ambrosek2008verification)
+[eqn:roots] for the roots of $\lambda$ is obtained from [!cite](longhurst1992verification). The equation presented in [!cite](ambrosek2008verification) has a typographical error and gives incorrect results.
 
 ## Results
 
@@ -56,14 +60,14 @@ NOTE: The above expression for the roots of $\lambda$ is obtained from [!cite](l
 !media figures/ver-1e_comparison_dist.png
     style=width:50%;margin-bottom:2%
     id=ver-1e_comparison_dist
-    caption=Comparison of TMAP8 calculation with the analytical solution. Bold text next to the plot curves shows the error between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
+    caption=Comparison of TMAP8 calculation with the analytical solution. Bold text next to the plot curves shows the root mean square percentage error (RMSPE) between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
 
-For transient solution comparison, the concentation at a point, which is $x$ $\mu m$ away from the PyC-SiC interface into the SiC layer, is obtained using the TMAP code as well as analytically. [ver-1e_comparison_time] shows comparison of the TMAP calculation with the analytical solution for this transient case. In the TMAP4 case, $x$ = 8 $\mu m$, and in the TMAP7 case $x$ = 15.75 $\mu m$. There is good agreement between TMAP and the analytical solution for both steady state as well as transient cases. In both cases, the root mean square error (RMSE) percent error is under 0.2 %. 
+For transient solution comparison, the concentation at a point, which is $x$ $\mu m$ away from the PyC-SiC interface into the SiC layer, is obtained using the TMAP code as well as analytically. [ver-1e_comparison_time] shows comparison of the TMAP calculation with the analytical solution for this transient case. In the TMAP4 case, $x$ = 8 $\mu m$, and in the TMAP7 case $x$ = 15.75 $\mu m$. There is good agreement between TMAP and the analytical solution for both steady state as well as transient cases. In both cases, the root mean square percentage error (RMSPE) is under 0.2 %. 
 
 !media figures/ver-1e_comparison_time.png
     style=width:50%;margin-bottom:2%
     id=ver-1e_comparison_time
-    caption=Comparison of TMAP8 calculation with the analytical solution. Bold text next to the plot curves shows the error between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
+    caption=Comparison of TMAP8 calculation with the analytical solution. Bold text next to the plot curves shows the RMSPE for the match between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
 
 The error is calculated between the TMAP8 and analytical solution values after $t$ = 0.2 s. This is in order to ignore the unphysical predictions of the analytical solution at very small times as shown in [ver-1e_comparison_time_zoomed], which is a close-up view of [ver-1e_comparison_time] close to the start of the simulation.
 
@@ -72,5 +76,8 @@ The error is calculated between the TMAP8 and analytical solution values after $
     id=ver-1e_comparison_time_zoomed
     caption=Zoomed-in view of comparison of TMAP8 calculation with the analytical solution for $t$ < 1 s. The analytical solution shows unphysical predictions close to $t$ = 0 s.
 
+## Comments on verification input file versus test file
+
+It is important to note that the input file used to reproduce these results and the input file used as test in TMAP8 are different. Indeed, the input file [/ver-1e.i] has a fine mesh and uses small time steps to accurately match the analytical solutions and reproduce the figures above. To limit the computational costs of the tests, however, the tests run a version of the file with a coarser mesh and larger time steps. More information about the changes can be found in the test specification file for this case [/ver-1e/tests].
 
 !bibtex bibliography
