@@ -154,7 +154,7 @@ analytical_conc_tmap4 = (x<a)*PyC_conc+(x>=a)*SiC_conc
 
 RMSE = np.sqrt(np.mean((tmap_conc_tmap4-analytical_conc_tmap4)**2))
 err_percent = RMSE*100/np.mean(analytical_conc_tmap4)
-ax.text(50, 15, 'RMSPE = %.2f '%err_percent+'% \n(TMAP4)',fontweight='bold')
+ax.text(40, 15, 'RMSPE = %.2f '%err_percent+'% \n(TMAP4)',fontweight='bold')
 
 # TMAP 7 Analytical solution
 c0 = 50.7079            # concentration at the PyC free surface (moles/m^3)
@@ -170,7 +170,7 @@ analytical_conc_tmap7 = (x<a)*PyC_conc+(x>=a)*SiC_conc
 
 RMSE = np.sqrt(np.mean((tmap_conc_tmap7-analytical_conc_tmap7)**2))
 err_percent = RMSE*100/np.mean(analytical_conc_tmap7)
-ax.text(80, 25, 'RMSPE = %.2f '%err_percent+'% \n(TMAP7)',fontweight='bold')
+ax.text(70, 25, 'RMSPE = %.2f '%err_percent+'% \n(TMAP7)',fontweight='bold')
 
 ax.plot(tmap_distance_tmap4_microns, analytical_conc_tmap4,
         label=r"Analytical (TMAP4 case)", c='k', linestyle='--', dashes=(5,5))
