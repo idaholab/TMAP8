@@ -2,38 +2,35 @@
 
 # Diffusion Problem with Partially Preloaded Slab
 
-This verification problem is taken from [!cite](longhurst1992verification). Diffusion of tritium through a semi-infinite SiC layer is modeled with an initial
+This verification problem is taken from [!cite](ambrosek2008verification,longhurst1992verification). Diffusion of tritium through a semi-infinite SiC layer is modeled with an initial
 loading of 1 atom/m{^3} in the first 10 m of a 2275-m slab. Diffusivity is unity
 and no traping is included. The analytical solution is given by:
 
 \begin{equation}
-C = \frac{C_o}{2} \left( erf \left( \frac{h-x}{2} \sqrt{Dt} \right) + erf \left( \frac{h+x}{2\sqrt{Dt}}) \right) \right)
+\label{eq:c_func}
+C = \frac{C_0}{2} \left[ \text{erf}\bigg(\frac{h-x}{2\sqrt{Dt}}\bigg) +
+\text{erf}\bigg(\frac{h+x}{2\sqrt{Dt}}\bigg)  \right]
 \end{equation}
-
 
 where h is the thickness of the pre-loaded portion of the layer.
 
-At the surface (x = 0) the concentration is given by:
+!alert warning title=Typo in [!cite](ambrosek2008verification,longhurst1992verification)
+[eq:c_func] for the value of $C$ is obtained from [!cite](ambrosek2008verification), but the equation there has a typographical error and gives incorrect results. The equation in [!cite](longhurst1992verification) also has typographical errors, and adds an extra term to the equation that gives incorrect results.
 
-\begin{equation}
-C = \frac{C_o}{2} \; erf \left( \frac{h}{2\sqrt{Dt}} \right)
-\end{equation}
+TMAP4 performs comparison of the mobile species concentration at three points - (a) a point at the interface (x = 0 m), (b) a point at the end of the pre-loaded region (x = 10 m), and (c) a point in the initally unloaded region (x = 12 m). The comparison of the values calculated through TMAP8 and analytically for the TMAP4 case is shown in
+[ver-1c_comparison_time_TMAP4]. TMAP7 performs comparison of the mobile species concentration at the same points (b) and (c) as in the TMAP4 case, but performs the third comparison at (d) a point close to the interface (x = 0.25 m). The comparison of the values calculated through TMAP8 and analytically for the TMAP7 case is shown in
+[ver-1c_comparison_time_TMAP7]. The TMAP8 calculations are found to be in good agreement with the analytical solution.
 
-while at x = h its value is described by
-
-\begin{equation}
-C = \frac{C_o}{2} \; erf \left( \frac{h}{\sqrt{Dt}} \right)
-\end{equation}
-
-A comparison of the mobile species concentration values at x = 0 m, 10 m and
-12.5 m calculated through TMAP8 and analytically is shown in
-[ver-1c_comparison_time]. The TMAP8 calculations are found to be in good agreement
-with the analytical solution.
-
-!media figures/ver-1c_comparison_time.png
+!media figures/ver-1c_comparison_time_TMAP4.png
     style=width:50%;margin-bottom:2%
-    id=ver-1c_comparison_time
+    id=ver-1c_comparison_time_TMAP4
     caption=Comparison of concentration as function of time at x\=0 m, 10 m and 12 m
-    calculated through TMAP8 and analytically
+    calculated through TMAP8 and analytically (TMAP4 case)
+
+!media figures/ver-1c_comparison_time_TMAP7.png
+    style=width:50%;margin-bottom:2%
+    id=ver-1c_comparison_time_TMAP7
+    caption=Comparison of concentration as function of time at x\=0.25 m, 10 m and 12 m
+    calculated through TMAP8 and analytically (TMAP7 case)
 
 !bibtex bibliography

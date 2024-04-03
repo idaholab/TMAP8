@@ -1,7 +1,10 @@
+# Locations for concentration comparison
+# TMAP7 - 12, 0.25, h (10)
+# TMAP4 - 12, 0,    h (10)
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 1000
+  nx = 1e4
   xmax = 100
 []
 
@@ -14,7 +17,7 @@
   [function]
     type = FunctionIC
     variable = u
-    function = 'if(x<10,1,0)'
+    function = 'if(x<10.0,1,0)'
   []
 []
 
@@ -35,10 +38,15 @@
     variable = u
     point = '0 0 0'
   []
+  [point0.25]
+    type = PointValue
+    variable = u
+    point = '0.25 0 0'
+  []
   [point10]
     type = PointValue
     variable = u
-    point = '10 0 0'
+    point = '10.0 0 0'
   []
   [point12]
     type = PointValue
@@ -50,13 +58,20 @@
 [Executioner]
   type = Transient
   end_time = 100
-  dt = .05
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_hypre_type'
-  petsc_options_value = 'hypre boomeramg'
+  scheme = bdf2
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = 'lu'
   l_tol = 1e-9
-  # scheme = 'crank-nicolson'
   timestep_tolerance = 1e-8
+  dtmax = 2
+  [TimeStepper]
+    type = IterationAdaptiveDT
+    dt = 0.001
+    growth_factor = 1.25
+    cutback_factor = 0.8
+    optimal_iterations = 4
+  []
 []
 
 [Outputs]
