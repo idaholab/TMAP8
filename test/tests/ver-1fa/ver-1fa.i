@@ -67,9 +67,9 @@
 [Executioner]
   type = Transient
   scheme = bdf2
-  solve_type = PJFNK
-  petsc_options_iname = '-pc_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap'
-  petsc_options_value = 'asm         101   preonly   ilu      1'
+  solve_type = NEWTON
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = 'lu'
   nl_rel_tol = 1e-8
   nl_abs_tol = 1e-10
   l_tol = 1e-4
@@ -92,5 +92,5 @@
 [Outputs]
   execute_on = FINAL
   exodus = true
-  csv = false
+  csv = true
 []

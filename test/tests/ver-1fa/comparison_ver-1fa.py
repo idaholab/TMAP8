@@ -19,7 +19,7 @@ Q = 10000
 analytical_temp = Ts + Q*L**2 * (1- analytical_x**2/L**2) / (2*k)
 ax.scatter(analytical_x,analytical_temp,label=r"Analytical",c='k', marker='^')
 
-tmap_sol = pd.read_csv("./gold/u_vs_x.csv")
+tmap_sol = pd.read_csv("./gold/ver-1fa_out_line_0011.csv")
 tmap_x = tmap_sol['id']
 tmap_temp = tmap_sol['temp']
 ax.plot(tmap_x,tmap_temp,label=r"TMAP8",c='tab:gray')
