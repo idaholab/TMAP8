@@ -5,7 +5,7 @@
     type = Exodiff
     input = ver-1d-diffusion.i
     exodiff = ver-1d-diffusion_out.e
-    cli_args = "Mesh/nx=20 Executioner/num_steps=300 Postprocessors/active='' Outputs/out/execute_on='final'"
+    cli_args = "Mesh/nx=20 Executioner/num_steps=300"
     requirement = 'The system shall be able to model a breakthrough problem where diffusion is the rate limiting process.'
     verification = 'ver-1d.md'
   []

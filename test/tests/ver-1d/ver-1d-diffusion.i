@@ -102,8 +102,8 @@ cl=3.1622e18
   dt = .01
   dtmin = .01
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_hypre_type'
-  petsc_options_value = 'hypre boomeramg'
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = 'lu'
   automatic_scaling = true
   verbose = true
   compute_scaling_once = false
@@ -111,10 +111,7 @@ cl=3.1622e18
 
 [Outputs]
   csv = true
-  [out]
-    type = Exodus
-    execute_on = 'initial timestep_end'
-  []
+  exodus = true
   [dof]
     type = DOFMap
     execute_on = initial
