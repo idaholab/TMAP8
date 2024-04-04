@@ -1,3 +1,5 @@
+#These tests currently only run in replicated mesh mode, since the BreakMeshByBlockGenerator
+#is currently only supported for replicated meshes
 [Tests]
   design = 'InterfaceSorptionSievert.md'
   [non_ad]
