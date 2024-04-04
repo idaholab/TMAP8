@@ -3,7 +3,7 @@
 # Diffusion Problem with Partially Preloaded Slab
 
 This verification problem is taken from [!cite](longhurst1992verification,ambrosek2008verification). Diffusion of tritium through a semi-infinite SiC layer is modeled with an initial
-loading of 1 atom/m$^3$ in the first 10 m of a 100 m slab. TMAP4 uses a slab length of 2275 m, however using a smaller slab length was found to not change the results. Additionally, the smaller domain size allows getting a finer simulation mesh for the same computational cost, which improves the agreement between the TMAP8 and analytical calculations.
+loading of 1 atom/m$^3$ in the first 10 m of a 100 m slab. TMAP4 uses a slab length of 2275 m (the slab length is not specified in the TMAP7 document [!cite](ambrosek2008verification)), however using a smaller slab length was found to not change the results. Additionally, the smaller domain size allows getting a finer simulation mesh for the same computational cost, which improves the agreement between the TMAP8 and analytical calculations.
 
 Diffusivity is set to 1 m$^2$/s
 and no traping is included. The analytical solution is given by:
