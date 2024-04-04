@@ -144,8 +144,11 @@ temperature = 1000
 [Executioner]
   type = Transient
   end_time = 1000
-  dt = 1
+  dt = 0.1
   solve_type = NEWTON
+  scheme = BDF2
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  petsc_options_value = 'lu superlu_dist'
   line_search = 'none'
   automatic_scaling = true
   verbose = true
