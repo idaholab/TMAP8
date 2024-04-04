@@ -12,7 +12,7 @@
     type = CSVDiff
     input = ver-1fa.i
     should_execute = False  # this test relies on the output files from ver-1fa, so it shouldn't be run twice
-    csvdiff = ver-1fa_out_line_0011.csv
+    csvdiff = ver-1fa_csv_line_0011.csv
     requirement = 'The system shall be able to model heat conduction in a slab that has heat generation to generate CSV data for use in comparisons with the analytic solution for the profile concentration.'
     prereq = ver-1fa
   []

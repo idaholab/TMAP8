@@ -7,6 +7,7 @@
     input = 'interface_sorption_Sievert.i'
     exodiff = 'interface_sorption_Sievert_out.e'
     abs_zero = 1e-7
+    mesh_mode = REPLICATED
   []
   [non_ad_penalty]
     issues = '#50'
@@ -18,6 +19,7 @@
     exodiff = 'interface_sorption_Sievert_out.e'
     prereq = non_ad
     abs_zero = 1e-7
+    mesh_mode = REPLICATED
   []
   [ad]
     issues = '#50'
@@ -36,6 +38,7 @@
     exodiff = 'interface_sorption_Sievert_out.e'
     prereq = non_ad
     abs_zero = 1e-7
+    mesh_mode = REPLICATED
   []
   [ad_penalty]
     issues = '#50'
@@ -55,5 +58,6 @@
     exodiff = 'interface_sorption_Sievert_out.e'
     prereq = ad
     abs_zero = 1e-7
+    mesh_mode = REPLICATED
   []
 []

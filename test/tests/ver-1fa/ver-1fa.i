@@ -90,7 +90,9 @@
 []
 
 [Outputs]
-  execute_on = FINAL
   exodus = true
-  csv = true
+  [csv]
+    type = CSV
+    execute_on = FINAL
+  []
 []
