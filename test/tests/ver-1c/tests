@@ -1,11 +1,25 @@
 [Tests]
   design = 'Diffusion.md TimeDerivative.md'
   issues = '#12'
-  [exo]
+  [ver-1c]
     type = Exodiff
     input = 'ver-1c.i'
     exodiff = ver-1c_out.e
-    cli_args = 'Executioner/dt=5'
-    requirement = 'The system shall be able to model species permeation into an unloaded portion of a slab from a p-loaded portion.'
+    requirement = 'The system shall be able to model species permeation into an unloaded portion of a slab from a pre-loaded portion.'
+  []
+  [ver-1c_csvdiff]
+    type = CSVDiff
+    input = ver-1c.i
+    should_execute = False  # this test relies on the output files from ver-1c, so it shouldn't be run twice
+    csvdiff = ver-1c_csv.csv
+    requirement = 'The system shall be able to model species permeation into an unloaded portion of a slab from a pre-loaded portion to generate CSV data for use in comparisons with the analytic solution over time for the TMAP4 and TMAP7 verification cases.'
+    prereq = ver-1c
+  []
+  [ver-1c_comparison]
+    type = RunCommand
+    command = 'python3 comparison_ver-1c.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1c, modeling species permeation into an unloaded portion of a slab from a pre-loaded portion for both the TMAP4 and TMAP7 verification cases.'
+    prereq = 'ver-1c_csvdiff'
+    required_python_packages = 'matplotlib numpy pandas os git'
   []
 []
