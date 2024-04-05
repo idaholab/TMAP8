@@ -18,7 +18,7 @@ Another issue is that the column labels for ABAQUS and TMAP7 are reversed in Tab
 The steady-state solution for this problem was compared to the analytical solution inaddition to the ABAQUS prediction [!cite](ambrosek2008verification).
 To solve for the steady state solution for this problem, the heat flux is given by
 \begin{equation} \label{eq:solution_analytical_heat_flux}
-q''=frac{T_{SA} - T_{SB}}{\frac{L_A}{k_A} + \frac{L_B}{k_B}},
+q''=\frac{T_{SA} - T_{SB}}{\frac{L_A}{k_A} + \frac{L_B}{k_B}},
 \end{equation}
 where
 
@@ -32,9 +32,9 @@ At steady state, the flux in and out of any section of the slab are equal.
 The temperature at the interface ($T_I$) can be found by setting the flux through A equal to the flux
 through B, which leads to:
 \begin{equation} \label{eq:solution_analytical_steady_state}
-frac{T_{SA} - T_{I}}{\frac{L_A}{k_A}} = frac{T_{I} - T_{SB}}{\frac{L_B}{k_B}}.
+\frac{T_{SA} - T_{I}}{\frac{L_A}{k_A}} = \frac{T_{I} - T_{SB}}{\frac{L_B}{k_B}}.
 \end{equation}
-The interface temperature at steady state is therefore equal to T_I = 500 K. The temperature profile
+The interface temperature at steady state is therefore equal to $T_I = 500$ K. The temperature profile
 for conduction in steady state, with constant physical properties, is linear. The temperature
 profile of A and B can therefore be found through linear interpolation.
 
@@ -46,27 +46,27 @@ TMAP8 predictions were found to be identical to the analytical solution, as show
 !media figures/ver-1fc_comparison_temperature_steady_state.png
     style=width:60%;margin-bottom:2%
     id=ver-1fc_comparison_temperature_steady_state
-    caption=Comparison of temperature profiles from the analytical solution and TMAP8 in composite structure at steady state ($t=10,000$ s).
+    caption=Comparison of temperature profiles from the analytical solution and TMAP8 in composite structure at steady state ($t = 10000$ s).
 
 ## Transient solution
 
 For the transient case, TMAP8 predictions are compared against ABAQUS predictions [!cite](ambrosek2008verification). This is therefore a benchmarking case.
 
 The transient solution was compared at a constant time and at constant distance. The constant time
-comparison between ABAQUS and TMAP8 was made at time t = 150 s. The constant time
+comparison between ABAQUS and TMAP8 was made at time $t = 150$ s. The constant time
 values are shown in [ver-1fc_comparison_temperature_transient_t150], and the comparison is satisfactory.
 
 !media figures/ver-1fc_comparison_temperature_transient_t150.png
     style=width:60%;margin-bottom:2%
     id=ver-1fc_comparison_temperature_transient_t150
-    caption=Comparison of temperature distribution from TMAP8, TMAP7, and ABAQUS in composite structure at t = 150 s.
+    caption=Comparison of temperature distribution from TMAP8, TMAP7, and ABAQUS in composite structure at $t = 150$ s.
 
-The constant distance values were compared at x = 0.09 m, at 5 second intervals from time
-t = 0 s to t = 150 s. These results can be seen in [ver-1fc_comparison_temperature_transient_x0.09], and the comparison is satisfactory.
+The constant distance values were compared at $x = 0.09$ m, at 5 second intervals from time
+$t = 0$ s to $t = 150$ s. These results can be seen in [ver-1fc_comparison_temperature_transient_x0.09], and the comparison is satisfactory.
 
 !media figures/ver-1fc_comparison_temperature_transient_x0.09.png
     style=width:60%;margin-bottom:2%
-    id=ver-1fc_comparison_temperature_transient__x0.09
-    caption=Comparison of temperature distribution from TMAP8, TMAP7, and ABAQUS in composite structure at x = 0.09 m.
+    id=ver-1fc_comparison_temperature_transient_x0.09
+    caption=Comparison of temperature distribution from TMAP8, TMAP7, and ABAQUS in composite structure at $x = 0.09$ m.
 
 !bibtex bibliography
