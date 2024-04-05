@@ -11,11 +11,11 @@ os.chdir(os.path.dirname(__file__))
 
 #===============================================================================
 # Extract TMAP8 results (both steady-state and transient)
-tmap8_sol_steady_state = pd.read_csv("./gold/ver-1fc_vector_postproc_line_0105.csv")
+tmap8_sol_steady_state = pd.read_csv("./gold/ver-1fc_vector_postproc_line_0067.csv")
 tmap8_sol_steady_state_x = tmap8_sol_steady_state['id']
 tmap8_sol_steady_state_temperature = tmap8_sol_steady_state['temperature']
 
-tmap8_sol_transient = pd.read_csv("./gold/ver-1fc_vector_postproc_line_0053.csv")
+tmap8_sol_transient = pd.read_csv("./gold/ver-1fc_vector_postproc_line_0032.csv")
 tmap8_sol_transient_x = tmap8_sol_transient['id']
 tmap8_sol_transient_temperature = tmap8_sol_transient['temperature']
 

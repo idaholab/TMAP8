@@ -117,14 +117,15 @@ position_measurement = 9e-2 # m
   nl_rel_tol = 1e-50
   nl_abs_tol = 1e-12
   l_tol = 1e-8
-  dtmax = 1e3
+  dtmax = 5e2
   end_time = 10000
   automatic_scaling = true
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 0.1
     optimal_iterations = 6
-    growth_factor = 1.1
+    iteration_window = 2
+    growth_factor = 1.2
     cutback_factor = 0.8
   []
 []

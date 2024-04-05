@@ -28,7 +28,7 @@
     type = CSVDiff
     input = ver-1fc.i
     should_execute = False  # this test relies on the output files from ver-1fc, so it shouldn't be run twice
-    csvdiff = ver-1fc_vector_postproc_line_0053.csv
+    csvdiff = ver-1fc_vector_postproc_line_0032.csv
     requirement = 'The system shall be able to model conduction in a composite structure with constant surface temperatures to generate CSV data for use in comparisons with ABAQUS during transient at t=150 s.'
     # heavy = true
     prereq = ver-1fc
@@ -37,7 +37,7 @@
     type = CSVDiff
     input = ver-1fc.i
     should_execute = False  # this test relies on the output files from ver-1fc, so it shouldn't be run twice
-    csvdiff = ver-1fc_vector_postproc_line_0105.csv
+    csvdiff = ver-1fc_vector_postproc_line_0067.csv
     requirement = 'The system shall be able to model conduction in a composite structure with constant surface temperatures to generate CSV data for use in comparisons with ABAQUS and an analytical solution at steady state (t=10000 s).'
     # heavy = true
     prereq = ver-1fc
