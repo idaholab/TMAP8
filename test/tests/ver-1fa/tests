@@ -1,11 +1,26 @@
 [Tests]
   design = 'HeatConduction.md HeatConductionTimeDerivative.md HeatSource.md'
   issues = '#12'
-  [heat_conduction_generation]
+  [ver-1fa]
     type = Exodiff
     input = ver-1fa.i
     exodiff = ver-1fa_out.e
     requirement = 'The system shall be able to model heat conduction in a slab that has heat generation'
     verification = 'ver-1fa.md'
+  []
+  [ver-1fa_lineplot]
+    type = CSVDiff
+    input = ver-1fa.i
+    should_execute = False  # this test relies on the output files from ver-1fa, so it shouldn't be run twice
+    csvdiff = ver-1fa_csv_line_0011.csv
+    requirement = 'The system shall be able to model heat conduction in a slab that has heat generation to generate CSV data for use in comparisons with the analytic solution for the profile concentration.'
+    prereq = ver-1fa
+  []
+  [ver-1fa_comparison]
+    type = RunCommand
+    command = 'python3 comparison_ver-1fa.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1fa, to model heat conduction in a slab that has heat generation.'
+    prereq = ver-1fa
+    required_python_packages = 'matplotlib numpy pandas os git'
   []
 []
