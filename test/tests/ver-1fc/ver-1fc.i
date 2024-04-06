@@ -32,6 +32,7 @@ position_measurement = 9e-2 # m
 [Variables]
   [temperature]
     initial_condition = 0.0
+    scaling = 1e-6
   []
 []
 
@@ -119,12 +120,11 @@ position_measurement = 9e-2 # m
   l_tol = 1e-8
   dtmax = 5e2
   end_time = 10000
-  automatic_scaling = true
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 0.1
-    optimal_iterations = 6
-    iteration_window = 2
+    dt = 1e-1
+    optimal_iterations = 3
+    iteration_window = 1
     growth_factor = 1.2
     cutback_factor = 0.8
   []
