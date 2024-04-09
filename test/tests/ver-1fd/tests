@@ -1,7 +1,7 @@
 [Tests]
   design = 'HeatConduction.md HeatConductionTimeDerivative.md'
   verification = 'ver-1fd.md'
-  issues = '#103'
+  issues = '#12 #103'
   [ver-1fd]
     type = Exodiff
     input = ver-1fd.i
