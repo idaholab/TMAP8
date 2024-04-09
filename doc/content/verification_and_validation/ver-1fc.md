@@ -15,7 +15,7 @@ Another issue is that the column labels for ABAQUS and TMAP7 are reversed in Tab
 
 ## Steady State solution
 
-The steady-state solution for this problem was compared to the analytical solution inaddition to the ABAQUS prediction [!cite](ambrosek2008verification).
+The steady-state solution for this problem was compared to the analytical solution in addition to the ABAQUS prediction [!cite](ambrosek2008verification).
 To solve for the steady state solution for this problem, the heat flux is given by
 \begin{equation} \label{eq:solution_analytical_heat_flux}
 q''=\frac{T_{SA} - T_{SB}}{\frac{L_A}{k_A} + \frac{L_B}{k_B}},
