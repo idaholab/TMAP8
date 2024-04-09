@@ -28,7 +28,7 @@ These results are shown in [ver-1fd_comparison_convective_heating].
 
 !media figures/ver-1fd_comparison_convective_heating.png
     style=width:60%;margin-bottom:2%
-    id=ver-ver-1fd_comparison_convective_heating
+    id=ver-1fd_comparison_convective_heating
     caption=Comparison of temperature profiles for convective heating in a semi-infinite slab from the analytical solution and TMAP8 at depth $x = 5$ cm.
 
 !bibtex bibliography
