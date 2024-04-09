@@ -1,48 +1,64 @@
+
+# provided by TMAP7 V&V documentation
+position_measurement = 5e-2 # m
+initial_temperature = 100 # T_i in K
+enclosure_temperature = 500 # T_infinity in K
+conduction_coefficient = 200 # h in W/m^2/K
+thermal_conductivity = 401 # k in W/m/K
+rho_Cp = 3.439e6  # J/m^3/K
+
+# Selected for TMAP8 case
+slab_length = 100e-2 # m semi-infinite slab
+num_nodes = 500 # (-)
+end_time = 1500 # s
+density = 1000 # kg/m^3
+specific_heat = ${fparse rho_Cp/density} # J/kg/K
+
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  xmax = 5.0
-  nx = 1000
+  xmax = ${slab_length}
+  nx = ${num_nodes}
 []
 
 [Variables]
-  [temp]
-    initial_condition = 100.0
+  [temperature]
+    initial_condition = ${initial_temperature}
   []
 []
 
 [Kernels]
   [heat]
     type = HeatConduction
-    variable = temp
+    variable = temperature
   []
-  [HeatTdot]
+  [heat_time_derivative]
     type = HeatConductionTimeDerivative
-    variable = temp
+    variable = temperature
   []
 []
 
 [BCs]
-  [lefttemp]
-    type = DirichletBC
-    boundary = left
-    variable = temp
-    value = 100
-  []
   [rightflux]
-    type = ConvectiveHeatFluxBC
+    type = NeumannBC
     boundary = right
-    variable = temp
-    T_infinity = 500
-    heat_transfer_coefficient = 200
+    variable = temperature
+    value = 0
+  []
+  [leftconvection]
+    type = ConvectiveHeatFluxBC
+    boundary = left
+    variable = temperature
+    T_infinity = ${enclosure_temperature}
+    heat_transfer_coefficient = ${conduction_coefficient}
   []
 []
 
 [Materials]
   [diffusivity]
     type = GenericConstantMaterial
-    prop_names = 'density  thermal_conductivity specific_heat'
-    prop_values = '3439.0 401.0 1000.0' # arbitrary values for diffusivity (=k/rho-Cp) to be 1.0
+    prop_names = 'density thermal_conductivity specific_heat'
+    prop_values = '${density} ${thermal_conductivity} ${specific_heat}'
   []
 []
 
@@ -56,38 +72,36 @@
 [Executioner]
   type = Transient
   scheme = bdf2
-  solve_type = PJFNK
-  petsc_options_iname = '-pc_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap'
-  petsc_options_value = 'asm         101   preonly   ilu      1'
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-10
-  l_tol = 1e-4
-  dt = 0.01
-  end_time = 180
-  automatic_scaling = true
+  solve_type = NEWTON
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = 'lu'
+  nl_rel_tol = 1e-10
+  nl_abs_tol = 1e-50
+  l_tol = 1e-8
+  end_time = ${end_time}
+  dtmax = 2e2
+  [TimeStepper]
+    type = IterationAdaptiveDT
+    dt = 1e-2
+    optimal_iterations = 3
+    iteration_window = 1
+    growth_factor = 1.2
+    cutback_factor = 0.8
+  []
 []
 
-# [VectorPostprocessors]
-#   [line]
-#     type = LineValueSampler
-#     start_point = '0 0 0'
-#     end_point = '1.0 0 0'
-#     num_points = 200
-#     sort_by = 'x'
-#     variable = temp
-#   []
-# []
 [Postprocessors]
-  [5cm_node_temp]
-    type = NodalVariableValue
-    nodeid = 989 # Paraview GlobalNodeID 990 at (0.95)
-    variable = temp
+  # Used to obtain varying temperature with time at the desired position
+  [temperature_at_x]
+    type = PointValue
+    variable = temperature
+    point = '${position_measurement} 0 0'
     execute_on = 'initial timestep_end'
+    outputs = 'csv'
   []
 []
 
 [Outputs]
-  #execute_on = FINAL
   exodus = true
   csv = true
 []
