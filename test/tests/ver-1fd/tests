@@ -13,12 +13,14 @@
     input = ver-1fd.i
     csvdiff = ver-1fd_out.csv
     should_execute = False  # this test relies on the output files from ver-1fd, so it shouldn't be run twice
-    requirement = 'The system shall be able to model convective heating to generate CSV data for use in comparisons with the analytic solution..'
+    requirement = 'The system shall be able to model convective heating to generate CSV data for use in comparisons with the analytic solution.'
+    prereq = ver-1fd
   []
   [ver-1fd_comparison]
     type = RunCommand
     command = 'python3 comparison_ver-1fd.py'
     requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1fd, modeling convective heating.'
     required_python_packages = 'matplotlib numpy pandas os git'
+    prereq = ver-1fd_csv
   []
 []
