@@ -6,6 +6,7 @@ import pandas as pd
 from scipy import special
 import os
 import math
+from np import exp
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
 os.chdir(os.path.dirname(__file__))
