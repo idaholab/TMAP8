@@ -1,6 +1,6 @@
 [Tests]
   design = 'ADMatReactionFlexible.md'
-  issues = '#12 #103'
+  issues = '#12 #104'
   [ver-1gc]
     type = Exodiff
     input = 'ver-1gc.i'
