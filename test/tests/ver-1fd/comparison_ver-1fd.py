@@ -6,6 +6,8 @@ import pandas as pd
 from scipy import special
 import os
 import math
+from scipy.special import erfc
+from np import sqrt, exp
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
 os.chdir(os.path.dirname(__file__))
@@ -36,7 +38,7 @@ def get_analytical_solution(x,t_vect):
     alpha = k/rho_Cp # ~1.17e-4 m^2/s
     small_value = 1e-42 # to avoid division by 0
 
-    temperature = [T_initial + (T_infinity - T_initial) * (math.erfc( x/(2 * math.sqrt(t * alpha) + small_value)) -  math.exp(h*x/k + h*h*t*alpha/k/k)*math.erfc( x/(2 * math.sqrt(t * alpha) + small_value)  + h*math.sqrt(t * alpha)/k)) for t in t_vect]
+    temperature = T_initial + (T_infinity - T_initial) * (erfc( x/(2 * sqrt(t * alpha) + small_value)) -  exp(h*x/k + h*h*t*alpha/k/k)*erfc( x/(2 * math.sqrt(t * alpha) + small_value)  + h*sqrt(t * alpha)/k))
     return temperature
 
 #===============================================================================

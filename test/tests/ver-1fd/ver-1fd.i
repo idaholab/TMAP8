@@ -1,4 +1,4 @@
-
+# This input file models the heating of a semi-infinite slab by convection at the left boundary.
 # provided by TMAP7 V&V documentation
 position_measurement = 5e-2 # m
 initial_temperature = 100 # T_i in K

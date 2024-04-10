@@ -20,7 +20,7 @@
     type = RunCommand
     command = 'python3 comparison_ver-1fd.py'
     requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1fd, modeling convective heating.'
-    required_python_packages = 'matplotlib numpy pandas os git'
+    required_python_packages = 'matplotlib scipy numpy pandas os git'
     prereq = ver-1fd_csv
   []
 []
