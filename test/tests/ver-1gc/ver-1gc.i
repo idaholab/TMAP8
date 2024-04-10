@@ -1,4 +1,4 @@
-concentration_A_0 = ${fparse 2.415e14 * (1e-6)^3} # atoms/microns^3 initial concentration of species A
+concentration_A_0 = ${units 2.415e14 at/m^3 -> at/mum^3} # atoms/microns^3 initial concentration of species A
 k_1 = 0.0125 # 1/s reaction rate for first reaction
 k_2 = 0.0025 # 1/s reaction rate for second reaction
 end_time = 1500 # s

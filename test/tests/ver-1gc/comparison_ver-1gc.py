@@ -19,9 +19,9 @@ tmap8_sol_concentration_B = tmap8_sol['concentration_B']
 tmap8_sol_concentration_C = tmap8_sol['concentration_C']
 
 # conversion from atoms/microns^3 to atoms/m^3
-tmap8_sol_concentration_A = [x*1e18 for x in tmap8_sol_concentration_A]
-tmap8_sol_concentration_B = [x*1e18 for x in tmap8_sol_concentration_B]
-tmap8_sol_concentration_C = [x*1e18 for x in tmap8_sol_concentration_C]
+tmap8_sol_concentration_A *= 1e18
+tmap8_sol_concentration_B *= 1e18
+tmap8_sol_concentration_C *= 1e18
 
 #===============================================================================
 # Calculate analytical solution
@@ -38,13 +38,9 @@ def get_analytical_solution(t_vect):
     k_2 = 0.0025 # 1/s
     concentration_A_0 = 2.415e14 # atoms/m^3
 
-    concentration_A = [None] * len(t_vect)
-    concentration_B = [None] * len(t_vect)
-    concentration_C = [None] * len(t_vect)
-    for i in range(len(t_vect)):
-        concentration_A[i] = concentration_A_0 * math.exp(-k_1 * t_vect[i])
-        concentration_B[i] = k_1 * concentration_A_0 * (math.exp(-k_1 * t_vect[i]) - math.exp(-k_2 * t_vect[i])) / (k_2-k_1)
-        concentration_C[i] = concentration_A_0 - concentration_A[i] - concentration_B[i]
+    concentration_A = concentration_A_0 * exp(-k_1 * t_vect)
+    concentration_B = k_1 * concentration_A_0 * (exp(-k_1 * t_vect) - exp(-k_2 * t_vect)) / (k_2-k_1)
+    concentration_C = concentration_A_0 - concentration_A - concentration_B
 
     return concentration_A, concentration_B, concentration_C
 

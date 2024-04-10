@@ -44,7 +44,7 @@ c_B(t) = k_1 c_{A0} \frac{\exp\left( -k_1 t\right) - \exp\left( -k_2 t\right)}{k
 where $t$ is the time in s, and $c_{A0} = 2.415 \times 10^{14}$ atoms/m$^3$ is the initial concentration of species $A$, $k_1 = 0.0125$ s$^{-1}$, and $k_2 = 0.0025$ s$^{-1}$.
 
 
-The concentration of $C$ was found by applying a mass balance over the system [!cite](ambrosek2008verification). From the
+The concentration of $C$ was found by applying a mass balance over the system in [!cite](ambrosek2008verification). From the
 stoichiometry of this reaction it was found that
 \begin{equation} \label{eq:chemical_reaction_solution_C}
 c_C(t) = c_{A0} - c_A(t) - c_B(t).
