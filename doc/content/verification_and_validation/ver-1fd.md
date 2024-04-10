@@ -12,7 +12,7 @@ T(x,t) = T_i + (T_{\infty}-T_i) \left[ erfc\left( \frac{x}{2 \sqrt{t \alpha}} \r
 \end{equation}
 where $T_i = 100$ K is the initial temperature, $T_{\infty} = 500$ K is the temperature of the enclosure, $h = 200$ W/m$^2$/K is the conduction coefficient, $k = 401$ W/m/K is the thermal conductivity, $erfc$ is the complimentary error function, $x$ is the position in the slab in m, and
 \begin{equation} \label{eq:analytical_solution_alpha}
-\alpha = k/\rho/C_p$
+\alpha = \frac{k}{\rho C_p}
 \end{equation}
 the thermal diffusivity with $\rho C_p = 3.439 \times 10^6$ J/m$^3$/K the volumetric specific heat, which leads to $\alpha \approx 1.17 \times 10^{-4}$ m$^2$/s.
 
