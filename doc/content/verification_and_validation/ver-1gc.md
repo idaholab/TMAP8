@@ -6,6 +6,7 @@
 ## Problem set up
 
 This verification problem is taken from [!cite](ambrosek2008verification) and builds on the capabilities verified in [ver-1g](ver-1g.md) for simple chemical reactions.
+This case is simulated in [/ver-1gc.i].
 
 This problem models a set of chemical reactions in series with three species: $A$, $B$, and $C$.
 The system was configured so that the enclosure initially contained only species $A$.
@@ -13,7 +14,7 @@ At time $t \geq 0$ s, the reactions were allowed to proceed.
 The reactions that were modeled are
 
 \begin{equation} \label{eq:chemical_reaction}
-\ce{A ->[k_1] B ->[k_2] C},
+A \xrightarrow{\mathit{k_1}} B \xrightarrow{\mathit{k_2}} C,
 \end{equation}
 with $k_1$ and $k_2$ the reaction rates.
 
@@ -32,7 +33,7 @@ with $c_i$ the concentration of species $i$.
 
 ## Analytical solution
 
-[!cite]() provides the analytical equations for the time evolution of the concentrations of $A$ and $B$ as
+[!cite](Fogler1999) provides the analytical equations for the time evolution of the concentrations of $A$ and $B$ as
 \begin{equation} \label{eq:chemical_reaction_solution_A}
 c_A(t) = c_{A0} \exp\left( -k_1 t\right),
 \end{equation}
@@ -52,22 +53,11 @@ The time evolution of the species concentrations from the analytical solution is
 
 ## Results and comparison against analytical solution
 
-####### TO BE UPDATED
-The concentration values of Equations (39), (40), and(41) were obtained using Microsoft
-Excel􀂕. These numbers, converted to Pa were then compared with the pressure values obtained
-from TMAP7. The variance for the pressures of species A and B are less than 0.2% for all time.
-The variance of species C, begins at around 10%, but continually decreases as the problem time
-increases. The variance falls below 0.2 % at time, t = 34 sec. The value is initially high because
-of the division by a small number in Equation (6).
-
-
-
-The comparison of TMAP8 results against the analytical solution is shown in [ver-1gc_comparison_diff_conc].
+The comparison of TMAP8 results against the analytical solution is shown in [ver-1gc_comparison_diff_conc]. The match between TMAP8's predictions and the analytical solution is satisfactory.
 
 !media figures/ver-1gc_comparison_diff_conc.png
     style=width:50%;margin-bottom:2%
     id=ver-1gc_comparison_diff_conc
     caption=Comparison of partial pressures of species in series reaction predicted by TMAP8 and provided by the analytical solution.
-
 
 !bibtex bibliography
