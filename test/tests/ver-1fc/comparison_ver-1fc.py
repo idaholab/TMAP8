@@ -49,11 +49,11 @@ def get_analytical_solution_steady_state(x):
         np.array: temperature in K at position x
     """
     T_SA = 600  # K
-    T_SB = 0       # K
+    T_SB = 0    # K
     L_A = 40e-2 # m
     L_B = 40e-2 # m
-    k_A = 401     # W/m/K
-    k_B = 80.2    # W/m/K
+    k_A = 401   # W/m/K
+    k_B = 80.2  # W/m/K
     # calculate interface temperature
     T_I = (T_SA*k_A/L_A + T_SB*k_B/L_B)/(k_A/L_A + k_B/L_B)
 

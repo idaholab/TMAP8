@@ -5,7 +5,7 @@
 The third heat transfer problem (after [ver-1fa](ver-1fa.md) and [ver-1fb](ver-1fb.md)) studies heat transfer through a composite with constant surface temperatures.
 The composite is a 40 cm thick layer of Copper (Cu) followed by a 40 cm layer of iron (Fe) [!cite](ambrosek2008verification).
 The temperature of both layers is initially 0 K, but at time t = 0, the outside face of the Cu is held at 600 K while the outside face of the Fe is maintained at 0 K.
-The thermal conductivity of Cu and Fe is set to 401 W/m/K and 80.2 W/m/K, respectively. The TMAP7 documentation does not specify the materials' density $\rho$ or the specific heat $C_p$, but the TMAP7 input file lists $\rho C_p = 3.4392 \times 10^6$ J$\cdot$m$^{-3}\cdot$K$^{-1}$ for Cu and $3.5179 \times 10^6$ J$\cdot$m$^{-3}\cdot$K$^{-1}$ for Fe [!cite](ambrosek2008verification). To match these values, TMAP8 uses $\rho = 8940.0$ kg/m$^{3}$ and $C_p =  384.70$ J$\cdot$kg$^{-1}\cdot$K$^{-1}$ for Cu and $\rho = 7860.0$ kg/m$^{3}$ and $C_p = 447.57$ J$\cdot$kg$^{-1}\cdot$K$^{-1}$ for Fe.
+The thermal conductivities of Cu and Fe are set to 401 W/m/K and 80.2 W/m/K, respectively. The TMAP7 documentation does not specify the materials' density $\rho$ or the specific heat $C_p$, but the TMAP7 input file lists $\rho C_p = 3.4392 \times 10^6$ J$\cdot$m$^{-3}\cdot$K$^{-1}$ for Cu and $3.5179 \times 10^6$ J$\cdot$m$^{-3}\cdot$K$^{-1}$ for Fe [!cite](ambrosek2008verification). TMAP8 uses $\rho = 8960$ kg/m$^{3}$ and $C_p =  383.8$ J$\cdot$kg$^{-1}\cdot$K$^{-1}$ for Cu [!cite]() and $\rho = 7870$ kg/m$^{3}$ and $C_p = 447.0$ J$\cdot$kg$^{-1}\cdot$K$^{-1}$ for Fe. The densities are from [!cite](Haynes2015), and the specific heat capacities are calculated to match the $\rho C_p$ values from TMAP7 [!cite](ambrosek2008verification), which closely match values from [!cite](Haynes2015) ($C_p =  385$ J$\cdot$kg$^{-1}\cdot$K$^{-1}$ for Cu and $C_p =  449$ J$\cdot$kg$^{-1}\cdot$K$^{-1}$ for Fe).
 
 This case provides both a verification (comparison against an analytical solution) and a benchmarking (code-to-code comparison) exercise. The steady state solution (called ver-1fcs in [!cite](ambrosek2008verification)) is compared against an analytical solution, and the transient solution is compared against ABAQUS. ABAQUS is a finite element analysis (FEA) program that has been validated for both transient and steady state solutions in heat transfer modeling applications. The ABAQUS code was setup and run by R. G. Ambrosek and presented in [!cite](ambrosek2008verification).
 
@@ -22,7 +22,7 @@ q''=\frac{T_{SA} - T_{SB}}{\frac{L_A}{k_A} + \frac{L_B}{k_B}},
 \end{equation}
 where
 
-    $T_{si}$ is the temperature of surface $i$, left ($T_{SA}=600$ K) and right ($T_{SB}=0$ K),
+    $T_{Si}$ is the temperature of surface $i$, left ($T_{SA}=600$ K) and right ($T_{SB}=0$ K),
 
     $L_i$ is Length of segment $i$ ($L_A=L_B=40$ cm),
 

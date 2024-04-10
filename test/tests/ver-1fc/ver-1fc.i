@@ -7,6 +7,11 @@ k_B = 80.2 # W/m/K
 num_nodes = 800 # (-)
 position_measurement = 9e-2 # m
 
+density_Cu = 8960 # kg/m^3
+specific_heat_Cu= 383.8 # J/kg/K
+density_Fe = 7870 # kg/m^3
+specific_heat_Fe = 447.0 # J/kg/K
+
 [Mesh]
   [whole_domain]
     type = GeneratedMeshGenerator
@@ -78,13 +83,13 @@ position_measurement = 9e-2 # m
     type = GenericConstantMaterial
     block = '0'
     prop_names = 'density specific_heat'
-    prop_values = '8940.0 384.70'
+    prop_values = '${density_Cu} ${specific_heat_Cu}'
   []
   [specific_heat_Fe]
     type = GenericConstantMaterial
     block = '1'
     prop_names = 'density specific_heat'
-    prop_values = '7860.0 447.57'
+    prop_values = '${density_Fe} ${specific_heat_Fe}'
   []
   [thermal_conductivity_Cu]
     type = GenericFunctionMaterial
