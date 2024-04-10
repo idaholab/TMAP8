@@ -48,22 +48,22 @@ def get_analytical_solution_steady_state(x):
     Returns:
         np.array: temperature in K at position x
     """
-    T_SA = 600 # K
-    T_SB = 0 # K
+    T_SA = 600  # K
+    T_SB = 0       # K
     L_A = 40e-2 # m
     L_B = 40e-2 # m
-    k_A = 401 # W/m/K
-    k_B = 80.2 # W/m/K
+    k_A = 401     # W/m/K
+    k_B = 80.2    # W/m/K
     # calculate interface temperature
     T_I = (T_SA*k_A/L_A + T_SB*k_B/L_B)/(k_A/L_A + k_B/L_B)
 
     # determine temperature at position x by linear interpolation (steady-state)
-    temperature = [None]*len(x)
+    temperature = []
     for i in range(len(x)):
         if x[i]<=L_A:
-            temperature[i] = (T_I-T_SA)/L_A*x[i] + T_SA
+            temperature.append((T_I-T_SA)/L_A*x[i] + T_SA)
         else:
-            temperature[i] = (T_SB-T_I)/L_B*(x[i]-L_A-L_B) + T_SB
+            temperature.append((T_SB-T_I)/L_B*(x[i]-L_A-L_B) + T_SB)
 
     return temperature
 
@@ -113,7 +113,7 @@ fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 ax.plot(tmap8_sol_transient_t,tmap8_sol_transient_temperature_at_x,label=r"TMAP8",c='tab:gray')
-ax.plot(abaqus_sol_transient_t,abaqus_sol_transient_temperature_at_x,'b^',label=r"ABAQUS)",mfc='none')
+ax.plot(abaqus_sol_transient_t,abaqus_sol_transient_temperature_at_x,'b^',label=r"ABAQUS",mfc='none')
 ax.plot(abaqus_sol_transient_t,tmap7_sol_transient_temperature_at_x,'ro',label=r"TMAP7",mfc='none')
 ax.set_xlabel(u'Time (s)')
 ax.set_ylabel(r"Temperature (K)")
