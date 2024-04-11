@@ -58,6 +58,6 @@ The comparison of TMAP8 results against the analytical solution is shown in [ver
 !media figures/ver-1gc_comparison_diff_conc.png
     style=width:50%;margin-bottom:2%
     id=ver-1gc_comparison_diff_conc
-    caption=Comparison of partial pressures of species in series reaction predicted by TMAP8 and provided by the analytical solution.
+    caption=Comparison of partial pressures of species in series reaction predicted by TMAP8 and provided by the analytical solution. The RMSPE is the root mean square percent error between the analytical solution and TMAP8 predictions.
 
 !bibtex bibliography
