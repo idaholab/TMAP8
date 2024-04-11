@@ -40,13 +40,13 @@ profile of A and B can therefore be found through linear interpolation.
 
 With TMAP8, the steady state solution can be obtained in different ways: It can be derived by using the [steady state solve](source/executioners/Steady.md) or by running a transient solution until steady state is reached.
 Ref. [!cite](ambrosek2008verification) indicates that the steady state solution was obtained by running the transient solution until $t=10,000$ s, which is what is reproduced with TMAP8 here.
-TMAP8 predictions were found to be identical to the analytical solution (the root mean square percentage error is equal to RMSPE = 0.01 %), as shown in
+TMAP8 predictions were found to be identical to the analytical solution with the root mean square percentage error (RMSPE) = 0.01 %, as shown in
 [ver-1fc_comparison_temperature_steady_state].
 
 !media figures/ver-1fc_comparison_temperature_steady_state.png
     style=width:60%;margin-bottom:2%
     id=ver-1fc_comparison_temperature_steady_state
-    caption=Comparison of temperature profiles from the analytical solution and TMAP8 in composite structure at steady state ($t = 10000$ s).
+    caption=Comparison of temperature profiles from the analytical solution and TMAP8 in composite structure at steady state ($t = 10000$ s). RMSPE is the root mean square percentage error between the analytical and TMAP8 profiles.
 
 ## Transient solution
 
