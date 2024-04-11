@@ -14,7 +14,7 @@ where $T_i = 100$ K is the initial temperature, $T_{\infty} = 500$ K is the temp
 \begin{equation} \label{eq:analytical_solution_alpha}
 \alpha = \frac{k}{\rho C_p}
 \end{equation}
-is the thermal diffusivity.  The volumetric specific heat $\rho C_p = 3.439 \times 10^6$ J/m$^3$/K, which gives us $\alpha \approx 1.17 \times 10^{-4}$ m$^2$/s.
+is the thermal diffusivity. The volumetric specific heat is defined as $\rho C_p = 3.439 \times 10^6$ J/m$^3$/K, which gives us $\alpha \approx 1.17 \times 10^{-4}$ m$^2$/s.
 
 Note that the simulated length of the semi-infinite slab is not explicitely specified in [!cite](ambrosek2008verification). In TMAP8, a length of $l=100$ cm with a zero-flux boundary condition at the end was found to be sufficient to match the analytical solution (i.e., the temperature at the desired position $x = 5$ cm is not affected by the boundary condition at position $l$), as shown in [ver-1fd_comparison_convective_heating].
 
