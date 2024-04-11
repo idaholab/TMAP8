@@ -86,7 +86,7 @@ ax.set_ylim(bottom=0)
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
 # Root Mean Square Percentage Error calculations
-RMSE = np.sqrt(np.mean((tmap8_sol_steady_state_temperature-analytical_sol_steady_state_x)**2))
+RMSE = np.linalg.norm(tmap8_sol_steady_state_temperature-analytical_sol_steady_state_x)
 err_percent = RMSE*100/np.mean(analytical_sol_steady_state_x)
 ax.text(0.55, 400, 'RMSPE = %.2f '%err_percent+'% \n',fontweight='bold')
 plt.savefig('ver-1fc_comparison_temperature_steady_state.png', bbox_inches='tight');
