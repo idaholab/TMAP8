@@ -6,7 +6,7 @@ import pandas as pd
 from scipy import special
 import os
 import math
-from np import exp
+from numpy import exp
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
 os.chdir(os.path.dirname(__file__))
@@ -67,6 +67,16 @@ ax.set_xlim(right=max(tmap8_sol_time))
 ax.set_ylim(bottom=0)
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
+# Root Mean Square Percentage Error calculations
+RMSE_A = np.sqrt(np.mean((tmap8_sol_concentration_A-concentration_A)**2))
+err_percent_A = RMSE_A*100/np.mean(concentration_A)
+ax.text(50, 2.05e14, '(A) RMSPE = %.2f '%err_percent_A+'%',fontweight='bold',color = 'tab:pink')
+RMSE_B = np.sqrt(np.mean((tmap8_sol_concentration_B-concentration_B)**2))
+err_percent_B = RMSE_B*100/np.mean(concentration_B)
+ax.text(80, 1.70e14, '(B) RMSPE = %.2f '%err_percent_B+'%',fontweight='bold',color = 'tab:blue')
+RMSE_C = np.sqrt(np.mean((tmap8_sol_concentration_C-concentration_C)**2))
+err_percent_C = RMSE_C*100/np.mean(concentration_C)
+ax.text(1010, 2.05e14, '(C) RMSPE = %.2f '%err_percent_C+'%',fontweight='bold',color = 'tab:green')
 plt.savefig('ver-1gc_comparison_diff_conc.png', bbox_inches='tight');
 plt.close(fig)
 

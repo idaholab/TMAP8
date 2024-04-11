@@ -105,14 +105,17 @@ end_time = 1500 # s
   [concentration_A]
     type = ElementAverageValue
     variable = c_A
+    execute_on = 'INITIAL TIMESTEP_END'
   []
   [concentration_B]
     type = ElementAverageValue
     variable = c_B
+    execute_on = 'INITIAL TIMESTEP_END'
   []
   [concentration_C]
     type = ElementAverageValue
     variable = c_C
+    execute_on = 'INITIAL TIMESTEP_END'
   []
 []
 
