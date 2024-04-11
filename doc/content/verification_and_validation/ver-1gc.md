@@ -53,7 +53,7 @@ The time evolution of the species concentrations from the analytical solution is
 
 ## Results and comparison against analytical solution
 
-The comparison of TMAP8 results against the analytical solution is shown in [ver-1gc_comparison_diff_conc]. The match between TMAP8's predictions and the analytical solution is satisfactory.
+The comparison of TMAP8 results against the analytical solution is shown in [ver-1gc_comparison_diff_conc]. The match between TMAP8's predictions and the analytical solution is satisfactory, with root mean square percentage errors (RMSPE) of RMSPE = 0.54 % for species $A$, RMSPE = 0.36 % for species $B$, and RMSPE = 0.04 % for species $C$.
 
 !media figures/ver-1gc_comparison_diff_conc.png
     style=width:50%;margin-bottom:2%
