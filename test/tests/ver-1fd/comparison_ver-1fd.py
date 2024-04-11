@@ -60,7 +60,7 @@ ax.set_ylim(bottom=100)
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
 # Root Mean Square Percentage Error calculations
-RMSE = np.sqrt(np.mean((tmap8_sol_temperature-analytical_sol_temperature)**2))
+RMSE = np.linalg.norm(tmap8_sol_temperature-analytical_sol_temperature)
 err_percent = RMSE*100/np.mean(analytical_sol_temperature)
 ax.text(900, 151, 'RMSPE = %.2f '%err_percent+'%',fontweight='bold')
 plt.savefig('ver-1fd_comparison_convective_heating.png', bbox_inches='tight');
