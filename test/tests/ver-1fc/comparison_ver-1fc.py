@@ -67,6 +67,8 @@ def get_analytical_solution_steady_state(x):
 
     return temperature
 
+analytical_sol_steady_state_x = get_analytical_solution_steady_state(tmap8_sol_steady_state_x)
+
 #===============================================================================
 # Plot temperature profile for steady-state
 
@@ -74,7 +76,7 @@ fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 ax.plot(tmap8_sol_steady_state_x,tmap8_sol_steady_state_temperature,label=r"TMAP8",c='tab:gray')
-ax.plot(tmap8_sol_steady_state_x,get_analytical_solution_steady_state(tmap8_sol_steady_state_x),label=r"Analytical",c='k', linestyle='--')
+ax.plot(tmap8_sol_steady_state_x,analytical_sol_steady_state_x,label=r"Analytical",c='k', linestyle='--')
 ax.set_xlabel(u'Distance (m)')
 ax.set_ylabel(r"Temperature (K)")
 ax.legend(loc="best")
@@ -83,6 +85,10 @@ ax.set_xlim(right=max(tmap8_sol_steady_state_x))
 ax.set_ylim(bottom=0)
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
+# Root Mean Square Percentage Error calculations
+RMSE = np.sqrt(np.mean((tmap8_sol_steady_state_temperature-analytical_sol_steady_state_x)**2))
+err_percent = RMSE*100/np.mean(analytical_sol_steady_state_x)
+ax.text(0.55, 400, 'RMSPE = %.2f '%err_percent+'% \n',fontweight='bold')
 plt.savefig('ver-1fc_comparison_temperature_steady_state.png', bbox_inches='tight');
 plt.close(fig)
 
