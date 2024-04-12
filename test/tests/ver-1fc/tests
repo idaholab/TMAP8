@@ -1,0 +1,42 @@
+[Tests]
+  design = 'HeatConduction.md HeatConductionTimeDerivative.md'
+  verification = 'ver-1fc.md'
+  issues = '#12 #102'
+  [ver-1fc]
+    type = Exodiff
+    input = ver-1fc.i
+    exodiff = ver-1fc_out.e
+    requirement = 'The system shall be able to model conduction in a composite structure with constant surface temperatures.'
+  []
+  [ver-1fc_csvdiff_transient]
+    type = CSVDiff
+    input = ver-1fc.i
+    should_execute = False  # this test relies on the output files from ver-1fc, so it shouldn't be run twice
+    csvdiff = ver-1fc_temperature_at_x0.09.csv
+    requirement = 'The system shall be able to model conduction in a composite structure with constant surface temperatures to generate CSV data for use in comparisons with ABAQUS during transient at x=0.09 m.'
+    prereq = ver-1fc
+  []
+  [ver-1fc_csvdiff_transient_profile]
+    type = CSVDiff
+    input = ver-1fc.i
+    should_execute = False  # this test relies on the output files from ver-1fc, so it shouldn't be run twice
+    csvdiff = ver-1fc_vector_postproc_line_0032.csv
+    requirement = 'The system shall be able to model conduction in a composite structure with constant surface temperatures to generate CSV data for use in comparisons with ABAQUS during transient at t=150 s.'
+    prereq = ver-1fc
+  []
+  [ver-1fc_csvdiff_steady_state]
+    type = CSVDiff
+    input = ver-1fc.i
+    should_execute = False  # this test relies on the output files from ver-1fc, so it shouldn't be run twice
+    csvdiff = ver-1fc_vector_postproc_line_0063.csv
+    requirement = 'The system shall be able to model conduction in a composite structure with constant surface temperatures to generate CSV data for use in comparisons with ABAQUS and an analytical solution at steady state (t=10000 s).'
+    prereq = ver-1fc
+  []
+  [ver-1fc_comparison]
+    type = RunCommand
+    command = 'python3 comparison_ver-1fc.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution, ABAQUS data, and simulated solution of verification case 1fc, modeling conduction in a composite structure with constant surface temperatures.'
+    prereq = 'ver-1fc_csvdiff_transient ver-1fc_csvdiff_steady_state'
+    required_python_packages = 'matplotlib numpy pandas os git'
+  []
+[]
