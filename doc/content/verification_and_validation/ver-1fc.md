@@ -22,9 +22,9 @@ q''=\frac{T_{SA} - T_{SB}}{\left(L_A / k_A \right) + \left(L_B / k_B \right)},
 \end{equation}
 where
 
-    - $T_{Si}$ is the temperature of surface $i$, left ($T_{SA}=600$ K) and right ($T_{SB}=0$ K),
-    - $L_i$ is Length of segment $i$ ($L_A=L_B=40$ cm),
-    - $k_i$ is thermal conductivity of segment $i$ ($k_A = 401$ W/m/K, $k_B = 80.2$ W/m/K).
+- $T_{Si}$ is the temperature of surface $i$, left ($T_{SA}=600$ K) and right ($T_{SB}=0$ K),
+- $L_i$ is Length of segment $i$ ($L_A=L_B=40$ cm),
+- $k_i$ is thermal conductivity of segment $i$ ($k_A = 401$ W/m/K, $k_B = 80.2$ W/m/K).
 
 At steady state, the flux in and out of any section of the slab are equal.
 The temperature at the interface ($T_I$) can be found by setting the flux through A equal to the flux
