@@ -7,7 +7,6 @@ from scipy import special
 import os
 import math
 from scipy.special import erfc
-from numpy import sqrt, exp
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
 os.chdir(os.path.dirname(__file__))
@@ -38,7 +37,7 @@ def get_analytical_solution(x,t_vect):
     alpha = k/rho_Cp # ~1.17e-4 m^2/s
     small_value = 1e-42 # to avoid division by 0
 
-    temperature = T_initial + (T_infinity - T_initial) * (erfc(x/(2 * sqrt(t_vect * alpha) + small_value)) - exp(h*x/k + h*h*t_vect*alpha/k/k)*erfc(x/(2 * sqrt(t_vect * alpha) + small_value) + h*sqrt(t_vect * alpha)/k))
+    temperature = T_initial + (T_infinity - T_initial) * (erfc(x/(2 * np.sqrt(t_vect * alpha) + small_value)) -  np.exp(h*x/k + h*h*t_vect*alpha/k/k)*erfc(x/(2 *  np.sqrt(t_vect * alpha) + small_value) + h* np.sqrt(t_vect * alpha)/k))
     return temperature
 
 analytical_sol_temperature = get_analytical_solution(5e-2,tmap8_sol_t)
