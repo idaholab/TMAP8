@@ -4,7 +4,7 @@
 
 ## Case set up and analytical solution
 
-The fourth heat transfer problem (after [ver-1fa](ver-1fa.md), [ver-1fb](ver-1fb.md), and [ver-1fc](ver-1fc.md)) models focuses on the heating of a semi-infinite slab by convection at the boundary. This case is extracted from TMAP7 [!cite](ambrosek2008verification).
+The fourth heat transfer problem (after [ver-1fa](ver-1fa.md), [ver-1fb](ver-1fb.md), and [ver-1fc](ver-1fc.md)) focuses on the heating of a semi-infinite slab by convection at the boundary. This case is extracted from TMAP7 [!citep](ambrosek2008verification).
 The slab is initially configured with a constant temperature of 100 K throughout the slab. A convection boundary is activated at the surface from time $t = 0$ s. The analytical solution is provided by [!cite](Incropera2002):
 
 \begin{equation} \label{eq:analytical_solution}
@@ -28,7 +28,7 @@ These results are shown in [ver-1fd_comparison_convective_heating].
 They show great agreement between TMAP8 and the analytical solution with a root mean square percentage error of RMSPE = 0.04 %.
 
 !media figures/ver-1fd_comparison_convective_heating.png
-    style=width:60%;margin-bottom:2%
+    style=width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=ver-1fd_comparison_convective_heating
     caption=Comparison of temperature profiles for convective heating in a semi-infinite slab from the analytical solution and TMAP8 at depth $x = 5$ cm. The RMSPE is the root mean square percentage error between the analytical solution and TMAP8 predictions.
 
