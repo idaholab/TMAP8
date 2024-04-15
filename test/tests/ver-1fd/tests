@@ -1,0 +1,26 @@
+[Tests]
+  design = 'HeatConduction.md HeatConductionTimeDerivative.md'
+  verification = 'ver-1fd.md'
+  issues = '#12 #103'
+  [ver-1fd]
+    type = Exodiff
+    input = ver-1fd.i
+    exodiff = ver-1fd_out.e
+    requirement = 'The system shall be able to model convective heating.'
+  []
+  [ver-1fd_csv]
+    type = CSVDiff
+    input = ver-1fd.i
+    csvdiff = ver-1fd_out.csv
+    should_execute = False  # this test relies on the output files from ver-1fd, so it shouldn't be run twice
+    requirement = 'The system shall be able to model convective heating to generate CSV data for use in comparisons with the analytic solution.'
+    prereq = ver-1fd
+  []
+  [ver-1fd_comparison]
+    type = RunCommand
+    command = 'python3 comparison_ver-1fd.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1fd, modeling convective heating.'
+    required_python_packages = 'csv matplotlib scipy numpy pandas os math'
+    prereq = ver-1fd_csv
+  []
+[]
