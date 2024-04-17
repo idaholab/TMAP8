@@ -129,7 +129,6 @@ end_time = 1500 # s
   petsc_options = '-snes_ksp_ew'
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
-  start_time = 0.0
   end_time = ${end_time}
   dtmax = 50
   [TimeStepper]

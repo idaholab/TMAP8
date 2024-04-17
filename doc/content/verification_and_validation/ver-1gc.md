@@ -41,7 +41,7 @@ and
 \begin{equation} \label{eq:chemical_reaction_solution_B}
 c_B(t) = k_1 c_{A0} \frac{\exp\left( -k_1 t\right) - \exp\left( -k_2 t\right)}{k_2-k_1},
 \end{equation}
-where $t$ is the time in s, and $c_{A0} = 2.415 \times 10^{14}$ atoms/m$^3$ is the initial concentration of species $A$, $k_1 = 0.0125$ s$^{-1}$, and $k_2 = 0.0025$ s$^{-1}$.
+where $t$ is the time in s, $c_{A0} = 2.415 \times 10^{14}$ atoms/m$^3$ is the initial concentration of species $A$, $k_1 = 0.0125$ s$^{-1}$, and $k_2 = 0.0025$ s$^{-1}$.
 
 
 The concentration of $C$ was found by applying a mass balance over the system in [!cite](ambrosek2008verification). From the
@@ -58,6 +58,6 @@ The comparison of TMAP8 results against the analytical solution is shown in [ver
 !media figures/ver-1gc_comparison_diff_conc.png
     style=width:50%;margin-bottom:2%
     id=ver-1gc_comparison_diff_conc
-    caption=Comparison of partial pressures of species in series reaction predicted by TMAP8 and provided by the analytical solution. The RMSPE is the root mean square percent error between the analytical solution and TMAP8 predictions.
+    caption=Comparison of partial pressures of species in a series reaction predicted by TMAP8 and provided by the analytical solution. The RMSPE is the root mean square percent error between the analytical solution and TMAP8 predictions.
 
 !bibtex bibliography

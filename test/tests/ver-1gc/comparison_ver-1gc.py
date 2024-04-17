@@ -6,7 +6,6 @@ import pandas as pd
 from scipy import special
 import os
 import math
-from numpy import exp
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
 os.chdir(os.path.dirname(__file__))
@@ -39,8 +38,8 @@ def get_analytical_solution(t_vect):
     k_2 = 0.0025 # 1/s
     concentration_A_0 = 2.415e14 # atoms/m^3
 
-    concentration_A = concentration_A_0 * exp(-k_1 * t_vect)
-    concentration_B = k_1 * concentration_A_0 * (exp(-k_1 * t_vect) - exp(-k_2 * t_vect)) / (k_2-k_1)
+    concentration_A = concentration_A_0 * np.exp(-k_1 * t_vect)
+    concentration_B = k_1 * concentration_A_0 * (np.exp(-k_1 * t_vect) - np.exp(-k_2 * t_vect)) / (k_2-k_1)
     concentration_C = concentration_A_0 - concentration_A - concentration_B
 
     return concentration_A, concentration_B, concentration_C
