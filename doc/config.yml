@@ -37,6 +37,7 @@ Extensions:
               TMAP8 Tutorial Slides: tutorial/index.md
               V&V: /verification_and_validation/index.md
               Examples: /examples/index.md
+              Publications using TMAP8: publications.md
             Software Quality: /sqa/index.md
             Help:
               TMAP8 Issues Page: https://github.com/idaholab/TMAP8/issues
