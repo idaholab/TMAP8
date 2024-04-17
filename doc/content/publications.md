@@ -1,6 +1,6 @@
 # List of Publications using TMAP8
 
-Below is a known list of publications using TMAP8, and might be incomplete. If
+Below is a known list of publications supporting TMAP8 development, and might be incomplete. If
 your work should be included on this list, please make a post in the
 [TMAP8 Discussion Forum](https://github.com/idaholab/TMAP8/discussions).
 
