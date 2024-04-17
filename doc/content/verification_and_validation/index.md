@@ -17,7 +17,8 @@ TMAP8 also contains [example cases](examples/index.md), which showcase how TMAP8
 | ver-1fb | [Thermal Transient](ver-1fb.md)                                                    |
 | ver-1fc | [Conduction in composite structure with constant surface temperatures](ver-1fc.md) |
 | ver-1fd | [Convective Heating](ver-1fd.md)                                                   |
-| ver-1g  | [Simple Chemical Reaction](ver-1g.md)                                              |
+| ver-1g  | [Simple Forward Chemical Reaction](ver-1g.md)                                      |
+| ver-1gc | [Series Chemical Reactions](ver-1gc.md)                                            |
 
 # List of benchmarking cases
 

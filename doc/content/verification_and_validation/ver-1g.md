@@ -1,6 +1,6 @@
 # ver-1g
 
-# A Simple Chemical Reaction
+# A Simple Forward Chemical Reaction
 
 This verification problem is taken from [!cite](longhurst1992verification,ambrosek2008verification). A simple time-dependent chemical reaction given by:
 
@@ -32,7 +32,7 @@ where $C_{A_o}$ and $C_{B_o}$ are the initial concentrations of A and B, respect
 C_{AB} = C_{A_o} - \frac{1}{\frac{1}{C_{A_o}} + Kt}
 \end{equation}
 
-For this verification exercise, three cases were considered: (a) the initial concentrations of A and B are equal, (b) the initial concentrations of A and B are different and use the TMAP4 verification case values, and (c) the initial concentrations of A and B are different and use the TMAP7 verification case values. The equal concentration case is the same in TMAP4 and TMAP7, and is used for verification of TMAP8 here. While both TMAP4 and TMAP7 verification cases ((b) and (c) respectively) have the same analytical solution, the different initial conditions produce different $C_{AB}$ values over time, and we replicate both results here. 
+For this verification exercise, three cases were considered: (a) the initial concentrations of A and B are equal, (b) the initial concentrations of A and B are different and use the TMAP4 verification case values, and (c) the initial concentrations of A and B are different and use the TMAP7 verification case values. The equal concentration case is the same in TMAP4 and TMAP7, and is used for verification of TMAP8 here. While both TMAP4 and TMAP7 verification cases ((b) and (c) respectively) have the same analytical solution, the different initial conditions produce different $C_{AB}$ values over time, and we replicate both results here.
 
 For case (a), the initial pressures of A and B were 1 $\mu$Pa, and the reaction rate (K) is 4.14 x 10$^3$ $\mu$m$^3$ / atom$\cdot$s. For case (b) the initial pressure of A was same as in case (a) while the initial pressure of B is 0.1 $\mu$Pa as per TMAP4. For case (c) the initial pressure of A was same as in case (a) while the initial pressure of B is 0.5 $\mu$Pa. In all cases, the initial pressures of A and B are first converted to their initial concentrations $C_{A_o}$ and $C_{B_o}$ using the ideal gas law to be used in the TMAP8 simulations and analytical solutions. The initial concentration $C_{i_0}$ of component $i$ is
 
