@@ -84,6 +84,30 @@ make -j8
 ./run_tests -j8
 ```
 
+## Viewing Results Remotely
+
+!style halign=left
+You can use HPC OnDemand to view a TMAP8 Exodus results file remotely. First, access the
+[HPC OnDemand Dashboard](https://hpcondemand.inl.gov/pun/sys/dashboard), select `Interactive Apps`,
+and then select `Linux Desktop with Visualization`. Next, select your cluster (such as Sawtooth),
+the amount of time you believe you need, and then click `Launch`.
+
+It may take some time before your 'Visualization Job' becomes available. When it does, simply click
+on it, and you will be presented a [!ac](GUI) desktop within your web browser. From here, you can
+open visualization applications (such as [ParaView](https://www.paraview.org/)), and open your
+results file.
+
+To use ParaView, open a terminal by clicking `Applications` at the top left, then click
+`Terminal Emulator`. A terminal window will open. Enter the following commands:
+
+```bash
+module load paraview
+paraview
+```
+
+ParaView should open. From here, you can select `File`, `Open`, and navigate to the directory
+containing your Exodus results file, and open it.
+
 <!-- Include troubleshooting section from main getting started  -->
 
 !include getting_started/installation.md start=Troubleshooting end=non-TMAP8 issues and questions. include-end=True
