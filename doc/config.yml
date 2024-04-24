@@ -76,7 +76,10 @@ Extensions:
     MooseDocs.extensions.template:
         active: true
     MooseDocs.extensions.bibtex:
-        duplicates: !include ${MOOSE_DIR}/modules/doc/duplicate_bibs.yml
+        duplicates:
+            - hales15homogenization
+            - kim_phase-field_1999
+            - incropera2002
     MooseDocs.extensions.civet:
         test_results_cache: '/tmp/civet/jobs'
         branch: main

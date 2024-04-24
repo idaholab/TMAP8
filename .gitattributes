@@ -1,0 +1,23 @@
+# GitHub Linguist overrides
+
+# Directory-level overrides
+doc/** linguist-documentation
+
+# Connecting languages to explicit file types
+*.C linguist-language=C++
+*.h linguist-language=C++
+
+# Input files are incorrectly identified as SWIG/Assembly. A suitable alternate doesn't yet exist in linguist.
+# See this URL for currently defined languages: https://github.com/github-linguist/linguist/blob/master/lib/linguist/languages.yml
+*.i linguist-vendored
+
+# Skipping other explicit file types
+*.eps linguist-vendored
+*.m linguist-vendored
+*.tex linguist-vendored
+*.e linguist-vendored
+*.js linguist-vendored
+*.nb linguist-vendored
+*.css linguist-vendored
+*.html linguist-vendored
+*.xml linguist-vendored
