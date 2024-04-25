@@ -7,6 +7,7 @@
 /************************************************************/
 
 #include "EmptySitesAux.h"
+#include "Function.h"
 
 registerMooseObject("MooseApp", EmptySitesAux);
 
@@ -14,9 +15,9 @@ InputParameters
 EmptySitesAux::validParams()
 {
   InputParameters params = AuxKernel::validParams();
-  params.addRequiredParam<Real>("N", "The atomic number density of the host material");
-  params.addRequiredParam<Real>("Ct0",
-                                "The fraction of host sites that can contribute to trapping");
+  params.addRequiredParam<Real>("N", "The atomic number density of the host material (1/m^3)");
+  params.addRequiredParam<FunctionName>(
+      "Ct0", "The fraction of host sites that can contribute to trapping as a function (-)");
   params.addParam<Real>(
       "trap_per_free",
       1.,
@@ -30,7 +31,7 @@ EmptySitesAux::validParams()
 EmptySitesAux::EmptySitesAux(const InputParameters & parameters)
   : AuxKernel(parameters),
     _N(getParam<Real>("N")),
-    _Ct0(getParam<Real>("Ct0")),
+    _Ct0(getFunction("Ct0")),
     _trap_per_free(getParam<Real>("trap_per_free"))
 {
   _n_concs = coupledComponents("trapped_concentration_variables");
@@ -45,7 +46,7 @@ EmptySitesAux::EmptySitesAux(const InputParameters & parameters)
 Real
 EmptySitesAux::computeValue()
 {
-  auto empty_trapping_sites = _Ct0 * _N;
+  auto empty_trapping_sites = _Ct0.value(_t, (*_current_node)) * _N;
   for (const auto & trap_conc : _trapped_concentrations)
     empty_trapping_sites -= (*trap_conc)[_qp] * _trap_per_free;
 
