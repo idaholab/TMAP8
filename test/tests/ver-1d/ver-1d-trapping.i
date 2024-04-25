@@ -3,6 +3,7 @@ trap_per_free=1e3
 N=3.1622e22
 time_scaling=1
 epsilon=10000
+temperature = 1000
 
 [Mesh]
   type = GeneratedMesh
@@ -91,13 +92,14 @@ epsilon=10000
     N = ${fparse 3.1622e22 / cl}
     Ct0 = 0.1
     mobile = 'mobile'
+    temperature = ${temperature}
     trap_per_free = ${trap_per_free}
     extra_vector_tags = ref
   []
   [release]
     type = ReleasingNodalKernel
     alpha_r = ${fparse 1e13 / time_scaling}
-    temp = 1000
+    temperature = ${temperature}
     trapping_energy = ${epsilon}
     variable = trapped
   []
