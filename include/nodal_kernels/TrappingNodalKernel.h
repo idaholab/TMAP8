@@ -15,6 +15,8 @@
 using MetaPhysicL::DualNumber;
 using MetaPhysicL::DynamicSparseNumberArray;
 
+class Function;
+
 // Forward Declarations
 typedef DualNumber<Real, DynamicSparseNumberArray<Real, unsigned int>> LocalDN;
 
@@ -31,14 +33,16 @@ protected:
   Real computeQpOffDiagJacobian(unsigned int jvar) override;
 
   const Real _alpha_t;
+  const Real _detrapping_energy;
   const Real _N;
-  const Real _Ct0;
+  const Function & _Ct0;
   const VariableValue & _mobile_conc;
   unsigned int _n_other_concs;
   std::vector<const VariableValue *> _trapped_concentrations;
   std::vector<unsigned int> _var_numbers;
   const Node * _last_node;
   const Real _trap_per_free;
+  const VariableValue & _temperature;
   LocalDN _jacobian;
 
 private:
