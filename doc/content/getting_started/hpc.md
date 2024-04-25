@@ -45,7 +45,7 @@ To compile TMAP8, first make sure that the [!ac](HPC) environment is activated f
 module load use.moose moose-dev
 ```
 
-<!-- Re-use the bulk of the build and test of the main getting started instructions here -->
+<!-- Re-use the bulk of the build and test section from the main getting started instructions here -->
 
 !include getting_started/installation.md start=Then navigate to the TMAP8 end=TMAP8 can be compiled and tested include-end=True
 
@@ -66,6 +66,8 @@ fellow users!
 !alert-end!
 
 ## Step Five: Keep TMAP8 Updated
+
+<!-- Re-use the bulk of the update section from the main getting started instructions here -->
 
 !style halign=left
 !include getting_started/installation.md start=TMAP8 (and the underlying MOOSE Framework) end=updated up to several times a week. include-end=True
