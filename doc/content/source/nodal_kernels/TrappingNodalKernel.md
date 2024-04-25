@@ -14,6 +14,11 @@ where $\alpha_t$ is the trapping rate coefficient, which has dimensions of
 1/time, $N$ is the atomic number density of the host material, $C_t^e$ is the
 concentration of empty trapping sites, and $C_s$ is the concentration of the
 mobile species.
+$\alpha_t$ is defined as
+\begin{equation}
+\alpha_t = \alpha_{t0} \exp(-\epsilon / T),
+\end{equation}
+with $\alpha_{t0}$ the pre-exponential factor is 1/time, $\epsilon$ the trapping energy in Kelvin, and $T$ the temperature in Kelvin.
 
 As outlined in [getting_started/user_notes.md#scaling exact=True], it is important
 to scale different specie numerical concentrations to the same order of magnitude
@@ -32,18 +37,18 @@ and the mobile concentration and host density ($N$) have units of
 $C_t^e$ in the following way:
 
 ```language=c++
-  auto empty_trapping_sites = _Ct0 * _N;
+  auto empty_trapping_sites = _Ct0.value(_t, (*_current_node)) * _N;
   for (const auto & trap_conc : _trapped_concentrations)
     empty_trapping_sites -= (*trap_conc)[_qp] * _trap_per_free;
 ```
 
 The trapping concentration, in units of k#/volume, is converted to units of
 #/volume by multiplying by `trap_per_free` which, in this example of k#/volume
-trapping concetration and #/volume mobile concentration, has a value of
+trapping concentration and #/volume mobile concentration, has a value of
 1000 #/(k#). We then compute the residual with the code
 
 ```language=c++
-  return -_alpha_t * empty_trapping_sites * _mobile_conc[_qp] / (_N * _trap_per_free);
+  return -_alpha_t * std::exp(-_detrapping_energy / _temperature[_qp]) * empty_trapping_sites * _mobile_conc[_qp] / (_N * _trap_per_free);
 ```
 
 Let's carry through the units: 1/time * #/volume * #/volume / (#/volume * 1000 #/(k#)) ->
