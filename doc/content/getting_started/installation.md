@@ -19,6 +19,11 @@ Advanced manual installation instructions for this environment are available
 If an error or other issue is experienced while using the conda environment,
 please see [the MOOSE troubleshooting guide for Conda](https://mooseframework.inl.gov/help/troubleshooting.html#condaissues)
 
+!alert! note title=Interested in TMAP8 on HPC?
+Those users & developers interested in running TMAP8 on an HPC cluster environment can find more
+information about that user case in our [getting_started/hpc.md] instructions.
+!alert-end!
+
 ## Step Two: Clone TMAP8
 
 !style halign=left

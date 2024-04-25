@@ -26,7 +26,7 @@ When logged in, run:
 module load use.moose moose-dev
 ```
 
-and a set of appropriate MOOSE dependency modules will be loaded for use. Note that these modules
+A set of appropriate MOOSE dependency modules will be loaded for use. Note that these modules
 +require activation+ each time you log in.
 
 ## Step Three: Clone TMAP8
@@ -51,6 +51,11 @@ module load use.moose moose-dev
 
 ```bash
 make -j8
+```
+
+Once TMAP8 has successfully been compiled, the following command runs the active TMAP8 tests:
+
+```bash
 ./run_tests -j8
 ```
 
