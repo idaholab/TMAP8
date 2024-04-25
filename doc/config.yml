@@ -30,6 +30,7 @@ Extensions:
             Getting Started:
                 Installation: getting_started/installation.md
                 Using TMAP8: getting_started/using_tmap8.md
+                TMAP8 on HPC: getting_started/hpc.md
                 User Notes: getting_started/user_notes.md
             Documentation:
               TMAP8-only Syntax: syntax/tmap_only.md
