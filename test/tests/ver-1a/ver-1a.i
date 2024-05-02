@@ -82,7 +82,7 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
     enclosure_scalar_var = v
     boundary = 'left'
     Ko = '${solubility_constant}'
-    temp = ${temperature}
+    temperature = ${temperature}
   []
 []
 

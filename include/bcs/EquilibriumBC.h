@@ -23,7 +23,7 @@ protected:
   /// The solubility coefficient
   const Real _Ko;
 
-  /// The solubility activation energy (J)
+  /// The solubility activation energy (J/mol)
   const Real _Ea;
 
   /// The exponent of the solution law
