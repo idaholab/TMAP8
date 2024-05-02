@@ -33,7 +33,7 @@ protected:
   Real computeQpOffDiagJacobian(unsigned int jvar) override;
 
   const Real _alpha_t;
-  const Real _detrapping_energy;
+  const Real _trapping_energy;
   const Real _N;
   const Function & _Ct0;
   const VariableValue & _mobile_conc;

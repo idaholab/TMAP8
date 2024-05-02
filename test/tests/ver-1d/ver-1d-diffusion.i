@@ -57,7 +57,7 @@ temperature = 1000
     type = ReleasingNodalKernel
     alpha_r = 1e13
     temperature = ${temperature}
-    trapping_energy = 100
+    detrapping_energy = 100
     variable = trapped
   []
 []

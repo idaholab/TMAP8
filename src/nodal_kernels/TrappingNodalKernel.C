@@ -20,7 +20,7 @@ TrappingNodalKernel::validParams()
   params.addRequiredParam<Real>("alpha_t",
                                 "The trapping rate coefficient. This has units of 1/s (e.g. no "
                                 "number densities are involved)");
-  params.addParam<Real>("detrapping_energy", 0, "The detrapping energy (K)");
+  params.addParam<Real>("trapping_energy", 0, "The trapping energy (K)");
   params.addRequiredParam<Real>("N", "The atomic number density of the host material (1/m^3)");
   params.addRequiredParam<FunctionName>(
       "Ct0", "The fraction of host sites that can contribute to trapping as a function (-)");
@@ -40,7 +40,7 @@ TrappingNodalKernel::validParams()
 TrappingNodalKernel::TrappingNodalKernel(const InputParameters & parameters)
   : NodalKernel(parameters),
     _alpha_t(getParam<Real>("alpha_t")),
-    _detrapping_energy(getParam<Real>("detrapping_energy")),
+    _trapping_energy(getParam<Real>("trapping_energy")),
     _N(getParam<Real>("N")),
     _Ct0(getFunction("Ct0")),
     _mobile_conc(coupledValue("mobile")),
@@ -73,7 +73,7 @@ TrappingNodalKernel::computeQpResidual()
   for (const auto & trap_conc : _trapped_concentrations)
     empty_trapping_sites -= (*trap_conc)[_qp] * _trap_per_free;
 
-  return -_alpha_t * std::exp(-_detrapping_energy / _temperature[_qp]) * empty_trapping_sites *
+  return -_alpha_t * std::exp(-_trapping_energy / _temperature[_qp]) * empty_trapping_sites *
          _mobile_conc[_qp] / (_N * _trap_per_free);
 }
 
@@ -98,7 +98,7 @@ TrappingNodalKernel::ADHelper()
 
   mobile_conc.derivatives().insert(_var_numbers.back()) = 1.;
 
-  _jacobian = -_alpha_t * std::exp(-_detrapping_energy / _temperature[_qp]) * empty_trapping_sites *
+  _jacobian = -_alpha_t * std::exp(-_trapping_energy / _temperature[_qp]) * empty_trapping_sites *
               mobile_conc / (_N * _trap_per_free);
 }
 

@@ -17,7 +17,7 @@ ReleasingNodalKernel::validParams()
   params.addClassDescription(
       "Implements a residual describing the release of trapped species in a material.");
   params.addRequiredParam<Real>("alpha_r", "The release rate coefficient (1/s)");
-  params.addParam<Real>("trapping_energy", 0, "The trapping energy (K)");
+  params.addParam<Real>("detrapping_energy", 0, "The detrapping energy (K)");
   params.addRequiredCoupledVar("temperature", "The temperature (K)");
   return params;
 }
@@ -25,7 +25,7 @@ ReleasingNodalKernel::validParams()
 ReleasingNodalKernel::ReleasingNodalKernel(const InputParameters & parameters)
   : NodalKernel(parameters),
     _alpha_r(getParam<Real>("alpha_r")),
-    _trapping_energy(getParam<Real>("trapping_energy")),
+    _detrapping_energy(getParam<Real>("detrapping_energy")),
     _temperature(coupledValue("temperature"))
 {
 }
@@ -33,11 +33,11 @@ ReleasingNodalKernel::ReleasingNodalKernel(const InputParameters & parameters)
 Real
 ReleasingNodalKernel::computeQpResidual()
 {
-  return _alpha_r * std::exp(-_trapping_energy / _temperature[_qp]) * _u[_qp];
+  return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]) * _u[_qp];
 }
 
 Real
 ReleasingNodalKernel::computeQpJacobian()
 {
-  return _alpha_r * std::exp(-_trapping_energy / _temperature[_qp]);
+  return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]);
 }

@@ -113,7 +113,7 @@ trap_profile_depth = 0.2 # position of the transition from Ct0_surface to Ct0_bu
     type = ReleasingNodalKernel
     alpha_r = ${fparse 1e13 / time_scaling}
     temperature = ${temperature}
-    trapping_energy = ${epsilon}
+    detrapping_energy = ${epsilon}
     variable = trapped
   []
 []
