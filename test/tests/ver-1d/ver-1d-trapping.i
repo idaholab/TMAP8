@@ -1,14 +1,14 @@
-cl=3.1622e18
-trap_per_free=1e3
-N=3.1622e22
-time_scaling=1
-epsilon=10000
+cl = 3.1622e18
+trap_per_free = 1e3
+N = 3.1622e22
+time_scaling = 1
+epsilon = 10000
 temperature = 1000
 
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 20
+  nx = 1000
   xmax = 1
 []
 
@@ -19,22 +19,28 @@ temperature = 1000
 []
 
 [Variables]
-  [mobile][]
-  [trapped][]
+  [mobile]
+  []
+  [trapped]
+  []
 []
 
 [AuxVariables]
-  [empty_sites][]
-  [scaled_empty_sites][]
-  [trapped_sites][]
-  [total_sites][]
+  [empty_sites]
+  []
+  [scaled_empty_sites]
+  []
+  [trapped_sites]
+  []
+  [total_sites]
+  []
 []
 
 [AuxKernels]
   [empty_sites]
     variable = empty_sites
     type = EmptySitesAux
-    N = ${fparse N / cl}
+    N = '${fparse N / cl}'
     Ct0 = .1
     trap_per_free = ${trap_per_free}
     trapped_concentration_variables = trapped
@@ -60,17 +66,17 @@ temperature = 1000
 []
 
 [Kernels]
-  [./diff]
+  [diff]
     type = MatDiffusion
     variable = mobile
-    diffusivity = ${fparse 1. / time_scaling}
+    diffusivity = '${fparse 1. / time_scaling}'
     extra_vector_tags = ref
-  [../]
-  [./time]
+  []
+  [time]
     type = TimeDerivative
     variable = mobile
     extra_vector_tags = ref
-  [../]
+  []
   [coupled_time]
     type = ScaledCoupledTimeDerivative
     variable = mobile
@@ -88,8 +94,8 @@ temperature = 1000
   [trapping]
     type = TrappingNodalKernel
     variable = trapped
-    alpha_t = ${fparse 1e15 / time_scaling}
-    N = ${fparse 3.1622e22 / cl}
+    alpha_t = '${fparse 1e15 / time_scaling}'
+    N = '${fparse 3.1622e22 / cl}'
     Ct0 = 0.1
     mobile_concentration = 'mobile'
     temperature = ${temperature}
@@ -100,16 +106,16 @@ temperature = 1000
     type = ReleasingNodalKernel
     alpha_r = ${fparse 1e13 / time_scaling}
     temperature = ${temperature}
-    detrapping_energy = ${epsilon}
+    trapping_energy = ${epsilon}
     variable = trapped
   []
 []
 
 [BCs]
   [left]
-    type = DirichletBC
+    type = FunctionDirichletBC
     variable = mobile
-    value = ${fparse 3.1622e18 / cl}
+    function = 'BC_func'
     boundary = left
   []
   [right]
@@ -117,6 +123,12 @@ temperature = 1000
     variable = mobile
     value = 0
     boundary = right
+  []
+[]
+[Functions]
+  [BC_func]
+    type = ParsedFunction
+    expression = '${fparse 3.1622e18 / cl}*tanh(10 * t )'
   []
 []
 
@@ -132,6 +144,17 @@ temperature = 1000
     value = outflux
     scaling_factor = ${cl}
   []
+  [nonlin_it]
+    type = NumNonlinearIterations
+  []
+  [dt]
+    type = TimestepSize
+  []
+  [min_trapped]
+    type = NodalExtremeValue
+    value_type = MIN
+    variable = trapped
+  []
 []
 
 [Preconditioning]
@@ -144,15 +167,19 @@ temperature = 1000
 [Executioner]
   type = Transient
   end_time = 1000
-  dt = 0.1
+  dtmax = 5
   solve_type = NEWTON
   scheme = BDF2
-  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
-  petsc_options_value = 'lu superlu_dist'
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = 'lu'
   line_search = 'none'
-  automatic_scaling = true
-  verbose = true
-  compute_scaling_once = false
+  [TimeStepper]
+    type = IterationAdaptiveDT
+    dt = 1e-6
+    optimal_iterations = 7
+    growth_factor = 1.1
+    cutback_factor = 0.909
+  []
   l_tol = 1e-11
 []
 
