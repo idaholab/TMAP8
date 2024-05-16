@@ -30,6 +30,7 @@ protected:
   const Real _p;
 
   /// The enclosure variable
+  const bool _enclosure_var_bool_scalar;
   const ADVariableValue & _enclosure_var;
 
   /// The temperature (K)

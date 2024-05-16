@@ -25,9 +25,13 @@ EquilibriumBC::validParams()
       "The activation energy $Ea$ for the relationship $C_i = Ko exp{-Ea/RT} P_i^p$ (J/mol)");
   params.addParam<Real>(
       "p", 1.0, "The exponent $p$ in the relationship $C_i = Ko exp{-Ea/RT} P_i^p$");
-  params.addRequiredCoupledVar(
+  params.addRequiredCoupledVar("enclosure_var",
+                               "The coupled enclosure variable $P_i$ in the relationship $C_i = Ko "
+                               "exp{-Ea/RT} P_i^p$. Can be a either a field or scalar variable.");
+  params.addCoupledVar(
       "enclosure_scalar_var",
       "The coupled enclosure variable $P_i$ in the relationship $C_i = Ko exp{-Ea/RT} P_i^p$");
+  params.deprecateCoupledVar("enclosure_scalar_var", "enclosure_var", "12/30/2024");
   params.addRequiredCoupledVar("temperature", "The temperature");
   params.addParam<Real>(
       "var_scaling_factor", 1, "The number of atoms that compose our arbitrary unit for quantity");
@@ -39,7 +43,9 @@ EquilibriumBC::EquilibriumBC(const InputParameters & parameters)
     _Ko(getParam<Real>("Ko")),
     _Ea(getParam<Real>("activation_energy")),
     _p(getParam<Real>("p")),
-    _enclosure_var(adCoupledScalarValue("enclosure_scalar_var")),
+    _enclosure_var_bool_scalar(isCoupledScalar("enclosure_var")),
+    _enclosure_var(_enclosure_var_bool_scalar ? adCoupledScalarValue("enclosure_var")
+                                              : adCoupledValue("enclosure_var")),
     _T(adCoupledValue("temperature")),
     _var_scaling_factor(getParam<Real>("var_scaling_factor"))
 {
