@@ -97,7 +97,7 @@
   []
   [csv]
     type = CSV
-    interval = 10
+    time_step_interval = 10
   []
   [vector_postproc]
     type = CSV

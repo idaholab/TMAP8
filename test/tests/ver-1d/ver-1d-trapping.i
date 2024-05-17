@@ -53,8 +53,8 @@ epsilon=10000
   [total_sites]
     variable = total_sites
     type = ParsedAux
-    function = 'trapped_sites + empty_sites'
-    args = 'trapped_sites empty_sites'
+    expression = 'trapped_sites + empty_sites'
+    coupled_variables = 'trapped_sites empty_sites'
   []
 []
 

@@ -205,30 +205,30 @@ scale = 1e20
   []
   [temp_bc_func]
     type = ParsedFunction
-    # value = 'if(t<180000.0, 773.0, if(t<183600, 773.0-((1-exp(-(t-180000)/2700))*642.3), 300.0+3.0*(t-183600)/60))'
-    value = 'if(t<180000.0, 773.0, if(t<182400.0, 773.0-((1-exp(-(t-180000)/2700))*475), 300+0.05*(t-182400)))'
+    # expression = 'if(t<180000.0, 773.0, if(t<183600, 773.0-((1-exp(-(t-180000)/2700))*642.3), 300.0+3.0*(t-183600)/60))'
+    expression = 'if(t<180000.0, 773.0, if(t<182400.0, 773.0-((1-exp(-(t-180000)/2700))*475), 300+0.05*(t-182400)))'
   []
 
   [diffusivity_BeO_func]
     type = ParsedFunction
     vars = 'T'
     vals = 'temp_bc_func'
-    # value = 'if(t<183600, 1.40e-4*exp(-24408/T), 7e-5*exp(-24408/T))'
-    value = 'if(t<182400, 1.40e-4*exp(-24408/T), 7e-5*exp(-24408/T))' # Paul's
-    # value = 'if(t<182400, 1.40e-4*exp(-24408/T), 7e-5*exp(-27000/T))' # TMAP7
+    # expression = 'if(t<183600, 1.40e-4*exp(-24408/T), 7e-5*exp(-24408/T))'
+    expression = 'if(t<182400, 1.40e-4*exp(-24408/T), 7e-5*exp(-24408/T))' # Paul's
+    # expression = 'if(t<182400, 1.40e-4*exp(-24408/T), 7e-5*exp(-27000/T))' # TMAP7
   []
 
   [diffusivity_Be_func]
     type = ParsedFunction
     vars = 'T'
     vals = 'temp_bc_func'
-    value = '8.0e-9*exp(-4220/T)'
+    expression = '8.0e-9*exp(-4220/T)'
   []
 
   [enclosure_pressure_func]
     type = ParsedFunction
-    # value = 'if(t<180000.0, 13300.0, if(t<183600.0, 1e-6, 0.001))'
-    value = 'if(t<180015.0, 13300.000001, if(t<182400.0, 1e-6, 0.001))' # Paul's
+    # expression = 'if(t<180000.0, 13300.0, if(t<183600.0, 1e-6, 0.001))'
+    expression = 'if(t<180015.0, 13300.000001, if(t<182400.0, 1e-6, 0.001))' # Paul's
 
   []
 
@@ -236,14 +236,14 @@ scale = 1e20
     type = ParsedFunction
     vars = 'T'
     vals = 'temp_bc_func'
-    value = '5.00e20 * exp(9377.7/T)/${scale}'
+    expression = '5.00e20 * exp(9377.7/T)/${scale}'
   []
 
   [solubility_Be_func]
     type = ParsedFunction
     vars = 'T'
     vals = 'temp_bc_func'
-    value = '7.156e27 * exp(-11606/T)/${scale}'
+    expression = '7.156e27 * exp(-11606/T)/${scale}'
   []
 
   [max_time_step_size_func]
