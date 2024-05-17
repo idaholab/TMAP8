@@ -8,25 +8,31 @@
 
 #pragma once
 
-#include "Component.h"
-#include "FunctionInterface.h"
+#include "ComponentAction.h"
+#include "PhysicsComponentHelper.h"
 
-class Structure1D : public Component, public FunctionInterface
+/**
+ * A 1D structure on which a species can diffuse
+ */
+class Structure1D : public virtual ComponentAction, public PhysicsComponentHelper
 {
 public:
   Structure1D(const InputParameters & params);
 
   static InputParameters validParams();
 
-  void addVariables() override;
-  void addMooseObjects() override;
+  virtual void addMeshGenerators() override;
+  virtual void initComponentPhysics() override;
 
 protected:
-  void setupMesh() override;
-
+  /// Names of the variables for the species
   const std::vector<NonlinearVariableName> _species;
+  /// Scaling factors for each nonlinear variable
   const std::vector<Real> _scaling_factors;
+  /// Initial values for the variables
   const std::vector<Real> _ics;
+  /// Diffusion coefficients
   const std::vector<FunctionName> _input_Ds;
+  /// Unit for the mesh
   const Real _length_unit;
 };
