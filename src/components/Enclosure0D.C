@@ -8,35 +8,33 @@
 
 #include "Enclosure0D.h"
 #include "TMAPUtils.h"
+#include "SpeciesTrappingPhysics.h"
 
-registerMooseObject("TMAPApp", Enclosure0D);
+registerMooseAction("TMAP8App", Enclosure0D, "init_component_physics");
 
 InputParameters
 Enclosure0D::validParams()
 {
-  auto params = Component::validParams();
+  auto params = ComponentAction::validParams();
+  params += PhysicsComponentHelper::validParams();
   params += TMAP::enclosureCommonParams();
+  params.makeParamRequired<std::vector<PhysicsName>>("physics");
   return params;
 }
 
 Enclosure0D::Enclosure0D(const InputParameters & params)
-  : Component(params),
+  : ComponentAction(params),
+    PhysicsComponentHelper(params),
     _species(getParam<std::vector<NonlinearVariableName>>("species")),
     _scaling_factors(isParamValid("species_scaling_factors")
                          ? getParam<std::vector<Real>>("species_scaling_factors")
                          : std::vector<Real>(_species.size(), 1)),
-    _ics(isParamValid("species_initial_pressures")
-             ? getParam<std::vector<Real>>("species_initial_pressures")
-             : std::vector<Real>()),
+    _ics(getParam<std::vector<Real>>("species_initial_pressures")),
     _temperature(getParam<Real>("temperature")),
-    _length_unit(getParam<Real>("length_unit")),
-    _pressure_unit(getParam<Real>("pressure_unit")),
     _surface_area(getParam<Real>("surface_area")),
-    _volume(getParam<Real>("volume"))
+    _volume(getParam<Real>("volume")),
+    _outer_boundaries({getParam<BoundaryName>("boundary")})
 {
-  for (auto & specie : _species)
-    specie += ("_" + name());
-
   if (_species.size() != _scaling_factors.size())
     paramError("species_scaling_factors",
                "The number of species scaling factors must match the number of species.");
@@ -44,4 +42,27 @@ Enclosure0D::Enclosure0D(const InputParameters & params)
   if (_ics.size() && (_ics.size() != _species.size()))
     paramError("species_initial_pressures",
                "The number of species partial pressures must match the number of species.");
+  if (_physics.empty())
+    paramError("physics", "A physics must be specified in the enclosure");
+  if (_physics.size() > 1)
+    paramError("physics",
+               "Enclosure0D has only been implemented for a single 'SpeciesTrappingPhysics'");
+}
+
+void
+Enclosure0D::initComponentPhysics()
+{
+  // Check the type of the Physics. This component is not implemented for all types
+  if (!physicsExists<SpeciesTrappingPhysics>(_physics_names[0]))
+    paramError("physics",
+               "Physics '" + _physics_names[0] +
+                   "' not a 'SpeciesTrappingPhysics'. This component has only been implemented for "
+                   "'SpeciesTrappingPhysics'.");
+
+  if (_verbose)
+    mooseInfoRepeated("Adding Physics '" + _physics[0]->name() + "'.");
+
+  // Transfer the data specified in the Component to the Physics
+  const auto stp = dynamic_cast<SpeciesTrappingPhysics *>(_physics[0]);
+  stp->addComponent(*this);
 }
