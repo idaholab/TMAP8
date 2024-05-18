@@ -32,8 +32,11 @@ protected:
   /// The enclosure variable
   const ADVariableValue & _enclosure_var;
 
-  /// The temperature (K)
-  const ADVariableValue & _T;
+  /// The temperature as a variable (K)
+  const ADVariableValue * const _T;
+
+  /// The temperature as a function (K)
+  const Function * _T_function;
 
   /// The number of atoms that compose our arbitrary unit for quantity
   const Real _var_scaling_factor;
