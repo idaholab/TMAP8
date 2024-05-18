@@ -165,7 +165,7 @@ concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} 
   automatic_scaling = true
   l_max_its = 30
   nl_max_its = 5
-  petsc_options = '-snes_converged_reason -ksp_monitor_true_residual'
+  # petsc_options = '-snes_converged_reason -ksp_monitor_true_residual'
   petsc_options_iname = '-pc_type -mat_mffd_err'
   petsc_options_value = 'lu       1e-5'
   line_search = 'bt'
@@ -174,13 +174,12 @@ concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} 
 [Outputs]
   exodus = true
   print_linear_residuals = false
-  perf_graph = true
-  [dof]
-    type = DOFMap
-    execute_on = 'initial'
-  []
   [csv]
     type = CSV
     execute_on = 'initial timestep_end'
+  []
+  [console]
+    type = Console
+    time_step_interval = 10
   []
 []
