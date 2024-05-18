@@ -8,6 +8,7 @@
 
 #include "EquilibriumBC.h"
 #include "PhysicalConstants.h"
+#include "Function.h"
 
 registerMooseObject("TMAP8App", EquilibriumBC);
 
@@ -31,8 +32,8 @@ EquilibriumBC::validParams()
   params.addCoupledVar(
       "enclosure_scalar_var",
       "The coupled enclosure variable $P_i$ in the relationship $C_i = Ko exp{-Ea/RT} P_i^p$");
-  params.deprecateCoupledVar("enclosure_scalar_var", "enclosure_var", "12/30/2024");
-  params.addRequiredCoupledVar("temperature", "The temperature");
+  params.addCoupledVar("temp", "The temperature");
+  params.addParam<FunctionName>("temperature", "The boundary temperature");
   params.addParam<Real>(
       "var_scaling_factor", 1, "The number of atoms that compose our arbitrary unit for quantity");
   return params;
@@ -43,17 +44,24 @@ EquilibriumBC::EquilibriumBC(const InputParameters & parameters)
     _Ko(getParam<Real>("Ko")),
     _Ea(getParam<Real>("activation_energy")),
     _p(getParam<Real>("p")),
-    _enclosure_var_bool_scalar(isCoupledScalar("enclosure_var")),
-    _enclosure_var(_enclosure_var_bool_scalar ? adCoupledScalarValue("enclosure_var")
-                                              : adCoupledValue("enclosure_var")),
-    _T(adCoupledValue("temperature")),
+    _enclosure_var(adCoupledScalarValue("enclosure_scalar_var")),
+    _T(isParamValid("temp") ? &adCoupledValue("temp") : nullptr),
+    _T_function(isParamValid("temperature") ? &getFunction("temperature") : nullptr),
     _var_scaling_factor(getParam<Real>("var_scaling_factor"))
 {
+  if (!isParamValid("temp") && !isParamValid("temperature"))
+    paramError("temp", "The temperature must be specified.");
 }
 
 ADReal
 EquilibriumBC::computeQpResidual()
 {
-  ADReal K = _Ko * std::exp(-_Ea / (PhysicalConstants::ideal_gas_constant * _T[0]));
+  ADReal K;
+  if (_T)
+    K = _Ko * std::exp(-1.0 * _Ea / (PhysicalConstants::ideal_gas_constant * (*_T)[0]));
+  else
+    K = _Ko *
+        std::exp(-1.0 * _Ea /
+                 (PhysicalConstants::ideal_gas_constant * _T_function->value(_t, *_current_node)));
   return (_u * _var_scaling_factor - K * std::pow(_enclosure_var[0], _p));
 }
