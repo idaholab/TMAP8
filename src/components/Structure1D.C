@@ -29,20 +29,10 @@ Structure1D::Structure1D(const InputParameters & params)
   : ComponentAction(params),
     PhysicsComponentHelper(params),
     _species(getParam<std::vector<NonlinearVariableName>>("species")),
-    _scaling_factors(isParamValid("species_scaling_factors")
-                         ? getParam<std::vector<Real>>("species_scaling_factors")
-                         : std::vector<Real>(_species.size(), 1)),
     _ics(getParam<std::vector<Real>>("species_initial_concentrations")),
-    _input_Ds(getParam<std::vector<FunctionName>>("diffusivities")),
     _length_unit(getParam<Real>("length_unit_scaling"))
 {
   _dimension = 1;
-  if (_species.size() != _scaling_factors.size())
-    paramError("species_scaling_factors",
-               "The number of species scaling factors must match the number of species.");
-
-  if (_species.size() != _input_Ds.size())
-    paramError("diffusivities", "The number of diffusivities must match the number of species.");
 
   if (_ics.size() && (_ics.size() != _species.size()))
     paramError("species_initial_concentrations",
