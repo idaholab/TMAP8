@@ -77,7 +77,7 @@ cl=3.1622e18
 
 [Postprocessors]
   [outflux]
-    type = SideFluxAverage
+    type = SideDiffusiveFluxAverage
     boundary = 'right'
     diffusivity = 1
     variable = mobile

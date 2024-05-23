@@ -47,8 +47,8 @@
 [Materials]
   [K]
     type = ADParsedMaterial
-    f_name = 'K'
-    function = '10'
+    property_name = 'K'
+    expression = '10'
   []
 []
 

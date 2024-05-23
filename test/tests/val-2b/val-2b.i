@@ -156,41 +156,41 @@ scale = 1e20
 [Functions]
   [temp_bc_func]
     type = ParsedFunction
-    value = 'if(t<180000.0, 773.0, if(t<182400.0, 773.0-((1-exp(-(t-180000)/2700))*475), 300+0.05*(t-182400)))'
+    expression = 'if(t<180000.0, 773.0, if(t<182400.0, 773.0-((1-exp(-(t-180000)/2700))*475), 300+0.05*(t-182400)))'
   []
 
   [diffusivity_BeO_func]
     type = ParsedFunction
-    vars = 'T'
-    vals = 'temp_bc_func'
-    # value = 'if(t<182400, 1.40e-4*exp(-24408/T), 7e-5*exp(-24408/T))'
-    value = 'if(t<182400, 1.40e-4*exp(-24408/T), 7e-5*exp(-27000/T))' # TMAP7
+    symbol_names = 'T'
+    symbol_values = 'temp_bc_func'
+    # expression = 'if(t<182400, 1.40e-4*exp(-24408/T), 7e-5*exp(-24408/T))'
+    expression = 'if(t<182400, 1.40e-4*exp(-24408/T), 7e-5*exp(-27000/T))' # TMAP7
   []
 
   [diffusivity_Be_func]
     type = ParsedFunction
-    vars = 'T'
-    vals = 'temp_bc_func'
-    value = '8.0e-9*exp(-4220/T)'
+    symbol_names = 'T'
+    symbol_values = 'temp_bc_func'
+    expression = '8.0e-9*exp(-4220/T)'
   []
 
   [enclosure_pressure_func]
     type = ParsedFunction
-    value = 'if(t<180015.0, 13300.0, if(t<182400.0, 1e-6, 0.001))'
+    expression = 'if(t<180015.0, 13300.0, if(t<182400.0, 1e-6, 0.001))'
   []
 
   [solubility_BeO_func]
     type = ParsedFunction
-    vars = 'T'
-    vals = 'temp_bc_func'
-    value = '5.00e20 * exp(9377.7/T)/${scale}'
+    symbol_names = 'T'
+    symbol_values = 'temp_bc_func'
+    expression = '5.00e20 * exp(9377.7/T)/${scale}'
   []
 
   [solubility_Be_func]
     type = ParsedFunction
-    vars = 'T'
-    vals = 'temp_bc_func'
-    value = '7.156e27 * exp(-11606/T)/${scale}'
+    symbol_names = 'T'
+    symbol_values = 'temp_bc_func'
+    expression = '7.156e27 * exp(-11606/T)/${scale}'
   []
 
   [max_time_step_size_func]
@@ -258,7 +258,7 @@ scale = 1e20
   []
   [gold_solubility_ratio]
     type = ParsedPostprocessor
-    function = 'sol_BeO / sol_Be'
+    expression = 'sol_BeO / sol_Be'
     pp_names = 'sol_BeO sol_Be'
   []
   [BeO_interface]
@@ -273,7 +273,7 @@ scale = 1e20
   []
   [variable_ratio]
     type = ParsedPostprocessor
-    function = 'BeO_interface / Be_interface'
+    expression = 'BeO_interface / Be_interface'
     pp_names = 'BeO_interface Be_interface'
   []
   [dt]
@@ -289,12 +289,12 @@ scale = 1e20
   []
   [Fo0]
     type = ParsedPostprocessor
-    function = 'diff_BeO * dt / h0^2'
+    expression = 'diff_BeO * dt / h0^2'
     pp_names = 'dt h0 diff_BeO'
   []
   [Fo1]
     type = ParsedPostprocessor
-    function = 'diff_Be * dt / h1^2'
+    expression = 'diff_Be * dt / h1^2'
     pp_names = 'dt h1 diff_Be'
   []
   [max_time_step_size_pp]
