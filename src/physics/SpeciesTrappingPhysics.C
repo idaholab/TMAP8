@@ -18,10 +18,10 @@
 
 // Register the actions for the objects actually used
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "init_physics");
-registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_scalar_kernel");
-registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_bc");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_variable");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_ic");
+registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_scalar_kernel");
+registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_bc");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_function");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_postprocessor");
 
@@ -185,7 +185,7 @@ SpeciesTrappingPhysics::addScalarKernels()
     const auto & component = getComponent(comp_name);
     const auto & structure_boundary = getConnectedStructureBoundary(c_i);
     const auto scaled_volume = component.volume() * Utility::pow<3>(_length_unit);
-    const auto scaled_area = component.outerSurfaceArea() * Utility::pow<3>(_length_unit);
+    const auto scaled_area = component.outerSurfaceArea() * Utility::pow<2>(_length_unit);
 
     // Create the kernel for each species
     for (const auto s_j : index_range(_species[c_i]))
@@ -203,7 +203,7 @@ SpeciesTrappingPhysics::addScalarKernels()
 
       const auto flux_name =
           getConnectedStructurePhysics(c_i)[0]->name() + "_diffusive_flux_" + structure_boundary;
-      static constexpr Real kb = 1.38e-23;
+      static constexpr Real kb = 1.380649e-23;
 
       // Sink term
       {
