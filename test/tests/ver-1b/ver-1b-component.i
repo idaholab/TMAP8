@@ -1,12 +1,27 @@
-[Mesh]
-  type = GeneratedMesh
-  dim = 1
-  nx = 5000
-  xmax = 200
+[SystemComponents]
+  [structure]
+    type = Structure1D
+    species = 'u'
+    physics = 'multi-D'
+
+    # Geometry
+    nx = 5000
+    xmax = 200
+    length_unit_scaling = 1
+  []
 []
 
-[Variables]
-  [u]
+[Physics]
+  [Diffusion]
+    [ContinuousGalerkin]
+      [multi-D]
+        variable_name = 'u'
+        diffusivity_matprop = 1
+        
+        dirichlet_boundaries = 'structure_left structure_right'
+        boundary_values = '1 0'
+      []
+    []
   []
 []
 
@@ -17,17 +32,6 @@
   []
 []
 
-[Kernels]
-  [diff]
-    type = Diffusion
-    variable = u
-  []
-  [time]
-    type = TimeDerivative
-    variable = u
-  []
-[]
-
 [AuxKernels]
   [flux_x]
     type = DiffusionFluxAux
@@ -35,21 +39,6 @@
     variable = flux_x
     diffusion_variable = u
     component = x
-  []
-[]
-
-[BCs]
-  [left]
-    type = DirichletBC
-    variable = u
-    boundary = left
-    value = 1
-  []
-  [right]
-    type = DirichletBC
-    variable = u
-    boundary = right
-    value = 0
   []
 []
 
@@ -97,7 +86,7 @@
   []
   [csv]
     type = CSV
-    time_step_interval = 10
+    interval = 10
   []
   [vector_postproc]
     type = CSV
