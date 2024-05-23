@@ -9,11 +9,11 @@
     cli_args = 'Executioner/dt=5 Mesh/nx=10 Outputs/file_base=ver-1a_test_out'
     requirement = 'The system shall be able to model species diffusion through a structure, originating from a depleting source enclosure.'
   []
-  [ver-1a_comp]
+  [ver-1a-components]
     type = Exodiff
     input = component-ver-1a.i
     exodiff = component-ver-1a_out.e
-    cli_args = 'Executioner/dt=10 Executioner/scheme=implicit-euler'
+    cli_args = 'Executioner/dt=5 Components/structure/nx=5'
     detail = 'The system shall be able to model species diffusion through a structure, originating from a depleting source enclosure using component syntax.'
   []
   [ver-1a_heavy]
