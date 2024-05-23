@@ -1,0 +1,82 @@
+[BCs]
+  [./multi-D_u_dirichlet_bc_structure_right]
+    type = ADDirichletBC
+    boundary = structure_right
+    value = 0
+    variable = u
+  [../]
+[]
+
+[Kernels]
+  [./multi-D_u_diffusion]
+    type = ADMatDiffusion
+    block = ''
+    diffusivity = 26.246546933733484
+    variable = u
+  [../]
+  [./multi-D_u_time]
+    type = ADTimeDerivative
+    block = ''
+    variable = u
+  [../]
+[]
+
+[Postprocessors]
+  [./multi-D_diffusive_flux_structure_left]
+    type = SideDiffusiveFluxIntegral
+    boundary = structure_left
+    diffusivity = 26.246546933733484
+    execute_on = 'INITIAL TIMESTEP_END NONLINEAR LINEAR'
+    variable = u
+  [../]
+[]
+
+[Variables]
+  [./u]
+    type = MooseVariable
+    block = ''
+  [../]
+[]
+
+**END DUMP DATA**
+ Solve Converged!
+**START DUMP DATA**
+[BCs]
+  [./multi-D_u_dirichlet_bc_structure_right]
+    type = ADDirichletBC
+    boundary = structure_right
+    value = 0
+    variable = u
+  [../]
+[]
+
+[Kernels]
+  [./multi-D_u_diffusion]
+    type = ADMatDiffusion
+    block = ''
+    diffusivity = 26.246546933733484
+    variable = u
+  [../]
+  [./multi-D_u_time]
+    type = ADTimeDerivative
+    block = ''
+    variable = u
+  [../]
+[]
+
+[Postprocessors]
+  [./multi-D_diffusive_flux_structure_left]
+    type = SideDiffusiveFluxIntegral
+    boundary = structure_left
+    diffusivity = 26.246546933733484
+    execute_on = 'INITIAL TIMESTEP_END NONLINEAR LINEAR'
+    variable = u
+  [../]
+[]
+
+[Variables]
+  [./u]
+    type = MooseVariable
+    block = ''
+  [../]
+[]
