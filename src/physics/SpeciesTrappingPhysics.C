@@ -210,8 +210,9 @@ SpeciesTrappingPhysics::addScalarKernels()
         const std::string kernel_type = "EnclosureSinkScalarKernel";
         auto params = _factory.getValidParams(kernel_type);
         params.set<NonlinearVariableName>("variable") = species_name;
+        // Note the additional minus sign added because the flux is measured outwards
         params.set<Real>("concentration_to_pressure_conversion_factor") =
-            kb * libMesh::Utility::pow<3>(_length_unit) * _enclosure_temperatures[c_i] *
+            -kb * libMesh::Utility::pow<3>(_length_unit) * _enclosure_temperatures[c_i] *
             _pressure_unit;
         params.set<PostprocessorName>("flux") = flux_name;
         params.set<Real>("surface_area") = scaled_area;
