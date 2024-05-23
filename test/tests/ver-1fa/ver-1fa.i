@@ -53,7 +53,7 @@
 [Functions]
   [./volumetric_heat]
      type = ParsedFunction
-     value = 1.0e4
+     expression = 1.0e4
   [../]
 []
 
