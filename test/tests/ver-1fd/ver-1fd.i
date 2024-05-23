@@ -5,14 +5,14 @@ initial_temperature = 100 # T_i in K
 enclosure_temperature = 500 # T_infinity in K
 conduction_coefficient = 200 # h in W/m^2/K
 thermal_conductivity = 401 # k in W/m/K
-rho_Cp = 3.439e6  # J/m^3/K
+rho_Cp = 3.439e6 # J/m^3/K
 
 # Selected for TMAP8 case
 slab_length = 100e-2 # m semi-infinite slab
 num_nodes = 500 # (-)
 end_time = 1500 # s
 density = 1000 # kg/m^3
-specific_heat = ${fparse rho_Cp/density} # J/kg/K
+specific_heat = '${fparse rho_Cp/density}' # J/kg/K
 
 [Mesh]
   type = GeneratedMesh
