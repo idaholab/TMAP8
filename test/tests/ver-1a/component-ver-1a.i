@@ -14,9 +14,9 @@ temperature = 2373 # K
 initial_pressure = 1e6 # Pa
 volume_enclosure = '${fparse 5.20e-11*length_unit^3}' # microns^3
 surface_area = '${fparse 2.16e-6*length_unit^2}' # microns^2
-diffusivity_SiC = '${fparse 1.58e-4*exp(-308000.0/(R*temperature))*length_unit^2}' # microns^2/s
-solubility_constant = '${fparse  7.244e22/(temperature * length_unit^3)}' # atoms/microns^3/Pa = atoms*s^2/m^2/kg
-slab_thickness = '${fparse  3.30e-5*length_unit}' # microns
+diffusivity_SiC = '${fparse 1.58e-4 * exp(-308000.0 / (R * temperature)) * length_unit^2}' # microns^2/s
+solubility_constant = '${fparse 7.244e22 / (temperature)}' # atoms/microns^3/Pa
+slab_thickness = '${fparse  3.30e-5 * length_unit}' # microns
 
 # Useful equations/conversions
 concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_unit^3}' # J = Pa*microns^3
@@ -27,6 +27,7 @@ pressure_unit = 1 # number of pressure units in a Pascal
     [SpeciesTrapping]
       [0d_trapping]
         species = 'v'
+        # should not be scaled
         equilibrium_constants = ${solubility_constant}
 
         # These parameters can be passed for each component here in lieu of fetching them from the components
@@ -37,8 +38,8 @@ pressure_unit = 1 # number of pressure units in a Pascal
 
         # If the initial pressure had not been scaled (=1 right now)
         pressure_unit_scaling = ${pressure_unit}
-        # Volume and area have been pre-scaled
-        length_unit_scaling = 1
+        # Volume and area of the enclosure have not been pre-scaled
+        length_unit_scaling = ${length_unit}
       []
     []
   []
@@ -62,7 +63,6 @@ pressure_unit = 1 # number of pressure units in a Pascal
   [structure]
     type = Structure1D
     species = 'u'
-    diffusivities = 'D_u'
     physics = 'multi-D'
 
     # Geometry
@@ -164,8 +164,6 @@ pressure_unit = 1 # number of pressure units in a Pascal
 
 [Executioner]
   type = Transient
-
-  # num_steps = 2
 
   # Time stepping and integration
   dt = .1
