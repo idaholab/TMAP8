@@ -6,50 +6,50 @@
 []
 
 [Variables]
-  [./temp]
+  [temp]
     initial_condition = 300.0
-  [../]
+  []
 []
 
 [Kernels]
-  [./heat]
+  [heat]
     type = HeatConduction
     variable = temp
-  [../]
-  [./HeatTdot]
+  []
+  [HeatTdot]
     type = HeatConductionTimeDerivative
     variable = temp
-  [../]
+  []
 []
 
 [BCs]
-  [./lefttemp]
+  [lefttemp]
     type = DirichletBC
     boundary = right
     variable = temp
     value = 300
-  [../]
-  [./rightflux]
+  []
+  [rightflux]
     type = DirichletBC
     boundary = left
     variable = temp
     value = 400
-  [../]
+  []
 []
 
 [Materials]
-  [./diffusivity]
+  [diffusivity]
     type = GenericConstantMaterial
     prop_names = 'density  thermal_conductivity specific_heat'
     prop_values = '1.0 10.0 10.0' # arbitrary values for diffusivity (=k/rho-Cp) to be 1.0
-  [../]
+  []
 []
 
 [Preconditioning]
-  [./SMP]
+  [SMP]
     type = SMP
     full = true
-  [../]
+  []
 []
 
 [Executioner]

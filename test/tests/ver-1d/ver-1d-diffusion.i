@@ -1,4 +1,4 @@
-cl=3.1622e18
+cl = 3.1622e18
 
 [Mesh]
   type = GeneratedMesh
@@ -14,21 +14,23 @@ cl=3.1622e18
 []
 
 [Variables]
-  [mobile][]
-  [trapped][]
+  [mobile]
+  []
+  [trapped]
+  []
 []
 
 [Kernels]
-  [./diff]
+  [diff]
     type = Diffusion
     variable = mobile
     extra_vector_tags = ref
-  [../]
-  [./time]
+  []
+  [time]
     type = TimeDerivative
     variable = mobile
     extra_vector_tags = ref
-  [../]
+  []
   [coupled_time]
     type = CoupledTimeDerivative
     variable = mobile
@@ -46,7 +48,7 @@ cl=3.1622e18
     type = TrappingNodalKernel
     variable = trapped
     alpha_t = 1e15
-    N = ${fparse 3.1622e22 / cl}
+    N = '${fparse 3.1622e22 / cl}'
     Ct0 = 0.1
     mobile = 'mobile'
     extra_vector_tags = ref
@@ -64,7 +66,7 @@ cl=3.1622e18
   [left]
     type = DirichletBC
     variable = mobile
-    value = ${fparse 3.1622e18 / cl}
+    value = '${fparse 3.1622e18 / cl}'
     boundary = left
   []
   [right]
