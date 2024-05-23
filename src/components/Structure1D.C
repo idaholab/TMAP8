@@ -11,6 +11,7 @@
 #include "DiffusionPhysicsBase.h"
 
 registerMooseAction("TMAP8App", Structure1D, "add_mesh_generator");
+registerMooseAction("TMAP8App", Structure1D, "init_component_physics");
 
 InputParameters
 Structure1D::validParams()
