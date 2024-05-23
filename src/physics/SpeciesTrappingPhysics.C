@@ -22,8 +22,6 @@ registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_variable");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_ic");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_scalar_kernel");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_bc");
-registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_function");
-registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_postprocessor");
 
 InputParameters
 SpeciesTrappingPhysics::validParams()
@@ -248,52 +246,6 @@ SpeciesTrappingPhysics::addFEBCs()
       }
     }
   }
-}
-
-void
-SpeciesTrappingPhysics::addFunctions()
-{
-  // for (const auto c_i : index_range(_components))
-  //   for (const auto s_j : index_range(_species[c_i]))
-  //   {
-  //     const auto K_name = (_species_Ks.size() > 1) ? _species_Ks[c_i][s_j] : _species_Ks[0][s_j];
-  //     const auto scaling_K = 1 / Utility::pow<3>(_length_unit) / _pressure_unit;
-
-  //     const std::string fun_type = "CompositeFunction";
-  //     auto params = _factory.getValidParams(fun_type);
-  //     params.set<std::vector<FunctionName>>("functions") = {K_name};
-  //     params.set<Real>("scale_factor") = scaling_K;
-  //     getProblem().addFunction(fun_type, K_name + "_scaled", params);
-  //   }
-}
-
-void
-SpeciesTrappingPhysics::addPostprocessors()
-{
-  // for (const auto c_i : index_range(_components))
-  //   for (const auto s_j : index_range(_species[c_i]))
-  //   {
-  //     // TODO Replace this with a functor. We are losing derivatives here
-  //     const auto & comp_name = _components[c_i];
-  //     const auto species_name = _species[c_i][s_j] + "_" + _components[c_i];
-  //     const auto & boundaries = getComponent(comp_name).outerSurfaceBoundaries();
-  //     checkSingleBoundary(boundaries, comp_name);
-  //     const auto & structure_boundary = boundaries[0];
-  //     const auto flux_name = species_name + "_" + structure_boundary + "_flux";
-
-  //     // Find the multi-D species from the Physics on the connected structure
-  //     const auto multi_D_species_name = getConnectedStructureVariableName(c_i, s_j);
-
-  //     // Create the boundary integration of the flux
-  //     const std::string pp_type = "SideDiffusiveFluxIntegral";
-  //     auto params = _factory.getValidParams(pp_type);
-  //     params.set<std::vector<VariableName>>("variable") = {multi_D_species_name};
-  //     params.set<MaterialPropertyName>("diffusivity") = "D_" + species_name;
-  //     params.set<std::vector<BoundaryName>>("boundary") = {structure_boundary};
-  //     params.set<ExecFlagEnum>("execute_on") = {
-  //         EXEC_INITIAL, EXEC_TIMESTEP_END, EXEC_NONLINEAR, EXEC_LINEAR};
-  //     getProblem().addPostprocessor(pp_type, flux_name, params);
-  //   }
 }
 
 void
