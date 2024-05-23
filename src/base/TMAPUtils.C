@@ -36,8 +36,6 @@ structureCommonParams()
       "block", "The list of block ids (SubdomainID) that this object will be applied");
   params.addParam<std::vector<Real>>(
       "species_initial_concentrations", {}, "Initial concentrations for the structure species");
-  params.addRequiredParam<std::vector<FunctionName>>("diffusivities",
-                                                     "The diffusivities of the species");
   return params;
 }
 
