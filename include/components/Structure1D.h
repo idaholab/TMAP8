@@ -24,11 +24,16 @@ public:
   virtual void addMeshGenerators() override;
   virtual void initComponentPhysics() override;
 
+  /// Return the species diffused on this structures
+  const std::vector<NonlinearVariableName> & species() const { return _species; }
+  /// Return the diffusivities for each species
+  const std::vector<FunctionName> & componentDiffusivities() const { return _input_Ds;}
+  /// Return the initial conditions fhe species concentrations on this structure
+  const std::vector<Real> & ics() { return _ics; };
+
 protected:
   /// Names of the variables for the species
   const std::vector<NonlinearVariableName> _species;
-  /// Scaling factors for each nonlinear variable
-  const std::vector<Real> _scaling_factors;
   /// Initial values for the variables
   const std::vector<Real> _ics;
   /// Diffusion coefficients
