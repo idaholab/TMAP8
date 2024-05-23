@@ -8,7 +8,7 @@ num_nodes = 800 # (-)
 position_measurement = 9e-2 # m
 
 density_Cu = 8960 # kg/m^3
-specific_heat_Cu= 383.8 # J/kg/K
+specific_heat_Cu = 383.8 # J/kg/K
 density_Fe = 7870 # kg/m^3
 specific_heat_Fe = 447.0 # J/kg/K
 
@@ -16,7 +16,7 @@ specific_heat_Fe = 447.0 # J/kg/K
   [whole_domain]
     type = GeneratedMeshGenerator
     xmin = 0
-    xmax = ${fparse L_A + L_B}
+    xmax = '${fparse L_A + L_B}'
     dim = 1
     nx = ${num_nodes}
   []

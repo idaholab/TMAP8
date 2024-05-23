@@ -6,62 +6,62 @@
 []
 
 [Variables]
-  [./temp]
+  [temp]
     initial_condition = 300.0
-  [../]
+  []
 []
 
 [Kernels]
-  [./heat]
+  [heat]
     type = HeatConduction
     variable = temp
-  [../]
-  [./heatsource]
+  []
+  [heatsource]
     type = HeatSource
     function = volumetric_heat
     variable = temp
-  [../]
-  [./HeatTdot]
+  []
+  [HeatTdot]
     type = HeatConductionTimeDerivative
     variable = temp
-  [../]
+  []
 []
 
 [BCs]
-  [./lefttemp]
+  [lefttemp]
     type = DirichletBC
     boundary = right
     variable = temp
     value = 300
-  [../]
-  [./rightflux]
+  []
+  [rightflux]
     type = NeumannBC
     boundary = left
     variable = temp
     value = 0
-  [../]
+  []
 []
 
 [Materials]
-  [./density]
+  [density]
     type = GenericConstantMaterial
     prop_names = 'density  thermal_conductivity specific_heat'
     prop_values = '1.0 10.0 1.0'
-  [../]
+  []
 []
 
 [Functions]
-  [./volumetric_heat]
-     type = ParsedFunction
-     expression = 1.0e4
-  [../]
+  [volumetric_heat]
+    type = ParsedFunction
+    value = 1.0e4
+  []
 []
 
 [Preconditioning]
-  [./SMP]
+  [SMP]
     type = SMP
     full = true
-  [../]
+  []
 []
 
 [Executioner]
