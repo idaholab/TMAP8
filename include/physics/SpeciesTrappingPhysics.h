@@ -47,9 +47,7 @@ private:
   virtual void addNonlinearVariables() override;
   virtual void addInitialConditions() override;
   virtual void addScalarKernels() override;
-  virtual void addFunctions() override;
   virtual void addFEBCs() override;
-  virtual void addPostprocessors() override;
 
   /**
    * Routine to process an Enclosure component parameter into the Physics
