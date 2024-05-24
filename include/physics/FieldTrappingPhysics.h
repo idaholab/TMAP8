@@ -30,14 +30,10 @@ protected:
   /// @param s_j index of  the species
   VariableName getSpeciesVariableName(unsigned int c_i, unsigned int s_j) const;
 
-  /// Which components this Physics is defined on
-  std::vector<ComponentName> _components;
   /// The mobile species of interest
   std::vector<std::vector<VariableName>> _mobile_species_names;
 
   // Properties on each component
-  /// Temperature of each component
-  std::vector<Real> _component_temperatures;
   /// Trapping rate coefficient for each component (outer indexing) and species (inner)
   std::vector<std::vector<Real>> _alpha_ts;
   /// Atomic number density of the host material
