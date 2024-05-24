@@ -8,7 +8,7 @@
 
 #include "Enclosure0D.h"
 #include "TMAPUtils.h"
-#include "SpeciesTrappingPhysics.h"
+#include "PointTrappingPhysics.h"
 
 registerMooseAction("TMAP8App", Enclosure0D, "init_component_physics");
 
@@ -46,23 +46,23 @@ Enclosure0D::Enclosure0D(const InputParameters & params)
     paramError("physics", "A physics must be specified in the enclosure");
   if (_physics.size() > 1)
     paramError("physics",
-               "Enclosure0D has only been implemented for a single 'SpeciesTrappingPhysics'");
+               "Enclosure0D has only been implemented for a single 'PointTrappingPhysics'");
 }
 
 void
 Enclosure0D::initComponentPhysics()
 {
   // Check the type of the Physics. This component is not implemented for all types
-  if (!physicsExists<SpeciesTrappingPhysics>(_physics_names[0]))
+  if (!physicsExists<PointTrappingPhysics>(_physics_names[0]))
     paramError("physics",
                "Physics '" + _physics_names[0] +
-                   "' not a 'SpeciesTrappingPhysics'. This component has only been implemented for "
-                   "'SpeciesTrappingPhysics'.");
+                   "' not a 'PointTrappingPhysics'. This component has only been implemented for "
+                   "'PointTrappingPhysics'.");
 
   if (_verbose)
     mooseInfoRepeated("Adding Physics '" + _physics[0]->name() + "'.");
 
   // Transfer the data specified in the Component to the Physics
-  const auto stp = dynamic_cast<SpeciesTrappingPhysics *>(_physics[0]);
+  const auto stp = dynamic_cast<PointTrappingPhysics *>(_physics[0]);
   stp->addComponent(*this);
 }
