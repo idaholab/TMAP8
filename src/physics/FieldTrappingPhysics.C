@@ -62,7 +62,7 @@ FieldTrappingPhysics::validParams()
 
   // Parameter groups
   params.addParamNamesToGroup("alpha_t N Ct0 trap_per_free", "Trapping");
-  params.addParamNamesToGroup("alpha_r component_temperature trapping_energy", "Release");
+  params.addParamNamesToGroup("alpha_r temperatures trapping_energy", "Release");
 
   return params;
 }
@@ -80,6 +80,7 @@ FieldTrappingPhysics::FieldTrappingPhysics(const InputParameters & parameters)
 {
   // TODO: do this after components have been processed
   _trap_per_frees.resize(_components.size());
+  // TODO: check that there is no overlap between names so we don't add kernels multiple times
 }
 
 void
@@ -198,6 +199,16 @@ FieldTrappingPhysics::addFEKernels()
         params.set<Real>("temperature") = _component_temperatures[c_i];
 
         getProblem().addNodalKernel(kernel_type, species_name + "_enc_release", params);
+      }
+
+      // Release term in the mobile species conservation equation
+      {
+        const std::string kernel_type = "CoupledTimeDerivative";
+        auto params = _factory.getValidParams(kernel_type);
+        params.set<NonlinearVariableName>("variable") = mobile_species_name;
+        params.set<VariableName>("v") = species_name;
+
+        getProblem().addKernel(kernel_type, mobile_species_name + "_from_" + species_name, params);
       }
     }
     if (_single_variable_set)
