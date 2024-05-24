@@ -22,7 +22,6 @@ public:
   static InputParameters validParams();
 
   virtual void addMeshGenerators() override;
-  virtual void initComponentPhysics() override;
 
   /// Return the species diffused on this structures
   const std::vector<NonlinearVariableName> & species() const { return _species; }
