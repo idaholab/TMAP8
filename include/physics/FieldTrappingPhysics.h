@@ -22,7 +22,7 @@ public:
 
   FieldTrappingPhysics(const InputParameters & parameters);
 
-  void addComponent(const ComponentAction & component);
+  void addComponent(const ComponentAction & component) override;
 
 protected:
   /// Return the name of the species variable
