@@ -12,17 +12,14 @@
 #include "PhysicsBase.h"
 
 /**
- * Creates all the objects needed to solve for the concentration of a scalar in a trap.
- * Implemented in 0D for now.
+ * Base class for physics implementing the trapping of one or more species in a medium
  */
-class SpeciesTrappingPhysics : public PhysicsBase
+class SpeciesTrappingPhysicsBase : public PhysicsBase
 {
 public:
   static InputParameters validParams();
 
-  SpeciesTrappingPhysics(const InputParameters & parameters);
-
-  void addComponent(const ComponentAction & component);
+  SpeciesTrappingPhysicsBase(const InputParameters & parameters);
 
 protected:
   /// Which components this Physics is defined on
@@ -33,22 +30,10 @@ protected:
   std::vector<std::vector<Real>> _scaling_factors;
   /// Initial conditions for each species
   std::vector<std::vector<Real>> _initial_conditions;
-  /// Temperature of each enclosure
-  std::vector<Real> _enclosure_temperatures;
-  /// Equilibrium constants / solubilities?
-  std::vector<std::vector<Real>> _species_Ks;
-
-  /// Scaling factor for lengths
-  const Real _length_unit;
-  /// Scaling factor for pressures
-  const Real _pressure_unit;
+  /// Temperature of each component
+  std::vector<Real> _component_temperatures;
 
 private:
-  virtual void addNonlinearVariables() override;
-  virtual void addInitialConditions() override;
-  virtual void addScalarKernels() override;
-  virtual void addFEBCs() override;
-
   /**
    * Routine to process an Enclosure component parameter into the Physics
    * @tparam T the type of the parameter to process
@@ -65,21 +50,6 @@ private:
                                   const T & component_value,
                                   bool use_default,
                                   const T & default_value);
-
-  /// Returns an error message if more than one boundary exists on the component
-  void checkSingleBoundary(const std::vector<BoundaryName> & boundaries,
-                           const ComponentName & comp) const;
-
-  /// Get the variable name for the structure connected to the component
-  /// @param c_i index of the component
-  /// @param s_j index of the species
-  const VariableName & getConnectedStructureVariableName(unsigned int c_i, unsigned int s_j);
-  /// Get the boundary name for the surface connecting the structure to the component
-  /// @param c_i index of the component
-  const BoundaryName & getConnectedStructureBoundary(unsigned int c_i);
-  /// Get the Physics active on the structure connected to the component
-  /// @param c_i index of the component
-  const std::vector<PhysicsBase *> getConnectedStructurePhysics(unsigned int c_i);
 };
 
 template <typename T>
@@ -94,12 +64,12 @@ struct is_vector<std::vector<T, A>> : public std::true_type
 
 template <typename T>
 void
-SpeciesTrappingPhysics::processComponentParameters(const std::string & param_name,
-                                                   const std::string & comp_name,
-                                                   std::vector<T> & physics_storage,
-                                                   const T & component_values,
-                                                   bool use_default,
-                                                   const T & default_values)
+SpeciesTrappingPhysicsBase::processComponentParameters(const std::string & param_name,
+                                                       const std::string & comp_name,
+                                                       std::vector<T> & physics_storage,
+                                                       const T & component_values,
+                                                       bool use_default,
+                                                       const T & default_values)
 {
   bool component_value_valid = false;
   // Create new cases as needed
@@ -115,7 +85,7 @@ SpeciesTrappingPhysics::processComponentParameters(const std::string & param_nam
       paramError(param_name,
                  "'" + param_name + "' in component '" + comp_name + "' :\n" +
                      Moose::stringify(component_values) + "\n differs from '" + param_name +
-                     "' in SpeciesTrappingPhysics:\n" + Moose::stringify(physics_storage[0]));
+                     "' in " + type() + ":\n" + Moose::stringify(physics_storage[0]));
   }
   // Always add if it's been specified on a component instead
   else if (component_value_valid)
