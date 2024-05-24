@@ -40,24 +40,6 @@ Structure1D::Structure1D(const InputParameters & params)
 }
 
 void
-Structure1D::initComponentPhysics()
-{
-  // Check the type of the Physics. This component is not implemented for all types
-  if (!physicsExists<DiffusionPhysicsBase>(_physics_names[0]))
-    paramError("physics",
-               "Physics '" + _physics_names[0] +
-                   "' not a 'SpeciesTrappingPhysics'. This component has only been implemented for "
-                   "'SpeciesTrappingPhysics'.");
-
-  if (_verbose)
-    mooseInfoRepeated("Adding Physics '" + _physics[0]->name() + "'.");
-
-  // Transfer the data specified in the Component to the Physics
-  const auto stp = dynamic_cast<DiffusionPhysicsBase *>(_physics[0]);
-  stp->addComponent(*this);
-}
-
-void
 Structure1D::addMeshGenerators()
 {
   InputParameters params = _factory.getValidParams("GeneratedMeshGenerator");
