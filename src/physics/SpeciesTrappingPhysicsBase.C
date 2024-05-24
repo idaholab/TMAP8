@@ -15,7 +15,7 @@ SpeciesTrappingPhysicsBase::validParams()
 {
   InputParameters params = PhysicsBase::validParams();
   params.addClassDescription(
-      "Nase class for Physics modeling the trapping of species on components.");
+      "Base class for Physics modeling the trapping of species on components.");
 
   // Not defined on blocks, but rather on components
   params.suppressParameter<std::vector<SubdomainName>>("block");
@@ -41,9 +41,7 @@ SpeciesTrappingPhysicsBase::validParams()
       {},
       "Initial values for each species equation on each component. If a single vector is "
       "specified, the same initial conditions will be used on every component");
-  params.addParam<std::vector<Real>>(
-      "temperatures", {}, "Temperatures for each enclosure component");
-
+  params.addParam<std::vector<MooseFunctorName>>("temperatures", "Temperatures for each enclosure component");
   return params;
 }
 
@@ -53,7 +51,7 @@ SpeciesTrappingPhysicsBase::SpeciesTrappingPhysicsBase(const InputParameters & p
     _species(getParam<std::vector<std::vector<NonlinearVariableName>>>("species")),
     _scaling_factors(getParam<std::vector<std::vector<Real>>>("species_scaling_factors")),
     _initial_conditions(getParam<std::vector<std::vector<Real>>>("species_initial_pressures")),
-    _component_temperatures(getParam<std::vector<Real>>("temperatures"))
+    _component_temperatures(getParam<std::vector<MooseFunctorName>>("temperatures"))
 {
   // Fill in the species vector of vectors for convenience
   // TODO: do this later so we can turn on this Physics from a component
