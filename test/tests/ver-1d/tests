@@ -9,6 +9,17 @@
     requirement = 'The system shall be able to model a breakthrough problem where diffusion is the rate limiting process.'
     verification = 'ver-1d.md'
   []
+  [diffusion_limited_components]
+    type = Exodiff
+    input = ver-1d-diffusion-component.i
+    exodiff = ver-1d-diffusion-component_out.e
+    cli_args = "Mesh/nx=20 Executioner/num_steps=300"
+    requirement = 'The system shall be able to model a breakthrough problem where diffusion is the rate limiting process using the Physics and Components syntax.'
+    verification = 'ver-1d.md'
+    # Physics does not use reference residual syntax
+    rel_tol = 1e-5
+    abs_tol = 1e-8
+  []
   [trapping_limited]
     type = Exodiff
     input = ver-1d-trapping.i
