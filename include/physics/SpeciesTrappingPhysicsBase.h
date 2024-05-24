@@ -31,9 +31,8 @@ protected:
   /// Initial conditions for each species
   std::vector<std::vector<Real>> _initial_conditions;
   /// Temperature of each component
-  std::vector<Real> _component_temperatures;
+  std::vector<MooseFunctorName> _component_temperatures;
 
-private:
   /**
    * Routine to process an Enclosure component parameter into the Physics
    * @tparam T the type of the parameter to process
@@ -75,6 +74,8 @@ SpeciesTrappingPhysicsBase::processComponentParameters(const std::string & param
   // Create new cases as needed
   if constexpr (is_vector<T>::value)
     component_value_valid = component_values.size();
+  else if constexpr (std::is_same_v<T, MooseFunctorName>)
+    component_value_valid = !component_values.empty();
   else
     component_value_valid = (component_values != 0);
 
