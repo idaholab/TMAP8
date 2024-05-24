@@ -38,7 +38,7 @@ specific_heat_Fe = 447.0 # J/kg/K
   [HeatConduction]
     [FiniteElement]
       [h1]
-        temperature_name = 'temp'
+        temperature_name = 'temperature'
 
         initial_temperature = 0
 
@@ -66,26 +66,26 @@ specific_heat_Fe = 447.0 # J/kg/K
 
 [Materials]
   [specific_heat_Cu]
-    type = GenericConstantMaterial
+    type = ADGenericConstantMaterial
     block = '0'
     prop_names = 'density specific_heat'
     prop_values = '${density_Cu} ${specific_heat_Cu}'
   []
   [specific_heat_Fe]
-    type = GenericConstantMaterial
+    type = ADGenericConstantMaterial
     block = '1'
     prop_names = 'density specific_heat'
     prop_values = '${density_Fe} ${specific_heat_Fe}'
   []
   [thermal_conductivity_Cu]
-    type = GenericFunctionMaterial
+    type = ADGenericFunctionMaterial
     block = '0'
     prop_values = thermal_conductivity_func_Cu
     prop_names = thermal_conductivity
     outputs = exodus
   []
   [thermal_conductivity_Fe]
-    type = GenericFunctionMaterial
+    type = ADGenericFunctionMaterial
     block = '1'
     prop_values = thermal_conductivity_func_Fe
     prop_names = thermal_conductivity
@@ -106,9 +106,7 @@ specific_heat_Fe = 447.0 # J/kg/K
   solve_type = NEWTON
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
-  nl_rel_tol = 1e-50
-  nl_abs_tol = 1e-12
-  l_tol = 1e-8
+  nl_abs_tol = 1e-6
   dtmax = 5e2
   end_time = 10000
   [TimeStepper]
