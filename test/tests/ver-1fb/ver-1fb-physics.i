@@ -26,7 +26,7 @@
 
 [Materials]
   [diffusivity]
-    type = GenericConstantMaterial
+    type = ADGenericConstantMaterial
     prop_names = 'density  thermal_conductivity specific_heat'
     prop_values = '1.0 10.0 10.0' # arbitrary values for diffusivity (=k/rho-Cp) to be 1.0
   []
