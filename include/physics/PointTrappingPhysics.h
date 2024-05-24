@@ -38,23 +38,6 @@ private:
   virtual void addScalarKernels() override;
   virtual void addFEBCs() override;
 
-  /**
-   * Routine to process an Enclosure component parameter into the Physics
-   * @tparam T the type of the parameter to process
-   * @param param_name name of the parameter
-   * @param physics_storage storage for those values on the Physics
-   * @param component_value values on the component
-   * @param use_default whether to rely on a default value if the component does not provide
-   * @param default_value the default
-   */
-  template <typename T>
-  void processComponentParameters(const std::string & param_name,
-                                  const std::string & comp_name,
-                                  std::vector<T> & physics_storage,
-                                  const T & component_value,
-                                  bool use_default,
-                                  const T & default_value);
-
   /// Returns an error message if more than one boundary exists on the component
   void checkSingleBoundary(const std::vector<BoundaryName> & boundaries,
                            const ComponentName & comp) const;
@@ -70,40 +53,3 @@ private:
   /// @param c_i index of the component
   const std::vector<PhysicsBase *> getConnectedStructurePhysics(unsigned int c_i);
 };
-
-template <typename T>
-void
-PointTrappingPhysics::processComponentParameters(const std::string & param_name,
-                                                   const std::string & comp_name,
-                                                   std::vector<T> & physics_storage,
-                                                   const T & component_values,
-                                                   bool use_default,
-                                                   const T & default_values)
-{
-  bool component_value_valid = false;
-  // Create new cases as needed
-  if constexpr (is_vector<T>::value)
-    component_value_valid = component_values.size();
-  else
-    component_value_valid = (component_values != 0);
-
-  // Parameter added by the Physics, just need to check consistency
-  if (isParamSetByUser(param_name))
-  {
-    if (component_value_valid && physics_storage[0] != component_values)
-      paramError(param_name,
-                 "'" + param_name + "' in component '" + comp_name + "' :\n" +
-                     Moose::stringify(component_values) + "\n differs from '" + param_name +
-                     "' in PointTrappingPhysics:\n" + Moose::stringify(physics_storage[0]));
-  }
-  // Always add if it's been specified on a component instead
-  else if (component_value_valid)
-    physics_storage.push_back(component_values);
-  // User did not specify the parameter, in the component or the Physics
-  else if (use_default)
-    physics_storage.push_back(default_values);
-  else
-    paramError(param_name,
-               "This parameter should be specified, in the Physics '" + name() +
-                   "' or in component '" + comp_name + "'");
-}
