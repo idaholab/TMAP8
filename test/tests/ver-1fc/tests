@@ -8,6 +8,12 @@
     exodiff = ver-1fc_out.e
     requirement = 'The system shall be able to model conduction in a composite structure with constant surface temperatures.'
   []
+  [ver-1fc-physics]
+    type = Exodiff
+    input = ver-1fc-physics.i
+    exodiff = ver-1fc-physics_out.e
+    requirement = 'The system shall be able to model conduction in a composite structure with constant surface temperatures using the Physics syntax.'
+  []
   [ver-1fc_csvdiff_transient]
     type = CSVDiff
     input = ver-1fc.i
