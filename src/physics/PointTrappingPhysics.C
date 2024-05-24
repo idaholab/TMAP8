@@ -94,8 +94,8 @@ PointTrappingPhysics::addComponent(const ComponentAction & component)
                                                 comp.ics(),
                                                 true,
                                                 std::vector<Real>(0, n_species_component));
-  processComponentParameters<Real>(
-      "temperatures", comp.name(), _component_temperatures, comp.temperature(), false, 0);
+  processComponentParameters<MooseFunctorName>(
+      "temperatures", comp.name(), _component_temperatures, std::to_string(comp.temperature()), false, 0);
 
   // TODO: check that inputs are consistent once all components have been added.
   // - the pressure, temperature and the scaling factors should be positive (defense in depth from
@@ -136,7 +136,7 @@ PointTrappingPhysics::addInitialConditions()
       params.set<Real>("value") =
           ((_initial_conditions.size() > 1)
                ? _initial_conditions[c_i][s_j]
-               : ((_initial_conditions.size() == 1) ? _initial_conditions[0][s_j] : 1)) *
+               : ((_initial_conditions.size() == 1) ? _initial_conditions[0][s_j] : 0)) *
           _pressure_unit;
       getProblem().addInitialCondition(ic_type, "IC_" + species_name, params);
     }
@@ -178,8 +178,10 @@ PointTrappingPhysics::addScalarKernels()
         auto params = _factory.getValidParams(kernel_type);
         params.set<NonlinearVariableName>("variable") = species_name;
         // Note the additional minus sign added because the flux is measured outwards
+        if (!MooseUtils::parsesToReal(_component_temperatures[c_i]))
+          paramError("temperatures", "Only real values are supported");
         params.set<Real>("concentration_to_pressure_conversion_factor") =
-            -kb * libMesh::Utility::pow<3>(_length_unit) * _component_temperatures[c_i] *
+            -kb * libMesh::Utility::pow<3>(_length_unit) * std::stod(_component_temperatures[c_i]) *
             _pressure_unit;
         params.set<PostprocessorName>("flux") = flux_name;
         params.set<Real>("surface_area") = scaled_area;
@@ -210,7 +212,7 @@ PointTrappingPhysics::addFEBCs()
         params.set<Real>("Ko") =
             ((_species_Ks.size() > 1) ? _species_Ks[c_i][s_j] : _species_Ks[0][s_j]) * 1 /
             Utility::pow<3>(_length_unit) / _pressure_unit;
-        params.set<FunctionName>("temperature") = std::to_string(_component_temperatures[c_i]);
+        params.set<FunctionName>("temperature") = _component_temperatures[c_i];
         params.set<std::vector<BoundaryName>>("boundary") = {structure_boundary};
         getProblem().addBoundaryCondition(bc_type, species_name + "_equi_bc", params);
       }
