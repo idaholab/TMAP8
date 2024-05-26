@@ -67,8 +67,8 @@ trap_profile_depth = 0.2 # position of the transition from Ct0_surface to Ct0_bu
   [total_sites]
     variable = total_sites
     type = ParsedAux
-    function = 'trapped_sites + empty_sites'
-    args = 'trapped_sites empty_sites'
+    expression = 'trapped_sites + empty_sites'
+    coupled_variables = 'trapped_sites empty_sites'
   []
 []
 
@@ -104,7 +104,7 @@ trap_profile_depth = 0.2 # position of the transition from Ct0_surface to Ct0_bu
     alpha_t = ${fparse 1e15 / time_scaling}
     N = ${fparse 3.1622e22 / cl}
     Ct0 = trapping_sites_density_function
-    mobile = 'mobile'
+    mobile_concentration = 'mobile'
     temperature = ${temperature}
     trap_per_free = ${trap_per_free}
     extra_vector_tags = ref

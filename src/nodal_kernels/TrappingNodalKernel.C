@@ -64,7 +64,7 @@ TrappingNodalKernel::TrappingNodalKernel(const InputParameters & parameters)
   }
   _trapped_concentrations[_n_other_concs] = &_u;
   _var_numbers[_n_other_concs] = _var.number();
-  _var_numbers[_n_other_concs + 1] = coupled("mobile");
+  _var_numbers[_n_other_concs + 1] = coupled("mobile_concentration");
 }
 
 Real
