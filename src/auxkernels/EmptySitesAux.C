@@ -15,6 +15,7 @@ InputParameters
 EmptySitesAux::validParams()
 {
   InputParameters params = AuxKernel::validParams();
+  params.addClassDescription("Calculates the concentration of empty trapping sites.");
   params.addRequiredParam<Real>("N", "The atomic number density of the host material (1/m^3)");
   params.addRequiredParam<FunctionName>(
       "Ct0", "The fraction of host sites that can contribute to trapping as a function (-)");
