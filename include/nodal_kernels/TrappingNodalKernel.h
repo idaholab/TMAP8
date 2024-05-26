@@ -36,7 +36,7 @@ protected:
   const Real _trapping_energy;
   const Real _N;
   const Function & _Ct0;
-  const VariableValue & _mobile_conc;
+  const VariableValue & _mobile_concentration;
   unsigned int _n_other_concs;
   std::vector<const VariableValue *> _trapped_concentrations;
   std::vector<unsigned int> _var_numbers;

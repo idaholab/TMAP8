@@ -30,7 +30,8 @@ TrappingNodalKernel::validParams()
       "An estimate for the ratio of the concentration magnitude of trapped species to free "
       "species. Setting a value for this can be helpful in producing a well-scaled matrix (-)");
   params.addRequiredCoupledVar(
-      "mobile", "The variable representing the mobile concentration of solute particles (1/m^3)");
+      "mobile_concentration",
+      "The variable representing the mobile concentration of solute particles (1/m^3)");
   params.addCoupledVar("other_trapped_concentration_variables",
                        "Other variables representing trapped particle concentrations.");
   params.addRequiredCoupledVar("temperature", "The temperature (K)");
@@ -43,7 +44,7 @@ TrappingNodalKernel::TrappingNodalKernel(const InputParameters & parameters)
     _trapping_energy(getParam<Real>("trapping_energy")),
     _N(getParam<Real>("N")),
     _Ct0(getFunction("Ct0")),
-    _mobile_conc(coupledValue("mobile")),
+    _mobile_concentration(coupledValue("mobile_concentration")),
     _last_node(nullptr),
     _trap_per_free(getParam<Real>("trap_per_free")),
     _temperature(coupledValue("temperature"))
@@ -74,7 +75,7 @@ TrappingNodalKernel::computeQpResidual()
     empty_trapping_sites -= (*trap_conc)[_qp] * _trap_per_free;
 
   return -_alpha_t * std::exp(-_trapping_energy / _temperature[_qp]) * empty_trapping_sites *
-         _mobile_conc[_qp] / (_N * _trap_per_free);
+         _mobile_concentration[_qp] / (_N * _trap_per_free);
 }
 
 void
@@ -94,12 +95,12 @@ TrappingNodalKernel::ADHelper()
     empty_trapping_sites -= trap_conc_dn * _trap_per_free;
     ++i;
   }
-  LocalDN mobile_conc = _mobile_conc[_qp];
+  LocalDN mobile_concentration = _mobile_concentration[_qp];
 
-  mobile_conc.derivatives().insert(_var_numbers.back()) = 1.;
+  mobile_concentration.derivatives().insert(_var_numbers.back()) = 1.;
 
   _jacobian = -_alpha_t * std::exp(-_trapping_energy / _temperature[_qp]) * empty_trapping_sites *
-              mobile_conc / (_N * _trap_per_free);
+              mobile_concentration / (_N * _trap_per_free);
 }
 
 Real
