@@ -49,7 +49,7 @@ temperature = 1000
     alpha_t = 1e15
     N = ${fparse 3.1622e22 / cl}
     Ct0 = 0.1
-    mobile = 'mobile'
+    mobile_concentration = 'mobile'
     temperature = ${temperature}
     extra_vector_tags = ref
   []

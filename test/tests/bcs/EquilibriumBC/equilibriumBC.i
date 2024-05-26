@@ -61,15 +61,11 @@
   num_steps = 1
   solve_type = PJFNK
   automatic_scaling = true
-  # dtmin = .1
-  # l_max_its = 30
-  # nl_max_its = 5
-  petsc_options = '-snes_converged_reason'# -ksp_monitor_true_residual'
-  petsc_options_iname = '-pc_type'# -mat_mffd_err'
-  petsc_options_value = 'lu'#       1e-5'
+  petsc_options = '-snes_converged_reason'
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = 'lu'
   line_search = 'bt'
   scheme = 'bdf2'
-  # timestep_tolerance = 1e-8
 []
 
 [Outputs]
