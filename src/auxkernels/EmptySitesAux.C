@@ -9,7 +9,7 @@
 #include "EmptySitesAux.h"
 #include "Function.h"
 
-registerMooseObject("MooseApp", EmptySitesAux);
+registerMooseObject("TMAP8App", EmptySitesAux);
 
 InputParameters
 EmptySitesAux::validParams()

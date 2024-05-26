@@ -4,7 +4,7 @@
 
 ## Overview
 
-This class calculates the concentration of empty trapping sites $C_t^e$ as
+This class calculates the concentration of empty trapping sites, $C_t^e$, as
 
 \begin{equation}
 C_t^e = C_{t,0} N - \sum_{s}{C_{t,s}},

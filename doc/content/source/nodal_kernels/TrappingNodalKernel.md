@@ -18,7 +18,7 @@ $\alpha_t$ is defined as
 \begin{equation}
 \alpha_t = \alpha_{t0} \exp(-\epsilon / T),
 \end{equation}
-with $\alpha_{t0}$ the pre-exponential factor is 1/time, $\epsilon$ the trapping energy in Kelvin, and $T$ the temperature in Kelvin.
+with $\alpha_{t0}$ being the pre-exponential factor is units of 1/time, $\epsilon$ being the trapping energy in units of Kelvin, and $T$ being the temperature in units of Kelvin.
 
 As outlined in [getting_started/user_notes.md#scaling exact=True], it is important
 to scale different specie numerical concentrations to the same order of magnitude

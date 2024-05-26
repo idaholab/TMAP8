@@ -1,5 +1,5 @@
 [Tests]
-  [equilibriumBC_fiel_variable]
+  [equilibriumBC_field_variable]
     type = 'CSVDiff'
     input = 'equilibriumBC.i'
     csvdiff = 'equilibriumBC_out.csv'
