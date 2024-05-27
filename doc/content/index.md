@@ -1,6 +1,8 @@
 !config navigation breadcrumbs=False scrollspy=False
 
-# TMAP8 class=center style=font-weight:600;font-size:350%
+&nbsp;
+
+!media figures/TMAP8_logo_blue.png dark_src=figures/TMAP8_logo_white.png style=display:block;margin-left:auto;margin-right:auto;width:30%;
 
 # Tritium Migration Analysis Program, Version 8 class=center style=font-weight:200;font-size:200%
 
