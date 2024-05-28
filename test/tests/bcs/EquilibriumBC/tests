@@ -5,6 +5,6 @@
     csvdiff = 'equilibriumBC_out.csv'
     issues = '#134'
     design = 'EquilibriumBC.md'
-    requirement = 'The system shall compute the flux imposed by EquilibriumBC when a field variable is used for the enclosure variable.'
+    requirement = 'The system shall compute the equilibrium flux condition between an enclosure and a structure when a field variable is used for the enclosure variable.'
   []
 []
