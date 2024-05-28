@@ -12,7 +12,7 @@
 #include "MooseVariable.h"
 #include "NonlinearSystem.h"
 
-registerMooseObject("MooseApp", ADMatReactionFlexible);
+registerMooseObject("TMAP8App", ADMatReactionFlexible);
 
 InputParameters
 ADMatReactionFlexible::validParams()

@@ -23,13 +23,14 @@ protected:
   /// The solubility coefficient
   const Real _Ko;
 
-  /// The solubility activation energy (J)
+  /// The solubility activation energy (J/mol)
   const Real _Ea;
 
   /// The exponent of the solution law
   const Real _p;
 
   /// The enclosure variable
+  const bool _enclosure_var_bool_scalar;
   const ADVariableValue & _enclosure_var;
 
   /// The temperature (K)

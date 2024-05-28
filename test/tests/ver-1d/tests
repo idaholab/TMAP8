@@ -17,4 +17,13 @@
     requirement = 'The system shall be able to model a breakthrough problem where trapping is the rate limiting process.'
     verification = 'ver-1d.md'
   []
+  [trapping_limited_trap_site_profile]
+    type = CSVDiff
+    input = ver-1d-trapping_profile.i
+    csvdiff = ver-1d-trapping_profile_out.csv
+    cli_args = 'Executioner/num_steps=10'
+    requirement = 'The system shall be able to model a breakthrough problem where trapping is the rate limiting process and the trapping site density is heterogeneous.'
+    issues = '#133'
+    verification = 'TrappingNodalKernel.md EmptySitesAux.md ver-1d.md'
+  []
 []

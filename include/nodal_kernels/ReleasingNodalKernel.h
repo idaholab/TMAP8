@@ -22,6 +22,6 @@ protected:
   Real computeQpJacobian() override;
 
   const Real _alpha_r;
-  const VariableValue & _temp;
-  const Real _trapping_energy;
+  const Real _detrapping_energy;
+  const VariableValue & _temperature;
 };

@@ -10,6 +10,8 @@
 
 #include "AuxKernel.h"
 
+class Function;
+
 class EmptySitesAux : public AuxKernel
 {
 public:
@@ -21,7 +23,7 @@ protected:
   virtual Real computeValue() override;
 
   const Real _N;
-  const Real _Ct0;
+  const Function & _Ct0;
   unsigned int _n_concs;
   std::vector<const VariableValue *> _trapped_concentrations;
   const Real _trap_per_free;
