@@ -79,10 +79,10 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
   [left]
     type = EquilibriumBC
     variable = u
-    enclosure_scalar_var = v
+    enclosure_var = v
     boundary = 'left'
     Ko = '${solubility_constant}'
-    temp = ${temperature}
+    temperature = ${temperature}
   []
 []
 

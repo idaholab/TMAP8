@@ -1,0 +1,10 @@
+[Tests]
+  [equilibriumBC_field_variable]
+    type = 'CSVDiff'
+    input = 'equilibriumBC.i'
+    csvdiff = 'equilibriumBC_out.csv'
+    issues = '#134'
+    design = 'EquilibriumBC.md'
+    requirement = 'The system shall compute the equilibrium flux condition between an enclosure and a structure when a field variable is used for the enclosure variable.'
+  []
+[]

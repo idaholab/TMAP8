@@ -1,15 +1,28 @@
+# This input file is slightly adapted from ver-1d-trapping.i to include a spatially-dependent trap site density
+
 cl=3.1622e18
 trap_per_free=1e3
 N=3.1622e22
 time_scaling=1
 epsilon=10000
 temperature = 1000
+Ct0_surface = .1 # trapping site density close to the sample surface
+Ct0_bulk = .01 # trapping site density in the sample bulk
+trap_profile_depth = 0.2 # position of the transition from Ct0_surface to Ct0_bulk
 
 [Mesh]
   type = GeneratedMesh
   dim = 1
   nx = 20
   xmax = 1
+[]
+
+[Functions]
+  [trapping_sites_density_function]
+    type = ParsedFunction
+    expression = 'if(x<${trap_profile_depth}, ${Ct0_surface}, ${Ct0_bulk})'
+    execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
+  []
 []
 
 [Problem]
@@ -35,7 +48,7 @@ temperature = 1000
     variable = empty_sites
     type = EmptySitesAux
     N = ${fparse N / cl}
-    Ct0 = .1
+    Ct0 = trapping_sites_density_function
     trap_per_free = ${trap_per_free}
     trapped_concentration_variables = trapped
   []
@@ -90,7 +103,7 @@ temperature = 1000
     variable = trapped
     alpha_t = ${fparse 1e15 / time_scaling}
     N = ${fparse 3.1622e22 / cl}
-    Ct0 = 0.1
+    Ct0 = trapping_sites_density_function
     mobile_concentration = 'mobile'
     temperature = ${temperature}
     trap_per_free = ${trap_per_free}

@@ -140,8 +140,8 @@ scale = 1e20
     Ko = 5.0
     activation_energy = -77966.2
     boundary = left
-    enclosure_scalar_var = enclosure_pressure
-    temp = temp
+    enclosure_var = enclosure_pressure
+    temperature = temp
     variable = conc_BeO
     p = 0.5
   []

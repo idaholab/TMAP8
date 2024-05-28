@@ -1,4 +1,5 @@
 cl=3.1622e18
+temperature = 1000
 
 [Mesh]
   type = GeneratedMesh
@@ -48,14 +49,15 @@ cl=3.1622e18
     alpha_t = 1e15
     N = ${fparse 3.1622e22 / cl}
     Ct0 = 0.1
-    mobile = 'mobile'
+    mobile_concentration = 'mobile'
+    temperature = ${temperature}
     extra_vector_tags = ref
   []
   [release]
     type = ReleasingNodalKernel
     alpha_r = 1e13
-    temp = 1000
-    trapping_energy = 100
+    temperature = ${temperature}
+    detrapping_energy = 100
     variable = trapped
   []
 []
