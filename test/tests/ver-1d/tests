@@ -1,29 +1,63 @@
 [Tests]
   design = 'TrappingNodalKernel.md ReleasingNodalKernel.md'
   issues = '#12'
-  [diffusion_limited]
+  [ver-1d_diffusion_limited]
     type = Exodiff
     input = ver-1d-diffusion.i
-    exodiff = ver-1d-diffusion_out.e
-    cli_args = "Mesh/nx=20 Executioner/num_steps=300"
+    exodiff = ver-1d_diffusion_limited_test_exodus.e
+    cli_args = "Mesh/nx=20 Executioner/num_steps=300 Outputs/file_base=ver-1d_diffusion_limited_test_exodus"
     requirement = 'The system shall be able to model a breakthrough problem where diffusion is the rate limiting process.'
     verification = 'ver-1d.md'
   []
-  [trapping_limited]
+  [ver-1d_diffusion_limited_heavy]
     type = Exodiff
-    input = ver-1d-trapping.i
-    exodiff = ver-1d-trapping_out.e
-    cli_args = 'Executioner/num_steps=10'
-    requirement = 'The system shall be able to model a breakthrough problem where trapping is the rate limiting process.'
+    heavy = true
+    input = ver-1d-diffusion.i
+    exodiff = ver-1d-diffusion_out.e
+    requirement = 'The system shall be able to model a breakthrough problem where diffusion is the rate limiting process, with the fine mesh and time step required to match the analytical solution for the verification case.'
     verification = 'ver-1d.md'
   []
-  [trapping_limited_trap_site_profile]
+  [ver-1d_diffusion_limited_heavy_csvdiff]
     type = CSVDiff
-    input = ver-1d-trapping_profile.i
-    csvdiff = ver-1d-trapping_profile_out.csv
-    cli_args = 'Executioner/num_steps=10'
-    requirement = 'The system shall be able to model a breakthrough problem where trapping is the rate limiting process and the trapping site density is heterogeneous.'
-    issues = '#133'
-    verification = 'TrappingNodalKernel.md EmptySitesAux.md ver-1d.md'
+    input = ver-1d-diffusion.i
+    should_execute = false # this test relies on the output files from ver-1c, so it shouldn't be run twice
+    csvdiff = ver-1d-diffusion_out.csv
+    prereq = ver-1d_diffusion_limited_heavy
+    requirement = 'The system shall be able to model a breakthrough problem where diffusion is the rate limiting process,
+    with the fine mesh and time step required to match the analytical solution for the verification case and generate CSV data for use in comparisons with the analytic solution.'
+    verification = 'ver-1d.md'
+  []
+  [ver-1d_trapping_limited]
+    type = Exodiff
+    input = ver-1d-trapping.i
+    exodiff = ver-1d_trapping_limited_test_exodus.e
+    requirement = 'The system shall be able to model a breakthrough problem where trapping is the rate limiting process.'
+    cli_args = "Mesh/nx=20 Executioner/num_steps=300 Outputs/file_base=ver-1d_trapping_limited_test_exodus"
+    verification = 'ver-1d.md'
+  []
+  [ver-1d_trapping_limited_heavy]
+    type = Exodiff
+    heavy = true
+    input = ver-1d-trapping.i
+    exodiff = ver-1d-trapping_out.e
+    requirement = 'The system shall be able to model a breakthrough problem where trapping is the rate limiting process with the fine mesh and time step required to match the analytical solution for the verification case.'
+    verification = 'ver-1d.md'
+  []
+  [ver-1d_trapping_limited_heavy_csvdiff]
+    type = CSVDiff
+    input = ver-1d-trapping.i
+    should_execute = false # this test relies on the output files from ver-1c, so it shouldn't be run twice
+    csvdiff = ver-1d-trapping_out.csv
+    prereq = ver-1d_trapping_limited_heavy
+    requirement = 'The system shall be able to model a breakthrough problem where trapping is the rate limiting process with the fine mesh and time step required to match the analytical solution for the verification case and generate CSV data for use in comparisons with the analytic solution.'
+    verification = 'ver-1d.md'
+  []
+  [ver-1d_comparison]
+    type = RunCommand
+    command = 'python3 comparison_ver-1d.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solutions of verification cases 1d, modeling  a breakthrough problem where diffusion and trapping are the rate limiting processes.'
+    heavy = true
+    prereq = 'ver-1d_diffusion_limited_heavy ver-1d_trapping_limited_heavy'
+    required_python_packages = 'matplotlib numpy pandas os git'
   []
 []

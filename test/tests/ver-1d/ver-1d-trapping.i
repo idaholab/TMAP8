@@ -128,7 +128,7 @@ temperature = 1000
 [Functions]
   [BC_func]
     type = ParsedFunction
-    expression = '${fparse 3.1622e18 / cl}*tanh(10 * t )'
+    expression = '${fparse 3.1622e18 / cl}*tanh( 3 * t )'
   []
 []
 
@@ -176,11 +176,10 @@ temperature = 1000
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 1e-6
-    optimal_iterations = 7
+    optimal_iterations = 9
     growth_factor = 1.1
     cutback_factor = 0.909
   []
-  l_tol = 1e-11
 []
 
 [Outputs]

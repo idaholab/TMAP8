@@ -39,7 +39,6 @@ zeta = ((lambdaa**2) * nu * np.exp((Ed - epsilon) /
 
 D = 1.0                 # diffusivity (m^2/s)
 D_eff = D / (1 + (1/zeta))   # Effective diffusivity (m^2/s)
-print(D_eff)
 l = 1                   # slab thickness (m)
 c_o = c
 tau_be = l**2 / (2 * (np.pi)**2 * D_eff)
@@ -83,6 +82,7 @@ plt.close(fig)
 
 # ========================= Trapping limited ====================================
 tau_bd = l**2 * rho / (2 * c_o * D)  # breakthrough time
+
 analytical_time = [tau_bd, tau_bd]
 analytical_sol = [0, 3.2e18]  # Adding numbers according to the range of axis
 # to show the line for analytically calculated
@@ -99,6 +99,8 @@ ax = fig.add_subplot(gs[0])
 ax.plot(tmap_time, tmap_perm, label=r"TMAP8", c='tab:gray')
 ax.plot(analytical_time, analytical_sol,
         label=r"Analytical breakthrough time", c='k', linestyle='--')
+
+print(tmap_time[np.argmin(np.abs(tmap_perm-3.1622e18))])
 
 ax.set_xlabel(u'Time(s)')
 ax.set_ylabel(u"Permeation (atom/m$^2$s)")

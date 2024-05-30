@@ -51,14 +51,14 @@ The discriminant for which regime is dominant is the ratio of $\zeta$ to c/$\rho
 
 \begin{equation}
 \label{eqn:Deff}
-    D_eff = \frac{D}{1 + \frac{1}{\zeta}}
+    D_{eff} = \frac{D}{1 + \frac{1}{\zeta}}
 \end{equation}
 
 In this limit, the breakthrough time, defined as the intersection of the steepest tangent to the diffusion transient with the time axis, will be
 
 \begin{equation}
 \label{eqn:tau_be}
-    \tau_{b_e} = \frac{l^2}{2 \; \pi^2 \; D_eff}
+    \tau_{b_e} = \frac{l^2}{2 \; \pi^2 \; D_{eff}}
 \end{equation}
 
 where $l$ is the thickness of the slab and D is the diffusivity of the gas through the material. The permeation transient is then given by
@@ -107,8 +107,7 @@ For the deep trapping limit we took $\epsilon/k = 10000 K$ to give $\zeta = 1.00
 
 ### Notes
 
-The trapping test features some oscillations in the solution for whatever
-reason. In order for the oscillations to not take over the simulation, it seems
+The trapping test input file can generate oscillations in the solution due to the feedback loop between the diffusion PDE and trap evolution ODE. In order for the oscillations to not take over the simulation, it seems
 that the ratio of the **inverse of the Fourier number** must be kept
 sufficiently high, e.g. `h^2 / (D * dt)`. Included in this directory are three
 `png` files that show the permeation for different `h` and `dt` values. They are
@@ -120,5 +119,12 @@ summarized below:
 
 The oscillations in the permeation graph go away with increasing fineness in the
 mesh and in `dt`.
+
+To keep the oscillations damped, the verification is run with nx=1000 and an adaptive time stepper with an initial time step of $10^{-6}$. Additionally, the boundary condition (BC) on the diffusion variable $C_M$ is increased gradually from the initial condition value of the variable (zero) to one over using the function
+
+\begin{equation}
+    C_M(x=0) = \tanh(3t).
+\end{equation}
+This takes the BC to 99.5 % of it's actual value in 3 s, which is a small fraction of the breakthrough time of 500 s.
 
 !bibtex bibliography
