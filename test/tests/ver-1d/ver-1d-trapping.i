@@ -2,7 +2,6 @@ cl = 3.1622e18
 trap_per_free = 1e3
 N = 3.1622e22
 time_scaling = 1
-epsilon = 10000
 temperature = 1000
 
 [Mesh]
@@ -106,7 +105,6 @@ temperature = 1000
     type = ReleasingNodalKernel
     alpha_r = ${fparse 1e13 / time_scaling}
     temperature = ${temperature}
-    trapping_energy = ${epsilon}
     variable = trapped
   []
 []

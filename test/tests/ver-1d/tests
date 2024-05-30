@@ -19,6 +19,7 @@
   []
   [ver-1d_diffusion_limited_heavy_csvdiff]
     type = CSVDiff
+    heavy = true
     input = ver-1d-diffusion.i
     should_execute = false # this test relies on the output files from ver-1c, so it shouldn't be run twice
     csvdiff = ver-1d-diffusion_out.csv
@@ -45,6 +46,7 @@
   []
   [ver-1d_trapping_limited_heavy_csvdiff]
     type = CSVDiff
+    heavy = true
     input = ver-1d-trapping.i
     should_execute = false # this test relies on the output files from ver-1c, so it shouldn't be run twice
     csvdiff = ver-1d-trapping_out.csv
