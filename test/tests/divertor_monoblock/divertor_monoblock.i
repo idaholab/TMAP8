@@ -598,7 +598,7 @@
         # Ct0 = 1.0e-4                # E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 1
         Ct0 = 1.0e-4                # E.A. Hodille et al 2021 Nucl. Fusion 61 1260033, trap 2
         trap_per_free = 1.0e0       # 1.0e1
-        mobile = 'C_mobile_W'
+        mobile_concentration = 'C_mobile_W'
         extra_vector_tags = ref
     []
     [release_W]
@@ -622,7 +622,7 @@
         N = 1.0e0  # = 6.338e28 #/m^3 (W lattice density)
         Ct0 = 5.0e-5                # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
         trap_per_free = 1.0e0       # 1.0e1
-        mobile = 'C_mobile_Cu'
+        mobile_concentration = 'C_mobile_Cu'
         extra_vector_tags = ref
     []
     [release_Cu]
@@ -646,7 +646,7 @@
         Ct0 = 5.0e-5                # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
         # Ct0 = 4.0e-2                # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 5
         trap_per_free = 1.0e0       # 1.0e1
-        mobile = 'C_mobile_CuCrZr'
+        mobile_concentration = 'C_mobile_CuCrZr'
         extra_vector_tags = ref
     []
     [release_CuCrZr]
@@ -1044,7 +1044,7 @@
         type = Exodus
         sync_only = false
         # output at key moment in the first two cycles, and then at the end of the simulation
-        sync_times = '0.0 10.0 90.0 110.0 480.0 500.0 590.0 610.0 1200.0 1500.0 1600.0 1610.0 1690.0 1710.0 2080.0 2100.0 2190.0 2210.0 2800.0 3100.0 3400.0 8.0e4'
+        sync_times = '110.0 480.0 590.0 1600.0 1710.0 2080.0 2190.0 3400.0 8.0e4'
     []
     csv = true
     hide = 'time dt

@@ -238,6 +238,9 @@ about the results for this example case and their significance, the reader is re
   caption=Tritium concentration profile in W (left), Cu (center), and CuCrZr (right) after ten (A, top) and fifty 1,600 s cycles (B, bottom). This corresponds to Fig. 4 in Ref. [!cite](Shimada2024114438).
   style=display:block;margin-left:auto;margin-right:auto;width:40%
 
+!alert warning title=The exodus file in `gold` is a smaller version of the output
+The input file [/divertor_monoblock.i] returns the outputs that were used in Ref. [!cite](Shimada2024114438). However, a slightly modified version of this input is ran in [/divertor_monoblock/tests] as part of TMAP8's [Software Quality Assurance](sqa/index.md) process: It simulates only one pulse cycle, has a coarser mesh, and outputs the results less regularly to limit the file size. As a result, the exodus file on `gold` is a smaller version of the output generated when running the full input file.
+
 
 ## Complete input file
 
