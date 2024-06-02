@@ -117,6 +117,9 @@ Similarly, the weak form of the conservation of energy equation can be written b
 
 Then, to solve for the PDEs and physical phenomena, we can select appropriate kernels and boundary conditions (BCs) from MOOSE’s extensive library. The following three subsections describe each kernel, BC, and numerical method utilized in the present work.
 
+!listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=Variables
+
+
 ### Kernels
 
 For the mass conservation equation, we use “ADTimeDerivative” and “ADMatDiffusion” to solve the 1st and 3rd terms of [eq:concentration_weak].
@@ -125,6 +128,13 @@ respectively and simulate the trapping/release behavior of hydrogen isotopes in/
 For the conservation of energy equation, “SpecificHeatConductionTimeDerivative” and “HeatConduction” solve the 1st and 3rd terms of [eq:temperature_weak].
 “ADTimeDerivative,” “ADMatDiffusion,” “SpecificHeatConductionTimeDerivative,” and “HeatConduction” are MOOSE kernels commonly
 used to solve the time derivative, material diffusion in the material, and heat conduction equations in the material.
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=Kernels
+
+Nodal kernels are used for non-diffusive variables (trapped species).
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=NodalKernels
+
 
 ### Boundary conditions and history
 
@@ -153,6 +163,9 @@ The solute T atom concentration is set to zero at the inner CuCrZr tube (at $r =
 
 !media examples/figures/divertor_monoblock_history.png id=fig:tritium_temperature_history caption=Temperature profiles (orange) and integrated tritium concentration profiles (blue) during two 1,600-second-cycle plasma discharges. This corresponds to Fig. 2 in Ref. [!cite](Shimada2024114438).
 
+!listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=BCs
+
+
 ### Material properties
 
 We use the tritium mass transport properties listed in [tab:material_properties_tritium]
@@ -176,6 +189,11 @@ W	| 19,300	| 1.16$\times$10$^{2}$ +7.11$\times$10$^{-2}$ T –6.58$\times$10$^{-
 Cu	8,960 |	4.21$\times$10$^{2}$ –6.85$\times$10$^{-2}$ T (293 < T[K] <873) |	3.16$\times$10$^{2}$ +3.18$\times$10$^{-1}$ T –3.49$\times$10$^{-4}$ T2 +1.66$\times$10$^{-7}$ T3 (293 < T[K] <873)	|
 CuCrZr	|8,900|	390 |	3.87$\times$10$^{2}$ –1.28$\times$10$^{-1}$ T (293 < T(K)<927)	|
 
+!listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=Materials
+
+
+# Interface Kernels
+
 TMAP8 assumes equilibrium between the chemical potentials of the diffusing species similar to how
 TMAP4 and TMAP7 treated the diffusing species across two different materials with different chemical potentials.
 “SolubilityRatioMaterial” is used to treat solute concentration differences stemming from a difference in T solubilities across the interface.
@@ -190,6 +208,9 @@ creating a large solute concentration difference between W and Cu.
 Two-component solubility in W is used to keep the maximum solubility ratio between W and Cu to 104 at low temperature
 to avoid the convergence issue associated with calculating two significantly different solute concentration in W and Cu.
 
+!listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=InterfaceKernels
+
+
 ### Numerical method
 
 We use a standard preconditioner; the “single matrix preconditioner”.
@@ -197,6 +218,8 @@ The Newton method is used to model “transient” tritium and thermal transport
 It is important to note that MOOSE is equipped with the built-in Message Passing Interface (MPI) protocol,
 as tritium and thermal transport analysis of fifty 1,600 s-cycle plasma discharges in the 2D monoblock is
 performed in under 2 h using a single device/computer (3.5 GHz Apple M2 Pro, 10-Core CPU/16-Core GPU) with this MPI feature.
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=Executioner
 
 
 ## Results
