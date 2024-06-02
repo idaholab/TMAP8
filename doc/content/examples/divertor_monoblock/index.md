@@ -192,7 +192,7 @@ The diffusivity is defined as $D=D_0 \exp⁡(-E_D/k_B/T)$ and the solubility is 
 | Material | Density: $\rho$ (g/m$^3$) | Specific heat: $c_p$ (J/kg/K) | Thermal conductivity: $k_T$ (W/m/K) |
 | --- | --- | --- | --- |
 | W | 19,300 | 1.16$\times$10$^{2}$ +7.11$\times$10$^{-2}$ T –6.58$\times$10$^{-5}$ T2 +3.24$\times$10$^{-8}$ T3 –5.45$\times$10$^{-12}$ T4 (293 < T(K)<2500) | 2.41$\times$10$^{2}$ –2.90$\times$10$^{-1}$ T + 2.54$\times$10$^{-4}$ T2 –1.03$\times$10$^{-7}$ T3 +1.52$\times$10$^{-11}$ T4 (293 < T(K) <2500) |
-| Cu | 8,960 | 4.21$\times$10$^{2}$ –6.85$\times$10$^{-2}$ T (293 < T[K] <873) | 3.16$\times$10$^{2}$ +3.18$\times$10$^{-1}$ T –3.49$\times$10$^{-4}$ T2 +1.66$\times$10$^{-7}$ T3 (293 < T[K] <873) |
+| Cu | 8,960 | 4.21$\times$10$^{2}$ –6.85$\times$10$^{-2}$ T (293 < T(K) <873) | 3.16$\times$10$^{2}$ +3.18$\times$10$^{-1}$ T –3.49$\times$10$^{-4}$ T2 +1.66$\times$10$^{-7}$ T3 (293 < T(K) <873) |
 | CuCrZr | 8,900 | 390 | 3.87$\times$10$^{2}$ –1.28$\times$10$^{-1}$ T (293 < T(K)<927) |
 
 !listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=Materials
@@ -239,12 +239,12 @@ about the results for this example case and their significance, the reader is re
   style=display:block;margin-left:auto;margin-right:auto;width:40%
 
 !alert warning title=The exodus file in `gold` is a smaller version of the output
-The input file [/divertor_monoblock.i] returns the outputs that were used in Ref. [!cite](Shimada2024114438). However, a slightly modified version of this input is ran in [/divertor_monoblock/tests] as part of TMAP8's [Software Quality Assurance](sqa/index.md) process: It simulates only one pulse cycle, has a coarser mesh, and outputs the results less regularly to limit the file size. As a result, the exodus file on `gold` is a smaller version of the output generated when running the full input file.
+The input file [/divertor_monoblock.i] returns the outputs that were used in Ref. [!cite](Shimada2024114438). However, a slightly modified version of this input is run in [/divertor_monoblock/tests] as part of TMAP8's [Software Quality Assurance](sqa/index.md) process: It simulates only one pulse cycle, has a coarser mesh, and outputs the results less regularly to limit the file size. As a result, the exodus file on `gold` is a smaller version of the output generated when running the full input file.
 
 
 ## Complete input file
 
-Below is the complete input file, which can be ran with around 4 processors. Note that this input file has not been optimized for computational costs.
+Below is the complete input file, which can be run with around 4 processors. Note that this input file has not been optimized for computational costs.
 
 !listing test/tests/divertor_monoblock/divertor_monoblock.i
 

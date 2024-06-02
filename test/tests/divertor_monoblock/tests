@@ -15,7 +15,7 @@
     cli_args = 'Outputs/exodus/sync_only=true Executioner/end_time=1600 Mesh/ccmg/rings="1 10 8 40"'
     requirement = 'The system shall model heat and tritium transport in a divertor monoblock during pulsed operation.'
     heavy = true
-    min_parallel = 4
+    min_parallel = 2
     max_time = 50000
   []
 []
