@@ -18,8 +18,8 @@ num_summation_terms = 1000
 # GR Longhurst, SL Harms, ES Marwil, and BG Miller. Verification and validation of
 # tmap4. Technical Report, EG and G Idaho, Inc., Idaho Falls, ID (United States), 1992.
 
-N_o = 3.1622e22          # For convenience lattice density chosen as 3.16e22 atom/m^3
-# Reference 1
+# For convenience lattice density chosen as 3.1622e22 atom/m^3 [Reference 1]
+N_o = 3.1622e22          
 
 # Rest of the parameters based on reference 2.
 
@@ -72,7 +72,7 @@ ax.plot(tmap_time, tmap_perm, label=r"TMAP8", c='tab:gray')
 ax.set_xlabel(u'Time(s)')
 ax.set_ylabel(u"Permeation (atom/m$^2$s)")
 ax.legend(loc="best")
-# ax.set_xlim(left=0)
+ax.set_xlim(left=0)
 ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
@@ -84,9 +84,10 @@ plt.close(fig)
 tau_bd = l**2 * rho / (2 * c_o * D)  # breakthrough time
 
 analytical_time = [tau_bd, tau_bd]
-analytical_sol = [0, 3.2e18]  # Adding numbers according to the range of axis
+# Adding numbers according to the range of axis
 # to show the line for analytically calculated
 # breakthrough time.
+analytical_sol = [0, 3.2e18]
 
 tmap_sol = pd.read_csv("./gold/ver-1d-trapping_out.csv")
 tmap_time = tmap_sol['time']
@@ -105,6 +106,8 @@ print(tmap_time[np.argmin(np.abs(tmap_perm-3.1622e18))])
 ax.set_xlabel(u'Time(s)')
 ax.set_ylabel(u"Permeation (atom/m$^2$s)")
 ax.legend(loc="lower right")
+ax.set_xlim(left=0)
+x.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()

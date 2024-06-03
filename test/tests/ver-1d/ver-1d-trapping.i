@@ -94,7 +94,7 @@ temperature = 1000
     type = TrappingNodalKernel
     variable = trapped
     alpha_t = '${fparse 1e15 / time_scaling}'
-    N = '${fparse 3.1622e22 / cl}'
+    N = '${fparse ${N} / cl}'
     Ct0 = 0.1
     mobile_concentration = 'mobile'
     temperature = ${temperature}
@@ -126,7 +126,7 @@ temperature = 1000
 [Functions]
   [BC_func]
     type = ParsedFunction
-    expression = '${fparse 3.1622e18 / cl}*tanh( 3 * t )'
+    expression = '${fparse cl / cl}*tanh( 3 * t )'
   []
 []
 
@@ -141,12 +141,6 @@ temperature = 1000
     type = ScalePostprocessor
     value = outflux
     scaling_factor = ${cl}
-  []
-  [nonlin_it]
-    type = NumNonlinearIterations
-  []
-  [dt]
-    type = TimestepSize
   []
   [min_trapped]
     type = NodalExtremeValue
