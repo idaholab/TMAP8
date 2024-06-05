@@ -230,12 +230,18 @@ performed in under 2 h using a single device/computer (3.5 GHz Apple M2 Pro, 10-
 
 ## Results
 
-The simulation results from this example are shown in [fig:results2D]. For more results, information, and discussion
-about the results for this example case and their significance, the reader is referred to Ref. [!cite](Shimada2024114438).
+The simulation results from this example are shown in [fig:results2D_a] and [fig:results2D_b].
+For more results, information, and discussion about the results for this example case and
+their significance, the reader is referred to Ref. [!cite](Shimada2024114438).
 
-!media examples/figures/divertor_monoblock_results_2D.png
-  id=fig:results2D
-  caption=Tritium concentration profile in W (left), Cu (center), and CuCrZr (right) after ten (A, top) and fifty 1,600 s cycles (B, bottom). This corresponds to Fig. 4 in Ref. [!cite](Shimada2024114438).
+!media examples/figures/divertor_monoblock_results_2D_a.png
+  id=fig:results2D_a
+  caption=Tritium concentration profile in W (left), Cu (center), and CuCrZr (right) after ten 1,600 s cycles. This corresponds to Fig. 4A in Ref. [!cite](Shimada2024114438).
+  style=display:block;margin-left:auto;margin-right:auto;width:40%
+
+!media examples/figures/divertor_monoblock_results_2D_b.png
+  id=fig:results2D_b
+  caption=Tritium concentration profile in W (left), Cu (center), and CuCrZr (right) after fifty 1,600 s cycles. This corresponds to Fig. 4B in Ref. [!cite](Shimada2024114438).
   style=display:block;margin-left:auto;margin-right:auto;width:40%
 
 !alert warning title=The exodus file in `gold` is a smaller version of the output
