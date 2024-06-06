@@ -19,7 +19,7 @@ num_summation_terms = 1000
 # tmap4. Technical Report, EG and G Idaho, Inc., Idaho Falls, ID (United States), 1992.
 
 # For convenience lattice density chosen as 3.1622e22 atom/m^3 [Reference 1]
-N_o = 3.1622e22          
+N_o = 3.1622e22
 
 # Rest of the parameters based on reference 2.
 
@@ -107,7 +107,7 @@ ax.set_xlabel(u'Time(s)')
 ax.set_ylabel(u"Permeation (atom/m$^2$s)")
 ax.legend(loc="lower right")
 ax.set_xlim(left=0)
-x.set_ylim(bottom=0)
+ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()
