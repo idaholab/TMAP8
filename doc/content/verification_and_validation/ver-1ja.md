@@ -16,7 +16,7 @@ The tritium (T) is uniformly distributed over the thickness of the slab with an 
 The tritium decays to $^3$He with a half-life of $t_{1/2} = 12.3232$ years.
 The concentrations of the two species are calculated.
 
-The evolution of the tritium and helium concentration, $C_T$ and C_{He}, respectively,
+The evolution of the tritium and helium concentration, $C_T$ and $C_{He}$, respectively,
 are governed by
 
 \begin{equation}
@@ -40,7 +40,7 @@ The concentration of T in atoms/m$^3$, $C_T$, at any given time is given by
     C_T = C_T^0 \exp(-kt),
 \end{equation}
 
-where $T$ is the time in seconds, $C_T^0 = 1.5 \times 10^{5}$ atoms/m$^3$ is the initial concentration of tritium, and .
+where $t$ is the time in seconds and $C_T^0 = 1.5 \times 10^{5}$ atoms/m$^3$ is the initial concentration of tritium.
 Applying a mass balance over the system, the concentration of helium in atoms/m$^3$, $C_{He}$, is given by
 \begin{equation}
     C_{He} = C_T^0 \left[1- \exp(-kt) \right].
@@ -52,7 +52,7 @@ Applying a mass balance over the system, the concentration of helium in atoms/m$
 
 [ver-1ja_results] shows the TMAP8 predictions and how they compare to the analytical solution
 for the decay of tritium and associated growth of $^3$He in a diffusion segment.
-The TMAP8 predictions match the analytical solution.
+The TMAP8 predictions match the analytical solution, with root mean square percentage errors (RMSPE) of * and * for the $C_T$ and $C_{He}$ concentration curves respectively.
 
 !media figures/ver-1ja_comparison_analytical.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto

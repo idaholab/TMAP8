@@ -2,14 +2,12 @@
 # Radioactive Decay of Mobile Tritium in a Slab
 
 # Case and model parameters (adapted from TMAP7)
-tritium_concentration_initial = 1.5e5 # atoms/m3
-half_life = 12.3232 # years
-conversion_years_to_s = ${fparse 365.25*24*60*60}
-half_life_s = ${fparse half_life*conversion_years_to_s} # s
+tritium_concentration_initial = ${units 1.5e5 atoms/m3}
+half_life = ${units 12.3232 years -> s}
 decay_rate_constant = ${fparse 0.693/half_life_s} # 1/s
 
 # Simulation parameters
-end_time = ${fparse 100*conversion_years_to_s} # s
+end_time = ${units 100 years -> s}
 dt_start = ${fparse end_time/250} # s
 
 [Mesh]

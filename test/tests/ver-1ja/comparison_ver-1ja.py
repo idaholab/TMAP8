@@ -32,7 +32,7 @@ analytical_helium = tritium_concentration_initial * ( 1. - np.exp(- decay_rate_c
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
-tmap8_time_years = [t/conversion_years_to_s for t in tmap8_time]
+tmap8_time_years = tmap8_time/conversion_years_to_s
 ax.plot(tmap8_time_years,tmap8_tritium,label=r"$C_T$ - TMAP8",c='tab:blue', alpha=0.5)
 ax.plot(tmap8_time_years,analytical_tritium,label=r"$C_T$ - Analytical",c='b', linestyle='--')
 ax.plot(tmap8_time_years,tmap8_helium,label=r"$C_{He}$ - TMAP8",c='tab:red', alpha=0.5)
@@ -40,7 +40,7 @@ ax.plot(tmap8_time_years,analytical_helium,label=r"$C_{He}$ - Analytical",c='r',
 ax.set_xlabel(u'Time (years)')
 ax.set_ylabel(r"Concentration (atoms/m$^3$)")
 ax.legend(loc="best")
-ax.set_xlim(left=0)
+ax.set_xlim(left=0,right=100)
 ax.set_ylim(bottom=0)
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
