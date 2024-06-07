@@ -177,6 +177,7 @@ The solute T atom concentration is set to zero at the inner CuCrZr tube (at $r =
 ### Material properties
 
 !style halign=left
+!style halign=left
 We use the tritium mass transport properties listed in [tab:material_properties_tritium]
 to solve the mass conservation equation ([eq:concentration_weak]) for two variables:
 $C_s$ and $C_t$ (i.e., solute and trapped T atom concentrations) in three materials
