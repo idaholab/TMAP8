@@ -215,7 +215,7 @@ The solubility ratio jump is calculated via the following:
 J = \frac{C_{s,1}}{K_{s,1}} - \frac{C_{s,2}}{K_{s,2}}.
 \end{equation}
 
-[ADPenaltyInterfaceDiffusion.md] is used to conserve the particle flux at this interface between two different solubilities.
+[ADPenaltyInterfaceDiffusion](PenaltyInterfaceDiffusion.md) is used to conserve the particle flux at this interface between two different solubilities.
 The extremely low tritium solubility in W at low temperature leads to an extremely low solute concentration in W,
 creating a large solute concentration difference between W and Cu.
 Two-component solubility in W is used to keep the maximum solubility ratio between W and Cu to 104 at low temperature
