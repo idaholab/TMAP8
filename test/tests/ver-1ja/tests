@@ -6,7 +6,7 @@
     type = CSVDiff
     input = ver-1ja.i
     csvdiff = ver-1ja_out.csv
-    requirement = 'The system shall be able to model decay of tritium and associated growth of He in a diffusion segment, with the fine mesh and timestep required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution.'
+    requirement = 'The system shall be able to model decay of tritium and associated growth of He in a diffusion segment and generate CSV data for use in comparisons with the analytic solution.'
   []
   [ver-1ja_comparison]
     type = RunCommand

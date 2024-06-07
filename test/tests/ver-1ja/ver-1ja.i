@@ -74,10 +74,9 @@ dt_start = ${fparse end_time/250} # s
   dtmin = 1
   l_max_its = 10
   nl_max_its = 5
-  nl_rel_tol = 1e-07
-  petsc_options = '-snes_converged_reason -ksp_monitor_true_residual'
-  petsc_options_iname = '-pc_type -mat_mffd_err'
-  petsc_options_value = 'lu       1e-5'
+  petsc_options = '-snes_converged_reason'
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = 'lu'
   line_search = 'bt'
 []
 

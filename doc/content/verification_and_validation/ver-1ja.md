@@ -13,7 +13,7 @@ This verification case tests the first order radioactive decay capabilities of T
 and is based on the case published in the TMAP7 V&V suite [!citep](ambrosek2008verification).
 The model assumes pre-charging of a slab with tritium.
 The tritium (T) is uniformly distributed over the thickness of the slab with an initial concentration of $C_T^0 = 1.5 \times 10^{5}$ atoms/m$^3$.
-The tritium decays to $^3$He with a half-life of $t_{1/2} = 12.3232$ years.
+The tritium decays to $^3\text{He}$ with a half-life of $t_{1/2} = 12.3232$ years.
 The concentrations of the two species are calculated.
 
 The evolution of the tritium and helium concentration, $C_T$ and $C_{He}$, respectively,
@@ -30,34 +30,33 @@ where $t$ is the time in s, concentrations are in atoms/m$^3$, and $k= 0.693/t_{
 
 !alert warning title=TMAP8 uses different model parameters than TMAP7
 The initial tritium concentration in TMAP7 was defined as $C_T^0 = 1.5$ atoms/m$^3$. To use a more realistic values, TMAP8 uses $C_T^0 = 1.5 \times 10^{5}$ atoms/m$^3$.
-Moreover, $k$ is defined as $k= 0.693/t_{1/2}=1.78199 \times 10^{-9} $ 1/s instead of $1.78241 \times 10^{-9} $ 1/s to be fully consistent with the half-life value (assuming 365.25 days in a year).
+Moreover, $k$ is defined as $k=0.693/t_{1/2} \approx 1.78199 \times 10^{-9}$ 1/s instead of $1.78241 \times 10^{-9}$ 1/s to be fully consistent with the half-life value (assuming 365.25 days in a year).
 
 ## Analytical Solution
 
-The concentration of T in atoms/m$^3$, $C_T$, at any given time is given by
+The concentration of T at any given time is given by
 
 \begin{equation}
     C_T = C_T^0 \exp(-kt),
 \end{equation}
 
 where $t$ is the time in seconds and $C_T^0 = 1.5 \times 10^{5}$ atoms/m$^3$ is the initial concentration of tritium.
-Applying a mass balance over the system, the concentration of helium in atoms/m$^3$, $C_{He}$, is given by
+Applying a mass balance over the system, the time evolution of helium concentration is given by
 \begin{equation}
     C_{He} = C_T^0 \left[1- \exp(-kt) \right].
 \end{equation}
 
 
-
 ### Results
 
 [ver-1ja_results] shows the TMAP8 predictions and how they compare to the analytical solution
-for the decay of tritium and associated growth of $^3$He in a diffusion segment.
+for the decay of tritium and associated growth of $^3\text{He}$ in a diffusion segment.
 The TMAP8 predictions match the analytical solution, with root mean square percentage errors (RMSPE) of * and * for the $C_T$ and $C_{He}$ concentration curves respectively.
 
 !media figures/ver-1ja_comparison_analytical.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=ver-1ja_results
-    caption= Comparison of TMAP8 predictions against the analytical solution for the decay of tritium and associated growth of $^3$He in a diffusion segment.
+    caption= Comparison of TMAP8 predictions against the analytical solution for the decay of tritium and associated growth of $^3\text{He}$ in a diffusion segment.
 
 ### Input file
 
