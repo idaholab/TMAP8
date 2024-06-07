@@ -3,11 +3,11 @@
 
 # Case and model parameters (adapted from TMAP7)
 tritium_concentration_initial = ${units 1.5e5 atoms/m3}
-half_life = ${units 12.3232 years -> s}
-decay_rate_constant = ${fparse 0.693/half_life_s} # 1/s
+half_life = ${units 12.3232 year -> s}
+decay_rate_constant = ${fparse 0.693/half_life} # 1/s
 
 # Simulation parameters
-end_time = ${units 100 years -> s}
+end_time = ${units 100 year -> s}
 dt_start = ${fparse end_time/250} # s
 
 [Mesh]
