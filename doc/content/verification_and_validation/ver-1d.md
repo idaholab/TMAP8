@@ -4,7 +4,23 @@
 
 ## Test Description
 
-This verification problem is taken from [!cite](longhurst1992verification). It models permeation through a membrane with a constant source in which traps are operative. The breakthrough time may have one of two limiting values depending on whether the trapping is in the effective diffusivity or strong-trapping regime. A trapping parameter is defined by:
+This verification problem is taken from [!cite](longhurst1992verification). It models permeation through a membrane with a constant source in which traps are operative. We solve the following equations
+
+\begin{equation}
+    \label{eqn:diffusion_mobile}
+    \frac{dC_M}{dt} = - \nabla D \nabla C_M - \text{trap\_per\_free} \cdot \frac{dC_T}{dt},
+\end{equation}
+\begin{equation}
+    \label{eqn:trapped_rate}
+    \frac{dC_T}{dt} = \alpha_t  \frac {C_T^{empty} C_M } {(N \cdot \text{trap\_per\_free})} - \alpha_r C_T,
+\end{equation}
+and
+\begin{equation}
+    C_T^{empty} = (C_{T0} \cdot N - \text{trap\_per\_free} \cdot C_T  ) ,
+\end{equation}
+where $C_M$ and $C_T$ are the concentrations of the mobile and trapped species respectively, $D$ is the diffusivity of the mobile species, $\alpha_t$ and $\alpha_r$ are the trapping and release rate coefficients, $\text{trap\_per\_free}$ is a factor converting the magnitude of $C_T$ to be closer to $C_M$ for better numerical convergence, $C_{T0}$ is the fraction of host sites that can contribute to trapping, $C_T^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density. 
+
+The breakthrough time may have one of two limiting values depending on whether the trapping is in the effective diffusivity or strong-trapping regime. A trapping parameter is defined by:
 
 \begin{equation}
   \label{eqn:zeta}
@@ -35,14 +51,14 @@ The discriminant for which regime is dominant is the ratio of $\zeta$ to c/$\rho
 
 \begin{equation}
 \label{eqn:Deff}
-    D_eff = \frac{D}{1 + \frac{1}{\zeta}}
+    D_{eff} = \frac{D}{1 + \frac{1}{\zeta}}
 \end{equation}
 
 In this limit, the breakthrough time, defined as the intersection of the steepest tangent to the diffusion transient with the time axis, will be
 
 \begin{equation}
 \label{eqn:tau_be}
-    \tau_{b_e} = \frac{l^2}{2 \; \pi^2 \; D_eff}
+    \tau_{b_e} = \frac{l^2}{2 \; \pi^2 \; D_{eff}}
 \end{equation}
 
 where $l$ is the thickness of the slab and D is the diffusivity of the gas through the material. The permeation transient is then given by
@@ -91,9 +107,8 @@ For the deep trapping limit we took $\epsilon/k = 10000 K$ to give $\zeta = 1.00
 
 ### Notes
 
-The trapping test features some oscillations in the solution for whatever
-reason. In order for the oscillations to not take over the simulation, it seems
-that the ratio of the **inverse of the Fourier number** must be kept
+The trapping test input file can generate oscillations in the solution due to the feedback loop between the diffusion PDE and trap evolution ODE. In order for the oscillations to not take over the simulation, it seems
+that the ratio of the inverse of the Fourier number must be kept
 sufficiently high, e.g. `h^2 / (D * dt)`. Included in this directory are three
 `png` files that show the permeation for different `h` and `dt` values. They are
 summarized below:
@@ -104,5 +119,12 @@ summarized below:
 
 The oscillations in the permeation graph go away with increasing fineness in the
 mesh and in `dt`.
+
+To keep the oscillations damped, the verification is run with nx=1000 and an adaptive time stepper with an initial time step of $10^{-6}$. Additionally, the boundary condition (BC) on the diffusion variable $C_M$ is increased gradually from the initial condition value of the variable (zero) to one over using the function
+
+\begin{equation}
+    C_M(x=0) = \tanh(3t).
+\end{equation}
+This takes the BC to 99.5 % of it's actual value in 3 s, which is a small fraction of the breakthrough time of 500 s.
 
 !bibtex bibliography
