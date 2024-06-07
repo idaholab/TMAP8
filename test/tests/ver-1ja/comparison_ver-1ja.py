@@ -37,6 +37,13 @@ ax.plot(tmap8_time_years,tmap8_tritium,label=r"$C_T$ - TMAP8",c='tab:blue', alph
 ax.plot(tmap8_time_years,analytical_tritium,label=r"$C_T$ - Analytical",c='b', linestyle='--')
 ax.plot(tmap8_time_years,tmap8_helium,label=r"$C_{He}$ - TMAP8",c='tab:red', alpha=0.5)
 ax.plot(tmap8_time_years,analytical_helium,label=r"$C_{He}$ - Analytical",c='r', linestyle='--')
+# Root Mean Square Percentage Error calculations
+RMSE_Ct = np.linalg.norm(tmap8_tritium-analytical_tritium)
+err_percent_Ct = RMSE_Ct*100/np.mean(analytical_tritium)
+ax.text(65, 1e4, '$C_T$ RMSPE = %.2f '%err_percent_Ct+'%',fontweight='bold',color = 'tab:blue')
+RMSE_CHe = np.linalg.norm(tmap8_helium-analytical_helium)
+err_percent_CHe = RMSE_CHe*100/np.mean(analytical_helium)
+ax.text(65, 13.8e4, '$C_{He}$ RMSPE = %.2f '%err_percent_CHe+'%',fontweight='bold',color = 'tab:red')
 ax.set_xlabel(u'Time (years)')
 ax.set_ylabel(r"Concentration (atoms/m$^3$)")
 ax.legend(loc="best")

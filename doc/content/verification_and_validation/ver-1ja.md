@@ -51,12 +51,13 @@ Applying a mass balance over the system, the time evolution of helium concentrat
 
 [ver-1ja_results] shows the TMAP8 predictions and how they compare to the analytical solution
 for the decay of tritium and associated growth of $^3\text{He}$ in a diffusion segment.
-The TMAP8 predictions match the analytical solution, with root mean square percentage errors (RMSPE) of * and * for the $C_T$ and $C_{He}$ concentration curves respectively.
+The TMAP8 predictions match the analytical solution, with root mean square percentage errors
+(RMSPE) of 0.79% and 0.17% for the $C_T$ and $C_{He}$ concentration curves respectively.
 
 !media figures/ver-1ja_comparison_analytical.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=ver-1ja_results
-    caption= Comparison of TMAP8 predictions against the analytical solution for the decay of tritium and associated growth of $^3\text{He}$ in a diffusion segment.
+    caption= Comparison of TMAP8 predictions against the analytical solution for the decay of tritium and associated growth of $^3\text{He}$ in a diffusion segment. The RMSPE is very low for both species.
 
 ### Input file
 
