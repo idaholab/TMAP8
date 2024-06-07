@@ -56,6 +56,31 @@ In the input file, the mesh is defined as:
 
 !listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=Mesh
 
+### Nomenclature of variables and physical parameters
+
+!style halign=left
+[tab:variables] lists the variables and physical parameters used in this example with their units.
+
+!table id=tab:variables caption=Nomenclature of variables and physical parameters used in this example.
+| Symbol | Variable or Physical Property | Unit |
+| --- | --- | --- |
+| $C_s$ | Concentration of solute (mobile) species | m$^{−3}$ |
+| $C_t$ | Concentration of trapped species | m$^{−3}$ |
+| $T$ | Temperature | K |
+| $D$ | Diffusivity of solute (mobile) species | m$^{2}$ s$^{-1}$ |
+| $K_s$ | Solubility of solute (mobile) species | m$^{−3}$ Pa$^{-1/2}$ |
+| $C_{total}$ | Total concentration of species $C_{total}=C_s + C_t$ | m$^{−3}$ |
+| $C_t^e$ | Concentration of empty trapping sites | m$^{−3}$ |
+| $C_t^0$ | Concentration of trapping sites $C_t^e=C_t^0-C_t$ | m$^{−3}$ |
+| $\alpha_t$ | Trapping rate coefficient, $2.75 \times 10^{11}$ | s$^{−1}$ |
+| $\alpha_r$ | Release rate coefficient $\alpha_r=\alpha_{r0} \exp⁡((-E_{dt})/(k_b T))$ | s$^{−1}$ |
+| $\alpha_{r0}$ | Pre-exponential factor, $8.40 \times 10^{12}$ | s$^{−1}$ |
+| $E_{dt}$ | Detrapping energy | eV |
+| $N$ | Atomic number density | m$^{−3}$ |
+| $\rho$ | Density | g m$^{-3}$ |
+| $c_p$ | Specific heat | J kg$^{-1}$ K$^{-1}$ |
+| $k_T$ | Thermal conductivity | W m$^{-1}$ K$^{-1}$ |
+
 
 ### Variables and governing equations
 
@@ -75,26 +100,6 @@ Second, the strong form of the conservation of energy equation is written as:
 \end{equation}
 
 [tab:variables] lists all the symbols and definitions used in [eq:concentration] and [eq:temperature].
-
-!table id=tab:variables caption=Nomenclature of all the variables and physical parameters used in [eq:concentration] and [eq:temperature].
-| Symbol | Variable or Physical Property | Unit |
-| --- | --- | --- |
-| $C_s$ | Concentration of solute (mobile) species | m$^{−3}$ |
-| $C_t$ | Concentration of trapped species | m$^{−3}$ |
-| $T$ | Temperature | K |
-| $D$ | Diffusivity of solute (mobile) species | m$^{2}$ s$^{-1}$ |
-| $K_s$ | Solubility of solute (mobile) species | m$^{−3}$ Pa$^{-1/2}$ |
-| $C_{total}$ | Total concentration of species $C_{total}=C_s + C_t$ | m$^{−3}$ |
-| $C_t^e$ | Concentration of empty trapping sites | m$^{−3}$ |
-| $C_t^0$ | Concentration of trapping sites $C_t^e=C_t^0-C_t$ | m$^{−3}$ |
-| $\alpha_t$ | Trapping rate coefficient, $2.75 \times 10^{11}$ | s$^{−1}$ |
-| $\alpha_r$ | Release rate coefficient $\alpha_r=\alpha_{r0} \exp⁡((-E_{dt})/(k_b T))$ | s$^{−1}$ |
-| $\alpha_{r0}$ | Pre-exponential factor, $8.40 \times 10^{12}$ | s$^{−1}$ |
-| $E_{dt}$ | Detrapping energy | eV |
-| $N$ | Atomic number density | m$^{−3}$ |
-| $\rho$ | Density | g m$^{-3}$ |
-| $c_p$ | Specific heat | J kg$^{-1}$ K$^{-1}$ |
-| $k_T$ | Thermal conductivity | W m$^{-1}$ K$^{-1}$ |
 
 The next step is to convert these two strong-form PDEs into their weak forms by multiplying with a test function, $\psi$, and integrating over a domain, $\Omega$ with surface $\delta \Omega$ and outward-facing normal vector $\hat{n}$. Using the divergence theorem, one can obtain the weak form of the mass conservation equation ([eq:concentration]) as follows:
 
@@ -140,6 +145,19 @@ re-used to represent time derivative, diffusion, and heat conduction terms in a 
 !listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=NodalKernels
 
 
+### AuxVariables and AuxKernels
+
+!style halign=left
+[AuxVariables.md] are used to track quantities that are not solved for by the [!ac](PDEs),
+but are needed to compute materials properties,
+or are desirable to obtain as outputs, such as the total concentration of tritium or flux values.
+[AuxKernels.md] provide the expressions that define the `AuxVariables`.
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=AuxVariables
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=AuxKernels
+
+
 ### Boundary conditions and history
 
 !style halign=left
@@ -156,27 +174,42 @@ a 400-second steady-state plasma discharge, a 100-second plasma ramp-down, and a
 Up to 50 cycles are simulated to achieve the total discharge.
 [fig:tritium_temperature_history] shows the integrated (solute, total and trapped) tritium concentration profiles in the monoblock.
 It shows that implantation fluxes and temperatures vary linearly up to (from) their steady-state values from (up to) their initial values during ramp-up (ramp-down).
-During the steady-state plasma discharge, we set a heat flux of 10 MW m$^{-2}$ at the top of the 2D monoblock (at $y = 14.0$ mm)
-and a cooling temperature of 552 K at the inner CuCrZr tube (at $r = 6.0$ mm).
-We assume a 100% T plasma with a 5.0 $\times$ 10$^{23}$ m$^{-2}$$\cdot$s$^{-1}$ plasma particle flux
-(which is 50% of 1.0 $\times$ 10$^{24}$ DT m$^{-2}$$\cdot$s$^{-1}$ plasma particle flux),
-and only 0.1% of the incident plasma particle flux (5.0 $\times$ 10$^{20}$ m$^{-2}$$\cdot$s$^{-1}$) entered the first layer of mesh at $y = 14.0$ mm.
-We treated this plasma exposure by setting the flux BC (5.0 $\times$ 10$^{16}$ m$^{-3}$$\cdot$s$^{-1}$) of the solute T atom concentration in the first layer of mesh
-(1.0 $\times$ 10$^{–4}$ m) at $y = 14.0$ mm in order to avoid simulating the complex plasma implantation and recombination phenomena
-via an extremely fine mesh size (∼10$^{–10}$ m) and a long computation time.
-The solute T atom concentration is set to zero at the inner CuCrZr tube (at $r = 6.0$ mm).
 
 !media examples/figures/divertor_monoblock_history.png
   id=fig:tritium_temperature_history
-  caption=Temperature profiles (orange) and integrated tritium concentration profiles (blue) during two 1,600-second-cycle plasma discharges. This corresponds to Fig. 2 in Ref. [!cite](Shimada2024114438).
+  caption=Temperature profiles (orange) and integrated tritium concentration profiles (blue) during two 1,600-second-cycle plasma discharges. This corresponds to Fig. 2 in [!cite](Shimada2024114438).
   style=display:block;margin-left:auto;margin-right:auto;width:60%
+
+During the steady-state plasma discharge, we set a heat flux of 10 MW m$^{-2}$ at the top of the 2D monoblock (at $y = 14.0$ mm)
+and a cooling temperature of 552 K at the inner CuCrZr tube (at $r = 6.0$ mm).
+We assume a 100% T plasma with a 5.0 $\times$ 10$^{23}$ m$^{-2}$$\cdot$s$^{-1}$ plasma particle flux
+(which is half of the full 1.0 $\times$ 10$^{24}$ DT m$^{-2}$$\cdot$s$^{-1}$ plasma particle flux),
+and only 0.1% of the incident plasma particle flux (5.0 $\times$ 10$^{20}$ m$^{-2}$$\cdot$s$^{-1}$)
+entered the first layer of mesh at the exposed surface ($y = 14.0$ mm) [!cite](Shimada2024114438).
+The solute T atom concentration is set to zero at the inner CuCrZr tube (at $r = 6.0$ mm).
+
+We treated this plasma exposure by setting the flux BC of the
+solute T atom concentration at the exposed surface ($y = 14.0$ mm)
+as a simplification of the complex plasma implantation and recombination phenomena,
+which would require a very fine mesh and increase computational costs.
 
 !listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=BCs
 
 
-### Material properties
+### Functions
 
 !style halign=left
+
+In this example, [Functions.md] are used to define the time-dependent tritium and heat flux at the exposed surface,
+as well as the coolant temperature.
+Functions can also be spatially-dependent.
+The functions are then provided to BCs, as described above.
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=Functions
+
+
+### Material properties
+
 !style halign=left
 We use the tritium mass transport properties listed in [tab:material_properties_tritium]
 to solve the mass conservation equation ([eq:concentration_weak]) for two variables:
@@ -200,13 +233,14 @@ The diffusivity is defined as $D=D_0 \exp⁡(-E_D/k_B/T)$ and the solubility is 
 | --- | --- | --- | --- |
 | W | 19,300 | 1.16$\times$10$^{2}$ +7.11$\times$10$^{-2}$ T –6.58$\times$10$^{-5}$ T$^{2}$ +3.24$\times$10$^{-8}$ T$^{3}$ –5.45$\times$10$^{-12}$ T$^{4}$ (293 < T (K) < 2500) | 2.41$\times$10$^{2}$ –2.90$\times$10$^{-1}$ T + 2.54$\times$10$^{-4}$ T$^{2}$ –1.03$\times$10$^{-7}$ T$^{3}$ +1.52$\times$10$^{-11}$ T$^{4}$ (293 < T (K) < 2500) |
 | Cu | 8,960 | 4.21$\times$10$^{2}$ –6.85$\times$10$^{-2}$ T (293 < T (K) < 873) | 3.16$\times$10$^{2}$ +3.18$\times$10$^{-1}$ T –3.49$\times$10$^{-4}$ T$^{2}$ +1.66$\times$10$^{-7}$ T$^{3}$ (293 < T (K) < 873) |
-| CuCrZr | 8,900 | 390 | 3.87$\times$10$^{2}$ –1.28$\times$10$^{-1}$ T (293 < T (K) < 927) | 
+| CuCrZr | 8,900 | 390 | 3.87$\times$10$^{2}$ –1.28$\times$10$^{-1}$ T (293 < T (K) < 927) |
 
 !listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=Materials
 
 
 # Interface Kernels
 
+!style halign=left
 TMAP8 assumes equilibrium between the chemical potentials of the diffusing species similar to how
 TMAP4 and TMAP7 treated the diffusing species across two different materials with different chemical potentials.
 [SolubilityRatioMaterial.md] is used to treat solute concentration differences stemming from a difference in T solubilities across the interface.
@@ -226,6 +260,7 @@ to avoid the convergence issue associated with calculating two significantly dif
 
 ### Numerical method
 
+!style halign=left
 We use a standard preconditioner: the [“single matrix preconditioner”](SingleMatrixPreconditioner.md).
 The Newton method is used to model the [transient](Transient.md) tritium and thermal transport in a 2D monoblock.
 It is important to note that MOOSE is equipped with the built-in Message Passing Interface (MPI) protocol,
@@ -237,6 +272,7 @@ performed in under 2 hours using a single device/computer (3.5 GHz Apple M2 Pro,
 
 ## Results
 
+!style halign=left
 The simulation results from this example are shown in [fig:results2D_a] and [fig:results2D_b].
 For more results, information, and discussion about the results for this example case and
 their significance, the reader is referred to [!cite](Shimada2024114438).

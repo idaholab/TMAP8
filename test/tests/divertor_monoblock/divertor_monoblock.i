@@ -1,11 +1,11 @@
 ### Nomenclatures
-### C_mobile_j      mobile H concentraion in "j" material, where j = CuCrZr, Cu, W
-### C_trapped_j     trapped H concentraion in "j" material, where j = CuCrZr, Cu, W
-### C_total_j       total H concentraion in "j" material, where j = CuCrZr, Cu, W
+### C_mobile_j      mobile H concentration in "j" material, where j = CuCrZr, Cu, W
+### C_trapped_j     trapped H concentration in "j" material, where j = CuCrZr, Cu, W
+### C_total_j       total H concentration in "j" material, where j = CuCrZr, Cu, W
 ###
-### S_empty_j       empty site concentraion in "j" material, where j = CuCrZr, Cu, W
-### S_trapped_j     trapped site concentraion in "j" material, where j = CuCrZr, Cu, W
-### S_total_j       total site Hconcentraion in "j" material, where j = CuCrZr, Cu, W
+### S_empty_j       empty site concentration in "j" material, where j = CuCrZr, Cu, W
+### S_trapped_j     trapped site concentration in "j" material, where j = CuCrZr, Cu, W
+### S_total_j       total site H concentration in "j" material, where j = CuCrZr, Cu, W
 ###
 ### F_permeation    permeation flux
 ### F_recombination recombination flux
@@ -123,8 +123,6 @@
 []
 
 [AuxVariables]
-    [time]
-    []
     [flux_y]
         order = FIRST
         family = MONOMIAL
@@ -224,13 +222,121 @@
     []
 []
 
-[AuxKernels]
-    [time_aux]
-        type = FunctionAux
-        variable = time
-        function = time_func
-        execute_on = 'INITIAL LINEAR'
+[Kernels]
+    ############################## Kernels for W (block = 4)
+    [diff_W]
+        type = ADMatDiffusion
+        variable = C_mobile_W
+        diffusivity = diffusivity_W
+        block = 4
+        extra_vector_tags = ref
     []
+    [time_diff_W]
+        type = ADTimeDerivative
+        variable = C_mobile_W
+        block = 4
+        extra_vector_tags = ref
+    []
+    [coupled_time_W]
+        type = ScaledCoupledTimeDerivative
+        variable = C_mobile_W
+        v = C_trapped_W
+        factor = 1e0
+        block = 4
+        extra_vector_tags = ref
+    []
+    [heat_conduction_W]
+        type = HeatConduction
+        variable = temperature
+        diffusion_coefficient = thermal_conductivity_W
+        block = 4
+        extra_vector_tags = ref
+    []
+    [time_heat_conduction_W]
+        type = SpecificHeatConductionTimeDerivative
+        variable = temperature
+        specific_heat = specific_heat_W
+        density = density_W
+        block = 4
+        extra_vector_tags = ref
+    []
+    ############################## Kernels for Cu (block = 3)
+    [diff_Cu]
+        type = ADMatDiffusion
+        variable = C_mobile_Cu
+        diffusivity = diffusivity_Cu
+        block = 3
+        extra_vector_tags = ref
+    []
+    [time_diff_Cu]
+        type = ADTimeDerivative
+        variable = C_mobile_Cu
+        block = 3
+        extra_vector_tags = ref
+    []
+    [coupled_time_Cu]
+        type = ScaledCoupledTimeDerivative
+        variable = C_mobile_Cu
+        v = C_trapped_Cu
+        factor = 1e0
+        block = 3
+        extra_vector_tags = ref
+    []
+    [heat_conduction_Cu]
+        type = HeatConduction
+        variable = temperature
+        diffusion_coefficient = thermal_conductivity_Cu
+        block = 3
+        extra_vector_tags = ref
+    []
+    [time_heat_conduction_Cu]
+        type = SpecificHeatConductionTimeDerivative
+        variable = temperature
+        specific_heat = specific_heat_Cu
+        density = density_Cu
+        block = 3
+        extra_vector_tags = ref
+    []
+    ############################## Kernels for CuCrZr (block = 2)
+    [diff_CuCrZr]
+        type = ADMatDiffusion
+        variable = C_mobile_CuCrZr
+        diffusivity = diffusivity_CuCrZr
+        block = 2
+        extra_vector_tags = ref
+    []
+    [time_diff_CuCrZr]
+        type = ADTimeDerivative
+        variable = C_mobile_CuCrZr
+        block = 2
+        extra_vector_tags = ref
+    []
+    [coupled_time_CuCrZr]
+        type = ScaledCoupledTimeDerivative
+        variable = C_mobile_CuCrZr
+        v = C_trapped_CuCrZr
+        factor = 1e0
+        block = 2
+        extra_vector_tags = ref
+    []
+    [heat_conduction_CuCrZr]
+        type = HeatConduction
+        variable = temperature
+        diffusion_coefficient = thermal_conductivity_CuCrZr
+        block = 2
+        extra_vector_tags = ref
+    []
+    [time_heat_conduction_CuCrZr]
+        type = SpecificHeatConductionTimeDerivative
+        variable = temperature
+        specific_heat = specific_heat_CuCrZr
+        density = density_CuCrZr
+        block = 2
+        extra_vector_tags = ref
+    []
+[]
+
+[AuxKernels]
     ############################## AuxKernels for W (block = 4)
     [Scaled_mobile_W]
         variable = Sc_C_mobile_W
@@ -448,120 +554,6 @@
     []
 []
 
-[Kernels]
-    ############################## Kernels for W (block = 4)
-    [diff_W]
-        type = ADMatDiffusion
-        variable = C_mobile_W
-        diffusivity = diffusivity_W
-        block = 4
-        extra_vector_tags = ref
-    []
-    [time_diff_W]
-        type = ADTimeDerivative
-        variable = C_mobile_W
-        block = 4
-        extra_vector_tags = ref
-    []
-    [coupled_time_W]
-        type = ScaledCoupledTimeDerivative
-        variable = C_mobile_W
-        v = C_trapped_W
-        factor = 1e0
-        block = 4
-        extra_vector_tags = ref
-    []
-    [heat_conduction_W]
-        type = HeatConduction
-        variable = temperature
-        diffusion_coefficient = thermal_conductivity_W
-        block = 4
-        extra_vector_tags = ref
-    []
-    [time_heat_conduction_W]
-        type = SpecificHeatConductionTimeDerivative
-        variable = temperature
-        specific_heat = specific_heat_W
-        density = density_W
-        block = 4
-        extra_vector_tags = ref
-    []
-    ############################## Kernels for Cu (block = 3)
-    [diff_Cu]
-        type = ADMatDiffusion
-        variable = C_mobile_Cu
-        diffusivity = diffusivity_Cu
-        block = 3
-        extra_vector_tags = ref
-    []
-    [time_diff_Cu]
-        type = ADTimeDerivative
-        variable = C_mobile_Cu
-        block = 3
-        extra_vector_tags = ref
-    []
-    [coupled_time_Cu]
-        type = ScaledCoupledTimeDerivative
-        variable = C_mobile_Cu
-        v = C_trapped_Cu
-        factor = 1e0
-        block = 3
-        extra_vector_tags = ref
-    []
-    [heat_conduction_Cu]
-        type = HeatConduction
-        variable = temperature
-        diffusion_coefficient = thermal_conductivity_Cu
-        block = 3
-        extra_vector_tags = ref
-    []
-    [time_heat_conduction_Cu]
-        type = SpecificHeatConductionTimeDerivative
-        variable = temperature
-        specific_heat = specific_heat_Cu
-        density = density_Cu
-        block = 3
-        extra_vector_tags = ref
-    []
-    ############################## Kernels for CuCrZr (block = 2)
-    [diff_CuCrZr]
-        type = ADMatDiffusion
-        variable = C_mobile_CuCrZr
-        diffusivity = diffusivity_CuCrZr
-        block = 2
-        extra_vector_tags = ref
-    []
-    [time_diff_CuCrZr]
-        type = ADTimeDerivative
-        variable = C_mobile_CuCrZr
-        block = 2
-        extra_vector_tags = ref
-    []
-    [coupled_time_CuCrZr]
-        type = ScaledCoupledTimeDerivative
-        variable = C_mobile_CuCrZr
-        v = C_trapped_CuCrZr
-        factor = 1e0
-        block = 2
-        extra_vector_tags = ref
-    []
-    [heat_conduction_CuCrZr]
-        type = HeatConduction
-        variable = temperature
-        diffusion_coefficient = thermal_conductivity_CuCrZr
-        block = 2
-        extra_vector_tags = ref
-    []
-    [time_heat_conduction_CuCrZr]
-        type = SpecificHeatConductionTimeDerivative
-        variable = temperature
-        specific_heat = specific_heat_CuCrZr
-        density = density_CuCrZr
-        block = 2
-        extra_vector_tags = ref
-    []
-[]
-
 [InterfaceKernels]
     [tied_4to3]
         type = ADPenaltyInterfaceDiffusion
@@ -687,10 +679,6 @@
 []
 
 [Functions]
-    [time_func]
-        type = ParsedFunction
-        expression = 't'
-    []
     ### Maximum mobile flux of 7.90e-13 at the top surface (1.0e-4 [m])
     ### 1.80e23/m^2-s = (5.0e23/m^2-s) *(1-0.999) = (7.90e-13)*(6.338e28)/(1.0e-4)  at steady state
     [mobile_flux_bc_func]
@@ -1047,7 +1035,7 @@
         sync_times = '110.0 480.0 590.0 1600.0 1710.0 2080.0 2190.0 3400.0 8.0e4'
     []
     csv = true
-    hide = 'time dt
+    hide = 'dt
             Int_C_mobile_W Int_C_trapped_W Int_C_total_W
             Int_C_mobile_Cu Int_C_trapped_Cu Int_C_total_Cu
             Int_C_mobile_CuCrZr Int_C_trapped_CuCrZr Int_C_total_CuCrZr'
