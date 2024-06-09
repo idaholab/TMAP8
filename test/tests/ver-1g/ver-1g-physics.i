@@ -4,6 +4,10 @@
 ## c. diff_conc_TMAP7.i  -> TMAP7 different concentration case
 ## Example: ~/projects/TMAP8/tmap8-opt -i ver-1g.i equal_conc.i
 
+R = 8.31446261815324 # Gas constant (from PhysicalConstants.h - https://physics.nist.gov/cgi-bin/cuu/Value?r)
+T = '${units 25 degC -> K}' # Temperature
+Na = 6.02214076E23 # Avogadro's constant (from PhysicalConstants.h - https://physics.nist.gov/cgi-bin/cuu/Value?na)
+
 [Mesh]
   type = GeneratedMesh
   dim = 2
