@@ -26,13 +26,15 @@ MultiSpeciesMigrationCG::validParams()
   // Add reaction parameters
   params.addParam<std::vector<std::vector<VariableName>>>(
       "reacting_species", "For each species (outer indexing), the list of species they react with");
+  params.addParam<std::vector<std::vector<VariableName>>>(
+      "product_species", "For each species (outer indexing), for each reactant, the species being created");
   params.addParam<std::vector<std::vector<MaterialPropertyName>>>(
       "reaction_coefficients",
       "For each species (outer indexing), the reaction coefficient for the reaction");
 
   // Remove diffusion parameters for now: talk to PC
-  params.suppressParameter<std::vector<MooseFunctorName>>("diffusivity_functor");
-  params.suppressParameter<std::vector<MaterialPropertyName>>("diffusivity_matprop");
+  params.suppressParameter<std::vector<MooseFunctorName>>("diffusivity_functors");
+  params.suppressParameter<std::vector<MaterialPropertyName>>("diffusivity_matprops");
 
   return params;
 }
@@ -42,6 +44,8 @@ MultiSpeciesMigrationCG::MultiSpeciesMigrationCG(const InputParameters & paramet
 {
   checkTwoDVectorParamsSameLength<VariableName, MaterialPropertyName>("reacting_species",
                                                                       "reaction_coefficients");
+  checkTwoDVectorParamsSameLength<VariableName, VariableName>("reacting_species",
+                                                              "product_species");
 }
 
 void
@@ -52,9 +56,11 @@ MultiSpeciesMigrationCG::addFEKernels()
   if (!isParamValid("reacting_species"))
     return;
   const auto & reacting_species =
-      getParam<std::vector<std::vector<MooseFunctorName>>>("reacting_species");
+      getParam<std::vector<std::vector<VariableName>>>("reacting_species");
+    const auto & product_species =
+        getParam<std::vector<std::vector<VariableName>>>("product_species");
   const auto & reaction_coeffs =
-      getParam<std::vector<std::vector<MooseFunctorName>>>("reaction_coefficients");
+      getParam<std::vector<std::vector<MaterialPropertyName>>>("reaction_coefficients");
 
   for (const auto s : index_range(_species_names))
   {
@@ -68,9 +74,14 @@ MultiSpeciesMigrationCG::addFEKernels()
       params.set<NonlinearVariableName>("variable") = var_name;
       assignBlocks(params, _blocks);
 
+      // Double-indexed vectors arent initialized as expected
+      if (reacting_species.size() <= s)
+        continue;
+
       for (const auto c : index_range(reacting_species[s]))
       {
-        params.set<std::vector<VariableName>>("vs") = {reacting_species[s][c]};
+        _console << s << " " << c << " " << reacting_species.size() << " " << reacting_species[s].size() << std::endl;
+        params.set<std::vector<VariableName>>("vs") = {var_name, reacting_species[s][c]};
         params.set<MaterialPropertyName>("reaction_rate_name") = reaction_coeffs[s][c];
         params.set<Real>("coeff") = -1;
 
@@ -79,16 +90,29 @@ MultiSpeciesMigrationCG::addFEKernels()
                                    reacting_species[s][c],
                                params);
 
-        // only if the target species is a nonlinear variable
+        // only if the other reacting species is a nonlinear variable
         if (nonlinearVariableExists(reacting_species[s][c], false))
         {
           params.set<NonlinearVariableName>("variable") = reacting_species[s][c];
-          params.set<std::vector<VariableName>>("vs") = {var_name};
+          params.set<std::vector<VariableName>>("vs") = {var_name, reacting_species[s][c]};
 
-          params.set<Real>("coeff") = 1;
+          params.set<Real>("coeff") = -1;
           getProblem().addKernel(kernel_type,
                                  prefix() + var_name + "_reaction_" + reacting_species[s][c] + "_" +
                                      var_name,
+                                 params);
+        }
+
+        // only if the target species is a nonlinear variable
+        if (nonlinearVariableExists(product_species[s][c], false))
+        {
+          params.set<NonlinearVariableName>("variable") = product_species[s][c];
+          params.set<std::vector<VariableName>>("vs") = {var_name, reacting_species[s][c]};
+
+          params.set<Real>("coeff") = 1;
+          getProblem().addKernel(kernel_type,
+                                 prefix() + var_name + "_production_" + var_name + "_" +
+                                     reacting_species[s][c],
                                  params);
         }
       }
