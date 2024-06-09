@@ -701,6 +701,18 @@
                         if((t % 1600) < 500.0, 552,
                         if((t % 1600) < 600.0, 552.0 - (552-300)*((t % 1600)-500)/100, 300)))'
     []
+    [timestep_function]
+        type = ParsedFunction
+        expression = 'if((t % 1600) <   10.0,  20,
+                      if((t % 1600) <   90.0,  40,
+                      if((t % 1600) <  110.0,  20,
+                      if((t % 1600) <  480.0,  40,
+                      if((t % 1600) <  500.0,  20,
+                      if((t % 1600) <  590.0,   4,
+                      if((t % 1600) <  610.0,  20,
+                      if((t % 1600) < 1500.0, 200,
+                      if((t % 1600) < 1600.0,  40,  2)))))))))'
+    []
 []
 
 [Materials]
@@ -977,6 +989,11 @@
         variable = temperature
         point = '0 6.0e-3 0'
     []
+    # limit timestep
+    [timestep_max_pp] # s
+    type = FunctionValuePostprocessor
+    function = timestep_function
+  []
 []
 
 [VectorPostprocessors]
@@ -1005,25 +1022,21 @@
     solve_type = NEWTON
     petsc_options_iname = '-pc_type'
     petsc_options_value = 'lu'
-    nl_rel_tol  = 1e-5       # 1e-8
-    nl_abs_tol  = 1.1e-7       #  1.0e-7    <== lower value fixes the issue with C_mobile_W at SSP, (t % 1600)~150 sec, but creates another issue at ramp down, (t % 1600)~550 sec,
-    l_tol       = 1e-8
-    end_time = 8.0e4   #   50 ITER shots (3.0e4 s plasma, 2.0e4 SSP)
+    nl_rel_tol  = 1e-6 # 1e-8 works for 1 cycle
+    nl_abs_tol  = 1e-7 # 1e-11 works for 1 cycle
+    end_time = 8.0e4   # 50 ITER shots (3.0e4 s plasma, 2.0e4 SSP)
     automatic_scaling = true
     line_search = 'none'
-    nl_max_its = 50
     dtmin = 1e-4
+    nl_max_its = 18
     [TimeStepper]
-        type = FunctionDT
-        function =     'if((t % 1600) <   10.0,  20,
-                        if((t % 1600) <   90.0,  40,
-                        if((t % 1600) <  110.0,  20,
-                        if((t % 1600) <  480.0,  40,
-                        if((t % 1600) <  500.0,  20,
-                        if((t % 1600) <  590.0,   4,
-                        if((t % 1600) <  610.0,  20,
-                        if((t % 1600) < 1500.0, 200,
-                        if((t % 1600) < 1600.0,  40,  2)))))))))'
+        type = IterationAdaptiveDT
+        dt = 20
+        optimal_iterations = 15
+        iteration_window = 1
+        growth_factor = 1.2
+        cutback_factor = 0.8
+        timestep_limiting_postprocessor = timestep_max_pp
     []
 []
 

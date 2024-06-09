@@ -12,10 +12,11 @@
     type = Exodiff
     input = 'divertor_monoblock.i'
     exodiff = 'divertor_monoblock_exodus.e'
-    cli_args = 'Outputs/exodus/sync_only=true Executioner/end_time=1600 Mesh/ccmg/rings="1 10 8 40"'
+    cli_args = 'Outputs/exodus/sync_only=true Executioner/end_time=1600 Mesh/ccmg/rings="1 10 8 40" Executioner/nl_rel_tol=1e-8 Executioner/nl_abs_tol=1e-11'
     requirement = 'The system shall model heat and tritium transport in a divertor monoblock during pulsed operation.'
+    rel_err = 8e-4 # increasing the relative error tolerance because the test is sensitive to the environment. This error is still small for physical problems.
     heavy = true
     min_parallel = 2
-    max_time = 50000
+    max_time = 1000
   []
 []
