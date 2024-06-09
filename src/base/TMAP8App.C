@@ -40,6 +40,7 @@ TMAP8App::registerAll(Factory & f, ActionFactory & af, Syntax & syntax)
   /* register custom execute flags, action syntax, etc. here */
   registerSyntax("PointTrappingPhysics", "Physics/SpeciesTrapping/ODE/*");
   registerSyntax("FieldTrappingPhysics", "Physics/SpeciesTrapping/ContinuousGalerkin/*");
+  registerSyntax("MultiSpeciesMigrationCG", "Physics/FieldMigration/ContinuousGalerkin/*");
 }
 
 void
