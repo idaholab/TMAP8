@@ -20,9 +20,12 @@ cl = 3.1622e18
       [mobile_diff]
         variable_name = 'mobile'
         diffusivity_matprop = 1
-        
+
         dirichlet_boundaries = 'structure_left structure_right'
         boundary_values = '${fparse 3.1622e18 / cl} 0'
+
+        # Test differences are too large with default preconditioning
+        preconditioning = 'none'
       []
     []
   []
