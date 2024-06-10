@@ -41,7 +41,8 @@ SpeciesTrappingPhysicsBase::validParams()
       {},
       "Initial values for each species equation on each component. If a single vector is "
       "specified, the same initial conditions will be used on every component");
-  params.addParam<std::vector<MooseFunctorName>>("temperatures", "Temperatures for each enclosure component");
+  params.addParam<std::vector<MooseFunctorName>>(
+      "temperatures", {}, "Temperatures for each enclosure component");
   return params;
 }
 
