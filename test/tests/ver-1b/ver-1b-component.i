@@ -17,7 +17,7 @@
       [multi-D]
         variable_name = 'u'
         diffusivity_matprop = 1
-        
+
         dirichlet_boundaries = 'structure_left structure_right'
         boundary_values = '1 0'
       []
@@ -82,7 +82,7 @@
 [Outputs]
   [exodus]
     type = Exodus
-    file_base = 'ver-1b_out'
+    file_base = 'ver-1b-component_out'
   []
   [csv]
     type = CSV
