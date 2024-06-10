@@ -26,7 +26,7 @@ registerMooseAction("TMAP8App", PointTrappingPhysics, "add_bc");
 InputParameters
 PointTrappingPhysics::validParams()
 {
-  InputParameters params = PhysicsBase::validParams();
+  InputParameters params = SpeciesTrappingPhysicsBase::validParams();
   params.addClassDescription("Add Physics for the trapping of species on enclosures / 0D components.");
 
   params.addRequiredParam<std::vector<std::vector<Real>>>(
@@ -69,7 +69,7 @@ PointTrappingPhysics::addComponent(const ComponentAction & component)
   checkComponentType<Enclosure0D>(component);
   const auto & comp = dynamic_cast<const Enclosure0D &>(component);
 
-  // This must be added
+  // Keep track of the names of the components
   _components.push_back(comp.name());
   if (isParamSetByUser("components"))
     paramError("components",
@@ -95,7 +95,7 @@ PointTrappingPhysics::addComponent(const ComponentAction & component)
                                                 true,
                                                 std::vector<Real>(0, n_species_component));
   processComponentParameters<MooseFunctorName>(
-      "temperatures", comp.name(), _component_temperatures, std::to_string(comp.temperature()), false, 0);
+      "temperatures", comp.name(), _component_temperatures, std::to_string(comp.temperature()), false, "0");
 
   // TODO: check that inputs are consistent once all components have been added.
   // - the pressure, temperature and the scaling factors should be positive (defense in depth from
