@@ -48,6 +48,8 @@ specific_heat_Fe = 447.0 # J/kg/K
         # Boundary conditions
         fixed_temperature_boundaries = 'right left'
         boundary_temperatures = '${T_SB} ${T_SA}'
+        # default preconditioning does not work
+        preconditioning = 'none'
       []
     []
   []
