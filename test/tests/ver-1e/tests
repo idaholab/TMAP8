@@ -17,6 +17,9 @@
     exodiff = ver-1e-component_test_exodus.e
     cli_args = 'Executioner/dt=0.2 Executioner/end_time=50 Outputs/exodus/file_base=ver-1e-component_test_exodus'
     requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition as the species source.'
+    # Very small dimensions
+    exodiff_opts = '-match_ids'
+    map = False
   []
   [ver-1e_TMAP4_heavy]
     type = Exodiff

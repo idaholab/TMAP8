@@ -18,8 +18,10 @@
         thermal_conductivity = 'thermal_conductivity'
 
         # Boundary conditions
-        fixed_temperature_boundaries = 'right left'
-        boundary_temperatures = '300 0'
+        fixed_temperature_boundaries = 'right'
+        boundary_temperatures = '300'
+        heat_flux_boundaries = 'left'
+        boundary_heat_fluxes = '0'
       []
     []
   []
