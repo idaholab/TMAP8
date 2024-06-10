@@ -23,8 +23,8 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
 pressure_unit = 1 # number of pressure units in a Pascal
 
 [Physics]
-  [TMAP8]
-    [SpeciesTrapping]
+  [SpeciesTrapping]
+    [ODE]
       [0d_trapping]
         species = 'v'
         # should not be scaled
