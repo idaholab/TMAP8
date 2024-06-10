@@ -20,9 +20,9 @@
         type = ConcentricCircleMeshGenerator
         num_sectors = 36
         rings = '1 30 20 110'
-        radii = '6.00e-3 7.5e-3 8.5e-3'
+        radii = '${units 6 mm -> m} ${units 7.5 mm -> m} ${units 8.5 mm -> m}'
         has_outer_square = on
-        pitch = 28.0e-3
+        pitch = ${units 28 mm -> m}
         portion = left_half
         preserve_volumes = false
         smoothing_max_it = 3
@@ -79,7 +79,7 @@
     [temperature]
         order = FIRST
         family = LAGRANGE
-        initial_condition = 300
+        initial_condition = ${units 300 K}
     []
     ######################### Variables for W (block = 4)
     [C_mobile_W]
