@@ -148,10 +148,10 @@ re-used to represent time derivative, diffusion, and heat conduction terms in a 
 ### AuxVariables and AuxKernels
 
 !style halign=left
-[AuxVariables.md] are used to track quantities that are not solved for by the [!ac](PDEs),
+[AuxVariables](AuxVariable.md) are used to track quantities that are not solved for by the [!ac](PDEs),
 but are needed to compute materials properties,
 or are desirable to obtain as outputs, such as the total concentration of tritium or flux values.
-[AuxKernels.md] provide the expressions that define the `AuxVariables`.
+[AuxKernels](AuxKernel.md) provide the expressions that define the `AuxVariables`.
 
 !listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=AuxVariables
 
@@ -200,8 +200,8 @@ which would require a very fine mesh and increase computational costs.
 
 !style halign=left
 
-In this example, [Functions.md] are used to define the time-dependent tritium and heat flux at the exposed surface,
-as well as the coolant temperature.
+In this example, [Functions](Functions/index.md) are used to define the time-dependent tritium
+and heat flux at the exposed surface, as well as the coolant temperature.
 Functions can also be spatially-dependent.
 The functions are then provided to BCs, as described above.
 
