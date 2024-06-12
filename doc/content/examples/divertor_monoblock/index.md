@@ -279,12 +279,12 @@ their significance, the reader is referred to [!cite](Shimada2024114438).
 
 !media examples/figures/divertor_monoblock_results_2D_a.png
   id=fig:results2D_a
-  caption=Tritium concentration profile in W (left), Cu (center), and CuCrZr (right) after ten 1,600-second cycles. This corresponds to Fig. 4A in [!cite](Shimada2024114438).
+  caption=Tritium concentration profile in W (left), Cu (center), and CuCrZr (right) after ten 1,600-second cycles ($t=14912$ s). This corresponds to Fig. 4A in [!cite](Shimada2024114438).
   style=display:block;margin-left:auto;margin-right:auto;width:40%
 
 !media examples/figures/divertor_monoblock_results_2D_b.png
   id=fig:results2D_b
-  caption=Tritium concentration profile in W (left), Cu (center), and CuCrZr (right) after fifty 1,600-second cycles. This corresponds to Fig. 4B in [!cite](Shimada2024114438).
+  caption=Tritium concentration profile in W (left), Cu (center), and CuCrZr (right) after fifty 1,600-second cycles ($t=78912$ s). This corresponds to Fig. 4B in [!cite](Shimada2024114438).
   style=display:block;margin-left:auto;margin-right:auto;width:40%
 
 !alert warning title=The exodus file in `gold` is a smaller version of the output
