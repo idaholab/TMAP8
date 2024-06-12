@@ -19,6 +19,7 @@ TMAP8 also contains [example cases](examples/index.md), which showcase how TMAP8
 | ver-1fd | [Convective Heating](ver-1fd.md)                                                                  |
 | ver-1g  | [Simple Forward Chemical Reaction](ver-1g.md)                                                     |
 | ver-1gc | [Series Chemical Reactions](ver-1gc.md)                                                           |
+| ver-1ha | [Convective Gas Outflow Problem](ver-1ha.md)                                                      |
 | ver-1ja | [Radioactive Decay of Mobile Tritium in a Slab](ver-1ja.md)                                       |
 | ver-1jb | [Radioactive Decay of Mobile Tritium in a Slab with a Distributed Trap Concentration](ver-1jb.md) |
 
