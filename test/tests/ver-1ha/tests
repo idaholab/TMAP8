@@ -1,21 +1,12 @@
 [Tests]
     design = 'ADMatReaction.md'
     issues = '#148'
-    [ver-1ha]
-      type = Exodiff
-      input = 'ver-1ha.i'
-      exodiff = ver-1ha_out.e
-      requirement = 'The system shall be able to model a convective outflow problem and calculate the pressure and concentration of the gas in the second and third enclosure.'
-      verification = 'ver-1ha.md'
-    []
     [ver-1ha_csv]
       type = CSVDiff
       input = 'ver-1ha.i'
-      should_execute = False # this test relies on the output files from ver-1h, so it shouldn't be run twice
       csvdiff = ver-1ha_out.csv
       requirement = 'The system shall be able to model a convective outflow problem and calculate the pressure and concentration of the gas in the second and third enclosure and to generate CSV data for use in comparisons with the analytic solution over time.'
       verification = 'ver-1ha.md'
-      prereq = ver-1ha
     []
     [ver-1ha_comparison]
       type = RunCommand

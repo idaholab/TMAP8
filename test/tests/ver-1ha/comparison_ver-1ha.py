@@ -14,10 +14,10 @@ os.chdir(os.path.dirname(__file__))
 # Extract TMAP8 results
 tmap8_sol = pd.read_csv("./gold/ver-1ha_out.csv")
 tmap8_sol_time = tmap8_sol['time']
-tmap8_sol_P2 = tmap8_sol['P2_val']
-tmap8_sol_P3 = tmap8_sol['P3_val']
-tmap8_sol_C2 = tmap8_sol['C2_val']
-tmap8_sol_C3 = tmap8_sol['C3_val']
+tmap8_sol_P2 = tmap8_sol['P2_value']
+tmap8_sol_P3 = tmap8_sol['P3_value']
+tmap8_sol_C2 = tmap8_sol['C2_value']
+tmap8_sol_C3 = tmap8_sol['C3_value']
 
 
 # ===============================================================================
@@ -27,15 +27,15 @@ def get_analytical_solution(t_vect):
     Args:
         t_vect (ndarray): time in s
     Returns:
-        P2 (np.array): pressure of T3 in the 2nd enclosure in Pa
-        P3 (np.array): pressure of T3 in the 3rd enclosure in Pa
-        C2 (np.array): concentration of T3 in the 2nd enclosure in atoms/m^3
-        C3 (np.array): concentration of T3 in the 3rd enclosure in atoms/m^3
+        P2 (np.array): pressure of T2 in the 2nd enclosure in Pa
+        P3 (np.array): pressure of T2 in the 3rd enclosure in Pa
+        C2 (np.array): concentration of T2 in the 2nd enclosure in atoms/m^3
+        C3 (np.array): concentration of T2 in the 3rd enclosure in atoms/m^3
     """
-    P1 = 1.0    # Pa
-    Q = 0.1    # m^3/s
-    V2 = 1      # m^3
-    V3 = 1      # m^3
+    P1 = 1.0  # Pa
+    Q = 0.1  # m^3/s
+    V2 = 1  # m^3
+    V3 = 1  # m^3
     R = 8.31446261815324  # J/K/mol
     T = 303  # K
     N_a = 6.02214076e23  # at/mol
@@ -93,7 +93,7 @@ err_percent_C3 = RMSE_C3*100/np.mean(C3)
 ax.text(20, 1.125e20, '(C3) RMSPE = %.2f ' %
         err_percent_C3+'%', fontweight='bold', color='tab:blue')
 
-plt.savefig('ver-1h_comparison_conc.png', bbox_inches='tight')
+plt.savefig('ver-1h_comparison_conc.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 
 # ===============================================================================
@@ -132,5 +132,5 @@ err_percent_P3 = RMSE_P3*100/np.mean(P3)
 ax.text(20, 0.55, '(P3) RMSPE = %.2f ' %
         err_percent_P3+'%', fontweight='bold', color='tab:blue')
 
-plt.savefig('ver-1h_comparison_pressure.png', bbox_inches='tight')
+plt.savefig('ver-1h_comparison_pressure.png', bbox_inches='tight', dpi=300)
 plt.close(fig)

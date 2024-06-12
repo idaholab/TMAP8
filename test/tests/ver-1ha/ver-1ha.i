@@ -1,7 +1,7 @@
 P1 = '${units 1 Pa}'
-R = '${units 8.31446261815324 J/K/mol }'
-T = '${units 303 K }'
-N_a = '${units 6.02214076e23 at/mol }'
+R = '${units 8.31446261815324 J/K/mol}' # from PhysicalConstants
+T = '${units 303 K}'
+N_a = '${units 6.02214076e23 at/mol}' # from PhysicalConstants
 Q = '${units 0.1 m^3/s }'
 V2 = '${units 1 m^3}'
 V3 = '${units 1 m^3}'
@@ -79,22 +79,22 @@ Q_by_V3 = '${fparse Q / V3}'
 []
 
 [Postprocessors]
-    [P2_val]
+    [P2_value]
         type = ElementAverageValue
         variable = P2
         execute_on = 'INITIAL TIMESTEP_END'
     []
-    [P3_val]
+    [P3_value]
         type = ElementAverageValue
         variable = P3
         execute_on = 'INITIAL TIMESTEP_END'
     []
-    [C2_val]
+    [C2_value]
         type = ElementAverageMaterialProperty
         mat_prop = C2
         execute_on = 'INITIAL TIMESTEP_END'
     []
-    [C3_val]
+    [C3_value]
         type = ElementAverageMaterialProperty
         mat_prop = C3
         execute_on = 'INITIAL TIMESTEP_END'
@@ -108,11 +108,10 @@ Q_by_V3 = '${fparse Q / V3}'
     petsc_options_iname = '-pc_type'
     petsc_options_value = 'lu'
     automatic_scaling = true
-    end_time = '${units 40 s }'
+    end_time = '${units 40 s}'
     dt = 0.1
 []
 
 [Outputs]
-    exodus = true
     csv = true
 []
