@@ -180,12 +180,12 @@ It shows that implantation fluxes and temperatures vary linearly up to (from) th
   caption=Temperature profiles (orange) and integrated tritium concentration profiles (blue) during two 1,600-second-cycle plasma discharges. This corresponds to Fig. 2 in [!cite](Shimada2024114438).
   style=display:block;margin-left:auto;margin-right:auto;width:60%
 
-During the steady-state plasma discharge, we set a heat flux of 10 MW m$^{-2}$ at the top of the 2D monoblock (at $y = 14.0$ mm)
+During the steady-state plasma discharge, we set a heat flux of 10 MW$\cdot$m$^{-2}$ at the top of the 2D monoblock (at $y = 14.0$ mm)
 and a cooling temperature of 552 K at the inner CuCrZr tube (at $r = 6.0$ mm).
 We assume a 100% T plasma with a 5.0 $\times$ 10$^{23}$ m$^{-2}$$\cdot$s$^{-1}$ plasma particle flux
-(which is half of the full 1.0 $\times$ 10$^{24}$ DT m$^{-2}$$\cdot$s$^{-1}$ plasma particle flux),
+(which is half of the full 1.0 $\times$ 10$^{24}$ m$^{-2}$$\cdot$s$^{-1}$ DT plasma particle flux),
 and only 0.1% of the incident plasma particle flux (5.0 $\times$ 10$^{20}$ m$^{-2}$$\cdot$s$^{-1}$)
-entered the first layer of mesh at the exposed surface ($y = 14.0$ mm) [!cite](Shimada2024114438).
+entered the first layer of mesh at the exposed surface ($y = 14.0$ mm) as in [!cite](Shimada2024114438).
 The solute T atom concentration is set to zero at the inner CuCrZr tube (at $r = 6.0$ mm).
 
 We treated this plasma exposure by setting the flux BC of the
