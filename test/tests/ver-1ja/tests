@@ -6,12 +6,12 @@
     type = CSVDiff
     input = ver-1ja.i
     csvdiff = ver-1ja_out.csv
-    requirement = 'The system shall be able to model decay of tritium and associated growth of He in a diffusion segment and generate CSV data for use in comparisons with the analytic solution.'
+    requirement = 'The system shall be able to model decay of tritium and associated growth of helium in a diffusion segment and generate CSV data for use in comparisons with the analytic solution.'
   []
   [ver-1ja_comparison]
     type = RunCommand
     command = 'python3 comparison_ver-1ja.py'
-    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1ja, which models decay of tritium and associated growth of He in a diffusion segment.'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1ja, which models decay of tritium and associated growth of helium in a diffusion segment.'
     prereq = ver-1ja_csvdiff
     required_python_packages = 'matplotlib numpy pandas os git'
   []

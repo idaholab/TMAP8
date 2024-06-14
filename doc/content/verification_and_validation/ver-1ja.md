@@ -9,6 +9,7 @@ This page presents ver-1ja.
 
 ## General Case Description
 
+!style halign=left
 This verification case tests the first order radioactive decay capabilities of TMAP8
 and is based on the case published in the TMAP7 V&V suite [!citep](ambrosek2008verification).
 The model assumes pre-charging of a slab with tritium.
@@ -26,7 +27,7 @@ and
 \begin{equation}
     \frac{d C_{He}}{dt} = kt,
 \end{equation}
-where $t$ is the time in s, concentrations are in atoms/m$^3$, and $k= 0.693/t_{1/2}$ is the decay rate constant in 1/s.
+where $t$ is the time in seconds, concentrations are in atoms/m$^3$, and $k= 0.693/t_{1/2}$ is the decay rate constant in 1/s.
 
 !alert warning title=TMAP8 uses different model parameters than TMAP7
 The initial tritium concentration in TMAP7 was defined as $C_T^0 = 1.5$ atoms/m$^3$. To use a more realistic values, TMAP8 uses $C_T^0 = 1.5 \times 10^{5}$ atoms/m$^3$.
@@ -34,6 +35,7 @@ Moreover, $k$ is defined as $k=0.693/t_{1/2} \approx 1.78199 \times 10^{-9}$ 1/s
 
 ## Analytical Solution
 
+!style halign=left
 The concentration of T at any given time is given by
 
 \begin{equation}
@@ -49,6 +51,7 @@ Applying a mass balance over the system, the time evolution of helium concentrat
 
 ### Results
 
+!style halign=left
 [ver-1ja_results] shows the TMAP8 predictions and how they compare to the analytical solution
 for the decay of tritium and associated growth of $^3\text{He}$ in a diffusion segment.
 The TMAP8 predictions match the analytical solution, with root mean square percentage errors
@@ -61,6 +64,7 @@ The TMAP8 predictions match the analytical solution, with root mean square perce
 
 ### Input file
 
+!style halign=left
 The input file for this case can be found at [/ver-1ja.i].
 
 !bibtex bibliography
