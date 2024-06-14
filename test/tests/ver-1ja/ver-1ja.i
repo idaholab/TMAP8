@@ -72,12 +72,9 @@ dt_start = ${fparse end_time/250} # s
   solve_type = PJFNK
   scheme = 'bdf2'
   dtmin = 1
-  l_max_its = 10
-  nl_max_its = 5
   petsc_options = '-snes_converged_reason'
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
-  line_search = 'bt'
 []
 
 [Outputs]
