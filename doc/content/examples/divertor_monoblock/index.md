@@ -219,11 +219,11 @@ to solve the energy conservation equation ([eq:temperature_weak]) for one variab
 The diffusivity is defined as $D=D_0 \exp⁡(-E_D/k_B/T)$ and the solubility is defined as $K_s=K_{s,0} \exp⁡(-E_s/k_B/T)$.
 
 !table id=tab:material_properties_tritium
-  caption=Tritium mass transport and trapping properties used in the W, Cu, and CuCrZr layers. **NOTE: Two-component solubility in W kept the maximum solubility ratio between W and Cu to 104 at low temperature. The references are provided in [!cite](Shimada2024114438).
+  caption=Tritium mass transport and trapping properties used in the W, Cu, and CuCrZr layers. $^{**}$NOTE: Two-component solubility in W kept the maximum solubility ratio between W and Cu to 104 at low temperature. The references are provided in [!cite](Shimada2024114438).
 | Material | $D_0$ (m$^2$/s) | $E_D$ (eV) | $K_{s,0}$ (Pa$^{1/2}$) | $E_s$ (eV) | Detrapping energy: $E_{dt}$ (eV) | Trap density: $n_{trap}$ (at.fr.) |
 | --- | --- | --- | --- | --- | --- | --- |
 | W | 2.4$\times$10$^{-7}$ | 0.39 | 1.87$\times$10$^{24}$ | 1.04 | 0.85 | 1.0$\times$10$^{-4}$ |
-| W |   |   |  3.14$\times$10$^{20}$** | 0.57** |   |   |
+| W |   |   |  3.14$\times$10$^{20}$$^{**}$ | 0.57$^{**}$ |   |   |
 | Cu | 6.6$\times$10$^{-7}$ | 0.39 | 3.14$\times$10$^{24}$ | 0.57 | 0.50 | 5.0$\times$10$^{-5}$ |
 | CuCrZr | 3.9$\times$10$^{-7}$ | 0.42 | 4.28$\times$10$^{23}$ | 0.39 | 0.83 | 5.0$\times$10$^{-5}$ |
 
