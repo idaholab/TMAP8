@@ -1,9 +1,14 @@
-# This test is to verify the implementation of InterfaceSorptionSievert and its AD counterpart.
+# This test is to verify the implementation of InterfaceSorption and its AD counterpart.
 # It contains two 2D blocks separated by a continuous interface.
-# InterfaceSorptionSievert is used to enforce the Sievert law and preserve flux between the blocks.
+# InterfaceSorption is used to enforce the sorption law and preserve flux between the blocks.
 # Checks are performed to verify concentration conservation, sorption behavior, and flux preservation.
 # This input file uses BreakMeshByBlockGenerator, which is currently only supported for replicated
 # meshes, so this file should not be run with the `parallel_type = DISTRIBUTED` flag
+
+# In this input file, we apply the Sievert law with n_sorption=1/2.
+
+# Physical Constants
+R = 8.31446261815324 # Based on PhysicalConstants
 
 
 [GlobalParams]
@@ -65,7 +70,7 @@
     diffusivity = diffusivity
     block = 2
   []
-  [temp]
+  [temperature]
     type = HeatConduction
     variable = temperature
   []
@@ -84,25 +89,25 @@
     variable = u2
     boundary = right
   []
-  [left_temp]
+  [left_temperature]
     type = DirichletBC
     value = 1100
     variable = temperature
     boundary = left
   []
-  [right_temp]
+  [right_temperature]
     type = DirichletBC
     value = 0
     variable = temperature
     boundary = right
   []
-  [block1_2_temp]
+  [block1_2_temperature]
     type = DirichletBC
     value = 1000
     variable = temperature
     boundary = Block1_Block2
   []
-  [block2_1_temp]
+  [block2_1_temperature]
     type = DirichletBC
     value = 900
     variable = temperature
@@ -112,9 +117,10 @@
 
 [InterfaceKernels]
   [interface]
-    type = InterfaceSorptionSievert
-    K0 = 1e-2
+    type = InterfaceSorption
+    K0 = 1.e-2
     Ea = 0
+    n_sorption = 0.5
     diffusivity = diffusivity
     unit_scale = 1
     unit_scale_neighbor = 1
@@ -151,7 +157,7 @@
   [residual_concentration]
     type = ParsedFunction
     symbol_names = 'u_mid_inner u_mid_outer T R solubility'
-    symbol_values = 'u_mid_inner u_mid_outer temperature_mid_inner 8.31446261815324 1e-2'
+    symbol_values = 'u_mid_inner u_mid_outer temperature_mid_inner ${R} 1e-2'
     expression = 'u_mid_outer - solubility*sqrt(u_mid_inner*R*T)'
   []
   [flux_error]
