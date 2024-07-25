@@ -32,6 +32,7 @@ Extensions:
                 Using TMAP8: getting_started/using_tmap8.md
                 TMAP8 on HPC: getting_started/hpc.md
                 User Notes: getting_started/user_notes.md
+                Contributing to TMAP8: getting_started/contributing.md
             Documentation:
               TMAP8-only Syntax: syntax/tmap_only.md
               Complete Code Syntax: syntax/index.md

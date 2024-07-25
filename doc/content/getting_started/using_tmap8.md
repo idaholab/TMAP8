@@ -47,3 +47,11 @@ tests, verification and validation cases, or examples is desired, their input fi
 As TMAP8 is developed and more capabilities are added, the tests directory will continue to
 grow. If you feel that you have added important new functionality, please create a test for
 it, such that any future changes will not break that capability.
+
+## Contributing to TMAP8
+
+!style halign=left
+As TMAP8 is developed and more capabilities are added, the tests directory will continue to
+grow. If you feel that you have added important new functionality, please create a test or example for
+it, such that any future changes will not break that capability.
+See the [contribution guide](getting_started/contributing.md) for detailed instructions on how to contribute to TMAP8.
