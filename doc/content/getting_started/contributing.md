@@ -19,7 +19,7 @@ When finding an issue with the code, or developing/suggesting a new feature or e
 should be created. This can be done ahead of time when developing code, or anytime before pushing
 your changes. In any case, you will need to list an issue number in one of your commits! To get started:
 
-1. Select “New issue” on this page: [https://github.com/idaholab/tmap8/issues](https://github.com/idaholab/tmap8/issues)
+1. Select “New issue” on this page: [https://github.com/idaholab/TMAP8/issues](https://github.com/idaholab/TMAP8/issues)
 1. Select either “bug report” or “feature request” (most should be feature requests)
 1. Provide issue descriptions of a couple of sentences (or as much as you see fit) following the prompts.
 1. Create issue
@@ -34,7 +34,7 @@ TMAP8 development follows a "Fork & Pull" development process. See more informat
 
 ### Fork TMAP8 and clone
 
-1. Navigate to [the TMAP8 repository](https://github.com/idaholab/tmap8)
+1. Navigate to [the TMAP8 repository](https://github.com/idaholab/TMAP8)
 1. Click the "Fork" button on the upper right of the code file tree to have a copy of TMAP8 in your own account
 1. Clone your new fork to your local machine using the following command (this assumes you
    [have SSH set up on your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)):
@@ -54,8 +54,8 @@ Add the main TMAP8 repository as an "upstream" git remote, so that you can
 [git fetch](https://git-scm.org/docs/git-fetch) updates from the main repository:
 
 ```
-cd ~/projects/tmap8
-git remote add upstream git@github.com:idaholab/tmap8.git
+cd ~/projects/TMAP8
+git remote add upstream git@github.com:idaholab/TMAP8.git
 ```
 
 To fetch changes, run:
