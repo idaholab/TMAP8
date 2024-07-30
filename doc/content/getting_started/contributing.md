@@ -37,7 +37,7 @@ TMAP8 development follows a "Fork & Pull" development process. See more informat
 1. Navigate to [the TMAP8 repository](https://github.com/idaholab/tmap8)
 1. Click the "Fork" button on the upper right of the code file tree to have a copy of TMAP8 in your own account
 1. Clone your new fork to your local machine using the following command (this assumes you
-   [have SSH set up on your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account))):
+   [have SSH set up on your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)):
 
    ```
    cd ~/projects
@@ -66,7 +66,7 @@ git fetch upstream
 
 ## Creating a new branch
 
-Before make any changes locally (which would require having a working version of the application),
+Before we make any changes locally (which would require having a working version of the application),
 we will need to create a new branch.
 
 1. In your terminal, go to your application:
@@ -75,7 +75,7 @@ we will need to create a new branch.
    cd ~/projects/tmap8
    ```
 
-1. It is usually best to make sure your changes are based on devel:
+1. It is usually best to make sure your changes are based on devel, so check it out for use:
 
    ```
    git checkout devel
@@ -87,7 +87,7 @@ we will need to create a new branch.
    git reset --hard upstream/devel && git submodule update --init
    ```
 
-1. Create new branch:
+1. Create a new branch, selecting an appropriate branch name for your development activities:
 
    ```
    git checkout -b <BRANCH_NAME>
@@ -141,7 +141,7 @@ unrelated changes all at once.
    git add <...>
    ```
 
-   for these files.
+   for these files. Using `git status` again to check for changed files is helpful here.
 1. Now you’re ready to commit. Run
 
    ```

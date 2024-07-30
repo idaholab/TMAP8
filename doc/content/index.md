@@ -65,4 +65,4 @@ throughout the world.
 TMAP8 is a collaborative project.
 We are always looking for new collaborations and encourage everyone to [get started](getting_started/installation.html),
 start [contributing](getting_started/contributing.html),
-and connect with the team on [the TMAP8 GitHub discussion](https://github.com/idaholab/tmap8/discussions).
+and connect with the team on [the TMAP8 GitHub discussion forum](https://github.com/idaholab/tmap8/discussions).
