@@ -13,7 +13,7 @@ Content:
     - ${MOOSE_DIR}/modules/misc/doc/content
     - ${MOOSE_DIR}/modules/phase_field/doc/content
     - ${MOOSE_DIR}/modules/solid_mechanics/doc/content
-    - modules:
+    modules:
         root_dir: ${MOOSE_DIR}/modules/doc/content
         content:
             - media/*
