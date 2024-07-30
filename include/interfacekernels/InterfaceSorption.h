@@ -36,7 +36,7 @@ protected:
   const Real _Ea;
   ///@}
 
-  /// Exponent of the Sorption law
+  /// Exponent of the sorption law
   const Real & _n_sorption;
 
   ///@{Unit conversion factors used to scale the concentrations
