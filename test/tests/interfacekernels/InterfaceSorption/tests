@@ -2,7 +2,7 @@
 #is currently only supported for replicated meshes
 [Tests]
   design = 'InterfaceSorption.md'
-  issues = '#50 #0000000'
+  issues = '#50 #156'
   [Sievert_non_ad]
     requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions.'
     type = 'Exodiff'
@@ -13,7 +13,7 @@
     mesh_mode = REPLICATED
   []
   [Sievert_non_ad_penalty]
-    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using penalty-enforced flux balance.'
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using a penalty-enforced flux balance.'
     type = 'Exodiff'
     input = 'interface_sorption.i'
     cli_args = 'InterfaceKernels/interface/use_flux_penalty=true
@@ -44,7 +44,7 @@
     mesh_mode = REPLICATED
   []
   [Sievert_ad_penalty]
-    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using automatic differentiation and penalty-enforced flux balance.'
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using automatic differentiation and a penalty-enforced flux balance.'
     type = 'Exodiff'
     input = 'interface_sorption.i'
     cli_args = 'Kernels/u1/type=ADMatDiffusion
@@ -74,7 +74,7 @@
     mesh_mode = REPLICATED
   []
   [Henry_non_ad_penalty]
-    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions using penalty-enforced flux balance.'
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions using a penalty-enforced flux balance.'
     type = 'Exodiff'
     input = 'interface_sorption.i'
     cli_args = 'InterfaceKernels/interface/use_flux_penalty=true
@@ -107,7 +107,7 @@
     mesh_mode = REPLICATED
   []
   [Henry_ad_penalty]
-    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions using automatic differentiation and penalty-enforced flux balance.'
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions using automatic differentiation and a penalty-enforced flux balance.'
     type = 'Exodiff'
     input = 'interface_sorption.i'
     cli_args = 'Kernels/u1/type=ADMatDiffusion
