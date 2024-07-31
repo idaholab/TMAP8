@@ -6,26 +6,37 @@
 /*                   ALL RIGHTS RESERVED                    */
 /************************************************************/
 
-#include "InterfaceSorptionSievert.h"
+#include "InterfaceSorption.h"
 #include "PhysicalConstants.h"
 
-registerMooseObject("TMAP8App", InterfaceSorptionSievert);
-registerMooseObject("TMAP8App", ADInterfaceSorptionSievert);
+registerMooseObject("TMAP8App", InterfaceSorption);
+registerMooseObject("TMAP8App", ADInterfaceSorption);
+
+registerMooseObjectRenamed("TMAP8App",
+                           InterfaceSorptionSievert,
+                           "07/01/2025 00:00",
+                           InterfaceSorption);
+registerMooseObjectRenamed("TMAP8App",
+                           ADInterfaceSorptionSievert,
+                           "07/01/2025 00:00",
+                           ADInterfaceSorption);
 
 template <bool is_ad>
 InputParameters
-InterfaceSorptionSievertTempl<is_ad>::validParams()
+InterfaceSorptionTempl<is_ad>::validParams()
 {
   InputParameters params = InterfaceKernelParent<is_ad>::validParams();
   params.addClassDescription(
-      "Computes Sievert's law at interface between solid and gas in isothermal conditions.");
+      "Computes a sorption law at interface between solid and gas in isothermal conditions.");
   params.addRequiredParam<Real>("K0",
                                 "The pre-exponential factor for the Arrhenius law for the "
-                                "solubility $K$ for the relationship $C_i = KP_i^p$");
+                                "solubility $K$ for the relationship $C_i = KP_i^n$");
   params.addParam<Real>("Ea",
                         0,
                         "The activation energy for the Arrhenius law for the solubility $K$ for "
-                        "the relationship $C_i = KP_i^p$");
+                        "the relationship $C_i = KP_i^n$");
+  params.addRequiredParam<Real>("n_sorption",
+                                "The exponent $n$ for the relationship $C_i = KP_i^n$");
   params.addParam<Real>(
       "unit_scale", 1.0, "Unit conversion factor used to scale the concentration");
   params.addParam<Real>("unit_scale_neighbor",
@@ -46,11 +57,12 @@ InterfaceSorptionSievertTempl<is_ad>::validParams()
 }
 
 template <bool is_ad>
-InterfaceSorptionSievertTempl<is_ad>::InterfaceSorptionSievertTempl(
-    const InputParameters & parameters)
+InterfaceSorptionTempl<is_ad>::InterfaceSorptionTempl(const InputParameters & parameters)
   : InterfaceKernelParent<is_ad>(parameters),
     _K0(this->template getParam<Real>("K0")),
     _Ea(this->template getParam<Real>("Ea")),
+
+    _n_sorption(this->template getParam<Real>("n_sorption")),
 
     _unit_scale(this->template getParam<Real>("unit_scale")),
     _unit_scale_neighbor(this->template getParam<Real>("unit_scale_neighbor")),
@@ -74,7 +86,7 @@ InterfaceSorptionSievertTempl<is_ad>::InterfaceSorptionSievertTempl(
 
 template <bool is_ad>
 GenericReal<is_ad>
-InterfaceSorptionSievertTempl<is_ad>::computeQpResidual(Moose::DGResidualType type)
+InterfaceSorptionTempl<is_ad>::computeQpResidual(Moose::DGResidualType type)
 {
   // restrict inputs to physically meaningful values to avoid encountering NANs during linear solve
   const auto small = 1.0e-20;
@@ -92,7 +104,7 @@ InterfaceSorptionSievertTempl<is_ad>::computeQpResidual(Moose::DGResidualType ty
     {
       r = _test[_i][_qp] * _sorption_penalty *
           (u - _K0 * std::exp(-_Ea / R / temperature_limited) *
-                   std::sqrt(u_neighbor * R * temperature_limited));
+                   std::pow(u_neighbor * R * temperature_limited, _n_sorption));
       break;
     }
 
@@ -112,7 +124,7 @@ InterfaceSorptionSievertTempl<is_ad>::computeQpResidual(Moose::DGResidualType ty
 
 template <>
 Real
-InterfaceSorptionSievertTempl<false>::computeQpJacobian(Moose::DGJacobianType type)
+InterfaceSorptionTempl<false>::computeQpJacobian(Moose::DGJacobianType type)
 {
   // restrict inputs to physically meaningful values to avoid encountering NANs during linear solve
   const Real small = 1.0e-20;
@@ -130,8 +142,9 @@ InterfaceSorptionSievertTempl<false>::computeQpJacobian(Moose::DGJacobianType ty
 
     case Moose::ElementNeighbor:
       jac = -_test[_i][_qp] * _sorption_penalty * _phi_neighbor[_j][_qp] *
-            (_K0 * std::exp(-_Ea / R / temperature_limited) * std::sqrt(R * temperature_limited) *
-             1 / 2 * std::pow(u_neighbor, -1 / 2));
+            (_K0 * std::exp(-_Ea / R / temperature_limited) *
+             std::pow(R * temperature_limited, _n_sorption) * _n_sorption *
+             std::pow(u_neighbor, _n_sorption - 1));
       break;
 
     case Moose::NeighborElement:
@@ -152,13 +165,14 @@ InterfaceSorptionSievertTempl<false>::computeQpJacobian(Moose::DGJacobianType ty
 }
 
 template <>
-Real InterfaceSorptionSievertTempl<true>::computeQpJacobian(Moose::DGJacobianType /*type*/)
+Real
+InterfaceSorptionTempl<true>::computeQpJacobian(Moose::DGJacobianType /*type*/)
 {
-  mooseError("ADInterfaceSorptionSievert '",
+  mooseError("ADInterfaceSorption '",
              name(),
              "': in , computeQpJacobian incorrectly called from within AD "
              "calculation");
 }
 
-template class InterfaceSorptionSievertTempl<false>;
-template class InterfaceSorptionSievertTempl<true>;
+template class InterfaceSorptionTempl<false>;
+template class InterfaceSorptionTempl<true>;
