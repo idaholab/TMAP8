@@ -17,9 +17,23 @@ Content:
         root_dir: ${MOOSE_DIR}/modules/doc/content
         content:
             - media/*
+            - help/development/VSCode.md
+            - help/development/analyze_jacobian.md
+            - help/finite_element_concepts/nodal_patch_recovery.md
+            - application_development/performance_benchmarking.md
             - application_usage/command_line_usage.md
             - application_usage/restart_recover.md
-            - help/finite_element_concepts/nodal_patch_recovery.md
+    - python:
+        root_dir: ${MOOSE_DIR}/python/doc/content
+        content:
+            - python/mms.md
+            - python/MooseDocs/**
+            - python/moosesqa/index.md
+            - python/source/moosetree/Node.md
+            - python/testers/**
+            - python/CSVDiff.md
+            - python/TestHarness.md
+
 Renderer:
     type: MooseDocs.base.MaterializeRenderer
 Extensions:
@@ -32,6 +46,7 @@ Extensions:
                 Using TMAP8: getting_started/using_tmap8.md
                 TMAP8 on HPC: getting_started/hpc.md
                 User Notes: getting_started/user_notes.md
+                Contributing to TMAP8: getting_started/contributing.md
             Documentation:
               TMAP8-only Syntax: syntax/tmap_only.md
               Complete Code Syntax: syntax/index.md

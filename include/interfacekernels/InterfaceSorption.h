@@ -17,15 +17,15 @@ using InterfaceKernelParent =
     typename std::conditional<is_ad, ADInterfaceKernel, InterfaceKernel>::type;
 
 /**
- * This interface kernel computes Sievert's law at interface between solid and gas in isothermal
+ * This interface kernel computes a sorption law at interface between solid and gas in isothermal
  * conditions
  */
 template <bool is_ad>
-class InterfaceSorptionSievertTempl : public InterfaceKernelParent<is_ad>
+class InterfaceSorptionTempl : public InterfaceKernelParent<is_ad>
 {
 public:
   static InputParameters validParams();
-  InterfaceSorptionSievertTempl(const InputParameters & parameters);
+  InterfaceSorptionTempl(const InputParameters & parameters);
 
 protected:
   virtual GenericReal<is_ad> computeQpResidual(Moose::DGResidualType type) override;
@@ -35,6 +35,9 @@ protected:
   const Real _K0;
   const Real _Ea;
   ///@}
+
+  /// Exponent of the sorption law
+  const Real & _n_sorption;
 
   ///@{Unit conversion factors used to scale the concentrations
   const Real & _unit_scale;
@@ -72,5 +75,5 @@ protected:
   ///@}
 };
 
-using InterfaceSorptionSievert = InterfaceSorptionSievertTempl<false>;
-using ADInterfaceSorptionSievert = InterfaceSorptionSievertTempl<true>;
+using InterfaceSorption = InterfaceSorptionTempl<false>;
+using ADInterfaceSorption = InterfaceSorptionTempl<true>;
