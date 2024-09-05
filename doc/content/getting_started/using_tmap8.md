@@ -5,7 +5,7 @@
 !style halign=left
 After TMAP8 is installed and tested, you should now be able to run input files
 using the `tmap8-opt` executable located at `~/projects/TMAP8`. Input files
-demonstrating the capabilities of TMAP8 can be found in `~/projects/test/tests`.
+demonstrating the capabilities of TMAP8 can be found in `~/projects/TMAP8/test/tests`.
 Any input file (say, one called `example_input.i`) can be run with the following
 basic syntax:
 
