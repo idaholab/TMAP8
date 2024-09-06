@@ -91,7 +91,7 @@ where $x=l$ is the position of the surface in contact with the enclosure, and $x
 \end{equation}
 and $\alpha_n$ are the roots of
 \begin{equation}
-    \alpha_n = \frac{L}{tan \ \alpha_n}.
+    \alpha_n = \frac{L}{tan (\alpha_n l)}.
 \end{equation}
 
 By linking the concentration on the surface of the slab in contact with the enclosure ($x=l$ as used in [!cite](ambrosek2008verification)) with the pressure of the enclosure, Henry's law provides

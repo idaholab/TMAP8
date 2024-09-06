@@ -21,11 +21,11 @@ The evolution of the tritium and helium concentration, $C_T$ and $C_{He}$, respe
 are governed by
 
 \begin{equation}
-    \frac{d C_T}{dt} = -k,
+    \frac{d C_T}{dt} = -k C_T,
 \end{equation}
 and
 \begin{equation}
-    \frac{d C_{He}}{dt} = kt,
+    \frac{d C_{He}}{dt} = k C_T,
 \end{equation}
 where $t$ is the time in seconds, concentrations are in atoms/m$^3$, and $k= 0.693/t_{1/2}$ is the decay rate constant in 1/s.
 
