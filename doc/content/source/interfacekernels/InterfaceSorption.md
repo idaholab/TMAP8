@@ -15,6 +15,7 @@ K = K_0 \exp \left(\frac{-E_a}{RT}\right),
 where $K_0$ is the pre-exponential constant, and $E_a$ is the activation energy in J/mol. The units of $K$ and $K_0$ depend on the units of $C_s$ and $P$, as well as the value of $n$.
 
 The value of $n$ determines the sorption law. For example:
+
 - $n = 1$ corresponds to Henry's law
 - $n = 1/2$ corresponds to Sievert's law.
 
