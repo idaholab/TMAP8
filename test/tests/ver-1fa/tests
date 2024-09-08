@@ -1,12 +1,12 @@
 [Tests]
   design = 'HeatConduction.md HeatConductionTimeDerivative.md HeatSource.md'
   issues = '#12'
+  verification = 'ver-1fa.md'
   [ver-1fa]
     type = Exodiff
     input = ver-1fa.i
     exodiff = ver-1fa_out.e
     requirement = 'The system shall be able to model heat conduction in a slab that has heat generation'
-    verification = 'ver-1fa.md'
   []
   [ver-1fa_lineplot]
     type = CSVDiff
