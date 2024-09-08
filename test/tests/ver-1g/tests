@@ -1,26 +1,24 @@
 [Tests]
   design = 'ADMatReactionFlexible.md'
   issues = '#12'
+  verification = 'ver-1g.md'
   [binary_reaction_equal_concentrations]
     type = Exodiff
     input = 'ver-1g.i equal_conc.i'
     exodiff = equal_conc_out.e
     requirement = 'The system shall be able to model a chemical reaction between two species with the same concentrations and calculate the concentrations of reactants and product as a function of time'
-    verification = 'ver-1g.md'
   []
   [binary_reaction_diff_concentrations_TMAP4]
     type = Exodiff
     input = 'ver-1g.i diff_conc_TMAP4.i'
     exodiff = diff_conc_TMAP4_out.e
     requirement = 'The system shall be able to model a chemical reaction between two species with different concentrations and calculate the concentrations of reactants and product as a function of time using the initial conditions from the TMAP4 case'
-    verification = 'ver-1g.md'
   []
   [binary_reaction_diff_concentrations_TMAP7]
     type = Exodiff
     input = 'ver-1g.i diff_conc_TMAP7.i'
     exodiff = diff_conc_TMAP7_out.e
     requirement = 'The system shall be able to model a chemical reaction between two species with different concentrations and calculate the concentrations of reactants and product as a function of time using the initial conditions from the TMAP7 case'
-    verification = 'ver-1g.md'
   []
   [binary_reaction_equal_concentrations_csv_diff]
     type = CSVDiff
