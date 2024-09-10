@@ -1,6 +1,6 @@
 # ver-1dc
 
-# Permeation Problem with Trapping
+# Permeation Problem with Multiple Trapping
 
 ## Test Description
 
@@ -48,7 +48,7 @@ $T$ = temperature
 
 $c$ = dissolved gas atom fraction
 
-## Analytical soultion
+## Analytical solution
 
 [!cite](ambrosek2008verification) provides the analytical equations for the permeation transient as
 

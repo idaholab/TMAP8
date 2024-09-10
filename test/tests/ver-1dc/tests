@@ -1,13 +1,13 @@
 [Tests]
   design = 'TrappingNodalKernel.md ReleasingNodalKernel.md'
   issues = '#12'
+  verification = 'ver-1dc.md'
   [ver-1dc_limited]
     type = Exodiff
     input = ver-1dc.i
     exodiff = ver-1dc_limited_test_exodus.e
     cli_args = "Mesh/nx=20 Executioner/num_steps=300 Outputs/file_base=ver-1dc_limited_test_exodus"
     requirement = 'The system shall be able to model a breakthrough problem of multiple traps.'
-    verification = 'ver-1dc.md'
   []
   [ver-1dc_limited_heavy]
     type = Exodiff
@@ -15,7 +15,6 @@
     input = ver-1dc.i
     exodiff = ver-1dc_out.e
     requirement = 'The system shall be able to model a breakthrough problem of multiple traps, with the fine mesh and time step required to match the analytical solution for the verification case.'
-    verification = 'ver-1dc.md'
   []
   [ver-1dc_limited_heavy_csvdiff]
     type = CSVDiff
@@ -26,7 +25,6 @@
     prereq = ver-1dc_limited_heavy
     requirement = 'The system shall be able to model a breakthrough problem of multiple traps,
     with the fine mesh and time step required to match the analytical solution for the verification case and generate CSV data for use in comparisons with the analytic solution.'
-    verification = 'ver-1dc.md'
   []
   [ver-1d_comparison]
     type = RunCommand
