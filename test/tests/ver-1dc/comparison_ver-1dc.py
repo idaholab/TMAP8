@@ -33,15 +33,15 @@ rho_3 = 0.2               # trapping site fraction for third trap
 D_o = 1                 # diffusivity pre-exponential (m^2/s)
 Ed = 0                  # diffusion activation energy
 
-k = 1.38064852e-23      # Boltzmann's constant(m^2-kg / sec^2-K)
+k = 1.38064852e-23      # Boltzmann's constant (m^2-kg / sec^2-K)
 T = 1000                # temperature (K)
-epsilon_k_ratio_1 = 100
-epsilon_k_ratio_2 = 500
-epsilon_k_ratio_3 = 800
-epsilon_1 = k * epsilon_k_ratio_1  # epsilon: trap energy
-epsilon_2 = k * epsilon_k_ratio_2  # epsilon: trap energy
-epsilon_3 = k * epsilon_k_ratio_3  # epsilon: trap energy
-c = 0.0001              # dissolved gas atom fraction
+epsilon_k_ratio_1 = 100 # epsilon_k_ratio for trap 1 (K)
+epsilon_k_ratio_2 = 500 # epsilon_k_ratio for trap 2 (K)
+epsilon_k_ratio_3 = 800 # epsilon_k_ratio for trap 3 (K)
+epsilon_1 = k * epsilon_k_ratio_1  # epsilon: trap energy for trap 1 (m^2-kg / sec^2)
+epsilon_2 = k * epsilon_k_ratio_2  # epsilon: trap energy for trap 2 (m^2-kg / sec^2)
+epsilon_3 = k * epsilon_k_ratio_3  # epsilon: trap energy for trap 3 (m^2-kg / sec^2)
+c = 0.0001              # dissolved gas atom fraction (-)
 zeta_1 = ((lambdaa**2) * nu * np.exp((Ed - epsilon_1) /
         (k * T)) / (rho_1 * D_o)) + (c / rho_1)
 zeta_2 = ((lambdaa**2) * nu * np.exp((Ed - epsilon_2) /

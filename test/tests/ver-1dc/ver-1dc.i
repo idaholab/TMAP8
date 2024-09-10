@@ -1,14 +1,23 @@
-cl = 3.1622e18
-N = 3.1622e22
-epsilon_1 = 100
-epsilon_2 = 500
-epsilon_3 = 800
-temperature = 1000
+cl = 3.1622e18 # atom/m^3
+N = 3.1622e22 # atom/m^3
+epsilon_1 = 100 # K
+epsilon_2 = 500 # K
+epsilon_3 = 800 # K
+temperature = 1000 # K
+nx_num = 1000 # (-)
+trapping_site_fraction_1 = 0.10 # (-)
+trapping_site_fraction_2 = 0.15 # (-)
+trapping_site_fraction_3 = 0.20 # (-)
+trapping_rate_coefficient = 1e15 # 1/s
+release_rate_coefficient = 1e13 # 1/s
+diffusivity = 1 # m^2/s
+simulation_time = 60 # s
+time_interval_max = 0.3 # s
 
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 1000
+  nx = ${nx_num}
   xmax = 1
 []
 
@@ -57,39 +66,39 @@ temperature = 1000
     variable = empty_sites_1
     type = EmptySitesAux
     N = '${fparse N / cl}'
-    Ct0 = .1
+    Ct0 = '${trapping_site_fraction_1}'
     trapped_concentration_variables = trapped_1
   []
   [scaled_empty_1]
     variable = scaled_empty_sites_1
     type = NormalizationAux
-    normal_factor = ${cl}
+    normal_factor = '${cl}'
     source_variable = empty_sites_1
   []
   [empty_sites_2]
     variable = empty_sites_2
     type = EmptySitesAux
     N = '${fparse N / cl}'
-    Ct0 = .15
+    Ct0 = '${trapping_site_fraction_2}'
     trapped_concentration_variables = trapped_2
   []
   [scaled_empty_2]
     variable = scaled_empty_sites_2
     type = NormalizationAux
-    normal_factor = ${cl}
+    normal_factor = '${cl}'
     source_variable = empty_sites_2
   []
   [empty_sites_3]
     variable = empty_sites_3
     type = EmptySitesAux
     N = '${fparse N / cl}'
-    Ct0 = .2
+    Ct0 = '${trapping_site_fraction_3}'
     trapped_concentration_variables = trapped_3
   []
   [scaled_empty_3]
     variable = scaled_empty_sites_3
     type = NormalizationAux
-    normal_factor = ${cl}
+    normal_factor = '${cl}'
     source_variable = empty_sites_3
   []
   [trapped_sites_1]
@@ -155,18 +164,18 @@ temperature = 1000
   [trapping_1]
     type = TrappingNodalKernel
     variable = trapped_1
-    alpha_t = '1e15'
+    alpha_t = '${trapping_rate_coefficient}'
     N = '${fparse N / cl}'
-    Ct0 = '${fparse 0.1}'
+    Ct0 = '${trapping_site_fraction_1}'
     mobile_concentration = 'mobile'
-    temperature = ${temperature}
+    temperature = '${temperature}'
     extra_vector_tags = ref
   []
   [release_1]
     type = ReleasingNodalKernel
-    alpha_r = '1e13'
-    temperature = ${temperature}
-    detrapping_energy = ${epsilon_1}
+    alpha_r = '${release_rate_coefficient}'
+    temperature = '${temperature}'
+    detrapping_energy = '${epsilon_1}'
     variable = trapped_1
   []
   # For second traps
@@ -177,18 +186,18 @@ temperature = 1000
   [trapping_2]
     type = TrappingNodalKernel
     variable = trapped_2
-    alpha_t = '1e15'
+    alpha_t = '${trapping_rate_coefficient}'
     N = '${fparse N / cl}'
-    Ct0 = '${fparse 0.15}'
+    Ct0 = '${trapping_site_fraction_2}'
     mobile_concentration = 'mobile'
-    temperature = ${temperature}
+    temperature = '${temperature}'
     extra_vector_tags = ref
   []
   [release_2]
     type = ReleasingNodalKernel
-    alpha_r = '1e13'
-    temperature = ${temperature}
-    detrapping_energy = ${epsilon_2}
+    alpha_r = '${release_rate_coefficient}'
+    temperature = '${temperature}'
+    detrapping_energy = '${epsilon_2}'
     variable = trapped_2
   []
   # For third traps
@@ -199,18 +208,18 @@ temperature = 1000
   [trapping_3]
     type = TrappingNodalKernel
     variable = trapped_3
-    alpha_t = '1e15'
+    alpha_t = '${trapping_rate_coefficient}'
     N = '${fparse N / cl}'
-    Ct0 = '${fparse 0.2}'
+    Ct0 = '${trapping_site_fraction_3}'
     mobile_concentration = 'mobile'
-    temperature = ${temperature}
+    temperature = '${temperature}'
     extra_vector_tags = ref
   []
   [release_3]
     type = ReleasingNodalKernel
-    alpha_r = '1e13'
-    temperature = ${temperature}
-    detrapping_energy = ${epsilon_3}
+    alpha_r = '${release_rate_coefficient}'
+    temperature = '${temperature}'
+    detrapping_energy = '${epsilon_3}'
     variable = trapped_3
   []
 []
@@ -234,13 +243,13 @@ temperature = 1000
   [outflux]
     type = SideDiffusiveFluxAverage
     boundary = 'right'
-    diffusivity = 1
+    diffusivity = '${diffusivity}'
     variable = mobile
   []
   [scaled_outflux]
     type = ScalePostprocessor
     value = outflux
-    scaling_factor = ${cl}
+    scaling_factor = '${cl}'
   []
 []
 
@@ -253,8 +262,8 @@ temperature = 1000
 
 [Executioner]
   type = Transient
-  end_time = 60
-  dtmax = 0.3
+  end_time = ${simulation_time}
+  dtmax = ${time_interval_max}
   solve_type = NEWTON
   scheme = BDF2
   petsc_options_iname = '-pc_type'
