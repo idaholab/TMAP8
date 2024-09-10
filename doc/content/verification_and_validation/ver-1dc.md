@@ -79,7 +79,7 @@ The trapping parameters, $\zeta_i$, for the three traps are 91.47930 $c/\rho$, 6
 !alert warning title=Typo in [!cite](ambrosek2008verification)
 The $\zeta_i$ of the three traps from [!cite](ambrosek2008verification) have a typographical error, but it won't impact the final analytical solution.
 
-The permeation transient from analytical solution is compared with TMAP8 results in [ver-1dc_comparison_diffusion]. The graphs for the theoretical flux and the calculated flux are in good agreement, with root mean square percentage errors (RMSPE) of RMSPE = 0.41 % when time $t \geq 3$ s .
+The permeation transient from analytical solution is compared with TMAP8 results in [ver-1dc_comparison_diffusion]. The graphs for the theoretical flux and the calculated flux are in good agreement, with root mean square percentage errors (RMSPE) of RMSPE = 0.41 % when time $t \geq 3$ s . TMAP8 can now model an arbitrary number of trapping population, unlike TMAP4 and TMAP7, which were limited to 1 and 3, respectively.
 
 !media comparison_ver-1dc.py
        image_name=ver-1dc_comparison_diffusion.png
