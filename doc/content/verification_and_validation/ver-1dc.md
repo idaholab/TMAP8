@@ -50,6 +50,8 @@ and $c$ = dissolved gas atom fraction.
 !alert note title=TMAP8 can accommodate an arbitrary number of trapping populations
 This verification case was first introduced in [!cite](ambrosek2008verification) to highlight TMAP7's capability to model up to three different trapping populations, when TMAP4 was limited to one [!citep](longhurst1992verification). However, TMAP8 can accommodate an arbitrary number of trapping populations.
 
+Three traps that are relatively weak are assumed to be active in a slab. The trapping site fraction of the three traps are 0.1, 0.15 and 0.20, respectively. The values of $\epsilon/k$ for the three traps are 100 K, 500 K, and 800 K, respectively. Other parameters are the same as the trap in the effective diffusivity limit in [ver-1d](ver-1d.md).
+
 ## Analytical solution
 
 [!cite](ambrosek2008verification) provides the analytical equations for the permeation transient as

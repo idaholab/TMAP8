@@ -75,7 +75,6 @@ tmap_prediction = tmap_sol['scaled_outflux']
 idx = np.where(tmap_time >= 3)[0][0]
 
 # Calculate the analytical solution
-c_o = c
 Jp = N_o * (c_o * D / l) * \
     (1 + 2 * summation_term(num_summation_terms, tmap_time))
 
