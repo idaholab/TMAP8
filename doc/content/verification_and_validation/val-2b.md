@@ -51,6 +51,7 @@ The model applies 13.3 kPa of D$_2$ for 50 hours and 15 seconds followed by evac
 
 ## Input files
 
+!style halign=left
 The input file for this case can be found at [/val-2b.i], which is also used as test in TMAP8 at [/val-2b/tests].
 
 !bibtex bibliography

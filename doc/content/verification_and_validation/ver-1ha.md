@@ -58,6 +58,7 @@ The comparison of TMAP8 results against the analytical solution is shown in [ver
 
 ## Input files
 
+!style halign=left
 The input file for this case can be found at [/ver-1ha.i], which is also used as test in TMAP8 at [/ver-1ha/tests].
 
 !bibtex bibliography

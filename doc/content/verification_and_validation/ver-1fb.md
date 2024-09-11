@@ -47,6 +47,7 @@ Comparison of the temperature distribution in the slab, computed through TMAP8 a
 
 ## Input files
 
+!style halign=left
 The input file for this case can be found at [/ver-1fb.i], which is also used as test in TMAP8 at [/ver-1fb/tests].
 
 !bibtex bibliography

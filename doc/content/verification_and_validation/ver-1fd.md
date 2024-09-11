@@ -34,6 +34,7 @@ They show great agreement between TMAP8 and the analytical solution with a root 
 
 ## Input files
 
+!style halign=left
 The input file for this case can be found at [/ver-1fd.i], which is also used as test in TMAP8 at [/ver-1fd/tests].
 
 !bibtex bibliography

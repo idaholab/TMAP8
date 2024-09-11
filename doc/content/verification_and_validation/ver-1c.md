@@ -37,6 +37,7 @@ TMAP4 and TMAP7 verification cases are slightly different: TMAP4 verifies the mo
 
 ## Input files
 
+!style halign=left
 The input file for this case can be found at [/ver-1c.i], which is also used as test in TMAP8 at [/ver-1c/tests].
 
 !bibtex bibliography
