@@ -47,6 +47,8 @@ $k$ = Boltzmann's constant
 $T$ = temperature
 
 and $c$ = dissolved gas atom fraction.
+!alert note title=TMAP8 can accommodate an arbitrary number of trapping populations
+This verification case was first introduced in [!cite](ambrosek2008verification) to highlight TMAP7's capability to model up to three different trapping populations, when TMAP4 was limited to one [!citep](longhurst1992verification). However, TMAP8 can accommodate an arbitrary number of trapping populations.
 
 ## Analytical solution
 
@@ -70,16 +72,15 @@ where $D_{eff}$, the effective diffusivity, is defined as
 \end{equation}
 where $\zeta_i$ is the trapping parameter of trap $i$.
 
-Three traps that are relatively weak are assumed to be active in a slab. The trapping site fraction of the three traps are 0.1, 0.15 and 0.20, respectively. The values of $\epsilon/k$ for the three traps are 100 K, 500 K, and 800 K, respectively. Other parameters are the same as the trap in the effective diffusivity limit in [ver-1d](ver-1d.md).
 
 ## Results and comparison against analytical solution
 
 The trapping parameters, $\zeta_i$, for the three traps are 91.47930 $c/\rho$, 61.65009 $c/\rho$, 45.93069 $c/\rho$.
 
 !alert warning title=Typo in [!cite](ambrosek2008verification)
-The $\zeta_i$ of the three traps from [!cite](ambrosek2008verification) have a typographical error, but it won't impact the final analytical solution.
+The $\zeta_i$ of the three traps from [!cite](ambrosek2008verification) have a typographical error, but it dos not impact the final analytical solution.
 
-The permeation transient from analytical solution is compared with TMAP8 results in [ver-1dc_comparison_diffusion]. The graphs for the theoretical flux and the calculated flux are in good agreement, with root mean square percentage errors (RMSPE) of RMSPE = 0.41 % when time $t \geq 3$ s . TMAP8 can now model an arbitrary number of trapping population, unlike TMAP4 and TMAP7, which were limited to 1 and 3, respectively.
+The analytical solution for the permeation transient is compared with TMAP8 results in [ver-1dc_comparison_diffusion]. The graphs for the theoretical flux and the calculated flux are in good agreement, with root mean square percentage errors (RMSPE) of RMSPE = 0.41 % when time $t \geq 3$ s.
 
 !media comparison_ver-1dc.py
        image_name=ver-1dc_comparison_diffusion.png

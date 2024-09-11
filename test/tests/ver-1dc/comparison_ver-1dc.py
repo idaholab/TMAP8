@@ -9,7 +9,7 @@ import git
 os.chdir(os.path.dirname(__file__))
 
 # ============ Comparison of permeation as a function of time =================
-# ========================= Diffusion limited =================================
+# ========================== Multiple Trapps ==================================
 num_summation_terms = 1000
 
 # Reference 1:
@@ -24,7 +24,7 @@ num_summation_terms = 1000
 # For convenience lattice density chosen as 3.1622e22 atom/m^3 [Reference 1]
 N_o = 3.1622e22
 
-# Rest of the parameters based on reference 2.
+# Rest of the parameters based on reference 1.
 lambdaa = 3.1622e-8     # lattice parameter (m) || lambda is a python keyword
 nu = 1e13               # Debye frequency (1/s)
 rho_1 = 0.1               # trapping site fraction for first trap
@@ -33,14 +33,14 @@ rho_3 = 0.2               # trapping site fraction for third trap
 D_o = 1                 # diffusivity pre-exponential (m^2/s)
 Ed = 0                  # diffusion activation energy
 
-k = 1.38064852e-23      # Boltzmann's constant (m^2-kg / sec^2-K)
+k = 1.38064852e-23      # Boltzmann's constant (m^2 kg / sec^2 / K)
 T = 1000                # temperature (K)
 epsilon_k_ratio_1 = 100 # epsilon_k_ratio for trap 1 (K)
 epsilon_k_ratio_2 = 500 # epsilon_k_ratio for trap 2 (K)
 epsilon_k_ratio_3 = 800 # epsilon_k_ratio for trap 3 (K)
-epsilon_1 = k * epsilon_k_ratio_1  # epsilon: trap energy for trap 1 (m^2-kg / sec^2)
-epsilon_2 = k * epsilon_k_ratio_2  # epsilon: trap energy for trap 2 (m^2-kg / sec^2)
-epsilon_3 = k * epsilon_k_ratio_3  # epsilon: trap energy for trap 3 (m^2-kg / sec^2)
+epsilon_1 = k * epsilon_k_ratio_1  # epsilon: trap energy for trap 1 (m^2 kg / sec^2)
+epsilon_2 = k * epsilon_k_ratio_2  # epsilon: trap energy for trap 2 (m^2 kg / sec^2)
+epsilon_3 = k * epsilon_k_ratio_3  # epsilon: trap energy for trap 3 (m^2 kg / sec^2)
 c = 0.0001              # dissolved gas atom fraction (-)
 zeta_1 = ((lambdaa**2) * nu * np.exp((Ed - epsilon_1) /
         (k * T)) / (rho_1 * D_o)) + (c / rho_1)
@@ -71,7 +71,7 @@ def summation_term(num_terms, time):
 # Extract data from 'gold' TMAP8 run
 tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1dc/gold/ver-1dc_out.csv"))
 tmap_time = tmap_sol['time']
-tmap_perm = tmap_sol['scaled_outflux']
+tmap_prediction = tmap_sol['scaled_outflux']
 idx = np.where(tmap_time >= 3)[0][0]
 
 # Calculate the analytical solution
@@ -87,14 +87,14 @@ ax = fig.add_subplot(gs[0])
 analytical_permeation = Jp # analytical solution
 ax.plot(tmap_time, analytical_permeation,
         label=r"Analytical", c='k', linestyle='--')
-ax.plot(tmap_time, tmap_perm, label=r"TMAP8", c='tab:gray') # numerical solution
+ax.plot(tmap_time, tmap_prediction, label=r"TMAP8", c='tab:gray') # numerical solution
 ax.set_xlabel(u'Time(s)')
-ax.set_ylabel(u"Permeation (atom/m$^2$s)")
+ax.set_ylabel(u"Flux (atom/m$^2$s)")
 ax.legend(loc="best")
 ax.set_xlim(left=0)
 ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-RMSE = np.sqrt(np.mean((tmap_perm-analytical_permeation)[idx:]**2) )
+RMSE = np.sqrt(np.mean((tmap_prediction-analytical_permeation)[idx:]**2) )
 RMSPE = RMSE*100/np.mean(analytical_permeation[idx:])
 ax.text(20,2.2e18, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()

@@ -6,7 +6,7 @@
     type = Exodiff
     input = ver-1dc.i
     exodiff = ver-1dc_limited_test_exodus.e
-    cli_args = "Mesh/nx=20 Executioner/num_steps=300 Outputs/file_base=ver-1dc_limited_test_exodus"
+    cli_args = "nx_num=20 Executioner/num_steps=300 Outputs/file_base=ver-1dc_limited_test_exodus"
     requirement = 'The system shall be able to model a breakthrough problem of multiple traps.'
   []
   [ver-1dc_limited_heavy]
