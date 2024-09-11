@@ -4,9 +4,9 @@
 
 ## Test Description
 
-This verification problem is taken from [!cite](ambrosek2008verification) and builds on the capabilities verified in [ver-1d](ver-1d.md) for a breakthrough problem where diffusion and trapping are the rate limiting processes. This case is simulated in [/ver-1dc.i].
+This verification problem is taken from [!cite](ambrosek2008verification) and builds on the capabilities verified in [ver-1d](ver-1d.md). However, in the current case, there are three different types of traps. This case is simulated in [/ver-1dc.i].
 
-This problem models permeation through a membrane with a constant source in which three traps are operative. We solve the following equations
+This problem models permeation through a membrane with a constant source in which three trap populations are present. We solve the following equations
 
 \begin{equation}
     \label{eqn:diffusion_mobile}
