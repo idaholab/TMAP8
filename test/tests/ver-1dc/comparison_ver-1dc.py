@@ -16,15 +16,8 @@ num_summation_terms = 1000
 # Verification and Validation of Tritium Transport code TMAP7
 # Glen Longhurst & James Ambrosek, Fusion Science & Technology 2017
 
-
-# Reference 2:
-# GR Longhurst, SL Harms, ES Marwil, and BG Miller. Verification and validation of
-# tmap4. Technical Report, EG and G Idaho, Inc., Idaho Falls, ID (United States), 1992.
-
-# For convenience lattice density chosen as 3.1622e22 atom/m^3 [Reference 1]
-N_o = 3.1622e22
-
-# Rest of the parameters based on reference 1.
+# The parameters based on reference 1.
+N_o = 3.1622e22         # For convenience lattice density chosen as 3.1622e22 atom/m^3
 lambdaa = 3.1622e-8     # lattice parameter (m) || lambda is a python keyword
 nu = 1e13               # Debye frequency (1/s)
 rho_1 = 0.1               # trapping site fraction for first trap
@@ -59,7 +52,7 @@ tau_be = l**2 / (2 * (np.pi)**2 * D_eff)
 output_line = f"The trapping parameters for three traps are {zeta_1/(c/rho_1):.2f} c/rho " \
               f"{zeta_2/(c/rho_2):.2f} c/rho, and {zeta_3/(c/rho_3):.2f} c/rho \n" \
               f"The effective diffusivity is {D_eff:.4f} m^2/s \n" \
-              f"The breakthrough time is {tau_be:.2f} s"
+              f"The breakthrough time from analytical solution is {tau_be:.2f} s"
 print(output_line)
 
 def summation_term(num_terms, time):
@@ -70,9 +63,15 @@ def summation_term(num_terms, time):
 
 # Extract data from 'gold' TMAP8 run
 tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1dc/gold/ver-1dc_out.csv"))
-tmap_time = tmap_sol['time']
-tmap_prediction = tmap_sol['scaled_outflux']
+tmap_time = np.array(tmap_sol['time'])
+tmap_prediction = np.array(tmap_sol['scaled_outflux'])
 idx = np.where(tmap_time >= 3)[0][0]
+
+# Calculate the breakthrough time from numberical solution
+tmap_slope = (tmap_prediction[idx+1:] - tmap_prediction[idx:-1]) / (tmap_time[idx+1:] - tmap_time[idx:-1])
+tmap_intercept = tmap_time[np.argmax(tmap_slope)+idx] -  (tmap_prediction[int(np.argmax(tmap_slope)+idx)]) / np.max(tmap_slope)
+output_line = f"The breakthrough time from numerical solution is {tmap_intercept:.2f} s"
+print(output_line)
 
 # Calculate the analytical solution
 Jp = N_o * (c_o * D / l) * \

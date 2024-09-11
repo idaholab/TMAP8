@@ -12,6 +12,7 @@ This problem models permeation through a membrane with a constant source in whic
     \label{eqn:diffusion_mobile}
     \frac{dC_M}{dt} = - \nabla D \nabla C_M - \text{trap\_per\_free} \cdot \sum_{i=1}^{3} \frac{dC_{T_i}}{dt} ,
 \end{equation}
+for $i=1$, $i=2$, and $i=3$:
 \begin{equation}
     \label{eqn:trapped_rate}
     \frac{dC_{T_i}}{dt} = \alpha_t^i  \frac {C_{T_i}^{empty} C_M } {(N \cdot \text{trap\_per\_free})} - \alpha_r^i C_{T_i},
@@ -47,6 +48,7 @@ $k$ = Boltzmann's constant
 $T$ = temperature
 
 and $c$ = dissolved gas atom fraction.
+
 !alert note title=TMAP8 can accommodate an arbitrary number of trapping populations
 This verification case was first introduced in [!cite](ambrosek2008verification) to highlight TMAP7's capability to model up to three different trapping populations, when TMAP4 was limited to one [!citep](longhurst1992verification). However, TMAP8 can accommodate an arbitrary number of trapping populations.
 
@@ -72,17 +74,15 @@ where $D_{eff}$, the effective diffusivity, is defined as
 \label{eqn:Deff}
     D_{eff} = \frac{D}{1 + \sum_{i=1}^3 \frac{1}{\zeta_i}},
 \end{equation}
-where $\zeta_i$ is the trapping parameter of trap $i$.
+where $\zeta_i$ is the trapping parameter of trap $i$. The trapping parameters, $\zeta_i$, for the three traps are 91.47930 $c/\rho$, 61.65009 $c/\rho$, 45.93069 $c/\rho$.
+
+!alert warning title=Typo in [!cite](ambrosek2008verification)
+The $\zeta_i$ of the three traps from [!cite](ambrosek2008verification) have a typographical error with three orders of magnitude lower than correct one, but it dos not impact the final analytical solution.
 
 
 ## Results and comparison against analytical solution
 
-The trapping parameters, $\zeta_i$, for the three traps are 91.47930 $c/\rho$, 61.65009 $c/\rho$, 45.93069 $c/\rho$.
-
-!alert warning title=Typo in [!cite](ambrosek2008verification)
-The $\zeta_i$ of the three traps from [!cite](ambrosek2008verification) have a typographical error, but it dos not impact the final analytical solution.
-
-The analytical solution for the permeation transient is compared with TMAP8 results in [ver-1dc_comparison_diffusion]. The graphs for the theoretical flux and the calculated flux are in good agreement, with root mean square percentage errors (RMSPE) of RMSPE = 0.41 % when time $t \geq 3$ s.
+The analytical solution for the permeation transient is compared with TMAP8 results in [ver-1dc_comparison_diffusion]. The graphs for the theoretical flux and the calculated flux are in good agreement, with root mean square percentage errors (RMSPE) of RMSPE = 0.41 % when time $t \geq 3$ s. The breakthrough time calculated from [eqn:zeta] in analytical solution is 4.04 s, and the breakthrough time from TMAP8 is 4.12 s.
 
 !media comparison_ver-1dc.py
        image_name=ver-1dc_comparison_diffusion.png
@@ -93,6 +93,6 @@ The analytical solution for the permeation transient is compared with TMAP8 resu
 
 ## Input files
 
-The input file for this case can be found at [/ver-1dc.i].
+The input file for this case can be found at [/ver-1dc.i] which is different from the input file used as test in TMAP8. To limit the computational costs of the test cases, the tests run a version of the file with a coarser mesh and less number of time steps. More information about the changes can be found in the test specification file for this case [/ver-1dc/tests].
 
 !bibtex bibliography
