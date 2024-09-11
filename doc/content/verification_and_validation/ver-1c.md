@@ -35,4 +35,8 @@ TMAP4 and TMAP7 verification cases are slightly different: TMAP4 verifies the mo
     caption=Comparison of concentration as a function of time at x\=0.25 m, 10 m, and 12 m
     calculated with TMAP8 and analytically (TMAP7 cases)
 
+## Input files
+
+The input file for this case can be found at [/ver-1c.i], which is also used as test in TMAP8 at [/ver-1c/tests].
+
 !bibtex bibliography

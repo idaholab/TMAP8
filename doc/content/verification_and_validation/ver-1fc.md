@@ -69,4 +69,8 @@ $t = 0$ s to $t = 150$ s. These results can be seen in [ver-1fc_comparison_tempe
     id=ver-1fc_comparison_temperature_transient_x0.09
     caption=Comparison of temperature value over time from TMAP8, TMAP7, and ABAQUS in the composite structure at $x = 0.09$ m.
 
+## Input files
+
+The input file for this case can be found at [/ver-1fc.i], which is also used as test in TMAP8 at [/ver-1fc/tests].
+
 !bibtex bibliography
