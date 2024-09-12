@@ -23,7 +23,7 @@ and
 \end{equation}
 where $C_M$ is the concentrations of the mobile, $C_{T_i}$ is the trapped species in trap $i$, $D$ is the diffusivity of the mobile species, $\alpha_t^i$ and $\alpha_r^i$ are the trapping and release rate coefficients for trap $i$, $\text{trap\_per\_free}$ is a factor scaling $C_{T_i}$ to be closer to $C_M$ for better numerical convergence, $C_{{T_i}0}$ is the fraction of host sites $i$ that can contribute to trapping, $C_{T_i}^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density.
 
-The breakthrough time is defined by
+The trapping parameter is defined by
 \begin{equation}
   \label{eqn:zeta}
     \zeta = \frac{\lambda^2 \nu}{\rho D_o} exp \left( \frac{E_d - \epsilon}{kT} \right) + \frac{c}{\rho},
@@ -74,7 +74,7 @@ where $D_{eff}$, the effective diffusivity, is defined as
 \label{eqn:Deff}
     D_{eff} = \frac{D}{1 + \sum_{i=1}^3 \frac{1}{\zeta_i}},
 \end{equation}
-where $\zeta_i$ is the trapping parameter of trap $i$. The trapping parameters, $\zeta_i$, for the three traps are 91.47930 $c/\rho$, 61.65009 $c/\rho$, 45.93069 $c/\rho$.
+where $\zeta_i$ is the trapping parameter of trap $i$. The trapping parameters, $\zeta_i$, calculated from [eqn:zeta] for the three traps are 91.47930 $c/\rho$, 61.65009 $c/\rho$, 45.93069 $c/\rho$.
 
 !alert warning title=Typo in [!cite](ambrosek2008verification)
 The $\zeta_i$ of the three traps from [!cite](ambrosek2008verification) have a typographical error with three orders of magnitude lower than correct one, but it dos not impact the final analytical solution.
@@ -82,7 +82,7 @@ The $\zeta_i$ of the three traps from [!cite](ambrosek2008verification) have a t
 
 ## Results and comparison against analytical solution
 
-The analytical solution for the permeation transient is compared with TMAP8 results in [ver-1dc_comparison_diffusion]. The graphs for the theoretical flux and the calculated flux are in good agreement, with root mean square percentage errors (RMSPE) of RMSPE = 0.41 % when time $t \geq 3$ s. The breakthrough time calculated from [eqn:zeta] in analytical solution is 4.04 s, and the breakthrough time from TMAP8 is 4.12 s.
+The analytical solution for the permeation transient is compared with TMAP8 results in [ver-1dc_comparison_diffusion]. The graphs for the theoretical flux and the calculated flux are in good agreement, with root mean square percentage errors (RMSPE) of RMSPE = 0.41 % when time $t \geq 3$ s. The breakthrough time calculated from [eqn:tau_be] in analytical solution is 4.04 s, and the breakthrough time from TMAP8 is 4.12 s.
 
 !media comparison_ver-1dc.py
        image_name=ver-1dc_comparison_diffusion.png
