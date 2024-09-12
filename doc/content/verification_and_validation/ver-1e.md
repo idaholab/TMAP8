@@ -57,24 +57,27 @@ and $\lambda_n$ are the roots of
 
 [ver-1e_comparison_dist] shows the comparison of the TMAP8 calculation and the analytical solution for concentration after steady-state is reached. The plots show the TMAP8 and analytical solution comparisons for both the TMAP4 case ($l$ = 63 $\mu m$) and the TMAP7 case ($l$ = 66 $\mu m$).
 
-!media figures/ver-1e_comparison_dist.png
-    style=width:50%;margin-bottom:2%
-    id=ver-1e_comparison_dist
-    caption=Comparison of TMAP8 calculation with the analytical solution. Bold text next to the plot curves shows the root mean square percentage error (RMSPE) between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
+!media comparison_ver-1e.py
+       image_name=ver-1e_comparison_dist.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1e_comparison_dist
+       caption=Comparison of TMAP8 calculation with the analytical solution. Bold text next to the plot curves shows the root mean square percentage error (RMSPE) between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
 
 For transient solution comparison, the concentation at a point, which is $x$ $\mu m$ away from the PyC-SiC interface into the SiC layer, is obtained using the TMAP code as well as analytically. [ver-1e_comparison_time] shows comparison of the TMAP calculation with the analytical solution for this transient case. In the TMAP4 case, $x$ = 8 $\mu m$, and in the TMAP7 case $x$ = 15.75 $\mu m$. There is good agreement between TMAP and the analytical solution for both steady state as well as transient cases. In both cases, the root mean square percentage error (RMSPE) is under 0.2 %.
 
-!media figures/ver-1e_comparison_time.png
-    style=width:50%;margin-bottom:2%
-    id=ver-1e_comparison_time
-    caption=Comparison of TMAP8 calculation with the analytical solution. Bold text next to the plot curves shows the RMSPE for the match between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
+!media comparison_ver-1e.py
+       image_name=ver-1e_comparison_time.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1e_comparison_time
+       caption=Comparison of TMAP8 calculation with the analytical solution. Bold text next to the plot curves shows the RMSPE for the match between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
 
 The error is calculated between the TMAP8 and analytical solution values after $t$ = 0.2 s. This is in order to ignore the unphysical predictions of the analytical solution at very small times as shown in [ver-1e_comparison_time_zoomed], which is a close-up view of [ver-1e_comparison_time] close to the start of the simulation.
 
-!media figures/ver-1e_comparison_time_closeup.png
-    style=width:50%;margin-bottom:2%
-    id=ver-1e_comparison_time_zoomed
-    caption=Zoomed-in view of comparison of TMAP8 calculation with the analytical solution for $t$ < 1 s. The analytical solution shows unphysical predictions close to $t$ = 0 s.
+!media comparison_ver-1e.py
+       image_name=ver-1e_comparison_time_closeup.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1e_comparison_time_zoomed
+       caption=Zoomed-in view of comparison of TMAP8 calculation with the analytical solution for $t$ < 1 s. The analytical solution shows unphysical predictions close to $t$ = 0 s.
 
 ## Input files
 

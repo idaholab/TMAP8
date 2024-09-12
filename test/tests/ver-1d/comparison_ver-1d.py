@@ -4,6 +4,11 @@ import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 from scipy import special
+import os
+import git
+
+# Changes working directory to script directory (for consistent MooseDocs usage)
+os.chdir(os.path.dirname(__file__))
 
 # ============ Comparison of permeation as a function of time =================
 # ========================= Diffusion limited =================================
@@ -64,7 +69,7 @@ analytical_permeation = Jp
 ax.plot(analytical_time, analytical_permeation,
         label=r"Analytical", c='k', linestyle='--')
 
-tmap_sol = pd.read_csv("./gold/ver-1d-diffusion_out.csv")
+tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1d/gold/ver-1d-diffusion_out.csv"))
 tmap_time = tmap_sol['time']
 tmap_perm = tmap_sol['scaled_outflux']
 ax.plot(tmap_time, tmap_perm, label=r"TMAP8", c='tab:gray')
@@ -89,7 +94,7 @@ analytical_time = [tau_bd, tau_bd]
 # breakthrough time.
 analytical_sol = [0, 3.2e18]
 
-tmap_sol = pd.read_csv("./gold/ver-1d-trapping_out.csv")
+tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1d/gold/ver-1d-trapping_out.csv"))
 tmap_time = tmap_sol['time']
 tmap_perm = tmap_sol['scaled_outflux']
 tmap_min_trapped = tmap_sol['min_trapped']

@@ -4,7 +4,11 @@ import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 from scipy import special
+import os
+import git
 
+# Changes working directory to script directory (for consistent MooseDocs usage)
+os.chdir(os.path.dirname(__file__))
 
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
@@ -13,13 +17,13 @@ ax = fig.add_subplot(gs[0])
 # ==============================================================================
 
 #TMAP4 case
-tmap_sol = pd.read_csv("./gold/diff_conc_TMAP4_out.csv")
+tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1g/gold/diff_conc_TMAP4_out.csv"))
 tmap_time = tmap_sol['time']
 tmap_concAB = tmap_sol['conc_ab']
 ax.plot(tmap_time, tmap_concAB, linewidth = 2, label=r"TMAP8 (TMAP4 case)", c='tab:brown')
 
 #TMAP7 case
-tmap_sol = pd.read_csv("./gold/diff_conc_TMAP7_out.csv")
+tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1g/gold/diff_conc_TMAP7_out.csv"))
 tmap_time = tmap_sol['time']
 tmap_concAB = tmap_sol['conc_ab']
 ax.plot(tmap_time, tmap_concAB, linewidth = 2, label=r"TMAP8 (TMAP7 case)", c='tab:gray')
@@ -76,7 +80,7 @@ fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol = pd.read_csv("./gold/equal_conc_out.csv")
+tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1g/gold/equal_conc_out.csv"))
 tmap_time = tmap_sol['time']
 tmap_concAB = tmap_sol['conc_ab']
 ax.plot(tmap_time, tmap_concAB, label=r"TMAP8", c='tab:gray')

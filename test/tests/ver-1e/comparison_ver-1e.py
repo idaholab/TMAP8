@@ -5,6 +5,11 @@ from matplotlib import gridspec
 import pandas as pd
 from scipy import special
 from numpy import sin,tan,sqrt,exp
+import os
+import git
+
+# Changes working directory to script directory (for consistent MooseDocs usage)
+os.chdir(os.path.dirname(__file__))
 
 # ========= Comparison of concentration as a function of time ===================
 
@@ -12,8 +17,8 @@ fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol_tmap4 = pd.read_csv("./gold/TMAP4.csv")
-tmap_sol_tmap7 = pd.read_csv("./gold/TMAP7.csv")
+tmap_sol_tmap4 = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1e/gold/TMAP4.csv"))
+tmap_sol_tmap7 = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1e/gold/TMAP7.csv"))
 
 tmap_time_tmap4 = tmap_sol_tmap4['time']
 tmap_conc_tmap4 = tmap_sol_tmap4['conc_at_x']
@@ -128,13 +133,13 @@ fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol = pd.read_csv("./gold/TMAP4_vector_postproc_line_0548.csv")
+tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1e/gold/TMAP4_vector_postproc_line_0548.csv"))
 tmap_distance_tmap4 = tmap_sol['x']
 tmap_distance_tmap4_microns = tmap_distance_tmap4*1e6
 tmap_conc_tmap4 = tmap_sol['u']
 ax.plot(tmap_distance_tmap4_microns, tmap_conc_tmap4, label=r"TMAP8 (TMAP4 case)", c='tab:gray')
 
-tmap_sol = pd.read_csv("./gold/TMAP7_vector_postproc_line_0548.csv")
+tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1e/gold/TMAP7_vector_postproc_line_0548.csv"))
 tmap_distance_tmap7 = tmap_sol['x']
 tmap_distance_tmap7_microns = tmap_distance_tmap7*1e6
 tmap_conc_tmap7 = tmap_sol['u']

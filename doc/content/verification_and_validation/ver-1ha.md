@@ -46,15 +46,17 @@ where $C_i$ is the concentration in atoms/m$^3$, $N_a$ is Avogadro's constant, $
 
 The comparison of TMAP8 results against the analytical solution is shown in [ver-1ha_comparison_conc] and [ver-1ha_comparison_pressure]. The match between TMAP8's predictions and the analytical solution is satisfactory, with root mean square percentage errors (RMSPE) of 0.06 % for both the 2$^{\text{nd}}$ and 3$^{\text{rd}}$ enclosures. The RMSPE value is the same for the concentration and pressure comparisons.
 
-!media figures/ver-1ha_comparison_conc.png
-    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=ver-1ha_comparison_conc
-    caption=Comparison of concentration of species $T_2$ for the second and third enclosures in a series outflow predicted by TMAP8 and provided by the analytical solution. The RMSPE is the root mean square percent error between the analytical solution and TMAP8 predictions. This recreates the verification figure from TMAP4.
+!media comparison_ver-1ha.py
+       image_name=ver-1ha_comparison_conc.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1ha_comparison_conc
+       caption=Comparison of concentration of species $T_2$ for the second and third enclosures in a series outflow predicted by TMAP8 and provided by the analytical solution. The RMSPE is the root mean square percent error between the analytical solution and TMAP8 predictions. This recreates the verification figure from TMAP4.
 
-!media figures/ver-1ha_comparison_pressure.png
-    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=ver-1ha_comparison_pressure
-    caption=Comparison of pressure of species $T_2$ for the second and third enclosures in a series outflow predicted by TMAP8 and provided by the analytical solution. The RMSPE is the root mean square percent error between the analytical solution and TMAP8 predictions. This recreates the verification figure from TMAP7.
+!media comparison_ver-1ha.py
+       image_name=ver-1ha_comparison_pressure.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1ha_comparison_pressure
+       caption=Comparison of pressure of species $T_2$ for the second and third enclosures in a series outflow predicted by TMAP8 and provided by the analytical solution. The RMSPE is the root mean square percent error between the analytical solution and TMAP8 predictions. This recreates the verification figure from TMAP7.
 
 ## Input files
 

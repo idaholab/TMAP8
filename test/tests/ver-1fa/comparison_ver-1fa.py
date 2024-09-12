@@ -4,8 +4,11 @@ import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 from scipy import special
+import os
+import git
 
-
+# Changes working directory to script directory (for consistent MooseDocs usage)
+os.chdir(os.path.dirname(__file__))
 
 fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
@@ -19,7 +22,7 @@ Q = 10000
 analytical_temp = Ts + Q*L**2 * (1- analytical_x**2/L**2) / (2*k)
 ax.scatter(analytical_x,analytical_temp,label=r"Analytical",c='k', marker='^')
 
-tmap_sol = pd.read_csv("./gold/ver-1fa_csv_line_0011.csv")
+tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1fa/gold/ver-1fa_csv_line_0011.csv"))
 tmap_x = tmap_sol['id']
 tmap_temp = tmap_sol['temp']
 ax.plot(tmap_x,tmap_temp,label=r"TMAP8",c='tab:gray')

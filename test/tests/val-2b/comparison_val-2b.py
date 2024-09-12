@@ -4,13 +4,17 @@ import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 from scipy import special
+import os
+import git
 
+# Changes working directory to script directory (for consistent MooseDocs usage)
+os.chdir(os.path.dirname(__file__))
 
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-expt_data = pd.read_csv("./gold/experimental_data.csv")
+expt_data = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/val-2b/gold/experimental_data.csv"))
 expt_temp = expt_data['temp']
 expt_flux = expt_data['flux']*1e15
 
@@ -22,7 +26,7 @@ ax.scatter(expt_temp, expt_flux,
 # all the way up the row with temperature around 673K (during temperature ramp up, not cool down).
 # We should update this script in future so that the script can itself leave out those rows.
 
-tmap_sol = pd.read_csv("./gold/val-2b_out_short_timeSteps.csv") # for documentation figure
+tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/val-2b/gold/val-2b_out_short_timeSteps.csv"))
 tmap_temp = tmap_sol['Temp']
 
 tmap_flux = tmap_sol['avg_flux_left']*2*1e20 # Factor of 2 because

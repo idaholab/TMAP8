@@ -43,11 +43,11 @@ The model applies 13.3 kPa of D$_2$ for 50 hours and 15 seconds followed by evac
 
 [val-2b_comparison] shows the comparison of the TMAP8 calculation and the experimental data. There is good agreement between the TMAP predictions and the data.
 
-
-!media figures/val-2b_comparison.png
-    style=width:50%;margin-bottom:2%
-    id=val-2b_comparison
-    caption=Comparison of TMAP8 calculation with the experimental data
+!media comparison_val-2b.py
+       image_name=val-2b_comparison.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2b_comparison
+       caption=Comparison of TMAP8 calculation with the experimental data
 
 ## Input files
 

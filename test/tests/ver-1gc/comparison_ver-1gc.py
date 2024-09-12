@@ -6,13 +6,14 @@ import pandas as pd
 from scipy import special
 import os
 import math
+import git
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
 os.chdir(os.path.dirname(__file__))
 
 #===============================================================================
 # Extract TMAP8 results
-tmap8_sol = pd.read_csv("./gold/ver-1gc_out.csv")
+tmap8_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1gc/gold/ver-1gc_out.csv"))
 tmap8_sol_time = tmap8_sol['time']
 tmap8_sol_concentration_A = tmap8_sol['concentration_A']
 tmap8_sol_concentration_B = tmap8_sol['concentration_B']

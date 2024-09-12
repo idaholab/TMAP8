@@ -88,19 +88,21 @@ Using TMAP8 we examine these two different regimes, one where diffusion is the r
 
 For the effective diffusivity limit, we selected $\epsilon/k = 100 K$ to give $\zeta = 91.47 c/\rho$. The comparison results are presented in [ver-1d_comparison_diffusion].
 
-!media figures/ver-1d_comparison_diffusion.png
-    style=width:50%;margin-bottom:2%
-    id=ver-1d_comparison_diffusion
-    caption=Permeation history of a slab subject to effective-diffusivity limit trapping.
+!media comparison_ver-1d.py
+       image_name=ver-1d_comparison_diffusion.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1d_comparison_diffusion
+       caption=Permeation history of a slab subject to effective-diffusivity limit trapping.
 
 ## Trapping-limited
 
 For the deep trapping limit we took $\epsilon/k = 10000 K$ to give $\zeta = 1.00454 c/\rho$.  The comparison results are presented in [ver-1d_comparison_trapping].
 
-!media figures/ver-1d_comparison_trapping.png
-    style=width:50%;margin-bottom:2%
-    id=ver-1d_comparison_trapping
-    caption=Permeation transient in a slab subject to strong trapping.
+!media comparison_ver-1d.py
+       image_name=ver-1d_comparison_trapping.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1d_comparison_trapping
+       caption=Permeation transient in a slab subject to strong trapping.
 
 
 

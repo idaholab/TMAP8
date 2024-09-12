@@ -5,8 +5,13 @@ from matplotlib import gridspec
 import pandas as pd
 from scipy.special import erf
 from numpy import sqrt
+import os
+import git
 
-tmap_sol = pd.read_csv("./gold/ver-1c_csv.csv")
+# Changes working directory to script directory (for consistent MooseDocs usage)
+os.chdir(os.path.dirname(__file__))
+
+tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1c/gold/ver-1c_csv.csv"))
 tmap_time = tmap_sol['time'][1:]
 tmap_conc0 = tmap_sol['point0'][1:]
 tmap_conc0_25 = tmap_sol['point0.25'][1:]

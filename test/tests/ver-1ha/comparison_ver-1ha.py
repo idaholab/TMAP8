@@ -6,13 +6,14 @@ import pandas as pd
 from scipy import special
 import os
 import math
+import git
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
 os.chdir(os.path.dirname(__file__))
 
 # ===============================================================================
 # Extract TMAP8 results
-tmap8_sol = pd.read_csv("./gold/ver-1ha_out.csv")
+tmap8_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1ha/gold/ver-1ha_out.csv"))
 tmap8_sol_time = tmap8_sol['time']
 tmap8_sol_P2 = tmap8_sol['P2_value']
 tmap8_sol_P3 = tmap8_sol['P3_value']
@@ -93,7 +94,7 @@ err_percent_C3 = RMSE_C3*100/np.mean(C3)
 ax.text(20, 1.125e20, '(C3) RMSPE = %.2f ' %
         err_percent_C3+'%', fontweight='bold', color='tab:blue')
 
-plt.savefig('ver-1h_comparison_conc.png', bbox_inches='tight', dpi=300)
+plt.savefig('ver-1ha_comparison_conc.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 
 # ===============================================================================
@@ -132,5 +133,5 @@ err_percent_P3 = RMSE_P3*100/np.mean(P3)
 ax.text(20, 0.55, '(P3) RMSPE = %.2f ' %
         err_percent_P3+'%', fontweight='bold', color='tab:blue')
 
-plt.savefig('ver-1h_comparison_pressure.png', bbox_inches='tight', dpi=300)
+plt.savefig('ver-1ha_comparison_pressure.png', bbox_inches='tight', dpi=300)
 plt.close(fig)

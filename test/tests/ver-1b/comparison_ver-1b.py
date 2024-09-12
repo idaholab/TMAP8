@@ -4,6 +4,11 @@ import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 from scipy import special
+import os
+import git
+
+# Changes working directory to script directory (for consistent MooseDocs usage)
+os.chdir(os.path.dirname(__file__))
 
 #========= Comparison of concentration as a function of time ===================
 
@@ -11,7 +16,7 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol = pd.read_csv("./gold/ver-1b_csv.csv")
+tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1b/gold/ver-1b_csv.csv"))
 tmap_time = tmap_sol['time']
 tmap_conc = tmap_sol['conc_point1']
 
@@ -43,7 +48,7 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol = pd.read_csv("./gold/ver-1b_vector_postproc_line_0250.csv")
+tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1b/gold/ver-1b_vector_postproc_line_0250.csv"))
 tmap_distance = tmap_sol['x']
 tmap_conc = tmap_sol['u']
 
@@ -73,7 +78,7 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol = pd.read_csv("./gold/ver-1b_csv.csv")
+tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1b/gold/ver-1b_csv.csv"))
 tmap_time = tmap_sol['time']
 tmap_flux = tmap_sol['flux_point2']
 
@@ -83,7 +88,7 @@ C_o = 1
 D = 1
 analytical_flux = C_o * np.sqrt(D/(np.pi * analytical_time)) * \
                   np.exp( x / (2 * np.sqrt(D * analytical_time)))
-ax.plot(tmap_time,tmap_flux,label=r"TMAP8",c='tab:gray')
+ax.plot(tmap_time[1:],tmap_flux[1:],label=r"TMAP8",c='tab:gray')
 ax.plot(analytical_time,analytical_flux,label=r"Analytical",c='k', linestyle='--')
 
 

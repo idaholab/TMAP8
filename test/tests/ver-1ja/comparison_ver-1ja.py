@@ -11,7 +11,7 @@ os.chdir(os.path.dirname(__file__))
 
 # ===============================================================================
 # Extract TMAP8 predictions
-tmap8_solution = pd.read_csv("./gold/ver-1ja_out.csv")
+tmap8_solution = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1ja/gold/ver-1ja_out.csv"))
 tmap8_time = tmap8_solution['time']
 tmap8_tritium = tmap8_solution['tritium_concentration']
 tmap8_helium = tmap8_solution['helium_concentration']

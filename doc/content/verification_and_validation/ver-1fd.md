@@ -25,12 +25,13 @@ In [!cite](ambrosek2008verification), the value of $k = 801$ W/m/K is provided, 
 
 The comparison between TMAP8 predictions and the analytical solution is performed at depth $x = 5$ cm.
 These results are shown in [ver-1fd_comparison_convective_heating].
-They show great agreement between TMAP8 and the analytical solution with a root mean square percentage error of RMSPE = 0.04 %.
+They show great agreement between TMAP8 and the analytical solution with a root mean square percentage error of RMSPE = 0.29 %.
 
-!media figures/ver-1fd_comparison_convective_heating.png
-    style=width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=ver-1fd_comparison_convective_heating
-    caption=Comparison of temperature profiles for convective heating in a semi-infinite slab from the analytical solution and TMAP8 at depth $x = 5$ cm. The RMSPE is the root mean square percentage error between the analytical solution and TMAP8 predictions.
+!media comparison_ver-1fd.py
+       image_name=ver-1fd_comparison_convective_heating.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1fd_comparison_convective_heating
+       caption=Comparison of temperature profiles for convective heating in a semi-infinite slab from the analytical solution and TMAP8 at depth $x = 5$ cm. The RMSPE is the root mean square percentage error between the analytical solution and TMAP8 predictions.
 
 ## Input files
 

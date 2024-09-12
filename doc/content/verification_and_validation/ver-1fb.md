@@ -39,10 +39,11 @@ $k$ is the thermal conductivity, $\rho$ is the density and $C_p$ is the specific
 
 Comparison of the temperature distribution in the slab, computed through TMAP8 and calculated analytically, is shown in [ver-1fb_comparison_temperature]. The TMAP8 code predictions match very well with the analytical solution.
 
-!media figures/ver-1fb_comparison_temperature.png
-    style=width:60%;margin-bottom:2%
-    id=ver-1fb_comparison_temperature
-    caption=Comparison of temperature distribution in the slab calculated
+!media comparison_ver-1fb.py
+       image_name=ver-1fb_comparison_temperature.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1fb_comparison_temperature
+       caption=Comparison of temperature distribution in the slab calculated
      through TMAP8 and analytically
 
 ## Input files

@@ -16,22 +16,24 @@ x = 0.2 mm. For simplicity, both the diffusion coefficient and the initial
 concentration were set to unity. The TMAP8 code predictions match very well with
 the analytical solution.
 
-!media figures/ver-1b_comparison_time.png
-    style=width:50%;margin-bottom:2%
-    id=ver-1b_comparison_time
-    caption=Comparison of concentration as function of time at x\=0.2m calculated
-     through TMAP8 and analytically
+!media comparison_ver-1b.py
+       image_name=ver-1b_comparison_time.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1b_comparison_time
+       caption=Comparison of concentration as function of time at x\=0.2m calculated
+       through TMAP8 and analytically
 
 As a second check, the concentration as a function of position at a given time
 t = 25s, from TMAP8 was compared with the analytical solution as shown in
 [ver-1b_comparison_dist]. The predicted concentration profile from TMAP8 is in
 good agreement with the analytical solution.
 
-!media figures/ver-1b_comparison_dist.png
-    style=width:50%;margin-bottom:2%
-    id=ver-1b_comparison_dist
-    caption=Comparison of concentration as function of distance from the source
-    at t\=25sec calculated through TMAP8 and analytically
+!media comparison_ver-1b.py
+       image_name=ver-1b_comparison_dist.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1b_comparison_dist
+       caption=Comparison of concentration as function of distance from the source
+       at t\=25sec calculated through TMAP8 and analytically
 
 Finally, the diffusive flux ($J$) was compared with the analytic solution where the
 flux is proportional to the derivative of the concentration with respect to x and
@@ -47,11 +49,12 @@ taken as unity, and the distance, x, was taken as 0.5 in this comparison.
 TMAP8 initially under predicts but the results match well subsequently. Comparison
 results are shown in []
 
-!media figures/ver-1b_comparison_flux.png
-    style=width:50%;margin-bottom:2%
-    id=ver-1b_comparison_flux
-    caption=Comparison of flux as function of time at x\=0.5m calculated through
-    TMAP8 and analytically
+!media comparison_ver-1b.py
+       image_name=ver-1b_comparison_flux.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1b_comparison_flux
+       caption=Comparison of flux as function of time at x\=0.5m calculated through
+       TMAP8 and analytically
 
 
 The oscillations in the permeation graph go away with increasing fineness in the
