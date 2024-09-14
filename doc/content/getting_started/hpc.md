@@ -78,7 +78,7 @@ compilation time by using more than one core to build the dependency. One can se
 signal that the scripts use of 8 computer cores by doing the following:
 
 ```bash
-export MOOSE_JOBS=8
+export MOOSE_JOBS=4 METHODS=opt 
 ```
 
 Then, the dependencies can be built by running the installation scripts for MOOSE dependencies in
@@ -136,6 +136,7 @@ only necessary to re-run those scripts for dependencies that were actually updat
 helpful to check the most recent [MOOSE Newsletter](https://mooseframework.inl.gov/newsletter/index.html) or [Discussion Forum](https://github.com/idaholab/moose/discussions) for any update announcements from the MOOSE development team for the preceding month.
 
 ```bash
+export MOOSE_JOBS=4 METHODS=opt 
 cd ~/projects/TMAP8/moose
 scripts/update_and_rebuild_petsc.sh
 scripts/update_and_rebuild_libmesh.sh
