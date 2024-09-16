@@ -57,6 +57,6 @@ A comparison of the concentration of AB as a function of time is plotted in [ver
 ## Input files
 
 !style halign=left
-The input file for these cases can be found at [/ver-1g.i], which is also used as test in TMAP8 at [/ver-1g/tests]. The initial conditions of three cases (a), (b), and (c) can be found at [/equal_conc.i], [/diff_conc_TMAP4.i], and [/diff_conc_TMAP7.i].
+The input file for these cases can be found at [/ver-1g.i], which is also used as tests in TMAP8 at [/ver-1g/tests]. The initial conditions of three cases (a), (b), and (c) can be found at [/equal_conc.i], [/diff_conc_TMAP4.i], and [/diff_conc_TMAP7.i], respectively.
 
 !bibtex bibliography
