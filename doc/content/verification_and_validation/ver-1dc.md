@@ -12,7 +12,7 @@ This problem models permeation through a membrane with a constant source in whic
     \label{eqn:diffusion_mobile}
     \frac{dC_M}{dt} = - \nabla D \nabla C_M - \text{trap\_per\_free} \cdot \sum_{i=1}^{3} \frac{dC_{T_i}}{dt} ,
 \end{equation}
-for $i=1$, $i=2$, and $i=3$:
+and, for $i=1$, $i=2$, and $i=3$:
 \begin{equation}
     \label{eqn:trapped_rate}
     \frac{dC_{T_i}}{dt} = \alpha_t^i  \frac {C_{T_i}^{empty} C_M } {(N \cdot \text{trap\_per\_free})} - \alpha_r^i C_{T_i},
@@ -72,12 +72,12 @@ where $D_{eff}$, the effective diffusivity, is defined as
 
 \begin{equation}
 \label{eqn:Deff}
-    D_{eff} = \frac{D}{1 + \sum_{i=1}^3 \frac{1}{\zeta_i}},
+    D_{eff} = \frac{D}{1 + \sum_{i=1}^3 1 / \zeta_i},
 \end{equation}
 where $\zeta_i$ is the trapping parameter of trap $i$. The trapping parameters, $\zeta_i$, calculated from [eqn:zeta] for the three traps are 91.47930 $c/\rho$, 61.65009 $c/\rho$, 45.93069 $c/\rho$.
 
 !alert warning title=Typo in [!cite](ambrosek2008verification)
-The $\zeta_i$ of the three traps from [!cite](ambrosek2008verification) have a typographical error with three orders of magnitude lower than correct one, but it dos not impact the final analytical solution.
+The $\zeta_i$ values of the three traps from [!cite](ambrosek2008verification) have a typographical error: They are three orders of magnitude lower than the correct values. however, it dos not impact the final analytical solution.
 
 
 ## Results and comparison against analytical solution

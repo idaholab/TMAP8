@@ -67,10 +67,10 @@ tmap_time = np.array(tmap_sol['time'])
 tmap_prediction = np.array(tmap_sol['scaled_outflux'])
 idx = np.where(tmap_time >= 3)[0][0]
 
-# Calculate the breakthrough time from numberical solution
+# Calculate the breakthrough time from the numerical solution
 tmap_slope = (tmap_prediction[idx+1:] - tmap_prediction[idx:-1]) / (tmap_time[idx+1:] - tmap_time[idx:-1])
 tmap_intercept = tmap_time[np.argmax(tmap_slope)+idx] -  (tmap_prediction[int(np.argmax(tmap_slope)+idx)]) / np.max(tmap_slope)
-output_line = f"The breakthrough time from numerical solution is {tmap_intercept:.2f} s"
+output_line = f"The breakthrough time from the numerical solution is {tmap_intercept:.2f} s"
 print(output_line)
 
 # Calculate the analytical solution
