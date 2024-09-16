@@ -51,6 +51,7 @@
     command = 'python3 comparison_ver-1g.py'
     requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a chemical reaction between two species with same or different concentrations, using the initial conditions from both TMAP4 and TMAP7 cases.'
     prereq = 'binary_reaction_equal_concentrations binary_reaction_diff_concentrations_TMAP4 binary_reaction_diff_concentrations_TMAP7'
+    heavy = true
     required_python_packages = 'matplotlib numpy pandas os git'
   []
 []

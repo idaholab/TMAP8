@@ -1,11 +1,9 @@
-import csv
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 from scipy import special
 import os
-import math
 import git
 
 # Changes working directory to script directory (for consistent MooseDocs usage)

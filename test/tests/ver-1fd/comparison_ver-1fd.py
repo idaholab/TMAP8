@@ -1,11 +1,9 @@
-import csv
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 from scipy import special
 import os
-import math
 from scipy.special import erfc
 import git
 

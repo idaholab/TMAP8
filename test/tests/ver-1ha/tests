@@ -13,6 +13,7 @@
       command = 'python3 comparison_ver-1ha.py'
       requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a convective outflow problem involving three enclosures and calculate the pressure and concentration of the gas in the second and third enclosure.'
       prereq = 'ver-1ha_csv'
-      required_python_packages = 'csv matplotlib numpy pandas scipy os math'
+      heavy = true
+      required_python_packages = 'matplotlib numpy pandas scipy os git'
     []
   []
