@@ -86,6 +86,9 @@ analytical_permeation = Jp # analytical solution
 ax.plot(tmap_time, analytical_permeation,
         label=r"Analytical", c='k', linestyle='--')
 ax.plot(tmap_time, tmap_prediction, label=r"TMAP8", c='tab:gray') # numerical solution
+ax.plot([tau_be, tau_be], [0, 3.15e18], label=r"Analytical breakthrough time", c='tab:brown', linestyle='--')
+ax.plot([tmap_intercept, 17.5], [0, (17.5 - tmap_intercept) * np.max(tmap_slope)],
+        label=r"Numerical breakthrough time", c='tab:brown')
 ax.set_xlabel(u'Time(s)')
 ax.set_ylabel(u"Flux (atom/m$^2$s)")
 ax.legend(loc="best")
@@ -95,6 +98,8 @@ plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 RMSE = np.sqrt(np.mean((tmap_prediction-analytical_permeation)[idx:]**2) )
 RMSPE = RMSE*100/np.mean(analytical_permeation[idx:])
 ax.text(20,2.2e18, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
+ax.text(6.0,0.05e18, 'Numerical breakthrough time = %.2f '%tmap_intercept + 's',fontweight='bold')
+ax.text(6.1,0.18e18, 'Analytical breakthrough time = %.2f '%tau_be + 's',fontweight='bold')
 ax.minorticks_on()
 plt.savefig('ver-1dc_comparison_diffusion.png', bbox_inches='tight')
 plt.close(fig)
