@@ -47,9 +47,54 @@ module load use.moose moose-dev
 
 <!-- Re-use the bulk of the build and test section from the main getting started instructions here -->
 
-!include getting_started/installation.md start=Then navigate to the TMAP8 end=TMAP8 can be compiled and tested include-end=True
+Then navigate to the TMAP8 clone directory and download the MOOSE submodule:
 
 ```bash
+cd ~/projects/TMAP8
+git submodule update --init moose
+```
+
+!alert! tip title=Thermochimica library (optional)
+To have access to the optional thermochemistry library Thermochimica [!cite](piro2013) provided within
+the MOOSE [modules/chemical_reactions/index.md], check out the corresponding submodule by performing
+the following before building:
+
+```bash
+cd ~/projects/TMAP8/moose
+git submodule update --init --checkout modules/chemical_reactions/contrib/thermochimica
+```
+!alert-end!
+
+!alert note
+The copy of MOOSE provided with TMAP8 has been fully tested against the current
+TMAP8 version, and is guaranteed to work with all current TMAP8 tests.
+
+<!-- End getting started re-use -->
+
+Once MOOSE is downloaded, several MOOSE dependencies need to be built: PETSc, libMesh, and WASP.
+These can be built easily using update-and-rebuild scripts within MOOSE. To speed up these build
+times, it is highly recommended to set the environment variable `MOOSE_JOBS`, which will speed up
+compilation time by using more than one core to build the dependency. One can set this variable to
+signal that the scripts use of 8 computer cores by doing the following:
+
+```bash
+export MOOSE_JOBS=4 METHODS=opt 
+```
+
+Then, the dependencies can be built by running the installation scripts for MOOSE dependencies in
+the following sequence:
+
+```bash
+cd ~/projects/TMAP8/moose
+scripts/update_and_rebuild_petsc.sh
+scripts/update_and_rebuild_libmesh.sh
+scripts/update_and_rebuild_wasp.sh
+```
+
+Once all dependencies have been downloaded and installed, TMAP8 can be compiled and tested:
+
+```bash
+cd ~/projects/TMAP8
 make -j8
 ```
 
@@ -84,9 +129,24 @@ not need to be kept up-to-date by the end user/developer. These are updated auto
 the [!ac](HPC) system administrators.
 !alert-end!
 
-!include getting_started/installation.md start=To update your TMAP8 repository as a TMAP8 user end=Finally, TMAP8 can be re-compiled and re-tested. include-end=True
+!include getting_started/installation.md start=To update your TMAP8 repository as a TMAP8 user end=commands as necessary.
+
+If there were updates to MOOSE dependencies, the update-and-rebuild scripts should be re-run. It is
+only necessary to re-run those scripts for dependencies that were actually updated! It is usually
+helpful to check the most recent [MOOSE Newsletter](https://mooseframework.inl.gov/newsletter/index.html) or [Discussion Forum](https://github.com/idaholab/moose/discussions) for any update announcements from the MOOSE development team for the preceding month.
 
 ```bash
+export MOOSE_JOBS=4 METHODS=opt 
+cd ~/projects/TMAP8/moose
+scripts/update_and_rebuild_petsc.sh
+scripts/update_and_rebuild_libmesh.sh
+scripts/update_and_rebuild_wasp.sh
+```
+
+Finally, TMAP8 can be re-compiled and re-tested. include-end=True
+
+```bash
+cd ~/projects/TMAP8
 make -j8
 ./run_tests -j8
 ```
