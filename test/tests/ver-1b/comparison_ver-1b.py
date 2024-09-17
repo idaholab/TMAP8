@@ -22,6 +22,7 @@ else:                                  # if in test folder
 tmap_sol = pd.read_csv(csv_folder)
 tmap_time = tmap_sol['time']
 tmap_conc = tmap_sol['conc_point1']
+idx = np.where(tmap_time >= 10.0)[0][0]
 
 analytical_time = tmap_time
 x = 0.2
@@ -39,7 +40,9 @@ ax.set_xlim(left=0)
 ax.set_xlim(right=45)
 ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-
+RMSE = np.sqrt(np.mean((tmap_conc-analytical_conc)[idx:]**2) )
+RMSPE = RMSE*100/np.mean(analytical_conc[idx:])
+ax.text(5,0.9, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
 plt.savefig('ver-1b_comparison_time.png', bbox_inches='tight');
 plt.close(fig)
@@ -75,7 +78,9 @@ ax.set_xlim(left=0)
 ax.set_xlim(right=50)
 ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-
+RMSE = np.sqrt(np.mean((tmap_conc-analytical_conc)[idx:]**2) )
+RMSPE = RMSE*100/np.mean(analytical_conc[idx:])
+ax.text(10,0.4, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
 plt.savefig('ver-1b_comparison_dist.png', bbox_inches='tight');
 plt.close(fig)
@@ -110,7 +115,9 @@ ax.set_xlim(left=0)
 ax.set_xlim(right=45)
 ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-
+RMSE = np.sqrt(np.mean((tmap_flux-analytical_flux)[idx:]**2) )
+RMSPE = RMSE*100/np.mean(analytical_flux[idx:])
+ax.text(10,0.25, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
 plt.savefig('ver-1b_comparison_flux.png', bbox_inches='tight');
 plt.close(fig)

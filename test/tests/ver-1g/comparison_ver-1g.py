@@ -22,8 +22,8 @@ else:                                  # if in test folder
     csv_folder = "./gold/diff_conc_TMAP4_out.csv"
 tmap_sol = pd.read_csv(csv_folder)
 tmap_time = tmap_sol['time']
-tmap_concAB = tmap_sol['conc_ab']
-ax.plot(tmap_time, tmap_concAB, linewidth = 2, label=r"TMAP8 (TMAP4 case)", c='tab:brown')
+tmap_concAB_TMAP4 = tmap_sol['conc_ab']
+ax.plot(tmap_time, tmap_concAB_TMAP4, linewidth = 2, label=r"TMAP8 (TMAP4 case)", c='tab:brown')
 
 #TMAP7 case
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
@@ -32,8 +32,8 @@ else:                                  # if in test folder
     csv_folder = "./gold/diff_conc_TMAP7_out.csv"
 tmap_sol = pd.read_csv(csv_folder)
 tmap_time = tmap_sol['time']
-tmap_concAB = tmap_sol['conc_ab']
-ax.plot(tmap_time, tmap_concAB, linewidth = 2, label=r"TMAP8 (TMAP7 case)", c='tab:gray')
+tmap_concAB_TMAP7 = tmap_sol['conc_ab']
+ax.plot(tmap_time, tmap_concAB_TMAP7, linewidth = 2, label=r"TMAP8 (TMAP7 case)", c='tab:gray')
 
 def get_conc_from_pressure(P):
     R = 8.31446261815324        # Gas constant (from PhysicalConstants.h - https://physics.nist.gov/cgi-bin/cuu/Value?r)
@@ -53,20 +53,22 @@ def get_concAB_diff(analytical_time,P_A0,P_B0):
         (1 - exponential_term) / (1 - (concB_o / concA_o) * exponential_term)
     return analytical_concAB
 
-analytical_time = np.linspace(0.0, 40, 40)
+analytical_time = tmap_time
 
 #TMAP4
 P_A0 = 1E-6                 # Pressure (Pa)
 P_B0 = 1E-7                 # Pressure (Pa)
+analytical_concAB_diff_TMAP4 = get_concAB_diff(analytical_time,P_A0,P_B0)
 
-ax.plot(analytical_time, get_concAB_diff(analytical_time,P_A0,P_B0), '--', c='tab:cyan', dashes=(5,5),
+ax.plot(analytical_time, analytical_concAB_diff_TMAP4, '--', c='tab:cyan', dashes=(5,5),
            label=r"Analytical TMAP4")
 
 #TMAP7
 P_A0 = 1E-6                 # Pressure (Pa)
 P_B0 = 5E-7                 # Pressure (Pa)
+analytical_concAB_diff_TMAP7 = get_concAB_diff(analytical_time,P_A0,P_B0)
 
-ax.plot(analytical_time, get_concAB_diff(analytical_time,P_A0,P_B0), 'k--', dashes=(5,5),
+ax.plot(analytical_time, analytical_concAB_diff_TMAP7, 'k--', dashes=(5,5),
            label=r"Analytical TMAP7")
 
 ax.set_xlabel(u'Time (seconds)')
@@ -76,7 +78,12 @@ ax.set_xlim(left=0)
 ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major',
          color='0.65', linestyle='--', alpha=0.3)
-
+RMSE = np.sqrt(np.mean((tmap_concAB_TMAP4-analytical_concAB_diff_TMAP4)**2) ) # TMAP4
+RMSPE = RMSE*100/np.mean(analytical_concAB_diff_TMAP4)
+ax.text(10, 1.8e-5, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',c='k')
+RMSE = np.sqrt(np.mean((tmap_concAB_TMAP7-analytical_concAB_diff_TMAP7)**2) ) # TMAP7
+RMSPE = RMSE*100/np.mean(analytical_concAB_diff_TMAP7)
+ax.text(10,11.5e-5, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',c='k')
 ax.minorticks_on()
 plt.savefig('ver-1g_comparison_diff_conc.png', bbox_inches='tight')
 
@@ -102,10 +109,11 @@ def get_concAB_equal(analytical_time,P_A0):
     analytical_concAB = concA_o - 1 / (1/concA_o + K*analytical_time)
     return analytical_concAB
 
-analytical_time = np.linspace(0.0, 40, 40)
+analytical_time = tmap_time
 P_A0 = 1E-6                 # Pressure (Pa) (which is equal to P_B0)
+analytical_concAB_diff = get_concAB_equal(analytical_time,P_A0)
 
-ax.plot(analytical_time, get_concAB_equal(analytical_time,P_A0), 'k--', dashes=(5,5),
+ax.plot(analytical_time, analytical_concAB_diff, 'k--', dashes=(5,5),
            label=r"Analytical")
 
 ax.set_xlabel(u'Time (seconds)')
@@ -115,7 +123,9 @@ ax.set_xlim(left=0)
 ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major',
          color='0.65', linestyle='--', alpha=0.3)
-
+RMSE = np.sqrt(np.mean((tmap_concAB-analytical_concAB_diff)**2) )
+RMSPE = RMSE*100/np.mean(analytical_concAB_diff)
+ax.text(10,21e-5, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',c='k')
 ax.minorticks_on()
 plt.savefig('ver-1g_comparison_equal_conc.png', bbox_inches='tight')
 
