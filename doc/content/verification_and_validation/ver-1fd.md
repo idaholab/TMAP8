@@ -32,4 +32,9 @@ They show great agreement between TMAP8 and the analytical solution with a root 
     id=ver-1fd_comparison_convective_heating
     caption=Comparison of temperature profiles for convective heating in a semi-infinite slab from the analytical solution and TMAP8 at depth $x = 5$ cm. The RMSPE is the root mean square percentage error between the analytical solution and TMAP8 predictions.
 
+## Input files
+
+!style halign=left
+The input file for this case can be found at [/ver-1fd.i], which is also used as test in TMAP8 at [/ver-1fd/tests].
+
 !bibtex bibliography

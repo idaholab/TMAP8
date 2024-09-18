@@ -18,7 +18,7 @@ and
 \begin{equation}
     C_T^{empty} = (C_{T0} \cdot N - \text{trap\_per\_free} \cdot C_T  ) ,
 \end{equation}
-where $C_M$ and $C_T$ are the concentrations of the mobile and trapped species respectively, $D$ is the diffusivity of the mobile species, $\alpha_t$ and $\alpha_r$ are the trapping and release rate coefficients, $\text{trap\_per\_free}$ is a factor converting the magnitude of $C_T$ to be closer to $C_M$ for better numerical convergence, $C_{T0}$ is the fraction of host sites that can contribute to trapping, $C_T^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density. 
+where $C_M$ and $C_T$ are the concentrations of the mobile and trapped species respectively, $D$ is the diffusivity of the mobile species, $\alpha_t$ and $\alpha_r$ are the trapping and release rate coefficients, $\text{trap\_per\_free}$ is a factor converting the magnitude of $C_T$ to be closer to $C_M$ for better numerical convergence, $C_{T0}$ is the fraction of host sites that can contribute to trapping, $C_T^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density.
 
 The breakthrough time may have one of two limiting values depending on whether the trapping is in the effective diffusivity or strong-trapping regime. A trapping parameter is defined by:
 
@@ -126,5 +126,10 @@ To keep the oscillations damped, the verification is run with nx=1000 and an ada
     C_M(x=0) = \tanh(3t).
 \end{equation}
 This takes the BC to 99.5 % of it's actual value in 3 s, which is a small fraction of the breakthrough time of 500 s.
+
+## Input files
+
+!style halign=left
+The input files for the cases where diffusion and trapping are the rate limiting processes can be found at [/ver-1d-diffusion.i] and [/ver-1d-trapping.i], respectively. These input files are different from the input files used as tests in TMAP8. To limit the computational costs of the test cases, the tests run a version of the files with a coarser mesh and fewer time steps. More information about the changes can be found in the test specification file for this case, namely [/ver-1d/tests].
 
 !bibtex bibliography
