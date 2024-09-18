@@ -20,7 +20,7 @@ tmap_time = np.array(tmap_sol['time'])
 tmap_prediction = np.array(tmap_sol['scaled_outflux'])
 idx = np.where(tmap_time >= 0.01)[0][0]
 
-# Calculate the breakthrough time from numberical solution
+# Calculate the breakthrough time from numerical solution
 tmap_slope = (tmap_prediction[idx+1:] - tmap_prediction[idx:-1]) / (tmap_time[idx+1:] - tmap_time[idx:-1])
 tmap_intercept = tmap_time[np.argmax(tmap_slope)+idx] -  (tmap_prediction[int(np.argmax(tmap_slope)+idx)]) / np.max(tmap_slope)
 output_line = f"The breakthrough time from numerical solution is {tmap_intercept:.2f} s"
@@ -54,7 +54,7 @@ ax.plot([tmap_intercept, 0.221], [0, (0.221 - tmap_intercept) * np.max(tmap_slop
 ax.set_xlabel(u'Time(s)')
 ax.set_ylabel(u"Flux (atom/m$^2$s)")
 ax.legend(loc="best")
-ax.set_xlim(left=0)
+ax.set_xlim(left=0, right=1.5)
 ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 RMSE = np.sqrt(np.mean((tmap_prediction-analytical_flux)[idx:]**2) )

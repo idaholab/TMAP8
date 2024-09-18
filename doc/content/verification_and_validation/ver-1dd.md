@@ -44,6 +44,6 @@ The analytical solution for the permeation transient is compared with TMAP8 resu
 
 ## Input files
 
-The input file for this case can be found at [/ver-1dd.i] which is also used as test in TMAP8 at [/ver-1dd/tests].
+The input file for this case can be found at [/ver-1dd.i], which is also used as test in TMAP8 at [/ver-1dd/tests].
 
 !bibtex bibliography
