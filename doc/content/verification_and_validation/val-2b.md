@@ -41,7 +41,7 @@ The model applies 13.3 kPa of D$_2$ for 50 hours and 15 seconds followed by evac
 ## Results
 
 
-[val-2b_comparison] shows the comparison of the TMAP8 calculation and the experimental data. There is good agreement between the TMAP predictions and the data.
+[val-2b_comparison] shows the comparison of the TMAP8 calculation and the experimental data. There is good agreement between the TMAP predictions and the experimental data with a root mean square percentage error of RMSPE = 19.41 %.
 
 !media comparison_val-2b.py
        image_name=val-2b_comparison.png
