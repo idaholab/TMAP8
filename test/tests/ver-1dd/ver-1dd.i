@@ -1,9 +1,9 @@
 cl = 3.1622e18 # atom/m^3
-nx_num = 100 # (-)
+nx_num = 200 # (-)
 diffusivity = 1 # m^2/s
 simulation_time = 3 # s
-interval_time_min = 0.05 # s
-interval_time = 0.05 # s
+interval_time_min = 0.01 # s
+interval_time = 0.01 # s
 
 [Mesh]
   type = GeneratedMesh
@@ -78,6 +78,8 @@ interval_time = 0.05 # s
   dt = ${interval_time}
   dtmin = ${interval_time_min}
   solve_type = NEWTON
+  scheme = BDF2
+  nl_abs_tol = 1e-13
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
   automatic_scaling = true

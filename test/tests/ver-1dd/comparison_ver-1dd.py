@@ -46,11 +46,11 @@ fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-ax.plot(analytical_time, analytical_flux, label=r"Analytical", c='k', linestyle='--') # numerical solution
 ax.plot(tmap_time, tmap_prediction, label=r"TMP8", c='tab:gray') # numerical solution
-ax.plot([tau_be, tau_be], [0, 3.15e18], label=r"Analytical breakthrough time", c='tab:brown', linestyle='--')
+ax.plot(analytical_time, analytical_flux, label=r"Analytical", c='k', linestyle='--') # analytical solution
 ax.plot([tmap_intercept, 0.221], [0, (0.221 - tmap_intercept) * np.max(tmap_slope)],
         label=r"Numerical breakthrough time", c='tab:brown')
+ax.plot([tau_be, tau_be], [0, 3.15e18], label=r"Analytical breakthrough time", c='tab:brown', linestyle='--')
 ax.set_xlabel(u'Time(s)')
 ax.set_ylabel(u"Flux (atom/m$^2$s)")
 ax.legend(loc="best")
@@ -61,7 +61,7 @@ RMSE = np.sqrt(np.mean((tmap_prediction-analytical_flux)[idx:]**2) )
 RMSPE = RMSE*100/np.mean(analytical_flux[idx:])
 ax.text(0.3,2.2e18, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.text(0.15,0.05e18, 'Numerical breakthrough time = %.2f '%tmap_intercept + 's',fontweight='bold')
-ax.text(0.158,0.18e18, 'Analytical breakthrough time = %.2f '%tau_be + 's',fontweight='bold')
+ax.text(0.153,0.18e18, 'Analytical breakthrough time = %.2f '%tau_be + 's',fontweight='bold')
 ax.minorticks_on()
 plt.savefig('ver-1dd_comparison_diffusion.png', bbox_inches='tight')
 plt.close(fig)
