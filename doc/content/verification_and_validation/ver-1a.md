@@ -142,8 +142,9 @@ Again, be aware of the typos in [!cite](ambrosek2008verification) and the differ
        id=ver-1a_comparison_analytical_TMAP7_flux
        caption=Comparison of TMAP8 calculation with the analytical solution for the release fraction from [!cite](ambrosek2008verification).
 
-## Comments on verification input file versus test file
+## Input files
 
+!style halign=left
 It is important to note that the input file used to reproduce these results and the input file used as test in TMAP8 are different. Indeed, the input file [/ver-1a.i] has a fine mesh and uses small time steps to accurately match the analytical solutions and reproduce the figures above. To limit the computational costs of the tests, however, the tests run a version of the file with a coarser mesh and larger time steps. More information about the changes can be found in the test specification file for this case [/ver-1a/tests].
 
 !bibtex bibliography

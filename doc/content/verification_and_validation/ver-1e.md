@@ -76,8 +76,9 @@ The error is calculated between the TMAP8 and analytical solution values after $
     id=ver-1e_comparison_time_zoomed
     caption=Zoomed-in view of comparison of TMAP8 calculation with the analytical solution for $t$ < 1 s. The analytical solution shows unphysical predictions close to $t$ = 0 s.
 
-## Comments on verification input file versus test file
+## Input files
 
+!style halign=left
 It is important to note that the input file used to reproduce these results and the input file used as test in TMAP8 are different. Indeed, the input file [/ver-1e.i] has a fine mesh and uses small time steps to accurately match the analytical solutions and reproduce the figures above. To limit the computational costs of the tests, however, the tests run a version of the file with a coarser mesh and larger time steps. More information about the changes can be found in the test specification file for this case [/ver-1e/tests].
 
 !bibtex bibliography

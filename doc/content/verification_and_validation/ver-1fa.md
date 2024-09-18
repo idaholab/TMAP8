@@ -31,4 +31,9 @@ the analytical solution.
     caption=Comparison of temperature along the slab calculated
      through TMAP8 and analytically
 
+## Input files
+
+!style halign=left
+The input file for this case can be found at [/ver-1fa.i], which is also used as test in TMAP8 at [/ver-1fa/tests].
+
 !bibtex bibliography

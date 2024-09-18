@@ -54,4 +54,9 @@ A comparison of the concentration of AB as a function of time is plotted in [ver
     id=ver-1g_comparison_diff_conc
     caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the case when A and B have different concentrations. The plot shows comparisons for the initial conditions specified in both TMAP4 (case (b)) and TMAP7 (case (c)).
 
+## Input files
+
+!style halign=left
+The input file for these cases can be found at [/ver-1g.i], which is also used as tests in TMAP8 at [/ver-1g/tests]. The initial conditions of three cases (a), (b), and (c) can be found at [/equal_conc.i], [/diff_conc_TMAP4.i], and [/diff_conc_TMAP7.i], respectively.
+
 !bibtex bibliography
