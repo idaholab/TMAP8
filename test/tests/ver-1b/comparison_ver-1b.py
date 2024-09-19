@@ -89,7 +89,7 @@ D = 1
 analytical_flux = C_o * np.sqrt(D/(np.pi * analytical_time)) * \
                   np.exp( x / (2 * np.sqrt(D * analytical_time)))
 ax.plot(tmap_time[1:],tmap_flux[1:],label=r"TMAP8",c='tab:gray')
-ax.plot(analytical_time,analytical_flux,label=r"Analytical",c='k', linestyle='--')
+ax.plot(analytical_time[1:],analytical_flux[1:],label=r"Analytical",c='k', linestyle='--')
 
 
 ax.set_xlabel(u'Time(s)')
