@@ -15,7 +15,7 @@ kb = 1.380649e-23  # J/K Boltzmann constant
 
 # ===============================================================================
 # Extract TMAP8 results
-tmap8_solution = pd.read_csv("./gold/ver-1ia_out.csv")
+tmap8_solution = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1ia/gold/ver-1ia_out.csv"))
 tmap8_solution_time = tmap8_solution['time']
 tmap8_solution_D2 = tmap8_solution['pressure_D2']
 tmap8_solution_H2 = tmap8_solution['pressure_H2']
