@@ -1,0 +1,18 @@
+[Tests]
+    design = 'ADMatReaction.md'
+    issues = '#2'
+    [ver-1ib_csv]
+      type = CSVDiff
+      input = 'ver-1ib.i'
+      csvdiff = ver-1ib_out.csv
+      requirement = 'The system shall be able to model a equilibration problem on a reactive surface with unequal starting pressures and to generate CSV data for use in comparisons with the analytic solution over time.'
+      verification = 'ver-1ib.md'
+    []
+    [ver-1ib_comparison]
+      type = RunCommand
+      command = 'python3 comparison_ver-1ib.py'
+      requirement = 'The system shall be able to model a equilibration problem on a reactive surface with unequal starting pressures and to generate CSV data for use in comparisons with the analytic solution over time.'
+      prereq = 'ver-1ib_csv'
+      required_python_packages = 'matplotlib numpy pandas scipy os git'
+    []
+  []
