@@ -4,10 +4,10 @@ V = '${units 1 m^3}' # Volume
 S = '${units 25 cm^2 -> m^2}' # Area
 p0_H2 = '${units 1e4 Pa}' # Initial pressure for H2
 p0_D2 = '${units 1e4 Pa}' # Initial pressure for D2
-end_time = '${units 3.8 s}'
-K_r = '5.88e-26' # at/m^3/Pa^0.5 recombination rate for H2 or D2
-K_d = '${fparse 1.858e24 / ${T}^0.5}' # at.m^-2/s/pa dissociation rate for HD
-K_s = '${fparse ${K_d}^0.5 / ${K_r}^0.5}' # Sieverts' solubility
+end_time = '${units 6 s}'
+K_r = '5.88e-26' # m^4/atom/s recombination rate for H2 or D2
+K_d = '${fparse 1.858e24 / sqrt( ${T} )}' # at/m^2/s/pa dissociation rate for HD
+K_s = '${fparse sqrt( ${K_d} / ${K_r} )}' # Sieverts' solubility
 
 [Mesh]
   type = GeneratedMesh
@@ -121,17 +121,35 @@ K_s = '${fparse ${K_d}^0.5 / ${K_r}^0.5}' # Sieverts' solubility
 
 [Executioner]
   type = Transient
-  dt = .01
+  scheme = bdf2
+  nl_rel_tol = 1e-10
+  nl_abs_tol = 1e-10
+
+  solve_type = 'NEWTON'
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = 'lu'
+
+  start_time = 0.0
   end_time = ${end_time}
-  solve_type = PJFNK
-  dtmin = .01
-  l_max_its = 30
-  nl_max_its = 5
-  petsc_options = '-snes_converged_reason -ksp_monitor_true_residual'
-  petsc_options_iname = '-pc_type -mat_mffd_err'
-  petsc_options_value = 'lu       1e-5'
-  scheme = 'bdf2'
+  num_steps = 6000
+  dt = .01
+  n_startup_steps = 0
+  automatic_scaling = true
 []
+
+# [Executioner]
+#   type = Transient
+#   dt = .01
+#   end_time = ${end_time}
+#   solve_type = PJFNK
+#   dtmin = .01
+#   l_max_its = 30
+#   nl_max_its = 5
+#   petsc_options = '-snes_converged_reason -ksp_monitor_true_residual'
+#   petsc_options_iname = '-pc_type -mat_mffd_err'
+#   petsc_options_value = 'lu       1e-5'
+#   scheme = 'bdf2'
+# []
 
 [Outputs]
   exodus = true

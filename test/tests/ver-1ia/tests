@@ -5,13 +5,13 @@
       type = CSVDiff
       input = 'ver-1ia.i'
       csvdiff = ver-1ia_out.csv
-      requirement = 'The system shall be able to model a equilibration problem on a Reactive Surface and to generate CSV data for use in comparisons with the analytic solution over time.'
+      requirement = 'The system shall be able to model a equilibration problem on a reactive surface with equal starting pressures and to generate CSV data for use in comparisons with the analytic solution over time.'
       verification = 'ver-1ia.md'
     []
     [ver-1ia_comparison]
       type = RunCommand
       command = 'python3 comparison_ver-1ia.py'
-      requirement = 'The system shall be able to model a equilibration problem on a Reactive Surface and to generate CSV data for use in comparisons with the analytic solution over time.'
+      requirement = 'The system shall be able to model a equilibration problem on a reactive surface with equal starting pressures and to generate CSV data for use in comparisons with the analytic solution over time.'
       prereq = 'ver-1ia_csv'
       required_python_packages = 'matplotlib numpy pandas scipy os git'
     []
