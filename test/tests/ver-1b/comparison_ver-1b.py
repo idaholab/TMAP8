@@ -1,14 +1,13 @@
-import csv
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 from scipy import special
 import os
-import git
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
-os.chdir(os.path.dirname(__file__))
+script_folder = os.path.dirname(__file__)
+os.chdir(script_folder)
 
 #========= Comparison of concentration as a function of time ===================
 
@@ -16,7 +15,11 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1b/gold/ver-1b_csv.csv"))
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1b/gold/ver-1b_csv.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/ver-1b_csv.csv"
+tmap_sol = pd.read_csv(csv_folder)
 tmap_time = tmap_sol['time']
 tmap_conc = tmap_sol['conc_point1']
 
@@ -48,7 +51,11 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1b/gold/ver-1b_vector_postproc_line_0250.csv"))
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1b/gold/ver-1b_vector_postproc_line_0250.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/ver-1b_vector_postproc_line_0250.csv"
+tmap_sol = pd.read_csv(csv_folder)
 tmap_distance = tmap_sol['x']
 tmap_conc = tmap_sol['u']
 
@@ -78,7 +85,11 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1b/gold/ver-1b_csv.csv"))
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1b/gold/ver-1b_csv.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/ver-1b_csv.csv"
+tmap_sol = pd.read_csv(csv_folder)
 tmap_time = tmap_sol['time']
 tmap_flux = tmap_sol['flux_point2']
 

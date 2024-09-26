@@ -229,4 +229,5 @@ unit/tmap8-unit.yaml
 tmap8.yaml
 
 # Generated image files
-doc/**/ver-1a_comparison_*.png
+doc/**/ver-*_comparison*.png
+doc/**/val-*_comparison*.png

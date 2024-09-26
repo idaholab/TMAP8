@@ -31,6 +31,6 @@
     requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1a, modeling species diffusion through a structure, originating from a depleting source enclosure.'
     heavy = true
     prereq = ver-1a_heavy_csvdiff
-    required_python_packages = 'matplotlib numpy pandas os git'
+    required_python_packages = 'matplotlib numpy pandas os'
   []
 []

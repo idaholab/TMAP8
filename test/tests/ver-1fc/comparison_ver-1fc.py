@@ -5,34 +5,54 @@ from matplotlib import gridspec
 import pandas as pd
 from scipy import special
 import os
-import git
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
-os.chdir(os.path.dirname(__file__))
+script_folder = os.path.dirname(__file__)
+os.chdir(script_folder)
 
 #===============================================================================
 # Extract TMAP8 results (both steady-state and transient)
-tmap8_sol_steady_state = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1fc/gold/ver-1fc_vector_postproc_line_0063.csv"))
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1fc/gold/ver-1fc_vector_postproc_line_0063.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/ver-1fc_vector_postproc_line_0063.csv"
+tmap8_sol_steady_state = pd.read_csv(csv_folder)
 tmap8_sol_steady_state_x = tmap8_sol_steady_state['id']
 tmap8_sol_steady_state_temperature = tmap8_sol_steady_state['temperature']
 
-tmap8_sol_transient = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1fc/gold/ver-1fc_vector_postproc_line_0032.csv"))
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1fc/gold/ver-1fc_vector_postproc_line_0032.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/ver-1fc_vector_postproc_line_0032.csv"
+tmap8_sol_transient = pd.read_csv(csv_folder)
 tmap8_sol_transient_x = tmap8_sol_transient['id']
 tmap8_sol_transient_temperature = tmap8_sol_transient['temperature']
 
-tmap8_sol_transient = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1fc/gold/ver-1fc_temperature_at_x0.09.csv"))
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1fc/gold/ver-1fc_temperature_at_x0.09.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/ver-1fc_temperature_at_x0.09.csv"
+tmap8_sol_transient = pd.read_csv(csv_folder)
 tmap8_sol_transient_t = tmap8_sol_transient['time']
 tmap8_sol_transient_temperature_at_x = tmap8_sol_transient['temperature_at_x']
 
 
 #===============================================================================
 # Extract ABAQUS results (for transient only since the steady-state results were not provided)
-abaqus_sol_transient = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1fc/ver-1fc_abaqus_TMAP7_results_over_distance.csv"))
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1fc/ver-1fc_abaqus_TMAP7_results_over_distance.csv"
+else:                                  # if in test folder
+    csv_folder = "./ver-1fc_abaqus_TMAP7_results_over_distance.csv"
+abaqus_sol_transient = pd.read_csv(csv_folder)
 abaqus_sol_transient_x = abaqus_sol_transient['Distance']
 abaqus_sol_transient_temperature_1 = abaqus_sol_transient['abaqus_or_TMAP7_temperature_transient_1']
 abaqus_sol_transient_temperature_2 = abaqus_sol_transient['abaqus_or_TMAP7_temperature_transient_2']
 
-abaqus_sol_transient = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1fc/ver-1fc_abaqus_TMAP7_results_over_time.csv"))
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1fc/ver-1fc_abaqus_TMAP7_results_over_time.csv"
+else:                                  # if in test folder
+    csv_folder = "./ver-1fc_abaqus_TMAP7_results_over_time.csv"
+abaqus_sol_transient = pd.read_csv(csv_folder)
 abaqus_sol_transient_t = abaqus_sol_transient['time']
 abaqus_sol_transient_temperature_at_x = abaqus_sol_transient['abaqus_temperature_transient']
 tmap7_sol_transient_temperature_at_x = abaqus_sol_transient['TMAP7_temperature_transient']

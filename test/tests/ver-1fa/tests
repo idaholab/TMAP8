@@ -21,7 +21,6 @@
     command = 'python3 comparison_ver-1fa.py'
     requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1fa, to model heat conduction in a slab that has heat generation.'
     prereq = ver-1fa
-    heavy = true
-    required_python_packages = 'matplotlib numpy pandas scipy os git'
+    required_python_packages = 'matplotlib numpy pandas scipy os'
   []
 []

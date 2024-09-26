@@ -3,10 +3,10 @@ import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 import os
-import git
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
-os.chdir(os.path.dirname(__file__))
+script_folder = os.path.dirname(__file__)
+os.chdir(script_folder)
 
 #===============================================================================
 # Physical constants
@@ -191,7 +191,11 @@ analytical_flux_TMAP7 = analytical_expression_flux(
 )
 
 # Extract data from 'gold' TMAP8 run
-tmap8_prediction = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1a/gold/ver-1a_csv.csv"))
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1a/gold/ver-1a_csv.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/ver-1a_csv.csv"
+tmap8_prediction = pd.read_csv(csv_folder)
 tmap8_time = tmap8_prediction['time']
 tmap8_release_fraction_right = tmap8_prediction['released_fraction_right']
 tmap8_release_fraction_left = tmap8_prediction['released_fraction_left']

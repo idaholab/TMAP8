@@ -4,14 +4,18 @@ from matplotlib import gridspec
 import pandas as pd
 from scipy import special
 import os
-import git
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
-os.chdir(os.path.dirname(__file__))
+script_folder = os.path.dirname(__file__)
+os.chdir(script_folder)
 
 # ===============================================================================
 # Extract TMAP8 results
-tmap8_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1ha/gold/ver-1ha_out.csv"))
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1ha/gold/ver-1ha_out.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/ver-1ha_out.csv"
+tmap8_sol = pd.read_csv(csv_folder)
 tmap8_sol_time = tmap8_sol['time']
 tmap8_sol_P2 = tmap8_sol['P2_value']
 tmap8_sol_P3 = tmap8_sol['P3_value']
@@ -85,7 +89,7 @@ ax.minorticks_on()
 # Root Mean Square Percentage Error calculations
 RMSE_C2 = np.linalg.norm(tmap8_sol_C2-C2)
 err_percent_C2 = RMSE_C2*100/np.mean(C2)
-ax.text(13, 1.95e20, '(C2) RMSPE = %.2f ' %
+ax.text(13, 2.25e20, '(C2) RMSPE = %.2f ' %
         err_percent_C2+'%', fontweight='bold', color='tab:pink')
 RMSE_C3 = np.linalg.norm(tmap8_sol_C3-C3)
 err_percent_C3 = RMSE_C3*100/np.mean(C3)

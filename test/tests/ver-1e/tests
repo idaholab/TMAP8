@@ -72,6 +72,6 @@
     requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1e, modeling transient diffusion through a composite slab with a constant concentration boundary condition as the species source for both the TMAP4 and TMAP7 verification cases.'
     heavy = true
     prereq = 'ver-1e_TMAP4_heavy ver-1e_TMAP7_heavy'
-    required_python_packages = 'matplotlib numpy pandas scipy os git'
+    required_python_packages = 'matplotlib numpy pandas scipy os'
   []
 []

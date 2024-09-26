@@ -32,6 +32,6 @@
     requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solutions of verification cases 1dc, modeling a breakthrough problem of multiple traps.'
     heavy = true
     prereq = 'ver-1dc_limited_heavy'
-    required_python_packages = 'matplotlib numpy pandas os git'
+    required_python_packages = 'matplotlib numpy pandas os'
   []
 []
