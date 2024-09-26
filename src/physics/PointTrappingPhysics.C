@@ -9,7 +9,7 @@
 
 #include "PointTrappingPhysics.h"
 #include "MooseUtils.h"
-#include "ComponentAction.h"
+#include "ActionComponent.h"
 #include "Enclosure0D.h"
 
 // For connecting to multi-D diffusion on other components
@@ -27,7 +27,8 @@ InputParameters
 PointTrappingPhysics::validParams()
 {
   InputParameters params = SpeciesTrappingPhysicsBase::validParams();
-  params.addClassDescription("Add Physics for the trapping of species on enclosures / 0D components.");
+  params.addClassDescription(
+      "Add Physics for the trapping of species on enclosures / 0D components.");
 
   params.addRequiredParam<std::vector<std::vector<Real>>>(
       "equilibrium_constants",
@@ -64,7 +65,7 @@ PointTrappingPhysics::PointTrappingPhysics(const InputParameters & parameters)
 }
 
 void
-PointTrappingPhysics::addComponent(const ComponentAction & component)
+PointTrappingPhysics::addComponent(const ActionComponent & component)
 {
   checkComponentType<Enclosure0D>(component);
   const auto & comp = dynamic_cast<const Enclosure0D &>(component);
@@ -94,8 +95,12 @@ PointTrappingPhysics::addComponent(const ComponentAction & component)
                                                 comp.ics(),
                                                 true,
                                                 std::vector<Real>(0, n_species_component));
-  processComponentParameters<MooseFunctorName>(
-      "temperatures", comp.name(), _component_temperatures, std::to_string(comp.temperature()), false, "0");
+  processComponentParameters<MooseFunctorName>("temperatures",
+                                               comp.name(),
+                                               _component_temperatures,
+                                               std::to_string(comp.temperature()),
+                                               false,
+                                               "0");
 
   // TODO: check that inputs are consistent once all components have been added.
   // - the pressure, temperature and the scaling factors should be positive (defense in depth from
@@ -149,7 +154,7 @@ PointTrappingPhysics::addScalarKernels()
   {
     // Get the boundary from the component
     const auto & comp_name = _components[c_i];
-    const auto & component = getComponent(comp_name);
+    const auto & component = getActionComponent(comp_name);
     const auto & structure_boundary = getConnectedStructureBoundary(c_i);
     const auto scaled_volume = component.volume() * Utility::pow<3>(_length_unit);
     const auto scaled_area = component.outerSurfaceArea() * Utility::pow<2>(_length_unit);
@@ -222,7 +227,7 @@ PointTrappingPhysics::addFEBCs()
 
 void
 PointTrappingPhysics::checkSingleBoundary(const std::vector<BoundaryName> & boundaries,
-                                            const ComponentName & comp_name) const
+                                          const ComponentName & comp_name) const
 {
   if (boundaries.size() != 1)
     paramError("components",
@@ -234,7 +239,7 @@ const VariableName &
 PointTrappingPhysics::getConnectedStructureVariableName(unsigned int c_i, unsigned int s_j)
 {
   const auto & comp_name = _components[c_i];
-  const auto & component = getComponent(comp_name);
+  const auto & component = getActionComponent(comp_name);
   const auto multi_D_physics = getConnectedStructurePhysics(c_i);
   if (multi_D_physics.empty())
     component.paramError("connected_structure",
@@ -257,7 +262,7 @@ const BoundaryName &
 PointTrappingPhysics::getConnectedStructureBoundary(unsigned int c_i)
 {
   const auto & comp_name = _components[c_i];
-  const auto & component = getComponent(comp_name);
+  const auto & component = getActionComponent(comp_name);
   const auto & boundaries = component.outerSurfaceBoundaries();
   checkSingleBoundary(boundaries, comp_name);
   return boundaries[0];
@@ -267,8 +272,8 @@ const std::vector<PhysicsBase *>
 PointTrappingPhysics::getConnectedStructurePhysics(unsigned int c_i)
 {
   const auto comp_name = _components[c_i];
-  const auto & component = dynamic_cast<const Enclosure0D &>(getComponent(comp_name));
-  const auto & structure = getComponent(component.connectedStructure());
+  const auto & component = dynamic_cast<const Enclosure0D &>(getActionComponent(comp_name));
+  const auto & structure = getActionComponent(component.connectedStructure());
   checkComponentType<Structure1D>(structure);
   return dynamic_cast<const Structure1D &>(structure).getPhysics();
 }

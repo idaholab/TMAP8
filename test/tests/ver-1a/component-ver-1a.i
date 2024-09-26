@@ -59,7 +59,7 @@ pressure_unit = 1 # number of pressure units in a Pascal
   []
 []
 
-[SystemComponents]
+[ActionComponents]
   [structure]
     type = Structure1D
     species = 'u'
