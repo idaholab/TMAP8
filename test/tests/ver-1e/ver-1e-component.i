@@ -2,7 +2,7 @@ T_PyC = ${units 33 mum -> m}
 T_SiC = ${units 66 mum -> m}
 D_ver = ${units 15.75 mum -> m}
 
-[SystemComponents]
+[ActionComponents]
   [structure]
     type = Structure1D
     species = 'u'
@@ -54,8 +54,8 @@ D_ver = ${units 15.75 mum -> m}
   [line]
     type = LineValueSampler
     start_point = '0 0 0'
-    end_point = '${SystemComponents/structure/xmax} 0 0'
-    num_points = ${SystemComponents/structure/nx}
+    end_point = '${ActionComponents/structure/xmax} 0 0'
+    num_points = ${ActionComponents/structure/nx}
     sort_by = 'x'
     variable = u
     outputs = vector_postproc

@@ -11,6 +11,8 @@
 
 #include "SpeciesTrappingPhysicsBase.h"
 
+class ActionComponent;
+
 /**
  * Creates all the objects needed to solve for the concentration of a scalar in traps distributed
  * over a mesh.
@@ -22,7 +24,7 @@ public:
 
   FieldTrappingPhysics(const InputParameters & parameters);
 
-  void addComponent(const ComponentAction & component) override;
+  void addComponent(const ActionComponent & component) override;
 
 protected:
   /// Return the name of the species variable
