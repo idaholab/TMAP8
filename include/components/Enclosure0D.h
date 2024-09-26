@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include "ComponentAction.h"
-#include "PhysicsComponentHelper.h"
+#include "ActionComponent.h"
+#include "PhysicsComponentBase.h"
 
 /**
  * Enclosure component which can trap a species, e.g. Tritium
  */
-class Enclosure0D : public virtual ComponentAction, public PhysicsComponentHelper
+class Enclosure0D : public virtual ActionComponent, public PhysicsComponentBase
 {
 public:
   Enclosure0D(const InputParameters & params);
@@ -34,9 +34,16 @@ public:
   /// Returns the scaled outer boundary surface area
   virtual Real outerSurfaceArea() const override { return _surface_area; }
   /// Returns the boundary of the enclosure, connecting with the structure
-  virtual const std::vector<BoundaryName> & outerSurfaceBoundaries() const override { _console << Moose::stringify(_outer_boundaries); return _outer_boundaries; }
+  virtual const std::vector<BoundaryName> & outerSurfaceBoundaries() const override
+  {
+    _console << Moose::stringify(_outer_boundaries);
+    return _outer_boundaries;
+  }
   /// Get the connected structure name
-  ComponentName connectedStructure() const { return getParam<ComponentName>("connected_structure");}
+  ComponentName connectedStructure() const
+  {
+    return getParam<ComponentName>("connected_structure");
+  }
 
 protected:
   virtual void initComponentPhysics() override;

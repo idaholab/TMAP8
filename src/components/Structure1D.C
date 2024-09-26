@@ -16,8 +16,8 @@ registerMooseAction("TMAP8App", Structure1D, "init_component_physics");
 InputParameters
 Structure1D::validParams()
 {
-  auto params = ComponentAction::validParams();
-  params += PhysicsComponentHelper::validParams();
+  auto params = ActionComponent::validParams();
+  params += PhysicsComponentBase::validParams();
   params += TMAP::structureCommonParams();
   params.addRequiredParam<unsigned int>("nx", "The number of elements in the structure.");
   params.addRequiredParam<Real>("xmax", "The maximum x-value.");
@@ -26,8 +26,8 @@ Structure1D::validParams()
 }
 
 Structure1D::Structure1D(const InputParameters & params)
-  : ComponentAction(params),
-    PhysicsComponentHelper(params),
+  : ActionComponent(params),
+    PhysicsComponentBase(params),
     _species(getParam<std::vector<NonlinearVariableName>>("species")),
     _ics(getParam<std::vector<Real>>("species_initial_concentrations")),
     _length_unit(getParam<Real>("length_unit_scaling"))
@@ -52,7 +52,7 @@ Structure1D::addMeshGenerators()
       "GeneratedMeshGenerator", name() + "_base", params);
 
   // Keep track of the component mesh
-  _mg_name = name() + "_base";
+  _mg_names.push_back(name() + "_base");
   _outer_boundaries.push_back(name() + "_left");
   _outer_boundaries.push_back(name() + "_right");
   _blocks.push_back(name());
