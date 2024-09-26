@@ -1,34 +1,35 @@
 # Locations for concentration comparison
 # TMAP7 - 12, 0.25, h (10)
 # TMAP4 - 12, 0,    h (10)
-[Mesh]
-  type = GeneratedMesh
-  dim = 1
-  nx = 1e4
-  xmax = 100
-[]
+[SystemComponents]
+  [structure]
+    type = Structure1D
+    species = 'u'
+    physics = 'diff'
 
-[Variables]
-  [u]
+    # Geometry
+    nx = 1e4
+    xmax = 100
+    length_unit_scaling = 1
   []
 []
 
-[ICs]
-  [function]
-    type = FunctionIC
-    variable = u
-    function = 'if(x<10.0,1,0)'
+[Physics]
+  [Diffusion]
+    [ContinuousGalerkin]
+      [diff]
+        variable_name = 'u'
+        diffusivity_matprop = 1
+        initial_condition = ic_u
+      []
+    []
   []
 []
 
-[Kernels]
-  [diff]
-    type = Diffusion
-    variable = u
-  []
-  [time]
-    type = TimeDerivative
-    variable = u
+[Functions]
+  [ic_u]
+    type = ParsedFunction
+    expression = 'if(x<10.0,1,0)'
   []
 []
 

@@ -21,42 +21,33 @@ specific_heat = '${fparse rho_Cp/density}' # J/kg/K
   nx = ${num_nodes}
 []
 
-[Variables]
-  [temperature]
-    initial_condition = ${initial_temperature}
-  []
-[]
+[Physics]
+  [HeatConduction]
+    [FiniteElement]
+      [h1]
+        temperature_name = 'temperature'
 
-[Kernels]
-  [heat]
-    type = HeatConduction
-    variable = temperature
-  []
-  [heat_time_derivative]
-    type = HeatConductionTimeDerivative
-    variable = temperature
-  []
-[]
+        initial_temperature = ${initial_temperature}
 
-[BCs]
-  [rightflux]
-    type = NeumannBC
-    boundary = right
-    variable = temperature
-    value = 0
-  []
-  [leftconvection]
-    type = ConvectiveHeatFluxBC
-    boundary = left
-    variable = temperature
-    T_infinity = ${enclosure_temperature}
-    heat_transfer_coefficient = ${conduction_coefficient}
+        # Thermal properties
+        thermal_conductivity = 'thermal_conductivity'
+
+        # Boundary conditions
+        insulated_boundaries = 'right'
+        fixed_convection_boundaries = 'left'
+        fixed_convection_T_infinity = ${enclosure_temperature}
+        fixed_convection_htc = ${conduction_coefficient}
+
+        # Default hypre preconditioning fails
+        preconditioning = 'none'
+      []
+    []
   []
 []
 
 [Materials]
   [diffusivity]
-    type = GenericConstantMaterial
+    type = ADGenericConstantMaterial
     prop_names = 'density thermal_conductivity specific_heat'
     prop_values = '${density} ${thermal_conductivity} ${specific_heat}'
   []
