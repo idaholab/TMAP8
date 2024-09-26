@@ -1,7 +1,7 @@
 # Locations for concentration comparison
 # TMAP7 - 12, 0.25, h (10)
 # TMAP4 - 12, 0,    h (10)
-[SystemComponents]
+[ActionComponents]
   [structure]
     type = Structure1D
     species = 'u'
