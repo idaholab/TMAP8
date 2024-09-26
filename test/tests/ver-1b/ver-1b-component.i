@@ -1,4 +1,4 @@
-[SystemComponents]
+[ActionComponents]
   [structure]
     type = Structure1D
     species = 'u'
