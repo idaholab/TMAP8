@@ -11,6 +11,9 @@
 
 #include "SpeciesTrappingPhysicsBase.h"
 
+// Forward declarations
+class ActionComponent;
+
 /**
  * Creates all the objects needed to solve for the concentration of a scalar in 0D trap(s).
  */
@@ -21,7 +24,7 @@ public:
 
   PointTrappingPhysics(const InputParameters & parameters);
 
-  void addComponent(const ComponentAction & component) override;
+  void addComponent(const ActionComponent & component) override;
 
 protected:
   /// Equilibrium constants / solubilities?

@@ -44,6 +44,7 @@ EquilibriumBC::EquilibriumBC(const InputParameters & parameters)
     _Ko(getParam<Real>("Ko")),
     _Ea(getParam<Real>("activation_energy")),
     _p(getParam<Real>("p")),
+    _enclosure_var_bool_scalar(isCoupled("enclosure_scalar_var")),
     _enclosure_var(adCoupledScalarValue("enclosure_scalar_var")),
     _T(isParamValid("temp") ? &adCoupledValue("temp") : nullptr),
     _T_function(isParamValid("temperature") ? &getFunction("temperature") : nullptr),
