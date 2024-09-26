@@ -15,7 +15,7 @@ D = 1                       # diffusivity (m^2/s)
 l = 1                       # slab thickness (m)
 
 # Extract data from 'gold' TMAP8 run
-if "doc" in script_folder.split("/"):  # if in documentation folder
+if "/TMAP8/doc/" in script_folder:  # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1dd/gold/ver-1dd_out.csv"
 else:                                   # if in test folder
     csv_folder = "./gold/ver-1dd_out.csv"
