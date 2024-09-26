@@ -8,7 +8,7 @@
 //* https://www.gnu.org/licenses/lgpl-2.1.html
 
 #include "FieldTrappingPhysics.h"
-#include "ComponentAction.h"
+#include "ActionComponent.h"
 #include "MooseUtils.h"
 
 // Register the actions for the objects actually used
@@ -85,7 +85,7 @@ FieldTrappingPhysics::FieldTrappingPhysics(const InputParameters & parameters)
 }
 
 void
-FieldTrappingPhysics::addComponent(const ComponentAction & component)
+FieldTrappingPhysics::addComponent(const ActionComponent & component)
 {
   for (const auto & block : component.blocks())
     _blocks.push_back(block);

@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include "ComponentAction.h"
-#include "PhysicsComponentHelper.h"
+#include "ActionComponent.h"
+#include "PhysicsComponentBase.h"
 
 /**
  * A 1D structure on which a species can diffuse
  */
-class Structure1D : public virtual ComponentAction, public PhysicsComponentHelper
+class Structure1D : public virtual ActionComponent, public PhysicsComponentBase
 {
 public:
   Structure1D(const InputParameters & params);

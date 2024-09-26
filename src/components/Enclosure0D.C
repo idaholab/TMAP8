@@ -15,16 +15,16 @@ registerMooseAction("TMAP8App", Enclosure0D, "init_component_physics");
 InputParameters
 Enclosure0D::validParams()
 {
-  auto params = ComponentAction::validParams();
-  params += PhysicsComponentHelper::validParams();
+  auto params = ActionComponent::validParams();
+  params += PhysicsComponentBase::validParams();
   params += TMAP::enclosureCommonParams();
   params.makeParamRequired<std::vector<PhysicsName>>("physics");
   return params;
 }
 
 Enclosure0D::Enclosure0D(const InputParameters & params)
-  : ComponentAction(params),
-    PhysicsComponentHelper(params),
+  : ActionComponent(params),
+    PhysicsComponentBase(params),
     _species(getParam<std::vector<NonlinearVariableName>>("species")),
     _scaling_factors(isParamValid("species_scaling_factors")
                          ? getParam<std::vector<Real>>("species_scaling_factors")
