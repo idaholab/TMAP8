@@ -1,6 +1,6 @@
 cl = 3.1622e18
 
-[SystemComponents]
+[ActionComponents]
   [structure]
     type = Structure1D
     species = 'trapped'
