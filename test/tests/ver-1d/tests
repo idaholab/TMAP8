@@ -58,8 +58,6 @@
     type = RunCommand
     command = 'python3 comparison_ver-1d.py'
     requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solutions of verification cases 1d, modeling a breakthrough problem where diffusion and trapping are the rate limiting processes.'
-    heavy = true
-    prereq = 'ver-1d_diffusion_limited_heavy ver-1d_trapping_limited_heavy'
     required_python_packages = 'matplotlib numpy pandas scipy os'
   []
 []

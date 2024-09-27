@@ -21,7 +21,6 @@
     type = RunCommand
     command = 'python3 comparison_ver-1gc.py'
     requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a series of chemical reactions involving three species and calculate the concentrations of each species as a function of time and to generate CSV data for use in comparisons with the analytic solution over time.'
-    prereq = 'ver-1gc_csv'
     required_python_packages = 'matplotlib numpy pandas scipy os'
   []
 []
