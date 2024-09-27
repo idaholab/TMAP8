@@ -40,13 +40,14 @@ profile of A and B can therefore be found through linear interpolation.
 
 With TMAP8, the steady state solution can be obtained in different ways: by using the [steady state solve](source/executioners/Steady.md) or by running a [transient simulation](source/executioners/Transient.md) until steady state is reached.
 [!cite](ambrosek2008verification) indicates that the steady state solution was obtained by running the transient solution until $t=10,000$ s, which is what is reproduced with TMAP8 here.
-TMAP8 predictions were found to be identical to the analytical solution with a root mean square percentage error (RMSPE) of 0.01 %, as shown in
+TMAP8 predictions were found to be identical to the analytical solution with a root mean square percentage error (RMSPE) of 0.23 %, as shown in
 [ver-1fc_comparison_temperature_steady_state].
 
-!media figures/ver-1fc_comparison_temperature_steady_state.png
-    style=width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=ver-1fc_comparison_temperature_steady_state
-    caption=Comparison of temperature profiles from the analytical solution and TMAP8 in the composite structure at steady state ($t = 10000$ s). RMSPE is the root mean square percentage error between the analytical and TMAP8 profiles.
+!media comparison_ver-1fc.py
+       image_name=ver-1fc_comparison_temperature_steady_state.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1fc_comparison_temperature_steady_state
+       caption=Comparison of temperature profiles from the analytical solution and TMAP8 in the composite structure at steady state ($t = 10000$ s). RMSPE is the root mean square percentage error between the analytical and TMAP8 profiles.
 
 ## Transient solution
 
@@ -56,18 +57,20 @@ The transient solution was compared in two ways: where time, $t$, is held consta
 comparison between ABAQUS and TMAP8 was made at time $t = 150$ s. The constant time
 values are shown in [ver-1fc_comparison_temperature_transient_t150], and the comparison is satisfactory.
 
-!media figures/ver-1fc_comparison_temperature_transient_t150.png
-    style=width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=ver-1fc_comparison_temperature_transient_t150
-    caption=Comparison of temperature profiles from TMAP8, TMAP7, and ABAQUS in the composite structure at $t = 150$ s.
+!media comparison_ver-1fc.py
+       image_name=ver-1fc_comparison_temperature_transient_t150.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1fc_comparison_temperature_transient_t150
+       caption=Comparison of temperature profiles from TMAP8, TMAP7, and ABAQUS in the composite structure at $t = 150$ s.
 
 The constant distance values were compared at $x = 0.09$ m, at 5 second intervals from time
 $t = 0$ s to $t = 150$ s. These results can be seen in [ver-1fc_comparison_temperature_transient_x0.09], and the comparison is satisfactory.
 
-!media figures/ver-1fc_comparison_temperature_transient_x0.09.png
-    style=width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=ver-1fc_comparison_temperature_transient_x0.09
-    caption=Comparison of temperature value over time from TMAP8, TMAP7, and ABAQUS in the composite structure at $x = 0.09$ m.
+!media comparison_ver-1fc.py
+       image_name=ver-1fc_comparison_temperature_transient_x0.09.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1fc_comparison_temperature_transient_x0.09
+       caption=Comparison of temperature value over time from TMAP8, TMAP7, and ABAQUS in the composite structure at $x = 0.09$ m.
 
 ## Input files
 

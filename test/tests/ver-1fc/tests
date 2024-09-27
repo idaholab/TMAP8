@@ -36,7 +36,6 @@
     type = RunCommand
     command = 'python3 comparison_ver-1fc.py'
     requirement = 'The system shall be able to generate comparison plots between the analytical solution, ABAQUS data, and simulated solution of verification case 1fc, modeling conduction in a composite structure with constant surface temperatures.'
-    prereq = 'ver-1fc_csvdiff_transient ver-1fc_csvdiff_steady_state'
-    required_python_packages = 'matplotlib numpy pandas os git'
+    required_python_packages = 'matplotlib numpy pandas os'
   []
 []

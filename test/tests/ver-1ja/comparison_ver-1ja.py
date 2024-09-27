@@ -3,15 +3,19 @@ import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 import os
-import git
 from numpy import sin,tan,sqrt,exp
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
-os.chdir(os.path.dirname(__file__))
+script_folder = os.path.dirname(__file__)
+os.chdir(script_folder)
 
 # ===============================================================================
 # Extract TMAP8 predictions
-tmap8_solution = pd.read_csv("./gold/ver-1ja_out.csv")
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1ja/gold/ver-1ja_out.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/ver-1ja_out.csv"
+tmap8_solution = pd.read_csv(csv_folder)
 tmap8_time = tmap8_solution['time']
 tmap8_tritium = tmap8_solution['tritium_concentration']
 tmap8_helium = tmap8_solution['helium_concentration']

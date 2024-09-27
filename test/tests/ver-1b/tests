@@ -37,8 +37,6 @@
       type = RunCommand
       command = 'python3 comparison_ver-1b.py'
       requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1b, modeling transient diffusion through a slab with a constant concentration boundary condition as the species source.'
-      heavy = true
-      prereq = ver-1b_heavy
-      required_python_packages = 'matplotlib numpy pandas os git'
+      required_python_packages = 'matplotlib numpy pandas scipy os'
     []
 []

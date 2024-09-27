@@ -1,16 +1,23 @@
-import csv
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 from scipy import special
+import os
 
+# Changes working directory to script directory (for consistent MooseDocs usage)
+script_folder = os.path.dirname(__file__)
+os.chdir(script_folder)
 
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-expt_data = pd.read_csv("./gold/experimental_data.csv")
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/val-2b/gold/experimental_data.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/experimental_data.csv"
+expt_data = pd.read_csv(csv_folder)
 expt_temp = expt_data['temp']
 expt_flux = expt_data['flux']*1e15
 
@@ -22,7 +29,11 @@ ax.scatter(expt_temp, expt_flux,
 # all the way up the row with temperature around 673K (during temperature ramp up, not cool down).
 # We should update this script in future so that the script can itself leave out those rows.
 
-tmap_sol = pd.read_csv("./gold/val-2b_out_short_timeSteps.csv") # for documentation figure
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/val-2b/gold/val-2b_out_short_timeSteps.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/val-2b_out_short_timeSteps.csv"
+tmap_sol = pd.read_csv(csv_folder)
 tmap_temp = tmap_sol['Temp']
 
 tmap_flux = tmap_sol['avg_flux_left']*2*1e20 # Factor of 2 because

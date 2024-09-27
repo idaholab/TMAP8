@@ -1,19 +1,22 @@
-import csv
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 from scipy import special
 import os
-import math
 from scipy.special import erfc
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
-os.chdir(os.path.dirname(__file__))
+script_folder = os.path.dirname(__file__)
+os.chdir(script_folder)
 
 #===============================================================================
 # Extract TMAP8 results
-tmap8_sol = pd.read_csv("./gold/ver-1fd_out.csv")
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1fd/gold/ver-1fd_out.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/ver-1fd_out.csv"
+tmap8_sol = pd.read_csv(csv_folder)
 tmap8_sol_t = tmap8_sol['time']
 tmap8_sol_temperature = tmap8_sol['temperature_at_x']
 
