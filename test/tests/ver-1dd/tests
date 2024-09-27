@@ -20,7 +20,6 @@
     type = RunCommand
     command = 'python3 comparison_ver-1dd.py'
     requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solutions of verification cases 1dd, modeling a breakthrough problem without traps.'
-    prereq = 'ver-1dd'
     required_python_packages = 'matplotlib numpy pandas os'
   []
 []

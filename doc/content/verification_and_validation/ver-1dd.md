@@ -4,15 +4,15 @@
 
 ## Test Description
 
-This verification problem is taken from [!cite](ambrosek2008verification) and builds on the capabilities verified in [ver-1d](ver-1d.md) and [ver-1dc](ver-1dc.md). However, in the current case, there are no traps in the membrane. This case is simulated in [/ver-1dd.i].
+This verification problem is taken from [!cite](ambrosek2008verification) and builds on the capabilities verified in [ver-1d](ver-1d.md) and [ver-1dc](ver-1dc.md). The configuration and modeling parameters are the same as in [ver-1d](ver-1d.md), except that, in the current case, there are no traps in the membrane. This case is simulated in [/ver-1dd.i].
 
-This problem models permeation through a membrane with a constant source in which no trap presented. We solve the following equations
+This problem models permeation through a membrane with a constant source in which no trap presented. We solve 
 
 \begin{equation}
     \label{eqn:diffusion_mobile}
     \frac{dC_M}{dt} = - \nabla D \nabla C_M ,
 \end{equation}
-where $C_M$ is the concentrations of the mobile, $D$ is the diffusivity of the mobile species.
+where $C_M$ is the concentrations of the mobile, $D$ is the diffusivity of the mobile species, and $t$ is the time.
 
 ## Analytical solution
 
@@ -33,7 +33,7 @@ where $D_{eff}$, the effective diffusivity, is same with $D$ due to no traps in 
 
 ## Results and comparison against analytical solution
 
-The analytical solution for the permeation transient is compared with TMAP8 results in [ver-1dd_comparison_diffusion]. The graphs for the theoretical flux and the calculated flux are in good agreement, with root mean square percentage errors (RMSPE) of RMSPE = 0.14 % when time $t \geq 0.01$ s. The breakthrough time calculated from [eqn:tau_be] in analytical solution is 0.05 s, and the breakthrough time from TMAP8 is 0.05 s.
+The analytical solution for the permeation transient is compared with TMAP8 results in [ver-1dd_comparison_diffusion]. The graphs for the theoretical flux and the calculated flux are in good agreement, with root mean square percentage errors (RMSPE) of RMSPE = 0.14 % for $t \geq 0.01$ s. The breakthrough time calculated from the analytical solution provided by [eqn:tau_be] is 0.05 s, and the breakthrough time from TMAP8 is 0.05 s, so it matches.
 
 !media comparison_ver-1dd.py
        image_name=ver-1dd_comparison_diffusion.png
