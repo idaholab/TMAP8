@@ -25,11 +25,12 @@ Comparison of the temperature computed through TMAP8 and calculated analytically
 [ver-1fa_comparison_temperature]. The TMAP8 code predictions match very well with
 the analytical solution.
 
-!media figures/ver-1fa_comparison_temperature.png
-    style=width:60%;margin-bottom:2%
-    id=ver-1fa_comparison_temperature
-    caption=Comparison of temperature along the slab calculated
-     through TMAP8 and analytically
+!media comparison_ver-1fa.py
+       image_name=ver-1fa_comparison_temperature.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1fa_comparison_temperature
+       caption=Comparison of temperature along the slab calculated
+       through TMAP8 and analytically
 
 ## Input files
 

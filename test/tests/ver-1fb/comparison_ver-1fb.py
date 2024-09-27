@@ -1,10 +1,13 @@
-import csv
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 from scipy import special
+import os
 
+# Changes working directory to script directory (for consistent MooseDocs usage)
+script_folder = os.path.dirname(__file__)
+os.chdir(script_folder)
 
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
@@ -44,14 +47,30 @@ ax.scatter(analytical_x,
            analytical_temp[3], label=r"Analytical 5.0 seconds", c='c', marker='^')
 
 tmap_temp = []
-tmap_sol = pd.read_csv("./gold/u_vs_x_0pt1sec.csv")
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1fb/gold/u_vs_x_0pt1sec.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/u_vs_x_0pt1sec.csv"
+tmap_sol = pd.read_csv(csv_folder)
 tmap_x = tmap_sol['id']
 tmap_temp.append(tmap_sol['temp'])
-tmap_sol = pd.read_csv("./gold/u_vs_x_0pt5sec.csv")
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1fb/gold/u_vs_x_0pt5sec.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/u_vs_x_0pt5sec.csv"
+tmap_sol = pd.read_csv(csv_folder)
 tmap_temp.append(tmap_sol['temp'])
-tmap_sol = pd.read_csv("./gold/u_vs_x_1pt0sec.csv")
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1fb/gold/u_vs_x_1pt0sec.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/u_vs_x_1pt0sec.csv"
+tmap_sol = pd.read_csv(csv_folder)
 tmap_temp.append(tmap_sol['temp'])
-tmap_sol = pd.read_csv("./gold/u_vs_x_5pt0sec.csv")
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1fb/gold/u_vs_x_5pt0sec.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/u_vs_x_5pt0sec.csv"
+tmap_sol = pd.read_csv(csv_folder)
 tmap_temp.append(tmap_sol['temp'])
 
 ax.plot(tmap_x, tmap_temp[0], label=r"TMAP8 0.1 seconds", c='k')

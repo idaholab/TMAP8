@@ -44,15 +44,17 @@ where $P_{i_0}$ is the initial pressure, $N_a$ is Avogardro's constant, $R$ is t
 
 A comparison of the concentration of AB as a function of time is plotted in [ver-1g_comparison_equal_conc] for case (a), and [ver-1g_comparison_diff_conc] for the cases (b) and (c), respectively. The TMAP8 calculations are found to be in good agreement with the analytical solution.
 
-!media figures/ver-1g_comparison_equal_conc.png
-    style=width:50%;margin-bottom:2%
-    id=ver-1g_comparison_equal_conc
-    caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the case when A and B have equal concentrations.
+!media comparison_ver-1g.py
+       image_name=ver-1g_comparison_equal_conc.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1g_comparison_equal_conc
+       caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the case when A and B have equal concentrations.
 
-!media figures/ver-1g_comparison_diff_conc.png
-    style=width:50%;margin-bottom:2%
-    id=ver-1g_comparison_diff_conc
-    caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the case when A and B have different concentrations. The plot shows comparisons for the initial conditions specified in both TMAP4 (case (b)) and TMAP7 (case (c)).
+!media comparison_ver-1g.py
+       image_name=ver-1g_comparison_diff_conc.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1g_comparison_diff_conc
+       caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the case when A and B have different concentrations. The plot shows comparisons for the initial conditions specified in both TMAP4 (case (b)) and TMAP7 (case (c)).
 
 ## Input files
 

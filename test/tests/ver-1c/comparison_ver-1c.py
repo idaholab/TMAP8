@@ -1,12 +1,20 @@
-import csv
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 from scipy.special import erf
 from numpy import sqrt
+import os
 
-tmap_sol = pd.read_csv("./gold/ver-1c_csv.csv")
+# Changes working directory to script directory (for consistent MooseDocs usage)
+script_folder = os.path.dirname(__file__)
+os.chdir(script_folder)
+
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1c/gold/ver-1c_csv.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/ver-1c_csv.csv"
+tmap_sol = pd.read_csv(csv_folder)
 tmap_time = tmap_sol['time'][1:]
 tmap_conc0 = tmap_sol['point0'][1:]
 tmap_conc0_25 = tmap_sol['point0.25'][1:]

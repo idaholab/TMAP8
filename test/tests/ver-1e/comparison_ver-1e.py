@@ -1,10 +1,14 @@
-import csv
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 from scipy import special
 from numpy import sin,tan,sqrt,exp
+import os
+
+# Changes working directory to script directory (for consistent MooseDocs usage)
+script_folder = os.path.dirname(__file__)
+os.chdir(script_folder)
 
 # ========= Comparison of concentration as a function of time ===================
 
@@ -12,8 +16,14 @@ fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol_tmap4 = pd.read_csv("./gold/TMAP4.csv")
-tmap_sol_tmap7 = pd.read_csv("./gold/TMAP7.csv")
+if "/TMAP8/doc/" in script_folder:      # if in documentation folder
+    csv_folder_tmap4 = "../../../../test/tests/ver-1e/gold/TMAP4.csv"
+    csv_folder_tmap7 = "../../../../test/tests/ver-1e/gold/TMAP7.csv"
+else:                                   # if in test folder
+    csv_folder_tmap4 = "./gold/TMAP4.csv"
+    csv_folder_tmap7 = "./gold/TMAP7.csv"
+tmap_sol_tmap4 = pd.read_csv(csv_folder_tmap4)
+tmap_sol_tmap7 = pd.read_csv(csv_folder_tmap7)
 
 tmap_time_tmap4 = tmap_sol_tmap4['time']
 tmap_conc_tmap4 = tmap_sol_tmap4['conc_at_x']
@@ -128,13 +138,21 @@ fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-tmap_sol = pd.read_csv("./gold/TMAP4_vector_postproc_line_0548.csv")
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1e/gold/TMAP4_vector_postproc_line_0548.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/TMAP4_vector_postproc_line_0548.csv"
+tmap_sol = pd.read_csv(csv_folder)
 tmap_distance_tmap4 = tmap_sol['x']
 tmap_distance_tmap4_microns = tmap_distance_tmap4*1e6
 tmap_conc_tmap4 = tmap_sol['u']
 ax.plot(tmap_distance_tmap4_microns, tmap_conc_tmap4, label=r"TMAP8 (TMAP4 case)", c='tab:gray')
 
-tmap_sol = pd.read_csv("./gold/TMAP7_vector_postproc_line_0548.csv")
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1e/gold/TMAP7_vector_postproc_line_0548.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/TMAP7_vector_postproc_line_0548.csv"
+tmap_sol = pd.read_csv(csv_folder)
 tmap_distance_tmap7 = tmap_sol['x']
 tmap_distance_tmap7_microns = tmap_distance_tmap7*1e6
 tmap_conc_tmap7 = tmap_sol['u']

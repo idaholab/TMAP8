@@ -23,17 +23,19 @@ TMAP4 and TMAP7 verification cases are slightly different: TMAP4 verifies the mo
 [ver-1c_comparison_time_TMAP4]. TMAP7 verifies the mobile species concentration at the same points (b) and (c) as in the TMAP4 case, but performs the third comparison at (d) a point close to the free surface (x = 0.25 m). The comparison of the values calculated with TMAP8 and analytically for the TMAP7 cases is shown in
 [ver-1c_comparison_time_TMAP7]. In all cases, the TMAP8 calculations are found to be in good agreement with the analytical solution.
 
-!media figures/ver-1c_comparison_time_TMAP4.png
-    style=width:50%;margin-bottom:2%
-    id=ver-1c_comparison_time_TMAP4
-    caption=Comparison of concentration as a function of time at x\=0 m, 10 m, and 12 m
-    calculated with TMAP8 and analytically (TMAP4 cases)
+!media comparison_ver-1c.py
+       image_name=ver-1c_comparison_time_TMAP4.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1c_comparison_time_TMAP4
+       caption=Comparison of concentration as a function of time at x\=0 m, 10 m, and 12 m
+       calculated with TMAP8 and analytically (TMAP4 cases)
 
-!media figures/ver-1c_comparison_time_TMAP7.png
-    style=width:50%;margin-bottom:2%
-    id=ver-1c_comparison_time_TMAP7
-    caption=Comparison of concentration as a function of time at x\=0.25 m, 10 m, and 12 m
-    calculated with TMAP8 and analytically (TMAP7 cases)
+!media comparison_ver-1c.py
+       image_name=ver-1c_comparison_time_TMAP7.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1c_comparison_time_TMAP7
+       caption=Comparison of concentration as a function of time at x\=0.25 m, 10 m, and 12 m
+       calculated with TMAP8 and analytically (TMAP7 cases)
 
 ## Input files
 

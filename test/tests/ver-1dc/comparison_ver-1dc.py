@@ -3,10 +3,10 @@ import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 import os
-import git
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
-os.chdir(os.path.dirname(__file__))
+script_folder = os.path.dirname(__file__)
+os.chdir(script_folder)
 
 # ============ Comparison of permeation as a function of time =================
 # ========================== Multiple Trapps ==================================
@@ -62,7 +62,11 @@ def summation_term(num_terms, time):
     return sum
 
 # Extract data from 'gold' TMAP8 run
-tmap_sol = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1dc/gold/ver-1dc_out.csv"))
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1dc/gold/ver-1dc_out.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/ver-1dc_out.csv"
+tmap_sol = pd.read_csv(csv_folder)
 tmap_time = np.array(tmap_sol['time'])
 tmap_prediction = np.array(tmap_sol['scaled_outflux'])
 idx = np.where(tmap_time >= 3)[0][0]
