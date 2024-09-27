@@ -41,18 +41,16 @@ is given by:
 
 \begin{equation}
 \label{eq:flux}
-\label{eq:flux}
 J = C_o \; \sqrt{\frac{D}{t\pi}} \; exp \left(\frac{x}{2\sqrt{Dt}}\right)
 \end{equation}
 
 The flux as given by [eq:flux] is compared with values calculated by TMAP8.
 The diffusivity, D, and the initial concentration, C$_o$, were both
-The flux as given by [eq:flux] is compared with values calculated by TMAP8.
-The diffusivity, D, and the initial concentration, C$_o$, were both
 taken as unity, and the distance, x, was taken as 0.5 in this comparison.
 TMAP8 initially under predicts but the results match well subsequently. Comparison
 results are shown in [ver-1b_comparison_flux] with a root mean square percentage
-error of RMSPE = 6.03 % for $t \geq 10$ s.
+error of RMSPE = 6.03 %. The error is calculated for $t \geq 10$ s due to infinite
+value at small $t$.
 
 !media comparison_ver-1b.py
        image_name=ver-1b_comparison_flux.png
