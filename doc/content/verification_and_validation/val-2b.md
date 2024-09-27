@@ -41,7 +41,7 @@ The model applies 13.3 kPa of D$_2$ for 50 hours and 15 seconds followed by evac
 ## Results
 
 
-[val-2b_comparison] shows the comparison of the TMAP8 calculation and the experimental data. There is good agreement between the TMAP predictions and the experimental data with a root mean square percentage error of RMSPE = 19.41 %.
+[val-2b_comparison] shows the comparison of the TMAP8 calculation and the experimental data. There is reasonable agreement between the TMAP predictions and the experimental data with a root mean square percentage error of RMSPE = 19.41 %. Note that the agreement could be improved by adjusting the model parameters. It is also possible to perform this optimization with [MOOSE's stochastic tools module](modules/stochastic_tools/).
 
 !media comparison_val-2b.py
        image_name=val-2b_comparison.png
