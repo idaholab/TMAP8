@@ -86,7 +86,7 @@ Using TMAP8 we examine these two different regimes, one where diffusion is the r
 
 ## Diffusion-limited
 
-For the effective diffusivity limit, we selected $\epsilon/k = 100 K$ to give $\zeta = 91.47 c/\rho$. The comparison results are presented in [ver-1d_comparison_diffusion] with a root mean square percentage error of RMSPE = 0.96 % when time $t \geq 0.4$ s..
+For the effective diffusivity limit, we selected $\epsilon/k = 100 K$ to give $\zeta = 91.47 c/\rho$. The comparison results are presented in [ver-1d_comparison_diffusion] with a root mean square percentage error of RMSPE = 0.96 % for $t \geq 0.4$ s..
 
 !media comparison_ver-1d.py
        image_name=ver-1d_comparison_diffusion.png
