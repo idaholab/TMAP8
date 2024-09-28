@@ -62,7 +62,7 @@ The expression in Eq. (1) of [!cite](longhurst1992verification) writes $-\alpha_
 
 ### Results
 
-[ver-1a_comparison_analytical_TMAP4_release_fraction] shows the comparison of the TMAP8 calculation and the analytical solution provided in [!cite](longhurst1992verification). There is agreement between the two plots.
+[ver-1a_comparison_analytical_TMAP4_release_fraction] shows the comparison of the TMAP8 calculation and the analytical solution provided in [!cite](longhurst1992verification). There is agreement between the two plots with a root mean square percentage error of RMSPE = 0.19 % for $t \geq 1$ s.
 
 !media comparison_ver-1a.py
        image_name=ver-1a_comparison_analytical_TMAP4_release_fraction.png
@@ -110,7 +110,7 @@ which leads to
 
 ### Results
 
-[ver-1a_comparison_analytical_TMAP7_release_fraction] shows the comparison of the TMAP8 calculation and the analytical solution for release fraction provided in [!cite](ambrosek2008verification). There is agreement between the two plots.
+[ver-1a_comparison_analytical_TMAP7_release_fraction] shows the comparison of the TMAP8 calculation and the analytical solution for release fraction provided in [!cite](ambrosek2008verification). There is agreement between the two plots with a root mean square percentage error of RMSPE = 0.07 % for $t \geq 1$ s.
 
 !media comparison_ver-1a.py
        image_name=ver-1a_comparison_analytical_TMAP7_release_fraction.png
@@ -134,7 +134,7 @@ Again, be aware of the typos in [!cite](ambrosek2008verification) and the differ
 
 ### Results
 
-[ver-1a_comparison_analytical_TMAP7_flux] shows the comparison of the TMAP8 calculation and the analytical solution for flux at the outer surface of the SiC slab in [!cite](ambrosek2008verification). There is agreement between the two plots.
+[ver-1a_comparison_analytical_TMAP7_flux] shows the comparison of the TMAP8 calculation and the analytical solution for flux at the outer surface of the SiC slab in [!cite](ambrosek2008verification). There is agreement between the two plots with a root mean square percentage error of RMSPE = 0.26 % for $t \geq 1$ s.
 
 !media comparison_ver-1a.py
        image_name=ver-1a_comparison_analytical_TMAP7_flux.png

@@ -55,9 +55,17 @@ def summation_term(num_terms, time):
         sum += (-1)**m * np.exp(-1 * m**2 * time / (2*tau_be))
     return sum
 
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1d/gold/ver-1d-diffusion_out.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/ver-1d-diffusion_out.csv"
+tmap_sol = pd.read_csv(csv_folder)
+tmap_time = tmap_sol['time']
+tmap_perm = tmap_sol['scaled_outflux']
+idx = np.where(tmap_time >= 0.4)[0][0]
 
 c_o = c
-analytical_time = np.linspace(0.0001, 3.0, 500)
+analytical_time = tmap_time
 Jp = N_o * (c_o * D / l) * \
     (1 + 2 * summation_term(num_summation_terms, analytical_time))
 
@@ -69,13 +77,6 @@ analytical_permeation = Jp
 ax.plot(analytical_time, analytical_permeation,
         label=r"Analytical", c='k', linestyle='--')
 
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-    csv_folder = "../../../../test/tests/ver-1d/gold/ver-1d-diffusion_out.csv"
-else:                                  # if in test folder
-    csv_folder = "./gold/ver-1d-diffusion_out.csv"
-tmap_sol = pd.read_csv(csv_folder)
-tmap_time = tmap_sol['time']
-tmap_perm = tmap_sol['scaled_outflux']
 ax.plot(tmap_time, tmap_perm, label=r"TMAP8", c='tab:gray')
 
 ax.set_xlabel(u'Time(s)')
@@ -84,7 +85,9 @@ ax.legend(loc="best")
 ax.set_xlim(left=0)
 ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-
+RMSE = np.sqrt(np.mean((tmap_perm-analytical_permeation)[idx:]**2) )
+RMSPE = RMSE*100/np.mean(analytical_permeation[idx:])
+ax.text(1.0,0.5e18, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
 plt.savefig('ver-1d_comparison_diffusion.png', bbox_inches='tight')
 plt.close(fig)

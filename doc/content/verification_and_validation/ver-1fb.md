@@ -37,7 +37,7 @@ $k$ is the thermal conductivity, $\rho$ is the density and $C_p$ is the specific
 #
 
 
-Comparison of the temperature distribution in the slab, computed through TMAP8 and calculated analytically, is shown in [ver-1fb_comparison_temperature]. The TMAP8 code predictions match very well with the analytical solution.
+Comparison of the temperature distribution in the slab, computed through TMAP8 and calculated analytically, is shown in [ver-1fb_comparison_temperature]. The TMAP8 code predictions match very well with the analytical solution with the root mean square percentage errors of RMSPE = 0.09 % at $t = 0.1$ s, RMSPE = 0.03 % at $t = 0.5$ s, RMSPE = 0.02 % at $t = 1$ s, and RMSPE = 0.00 % at $t = 5$ s.
 
 !media comparison_ver-1fb.py
        image_name=ver-1fb_comparison_temperature.png
