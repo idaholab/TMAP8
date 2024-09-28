@@ -42,7 +42,7 @@ C_{i_0} = 10^{-18} \frac{P_{i_0} N_a}{R T},
 
 where $P_{i_0}$ is the initial pressure, $N_a$ is Avogardro's constant, $R$ is the gas constant (from  [PhysicalConstants](source/utils/PhysicalConstants.md)), and $T$ = 298.15 K (25$\deg$ C) is the temperature. The factor $10^{-18}$ converts the concentration from atoms/m$^3$ to atoms/$\mu$m$^3$.
 
-A comparison of the concentration of AB as a function of time is plotted in [ver-1g_comparison_equal_conc] for case (a), and [ver-1g_comparison_diff_conc] for the cases (b) and (c), respectively. The TMAP8 calculations are found to be in good agreement with the analytical solution.
+A comparison of the concentration of AB as a function of time is plotted in [ver-1g_comparison_equal_conc] for case (a), and [ver-1g_comparison_diff_conc] for the cases (b) and (c), respectively. The TMAP8 calculations are found to be in good agreement with the analytical solution with the root mean square percentage errors of (a) RMSPE = 0.27 %, (b) RMSPE = 0.22 %, and (c) RMSPE = 0.24 %.
 
 !media comparison_ver-1g.py
        image_name=ver-1g_comparison_equal_conc.png

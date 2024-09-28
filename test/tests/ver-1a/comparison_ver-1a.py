@@ -151,7 +151,21 @@ def analytical_expression_flux(t, P_0, D, S, V, T, A, l):
     flux = 2 * S * P_0 * L * D * summation
     return flux
 
-time_analytical = np.linspace(0, 140, 1000)
+# Extract data from 'gold' TMAP8 run
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1a/gold/ver-1a_csv.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/ver-1a_csv.csv"
+tmap8_prediction = pd.read_csv(csv_folder)
+tmap8_time = tmap8_prediction['time']
+tmap8_release_fraction_right = tmap8_prediction['released_fraction_right']
+tmap8_release_fraction_left = tmap8_prediction['released_fraction_left']
+tmap8_flux_right = tmap8_prediction['flux_surface_right'] # at/microns^2/s
+tmap8_flux_right = tmap8_flux_right*1e6*1e6 # at/m^2/s
+idx = np.where(tmap8_time >= 1.0)[0][0]
+
+# time_analytical = np.linspace(0, 140, 1000)
+time_analytical = np.array(tmap8_time)
 T=2373
 P_0=1e6
 D=1.58e-4*np.exp(-308000.0/(R*T))
@@ -190,18 +204,6 @@ analytical_flux_TMAP7 = analytical_expression_flux(
     l=l,
 )
 
-# Extract data from 'gold' TMAP8 run
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-    csv_folder = "../../../../test/tests/ver-1a/gold/ver-1a_csv.csv"
-else:                                  # if in test folder
-    csv_folder = "./gold/ver-1a_csv.csv"
-tmap8_prediction = pd.read_csv(csv_folder)
-tmap8_time = tmap8_prediction['time']
-tmap8_release_fraction_right = tmap8_prediction['released_fraction_right']
-tmap8_release_fraction_left = tmap8_prediction['released_fraction_left']
-tmap8_flux_right = tmap8_prediction['flux_surface_right'] # at/microns^2/s
-tmap8_flux_right = tmap8_flux_right*1e6*1e6 # at/m^2/s
-
 # Plot figure for verification of release fraction as determined in TMAP4 (SiC outer layer)
 fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
@@ -215,6 +217,9 @@ ax.set_xlim(left=0)
 ax.set_xlim(right=140)
 ax.set_ylim(bottom=0)
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
+RMSE = np.sqrt(np.mean((tmap8_release_fraction_right-analytical_release_fraction_TMAP4)[idx:]**2) )
+RMSPE = RMSE*100/np.mean(analytical_release_fraction_TMAP4[idx:])
+ax.text(60,0.6, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
 plt.savefig('ver-1a_comparison_analytical_TMAP4_release_fraction.png', bbox_inches='tight');
 plt.close(fig)
@@ -232,6 +237,9 @@ ax.set_xlim(left=0)
 ax.set_xlim(right=140)
 ax.set_ylim(bottom=0)
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
+RMSE = np.sqrt(np.mean((tmap8_release_fraction_left-analytical_release_fraction_TMAP7)[idx:]**2) )
+RMSPE = RMSE*100/np.mean(analytical_release_fraction_TMAP7[idx:])
+ax.text(40,0.6, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
 plt.savefig('ver-1a_comparison_analytical_TMAP7_release_fraction.png', bbox_inches='tight');
 plt.close(fig)
@@ -249,6 +257,9 @@ ax.set_xlim(left=0)
 ax.set_xlim(right=140)
 ax.set_ylim(bottom=0)
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
+RMSE = np.sqrt(np.mean((tmap8_flux_right-analytical_flux_TMAP7)[idx:]**2) )
+RMSPE = RMSE*100/np.mean(analytical_flux_TMAP7 [idx:])
+ax.text(60,0.6e19, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
 plt.savefig('ver-1a_comparison_analytical_TMAP7_flux.png', bbox_inches='tight');
 plt.close(fig)

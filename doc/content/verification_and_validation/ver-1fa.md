@@ -23,7 +23,7 @@ The slab is assumed to have a density of 1 kg/m$^3$ and a specific heat capabity
 
 Comparison of the temperature computed through TMAP8 and calculated analytically is shown in
 [ver-1fa_comparison_temperature]. The TMAP8 code predictions match very well with
-the analytical solution.
+the analytical solution with a root mean square percentage error of RMSPE = 0.05 %.
 
 !media comparison_ver-1fa.py
        image_name=ver-1fa_comparison_temperature.png
