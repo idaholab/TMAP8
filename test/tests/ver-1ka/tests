@@ -1,0 +1,9 @@
+[Tests]
+  issues = '#12'
+  [csv]
+    type = CSVDiff
+    input = val-1ka.i
+    csvdiff = val-1ka_out.csv
+    requirement = 'The system shall be able to model the tritium volumetric source in one enclosure'
+  []
+[]
