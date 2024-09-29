@@ -1,4 +1,5 @@
 [Tests]
+  design = 'ODETimeDerivative.md ParsedODEKernel.md'
   issues = '#12'
   [csv]
     type = CSVDiff
