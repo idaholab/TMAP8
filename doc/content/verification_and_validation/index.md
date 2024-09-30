@@ -22,6 +22,7 @@ TMAP8 also contains [example cases](examples/tmap_index.md), which showcase how 
 | ver-1g  | [Simple Forward Chemical Reaction](ver-1g.md)                                                     |
 | ver-1gc | [Series Chemical Reactions](ver-1gc.md)                                                           |
 | ver-1ha | [Convective Gas Outflow Problem](ver-1ha.md)                                                      |
+| ver-1ic | [Species Equilibration Problem in Surfdep Conditions with Low Barrier Energy](ver-1ic.md)         |
 | ver-1ia | [Species Equilibration Problem in Ratedep Conditions with Equal Starting Pressures](ver-1ia.md)   |
 | ver-1ie | [Species Equilibration Problem in Lawdep Condition with Equal Starting Pressures](ver-1ie.md)     |
 | ver-1ib | [Species Equilibration Problem in Ratedep Condition with Unequal Starting Pressures](ver-1ib.md)  |

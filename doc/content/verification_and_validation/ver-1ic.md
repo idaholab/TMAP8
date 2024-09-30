@@ -51,9 +51,9 @@ K_d  = \frac{1}{\sqrt{2 \pi M k T}}
 A comparison of the concentration of AB as a function of time is plotted in [ver-1ic_comparison]. The TMAP8 calculations are found to be in good agreement with the analytical solution, with root mean square percentage errors (RMSPE) of RMSPE =  %. The concentration of $H_2$ and $D_2$ as a function of time are also plotted in [ver-1ic_comparison].
 
 !media comparison_ver-1ic.py
-       image_name=ver-1ic_comparison.png
+       image_name=ver-1ic_comparison_pressure.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=ver-1ic_comparison
+       id=ver-1ic_comparison_pressure
        caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the solution when A and B have equal pressures [!cite](ambrosek2008verification).
 
 ## Input files

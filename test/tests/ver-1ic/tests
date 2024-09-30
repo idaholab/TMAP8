@@ -1,6 +1,6 @@
 [Tests]
-    design = 'ADMatReaction.md'
-    issues = '#2'
+    design = 'ADMatReactionFlexible.md'
+    issues = '#12'
     [ver-1ic_csv]
       type = CSVDiff
       input = 'ver-1ic.i'
@@ -11,8 +11,7 @@
     [ver-1ic_comparison]
       type = RunCommand
       command = 'python3 comparison_ver-1ic.py'
-      requirement = 'The system shall be able to model a equilibration problem on a reactive surface in surfdep conditions with low barrier energy and to generate CSV data for use in comparisons with the analytic solution over time.'
-      prereq = 'ver-1ic_csv'
-      required_python_packages = 'matplotlib numpy pandas scipy os git'
+      requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a equiliration on a reactive surface in surfdep condition with low barrier energy.'
+      required_python_packages = 'matplotlib numpy pandas scipy os'
     []
   []
