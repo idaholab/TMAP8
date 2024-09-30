@@ -4,10 +4,10 @@ V = '${units 1 m^3}' # Volume
 S = '${units 25 cm^2 -> m^2}' # Area
 p0_H2 = '${units 1e4 Pa}' # Initial pressure for H2
 p0_D2 = '${units 1e4 Pa}' # Initial pressure for D2
-peq_HD = '${units ${fparse 2 * ${p0_H2} * ${p0_D2} / ( ${p0_H2} + ${p0_D2} )} Pa}' # pressure in equilibration for HD
 simulation_time = '${units 6 s}'
 K_r = '5.88e-26' # m^4/atom/s recombination rate for H2 or D2
 K_d = '${fparse 1.858e24 / sqrt( ${T} )}' # at/m^2/s/pa dissociation rate for HD
+K_s = '${fparse sqrt( ${K_d} / ${K_r} )}' # Sieverts' solubility
 
 [Mesh]
   type = GeneratedMesh
@@ -27,7 +27,9 @@ K_d = '${fparse 1.858e24 / sqrt( ${T} )}' # at/m^2/s/pa dissociation rate for HD
   [p_D2]
     initial_condition = ${p0_D2}
   []
-  [c_H_dot_c_D]
+  [c_H]
+  []
+  [c_D]
   []
 []
 
@@ -44,10 +46,17 @@ K_d = '${fparse 1.858e24 / sqrt( ${T} )}' # at/m^2/s/pa dissociation rate for HD
     coupled_variables = 'p_HD'
     expression = '${p0_D2} - p_HD / 2'
   []
-  [c_H_dot_c_D_kernel]
+  [c_H2_kernel]
     type = ParsedAux
-    variable = c_H_dot_c_D
-    expression = '${K_d} * ${peq_HD} / 2 / ${K_r}'
+    variable = c_H
+    coupled_variables = 'p_H2'
+    expression = '${K_s} * sqrt(p_H2)'
+  []
+  [c_D2_kernel]
+    type = ParsedAux
+    variable = c_D
+    coupled_variables = 'p_D2'
+    expression = '${K_s} * sqrt(p_D2)'
   []
 []
 
@@ -59,7 +68,7 @@ K_d = '${fparse 1.858e24 / sqrt( ${T} )}' # at/m^2/s/pa dissociation rate for HD
   [MatReaction_p_HD_recombination]
     type = ADMatReactionFlexible
     variable = p_HD
-    vs = 'c_H_dot_c_D'
+    vs = 'c_H c_D'
     coeff = '${fparse 2 * ${k_b} * ${T} * ${S} / ${V}}'
     reaction_rate_name = '${K_r}'
   []
