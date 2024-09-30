@@ -1,6 +1,6 @@
 # ver-1ib
 
-# A Species Equilibration Model in Ratedep Conditions with Equal Starting Pressures
+# A Species Equilibration Model in Ratedep Conditions with Unequal Starting Pressures
 
 ## General Case Description
 
