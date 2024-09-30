@@ -1,6 +1,6 @@
 [Tests]
     design = 'ADMatReactionFlexible.md'
-    issues = '#2'
+    issues = '#12'
     [ver-1ia_csv]
       type = CSVDiff
       input = 'ver-1ia.i'
