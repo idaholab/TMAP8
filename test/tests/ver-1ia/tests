@@ -1,24 +1,24 @@
 [Tests]
-    design = 'ADMatReactionFlexible.md'
-    issues = '#12'
-    [ver-1ia_csv]
-      type = CSVDiff
-      input = 'ver-1ia.i'
-      csvdiff = ver-1ia_out.csv
-      requirement = 'The system shall be able to model a equilibration problem on a reactive surface with equal starting pressures in ratedep condition and to generate CSV data for use in comparisons with the analytic solution over time.'
-      verification = 'ver-1ia.md'
-    []
-    [ver-1ia_nonequal_csv]
-      type = CSVDiff
-      input = 'ver-1ia_nonequal.i'
-      csvdiff = ver-1ia_nonequal_out.csv
-      requirement = 'The system shall be able to model a equilibration problem on a reactive surface with equal starting pressures in ratedep condition without equilirium assumption.'
-      verification = 'ver-1ia.md'
-    []
-    [ver-1ia_comparison]
-      type = RunCommand
-      command = 'python3 comparison_ver-1ia.py'
-      requirement = 'The system shall be able to model a equilibration problem on a reactive surface with equal starting pressures in ratedep condition and to generate CSV data for use in comparisons with the analytic solution over time.'
-      required_python_packages = 'matplotlib numpy pandas scipy os'
-    []
+  design = 'ADMatReactionFlexible.md'
+  issues = '#12'
+  [ver-1ia_csv]
+    type = CSVDiff
+    input = 'ver-1ia.i'
+    csvdiff = ver-1ia_out.csv
+    requirement = 'The system shall be able to model a equilibration problem on a reactive surface with equal starting pressures in ratedep condition and to generate CSV data for use in comparisons with the analytic solution over time.'
+    verification = 'ver-1ia.md'
+  []
+  [ver-1ia_nonequal_csv]
+    type = CSVDiff
+    input = 'ver-1ia_nonequal.i'
+    csvdiff = ver-1ia_nonequal_out.csv
+    requirement = 'The system shall be able to model a equilibration problem on a reactive surface with equal starting pressures in ratedep condition without equilirium assumption.'
+    verification = 'ver-1ia.md'
+  []
+  [ver-1ia_comparison]
+    type = RunCommand
+    command = 'python3 comparison_ver-1ia.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a equiliration on a reactive surface'
+    required_python_packages = 'matplotlib numpy pandas scipy os'
+  []
   []
