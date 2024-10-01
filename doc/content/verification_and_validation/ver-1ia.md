@@ -41,7 +41,7 @@ C_A C_B = \frac{K_d}{2 K_r} P_{AB}^{eq}.
 \end{equation}
 
 <!-- Detail parameters -->
-This case uses equal starting pressures of $1e4$ Pa of $H_2$ and $D_2$ and no $HD$. $K_d$ was specified to be $1.858e24/\sqrt{T}$ atom/m$^2$/s/pa. $K_r$ was specified to be $5.88e-26$. Temperature was 1000 K, the surface area for reaction was a 5 cm $\times$ 5 cm square, and the enclosure volume was 1 m$^3$.
+This case uses equal starting pressures of $1e4$ Pa of $H_2$ and $D_2$ and no $HD$. $K_d$ was specified to be $1.858e24/\sqrt{T}$ atom/m$^2$/s/pa. $K_r$ was specified to be $5.88e-26$ m$^4$/atom/s. Temperature was 1000 K, the surface area for reaction was a 5 cm $\times$ 5 cm square, and the enclosure volume was 1 m$^3$.
 
 
 ## Analytical solution
