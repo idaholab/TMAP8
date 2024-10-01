@@ -25,17 +25,6 @@ tmap8_solution_D2 = tmap8_solution['pressure_D2']
 tmap8_solution_H2 = tmap8_solution['pressure_H2']
 tmap8_solution_HD = tmap8_solution['pressure_HD']
 
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-    csv_folder = "../../../../test/tests/ver-1ia/gold/ver-1ia_nonequal_out.csv"
-else:                                  # if in test folder
-    csv_folder = "./gold/ver-1ia_nonequal_out.csv"
-tmap8_solution = pd.read_csv(csv_folder)
-tmap8_solution_nonequal_time = tmap8_solution['time']
-tmap8_solution_nonequal_D2 = tmap8_solution['pressure_D2']
-tmap8_solution_nonequal_H2 = tmap8_solution['pressure_H2']
-tmap8_solution_nonequal_HD = tmap8_solution['pressure_HD']
-
-
 # ===============================================================================
 # Calculate analytical solution
 def get_analytical_solution(numerical_steps):
@@ -86,30 +75,3 @@ ax.text(2.0, 0.95e4, f'(HD) RMSPE = {RMSPE_HD:.2f} %', fontweight='bold', color=
 
 plt.savefig('ver-1ia_comparison_pressure.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
-
-# ===============================================================================
-# Plot concentration evolution as a function of time on flexible case
-
-fig = plt.figure(figsize=[6.5, 5.5])
-gs = gridspec.GridSpec(1, 1)
-ax = fig.add_subplot(gs[0])
-alpha = 0.6
-ax.plot(tmap8_solution_nonequal_time, tmap8_solution_nonequal_H2,
-        label=r"$H_2$ TMAP8", c='tab:brown', alpha=alpha)
-ax.plot(tmap8_solution_nonequal_time, tmap8_solution_nonequal_D2,
-        label=r"$D_2$ TMAP8", c='tab:cyan', alpha=alpha, linestyle='--')
-ax.plot(tmap8_solution_nonequal_time, tmap8_solution_nonequal_HD,
-        label=r"$HD$ TMAP8", c='tab:gray', linestyle='-')
-
-ax.set_xlabel(u'Time (s)')
-ax.set_ylabel(r"Partial Pressure (Pa)")
-ax.legend(loc="best")
-ax.set_xlim(left=0)
-ax.set_xlim(right=max(tmap8_solution_time))
-ax.set_ylim(bottom=0)
-plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
-ax.minorticks_on()
-
-plt.savefig('ver-1ia_comparison_pressure_nonequal.png', bbox_inches='tight', dpi=300)
-plt.close(fig)
-
