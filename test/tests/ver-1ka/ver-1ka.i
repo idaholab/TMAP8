@@ -3,7 +3,8 @@ kb = 1.380649e-23 # Boltzmann constant J/K
 T = 500 # K
 S = 1e20 # 1/m^3/s
 V = 1 # m^3
-
+end_time = 10800 # s
+  
 [Mesh]
   type = GeneratedMesh
   dim = 2
@@ -36,12 +37,10 @@ V = 1 # m^3
 [Executioner]
   type = Transient
   dt = .1
-  end_time = 10800
+  end_time = ${end_time}
   scheme = 'bdf2'
 []
 
 [Outputs]
-  [csv]
-    type = CSV
-  []
+  csv = true
 []

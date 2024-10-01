@@ -1,10 +1,11 @@
 [Tests]
   design = 'ODETimeDerivative.md ParsedODEKernel.md'
   issues = '#12'
+  verification = 'ver-1ka.md'
   [csv]
     type = CSVDiff
-    input = val-1ka.i
-    csvdiff = val-1ka_out.csv
+    input = ver-1ka.i
+    csvdiff = ver-1ka_out.csv
     requirement = 'The system shall be able to model the tritium volumetric source in one enclosure'
   []
 []
