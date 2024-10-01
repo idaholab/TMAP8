@@ -1,20 +1,20 @@
 # ver-1ie
 
-# A Species Equilibration Problem in Ratedep Condition with Unequal Starting Pressures
+# Species Equilibration Problem in Lawdep Condition with Equal Starting Pressures
 
 ## General Case Description
 
 <!-- All necessary equations -->
 This verification problem is taken from [!cite](ambrosek2008verification) and builds on Equilibration Problem verified in [ver-1ia](ver-1ia.md), [ver-1ib](ver-1ib.md), [ver-1ic](ver-1ic.md), [ver-1id](ver-1id.md). The configuration and modeling parameters are the same as in [ver-1ia](ver-1ia.md), except that, in the current case, the reaction is in lawdep condition. The case is simulated in [/ver-1ie.i].
 
-The problem considers the reaction between two isotopic species, $A_2$ and $B_2$, on a surface in lawdep condition. The reaction is described by
+The problem considers the reaction between two isotopic species, $A_2$ and $B_2$, on a surface in lawdep condition. The reaction is described as
 
 \begin{equation}
 \label{eq:reaction}
 \frac{1}{2} A_2 + \frac{1}{2} B_2 \rightleftharpoons AB,
 \end{equation}
 
-and the partial pressure of $A_2$, $B_2$, and $AB$ in equilibrium of the reaction is maintained by
+and the partial pressure of $A_2$, $B_2$, and $AB$ in equilibrium of the reaction is defined by
 
 \begin{equation}
 \label{eq:reaction_equilibrium_pressure}
@@ -49,7 +49,7 @@ and
 C_B = K_s \sqrt{P_{B_2}},
 \end{equation}
 
-where $K_s$ is Sieverts’ solubility. Due to in the isotopic reaction, $K_s$ will be the same for each homonuclear species. The relationship between $K_s$, $K_r$, and $K_d$ is given by
+where $K_s$ is Sieverts’ solubility. Due to in the isotopic reaction, $K_s$ is the same for each homonuclear species. The relationship between $K_s$, $K_r$, and $K_d$ is given by
 
 \begin{equation}
 \label{eq:k_relation}
@@ -57,18 +57,18 @@ K_d = {K_s}^2 K_r.
 \end{equation}
 
 <!-- Detail parameters -->
-This case uses equal starting pressures of $1e4$ Pa of $H_2$ and $D_2$ and no $HD$. $K_d$ was specified to be $1.858e24/\sqrt{T}$. $K_s$ was specified to be $1e24$. Temperature was 1000 K, the surface area for reaction was a 5 cm $\times$ 5 cm square, and the enclosure volume was 1 m$^3$.
+This case uses equal starting pressures of $1e4$ Pa of $H_2$ and $D_2$ and no $HD$. $K_d$ was specified to be $1.858e24/\sqrt{T}$ atom/m$^2$/s/pa. $K_s$ was specified to be $1e24$ atom/m$^3$/Pa$^{0.5}$. Temperature was 1000 K, the surface area for reaction was a 5 cm $\times$ 5 cm square, and the enclosure volume was 1 m$^3$.
 
 
 ## Analytical solution
 
 <!-- introduce the analytical equation and explain -->
 
-After combining [eq:p_ca_relation] and [qe:p_cb_relation], [eq:equation_p_ab] becomes
+After combining [eq:p_ca_relation] and [eq:p_cb_relation], [eq:equation_p_ab] becomes
 
 \begin{equation}
 \label{eq:equation_p_ab_final}
-\frac{d P_{AB}}{dt} = \frac{S k T K_d}{V} (2 \sqrt{P^0_{A_2} - P_{AB}/2} \sqrt{P^0_{B_2} - P_{AB}/2} - P_{AB}).
+\frac{d P_{AB}}{dt} = \frac{S k T K_d}{V} (2 \sqrt{P^0_{A_2} - \frac{P_{AB}}{2}} \sqrt{P^0_{B_2} - \frac{P_{AB}}{2}} - P_{AB}).
 \end{equation}
 
 This is a non-linear function, but it has a special solution when $P^0_{A_2} = P^0_{B_2}$ in current case. Thus, the analytical solution for the partial pressure of $AB$ is given by
