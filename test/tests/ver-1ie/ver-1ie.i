@@ -8,7 +8,7 @@ p0_D2 = '${units 1e4 Pa}' # Initial pressure for D2
 simulation_time = '${units 3 s}'
 K_s = '${units 1.0e24 atom/m^3/pa^0.5}' # atom/m^3/pa^0.5 recombination rate for H2 or D2
 K_d = '${fparse 1.858e24 / sqrt( ${T} )}' # at/m^2/s/pa dissociation rate for HD
-K_r = '${fparse K_d / K_s / K_s}'
+K_r = '${fparse K_d / K_s / K_s}' # m^4/atom/s
 
 [Mesh]
   type = GeneratedMesh

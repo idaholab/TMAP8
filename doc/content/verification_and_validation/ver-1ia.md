@@ -5,14 +5,14 @@
 ## General Case Description
 
 <!-- All necessary equations -->
-This verification problem is taken from [!cite](ambrosek2008verification). When two species can react on a surface to form a third, it is possible to predict the rate at which equilibration between the species will occur. For example, the reaction between two isotopic species, $A_2$ and $B_2$, is described by
+This verification problem is taken from [!cite](ambrosek2008verification). When two species can react on a surface to form a third, it is possible to predict the rate at which equilibration between the species will occur. For example, the reaction between two isotopic species, $A_2$ and $B_2$, is described as
 
 \begin{equation}
 \label{eq:reaction}
 \frac{1}{2} A_2 + \frac{1}{2} B_2 \rightleftharpoons AB,
 \end{equation}
 
-and the partial pressure of $A_2$, $B_2$, and $AB$ in equilibrium of the reaction is maintained by
+and the partial pressure of $A_2$, $B_2$, and $AB$ in equilibrium of the reaction is defined by
 
 \begin{equation}
 \label{eq:reaction_equilibrium_pressure}
@@ -41,7 +41,7 @@ C_A C_B = \frac{K_d}{2 K_r} P_{AB}^{eq}.
 \end{equation}
 
 <!-- Detail parameters -->
-This case uses equal starting pressures of $1e4$ Pa of $H_2$ and $D_2$ and no $HD$. $K_d$ was specified to be $1.858e24/\sqrt{T}$. $K_r$ was specified to be $5.88e-26$. Temperature was 1000 K, the surface area for reaction was a 5 cm $\times$ 5 cm square, and the enclosure volume was 1 m$^3$.
+This case uses equal starting pressures of $1e4$ Pa of $H_2$ and $D_2$ and no $HD$. $K_d$ was specified to be $1.858e24/\sqrt{T}$ atom/m$^2$/s/pa. $K_r$ was specified to be $5.88e-26$. Temperature was 1000 K, the surface area for reaction was a 5 cm $\times$ 5 cm square, and the enclosure volume was 1 m$^3$.
 
 
 ## Analytical solution
@@ -64,7 +64,7 @@ A comparison of the concentration of $AB$ as a function of time is plotted in [v
        image_name=ver-1ia_comparison_pressure.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1ia_comparison_pressure
-       caption=Comparison of concentration of $AB$ as a function of time calculated through TMAP8 and analytically for the solution when A and B have equal pressures [!cite](ambrosek2008verification).
+       caption=Comparison of concentration of $AB$ as a function of time calculated through TMAP8 and analytically for the solution in ratedep condition when A and B have equal pressures [!cite](ambrosek2008verification).
 
 ## Input files
 
