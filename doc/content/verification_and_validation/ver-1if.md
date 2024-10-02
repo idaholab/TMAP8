@@ -1,11 +1,11 @@
 # ver-1if
 
-# A Species Equilibration Problem in Ratedep Condition with Unequal Starting Pressures
+# Species Equilibration Problem in Lawdep Condition with Unequal Starting Pressures
 
 ## General Case Description
 
 <!-- All necessary equations -->
-This verification problem is taken from [!cite](ambrosek2008verification) and builds on Equilibration Problem verified in [ver-1ia](ver-1ia.md), [ver-1ib](ver-1ib.md), [ver-1ic](ver-1ic.md), [ver-1id](ver-1id.md), and [ver-1ie](ver-1ie.md). The configuration and modeling parameters are the same as in [ver-1ib](ver-1ib.md), except that, in the current case, the reaction is in lawdep condition. The case is simulated in [/ver-1if.i].
+This verification problem is taken from [!cite](ambrosek2008verification) and builds on Equilibration Problem verified in [ver-1ia](ver-1ia.md), [ver-1ib](ver-1ib.md), [ver-1ic](ver-1ic.md), [ver-1id](ver-1id.md), and [ver-1ie](ver-1ie.md). The configuration and modeling parameters are the same as in [ver-1ie](ver-1ie.md), except that, in the current case, there are unequal starting pressures for $A_2$ and $B_2$. The case is simulated in [/ver-1if.i].
 
 The problem considers the reaction between two isotopic species, $A_2$ and $B_2$, on a surface in lawdep condition. The reaction is described as
 
@@ -35,7 +35,7 @@ Under lawdep condition, we solve
 \frac{d P_{AB}}{dt} = \frac{S k T}{V} (2 K_r C_A C_B - K_d P_{AB}),
 \end{equation}
 
-where $t$ is the time, $S$ is the surface area, $k$ is the Boltzmann’s constant, $T$ is the temperature, $V$ is the volume in the enclosure, $K_r$ and $K_d$ are the recombination and dissociation rate, $C_A$ and $C_B$ are the concentration of $A_2$ and $B_2$ on the reactive surface, respectively. In lawdep diffusion boundary condition, the concentration of $A_2$ and $B_2$ are always fixed relative to the partial pressures in the gas over the surface. When heteronuclear species formation is involved, TMAP8 uses logic similar to that used in the ratedep and surfdep condition for the arrival rate of gas atoms to the surface. However, there are no barriers to adsorption or release, and conversion is assumed to take place instantaneously. Any gas that does not diffuse away is immediately released from the surface. Therefore, the concentration of $C_A$ and $C_B$ from Sieverts' law are given by
+where $t$ is the time, $S$ is the surface area, $k$ is the Boltzmann’s constant, $T$ is the temperature, $V$ is the volume in the enclosure, $K_r$ and $K_d$ are the recombination and dissociation coefficients, $C_A$ and $C_B$ are the concentration of $A_2$ and $B_2$ on the reactive surface, respectively. In lawdep diffusion boundary condition, the concentration of $A_2$ and $B_2$ are always fixed relative to the partial pressures in the gas over the surface. When heteronuclear species formation is involved, TMAP8 uses logic similar to that used in the ratedep and surfdep condition for the arrival rate of gas atoms to the surface. However, there are no barriers to adsorption or release, and conversion is assumed to take place instantaneously. Any gas that does not diffuse away is immediately released from the surface. Therefore, the concentration of $C_A$ and $C_B$ from Sieverts' law are given by
 
 \begin{equation}
 \label{eq:p_ca_relation}
@@ -64,26 +64,26 @@ This case uses starting pressures of $1e4$ Pa of $H_2$ and $1e5$ Pa of $D_2$ and
 
 <!-- introduce the analytical equation and explain -->
 
-After combining [eq:p_ca_relation] and [qe:p_cb_relation], [eq:equation_p_ab] becomes
+After combining [eq:p_ca_relation] and [eq:p_cb_relation], [eq:equation_p_ab] becomes
 
 \begin{equation}
 \label{eq:equation_p_ab_final}
-\frac{d P_{AB}}{dt} = \frac{S k T K_d}{V} (2 \sqrt{P^0_{A_2} - P_{AB}/2} \sqrt{P^0_{B_2} - P_{AB}/2} - P_{AB}).
+\frac{d P_{AB}}{dt} = \frac{S k T K_d}{V} (2 \sqrt{P^0_{A_2} - \frac{P_{AB}}{2}} \sqrt{P^0_{B_2} - \frac{P_{AB}}{2}} - P_{AB}).
 \end{equation}
 
 This is a non-linear function, the analytical solution is hard to calculate. [!cite](ambrosek2008verification) uses the solution from [ver-1ia](ver-1ia.md) with a different saturation time constant to compare with the numerical solution. The equation is defined by
 
 \begin{equation}
 \label{eq:analytical_solution}
-P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} (1 - exp(- t / \tao)),
+P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} (1 - \exp(- \frac{t}{\tau})),
 \end{equation}
-where $\tao$ is the saturation time constant. The value of $\tao$ is selected as 0.123 because the shape of [eq:analytical_solution] is close to the shape of numerical solution.
+where $\tau$ is the saturation time constant. The value of $\tau$ is selected as 0.123 because the shape of [eq:analytical_solution] is close to the shape of numerical solution.
 
 ## Results
 
 <!-- introduce the numerical result and compare the figures between analytical and results -->
 
-A comparison of the concentration of $AB$ as a function of time is plotted in [ver-1if_comparison_pressure]. The TMAP8 calculations are found to be in reasonable agreement with the solution from TMAP7, with root mean square percentage errors (RMSPE) of RMSPE =  %. It makes sense for us because the solution from TMAP7 is not the real analytical solution. The concentration of $H_2$ and $D_2$ as a function of time are also plotted in [ver-1if_comparison_pressure].
+A comparison of the concentration of $AB$ as a function of time is plotted in [ver-1if_comparison_pressure]. The TMAP8 calculations are found to be in reasonable agreement with the solution from TMAP7, with root mean square percentage errors (RMSPE) of RMSPE =  13.56%. It makes sense for us because the solution from TMAP7 is not the real analytical solution. The concentration of $H_2$ and $D_2$ as a function of time are also plotted in [ver-1if_comparison_pressure].
 
 !media comparison_ver-1if.py
        image_name=ver-1if_comparison_pressure.png

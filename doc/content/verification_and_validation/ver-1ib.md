@@ -1,6 +1,6 @@
 # ver-1ib
 
-# A Species Equilibration Problem in Ratedep Condition with Unequal Starting Pressures
+# Species Equilibration Problem in Ratedep Condition with Unequal Starting Pressures
 
 ## General Case Description
 
@@ -35,7 +35,7 @@ Under ratedep condition, the conversion rate at the surface is higher than the r
 \frac{d P_{AB}}{dt} = \frac{S k T}{V} (2 K_r C_A C_B - K_d P_{AB}),
 \end{equation}
 
-where $t$ is the time, $S$ is the surface area, $k$ is the Boltzmann’s constant, $T$ is the temperature, $V$ is the volume in the enclosure, $K_r$ and $K_d$ are the recombination and dissociation rate, $C_A$ and $C_B$ are the concentration of $A_2$ and $B_2$ on the reactive surface, respectively. If diffusion is small, the almost constant numbers of A and B atoms in the gas imply that $C_A$ and $C_B$ should have an almost constant value regardless of the isotopic species composition. The production of $C_A$ and $C_B$ in equilibration is given by
+where $t$ is the time, $S$ is the surface area, $k$ is the Boltzmann’s constant, $T$ is the temperature, $V$ is the volume in the enclosure, $K_r$ and $K_d$ are the recombination and dissociation coefficients, $C_A$ and $C_B$ are the concentration of $A_2$ and $B_2$ on the reactive surface, respectively. If diffusion is small, the almost constant numbers of A and B atoms in the gas imply that $C_A$ and $C_B$ should have an almost constant value regardless of the isotopic species composition. The production of $C_A$ and $C_B$ in equilibration is given by
 
 \begin{equation}
 \label{eq:equal_c_a_c_b}
@@ -53,7 +53,7 @@ This case uses starting pressures of $1e4$ Pa of $H_2$ and $1e5$ Pa of $D_2$ and
 
 \begin{equation}
 \label{eq:analytical_solution}
-P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} (1 - exp(-\frac{S K_d k T}{V} t)).
+P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} (1 - \exp \left( -\frac{S K_d k T}{V} t \right)).
 \end{equation}
 
 ## Results
@@ -66,7 +66,7 @@ A comparison of the concentration of $AB$ as a function of time is plotted in [v
        image_name=ver-1ib_comparison_pressure.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1ib_comparison_pressure
-       caption=Comparison of concentration of $AB$ as a function of time calculated through TMAP8 and analytically for the solution in ratedep when $A_2$ and $B_2$ have unequal pressures [!cite](ambrosek2008verification).
+       caption=Comparison of concentration of $AB$ as a function of time calculated through TMAP8 and analytically for the solution in ratedep condition when $A_2$ and $B_2$ have unequal pressures [!cite](ambrosek2008verification).
 
 ## Input files
 

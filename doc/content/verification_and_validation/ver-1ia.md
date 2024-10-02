@@ -26,14 +26,14 @@ where $P_i$ is the partial pressure of corresponding gas $i$, $K_{eq}$ is the eq
 P_{AB}^{eq} = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0}.
 \end{equation}
 
-Under ratedep conditions, the conversion rate at the surface is higher than the rate in enclosure. We solve
+Under ratedep condition, the conversion rate at the surface is higher than the rate in enclosure. We solve
 
 \begin{equation}
 \label{eq:equation_p_ab}
 \frac{d P_{AB}}{dt} = \frac{S k T}{V} (2 K_r C_A C_B - K_d P_{AB}),
 \end{equation}
 
-where $t$ is the time, $S$ is the surface area, $k$ is the Boltzmann’s constant, $T$ is the temperature, $V$ is the volume in the enclosure, $K_r$ and $K_d$ are the recombination and dissociation rate, $C_A$ and $C_B$ are the concentration of $A_2$ and $B_2$ on the reactive surface, respectively. If diffusion is small, the almost constant numbers of A and B atoms in the gas imply that $C_A$ and $C_B$ should have an almost constant value regardless of the isotopic species composition. The production of $C_A$ and $C_B$ in equilibration is given by
+where $t$ is the time, $S$ is the surface area, $k$ is the Boltzmann’s constant, $T$ is the temperature, $V$ is the volume in the enclosure, $K_r$ and $K_d$ are the recombination and dissociation coefficients, $C_A$ and $C_B$ are the concentration of $A_2$ and $B_2$ on the reactive surface, respectively. If diffusion is small, the almost constant numbers of A and B atoms in the gas imply that $C_A$ and $C_B$ should have an almost constant value regardless of the isotopic species composition. The production of $C_A$ and $C_B$ in equilibration is given by
 
 \begin{equation}
 \label{eq:equal_c_a_c_b}
@@ -51,7 +51,7 @@ This case uses equal starting pressures of $1e4$ Pa of $H_2$ and $D_2$ and no $H
 
 \begin{equation}
 \label{eq:analytical_solution}
-P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} (1 - exp(-\frac{S K_d k T}{V} t)).
+P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} (1 - \ \left( -\frac{S K_d k T}{V} t \right)).
 \end{equation}
 
 ## Results
