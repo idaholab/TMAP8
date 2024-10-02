@@ -62,7 +62,7 @@ ax.plot(tmap8_solution_time, tmap8_solution_D2,
 ax.plot(tmap8_solution_time, tmap8_solution_HD,
         label=r"$HD$ TMAP8", c='tab:gray', linestyle='-')
 ax.plot(tmap8_solution_time, p_AB_analytical,
-        label=r"$HD$ Analytical", c='k', linestyle='--')
+        label=r"$HD$ 0.123 $\times$ $\tau$ fit", c='k', linestyle='--')
 ax.plot(tmap8_solution_time, p_AB_analytical_ratedep,
         label=r"$HD$ in Ratedep Analytical", c='tab:blue', linestyle='--')
 

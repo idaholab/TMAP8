@@ -35,7 +35,7 @@ Under lawdep condition, we solve
 \frac{d P_{AB}}{dt} = \frac{S k T}{V} (2 K_r C_A C_B - K_d P_{AB}),
 \end{equation}
 
-where $t$ is the time, $S$ is the surface area, $k$ is the Boltzmann’s constant, $T$ is the temperature, $V$ is the volume in the enclosure, $K_r$ and $K_d$ are the recombination and dissociation rate, $C_A$ and $C_B$ are the concentration of $A_2$ and $B_2$ on the reactive surface, respectively. In lawdep diffusion boundary condition, the concentration of $A_2$ and $B_2$ are always fixed relative to the partial pressures in the gas over the surface. When heteronuclear species formation is involved, TMAP8 uses logic similar to that used in the ratedep and surfdep conditions for the arrival rate of gas atoms to the surface. However, there are no barriers to adsorption or release, and conversion is assumed to take place instantaneously. Any gas that does not diffuse away is immediately released from the surface. Therefore, the concentration of $C_A$ and $C_B$ from Sieverts' law are given by
+where $t$ is the time, $S$ is the surface area, $k$ is the Boltzmann’s constant, $T$ is the temperature, $V$ is the volume in the enclosure, $K_r$ and $K_d$ are the recombination and dissociation coefficients, $C_A$ and $C_B$ are the concentration of $A_2$ and $B_2$ on the reactive surface, respectively. In lawdep diffusion boundary condition, the concentration of $A_2$ and $B_2$ are always fixed relative to the partial pressures in the gas over the surface. When heteronuclear species formation is involved, TMAP8 uses logic similar to that used in the ratedep and surfdep condition for the arrival rate of gas atoms to the surface. However, there are no barriers to adsorption or release, and conversion is assumed to take place instantaneously. Any gas that does not diffuse away is immediately released from the surface. Therefore, the concentration of $C_A$ and $C_B$ from Sieverts' law are given by
 
 \begin{equation}
 \label{eq:p_ca_relation}
@@ -75,7 +75,7 @@ This is a non-linear function, but it has a special solution when $P^0_{A_2} = P
 
 \begin{equation}
 \label{eq:analytical_solution}
-P_{AB}  = P_{A_2}^0 (1 - exp(-\frac{ 2 S K_d k T}{V} t)).
+P_{AB}  = P_{A_2}^0 (1 - \exp \left( -\frac{ 2 S K_d k T}{V} t \right)).
 \end{equation}
 
 ## Results
