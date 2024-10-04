@@ -4,7 +4,7 @@ T = 500 # K
 S = 1e20 # 1/m^3/s
 V = 1 # m^3
 end_time = 10800 # s
-  
+
 [Mesh]
   type = GeneratedMesh
   dim = 2
