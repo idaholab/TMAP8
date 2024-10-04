@@ -40,8 +40,8 @@ RMSE_pressure = np.linalg.norm(TMAP8_pres-analytical_pressure)
 err_percent_pressure = RMSE_pressure*100/np.mean(analytical_pressure)
 
 # Add text annotation for RMSPE on the plot
-ax.text(0.05, 0.95, '$P_{T_2}$ RMSPE = %.2f ' % err_percent_pressure + '%', 
-    transform=ax.transAxes, fontsize=12, fontweight='bold', color='tab:blue', 
+ax.text(0.05, 0.95, '$P_{T_2}$ RMSPE = %.2f ' % err_percent_pressure + '%',
+    transform=ax.transAxes, fontsize=12, fontweight='bold', color='tab:blue',
     verticalalignment='top', bbox=dict(facecolor='white', alpha=0.8))
 
 # Format the y-axis to use scientific notation
