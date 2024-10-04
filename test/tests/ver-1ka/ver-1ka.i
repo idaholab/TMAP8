@@ -1,5 +1,5 @@
 initial_pressure = 0 # Pa
-kb = 1.380649e-23 # Boltzmann constant J/K
+kb = 1.380649e-23 # Boltzmann constant J/K - from PhysicalConstants.h
 T = 500 # K
 S = 1e20 # 1/m^3/s
 V = 1 # m^3
