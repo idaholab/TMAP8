@@ -3,7 +3,8 @@ kb = 1.380649e-23 # Boltzmann constant J/K
 T = 500 # K
 S = 1e20 # 1/m^3/s
 V = 1 # m^3
-end_time = 10800 # s
+end_time = 10000 # s
+time_step = 500 # s
 
 [Mesh]
   type = GeneratedMesh
@@ -15,7 +16,7 @@ end_time = 10800 # s
 []
 
 [Variables]
-  [v]
+  [pressure]
     family = SCALAR
     order = FIRST
     initial_condition = '${fparse initial_pressure}'
@@ -25,22 +26,23 @@ end_time = 10800 # s
 [ScalarKernels]
   [time]
     type = ODETimeDerivative
-    variable = v
+    variable = pressure
   []
   [source]
     type = ParsedODEKernel
-    variable = v
+    variable = pressure
     expression = '${fparse - S/V * kb * T}'
   []
 []
 
 [Executioner]
   type = Transient
-  dt = .1
+  dt = ${time_step}
   end_time = ${end_time}
   scheme = 'bdf2'
 []
 
 [Outputs]
+  file_base = 'ver-1ka_out'
   csv = true
 []
