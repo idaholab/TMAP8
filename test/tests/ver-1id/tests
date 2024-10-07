@@ -1,17 +1,17 @@
 [Tests]
-    design = 'ADMatReactionFlexible.md'
-    issues = '#12'
-    [ver-1id_csv]
-      type = CSVDiff
-      input = 'ver-1id.i'
-      csvdiff = ver-1id_out.csv
-      requirement = 'The system shall be able to model a equilibration problem on a reactive surface in surfdep conditions with high barrier energy and to generate CSV data for use in comparisons with the analytic solution over time.'
-      verification = 'ver-1id.md'
-    []
-    [ver-1id_comparison]
-      type = RunCommand
-      command = 'python3 comparison_ver-1id.py'
-      requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a equiliration on a reactive surface in surfdep condition with high barrier energy.'
-      required_python_packages = 'matplotlib numpy pandas scipy os'
-    []
+  design = 'ADMatReactionFlexible.md'
+  issues = '#12'
+  verification = 'ver-1id.md'
+  [ver-1id_csv]
+    type = CSVDiff
+    input = 'ver-1id.i'
+    csvdiff = ver-1id_out.csv
+    requirement = 'The system shall be able to model a equilibration problem on a reactive surface in surfdep conditions with high barrier energy and to generate CSV data for use in comparisons with the analytic solution over time.'
   []
+  [ver-1id_comparison]
+    type = RunCommand
+    command = 'python3 comparison_ver-1id.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a equiliration on a reactive surface in surfdep condition with high barrier energy.'
+    required_python_packages = 'matplotlib numpy pandas scipy os'
+  []
+[]
