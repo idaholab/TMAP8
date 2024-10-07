@@ -27,7 +27,7 @@ where $P_i$ is the partial pressure of corresponding gas $i$, $K_{eq}$ is the eq
 P_{AB}^{eq} = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0}.
 \end{equation}
 
-Under surfdep condition, the conversion of A2 and B2 molecules to AB molecules requires several steps. First, homonuclear molecules in the gas must get to the surface. Next, they must dissociate. Then the individual surface atoms must migrate to sites where they encounter their conjugates. Here we assume there is a probability of unity of their combination once they find each other. Finally, the AB molecule must leave the surface and return to the gas. We solve
+Under surfdep condition, the conversion of A$_2$ and B$_2$ molecules to AB molecules requires several steps. First, homonuclear molecules in the gas must get to the surface. Next, they must dissociate. Then the individual surface atoms must migrate to sites where they encounter their conjugates. Here we assume there is a probability of unity of their combination once they find each other. Finally, the AB molecule must leave the surface and return to the gas. We solve
 
 \begin{equation}
 \label{eq:equation_p_ab}
