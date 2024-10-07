@@ -21,10 +21,10 @@ Comparison of the TMAP8 results and the analytical solution is shown in
 [ver-1ka_comparison_time] as a function of time. The TMAP8 code predictions match very well with the analytical solution.
 
 !media comparison_ver-1ka.py 
-    image_name=ver-1ka_comparison_time.png
-    style=width:50%;margin-bottom:2%
-    id=ver-1ka_comparison_time
-    caption=Comparison of T$_2$ partial pressure in an enclosure with no loss pathways as function of time calculated through TMAP8 and analytically
+       image_name=ver-1ka_comparison_time.png
+       style=width:50%;margin-bottom:2%
+       id=ver-1ka_comparison_time
+       caption=Comparison of T$_2$ partial pressure in an enclosure with no loss pathways as function of time calculated through TMAP8 and analytically
 
 ## Input files
 
