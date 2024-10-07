@@ -4,24 +4,23 @@
 
 ## General Case Description
 
-<!-- All necessary equations -->
 This verification problem is taken from [!cite](ambrosek2008verification) and builds on Equilibration Problem verified in [ver-1ia](ver-1ia.md), [ver-1ib](ver-1ib.md), and [ver-1ic](ver-1ic.md). The configuration and modeling parameters are the same as in [ver-1ic](ver-1ic.md), except that, in the current case, the reaction has a high barrier energy. The case is simulated in [/ver-1id.i].
 
-The problem considers the reaction between two isotopic species, $A_2$ and $B_2$, on a surface in surfdep condition. The reaction is described as
+The problem considers the reaction between two isotopic species, A$_2$ and B$_2$, on a surface in surfdep condition. The reaction is described as
 
 \begin{equation}
 \label{eq:reaction}
 \frac{1}{2} A_2 + \frac{1}{2} B_2 \rightleftharpoons AB.
 \end{equation}
 
-and the partial pressure of $A_2$, $B_2$, and $AB$ in equilibrium of the reaction is defined by
+and the partial pressure of A$_2$, B$_2$, and AB in equilibrium of the reaction is defined by
 
 \begin{equation}
 \label{eq:reaction_equilibrium_pressure}
 \frac{P_{AB}}{\sqrt{P_{A_2}} \sqrt{P_{B_2}}} = K_{eq},
 \end{equation}
 
-where $P_i$ is the partial pressure of corresponding gas $i$, $K_{eq}$ is the equilibrium constant, and $K_{eq} = 2$ in this isotope reaction. Therefore, the partial pressure of $AB$ in equilibrium is a constant value depends on initial partial pressure of $A_2$ and $B_2$:
+where $P_i$ is the partial pressure of corresponding gas $i$, $K_{eq}$ is the equilibrium constant, and $K_{eq} = 2$ in this isotope reaction. Therefore, the partial pressure of AB in equilibrium is a constant value depends on initial partial pressure of A$_2$ and B$_2$:
 
 \begin{equation}
 \label{eq:p_AB_equilibrium}
@@ -35,7 +34,7 @@ Under surfdep condition, the conversion of A2 and B2 molecules to AB molecules r
 \frac{d P_{AB}}{dt} = \frac{S k T \hat{K_d} \hat{K_b}}{V (\hat{K_r} + \hat{K_b})} ( C_A C_B 2 D_s \lambda \frac{\hat{K_r}}{\hat{K_d} \hat{K_b}} - P_{AB}),
 \end{equation}
 
-where $t$ is the time, $S$ is the surface area, $k$ is the Boltzmann’s constant, $T$ is the temperature, $V$ is the volume in the enclosure, $D_s$ is the surface diffusivity or mobility of the atomic species, and $\lambda$ is the lattice constant, $C_A$ and $C_B$ are the concentration of $A_2$ and $B_2$ on the reactive surface, respectively, $\hat{K_d}$, $\hat{K_r}$, and $\hat{K_b}$ are the release, deposition, and dissociation coefficients, respectively. The three coefficients is defined by
+where $t$ is the time, $S$ is the surface area, $k$ is the Boltzmann’s constant, $T$ is the temperature, $V$ is the volume in the enclosure, $D_s$ is the surface diffusivity or mobility of the atomic species, and $\lambda$ is the lattice constant, $C_A$ and $C_B$ are the concentration of A$_2$ and B$_2$ on the reactive surface, respectively, $\hat{K_d}$, $\hat{K_r}$, and $\hat{K_b}$ are the release, deposition, and dissociation coefficients, respectively. The three coefficients is defined by
 
 \begin{equation}
 \label{eq:k_d_equation}
@@ -61,13 +60,11 @@ where $M$ is the mass of species molecules, $\nu_0$ is the Debye frequency, $E_x
 C_A C_B = \frac{\hat{K_b} \hat{K_d}}{2 D_s \lambda \hat{K_r}} P_{AB}^{eq}.
 \end{equation}
 
-<!-- Detail parameters -->
-This case uses equal starting pressures of $1e4$ Pa of $H_2$ and $D_2$ and no $HD$. $E_x$, $E_c$, and $E_b$ were specified to be 0.20, -0.01, and 0.0 eV, respectively. $\nu_0$ was 8.4e12 m/s. Temperature was 1000 K, the surface area for reaction was a 5 cm $\times$ 5 cm square, and the enclosure volume was 1 m$^3$.
+This case uses equal starting pressures of $1e4$ Pa of H$_2$ and D$_2$ and no HD. $E_x$, $E_c$, and $E_b$ were specified to be 0.20, -0.01, and 0.0 eV, respectively. $\nu_0$ was 8.4e12 m/s. Temperature was 1000 K, the surface area for reaction was a 5 cm $\times$ 5 cm square, and the enclosure volume was 1 m$^3$.
 
 ## Analytical solution
 
-<!-- introduce the analytical equation and explain -->
-[!cite](ambrosek2008verification) provides the analytical equation for the partial pressure of $AB$ as
+[!cite](ambrosek2008verification) provides the analytical equation for the partial pressure of AB as
 
 \begin{equation}
 \label{eq:analytical_solution}
@@ -83,9 +80,7 @@ where $\tau$ is defined by
 
 ## Results
 
-<!-- introduce the numerical result and compare the figures between analytical and results -->
-
-A comparison of the concentration of AB as a function of time is plotted in [ver-1id_comparison_pressure]. The TMAP8 calculations are found to be in good agreement with the analytical solution, with root mean square percentage errors (RMSPE) of RMSPE =  0.19%. The concentration of $H_2$ and $D_2$ as a function of time are also plotted in [ver-1id_comparison_pressure].
+A comparison of the concentration of AB as a function of time is plotted in [ver-1id_comparison_pressure]. The TMAP8 calculations are found to be in good agreement with the analytical solution, with root mean square percentage errors (RMSPE) of RMSPE =  0.19%. The concentration of H$_2$ and D$_2$ as a function of time are also plotted in [ver-1id_comparison_pressure].
 
 !media comparison_ver-1id.py
        image_name=ver-1id_comparison_pressure.png
