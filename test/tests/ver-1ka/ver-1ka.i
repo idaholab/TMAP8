@@ -1,7 +1,7 @@
 initial_pressure = ${units 0 Pa} # initial internal pressure
 kb = ${units 1.380649e-23 J/K} # Boltzmann constant J/K - from PhysicalConstants.h
 T = ${units 500 K} # Temperature
-S = ${units 1e20 1/m^3/s} # Source term 
+S = ${units 1e20 1/m^3/s} # Source term
 V = ${units 1 m^3} # Volume
 end_time = ${units 10000 s}
 time_step = ${units 500 s}
