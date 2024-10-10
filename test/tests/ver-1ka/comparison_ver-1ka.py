@@ -21,7 +21,7 @@ else:                                  # if in test folder
     csv_folder = "./gold/ver-1ka_out.csv"
 expt_data = pd.read_csv(csv_folder)
 TMAP8_time = expt_data['time']
-TMAP8_pres = expt_data['v']
+TMAP8_pressure = expt_data['v']
 
 # Calculate the theoretical expression for pressure
 analytical_pressure = (S / V) * kb * T * TMAP8_time
@@ -31,12 +31,12 @@ gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
 # Plot the experimental data
-ax.plot(TMAP8_time/3600, TMAP8_pres, linestyle='-', color='magenta', label='TMAP8', linewidth=3)
+ax.plot(TMAP8_time/3600, TMAP8_pressure, linestyle='-', color='magenta', label='TMAP8', linewidth=3)
 
 # Plot the selected theoretical data
 ax.plot(TMAP8_time/3600, analytical_pressure, marker='+', linestyle='', color='black', label=r"theory", markersize=10)
 
-RMSE_pressure = np.linalg.norm(TMAP8_pres-analytical_pressure)
+RMSE_pressure = np.linalg.norm(TMAP8_pressure-analytical_pressure)
 err_percent_pressure = RMSE_pressure*100/np.mean(analytical_pressure)
 
 # Add text annotation for RMSPE on the plot

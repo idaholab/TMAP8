@@ -4,21 +4,25 @@
 
 ## General Case Description
 
-This problem involves two enclosures connected by a diffusive membrane that follows Sieverts law for diffusion. Both enclosures contain hydrogen (H$_2$), deuterium (T$_2$), and hydrogen deuteride (HT). In the first enclosure, there is an initial inventory of only hydrogen (H$_2$) along with a constant volumetric source rate of deuterium (T$_2$). The second enclosure starts out empty.
+This problem involves two enclosures connected by a diffusive membrane that follows Sieverts law for diffusion. Both enclosures contain hydrogen (H$_2$), tritium (T$_2$), and tritium gas (HT). In the first enclosure, there is an initial inventory of only hydrogen (H$_2$) along with a constant volumetric source rate of tritium (T$_2$). The second enclosure starts out empty.
 
 ## Case Set up
 
 This verification problem is taken from [!cite](longhurst1992verification). 
-The rise in pressure of T$_2$ molecules in the first enclosure can be monitored by using a non-flow type membrane between the two enclosures. Consequently, the rate of pressure increase can be expressed as:
+The rise in pressure of T$_2$ molecules in the first enclosure can be monitored by not enabling T$_2$ molecules to traverse the membrane between the two enclosures (no tritium flux). Consequently, the rate of pressure increase in the first enclosure can be expressed as:
 
 \begin{equation}
-\frac{dP_{T_2}}{dt} = \frac{S}{V} kT
+\frac{dP_{T_2}}{dt} = \frac{S}{V} kT,
 \end{equation}
 
-where $S$ represents the volumetric source rate, $V$ is the volume of the enclosure, $k$ is the Boltzmann constant, and $T$ is the temperature of the enclosure.
+where $S$ represents the volumetric T$_2$ source rate, $V$ is the volume of the enclosure, $k$ is the Boltzmann constant, and $T$ is the temperature of the enclosure.
+
+In this case, $S$ is set to 10$^{20}$ molecules/m$^{-3}$/s, $V = 1$ m$^3$, and the temperature of the enclosure is constant at $T = 500$ K. 
+
+## Results
 
 Comparison of the TMAP8 results and the analytical solution is shown in
-[ver-1ka_comparison_time] as a function of time. The TMAP8 code predictions match very well with the analytical solution.
+[ver-1ka_comparison_time] as a function of time. The TMAP8 code predictions match very well with the analytical solution with a root mean squared percentage error of RMSPE $= xxxxx$ %.
 
 !media comparison_ver-1ka.py 
        image_name=ver-1ka_comparison_time.png
