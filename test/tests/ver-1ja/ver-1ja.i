@@ -37,7 +37,7 @@ dt_start = ${fparse end_time/250} # s
     v = tritium_concentration
     reaction_rate = '${fparse -decay_rate_constant}'
   []
-  # kernels for the tritium concentration equation
+  # kernels for the helium concentration equation
   [time_helium]
     type = TimeDerivative
     variable = helium_concentration

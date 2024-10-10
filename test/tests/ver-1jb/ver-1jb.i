@@ -10,29 +10,27 @@ boltzmann_constant = 8.6173303e-5 # eV/K - from PhysicalConstants.h
 
 # Case and model parameters (adapted from TMAP7)
 slab_length = 1.5 # m
-tritium_concentration_initial = 1 # atoms/m3
+tritium_concentration_initial = ${units 1 atoms/m3}
 # trapping_sites_concentration_max = 5e25 # atoms/m3
-trapping_sites_atomic_fraction_max = 0.001 # atomic fraction
+trapping_sites_atomic_fraction_max = ${units 0.001 at.frac.}
 trapping_sites_fraction_occupied_initial = 0.5 # (-)
 normal_center_position = ${fparse slab_length/2} # m
 normal_standard_deviation = ${fparse slab_length/4} # m
-density_material = 6.34e28 # atoms/m^3 - for tungsten
-temperature = 300 # K - assumed
-tritium_diffusivity_prefactor = 1.58e-4 # m^2/s - from TMAP7 V&V report
-tritium_diffusivity_energy = 308000.0 # J/K
-tritium_release_prefactor = 1.0e13 # 1/s
-tritium_release_energy = 4.2 # eV
-tritium_trapping_prefactor = 2.096e15 # 1/s
-tritium_trapping_energy = ${tritium_diffusivity_energy} # 1/s
+density_material = ${units 6.34e28 atoms/m^3} # for tungsten
+temperature = ${units 300 K} # assumed (TMAP7's input file lists 273 K)
+tritium_diffusivity_prefactor = ${units 1.58e-4 m^2/s} # from TMAP7 V&V input file
+tritium_diffusivity_energy = ${units 308000.0 J/K} # from TMAP7 V&V input file
+tritium_release_prefactor = ${units 1.0e13 1/s} # from TMAP7 V&V input file
+tritium_release_energy = ${units 4.2 eV}
+tritium_trapping_prefactor = ${units 2.096e15 1/s} # from TMAP7 V&V input file
+tritium_trapping_energy = ${tritium_diffusivity_energy} # 1/s - from TMAP7 V&V input file
 trap_per_free = 1 #1e25 # (-)
-half_life = 12.3232 # years
-conversion_years_to_s = ${fparse 365.25*24*60*60}
-half_life_s = ${fparse half_life*conversion_years_to_s} # s
+half_life_s = ${units 12.3232 year -> s}
 decay_rate_constant = ${fparse 0.693/half_life_s} # 1/s
 
 # Simulation parameters
 num_mesh_element = 50
-end_time = ${fparse 100*conversion_years_to_s} # s
+end_time = ${units 100 year -> s} # s
 dt_start = ${fparse end_time/250} # s
 
 [Mesh]
@@ -168,7 +166,15 @@ dt_start = ${fparse end_time/250} # s
     factor = ${trap_per_free}
     extra_vector_tags = ref
   []
-  # kernels for the tritium concentration equation
+  # re-adding it to the equation of mobile tritium because it is accounted for in coupled_time_tritium, and needs to be counter-balanced
+  [decay_tritium_trapped]
+    type = MatReaction
+    variable = tritium_trapped_concentration
+    v = tritium_trapped_concentration
+    mob_name = '${fparse decay_rate_constant * trap_per_free}'
+    extra_vector_tags = ref
+  []
+  # kernels for the helium concentration equation
   [time_helium]
     type = TimeDerivative
     variable = helium_concentration
@@ -190,7 +196,7 @@ dt_start = ${fparse end_time/250} # s
   []
 []
 
-[NodalKernels] ############################################### I NEED TO ADD DECAY FOR TRAPPED TRITIUM ###########
+[NodalKernels]
   [time]
     type = TimeDerivativeNodalKernel
     variable = tritium_trapped_concentration # (atoms/m^3) / trap_per_free
@@ -214,7 +220,13 @@ dt_start = ${fparse end_time/250} # s
     detrapping_energy = ${fparse tritium_release_energy / boltzmann_constant} # (K)
     temperature = temperature # (K)
   []
-  ### DECAY of trapped tritium
+  [decay]
+    type = ReleasingNodalKernel
+    variable = tritium_trapped_concentration # (atoms/m^3) / trap_per_free
+    alpha_r = ${decay_rate_constant} # (1/s) - decay rate
+    detrapping_energy = 0 # (K) - The decay rate is not dependent on temperature
+    temperature = temperature # (K)
+  []
 []
 
 [Materials]
