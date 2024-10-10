@@ -16,7 +16,6 @@ The rise in pressure of T$_2$ molecules in the first enclosure can be monitored 
 \end{equation}
 
 where $S$ represents the volumetric T$_2$ source rate, $V$ is the volume of the enclosure, $k$ is the Boltzmann constant, and $T$ is the temperature of the enclosure.
-
 In this case, $S$ is set to 10$^{20}$ molecules/m$^{-3}$/s, $V = 1$ m$^3$, and the temperature of the enclosure is constant at $T = 500$ K. 
 
 ## Results
