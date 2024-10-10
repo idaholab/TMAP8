@@ -21,7 +21,7 @@ In this case, $S$ is set to 10$^{20}$ molecules/m$^{-3}$/s, $V = 1$ m$^3$, and t
 ## Results
 
 Comparison of the TMAP8 results and the analytical solution is shown in
-[ver-1ka_comparison_time] as a function of time. The TMAP8 code predictions match very well with the analytical solution with a root mean squared percentage error of RMSPE $= xxxxx$ %.
+[ver-1ka_comparison_time] as a function of time. The TMAP8 code predictions match very well with the analytical solution with a root mean squared percentage error of RMSPE $= 0.00$ %.
 
 !media comparison_ver-1ka.py 
        image_name=ver-1ka_comparison_time.png
