@@ -21,9 +21,9 @@ else:                                  # if in test folder
     csv_folder = "./gold/ver-1ia_out.csv"
 tmap8_solution = pd.read_csv(csv_folder)
 tmap8_solution_time = tmap8_solution['time']
-tmap8_solution_D2 = tmap8_solution['pressure_D2']
-tmap8_solution_H2 = tmap8_solution['pressure_H2']
-tmap8_solution_HD = tmap8_solution['pressure_HD']
+tmap8_solution_B2 = tmap8_solution['pressure_B2']
+tmap8_solution_A2 = tmap8_solution['pressure_A2']
+tmap8_solution_AB = tmap8_solution['pressure_AB']
 
 # ===============================================================================
 # Calculate analytical solution
@@ -32,11 +32,11 @@ def get_analytical_solution(numerical_steps):
     T = 1000 # K Temperature
     V = 1.0 # m^3 Volume
     S = 0.0025 # m^2 Area
-    p0_H2 = 1e4 # Pa Initial pressure for H2
-    p0_D2 = 1e4 # Pa Initial pressure for D2
-    K_d = 1.858e24 / np.sqrt(T) # at.m^-2/s/pa dissociation rate for HD
+    p0_A2 = 1e4 # Pa Initial pressure for A2
+    p0_B2 = 1e4 # Pa Initial pressure for B2
+    K_d = 1.858e24 / np.sqrt(T) # at.m^-2/s/pa dissociation rate for AB
 
-    p_AB_analytical = 2 * p0_H2 * p0_D2 * (1 - np.exp(-S * K_d * kb * T * numerical_steps / V)) / (p0_H2 + p0_D2)
+    p_AB_analytical = 2 * p0_A2 * p0_B2 * (1 - np.exp(-S * K_d * kb * T * numerical_steps / V)) / (p0_A2 + p0_B2)
     return p_AB_analytical
 
 
@@ -50,14 +50,14 @@ fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 alpha = 0.6
-ax.plot(tmap8_solution_time, tmap8_solution_H2,
-        label=r"$H_2$ TMAP8", c='tab:brown', alpha=alpha)
-ax.plot(tmap8_solution_time, tmap8_solution_D2,
-        label=r"$D_2$ TMAP8", c='tab:cyan', alpha=alpha, linestyle='--')
-ax.plot(tmap8_solution_time, tmap8_solution_HD,
-        label=r"$HD$ TMAP8", c='tab:gray', linestyle='-')
+ax.plot(tmap8_solution_time, tmap8_solution_A2,
+        label=r"$A_2$ TMAP8", c='tab:brown', alpha=alpha)
+ax.plot(tmap8_solution_time, tmap8_solution_B2,
+        label=r"$B_2$ TMAP8", c='tab:cyan', alpha=alpha, linestyle='--')
+ax.plot(tmap8_solution_time, tmap8_solution_AB,
+        label=r"$AB$ TMAP8", c='tab:gray', linestyle='-')
 ax.plot(tmap8_solution_time, p_AB_analytical,
-        label=r"$HD$ Analytical", c='k', linestyle='--')
+        label=r"$AB$ Analytical", c='k', linestyle='--')
 
 ax.set_xlabel(u'Time (s)')
 ax.set_ylabel(r"Partial Pressure (Pa)")
@@ -69,9 +69,9 @@ plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
 
 # Root Mean Square Percentage Error calculations
-RMSE_HD = np.linalg.norm(tmap8_solution_HD-p_AB_analytical)
-RMSPE_HD = RMSE_HD*100/np.mean(p_AB_analytical)
-ax.text(2.0, 0.95e4, f'(HD) RMSPE = {RMSPE_HD:.2f} %', fontweight='bold', color='k')
+RMSE_AB = np.linalg.norm(tmap8_solution_AB-p_AB_analytical)
+RMSPE_AB = RMSE_AB*100/np.mean(p_AB_analytical)
+ax.text(2.0, 0.95e4, f'(AB) RMSPE = {RMSPE_AB:.2f} %', fontweight='bold', color='k')
 
 plt.savefig('ver-1ia_comparison_pressure.png', bbox_inches='tight', dpi=300)
 plt.close(fig)

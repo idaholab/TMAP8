@@ -4,14 +4,15 @@
   verification = 'ver-1ib.md'
   [ver-1ib_csv]
     type = CSVDiff
-    input = 'ver-1ib.i'
+    input = '../ver-1ia/ver-1ia.i'
+    cli_args = 'p0_B2="${units 1e5 Pa}" Outputs/file_base="ver-1ib_out" Executioner/dt=0.05' # this is the only thing that needs to be updated from ver-1ia to ver-1ib.
     csvdiff = ver-1ib_out.csv
     requirement = 'The system shall be able to model a equilibration problem on a reactive surface with unequal starting pressures in ratedep condition and to generate CSV data for use in comparisons with the analytic solution over time.'
   []
   [ver-1ib_comparison]
     type = RunCommand
     command = 'python3 comparison_ver-1ib.py'
-    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a equiliration on a reactive surface in ratedep condition with unequal starting pressures .'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a equilibration on a reactive surface in ratedep condition with unequal starting pressures .'
     required_python_packages = 'matplotlib numpy pandas scipy os'
   []
 []

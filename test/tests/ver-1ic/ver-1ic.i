@@ -2,9 +2,9 @@ k = '${units 1.380649e-23 J/K}' # Boltzmann constant (from PhysicalConstants.h -
 T = '${units 1000 K}' # Temperature
 V = '${units 1 m^3}' # Volume
 S = '${units 25 cm^2 -> m^2}' # Area
-p0_H2 = '${units 1e4 Pa}' # Initial pressure for H2
-p0_D2 = '${units 1e4 Pa}' # Initial pressure for D2
-peq_HD = '${fparse 2 * ${p0_H2} * ${p0_D2} / ( ${p0_H2} + ${p0_D2} )}' # pressure in equilibration for HD
+p0_A2 = '${units 1e4 Pa}' # Initial pressure for A2
+p0_B2 = '${units 1e4 Pa}' # Initial pressure for B2
+peq_AB = '${fparse 2 * ${p0_A2} * ${p0_B2} / ( ${p0_A2} + ${p0_B2} )}' # pressure in equilibration for AB
 end_time = '${units 10 s}'
 E_x = '${units 0.05 eV -> J}'
 E_c = '${units -0.01 eV -> J}'
@@ -23,95 +23,95 @@ D_s_lamda = '${fparse 5.3167e-7 * exp( -4529 / ${T} ) }' # m^4 / atom / s
 []
 
 [Variables]
-  [p_HD]
+  [p_AB]
     initial_condition = 0
   []
 []
 
 [AuxVariables]
-  [c_H_dot_c_D]
+  [c_A_dot_c_B]
   []
-  [c_HD]
+  [c_AB]
   []
-  [p_H2]
-    initial_condition = ${p0_H2}
+  [p_A2]
+    initial_condition = ${p0_A2}
   []
-  [p_D2]
-    initial_condition = ${p0_D2}
+  [p_B2]
+    initial_condition = ${p0_B2}
   []
 []
 
 [AuxKernels]
-  [c_H_dot_c_D_kernel]
+  [c_A_dot_c_B_kernel]
     type = ParsedAux
-    variable = c_H_dot_c_D
-    # coupled_variables = 'p_HD c_H c_D'
-    expression = ' ${peq_HD} * ${K_d} * ${K_b} / ${K_r} / 2 / ${D_s_lamda} '
+    variable = c_A_dot_c_B
+    # coupled_variables = 'p_AB c_A c_B'
+    expression = ' ${peq_AB} * ${K_d} * ${K_b} / ${K_r} / 2 / ${D_s_lamda} '
   []
-  [c_HD_kernel]
+  [c_AB_kernel]
     type = ParsedAux
-    variable = c_HD
-    coupled_variables = 'p_HD c_H_dot_c_D'
-    expression = ' (p_HD * ${K_d} + c_H_dot_c_D * 2 * ${D_s_lamda}) / ( ${K_r} + ${K_b} ) '
+    variable = c_AB
+    coupled_variables = 'p_AB c_A_dot_c_B'
+    expression = ' (p_AB * ${K_d} + c_A_dot_c_B * 2 * ${D_s_lamda}) / ( ${K_r} + ${K_b} ) '
   []
-  [p_H2_kernel]
+  [p_A2_kernel]
     type = ParsedAux
-    variable = p_H2
-    coupled_variables = 'p_HD'
-    expression = '${p0_H2} - p_HD / 2'
+    variable = p_A2
+    coupled_variables = 'p_AB'
+    expression = '${p0_A2} - p_AB / 2'
   []
-  [p_D2_kernel]
+  [p_B2_kernel]
     type = ParsedAux
-    variable = p_D2
-    coupled_variables = 'p_HD'
-    expression = '${p0_D2} - p_HD / 2'
+    variable = p_B2
+    coupled_variables = 'p_AB'
+    expression = '${p0_B2} - p_AB / 2'
   []
 []
 
 [Kernels]
-  [timeDerivative_p_HD]
+  [timeDerivative_p_AB]
     type = ADTimeDerivative
-    variable = p_HD
+    variable = p_AB
   []
-  [MatReaction_p_HD_recombination]
+  [MatReaction_p_AB_recombination]
     type = ADMatReactionFlexible
-    variable = p_HD
-    vs = 'c_H_dot_c_D'
+    variable = p_AB
+    vs = 'c_A_dot_c_B'
     coeff = '${fparse 2 * ${S} * ${k} * ${T} / ${V} }'
     reaction_rate_name = '${D_s_lamda}'
   []
-  [MatReaction_p_HD_dissociation]
+  [MatReaction_p_AB_dissociation]
     type = ADMatReactionFlexible
-    variable = p_HD
-    vs = 'c_HD'
+    variable = p_AB
+    vs = 'c_AB'
     coeff = '${fparse - ${S} * ${k} * ${T} / ${V} }'
     reaction_rate_name = '${K_b}'
   []
 []
 
 [BCs]
-  [p_HD_neumann] # No flux on the sides
+  [p_AB_neumann] # No flux on the sides
     type = NeumannBC
-    variable = p_HD
+    variable = p_AB
     boundary = 'left right bottom top'
     value = 0
   []
 []
 
 [Postprocessors]
-  [pressure_H2]
+  [pressure_A2]
     type = ElementAverageValue
-    variable = p_H2
+    variable = p_A2
     execute_on = 'initial timestep_end'
   []
-  [pressure_D2]
+  [pressure_B2]
     type = ElementAverageValue
-    variable = p_D2
+    variable = p_B2
     execute_on = 'initial timestep_end'
   []
-  [pressure_HD]
+  [pressure_AB]
     type = ElementAverageValue
-    variable = p_HD
+    variable = p_AB
     execute_on = 'initial timestep_end'
   []
 []

@@ -11,7 +11,7 @@
   [ver-1ia_comparison]
     type = RunCommand
     command = 'python3 comparison_ver-1ia.py'
-    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a equiliration on a reactive surface'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a equilibration on a reactive surface with equal starting pressures in ratedep condition'
     required_python_packages = 'matplotlib numpy pandas scipy os'
   []
 []

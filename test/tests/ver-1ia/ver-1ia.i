@@ -2,12 +2,12 @@ k_b = '${units 1.380649e-23 J/K}' # Boltzmann constant (from PhysicalConstants.h
 T = '${units 1000 K}' # Temperature
 V = '${units 1 m^3}' # Volume
 S = '${units 25 cm^2 -> m^2}' # Area
-p0_H2 = '${units 1e4 Pa}' # Initial pressure for H2
-p0_D2 = '${units 1e4 Pa}' # Initial pressure for D2
-peq_HD = '${units ${fparse 2 * ${p0_H2} * ${p0_D2} / ( ${p0_H2} + ${p0_D2} )} Pa}' # pressure in equilibration for HD
+p0_A2 = '${units 1e4 Pa}' # Initial pressure for A2
+p0_B2 = '${units 1e4 Pa}' # Initial pressure for B2
+peq_AB = '${units ${fparse 2 * ${p0_A2} * ${p0_B2} / ( ${p0_A2} + ${p0_B2} )} Pa}' # pressure in equilibration for AB
 simulation_time = '${units 6 s}'
-K_r = '5.88e-26' # m^4/atom/s recombination rate for H2 or D2
-K_d = '${fparse 1.858e24 / sqrt( ${T} )}' # at/m^2/s/pa dissociation rate for HD
+K_r = '5.88e-26' # m^4/atom/s recombination rate for A2 or B2
+K_d = '${fparse 1.858e24 / sqrt( ${T} )}' # at/m^2/s/pa dissociation rate for AB
 
 [Mesh]
   type = GeneratedMesh
@@ -15,86 +15,86 @@ K_d = '${fparse 1.858e24 / sqrt( ${T} )}' # at/m^2/s/pa dissociation rate for HD
 []
 
 [Variables]
-  [p_HD]
+  [p_AB]
     initial_condition = 0
   []
 []
 
 [AuxVariables]
-  [p_H2]
-    initial_condition = ${p0_H2}
+  [p_A2]
+    initial_condition = ${p0_A2}
   []
-  [p_D2]
-    initial_condition = ${p0_D2}
+  [p_B2]
+    initial_condition = ${p0_B2}
   []
-  [c_H_dot_c_D]
+  [c_A_dot_c_B]
   []
 []
 
 [AuxKernels]
-  [p_H2_kernel]
+  [p_A2_kernel]
     type = ParsedAux
-    variable = p_H2
-    coupled_variables = 'p_HD'
-    expression = '${p0_H2} - p_HD / 2'
+    variable = p_A2
+    coupled_variables = 'p_AB'
+    expression = '${p0_A2} - p_AB / 2'
   []
-  [p_D2_kernel]
+  [p_B2_kernel]
     type = ParsedAux
-    variable = p_D2
-    coupled_variables = 'p_HD'
-    expression = '${p0_D2} - p_HD / 2'
+    variable = p_B2
+    coupled_variables = 'p_AB'
+    expression = '${p0_B2} - p_AB / 2'
   []
-  [c_H_dot_c_D_kernel]
+  [c_A_dot_c_B_kernel]
     type = ParsedAux
-    variable = c_H_dot_c_D
-    expression = '${K_d} * ${peq_HD} / 2 / ${K_r}'
+    variable = c_A_dot_c_B
+    expression = '${K_d} * ${peq_AB} / 2 / ${K_r}'
   []
 []
 
 [Kernels]
-  [timeDerivative_p_HD]
+  [timeDerivative_p_AB]
     type = ADTimeDerivative
-    variable = p_HD
+    variable = p_AB
   []
-  [MatReaction_p_HD_recombination]
+  [MatReaction_p_AB_recombination]
     type = ADMatReactionFlexible
-    variable = p_HD
-    vs = 'c_H_dot_c_D'
+    variable = p_AB
+    vs = 'c_A_dot_c_B'
     coeff = '${fparse 2 * ${k_b} * ${T} * ${S} / ${V}}'
     reaction_rate_name = '${K_r}'
   []
-  [MatReaction_p_HD_dissociation]
+  [MatReaction_p_AB_dissociation]
     type = ADMatReactionFlexible
-    variable = p_HD
-    vs = 'p_HD'
+    variable = p_AB
+    vs = 'p_AB'
     coeff = '${fparse -1 * ${k_b} * ${T} * ${S} / ${V}}'
     reaction_rate_name = '${K_d}'
   []
 []
 
 [BCs]
-  [p_HD_neumann] # No flux on the sides
+  [p_AB_neumann] # No flux on the sides
     type = NeumannBC
-    variable = p_HD
+    variable = p_AB
     boundary = 'left right bottom top'
     value = 0
   []
 []
 
 [Postprocessors]
-  [pressure_H2]
+  [pressure_A2]
     type = ElementAverageValue
-    variable = p_H2
+    variable = p_A2
     execute_on = 'initial timestep_end'
   []
-  [pressure_D2]
+  [pressure_B2]
     type = ElementAverageValue
-    variable = p_D2
+    variable = p_B2
     execute_on = 'initial timestep_end'
   []
-  [pressure_HD]
+  [pressure_AB]
     type = ElementAverageValue
-    variable = p_HD
+    variable = p_AB
     execute_on = 'initial timestep_end'
   []
 []
