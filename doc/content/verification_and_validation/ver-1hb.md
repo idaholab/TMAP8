@@ -18,7 +18,7 @@ and for gas $D_2$ are given by
 \begin{equation} \label{eq:dt_P2_D}
 \frac{dP^2_{D_2}}{dt} = \frac{Q}{V} (P^2_{D_2} - P^1_{D_2}),
 \end{equation}
-where $Q$ is the volumetric flow rate (m$^3$s$^-1$), $V$ is the volume (m$^3$), $P^i_j$ is the pressure in enclosure $i$ of gas species $j$ ($j$ = $T_2$ or $D_2$).
+where $Q$ is the volumetric flow rate (m$^3 \cdot$s$^{-1}$), $V$ is the volume (m$^3$), $P^i_j$ is the pressure in enclosure $i$ of gas species $j$ ($j$ = $T_2$ or $D_2$).
 
 We solve these time evolution equations for the T$_2$ and D$_2$ pressures in the two enclosures using TMAP8 with $t$ the time and with the initial condition set to $P^1_{T_2} = P^2_{D_2} = 1$ Pa, and $P^2_{T_2} = P^1_{D_2} = 0$ Pa. We use $V = 1$ m$^3$ and $Q = 0.1$ m$^3$/s.
 
@@ -38,7 +38,7 @@ P^i_{D_2} = P^S_{D_2} + (P^i_{D_2}-P^S_{D_2}) \exp\left(-\frac{2Q}{V} t \right),
 \end{equation}
 where $P^S_{D_2} = \left(P^1_{D_2} (t=0) + P^2_{D_2} (t=0)\right)/2$.
 
-Note that the TMAP7 verification case provides the initial values of gas pressures, and compares plots of gas pressure, but the analytical solutions use concentration variables. We used pressure variables throughout the derivation here to keep consistent units, but the pressure can be converted to concentration if needed using the ideal gas law as discussed in [ver-1ha.md].
+Note that the TMAP7 verification case in [!cite](ambrosek2008verification) provides the initial values of gas pressures, and compares plots of gas pressure, but the analytical solutions use concentration variables. We used pressure variables throughout the derivation here to keep consistent units, but the pressure can be converted to concentration if needed using the ideal gas law as discussed in [ver-1ha.md].
 
 ## Results and comparison against analytical solution
 
