@@ -4,10 +4,10 @@ from matplotlib import gridspec
 import pandas as pd
 from scipy import special
 import os
-import git
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
-os.chdir(os.path.dirname(__file__))
+script_folder = os.path.dirname(__file__)
+os.chdir(script_folder)
 
 #===============================================================================
 # Physical constants
@@ -15,7 +15,11 @@ kb = 1.380649e-23  # J/K Boltzmann constant
 
 # ===============================================================================
 # Extract TMAP8 results
-tmap8_solution = pd.read_csv(os.path.join(git.Repo('.',search_parent_directories=True).working_tree_dir, "test/tests/ver-1ib/gold/ver-1ib_out.csv"))
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1ib/gold/ver-1ib_out.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/ver-1ib_out.csv"
+tmap8_solution = pd.read_csv(csv_folder)
 tmap8_solution_time = tmap8_solution['time']
 tmap8_solution_B2 = tmap8_solution['pressure_B2']
 tmap8_solution_A2 = tmap8_solution['pressure_A2']
