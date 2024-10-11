@@ -1,9 +1,15 @@
-# R = '${units 8.31446261815324 J/K/mol}' # from PhysicalConstants
-# T = '${units 303 K}'
-# N_a = '${units 6.02214076e23 at/mol}' # from PhysicalConstants
 Q = '${units 0.1 m^3/s }'
 V = '${units 1 m^3}'
 Q_by_V = '${fparse Q / V}'
+
+# Initial pressures of Tritium and Deuterium in enclosures 1 and 2
+P1_T = '${units 1.0 Pa}'
+P2_T = '${units 0 Pa}'
+P1_D = '${units 0 Pa}'
+P2_D = '${units 1.0 Pa}'
+
+simulation_time = '${units 40 s}'
+time_step_size = '${units 0.1 s}'
 
 [Mesh]
     type = GeneratedMesh
@@ -12,17 +18,17 @@ Q_by_V = '${fparse Q / V}'
 
 [Variables]
     [P1_T]
-        initial_condition = '${units 1.0 Pa}'
+        initial_condition = ${P1_T}
     []
     [P2_T]
-        initial_condition = '${units 0 Pa}'
+        initial_condition = ${P2_T}
     []
 
     [P1_D]
-        initial_condition = '${units 0 Pa}'
+        initial_condition = ${P1_D}
     []
     [P2_D]
-        initial_condition = '${units 1.0 Pa}'
+        initial_condition = ${P2_D}
     []
 []
 
@@ -131,8 +137,8 @@ Q_by_V = '${fparse Q / V}'
     petsc_options_iname = '-pc_type'
     petsc_options_value = 'lu'
     automatic_scaling = true
-    end_time = '${units 40 s}'
-    dt = '${units 0.1 s}'
+    end_time = ${simulation_time}
+    dt = ${time_step_size}
 []
 
 [Outputs]

@@ -6,12 +6,18 @@ from scipy import special
 import os
 import math
 
+
+script_folder = os.path.dirname(__file__)
 # Changes working directory to script directory (for consistent MooseDocs usage)
 os.chdir(os.path.dirname(__file__))
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+   csv_folder = "../../../../test/tests/ver-1hb/gold/ver-1hb_out.csv"
+else:                                  # if in test folder
+   csv_folder = "./gold/ver-1hb_out.csv"
 
 # ===============================================================================
 # Extract TMAP8 results
-tmap8_sol = pd.read_csv("./gold/ver-1hb_out.csv")
+tmap8_sol = pd.read_csv(csv_folder)
 tmap8_sol_time = tmap8_sol['time']
 tmap8_sol_P1_T = tmap8_sol['P1_T_value']
 tmap8_sol_P2_T = tmap8_sol['P2_T_value']
