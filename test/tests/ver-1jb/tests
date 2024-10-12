@@ -1,18 +1,29 @@
 [Tests]
-  design = 'ver-1jb.md'
+  design = 'ver-1jb.md MatReaction.md MatDiffusion.md ScaledCoupledTimeDerivative.md TrappingNodalKernel.md ReleasingNodalKernel.md'
   verification = 'ver-1jb.md'
-  issues = '#145'
+  issues = '#145 #12'
   [ver-1jb_csvdiff]
     type = CSVDiff
     input = ver-1jb.i
-    csvdiff = ver-1jb_out.csv
-    requirement = 'The system shall be able to model decay of tritium and associated growth of He in a diffusion segment with distributed traps, with the fine mesh and timestep required to match the analytical solution to generate CSV data for use in comparisons with the analytic solution.'
+    csvdiff = ver-1jb_time_dependent_out.csv
+    requirement = 'The system shall be able to model decay of tritium and associated growth of He in a diffusion segment with
+                   distributed traps, with the fine mesh and timestep required to match the analytical solution to generate CSV
+                   data for use in comparisons with the analytic solution.'
+  []
+  [ver-1jb_csvdiff_profile]
+    type = CSVDiff
+    input = ver-1jb.i
+    csvdiff = ver-1jb_profile_out_line_0080.csv
+    should_execute = false # uses ver-1jb_csvdiff
+    prereq = ver-1jb_csvdiff
+    requirement = 'The system shall be able to model decay of tritium and associated growth of He in a diffusion segment with
+                   distributed traps and output the profiles of concentrations.'
   []
   [ver-1jb_comparison]
     type = RunCommand
     command = 'python3 comparison_ver-1jb.py'
-    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1jb, which models decay of tritium and associated growth of He in a diffusion segment with distributed traps.'
-    prereq = ver-1jb_csvdiff
-    required_python_packages = 'matplotlib numpy pandas os git'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution
+                   when modeling decay of tritium and associated growth of He in a diffusion segment with distributed traps.'
+    required_python_packages = 'csv matplotlib numpy pandas os'
   []
 []
