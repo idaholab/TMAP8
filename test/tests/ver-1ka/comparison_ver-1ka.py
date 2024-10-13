@@ -21,7 +21,7 @@ else:                                  # if in test folder
     csv_folder = "./gold/ver-1ka_out.csv"
 expt_data = pd.read_csv(csv_folder)
 TMAP8_time = expt_data['time']
-TMAP8_pressure = expt_data['v']
+TMAP8_pressure = expt_data['pressure']
 
 # Calculate the theoretical expression for pressure
 analytical_pressure = (S / V) * kb * T * TMAP8_time

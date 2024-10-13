@@ -12,7 +12,6 @@
     type = RunCommand
     command = 'python3 comparison_ver-1ka.py'
     requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1ka, modeling a tritium volumetric source in one enclosure.'
-    prereq = ver-1ka_csv
     required_python_packages = 'matplotlib numpy pandas os git'
   []
 []
