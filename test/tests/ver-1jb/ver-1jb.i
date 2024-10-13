@@ -9,7 +9,7 @@ boltzmann_constant_eV = ${fparse boltzmann_constant / eV_to_J} # eV/K
 
 # Case and model parameters (adapted from TMAP7)
 slab_length = 1.5 # m
-tritium_concentration_initial = ${units 1 atoms/m3}
+tritium_mobile_concentration_initial = ${units 1 atoms/m3}
 trapping_sites_atomic_fraction_max = ${units 0.001 at.frac.}
 trapping_sites_fraction_occupied_initial = 0.5 # (-)
 normal_center_position = ${fparse slab_length/2} # m
@@ -48,7 +48,7 @@ dt_start = ${fparse end_time/250} # s
 [Variables]
   # tritium mobile concentration in atoms/m^3 / density_scalar = (-)
   [tritium_mobile_concentration_scaled]
-    initial_condition = ${fparse tritium_concentration_initial / density_scalar}
+    initial_condition = ${fparse tritium_mobile_concentration_initial / density_scalar}
     scaling = ${density_scalar} # to bring the residual to the level of tritium trapped concentration
   []
   # tritium trapped concentration in (atoms/m^3) / density_scalar = (-)
@@ -197,7 +197,7 @@ dt_start = ${fparse end_time/250} # s
     type = MatReaction
     variable = tritium_mobile_concentration_scaled
     v = tritium_trapped_concentration_scaled
-    reaction_rate = '${fparse decay_rate_constant * trap_per_free}'
+    reaction_rate = '${fparse - decay_rate_constant * trap_per_free}'
     extra_vector_tags = ref
   []
   # kernels for the helium concentration equation
