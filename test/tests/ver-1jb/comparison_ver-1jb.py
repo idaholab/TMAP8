@@ -81,9 +81,9 @@ plt.close(fig)
 # ===============================================================================
 # Extract TMAP8 predictions - concentration profile
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-    csv_folder_profile = "../../../../test/tests/ver-1jb/gold/ver-1jb_profile_out_line_0035.csv"
+    csv_folder_profile = "../../../../test/tests/ver-1jb/gold/ver-1jb_profile_out_line_0048.csv"
 else:                                  # if in test folder
-    csv_folder_profile = "./gold/ver-1jb_profile_out_line_0035.csv"
+    csv_folder_profile = "./gold/ver-1jb_profile_out_line_0048.csv"
 tmap8_solution = pd.read_csv(csv_folder_profile)
 tmap8_position = tmap8_solution['x']
 tmap8_tritium_mobile = tmap8_solution['tritium_mobile_concentration']
@@ -186,9 +186,9 @@ plt.close(fig)
 # ===============================================================================
 # Extract TMAP8 predictions - concentration profile
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-    csv_folder_profile = "../../../../test/tests/ver-1jb/gold/ver-1jb_equivalent_concentrations_profile_out_line_0035.csv"
+    csv_folder_profile = "../../../../test/tests/ver-1jb/gold/ver-1jb_equivalent_concentrations_profile_out_line_0048.csv"
 else:                                  # if in test folder
-    csv_folder_profile = "./gold/ver-1jb_equivalent_concentrations_profile_out_line_0035.csv"
+    csv_folder_profile = "./gold/ver-1jb_equivalent_concentrations_profile_out_line_0048.csv"
 tmap8_solution = pd.read_csv(csv_folder_profile)
 tmap8_position = tmap8_solution['x']
 tmap8_tritium_mobile = tmap8_solution['tritium_mobile_concentration']

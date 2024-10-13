@@ -31,6 +31,7 @@ decay_rate_constant = ${fparse 0.693/half_life_s} # 1/s
 num_mesh_element = 50
 end_time = ${units 100 year -> s} # s
 dt_start = ${fparse end_time/250} # s
+dt_max = ${fparse end_time/100} # s
 
 [Mesh]
   type = GeneratedMesh
@@ -43,7 +44,6 @@ dt_start = ${fparse end_time/250} # s
   # tritium mobile concentration in atoms/m^3 / density_scalar = (-)
   [tritium_mobile_concentration_scaled]
     initial_condition = ${fparse tritium_mobile_concentration_initial / density_scalar}
-    scaling = ${density_scalar} # to bring the residual to the level of tritium trapped concentration
   []
   # tritium trapped concentration in (atoms/m^3) / density_scalar = (-)
   [tritium_trapped_concentration_scaled]
@@ -333,6 +333,7 @@ dt_start = ${fparse end_time/250} # s
   solve_type = NEWTON
   scheme = 'bdf2'
   dtmin = 1
+  dtmax = ${dt_max}
   l_max_its = 10
   nl_max_its = 11
   nl_rel_tol = 1e-10

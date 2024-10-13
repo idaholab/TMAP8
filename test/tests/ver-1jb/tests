@@ -13,7 +13,7 @@
   [ver-1jb_csvdiff_profile]
     type = CSVDiff
     input = ver-1jb.i
-    csvdiff = ver-1jb_profile_out_line_0035.csv
+    csvdiff = ver-1jb_profile_out_line_0048.csv
     should_execute = false # uses ver-1jb_csvdiff
     prereq = ver-1jb_csvdiff
     requirement = 'The system shall be able to model decay of tritium and associated growth of He in a diffusion segment with
@@ -24,7 +24,6 @@
     input = ver-1jb.i
     cli_args = 'tritium_mobile_concentration_initial=1e25
                 trap_per_free=1
-                Variables/tritium_mobile_concentration_scaled/scaling=1
                 Outputs/time_dependent_out/file_base=ver-1jb_equivalent_concentrations_time_dependent_out
                 Outputs/profile_out/file_base=ver-1jb_equivalent_concentrations_profile_out'
     csvdiff = ver-1jb_equivalent_concentrations_time_dependent_out.csv
@@ -38,10 +37,9 @@
     input = ver-1jb.i
     cli_args = 'tritium_mobile_concentration_initial=1e25
                 trap_per_free=1
-                Variables/tritium_mobile_concentration_scaled/scaling=1
                 Outputs/time_dependent_out/file_base=ver-1jb_equivalent_concentrations_time_dependent_out
                 Outputs/profile_out/file_base=ver-1jb_equivalent_concentrations_profile_out'
-    csvdiff = ver-1jb_equivalent_concentrations_profile_out_line_0035.csv
+    csvdiff = ver-1jb_equivalent_concentrations_profile_out_line_0048.csv
     should_execute = false # uses ver-1jb_csvdiff_equivalent_concentrations
     prereq = ver-1jb_csvdiff_equivalent_concentrations
     requirement = 'The system shall be able to model decay of tritium and associated growth of He in a diffusion segment with
