@@ -12,7 +12,7 @@ This page presents ver-1jb.
 This verification case is an extension of[ver-1ja](ver-1ja.md), which tests the first order radioactive decay capabilities of TMAP8.
 In ver-1jb, however, tritium decay is coupled with trapping, which was verified in several verification cases, including [ver-1d](ver-1d.md).
 As [ver-1ja](ver-1ja.md), ver-1jb is based on the case published in the TMAP7 V&V suite [!citep](ambrosek2008verification).
-The model assumes pre-charging of an $l=1.5$ m long slab with tritium.
+The model assumes pre-charging of an $l=1.5$ m long slab with tritium (with an assumed width and thickness of 1 m).
 As opposed to [ver-1ja](ver-1ja.md), however, traps at $C_{trap} = 0.1$% atom fraction (with a material density based on tungsten defined as 6.34 $\times 10^{28}$ atoms/m$^3$)
 and $E=4.2$ eV trap energy are distributed in a normal distribution centered at the mid-plane of the slab and standard deviation of $l/4$. The traps are initially filled with trapped tritium to 50% of trap concentration.
 
@@ -92,7 +92,7 @@ Applying a mass balance over the system, the inventory of helium in atoms, $I_{H
 [ver-1jb_results_comparison_analytical_time_evolution_1] shows the TMAP8 predictions and how they compare to the analytical solution
 for the decay of tritium and associated growth of $^3$He in a distributed trap.
 TMAP8 matches the analytical solution, with a root mean square percentage error
-(RMSPE) of 2.85% and 0.92% for the $I_{tot}$ and $I_{He}$ concentration curves, respectively,
+(RMSPE) of 1.29% and 0.35% for the $I_{tot}$ and $I_{He}$ concentration curves, respectively,
 and can also provide the trapped and mobile tritium concentrations.
 
 !media comparison_ver-1jb.py

@@ -39,12 +39,6 @@ dt_start = ${fparse end_time/250} # s
   xmax = ${slab_length}
 []
 
-[Problem]
-  type = ReferenceResidualProblem
-  extra_tag_vectors = 'ref'
-  reference_vector = 'ref'
-[]
-
 [Variables]
   # tritium mobile concentration in atoms/m^3 / density_scalar = (-)
   [tritium_mobile_concentration_scaled]
@@ -170,27 +164,23 @@ dt_start = ${fparse end_time/250} # s
   [time_tritium]
     type = TimeDerivative
     variable = tritium_mobile_concentration_scaled
-    extra_vector_tags = ref
   []
   [diffusion]
     type = MatDiffusion
     variable = tritium_mobile_concentration_scaled
     diffusivity = diffusivity
-    extra_vector_tags = ref
   []
   [decay_tritium]
     type = MatReaction
     variable = tritium_mobile_concentration_scaled
     v = tritium_mobile_concentration_scaled
     reaction_rate = '${fparse -decay_rate_constant}'
-    extra_vector_tags = ref
   []
   [coupled_time_tritium]
     type = ScaledCoupledTimeDerivative
     variable = tritium_mobile_concentration_scaled
     v = tritium_trapped_concentration_scaled
     factor = ${trap_per_free}
-    extra_vector_tags = ref
   []
   # re-adding it to the equation of mobile tritium because it is accounted for in coupled_time_tritium, and needs to be removed
   [decay_tritium_trapped]
@@ -198,27 +188,23 @@ dt_start = ${fparse end_time/250} # s
     variable = tritium_mobile_concentration_scaled
     v = tritium_trapped_concentration_scaled
     reaction_rate = '${fparse - decay_rate_constant * trap_per_free}'
-    extra_vector_tags = ref
   []
   # kernels for the helium concentration equation
   [time_helium]
     type = TimeDerivative
     variable = helium_concentration_scaled
-    extra_vector_tags = ref
   []
   [decay_helium_mobile]
     type = MatReaction
     variable = helium_concentration_scaled
     v = tritium_mobile_concentration_scaled
     reaction_rate = '${fparse decay_rate_constant}'
-    extra_vector_tags = ref
   []
   [decay_helium_trapped]
     type = MatReaction
     variable = helium_concentration_scaled
     v = tritium_trapped_concentration_scaled
     reaction_rate = '${fparse decay_rate_constant}'
-    extra_vector_tags = ref
   []
 []
 
@@ -237,7 +223,6 @@ dt_start = ${fparse end_time/250} # s
     mobile_concentration = 'tritium_mobile_concentration_scaled' # (-)
     temperature = temperature # (K)
     trap_per_free = ${trap_per_free}
-    extra_vector_tags = ref
   []
   [release]
     type = ReleasingNodalKernel
@@ -347,20 +332,20 @@ dt_start = ${fparse end_time/250} # s
   end_time = ${end_time}
   solve_type = NEWTON
   scheme = 'bdf2'
-  dtmin = 1e-15
+  dtmin = 1
   l_max_its = 10
-  nl_max_its = 5
+  nl_max_its = 11
   nl_rel_tol = 1e-10
-  nl_abs_tol = 1e-17
+  nl_abs_tol = 1e-30
+  petsc_options = '-snes_converged_reason'
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
-  line_search = 'none'
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = ${dt_start}
     optimal_iterations = 9
-    growth_factor = 1.1
-    cutback_factor = 0.909
+    growth_factor = 1.2
+    cutback_factor = 0.9
   []
 []
 
