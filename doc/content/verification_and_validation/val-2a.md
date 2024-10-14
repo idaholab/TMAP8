@@ -6,7 +6,7 @@
 
 This validation problem is taken from [!cite](anderl1985tritium). He and co-workers conducted an ion implantation experiment on a modified 316 stainless steel called Primary Candidate Alloy (PCA). The PCA sample has 0.5 mm thick and has a diameter of 2.5 cm. It is exposed to an deuterium ion beam on the left side. The TRIM code ([!citep](biersack1982stopping)) is used to determine that the average implantation depth for the ions is 11 nm $\pm$ 5.4 nm. Reemission data from the TRIM calculation shows that only 75 % of the incident flux remained in the metal and other 25 % is re-emitted.
 
-One known non-physical feature in the modeling is that the cleanup of the upstream surface was modeled by a simple exponential in time rather than an integrated ion influence which was interrupted twice during the actual experiment. The pressures upstream and downstream are proved to be inconsequential; they could have been taken as zero and obtained essentially the same results. The comparison between results from TMAP8 and experiment is reproduced in [val-2a_comparison] here.
+One known non-physical feature in the modeling is that the cleanup of the upstream surface was modeled by a simple exponential in time rather than an integrated ion influence which was interrupted twice during the actual experiment. The pressures upstream and downstream are proved to be inconsequential; they could have been taken as zero and obtained essentially the same results. The comparison between results from TMAP8 and experiment is reproduced in [TMAP7_val-2a_comparison_left] here.
 
 !table id=val-2a_flux_and_pressure_TMAP7 caption=Values of beam flux and pressure on the left side during experiment.
 | time (s)      | Pressure (Pa)              | Beam flux (atom/m$^2$/s)     |
@@ -53,12 +53,12 @@ One known non-physical feature in the modeling is that the cleanup of the upstre
 | $l$       | thickness of PCA                  | 5\times 10^{-4}                                     | m               |
 | $T$       | temperature                       | 703                                                 | K               |
 
-Due to the parameters from TMAP4 and TMAP7 are different, the case considers both situations. In TMAP7, the beam flux and the pressure on the left during the experiment are presented in [val-2a_flux_and_pressure_TMAP7]. Other parameters are shown in [val-2a_set_up_values_TMAP7]. From TRIM, the peak flux from 5 nm to 9 nm is 0.15 $\times$ beam flux, the peak flux from 9 nm to 13 nm is 0.70 $\times$ beam flux, and peak beam flux from 13 nm to 17 nm is 0.15 $\times$ beam flux. The permeation flux from the sample gives a good fit to the experimental data as shown in [val-2a_comparison_TMAP7]. In TMAP4, the beam flux and the pressure on the left during the experiment are presented in [val-2a_flux_and_pressure_TMAP4]. Other parameters are shown in [val-2a_set_up_values_TMAP4]. From TRIM, the peak flux from 8 nm to 12 nm is 0.25 $\times$ beam flux, the peak flux from 12 nm to 16 nm is 1.0 $\times$ beam flux, and peak beam flux from 16 nm to 20 nm is 0.25 $\times$ beam flux. The permeation flux from the sample gives a good fit to the experimental data as shown in [val-2a_comparison_TMAP4].
+Due to the parameters from TMAP4 and TMAP7 are different, the case considers both situations. In TMAP7, the beam flux and the pressure on the left during the experiment are presented in [val-2a_flux_and_pressure_TMAP7]. Other parameters are shown in [val-2a_set_up_values_TMAP7]. From TRIM, the peak flux from 5 nm to 9 nm is 0.15 $\times$ beam flux, the peak flux from 9 nm to 13 nm is 0.70 $\times$ beam flux, and peak beam flux from 13 nm to 17 nm is 0.15 $\times$ beam flux. The permeation flux from the sample gives a good fit to the experimental data as shown in [TMAP7_val-2a_comparison_left]. In TMAP4, the beam flux and the pressure on the left during the experiment are presented in [val-2a_flux_and_pressure_TMAP4]. Other parameters are shown in [val-2a_set_up_values_TMAP4]. From TRIM, the peak flux from 8 nm to 12 nm is 0.25 $\times$ beam flux, the peak flux from 12 nm to 16 nm is 1.0 $\times$ beam flux, and peak beam flux from 16 nm to 20 nm is 0.25 $\times$ beam flux. The permeation flux from the sample gives a good fit to the experimental data as shown in [TMAP4_val-2a_comparison_left].
 
 
 ## Results
 
-[val-2a_comparison] shows the comparison of the TMAP8 calculation and the experimental data. There is reasonable agreement between the TMAP predictions and the experimental data with a root mean square percentage error of RMSPE =  %. Note that the agreement could be improved by adjusting the model parameters. It is also possible to perform this optimization with [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html).
+[TMAP7_val-2a_comparison_left] shows the comparison of the TMAP8 calculation and the experimental data. There is reasonable agreement between the TMAP predictions and the experimental data with a root mean square percentage error of RMSPE =  %. Note that the agreement could be improved by adjusting the model parameters. It is also possible to perform this optimization with [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html).
 
 ### Comparison based on data from TMAP7
 
@@ -103,37 +103,37 @@ Due to the parameters from TMAP4 and TMAP7 are different, the case considers bot
 !media comparison_val-2a.py
        image_name=TMAP4_val-2a_comparison_left.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP7_val-2a_comparison_left
+       id=TMAP4_val-2a_comparison_left
        caption=Comparison of TMAP8 calculation with the experimental data on left side with unit of atom/m$^2$/s
 
 !media comparison_val-2a.py
        image_name=TMAP4_val-2a_comparison_right.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP7_val-2a_comparison_right
+       id=TMAP4_val-2a_comparison_right
        caption=Comparison of TMAP8 calculation with the experimental data on right side with unit of atom/m$^2$/s
 
 !media comparison_val-2a.py
        image_name=TMAP4_val-2a_comparison_both.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP7_val-2a_comparison_both
+       id=TMAP4_val-2a_comparison_both
        caption=Comparison of TMAP8 calculation with the experimental data on both side with unit of atom/m$^2$/s
 
 !media comparison_val-2a.py
        image_name=TMAP4_val-2a_comparison_left_area.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP7_val-2a_comparison_left_area
+       id=TMAP4_val-2a_comparison_left_area
        caption=Comparison of TMAP8 calculation with the experimental data on left side with unit of atom/s
 
 !media comparison_val-2a.py
        image_name=TMAP4_val-2a_comparison_right_area.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP7_val-2a_comparison_right_area
+       id=TMAP4_val-2a_comparison_right_area
        caption=Comparison of TMAP8 calculation with the experimental data on right side with unit of atom/s
 
 !media comparison_val-2a.py
        image_name=TMAP4_val-2a_comparison_both_area.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP7_val-2a_comparison_both_area
+       id=TMAP4_val-2a_comparison_both_area
        caption=Comparison of TMAP8 calculation with the experimental data on both side with unit of atom/s
 
 

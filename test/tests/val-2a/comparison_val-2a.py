@@ -55,7 +55,7 @@ simulation_flux_left_TMAP7 = simulation_TMAP7_data['scaled_flux_surface_left']
 simulation_flux_right_TMAP7 = simulation_TMAP7_data['scaled_flux_surface_right']
 
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-    csv_folder = "../../../../test/tests/val-2b/gold/val-2a_TMAP4_out.csv"
+    csv_folder = "../../../../test/tests/val-2a/gold/val-2a_TMAP4_out.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/val-2a_TMAP4_out.csv"
 simulation_TMAP4_data = pd.read_csv(csv_folder)
