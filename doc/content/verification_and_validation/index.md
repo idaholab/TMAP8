@@ -21,7 +21,8 @@ TMAP8 also contains [example cases](examples/tmap_index.md), which showcase how 
 | ver-1fd | [Convective Heating](ver-1fd.md)                                                                  |
 | ver-1g  | [Simple Forward Chemical Reaction](ver-1g.md)                                                     |
 | ver-1gc | [Series Chemical Reactions](ver-1gc.md)                                                           |
-| ver-1ha | [Convective Gas Outflow Problem](ver-1ha.md)                                                      |
+| ver-1ha | [Convective Gas Outflow Problem in Three Enclosures](ver-1ha.md)                                  |
+| ver-1hb | [Convective Gas Outflow Problem in Equilibrating Enclosures](ver-1hb.md)                          |
 | ver-1ia | [Species Equilibration Problem in Ratedep Condition with Equal Starting Pressures](ver-1ia.md)    |
 | ver-1ib | [Species Equilibration Problem in Ratedep Condition with Unequal Starting Pressures](ver-1ib.md)  |
 | ver-1ic | [Species Equilibration Problem in Surfdep Conditions with Low Barrier Energy](ver-1ic.md)         |
