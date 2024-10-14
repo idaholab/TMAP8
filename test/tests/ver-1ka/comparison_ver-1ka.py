@@ -31,18 +31,16 @@ gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
 # Plot the experimental data
-ax.plot(TMAP8_time/3600, TMAP8_pressure, linestyle='-', color='magenta', label='TMAP8', linewidth=3)
+ax.plot(TMAP8_time/3600, TMAP8_pressure, label=r"TMAP8", c='tab:gray',linestyle='-')
 
 # Plot the selected theoretical data
-ax.plot(TMAP8_time/3600, analytical_pressure, marker='+', linestyle='', color='black', label=r"theory", markersize=10)
+ax.plot(TMAP8_time/3600, analytical_pressure, label=r"Analytical",c='k', linestyle='--')
 
 RMSE_pressure = np.linalg.norm(TMAP8_pressure-analytical_pressure)
 err_percent_pressure = RMSE_pressure*100/np.mean(analytical_pressure)
 
 # Add text annotation for RMSPE on the plot
-ax.text(0.05, 0.95, '$P_{T_2}$ RMSPE = %.2f ' % err_percent_pressure + '%',
-    transform=ax.transAxes, fontsize=12, fontweight='bold', color='tab:blue',
-    verticalalignment='top', bbox=dict(facecolor='white', alpha=0.8))
+ax.text(0.05, 0.95, '$P_{T_2}$ RMSPE = %.2f ' % err_percent_pressure + '%', fontweight='bold')
 
 # Format the y-axis to use scientific notation
 plt.gca().yaxis.set_major_formatter(plt.FuncFormatter(lambda val, pos: '{:.1e}'.format(val)))
@@ -50,6 +48,11 @@ plt.gca().yaxis.set_major_formatter(plt.FuncFormatter(lambda val, pos: '{:.1e}'.
 # Label the axes
 ax.set_xlabel('Time (hr)')
 ax.set_ylabel('Pressure (Pa)')
+
+# define axis range
+ax.set_xlim(left=0)
+ax.set_xlim(right=3)
+ax.set_ylim(bottom=0)
 
 # Add a legend
 ax.legend(loc="best")
