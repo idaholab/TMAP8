@@ -45,8 +45,8 @@ def get_analytical_solution(numerical_steps):
     K_r = nu * np.exp( (E_c - E_x) / kb / T) # m/s release coefficient
     K_b = nu * np.exp(- E_b / kb / T) # m/s dissociation coefficient
 
-    tao = V / S / kb / T  * (K_r + K_b) / K_d / K_b
-    p_AB_analytical = 2 * p0_A2 * p0_B2 / (p0_A2 + p0_B2) * (1 - np.exp(- numerical_steps / tao))
+    tau = V / S / kb / T  * (K_r + K_b) / K_d / K_b
+    p_AB_analytical = 2 * p0_A2 * p0_B2 / (p0_A2 + p0_B2) * (1 - np.exp(- numerical_steps / tau))
     return p_AB_analytical
 
 

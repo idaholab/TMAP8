@@ -36,10 +36,8 @@ def get_analytical_solution(numerical_steps):
     p0_A2 = 1e4 # Pa Initial pressure for A2
     p0_B2 = 1e4 # Pa Initial pressure for B2
     K_d = 1.858e24 / np.sqrt(T) # at.m^-2/s/pa dissociation rate for AB
-    # time_constant = 0.15
 
     p_AB_analytical_ratedep = 2 * p0_A2 * p0_B2 * (1 - np.exp(-S * K_d * kb * T * numerical_steps / V)) / (p0_A2 + p0_B2)
-    # p_AB_analytical_tao = 2 * p0_A2 * p0_B2 * (1 - np.exp(- numerical_steps / time_constant)) / (p0_A2 + p0_B2)
     p_AB_analytical_special = 2 * p0_A2 * p0_B2 * (1 - np.exp(- 2 * S * K_d * kb * T * numerical_steps / V)) / (p0_A2 + p0_B2)
     return p_AB_analytical_special, p_AB_analytical_ratedep
 
@@ -62,8 +60,6 @@ ax.plot(tmap8_solution_time, tmap8_solution_AB,
         label=r"$AB$ TMAP8", c='tab:gray', linestyle='-')
 ax.plot(tmap8_solution_time, p_AB_analytical,
         label=r"$AB$ Analytical", c='k', linestyle='--')
-# ax.plot(tmap8_solution_time, p_AB_analytical_ratedep,
-#         label=r"$AB$ in Ratedep Analytical", c='tab:blue', linestyle='--')
 
 ax.set_xlabel(u'Time (s)')
 ax.set_ylabel(r"Partial Pressure (Pa)")

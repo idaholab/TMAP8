@@ -29,14 +29,14 @@ K_{eq} = \exp\left( - \frac{\Delta G_f}{RT} \right) = \exp\left( - \frac{-T \Del
 
 where $G_f$ is the Gibbs free energy, $R$ is the ideal gas constant, $T$ is the temperature.
 
-Therefore, the partial pressure of AB in equilibrium is a constant value depends on initial partial pressure of A$_2$ and B$_2$:
+Therefore, the partial pressure of AB in equilibrium depends on initial partial pressure of A$_2$ and B$_2$:
 
 \begin{equation}
 \label{eq:p_AB_equilibrium}
 P_{AB}^{eq} = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0}.
 \end{equation}
 
-At equilibrium, the concentration of $C_A$ and $C_B$ from Sieverts' law are given by
+At equilibrium, the surface concentrations of A$_2$ (i.e., $C_A$) and B$_2$ (i.e., $C_B$) from Sieverts' law are given by
 
 \begin{equation}
 \label{eq:p_ca_relation}
@@ -50,7 +50,7 @@ and
 C_B = K_s \sqrt{P_{B_2}},
 \end{equation}
 
-where $K_s$ is Sieverts’ solubility. Because we are considering isotopic variants, Ks will be the same for each homonuclear species. Under equilibrium conditions, we also expect
+where $K_s$ is Sieverts’ solubility. Because we are considering isotopic variants, $K_s$ will be the same for each homonuclear species. Under equilibrium conditions, we also expect
 
 \begin{equation}
 \label{eq:equation_p_a2}
@@ -65,21 +65,21 @@ K_d = K_s^2 K_r,
 \end{equation}
 
 Under ratedep condition, equilibrium is not assumed, but the relationships between the coefficients are maintained. In particular, the recombination and dissociation coefficients are assumed to be independent of the surface species concentrations and gas partial pressures, respectively. If the species molecular masses and solubilities are assumed equal, the dissociation
-coefficients for AB, A$_2$, and B$_2$ molecules should be identical. Because two different microscopic processes can produce AB (A jumping to find B and B jumping to find A) and only one (A finding A) can form A$_2$, and similarly for B$_2$, the recombination coefficient for AB should be twice of the coefficient for homonuclear molecules. We solve the net current of AB molecules from surface to the enclosure by
+coefficients for AB, A$_2$, and B$_2$ molecules should be identical. Because two different microscopic processes can produce AB (A jumping to find B and B jumping to find A) and only one (A finding A) can form A$_2$, and similarly for B$_2$, the recombination coefficient for AB should be twice of the coefficient for homonuclear molecules. We solve the net current of AB molecules from the surface to the enclosure by
 
 \begin{equation}
 \label{eq:equation_p_ab}
 \frac{d P_{AB}}{dt} = \frac{S k_b T}{V} (2 K_r C_A C_B - K_d P_{AB}),
 \end{equation}
 
-where $t$ is the time, $S$ is the surface area, $k_b$ is the Boltzmann’s constant, $T$ is the temperature, $V$ is the volume in the enclosure, $C_A$ and $C_B$ are the concentration of A$_2$ and B$_2$ on the reactive surface, respectively. If diffusion is small, the almost constant numbers of A and B atoms in the gas imply that $C_A$ and $C_B$ should have an almost constant value regardless of the isotopic species composition. The production of $C_A$ and $C_B$ in equilibration is given by
+where $t$ is the time, $S$ is the surface area, $k_b$ is the Boltzmann’s constant, $T$ is the temperature, and $V$ is the volume in the enclosure. If diffusion is small, the almost constant numbers of A and B atoms in the gas imply that $C_A$ and $C_B$ should have an almost constant value regardless of the isotopic species composition. The production of A$_2$ and B$_2$ in equilibration conditions is given by
 
 \begin{equation}
 \label{eq:equal_c_a_c_b}
 C_A C_B = \frac{K_d}{2 K_r} P_{AB}^{eq}.
 \end{equation}
 
-This case uses equal starting pressures of $1 \times 10^{4}$ Pa of A$_2$ and B$_2$ and no AB. $K_d$ was specified to be $1.858 \times 10^{24}/\sqrt{T}$ atom/m$^2$/s/Pa. $K_r$ was specified to be $5.88 \times 10^{-26}$ m$^4$/atom/s. Temperature was 1000 K, the surface area for reaction was a 0.05 m $\times$ 0.05 m square, and the enclosure volume was 1 m$^3$.
+This case uses equal starting pressures of $1 \times 10^{4}$ Pa of A$_2$ and B$_2$ and no AB. $K_d$ is specified to be $1.858 \times 10^{24}/\sqrt{T}$ atom/m$^2$/s/Pa. $K_r$ is specified to be $5.88 \times 10^{-26}$ m$^4$/atom/s, the temperature is 1000 K, the surface area for reaction is 0.05 m $\times$ 0.05 m square, and the enclosure volume is 1 m$^3$.
 
 
 ## Analytical solution
@@ -88,18 +88,18 @@ This case uses equal starting pressures of $1 \times 10^{4}$ Pa of A$_2$ and B$_
 
 \begin{equation}
 \label{eq:analytical_solution}
-P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} (1 - \exp \left( -\frac{S K_d k_b T}{V} t \right)).
+P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} \left(1 - \exp \left( -\frac{S K_d k_b T}{V} t \right)\right).
 \end{equation}
 
 ## Results
 
-A comparison of the concentration of AB as a function of time is plotted in [ver-1ia_comparison_pressure]. The TMAP8 calculations are found to be in good agreement with the analytical solution, with a root mean square percentage error (RMSPE) of RMSPE = 0.13 %. The concentration of A$_2$ and B$_2$ as a function of time are also plotted in [ver-1ia_comparison_pressure].
+A comparison of the concentration of AB as a function of time is plotted in [ver-1ia_comparison_pressure]. The TMAP8 calculations are found to be in good agreement with the analytical solution, with a root mean square percentage error (RMSPE) of RMSPE = 0.13 %. The concentrations of A$_2$ and B$_2$ as a function of time are also plotted in [ver-1ia_comparison_pressure].
 
 !media comparison_ver-1ia.py
        image_name=ver-1ia_comparison_pressure.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1ia_comparison_pressure
-       caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the solution in ratedep condition when A and B have equal pressures [!cite](ambrosek2008verification).
+       caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the solution in ratedep condition when A and B have equal pressures [!citep](ambrosek2008verification).
 
 ## Input files
 

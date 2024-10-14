@@ -109,15 +109,11 @@ K_d = '${fparse 1.858e24 / sqrt( ${T} )}' # at/m^2/s/pa dissociation rate for AB
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
 
-  start_time = 0.0
   end_time = ${simulation_time}
-  num_steps = 6000
   dt = .01
-  n_startup_steps = 0
   automatic_scaling = true
 []
 
 [Outputs]
-  exodus = true
   csv = true
 []

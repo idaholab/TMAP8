@@ -4,7 +4,7 @@
 
 ## General Case Description
 
-This verification problem is taken from [!cite](ambrosek2008verification) and builds on Equilibration Problem verified in [ver-1ia](ver-1ia.md). The configuration and modeling parameters are the same as in [ver-1ia](ver-1ia.md), except that, in the current case, the starting pressures for A$_2$ and B$_2$ are not equal. The case is simulated in [/ver-1ia.i], but the starting pressures of A$_2$ and B$_2$ are $1e4$ Pa and $1e5$ Pa, respectively, and there is no AB initially present.
+This verification problem is taken from [!cite](ambrosek2008verification) and builds on [ver-1ia](ver-1ia.md). The configuration and modeling parameters are the same as in [ver-1ia](ver-1ia.md), except that, in the current case, the starting pressures for A$_2$ and B$_2$ are not equal. The case is simulated in [/ver-1ia.i], but the starting pressures of A$_2$ and B$_2$ are $1e4$ Pa and $1e5$ Pa, respectively, and there is no AB initially present.
 
 ## Analytical solution
 
@@ -12,18 +12,18 @@ This verification problem is taken from [!cite](ambrosek2008verification) and bu
 
 \begin{equation}
 \label{eq:analytical_solution}
-P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} (1 - \exp \left( -\frac{S K_d k_b T}{V} t \right)).
+P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} \left(1 - \exp \left( -\frac{S K_d k_b T}{V} t \right)\right).
 \end{equation}
 
 ## Results
 
-A comparison of the concentration of AB as a function of time is plotted in [ver-1ib_comparison_pressure]. The TMAP8 calculations are found to be in good agreement with the analytical solution, with a root mean square percentage error (RMSPE) of RMSPE =  1.32%. The concentration of A$_2$ and B$_2$ as a function of time are also plotted in [ver-1ib_comparison_pressure].
+A comparison of the concentration of AB as a function of time is plotted in [ver-1ib_comparison_pressure]. The TMAP8 calculations are found to be in good agreement with the analytical solution, with a root mean square percentage error (RMSPE) of RMSPE =  1.32%. The concentrations of A$_2$ and B$_2$ as a function of time are also plotted in [ver-1ib_comparison_pressure].
 
 !media comparison_ver-1ib.py
        image_name=ver-1ib_comparison_pressure.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1ib_comparison_pressure
-       caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the solution in ratedep condition when A$_2$ and B$_2$ have unequal pressures [!cite](ambrosek2008verification).
+       caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the solution in ratedep condition when A$_2$ and B$_2$ have unequal pressures [!citep](ambrosek2008verification).
 
 ## Input files
 

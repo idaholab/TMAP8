@@ -4,7 +4,6 @@ V = '${units 1 m^3}' # Volume
 S = '${units 25 cm^2 -> m^2}' # Area
 p0_A2 = '${units 1e4 Pa}' # Initial pressure for A2
 p0_B2 = '${units 1e4 Pa}' # Initial pressure for B2
-# peq_AB = '${fparse 2 * ${p0_A2} * ${p0_B2} / ( ${p0_A2} + ${p0_B2} )}' # pressure in equilibration for AB
 simulation_time = '${units 3 s}'
 K_s = '${units 1.0e24 atom/m^3/pa^0.5}' # atom/m^3/pa^0.5 recombination rate for A2 or B2
 K_d = '${fparse 1.858e24 / sqrt( ${T} )}' # at/m^2/s/pa dissociation rate for AB
@@ -119,15 +118,11 @@ K_r = '${fparse K_d / K_s / K_s}' # m^4/atom/s
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
 
-  start_time = 0.0
   end_time = ${simulation_time}
-  num_steps = 6000
   dt = .01
-  n_startup_steps = 0
   automatic_scaling = true
 []
 
 [Outputs]
-  exodus = true
   csv = true
 []

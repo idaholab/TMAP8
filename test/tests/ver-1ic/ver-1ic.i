@@ -126,15 +126,11 @@ D_s_lamda = '${fparse 5.3167e-7 * exp( -4529 / ${T} ) }' # m^4 / atom / s
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
 
-  start_time = 0.0
   end_time = ${end_time}
-  num_steps = 6000
   dt = .1
-  n_startup_steps = 0
   automatic_scaling = true
 []
 
 [Outputs]
-  exodus = true
   csv = true
 []

@@ -4,7 +4,7 @@
 
 ## General Case Description
 
-This verification problem is taken from [!cite](ambrosek2008verification) and builds on Equilibration Problem verified in [ver-1ia](ver-1ia.md), [ver-1ib](ver-1ib.md), and [ver-1ic](ver-1ic.md). The configuration and modeling parameters are the same as in [ver-1ic](ver-1ic.md), except that, in the current case, the reaction has a high barrier energy. The case is simulated in [/ver-1ic.i], but the $E_x$ is 0.20 eV instead of 0.05 eV.
+This verification problem is taken from [!cite](ambrosek2008verification) and builds on [ver-1ic](ver-1ic.md). The configuration and modeling parameters are the same as in [ver-1ic](ver-1ic.md), except that, in the current case, the reaction has a high barrier energy. The case is simulated in [/ver-1ic.i], but $E_x$ is set to 0.20 eV instead of 0.05 eV.
 
 ## Analytical solution
 
@@ -12,10 +12,10 @@ This verification problem is taken from [!cite](ambrosek2008verification) and bu
 
 \begin{equation}
 \label{eq:analytical_solution}
-P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} (1 - \exp(- \frac{t}{\tau})),
+P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} \left(1 - \exp \left(- \frac{t}{\tau}\right)\right),
 \end{equation}
 
-where $\tau$ is defined by
+where $\tau$ is defined as
 
 \begin{equation}
 \label{eq:tao}
@@ -24,13 +24,13 @@ where $\tau$ is defined by
 
 ## Results
 
-A comparison of the concentration of AB as a function of time is plotted in [ver-1id_comparison_pressure]. The TMAP8 calculations are found to be in good agreement with the analytical solution, with a root mean square percentage error (RMSPE) of RMSPE =  0.19%. The concentration of A$_2$ and B$_2$ as a function of time are also plotted in [ver-1id_comparison_pressure].
+A comparison of the concentration of AB as a function of time is plotted in [ver-1id_comparison_pressure]. The TMAP8 calculations are found to be in good agreement with the analytical solution, with a root mean square percentage error (RMSPE) of RMSPE =  0.19%. The concentrations of A$_2$ and B$_2$ as a function of time are also plotted in [ver-1id_comparison_pressure].
 
 !media comparison_ver-1id.py
        image_name=ver-1id_comparison_pressure.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1id_comparison_pressure
-       caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the solution in surfdep condition with high barrier energy [!cite](ambrosek2008verification).
+       caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the solution in surfdep condition with high barrier energy [!citep](ambrosek2008verification).
 
 ## Input files
 
