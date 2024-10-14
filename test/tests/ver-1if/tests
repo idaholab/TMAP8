@@ -1,0 +1,18 @@
+[Tests]
+  design = 'ADMatReactionFlexible.md'
+  issues = '#12'
+  verification = 'ver-1if.md'
+  [ver-1if_csv]
+    type = CSVDiff
+    input = '../ver-1ie/ver-1ie.i'
+    cli_args = 'p0_B2="${units 1e5 Pa}" Outputs/file_base="ver-1if_out"' # these are the only things that need to be updated from ver-1ie to ver-1if.
+    csvdiff = ver-1if_out.csv
+    requirement = 'The system shall be able to model a equilibration problem on a reactive surface in lawdep condition with unequal starting pressures and to generate CSV data for use in comparisons with the analytic solution over time.'
+  []
+  [ver-1if_comparison]
+    type = RunCommand
+    command = 'python3 comparison_ver-1if.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a equilibration on a reactive surface in lawdep condition with unequal starting pressures.'
+    required_python_packages = 'matplotlib numpy pandas scipy os'
+  []
+[]
