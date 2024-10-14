@@ -1,0 +1,26 @@
+[Tests]
+  design = 'EquilibriumBC.md'
+  issues = '#12'
+  [val-2a_TMAP7_csvdiff]
+    type = CSVDiff
+    input = val-2a.i
+    csvdiff = val-2a_TMAP7_out.csv
+    requirement = 'The system shall be able to model Ion implantation'
+  []
+  [val-2a_TMAP4_csvdiff]
+    type = CSVDiff
+    input = val-2a.i
+    cli_args = 'Mesh/active="cartesian_mesh_TMAP4"
+                Kernels/source/function=concentration_source_func_TMAP4
+                BCs/active="left_balance_TMAP4 right_balance"
+                Outputs/file_base="val-2a_TMAP4_out"'
+    csvdiff = val-2a_TMAP4_out.csv
+    requirement = 'The system shall be able to model Ion implantation'
+  []
+  [val-2a_comparison]
+    type = RunCommand
+    command = 'python3 comparison_val-2a.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of validation case 2a, modeling ion implantation experiment.'
+    required_python_packages = 'matplotlib numpy pandas os'
+  []
+[]
