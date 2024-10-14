@@ -25,6 +25,15 @@ tmap8_solution_B2 = tmap8_solution['pressure_B2']
 tmap8_solution_A2 = tmap8_solution['pressure_A2']
 tmap8_solution_AB = tmap8_solution['pressure_AB']
 
+# Extract TMAP7 results
+if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    csv_folder = "../../../../test/tests/ver-1if/gold/simulation_data_TMAP7.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/simulation_data_TMAP7.csv"
+tmap7_solution = pd.read_csv(csv_folder)
+tmap7_solution_time = tmap7_solution['x']
+tmap7_solution_AB = tmap7_solution['y']
+
 
 # ===============================================================================
 # Calculate analytical solution
@@ -59,6 +68,8 @@ ax.plot(tmap8_solution_time, tmap8_solution_B2,
         label=r"$B_2$ TMAP8", c='tab:cyan', alpha=alpha)
 ax.plot(tmap8_solution_time, tmap8_solution_AB,
         label=r"$AB$ TMAP8", c='tab:gray', linestyle='-')
+ax.plot(tmap7_solution_time, tmap7_solution_AB,
+        label=r"$AB$ TMAP7", c='tab:orange', linestyle='--')
 ax.plot(tmap8_solution_time, p_AB_analytical,
         label=r"$AB$ $\tau = 0.123$ fit", c='k', linestyle='--')
 ax.plot(tmap8_solution_time, p_AB_analytical_ratedep,

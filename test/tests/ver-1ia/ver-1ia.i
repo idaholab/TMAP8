@@ -6,8 +6,9 @@ p0_A2 = '${units 1e4 Pa}' # Initial pressure for A2
 p0_B2 = '${units 1e4 Pa}' # Initial pressure for B2
 peq_AB = '${units ${fparse 2 * ${p0_A2} * ${p0_B2} / ( ${p0_A2} + ${p0_B2} )} Pa}' # pressure in equilibration for AB
 simulation_time = '${units 6 s}'
-K_r = '5.88e-26' # m^4/atom/s recombination rate for A2 or B2
-K_d = '${fparse 1.858e24 / sqrt( ${T} )}' # at/m^2/s/pa dissociation rate for AB
+time_interval = '${units 0.01 s}'
+K_r = '${units 5.88e-26 m^4/at/s}' # recombination rate for A2 or B2
+K_d = '${units ${fparse 1.858e24 / sqrt( ${T} )} at/m^2/s/Pa}' # dissociation rate for AB
 
 [Mesh]
   type = GeneratedMesh
@@ -110,7 +111,7 @@ K_d = '${fparse 1.858e24 / sqrt( ${T} )}' # at/m^2/s/pa dissociation rate for AB
   petsc_options_value = 'lu'
 
   end_time = ${simulation_time}
-  dt = .01
+  dt = ${time_interval}
   automatic_scaling = true
 []
 

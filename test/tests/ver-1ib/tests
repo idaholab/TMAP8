@@ -5,7 +5,7 @@
   [ver-1ib_csv]
     type = CSVDiff
     input = '../ver-1ia/ver-1ia.i'
-    cli_args = 'p0_B2="${units 1e5 Pa}" Outputs/file_base="ver-1ib_out" Executioner/dt=0.05' # these are the only things that need to be updated from ver-1ia to ver-1ib.
+    cli_args = 'p0_B2="${units 1e5 Pa}" time_interval="${units 0.05 s}" Outputs/file_base="ver-1ib_out"' # these are the only things that need to be updated from ver-1ia to ver-1ib.
     csvdiff = ver-1ib_out.csv
     requirement = 'The system shall be able to model a equilibration problem on a reactive surface with unequal starting pressures in ratedep condition and to generate CSV data for use in comparisons with the analytic solution over time.'
   []

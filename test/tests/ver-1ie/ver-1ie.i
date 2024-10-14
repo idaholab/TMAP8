@@ -5,9 +5,10 @@ S = '${units 25 cm^2 -> m^2}' # Area
 p0_A2 = '${units 1e4 Pa}' # Initial pressure for A2
 p0_B2 = '${units 1e4 Pa}' # Initial pressure for B2
 simulation_time = '${units 3 s}'
-K_s = '${units 1.0e24 atom/m^3/pa^0.5}' # atom/m^3/pa^0.5 recombination rate for A2 or B2
-K_d = '${fparse 1.858e24 / sqrt( ${T} )}' # at/m^2/s/pa dissociation rate for AB
-K_r = '${fparse K_d / K_s / K_s}' # m^4/atom/s
+time_interval = '${units 0.01 s}'
+K_s = '${units 1.0e24 at/m^3/Pa^0.5}' # atom/m^3/pa^0.5 recombination rate for A2 or B2
+K_d = '${units ${fparse 1.858e24 / sqrt( ${T} )} at/m^2/s/Pa}' # dissociation rate for AB
+K_r = '${units ${fparse K_d / K_s / K_s} m^4/at/s}'
 
 [Mesh]
   type = GeneratedMesh
@@ -119,7 +120,7 @@ K_r = '${fparse K_d / K_s / K_s}' # m^4/atom/s
   petsc_options_value = 'lu'
 
   end_time = ${simulation_time}
-  dt = .01
+  dt = ${time_interval}
   automatic_scaling = true
 []
 

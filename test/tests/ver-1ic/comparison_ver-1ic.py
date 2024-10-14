@@ -12,6 +12,8 @@ os.chdir(script_folder)
 #===============================================================================
 # Physical constants
 kb = 1.380649e-23  # J/K Boltzmann constant
+eV_to_J = 1.60218e-19 # J/eV
+amu_to_kg = 1.6605390666e-27 # kg/amu
 
 # ===============================================================================
 # Extract TMAP8 results
@@ -35,8 +37,7 @@ def get_analytical_solution(numerical_steps):
     S = 0.0025 # m^2 Area
     p0_A2 = 1e4 # Pa Initial pressure for A2
     p0_B2 = 1e4 # Pa Initial pressure for B2
-    M = 2 * 1.6605390666e-27 # kg mass of species molecules
-    eV_to_J = 1.60218e-19 # J/eV
+    M = 2 * amu_to_kg # kg mass of species molecules
     E_x = 0.05 * eV_to_J # J deposition energy
     E_c = -0.01 * eV_to_J # J release energy
     E_b = 0.00 * eV_to_J # J dissociation energy

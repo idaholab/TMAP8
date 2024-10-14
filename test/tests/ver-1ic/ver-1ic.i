@@ -1,20 +1,22 @@
 k = '${units 1.380649e-23 J/K}' # Boltzmann constant (from PhysicalConstants.h - https://physics.nist.gov/cgi-bin/cuu/Value?r)
+amu = '${units 1.6605390666e-27 kg}' # Atomic mass unit
 T = '${units 1000 K}' # Temperature
 V = '${units 1 m^3}' # Volume
 S = '${units 25 cm^2 -> m^2}' # Area
 p0_A2 = '${units 1e4 Pa}' # Initial pressure for A2
 p0_B2 = '${units 1e4 Pa}' # Initial pressure for B2
-peq_AB = '${fparse 2 * ${p0_A2} * ${p0_B2} / ( ${p0_A2} + ${p0_B2} )}' # pressure in equilibration for AB
+peq_AB = '${units ${fparse 2 * ${p0_A2} * ${p0_B2} / ( ${p0_A2} + ${p0_B2} )} Pa}' # pressure in equilibration for AB
 end_time = '${units 10 s}'
+time_interval = '${units 0.1 s}'
 E_x = '${units 0.05 eV -> J}'
 E_c = '${units -0.01 eV -> J}'
 E_b = '${units 0.00 eV -> J}'
 nu = '${units 8.4e12 m/s}' # Debye frequency
-M = '${fparse 2 * ${units 1.6605390666e-27 kg}}'
-K_d = '${fparse 1 / sqrt(2 * pi * ${M} * ${k} * ${T}) * exp( - ${E_x} / ( ${k} * ${T} ) )}' # s / kg / m deposition rate
-K_r = '${fparse ${nu} * exp(( ${E_c} - ${E_x} ) / ${k} / ${T})}' # m / s release rate
-K_b = '${fparse ${nu} * exp( - E_b / ${k} / ${T} ) }' # m / s dissociation rate
-D_s_lamda = '${fparse 5.3167e-7 * exp( -4529 / ${T} ) }' # m^4 / atom / s
+M = '${units ${fparse 2 * amu} kg}'
+K_d = '${units ${fparse 1 / sqrt(2 * pi * ${M} * ${k} * ${T}) * exp( - ${E_x} / ( ${k} * ${T} ) )} s/kg/m}' # deposition rate
+K_r = '${units ${fparse ${nu} * exp(( ${E_c} - ${E_x} ) / ${k} / ${T})} m/s}' # release rate
+K_b = '${units ${fparse ${nu} * exp( - E_b / ${k} / ${T} ) } m/s}' # dissociation rate
+D_s_lamda = '${units ${fparse 5.3167e-7 * exp( -4529 / ${T} )} m^4/at/s}'
 
 
 [Mesh]
@@ -127,7 +129,7 @@ D_s_lamda = '${fparse 5.3167e-7 * exp( -4529 / ${T} ) }' # m^4 / atom / s
   petsc_options_value = 'lu'
 
   end_time = ${end_time}
-  dt = .1
+  dt = ${time_interval}
   automatic_scaling = true
 []
 
