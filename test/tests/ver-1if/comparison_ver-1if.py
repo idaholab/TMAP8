@@ -48,8 +48,8 @@ def get_analytical_solution(numerical_steps):
     time_constant = 0.123
 
     p_AB_analytical_ratedep = 2 * p0_A2 * p0_B2 * (1 - np.exp(- S * K_d * kb * T * numerical_steps / V)) / (p0_A2 + p0_B2)
-    p_AB_analytical_tao = 2 * p0_A2 * p0_B2 * (1 - np.exp(- numerical_steps / time_constant)) / (p0_A2 + p0_B2)
-    return p_AB_analytical_tao, p_AB_analytical_ratedep
+    p_AB_analytical_tau = 2 * p0_A2 * p0_B2 * (1 - np.exp(- numerical_steps / time_constant)) / (p0_A2 + p0_B2)
+    return p_AB_analytical_tau, p_AB_analytical_ratedep
 
 
 p_AB_analytical, p_AB_analytical_ratedep = get_analytical_solution(tmap8_solution_time)

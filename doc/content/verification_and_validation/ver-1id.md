@@ -18,7 +18,7 @@ P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} \left(1 - \exp \le
 where $\tau$ is defined as
 
 \begin{equation}
-\label{eq:tao}
+\label{eq:tau}
 \tau = \frac{V (\hat{K_r} + \hat{K_b})}{S k_b T \hat{K_d} \hat{K_b}}.
 \end{equation}
 
