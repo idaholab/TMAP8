@@ -25,7 +25,7 @@ TMAP8 also contains [example cases](examples/tmap_index.md), which showcase how 
 | ver-1hb | [Convective Gas Outflow Problem in Equilibrating Enclosures](ver-1hb.md)        |
 | ver-1ja | [Radioactive Decay of Mobile Tritium in a Slab](ver-1ja.md)                                       |
 | ver-1jb | [Radioactive Decay of Mobile Tritium in a Slab with a Distributed Trap Concentration](ver-1jb.md) |
-
+| ver-1ka | [Simple Volumetric Source](ver-1ka.md)                                                            |
 
 # List of benchmarking cases
 
