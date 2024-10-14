@@ -29,7 +29,7 @@ Because [eq:equation_p_ab_final] is a complex non-linear function, we have no ex
 
 ## Results
 
-A comparison of the concentration of AB as a function of time is plotted in [ver-1if_comparison_pressure]. The TMAP8 calculations are found to be in reasonable agreement with the solution from TMAP7, with a root mean square percentage error (RMSPE) of RMSPE =  13.56%. It makes sense for us because the solution from TMAP7 is not the real analytical solution. Also, the results from TMAP8 has a better fit than those from TMAP7. The concentrations of A$_2$ and B$_2$ as a function of time are also plotted in [ver-1if_comparison_pressure].
+A comparison of the concentration of AB as a function of time is plotted in [ver-1if_comparison_pressure]. The TMAP8 calculations are found to be in reasonable agreement with the solution from TMAP7, with a root mean square percentage error (RMSPE) of RMSPE =  13.56%. It makes sense for us because the solution from TMAP7 is not the real analytical solution. Also, the results from TMAP8 represent an improvement from those from TMAP7, which showed some numerical instability around $t=2.5$ s. The concentrations of A$_2$ and B$_2$ as a function of time are also plotted in [ver-1if_comparison_pressure].
 
 !media comparison_ver-1if.py
        image_name=ver-1if_comparison_pressure.png
