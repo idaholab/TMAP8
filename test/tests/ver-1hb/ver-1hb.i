@@ -1,4 +1,4 @@
-Q = '${units 0.1 m^3/s }'
+Q = '${units 0.1 m^3/s}'
 V = '${units 1 m^3}'
 Q_by_V = '${fparse Q / V}'
 

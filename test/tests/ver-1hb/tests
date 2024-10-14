@@ -1,12 +1,12 @@
 [Tests]
     design = 'ADMatReaction.md'
-    issues = '#148'
+    issues = '#148 #12'
+    verification = 'ver-1hb.md'
     [ver-1hb_csv]
       type = CSVDiff
       input = 'ver-1hb.i'
       csvdiff = ver-1hb_out.csv
       requirement = 'The system shall be able to model a convective outflow problem and calculate the pressure and concentration of tritium and deuterium gas in the first and second enclosure and to generate CSV data for use in comparisons with the analytic solution over time.'
-      verification = 'ver-1hb.md'
     []
     [ver-1hb_comparison]
       type = RunCommand
