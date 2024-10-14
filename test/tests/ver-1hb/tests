@@ -1,0 +1,18 @@
+[Tests]
+    design = 'ADMatReaction.md'
+    issues = '#148 #12'
+    verification = 'ver-1hb.md'
+    [ver-1hb_csv]
+      type = CSVDiff
+      input = 'ver-1hb.i'
+      csvdiff = ver-1hb_out.csv
+      requirement = 'The system shall be able to model a convective outflow problem and calculate the pressure and concentration of tritium and deuterium gas in the first and second enclosure and to generate CSV data for use in comparisons with the analytic solution over time.'
+    []
+    [ver-1hb_comparison]
+      type = RunCommand
+      command = 'python3 comparison_ver-1hb.py'
+      requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a convective outflow problem involving two enclosures and two different gases and calculate the pressure and concentration of the gases in the enclosures.'
+      prereq = 'ver-1hb_csv'
+      required_python_packages = 'csv matplotlib numpy pandas scipy os math'
+    []
+  []
