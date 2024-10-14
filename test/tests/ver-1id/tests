@@ -1,0 +1,18 @@
+[Tests]
+  design = 'ADMatReactionFlexible.md'
+  issues = '#12'
+  verification = 'ver-1id.md'
+  [ver-1id_csv]
+    type = CSVDiff
+    input = '../ver-1ic/ver-1ic.i'
+    cli_args = "E_x='${units 0.2 eV -> J}' Outputs/file_base='ver-1id_out'" # these are the only things that need to be updated from ver-1ic to ver-1id.
+    csvdiff = ver-1id_out.csv
+    requirement = 'The system shall be able to model a equilibration problem on a reactive surface in surfdep conditions with high barrier energy and to generate CSV data for use in comparisons with the analytic solution over time.'
+  []
+  [ver-1id_comparison]
+    type = RunCommand
+    command = 'python3 comparison_ver-1id.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a equilibration on a reactive surface in surfdep condition with high barrier energy.'
+    required_python_packages = 'matplotlib numpy pandas scipy os'
+  []
+[]

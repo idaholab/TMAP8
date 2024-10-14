@@ -1,0 +1,17 @@
+[Tests]
+  design = 'ADMatReactionFlexible.md'
+  issues = '#12'
+  verification = 'ver-1ie.md'
+  [ver-1ie_csv]
+    type = CSVDiff
+    input = 'ver-1ie.i'
+    csvdiff = ver-1ie_out.csv
+    requirement = 'The system shall be able to model a equilibration problem on a reactive surface in lawdep condition with equal starting pressures and to generate CSV data for use in comparisons with the analytic solution over time.'
+  []
+  [ver-1ie_comparison]
+    type = RunCommand
+    command = 'python3 comparison_ver-1ie.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a equilibration on a reactive surface in lawdep condition with equal starting pressures.'
+    required_python_packages = 'matplotlib numpy pandas scipy os'
+  []
+[]
