@@ -142,4 +142,6 @@ lines are model results.
 
 !listing test/tests/fuel-cycle/fuel_cycle.i
 
+A python-based graphical interactive script is available at [scripts/fuel_cycle_gui.py](/scripts/fuel_cycle_gui.py) as a demonstration of the various effects of individual parameters.
+
 !bibtex bibliography

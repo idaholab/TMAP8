@@ -471,7 +471,20 @@
     values = 'T_BZ T_TES T_FW T_DIV T_HX T_CPS T_VAC T_FCU T_ISS T_EXO T_STO'
   []
 []
-
+[UserObjects]
+  [terminator]
+    type = Terminator
+    expression = 'T_STO < 0'
+    fail_mode = 'HARD'
+    message = 'Tritium in storage has been depleted'
+  []
+  [terminator2]
+    type = Terminator
+    expression = 'total_tritium < 0'
+    fail_mode = 'HARD'
+    message = 'Tritium in system has been depleted'
+  []
+[]
 # The tritium breeding ratio is not directly given in the paper,
 # but is specified as a "five year" doubling time from the initial
 # inventory. As such, it may be necessary to force the simulation to
@@ -492,7 +505,7 @@
   type = Transient
   start_time = 0
   dtmin = 1
-  end_time = 864000000.0
+  end_time = 946080000.0
   [TimeStepper]
     type = IterationAdaptiveDT
     growth_factor = 1.4
@@ -506,7 +519,7 @@
   nl_abs_tol = 1e-14
 []
 [Outputs]
-  hide = 'T_BZ T_CPS T_DIV T_EXO T_FCU T_FW T_HX T_ISS T_STO T_TES T_VAC'
+  hide = "BZ_HX_leak_fraction CPS_FW_leak_fraction CPS_efficiency FCU_STO_fraction HX_CPS_leak_fraction HX_EXO_leak_fraction HX_FW_leak_fraction ISS_EXO_leak_fraction P_DIV_leak_fraction P_FW_leak_fraction TBR TES_efficiency T_BZ T_CPS T_DIV T_EXO T_FCU T_FW T_HX T_ISS T_STO T_TES T_VAC epsilon1 epsilon10 epsilon11 epsilon2 epsilon3 epsilon4 epsilon5 epsilon6 epsilon7 epsilon8 epsilon9 residence1 residence10 residence2 residence3 residence4 residence5 residence6 residence7 residence8 residence9 tdecay tritium_burn_fraction tritium_burn_rate tritium_fueling_efficiency"
   csv = true
   console = false
 []
