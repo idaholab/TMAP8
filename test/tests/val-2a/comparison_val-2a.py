@@ -85,7 +85,7 @@ experiment_flux_TMAP4 = experiment_TMAP4_data[' y']
 
 TMAP7_file_base = 'TMAP7_val-2a_comparison'
 TMAP4_file_base = 'TMAP4_val-2a_comparison'
-############################ TMP7 left side atom/m$^2$/s ############################
+############################ TMAP7 left side atom/m$^2$/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
@@ -105,7 +105,7 @@ ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
 plt.savefig(f'{TMAP7_file_base}_left.png', bbox_inches='tight')
 plt.close(fig)
 
-############################ TMP7 right side atom/m$^2$/s ############################
+############################ TMAP7 right side atom/m$^2$/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
@@ -125,7 +125,7 @@ ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
 plt.savefig(f'{TMAP7_file_base}_right.png', bbox_inches='tight')
 plt.close(fig)
 
-############################ TMP7 both sides atom/m$^2$/s ############################
+############################ TMAP7 both sides atom/m$^2$/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
@@ -148,7 +148,7 @@ plt.close(fig)
 
 
 
-############################ TMP7 left side atom/s ############################
+############################ TMAP7 left side atom/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
@@ -168,7 +168,7 @@ ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
 plt.savefig(f'{TMAP7_file_base}_left_area.png', bbox_inches='tight')
 plt.close(fig)
 
-############################ TMP7 right side atom/s ############################
+############################ TMAP7 right side atom/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
@@ -209,7 +209,7 @@ plt.savefig(f'{TMAP7_file_base}_both_area.png', bbox_inches='tight')
 plt.close(fig)
 
 
-############################ TMP4 left side atom/m$^2$/s ############################
+############################ TMAP4 left side atom/m$^2$/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
@@ -229,7 +229,7 @@ ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
 plt.savefig(f'{TMAP4_file_base}_left.png', bbox_inches='tight')
 plt.close(fig)
 
-############################ TMP4 right side atom/m$^2$/s ############################
+############################ TMAP4 right side atom/m$^2$/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
@@ -249,7 +249,7 @@ ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
 plt.savefig(f'{TMAP4_file_base}_right.png', bbox_inches='tight')
 plt.close(fig)
 
-############################ TMP4 both sides atom/m$^2$/s ############################
+############################ TMAP4 both sides atom/m$^2$/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
@@ -270,7 +270,7 @@ plt.savefig(f'{TMAP4_file_base}_both.png', bbox_inches='tight')
 plt.close(fig)
 
 
-############################ TMP4 left side atom/s ############################
+############################ TMAP4 left side atom/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
@@ -290,7 +290,7 @@ ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
 plt.savefig(f'{TMAP4_file_base}_left_area.png', bbox_inches='tight')
 plt.close(fig)
 
-############################ TMP4 right side atom/s ############################
+############################ TMAP4 right side atom/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
@@ -310,7 +310,7 @@ ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
 plt.savefig(f'{TMAP4_file_base}_right_area.png', bbox_inches='tight')
 plt.close(fig)
 
-############################ TMP4 both sides atom/s ############################
+############################ TMAP4 both sides atom/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])

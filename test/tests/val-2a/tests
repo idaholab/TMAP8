@@ -1,11 +1,12 @@
 [Tests]
   design = 'EquilibriumBC.md'
-  issues = '#12'
+  issues = '#12 #188'
+  validation = 'val-2a.md'
   [val-2a_TMAP7_csvdiff]
     type = CSVDiff
     input = val-2a.i
     csvdiff = val-2a_TMAP7_out.csv
-    requirement = 'The system shall be able to model Ion implantation'
+    requirement = 'The system shall be able to model Ion implantation based on the requirements and conditions listed in the TMAP7 V&V report'
   []
   [val-2a_TMAP4_csvdiff]
     type = CSVDiff
@@ -15,7 +16,7 @@
                 BCs/active="left_balance_TMAP4 right_balance"
                 Outputs/file_base="val-2a_TMAP4_out"'
     csvdiff = val-2a_TMAP4_out.csv
-    requirement = 'The system shall be able to model Ion implantation'
+    requirement = 'The system shall be able to model Ion implantation based on the requirements and conditions listed in the TMAP4 V&V report'
   []
   [val-2a_comparison]
     type = RunCommand
