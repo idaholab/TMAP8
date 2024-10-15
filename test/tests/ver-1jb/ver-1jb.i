@@ -23,7 +23,7 @@ tritium_release_prefactor = ${units 1.0e13 1/s} # from TMAP7 V&V input file
 tritium_release_energy = ${units 4.2 eV}
 tritium_trapping_prefactor = ${units 2.096e15 1/s} # from TMAP7 V&V input file
 tritium_trapping_energy = ${tritium_diffusivity_energy} # J/K - from TMAP7 V&V input file
-trap_per_free = 1e-25 # (-)
+trap_per_free = 1.e-25 # (-)
 half_life_s = ${units 12.3232 year -> s}
 decay_rate_constant = ${fparse 0.693/half_life_s} # 1/s
 
@@ -352,15 +352,18 @@ dt_max = ${fparse end_time/100} # s
 
 [Outputs]
   perf_graph = true
+  file_base = ver-1jb_out
   [time_dependent_out]
     type = CSV
     execute_vector_postprocessors_on = NONE
+    file_base = ver-1jb_time_dependent_out
   []
   [profile_out]
     type = CSV
     sync_only = true
     sync_times = '${units 45 year -> s}'
     execute_postprocessors_on = NONE
+    file_base=ver-1jb_profile_out
   []
   exodus = true
 []

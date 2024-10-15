@@ -24,6 +24,7 @@
     input = ver-1jb.i
     cli_args = 'tritium_mobile_concentration_initial=1e25
                 trap_per_free=1
+                Outputs/file_base=ver-1jb_equivalent_concentrations_out
                 Outputs/time_dependent_out/file_base=ver-1jb_equivalent_concentrations_time_dependent_out
                 Outputs/profile_out/file_base=ver-1jb_equivalent_concentrations_profile_out'
     csvdiff = ver-1jb_equivalent_concentrations_time_dependent_out.csv
@@ -37,6 +38,7 @@
     input = ver-1jb.i
     cli_args = 'tritium_mobile_concentration_initial=1e25
                 trap_per_free=1
+                Outputs/file_base=ver-1jb_equivalent_concentrations_out
                 Outputs/time_dependent_out/file_base=ver-1jb_equivalent_concentrations_time_dependent_out
                 Outputs/profile_out/file_base=ver-1jb_equivalent_concentrations_profile_out'
     csvdiff = ver-1jb_equivalent_concentrations_profile_out_line_0048.csv
