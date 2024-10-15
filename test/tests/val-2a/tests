@@ -4,17 +4,13 @@
   validation = 'val-2a.md'
   [val-2a_TMAP7_csvdiff]
     type = CSVDiff
-    input = val-2a.i
+    input = 'val-2a_base.i val-2a_TMAP7.i'
     csvdiff = val-2a_TMAP7_out.csv
     requirement = 'The system shall be able to model Ion implantation based on the requirements and conditions listed in the TMAP7 V&V report'
   []
   [val-2a_TMAP4_csvdiff]
     type = CSVDiff
-    input = val-2a.i
-    cli_args = 'Mesh/active="cartesian_mesh_TMAP4"
-                Kernels/source/function=concentration_source_func_TMAP4
-                BCs/active="left_balance_TMAP4 right_balance"
-                Outputs/file_base="val-2a_TMAP4_out"'
+    input = 'val-2a_base.i val-2a_TMAP4.i'
     csvdiff = val-2a_TMAP4_out.csv
     requirement = 'The system shall be able to model Ion implantation based on the requirements and conditions listed in the TMAP4 V&V report'
   []
