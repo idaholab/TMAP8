@@ -2,7 +2,7 @@
 """
 Created on Fri Oct 11 15:33:07 2024
 This file creates a GUI interface that can be used to adjust the parameters in
-the TMAP8 fuel cycle model. 
+the TMAP8 fuel cycle model.
 """
 import tempfile
 import tkinter as tk
@@ -129,7 +129,7 @@ class fuel_cycle_form(tk.Tk):
         self.ax.set_xlim(0,8.64e8/self.time_divisors[self.time_unit.get()])
 
     def on_key_press(self,event):
-        key_press_handler(event,self.canvas,self.toolbar)        
+        key_press_handler(event,self.canvas,self.toolbar)
 
     def buttonClick(self):
         output_string = ""
