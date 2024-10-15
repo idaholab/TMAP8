@@ -83,249 +83,92 @@ experiment_time_TMAP4 = experiment_TMAP4_data['x']
 experiment_flux_TMAP4 = experiment_TMAP4_data[' y']
 
 
-TMAP7_file_base = 'TMAP7_val-2a_comparison'
-TMAP4_file_base = 'TMAP4_val-2a_comparison'
-############################ TMAP7 left side atom/m$^2$/s ############################
+TMAP7_file_base = 'val-2a_comparison_TMAP7'
+TMAP4_file_base = 'val-2a_comparison_TMAP4'
+############################ TMAP7 atom/m$^2$/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-ax.plot(simulation_time_TMAP7/1000, simulation_flux_left_TMAP7, linestyle='-', label=r"TMAP8", c='tab:blue')
+ax.plot(simulation_time_TMAP7/1000, simulation_flux_left_TMAP7, linestyle='-', label=r"left", c='tab:blue')
+ax.plot(simulation_time_TMAP7/1000, simulation_flux_right_TMAP7, linestyle='-', label=r"right", c='tab:brown')
+ax.plot(simulation_time_TMAP7/1000, simulation_flux_left_TMAP7 + simulation_flux_right_TMAP7, linestyle='-', label=r"both", c='tab:orange')
 ax.plot(experiment_time_TMAP7/1000, experiment_flux_TMAP7, linestyle='--', label=r"experiment", c='k')
 
 ax.set_xlabel(u'time (1000s)')
 ax.set_ylabel(u"Deuterium flux (atom/m$^2$/s)")
 ax.legend(loc="best")
-ax.set_ylim(bottom=0)
-# ax.set_yscale("log")
+# ax.set_ylim(bottom=0)
+ax.set_yscale("log")
 ax.set_xlim(left=-0.1,right=2e1)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
-ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
-plt.savefig(f'{TMAP7_file_base}_left.png', bbox_inches='tight')
+# ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
+plt.savefig(f'{TMAP7_file_base}.png', bbox_inches='tight')
 plt.close(fig)
 
-############################ TMAP7 right side atom/m$^2$/s ############################
+############################ TMAP7 atom/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-ax.plot(simulation_time_TMAP7/1000, simulation_flux_right_TMAP7, linestyle='-', label=r"TMAP8", c='tab:blue')
-ax.plot(experiment_time_TMAP7/1000, experiment_flux_TMAP7, linestyle='--', label=r"experiment", c='k')
-
-ax.set_xlabel(u'time (1000s)')
-ax.set_ylabel(u"Deuterium flux (atom/m$^2$/s)")
-ax.legend(loc="best")
-ax.set_ylim(bottom=0)
-# ax.set_yscale("log")
-ax.set_xlim(left=-0.1,right=2e1)
-plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-ax.minorticks_on()
-ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
-plt.savefig(f'{TMAP7_file_base}_right.png', bbox_inches='tight')
-plt.close(fig)
-
-############################ TMAP7 both sides atom/m$^2$/s ############################
-fig = plt.figure(figsize=[6.5, 5.5])
-gs = gridspec.GridSpec(1, 1)
-ax = fig.add_subplot(gs[0])
-
-ax.plot(simulation_time_TMAP7/1000, simulation_flux_left_TMAP7 + simulation_flux_right_TMAP7, linestyle='-', label=r"TMAP8", c='tab:blue')
-ax.plot(experiment_time_TMAP7/1000, experiment_flux_TMAP7, linestyle='--', label=r"experiment", c='k')
-
-ax.set_xlabel(u'time (1000s)')
-ax.set_ylabel(u"Deuterium flux (atom/m$^2$/s)")
-ax.legend(loc="best")
-ax.set_ylim(bottom=0)
-# ax.set_yscale("log")
-ax.set_xlim(left=-0.1,right=2e1)
-plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-ax.minorticks_on()
-ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
-plt.savefig(f'{TMAP7_file_base}_both.png', bbox_inches='tight')
-plt.close(fig)
-
-
-
-
-############################ TMAP7 left side atom/s ############################
-fig = plt.figure(figsize=[6.5, 5.5])
-gs = gridspec.GridSpec(1, 1)
-ax = fig.add_subplot(gs[0])
-
-ax.plot(simulation_time_TMAP7/1000, simulation_flux_left_TMAP7 * area, linestyle='-', label=r"TMAP8", c='tab:blue')
+ax.plot(simulation_time_TMAP7/1000, simulation_flux_left_TMAP7 * area, linestyle='-', label=r"left", c='tab:blue')
+ax.plot(simulation_time_TMAP7/1000, simulation_flux_right_TMAP7 * area, linestyle='-', label=r"right", c='tab:brown')
+ax.plot(simulation_time_TMAP7/1000, (simulation_flux_left_TMAP7 + simulation_flux_right_TMAP7) * area, linestyle='-', label=r"both", c='tab:orange')
 ax.plot(experiment_time_TMAP7/1000, experiment_flux_TMAP7, linestyle='--', label=r"experiment", c='k')
 
 ax.set_xlabel(u'time (1000s)')
 ax.set_ylabel(u"Deuterium flux (atom/s)")
 ax.legend(loc="best")
-ax.set_ylim(bottom=0)
-# ax.set_yscale("log")
+# ax.set_ylim(bottom=0)
+ax.set_yscale("log")
 ax.set_xlim(left=-0.1,right=2e1)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
-ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
-plt.savefig(f'{TMAP7_file_base}_left_area.png', bbox_inches='tight')
+# ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
+plt.savefig(f'{TMAP7_file_base}_area.png', bbox_inches='tight')
 plt.close(fig)
 
-############################ TMAP7 right side atom/s ############################
+############################ TMAP4 atom/m$^2$/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-ax.plot(simulation_time_TMAP7/1000, simulation_flux_right_TMAP7 * area, linestyle='-', label=r"TMAP8", c='tab:blue')
-ax.plot(experiment_time_TMAP7/1000, experiment_flux_TMAP7, linestyle='--', label=r"experiment", c='k')
-
-ax.set_xlabel(u'time (1000s)')
-ax.set_ylabel(u"Deuterium flux (atom/s)")
-ax.legend(loc="best")
-ax.set_ylim(bottom=0)
-# ax.set_yscale("log")
-ax.set_xlim(left=-0.1,right=2e1)
-plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-ax.minorticks_on()
-ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
-plt.savefig(f'{TMAP7_file_base}_right_area.png', bbox_inches='tight')
-plt.close(fig)
-
-############################ TMP7 both sides atom/s ############################
-fig = plt.figure(figsize=[6.5, 5.5])
-gs = gridspec.GridSpec(1, 1)
-ax = fig.add_subplot(gs[0])
-
-ax.plot(simulation_time_TMAP7/1000, (simulation_flux_left_TMAP7 + simulation_flux_right_TMAP7) * area, linestyle='-', label=r"TMAP8", c='tab:blue')
-ax.plot(experiment_time_TMAP7/1000, experiment_flux_TMAP7, linestyle='--', label=r"experiment", c='k')
-
-ax.set_xlabel(u'time (1000s)')
-ax.set_ylabel(u"Deuterium flux (atom/s)")
-ax.legend(loc="best")
-ax.set_ylim(bottom=0)
-# ax.set_yscale("log")
-ax.set_xlim(left=-0.1,right=2e1)
-plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-ax.minorticks_on()
-ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
-plt.savefig(f'{TMAP7_file_base}_both_area.png', bbox_inches='tight')
-plt.close(fig)
-
-
-############################ TMAP4 left side atom/m$^2$/s ############################
-fig = plt.figure(figsize=[6.5, 5.5])
-gs = gridspec.GridSpec(1, 1)
-ax = fig.add_subplot(gs[0])
-
-ax.plot(simulation_time_TMAP4/1000, simulation_flux_left_TMAP4, linestyle='-', label=r"TMAP8", c='tab:blue')
+ax.plot(simulation_time_TMAP4/1000, simulation_flux_left_TMAP4, linestyle='-', label=r"left", c='tab:blue')
+ax.plot(simulation_time_TMAP4/1000, simulation_flux_right_TMAP4, linestyle='-', label=r"right", c='tab:brown')
+ax.plot(simulation_time_TMAP4/1000, simulation_flux_left_TMAP4 + simulation_flux_right_TMAP4, linestyle='-', label=r"both", c='tab:orange')
 ax.plot(experiment_time_TMAP4/1000, experiment_flux_TMAP4, linestyle='--', label=r"experiment", c='k')
 
 ax.set_xlabel(u'time (1000s)')
 ax.set_ylabel(u"Deuterium flux (atom/m$^2$/s)")
 ax.legend(loc="best")
-ax.set_ylim(bottom=0)
-# ax.set_yscale("log")
+# ax.set_ylim(bottom=0)
+ax.set_yscale("log")
 ax.set_xlim(left=-0.1,right=2e1)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
-ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
-plt.savefig(f'{TMAP4_file_base}_left.png', bbox_inches='tight')
+# ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
+plt.savefig(f'{TMAP4_file_base}.png', bbox_inches='tight')
 plt.close(fig)
-
-############################ TMAP4 right side atom/m$^2$/s ############################
-fig = plt.figure(figsize=[6.5, 5.5])
-gs = gridspec.GridSpec(1, 1)
-ax = fig.add_subplot(gs[0])
-
-ax.plot(simulation_time_TMAP4/1000, simulation_flux_right_TMAP4, linestyle='-', label=r"TMAP8", c='tab:blue')
-ax.plot(experiment_time_TMAP4/1000, experiment_flux_TMAP4, linestyle='--', label=r"experiment", c='k')
-
-ax.set_xlabel(u'time (1000s)')
-ax.set_ylabel(u"Deuterium flux (atom/m$^2$/s)")
-ax.legend(loc="best")
-ax.set_ylim(bottom=0)
-# ax.set_yscale("log")
-ax.set_xlim(left=-0.1,right=2e1)
-plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-ax.minorticks_on()
-ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
-plt.savefig(f'{TMAP4_file_base}_right.png', bbox_inches='tight')
-plt.close(fig)
-
-############################ TMAP4 both sides atom/m$^2$/s ############################
-fig = plt.figure(figsize=[6.5, 5.5])
-gs = gridspec.GridSpec(1, 1)
-ax = fig.add_subplot(gs[0])
-
-ax.plot(simulation_time_TMAP4/1000, simulation_flux_left_TMAP4 + simulation_flux_right_TMAP4, linestyle='-', label=r"TMAP8", c='tab:blue')
-ax.plot(experiment_time_TMAP4/1000, experiment_flux_TMAP4, linestyle='--', label=r"experiment", c='k')
-
-ax.set_xlabel(u'time (1000s)')
-ax.set_ylabel(u"Deuterium flux (atom/m$^2$/s)")
-ax.legend(loc="best")
-ax.set_ylim(bottom=0)
-# ax.set_yscale("log")
-ax.set_xlim(left=-0.1,right=2e1)
-plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-ax.minorticks_on()
-ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
-plt.savefig(f'{TMAP4_file_base}_both.png', bbox_inches='tight')
-plt.close(fig)
-
 
 ############################ TMAP4 left side atom/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-ax.plot(simulation_time_TMAP4/1000, simulation_flux_left_TMAP4 * area, linestyle='-', label=r"TMAP8", c='tab:blue')
+ax.plot(simulation_time_TMAP4/1000, simulation_flux_left_TMAP4 * area, linestyle='-', label=r"left", c='tab:blue')
+ax.plot(simulation_time_TMAP4/1000, simulation_flux_right_TMAP4 * area, linestyle='-', label=r"right", c='tab:brown')
+ax.plot(simulation_time_TMAP4/1000, (simulation_flux_left_TMAP4 + simulation_flux_right_TMAP4) * area, linestyle='-', label=r"both", c='tab:orange')
 ax.plot(experiment_time_TMAP4/1000, experiment_flux_TMAP4, linestyle='--', label=r"experiment", c='k')
 
 ax.set_xlabel(u'time (1000s)')
 ax.set_ylabel(u"Deuterium flux (atom/s)")
 ax.legend(loc="best")
-ax.set_ylim(bottom=0)
-# ax.set_yscale("log")
+# ax.set_ylim(bottom=0)
+ax.set_yscale("log")
 ax.set_xlim(left=-0.1,right=2e1)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
-ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
-plt.savefig(f'{TMAP4_file_base}_left_area.png', bbox_inches='tight')
-plt.close(fig)
-
-############################ TMAP4 right side atom/s ############################
-fig = plt.figure(figsize=[6.5, 5.5])
-gs = gridspec.GridSpec(1, 1)
-ax = fig.add_subplot(gs[0])
-
-ax.plot(simulation_time_TMAP4/1000, simulation_flux_right_TMAP4 * area, linestyle='-', label=r"TMAP8", c='tab:blue')
-ax.plot(experiment_time_TMAP4/1000, experiment_flux_TMAP4, linestyle='--', label=r"experiment", c='k')
-
-ax.set_xlabel(u'time (1000s)')
-ax.set_ylabel(u"Deuterium flux (atom/s)")
-ax.legend(loc="best")
-ax.set_ylim(bottom=0)
-# ax.set_yscale("log")
-ax.set_xlim(left=-0.1,right=2e1)
-plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-ax.minorticks_on()
-ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
-plt.savefig(f'{TMAP4_file_base}_right_area.png', bbox_inches='tight')
-plt.close(fig)
-
-############################ TMAP4 both sides atom/s ############################
-fig = plt.figure(figsize=[6.5, 5.5])
-gs = gridspec.GridSpec(1, 1)
-ax = fig.add_subplot(gs[0])
-
-ax.plot(simulation_time_TMAP4/1000, (simulation_flux_left_TMAP4 + simulation_flux_right_TMAP4) * area, linestyle='-', label=r"TMAP8", c='tab:blue')
-ax.plot(experiment_time_TMAP4/1000, experiment_flux_TMAP4, linestyle='--', label=r"experiment", c='k')
-
-ax.set_xlabel(u'time (1000s)')
-ax.set_ylabel(u"Deuterium flux (atom/s)")
-ax.legend(loc="best")
-ax.set_ylim(bottom=0)
-# ax.set_yscale("log")
-ax.set_xlim(left=-0.1,right=2e1)
-plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-ax.minorticks_on()
-ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
-plt.savefig(f'{TMAP4_file_base}_both_area.png', bbox_inches='tight')
+# ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
+plt.savefig(f'{TMAP4_file_base}_area.png', bbox_inches='tight')
 plt.close(fig)

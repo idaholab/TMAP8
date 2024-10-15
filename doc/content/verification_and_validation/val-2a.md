@@ -63,80 +63,30 @@ Due to the parameters from TMAP4 and TMAP7 are different, the case considers bot
 ### Comparison based on data from TMAP7
 
 !media comparison_val-2a.py
-       image_name=TMAP7_val-2a_comparison_left.png
+       image_name=val-2a_comparison_TMAP4.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP7_val-2a_comparison_left
-       caption=Comparison of TMAP8 calculation with the experimental data on left side with unit of atom/m$^2$/s
+       id=val-2a_comparison_TMAP4
+       caption=Comparison of TMAP8 calculation with the experimental data on left, right, and both sides with unit of atom/m$^2$/s
 
 !media comparison_val-2a.py
-       image_name=TMAP7_val-2a_comparison_right.png
+       image_name=val-2a_comparison_TMAP4_area.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP7_val-2a_comparison_right
-       caption=Comparison of TMAP8 calculation with the experimental data on right side with unit of atom/m$^2$/s
-
-!media comparison_val-2a.py
-       image_name=TMAP7_val-2a_comparison_both.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP7_val-2a_comparison_both
-       caption=Comparison of TMAP8 calculation with the experimental data on both side with unit of atom/m$^2$/s
-
-!media comparison_val-2a.py
-       image_name=TMAP7_val-2a_comparison_left_area.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP7_val-2a_comparison_left_area
-       caption=Comparison of TMAP8 calculation with the experimental data on left side with unit of atom/s
-
-!media comparison_val-2a.py
-       image_name=TMAP7_val-2a_comparison_right_area.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP7_val-2a_comparison_right_area
-       caption=Comparison of TMAP8 calculation with the experimental data on right side with unit of atom/s
-
-!media comparison_val-2a.py
-       image_name=TMAP7_val-2a_comparison_both_area.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP7_val-2a_comparison_both_area
-       caption=Comparison of TMAP8 calculation with the experimental data on both side with unit of atom/s
+       id=val-2a_comparison_TMAP4_area
+       caption=Comparison of TMAP8 calculation with the experimental data on left, right, and both sides with unit of atom/s
 
 ### Comparison based on data from TMAP7
 
 !media comparison_val-2a.py
-       image_name=TMAP4_val-2a_comparison_left.png
+       image_name=val-2a_comparison_TMAP4.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP4_val-2a_comparison_left
-       caption=Comparison of TMAP8 calculation with the experimental data on left side with unit of atom/m$^2$/s
+       id=val-2a_comparison_TMAP4
+       caption=Comparison of TMAP8 calculation with the experimental data on left, right, and both sides with unit of atom/m$^2$/s
 
 !media comparison_val-2a.py
-       image_name=TMAP4_val-2a_comparison_right.png
+       image_name=val-2a_comparison_TMAP4_area.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP4_val-2a_comparison_right
-       caption=Comparison of TMAP8 calculation with the experimental data on right side with unit of atom/m$^2$/s
-
-!media comparison_val-2a.py
-       image_name=TMAP4_val-2a_comparison_both.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP4_val-2a_comparison_both
-       caption=Comparison of TMAP8 calculation with the experimental data on both side with unit of atom/m$^2$/s
-
-!media comparison_val-2a.py
-       image_name=TMAP4_val-2a_comparison_left_area.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP4_val-2a_comparison_left_area
-       caption=Comparison of TMAP8 calculation with the experimental data on left side with unit of atom/s
-
-!media comparison_val-2a.py
-       image_name=TMAP4_val-2a_comparison_right_area.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP4_val-2a_comparison_right_area
-       caption=Comparison of TMAP8 calculation with the experimental data on right side with unit of atom/s
-
-!media comparison_val-2a.py
-       image_name=TMAP4_val-2a_comparison_both_area.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=TMAP4_val-2a_comparison_both_area
-       caption=Comparison of TMAP8 calculation with the experimental data on both side with unit of atom/s
-
-
+       id=val-2a_comparison_TMAP4_area
+       caption=Comparison of TMAP8 calculation with the experimental data on left, right, and both sides with unit of atom/s
 
 ## Input files
 
