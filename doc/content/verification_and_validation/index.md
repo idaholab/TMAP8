@@ -45,3 +45,4 @@ TMAP8 also contains [example cases](examples/tmap_index.md), which showcase how 
 | Case   | Title                                          |
 | ------ | ---------------------------------------------- |
 | val-2b | [Diffusion Experiment in Beryllium](val-2b.md) |
+| val-2c | [Test Cell Release Experiment](val-2c.md)      |
