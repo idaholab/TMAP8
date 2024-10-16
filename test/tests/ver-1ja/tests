@@ -1,7 +1,7 @@
 [Tests]
-  design = 'ver-1ja.md'
+  design = 'ver-1ja.md MatReaction.md'
   verification = 'ver-1ja.md'
-  issues = '#145'
+  issues = '#145 #12'
   [ver-1ja_csvdiff]
     type = CSVDiff
     input = ver-1ja.i

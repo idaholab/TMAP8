@@ -1,0 +1,58 @@
+[Tests]
+  design = 'ver-1jb.md MatReaction.md MatDiffusion.md ScaledCoupledTimeDerivative.md TrappingNodalKernel.md ReleasingNodalKernel.md'
+  verification = 'ver-1jb.md'
+  issues = '#145 #12'
+  [ver-1jb_csvdiff]
+    type = CSVDiff
+    input = ver-1jb.i
+    csvdiff = ver-1jb_time_dependent_out.csv
+    requirement = 'The system shall be able to model decay of tritium and associated growth of He in a diffusion segment with
+                   distributed traps, with the fine mesh and timestep required to match the analytical solution to generate CSV
+                   data for use in comparisons with the analytic solution.'
+  []
+  [ver-1jb_csvdiff_profile]
+    type = CSVDiff
+    input = ver-1jb.i
+    csvdiff = ver-1jb_profile_out_line_0048.csv
+    should_execute = false # uses ver-1jb_csvdiff
+    prereq = ver-1jb_csvdiff
+    requirement = 'The system shall be able to model decay of tritium and associated growth of He in a diffusion segment with
+                   distributed traps and output the profiles of concentrations.'
+  []
+  [ver-1jb_csvdiff_equivalent_concentrations]
+    type = CSVDiff
+    input = ver-1jb.i
+    cli_args = 'tritium_mobile_concentration_initial=1e25
+                trap_per_free=1
+                Outputs/file_base=ver-1jb_equivalent_concentrations_out
+                Outputs/time_dependent_out/file_base=ver-1jb_equivalent_concentrations_time_dependent_out
+                Outputs/profile_out/file_base=ver-1jb_equivalent_concentrations_profile_out'
+    csvdiff = ver-1jb_equivalent_concentrations_time_dependent_out.csv
+    requirement = 'The system shall be able to model decay of tritium and associated growth of He in a diffusion segment with
+                   distributed traps with equivalent initial mobile and trapped tritium concentration,
+                   with the fine mesh and timestep required to match the analytical solution to generate CSV data for use in
+                   comparisons with the analytic solution.'
+  []
+  [ver-1jb_csvdiff_profile_equivalent_concentrations]
+    type = CSVDiff
+    input = ver-1jb.i
+    cli_args = 'tritium_mobile_concentration_initial=1e25
+                trap_per_free=1
+                Outputs/file_base=ver-1jb_equivalent_concentrations_out
+                Outputs/time_dependent_out/file_base=ver-1jb_equivalent_concentrations_time_dependent_out
+                Outputs/profile_out/file_base=ver-1jb_equivalent_concentrations_profile_out'
+    csvdiff = ver-1jb_equivalent_concentrations_profile_out_line_0048.csv
+    should_execute = false # uses ver-1jb_csvdiff_equivalent_concentrations
+    prereq = ver-1jb_csvdiff_equivalent_concentrations
+    requirement = 'The system shall be able to model decay of tritium and associated growth of He in a diffusion segment with
+                   distributed traps with equivalent initial mobile and trapped tritium concentration and output the
+                   profiles of concentrations.'
+  []
+  [ver-1jb_comparison]
+    type = RunCommand
+    command = 'python3 comparison_ver-1jb.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution
+                   when modeling decay of tritium and associated growth of He in a diffusion segment with distributed traps.'
+    required_python_packages = 'csv matplotlib numpy pandas os'
+  []
+[]
