@@ -3,14 +3,12 @@
 
 # Physical Constants
 ideal_gas_constant = ${units 8.31446261815324 J/K/mol} # from PhysicalConstants.h
-boltzmann_constant = ${units 1.380649e-23 J/K } # from PhysicalConstants.h
-eV_to_J = 1.602176634e-19 # J/eV - from PhysicalConstants.h
-boltzmann_constant_eV = ${fparse boltzmann_constant / eV_to_J} # eV/K
+boltzmann_constant = ${units 1.380649e-23 J/K -> eV/K } # from PhysicalConstants.h
 
 # Case and model parameters (adapted from TMAP7)
-slab_length = 1.5 # m
+slab_length = ${units 1.5 m }
 tritium_mobile_concentration_initial = ${units 1 atoms/m3}
-trapping_sites_atomic_fraction_max = ${units 0.001 at.frac.}
+trapping_sites_atomic_fraction_max = 0.001 # (-)
 trapping_sites_fraction_occupied_initial = 0.5 # (-)
 normal_center_position = ${fparse slab_length/2} # m
 normal_standard_deviation = ${fparse slab_length/4} # m
@@ -228,7 +226,7 @@ dt_max = ${fparse end_time/100} # s
     type = ReleasingNodalKernel
     variable = tritium_trapped_concentration_scaled # (atoms/m^3) / density_scalar = (-)
     alpha_r = ${fparse tritium_release_prefactor} # (1/s)
-    detrapping_energy = ${fparse tritium_release_energy / boltzmann_constant_eV} # (K)
+    detrapping_energy = ${fparse tritium_release_energy / boltzmann_constant} # (K)
     temperature = temperature # (K)
   []
   [decay]
@@ -258,7 +256,7 @@ dt_max = ${fparse end_time/100} # s
     type = ParsedMaterial
     property_name = 'alpha_r_tot'
     coupled_variables = 'temperature'
-    expression = '${tritium_release_prefactor} * exp(- ${tritium_release_energy} / ${boltzmann_constant_eV}/temperature)'
+    expression = '${tritium_release_prefactor} * exp(- ${tritium_release_energy} / ${boltzmann_constant}/temperature)'
     outputs = 'all'
   []
 []
@@ -365,5 +363,4 @@ dt_max = ${fparse end_time/100} # s
     execute_postprocessors_on = NONE
     file_base=ver-1jb_profile_out
   []
-  exodus = true
 []

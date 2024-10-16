@@ -12,11 +12,9 @@ This page presents ver-1jb.
 This verification case is an extension of[ver-1ja](ver-1ja.md), which tests the first order radioactive decay capabilities of TMAP8.
 In ver-1jb, however, tritium decay is coupled with trapping, which was verified in several verification cases, including [ver-1d](ver-1d.md).
 As [ver-1ja](ver-1ja.md), ver-1jb is based on the case published in the TMAP7 V&V suite [!citep](ambrosek2008verification).
-The model assumes pre-charging of an $l=1.5$ m long slab with tritium (with an assumed width and thickness of 1 m).
-As opposed to [ver-1ja](ver-1ja.md), however, traps at $C_{trap} = 0.1$% atom fraction (with a material density based on tungsten defined as 6.34 $\times 10^{28}$ atoms/m$^3$)
-and $E=4.2$ eV trap energy are distributed in a normal distribution centered at the mid-plane of the slab and standard deviation of $l/4$. The traps are initially filled with trapped tritium to 50% of trap concentration.
+Similarly to [ver-1ja](ver-1ja.md), the model assumes pre-charging of an $l=1.5$ m long slab with tritium (with an assumed width and thickness of 1 m). Further complexity is added to the problem by introducing traps with a normal distribution centered at the mid-plane of the slab and a standard deviation of $l/4$. The peak atomic fraction of traps is $C_{trap} = 0.001$, and the trap energy is $E=4.2$ eV. The material density used to calculate the number of traps is based on tungsten, and defined as 6.34 $\times 10^{28}$ atoms/m$^3$. The traps are initially filled with trapped tritium to 50% of trap concentration.
 
-The evolution of the mobile tritium, trapped tritium, and helium concentration, i.e.,
+The evolution of the mobile tritium, trapped tritium, and helium concentrations, i.e.,
 $C_M$, $C_T$, and $C_{He}$, respectively, is governed by
 
 \begin{equation}
@@ -37,7 +35,7 @@ and
 where $t$ is the time in s, concentrations are in atoms/m$^3$,
 $D_T$ is the tritium diffusivity in m$^2$/s,
 $\text{trap\_per\_free}$ is a factor converting the magnitude of $C_T$ to be closer to $C_M$ for better numerical convergence,
-$k= 0.693/t_{1/2}$ is the decay rate constant in 1/s,
+$k= 0.693/t_{1/2}$ is the decay rate constant in 1/s, $t_{1/2} = 12.3232$ years is the half life of tritium decay to helium-3,
 $C_T^{empty}$ is the concentration of empty trapping sites,
 $N$ is the host density,
 $\alpha_t$ and $\alpha_r$ are the trapping and release rate coefficients,
@@ -92,7 +90,7 @@ Applying a mass balance over the system, the inventory of helium in atoms, $I_{H
 [ver-1jb_results_comparison_analytical_time_evolution_1] shows the TMAP8 predictions and how they compare to the analytical solution
 for the decay of tritium and associated growth of $^3$He in a distributed trap.
 TMAP8 matches the analytical solution, with a root mean square percentage error
-(RMSPE) of 1.29% and 0.35% for the $I_{tot}$ and $I_{He}$ concentration curves, respectively,
+(RMSPE) of 0.82% and 0.20% for the $I_{tot}$ and $I_{He}$ concentration curves, respectively,
 and can also provide the trapped and mobile tritium concentrations.
 
 !media comparison_ver-1jb.py
@@ -117,7 +115,7 @@ including [ver-1d](ver-1d.md).
 #### With equivalent mobile and trapped tritium initial concentrations
 
 [ver-1jb_results_comparison_analytical_time_evolution_2] and [ver-1jb_results_profile_2] show the results of the simulations when the initial concentrations of mobile and trapped tritium are equivalent.
-[ver-1jb_results_comparison_analytical_time_evolution_2] shows TMAP8's time predictions of the inventories and how they compare to the analytical solution. The RMSPE values as low as in the previous case.
+[ver-1jb_results_comparison_analytical_time_evolution_2] shows TMAP8's time predictions of the inventories and how they compare to the analytical solution. The RMSPE values are as low as in the previous case.
 
 !media comparison_ver-1jb.py
        image_name=ver-1jb_equivalent_concentrations_comparison_analytical_time_evolution.png
