@@ -1,32 +1,14 @@
-nx_scale = 1
-
-
+nx_scale = 5
 
 [Mesh]
   [cartesian_mesh_TMAP4]
     type = CartesianMeshGenerator
     dim = 1
     #     num
-    dx = '${fparse 5 * 4e-3}        1e-2        1e-1        1e0         1e1         ${fparse 10 * 4.88e1}'
-    ix = '${fparse 5 * ${nx_scale}} ${nx_scale} ${nx_scale} ${nx_scale} ${nx_scale} ${fparse 10 * ${nx_scale}}'
-  []
-[]
-
-[BCs]
-  # [left_balance]
-  #   type = ADFunctionNeumannBC
-  #   boundary = left
-  #   variable = concentration
-  #   function = 0
-  # []
-  [left_balance]
-    type = EquilibriumBC
-    Ko = '${fparse sqrt( ${dissociation_coefficient_parameter_enclos1} / ${recombination_coefficient_parameter_enclos1_TMAP4} )}'
-    boundary = left
-    enclosure_var = pressure_left
-    temperature = ${Temperature}
-    variable = concentration
-    p = 0.5
+    dx = '${fparse 5 * ${units 4e-9 m -> mum}}  ${units 1e-8 m -> mum}  ${units 1e-7 m -> mum}
+          ${units 1e-6 m -> mum}                ${units 1e-5 m -> mum}  ${fparse 10 * ${units 4.88e-5 m -> mum}}'
+    ix = '${fparse 5 * ${nx_scale}}             ${nx_scale}             ${nx_scale}
+          ${nx_scale}                           ${nx_scale}             ${fparse 10 * ${nx_scale}}'
   []
 []
 
@@ -40,6 +22,11 @@ nx_scale = 1
   [Kr_left_func]
     type = ParsedFunction
     expression = '${recombination_coefficient_parameter_enclos1_TMAP4} * (1 - 0.9999 * exp(-6e-5 * t))'
+  []
+
+  [Kr_left_time_dependent_func]
+    type = ParsedFunction
+    expression = '1 - 0.9999 * exp(-6e-5 * t)'
   []
 
   [pressure_func]
@@ -60,20 +47,38 @@ nx_scale = 1
                   if(t<18180,  ${flux_high}, ${flux_low}))))) * 0.75'
   []
 
-  [concentration_source_func]
+  [source_distribution]
     type = ParsedFunction
-    symbol_names = 'surface_flux_func pressure_func Kd_left_func Kr_left_func'
-    symbol_values = 'surface_flux_func pressure_func Kd_left_func Kr_left_func'
-    expression = 'if(x<8e-3,  0,
-                  if(x<12e-3, sqrt((0.25 * surface_flux_func  + pressure_func * Kd_left_func) / Kr_left_func),
-                  if(x<16e-3, sqrt((1.00 * surface_flux_func  + pressure_func * Kd_left_func) / Kr_left_func),
-                  if(x<20e-3, sqrt((0.25 * surface_flux_func  + pressure_func * Kd_left_func) / Kr_left_func), 0))))'
+    symbol_names = 'width depth'
+    symbol_values = '${units 2.4e-9 m -> mum} ${units 14e-9 m -> mum}'
+    expression = '1.5 / ( width * sqrt(2 * pi) ) * exp(-0.5 * ((x - depth) / width) ^ 2)'
+  []
+
+  [concentration_source_norm_func]
+    type = ParsedFunction
+    symbol_names = 'source_distribution surface_flux_func'
+    symbol_values = 'source_distribution surface_flux_func'
+    expression = 'source_distribution * surface_flux_func'
+  []
+
+  [max_dt_size_func]
+    type = ParsedFunction
+    expression = 'if(t<6420.0-100, ${high_dt_max},
+                  if(t<6420.0+100.0, ${low_dt_max},
+                  if(t<9420.0-100, ${high_dt_max},
+                  if(t<9420.0+100, ${low_dt_max},
+                  if(t<12480-100,  ${high_dt_max},
+                  if(t<12480+100,  ${low_dt_max},
+                  if(t<14940-100,  ${high_dt_max},
+                  if(t<14940+100,  ${low_dt_max},
+                  if(t<18180-100,  ${high_dt_max},
+                  if(t<18180+100,  ${low_dt_max}, ${high_dt_max}))))))))))'
   []
 []
 
 [Outputs]
   # checkpoint = true
-  file_base = 'val-2a_TMAP4_out'
+  file_base = 'val-2a_TMAP4_test_out'
   csv = true
   [exodus]
     type = Exodus

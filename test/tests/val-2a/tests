@@ -6,12 +6,14 @@
     type = CSVDiff
     input = 'val-2a_base.i val-2a_TMAP7.i'
     csvdiff = val-2a_TMAP7_out.csv
+    heavy = true
     requirement = 'The system shall be able to model Ion implantation based on the requirements and conditions listed in the TMAP7 V&V report'
   []
   [val-2a_TMAP4_csvdiff]
     type = CSVDiff
     input = 'val-2a_base.i val-2a_TMAP4.i'
     csvdiff = val-2a_TMAP4_out.csv
+    heavy = true
     requirement = 'The system shall be able to model Ion implantation based on the requirements and conditions listed in the TMAP4 V&V report'
   []
   [val-2a_comparison]

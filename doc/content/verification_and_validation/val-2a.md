@@ -68,12 +68,6 @@ Due to the parameters from TMAP4 and TMAP7 are different, the case considers bot
        id=val-2a_comparison_TMAP4
        caption=Comparison of TMAP8 calculation with the experimental data on left, right, and both sides with unit of atom/m$^2$/s
 
-!media comparison_val-2a.py
-       image_name=val-2a_comparison_TMAP4_area.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=val-2a_comparison_TMAP4_area
-       caption=Comparison of TMAP8 calculation with the experimental data on left, right, and both sides with unit of atom/s
-
 ### Comparison based on data from TMAP7
 
 !media comparison_val-2a.py
@@ -81,12 +75,6 @@ Due to the parameters from TMAP4 and TMAP7 are different, the case considers bot
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2a_comparison_TMAP7
        caption=Comparison of TMAP8 calculation with the experimental data on left, right, and both sides with unit of atom/m$^2$/s
-
-!media comparison_val-2a.py
-       image_name=val-2a_comparison_TMAP7_area.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=val-2a_comparison_TMAP7_area
-       caption=Comparison of TMAP8 calculation with the experimental data on left, right, and both sides with unit of atom/s
 
 ## Input files
 
