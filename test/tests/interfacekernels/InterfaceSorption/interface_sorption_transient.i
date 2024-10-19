@@ -28,8 +28,7 @@ unit_scale_neighbor = 1
   [gen]
     type = GeneratedMeshGenerator
     nx = 10
-    ny = 10
-    dim = 2
+    dim = 1
   []
   [block1]
     type = SubdomainBoundingBoxGenerator
@@ -186,13 +185,13 @@ unit_scale_neighbor = 1
   [u_mid_inner]
     type = PointValue
     variable = u1
-    point = '0.49999 0.5 0'
+    point = '0.49999 0 0'
     outputs = 'csv console'
   []
   [u_mid_outer]
     type = PointValue
     variable = u2
-    point = '0.50001 0.5 0'
+    point = '0.50001 0 0'
     outputs = 'csv console'
   []
   [u_mid_diff]
