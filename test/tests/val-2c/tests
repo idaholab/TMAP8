@@ -1,0 +1,18 @@
+[Tests]
+  design = 'val-2c.md'
+  issues = '#98'
+  [val-2c_csv]
+    type = CSVDiff
+    input = val-2c.i
+    csvdiff = val-2c_csv.csv
+    requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c).'
+  []
+  [val-2c_exodus]
+    type = Exodiff
+    input = val-2c.i
+    prereq = val-2c_csv
+    should_execute = false # this test relies on the output files from val-2c_csv, so it shouldn't be run twice
+    exodiff = val-2c_out.e
+    requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) and properly compute the exodus file.'
+  []
+[]
