@@ -19,7 +19,7 @@ The value of $n$ determines the sorption law. For example:
 - $n = 1$ corresponds to Henry's law
 - $n = 1/2$ corresponds to Sievert's law.
 
-A penalty is applied to enforce the sorption law at the interface. Note that solubilities in the literature may only be compatible with concentrations expressed in certain units, and those units may differ from those used elsewhere in the simulation, e.g., $mmol/kg$ versus $mol/m^3$. The model accepts concentration unit conversion factors to accommodate data from different sources. For example, unit conversion factors of $1000$ can be supplied to accommodate sets of solubilities for concentrations in $mmol/m^3$. Note that for multi-atomic molecules, it is important to specify if the moles correspond to the moles of gas molecules, or the moles of atoms. The model assumes that the units associated with the partial pressures are equal and that all constants are compatible with absolute temperature.
+A penalty is applied to enforce the sorption law at the interface. Note that solubilities in the literature may only be compatible with concentrations expressed in certain units, and those units may differ from those used elsewhere in the simulation, e.g., $mmol/kg$ versus $mol/m^3$. The model accepts concentration unit conversion factors (`unit_scale` and `unit_scale_neighbor`) to accommodate data from different sources. For example, unit conversion factors of $1000$ can be supplied to accommodate sets of solubilities for concentrations in $mmol/m^3$. Note that for multi-atomic molecules, it is important to specify if the moles correspond to the moles of gas molecules, or the moles of atoms. The model assumes that the units associated with the partial pressures are equal and that all constants are compatible with absolute temperature.
 
 To balance the mass flux across the gap, a second interfacial condition is given as:
 
@@ -33,6 +33,8 @@ where $D_s$ and $D_g$ are the diffusivities in the solid and the gas, respective
 When using the default, non-penalty method to enforce flux conditions at the interface, a kernel such as [MatDiffusion](/MatDiffusion.md) must be applied to the neighbor block to form the correct residual.
 
 Optionally, a penalty can be applied within `InterfaceSorption` to directly enforce the full flux condition at the interface. The penalty method adds the correct residual to the neighbor side of the interface without requiring a second kernel, but it may over-constrain the problem under certain conditions.
+
+Note that the unit conversion factors (`unit_scale` and `unit_scale_neighbor`) do not apply to the flux equation to ensure mass conservation.
 
 ## Input File Usage Example
 
