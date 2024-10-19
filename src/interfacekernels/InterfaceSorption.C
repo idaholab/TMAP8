@@ -98,6 +98,9 @@ InterfaceSorptionTempl<is_ad>::computeQpResidual(Moose::DGResidualType type)
 
   GenericReal<is_ad> r = 0.; // residual
 
+  // The unit scaling affects the residual of the sorption equation, but not the flux equation.
+  // Otherwise mass is not conserved.
+
   switch (type)
   {
     case Moose::Element:
@@ -112,11 +115,10 @@ InterfaceSorptionTempl<is_ad>::computeQpResidual(Moose::DGResidualType type)
     {
       if (_use_flux_penalty)
         r = _test_neighbor[_i][_qp] * _flux_penalty * _normals[_qp] *
-            (_diffusivity[_qp] * _unit_scale * _grad_u[_qp] -
-             (*_diffusivity_neighbor)[_qp] * _unit_scale_neighbor * _grad_neighbor_value[_qp]);
+            (_diffusivity[_qp] * _grad_u[_qp] -
+             (*_diffusivity_neighbor)[_qp] * _grad_neighbor_value[_qp]);
       else
-        r = _test_neighbor[_i][_qp] * _normals[_qp] * _diffusivity[_qp] * _unit_scale *
-            _grad_u[_qp];
+        r = _test_neighbor[_i][_qp] * _normals[_qp] * _diffusivity[_qp] * _grad_u[_qp];
       break;
     }
   }
@@ -135,6 +137,9 @@ InterfaceSorptionTempl<false>::computeQpJacobian(Moose::DGJacobianType type)
 
   Real jac = 0.; // jacobian
 
+  // The unit scaling affects the jacobian of the sorption equation, but not the flux equation.
+  // Otherwise mass is not conserved.
+
   switch (type)
   {
     case Moose::ElementElement:
@@ -152,16 +157,15 @@ InterfaceSorptionTempl<false>::computeQpJacobian(Moose::DGJacobianType type)
     case Moose::NeighborElement:
       if (_use_flux_penalty)
         jac = _test_neighbor[_i][_qp] * _flux_penalty * _normals[_qp] * _diffusivity[_qp] *
-              _unit_scale * _grad_phi[_j][_qp];
+              _grad_phi[_j][_qp];
       else
-        jac = _test_neighbor[_i][_qp] * _diffusivity[_qp] * _unit_scale * _grad_phi[_j][_qp] *
-              _normals[_qp];
+        jac = _test_neighbor[_i][_qp] * _diffusivity[_qp] * _grad_phi[_j][_qp] * _normals[_qp];
       break;
 
     case Moose::NeighborNeighbor:
       if (_use_flux_penalty)
         jac = -_test_neighbor[_i][_qp] * _flux_penalty * _normals[_qp] *
-              (*_diffusivity_neighbor)[_qp] * _unit_scale_neighbor * _grad_phi_neighbor[_j][_qp];
+              (*_diffusivity_neighbor)[_qp] * _grad_phi_neighbor[_j][_qp];
       break;
   }
   return jac;
