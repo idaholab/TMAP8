@@ -12,8 +12,8 @@ R = 8.31446261815324 # J/mol/K Based on PhysicalConstants
 
 temperature = 1000 # K
 initial_concentration = 1
-solubility = ${fparse 2/R/temperature}
 n_sorption = 0.5
+solubility = ${fparse 2/R^n_sorption/temperature^n_sorption}
 
 unit_scale = 1
 unit_scale_neighbor = 1
