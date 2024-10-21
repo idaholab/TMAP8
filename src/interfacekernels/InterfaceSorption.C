@@ -32,7 +32,7 @@ InterfaceSorptionTempl<is_ad>::validParams()
                                 "The pre-exponential factor for the Arrhenius law for the "
                                 "solubility $K$ for the relationship $C_i = KP_i^n$");
   params.addParam<Real>("Ea",
-                        0,
+                        0.,
                         "The activation energy for the Arrhenius law for the solubility $K$ for "
                         "the relationship $C_i = KP_i^n$");
   params.addRequiredParam<Real>("n_sorption",
@@ -96,7 +96,10 @@ InterfaceSorptionTempl<is_ad>::computeQpResidual(Moose::DGResidualType type)
   const GenericReal<is_ad> temperature_limited = std::max(small, _T[_qp]);
   const auto R = PhysicalConstants::ideal_gas_constant; // ideal gas constant (J/K/mol)
 
-  GenericReal<is_ad> r = 0; // residual
+  GenericReal<is_ad> r = 0.; // residual
+
+  // The unit scaling affects the residual of the sorption equation, but not the flux equation.
+  // Otherwise mass is not conserved.
 
   switch (type)
   {
@@ -132,7 +135,10 @@ InterfaceSorptionTempl<false>::computeQpJacobian(Moose::DGJacobianType type)
   const Real temperature_limited = std::max(small, _T[_qp]);
   const auto R = PhysicalConstants::ideal_gas_constant; // ideal gas constant (J/K/mol)
 
-  Real jac = 0; // jacobian
+  Real jac = 0.; // jacobian
+
+  // The unit scaling affects the jacobian of the sorption equation, but not the flux equation.
+  // Otherwise mass is not conserved.
 
   switch (type)
   {
@@ -141,10 +147,11 @@ InterfaceSorptionTempl<false>::computeQpJacobian(Moose::DGJacobianType type)
       break;
 
     case Moose::ElementNeighbor:
-      jac = -_test[_i][_qp] * _sorption_penalty * _phi_neighbor[_j][_qp] *
+      jac = -_test[_i][_qp] * _sorption_penalty * _unit_scale_neighbor / _unit_scale *
+            _phi_neighbor[_j][_qp] *
             (_K0 * std::exp(-_Ea / R / temperature_limited) *
              std::pow(R * temperature_limited, _n_sorption) * _n_sorption *
-             std::pow(u_neighbor, _n_sorption - 1));
+             std::pow(u_neighbor, _n_sorption - 1.));
       break;
 
     case Moose::NeighborElement:
