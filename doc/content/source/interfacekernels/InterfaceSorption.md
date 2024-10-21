@@ -1,4 +1,4 @@
-# InterfaceSorption
+# ADInterfaceSorption / InterfaceSorption
 
 !syntax description /InterfaceKernels/InterfaceSorption
 

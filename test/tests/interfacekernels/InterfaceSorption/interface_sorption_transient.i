@@ -1,10 +1,9 @@
 # This test is to verify the implementation of InterfaceSorption and its AD counterpart in transient conditions.
-# It contains two 2D blocks separated by a continuous interface.
+# It contains two 1D blocks separated by a continuous interface.
 # InterfaceSorption is used to enforce the sorption law and preserve flux between the blocks.
 # Checks are performed to verify concentration conservation, sorption behavior, and flux preservation.
 # This input file uses BreakMeshByBlockGenerator, which is currently only supported for replicated
-# meshes, so this file should not be run with distributed meshes turned on
-# (i.e., using the `parallel_type = DISTRIBUTED` flag)!
+# meshes, so this file should not be run with the `parallel_type = DISTRIBUTED` flag
 
 # In this input file, we apply the Sievert law with n_sorption=1/2.
 

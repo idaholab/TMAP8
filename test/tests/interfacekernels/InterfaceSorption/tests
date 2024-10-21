@@ -129,7 +129,7 @@
     cli_args = 'Outputs/file_base=interface_sorption_transient_Sievert_non_ad_out'
     exodiff = 'interface_sorption_transient_Sievert_non_ad_out.e'
     mesh_mode = REPLICATED
-    recover = false
+    recover = false # this is discussed in #196
   []
   [Sievert_transient_ad]
     requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using automatic differentiation during transient simulations.'
@@ -152,7 +152,7 @@
                 Executioner/nl_abs_tol=1e-12'
     exodiff = 'interface_sorption_transient_Sievert_ad_out.e'
     mesh_mode = REPLICATED
-    recover = false
+    recover = false # this is discussed in #196
   []
 
   [Sievert_transient_non_ad_scaling]
@@ -164,7 +164,7 @@
                 Outputs/file_base=interface_sorption_transient_Sievert_non_ad_scaling_out'
     exodiff = 'interface_sorption_transient_Sievert_non_ad_scaling_out.e'
     mesh_mode = REPLICATED
-    recover = false
+    recover = false # this is discussed in #196
   []
   [Sievert_transient_ad_scaling]
     requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using automatic differentiation during transient simulations with unit scaling on both variables.'
@@ -188,7 +188,7 @@
                 Executioner/nl_abs_tol=5e-12'
     exodiff = 'interface_sorption_transient_Sievert_ad_scaling_out.e'
     mesh_mode = REPLICATED
-    recover = false
+    recover = false # this is discussed in #196
   []
   [Sievert_transient_non_ad_penalty_scaling]
     requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using a penalty-enforced flux balance during transient simulations with unit scaling on both variables.'
@@ -200,12 +200,27 @@
                 InterfaceKernels/interface/flux_penalty=1e1
                 Outputs/file_base=interface_sorption_transient_Sievert_non_ad_penalty_scaling_out'
     exodiff = 'interface_sorption_transient_Sievert_non_ad_penalty_scaling_out.e'
+    mesh_mode = REPLICATED
+    recover = false # this is discussed in #196
+  []
+  [Sievert_transient_non_ad_penalty_scaling_comparison]
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using a penalty-enforced flux balance during transient simulations with unit scaling on both variables and provide similar results to the approach without the penalty-enforced flux balance.'
+    type = 'Exodiff'
+    input = 'interface_sorption_transient.i'
+    cli_args = 'unit_scale=4
+                unit_scale_neighbor=6
+                InterfaceKernels/interface/use_flux_penalty=true
+                InterfaceKernels/interface/flux_penalty=1e1
+                Outputs/file_base=interface_sorption_transient_Sievert_non_ad_penalty_scaling_comparison_out'
+    should_execute = false # this test relies on the output files from Sievert_transient_non_ad_penalty_scaling, so it shouldn't be run twice
+    exodiff = 'interface_sorption_transient_Sievert_non_ad_penalty_scaling_comparison_out.e'
     # compared to Sievert_transient_non_ad_scaling because it is supposed to be equivalent,
     # but the residuals are expected to be different when the penalty is used, so the relative error tolerance is increased here
     rel_err = 8.5e-2
     mesh_mode = REPLICATED
-    recover = false
+    recover = false # this is discussed in #196
   []
+
   [Sievert_transient_ad_penalty_scaling]
     requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using automatic differentiation and a penalty-enforced flux balance during transient simulations with unit scaling on both variables.'
     type = 'Exodiff'
@@ -233,7 +248,7 @@
     # but the residuals are expected to be different when the penalty is used, so the relative error tolerance is increased here
     rel_err = 8.5e-2
     mesh_mode = REPLICATED
-    recover = false
+    recover = false # this is discussed in #196
   []
 
   [Henry_transient_non_ad]
@@ -244,7 +259,7 @@
                 Outputs/file_base=interface_sorption_transient_Henry_non_ad_out'
     exodiff = 'interface_sorption_transient_Henry_non_ad_out.e'
     mesh_mode = REPLICATED
-    recover = false
+    recover = false # this is discussed in #196
   []
   [Henry_transient_ad]
     requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions using automatic differentiation during transient simulations.'
@@ -268,7 +283,7 @@
                 Executioner/nl_abs_tol=1e-12'
     exodiff = 'interface_sorption_transient_Henry_ad_out.e'
     mesh_mode = REPLICATED
-    recover = false
+    recover = false # this is discussed in #196
   []
 
   [Henry_transient_non_ad_scaling]
@@ -281,7 +296,7 @@
                 Outputs/file_base=interface_sorption_transient_Henry_non_ad_scaling_out'
     exodiff = 'interface_sorption_transient_Henry_non_ad_scaling_out.e'
     mesh_mode = REPLICATED
-    recover = false
+    recover = false # this is discussed in #196
   []
   [Henry_transient_ad_scaling]
     requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions using automatic differentiation during transient simulation with unit scaling on both variables.'
@@ -306,7 +321,7 @@
                 Executioner/nl_abs_tol=5e-12'
     exodiff = 'interface_sorption_transient_Henry_ad_scaling_out.e'
     mesh_mode = REPLICATED
-    recover = false
+    recover = false # this is discussed in #196
   []
   [Henry_transient_non_ad_penalty_scaling]
     requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions using a penalty-enforced flux balance during transient simulations with unit scaling on both variables.'
@@ -319,11 +334,26 @@
                 InterfaceKernels/interface/flux_penalty=1e1
                 Outputs/file_base=interface_sorption_transient_Henry_non_ad_penalty_scaling_out'
     exodiff = 'interface_sorption_transient_Henry_non_ad_penalty_scaling_out.e'
+    mesh_mode = REPLICATED
+    recover = false # this is discussed in #196
+  []
+  [Henry_transient_non_ad_penalty_scaling_comparison]
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions using a penalty-enforced flux balance during transient simulations with unit scaling on both variables and provide similar results to the approach without the penalty-enforced flux balance.'
+    type = 'Exodiff'
+    input = 'interface_sorption_transient.i'
+    cli_args = 'n_sorption=1
+                unit_scale=4
+                unit_scale_neighbor=6
+                InterfaceKernels/interface/use_flux_penalty=true
+                InterfaceKernels/interface/flux_penalty=1e1
+                Outputs/file_base=interface_sorption_transient_Henry_non_ad_penalty_scaling_comparison_out'
+    should_execute = false # this test relies on the output files from Henry_transient_non_ad_penalty_scaling, so it shouldn't be run twice
+    exodiff = 'interface_sorption_transient_Henry_non_ad_penalty_scaling_comparison_out.e'
     # compared to Henry_transient_non_ad_scaling because it is supposed to be equivalent,
     # but the residuals are expected to be different when the penalty is used, so the relative error tolerance is increased here
     rel_err = 5.4e-2
     mesh_mode = REPLICATED
-    recover = false
+    recover = false # this is discussed in #196
   []
   [Henry_transient_ad_penalty_scaling]
     requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions using automatic differentiation and a penalty-enforced flux balance during transient simulations with unit scaling on both variables.'
@@ -353,6 +383,6 @@
     # but the residuals are expected to be different when the penalty is used, so the relative error tolerance is increased here
     rel_err = 5.4e-2
     mesh_mode = REPLICATED
-    recover = false
+    recover = false # this is discussed in #196
   []
 []
