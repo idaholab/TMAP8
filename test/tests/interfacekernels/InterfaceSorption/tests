@@ -212,7 +212,6 @@
                 InterfaceKernels/interface/use_flux_penalty=true
                 InterfaceKernels/interface/flux_penalty=1e1
                 Outputs/file_base=interface_sorption_transient_Sievert_non_ad_penalty_scaling_comparison_out'
-    should_execute = false # this test relies on the output files from Sievert_transient_non_ad_penalty_scaling, so it shouldn't be run twice
     exodiff = 'interface_sorption_transient_Sievert_non_ad_penalty_scaling_comparison_out.e'
     # compared to Sievert_transient_non_ad_scaling because it is supposed to be equivalent,
     # but the residuals are expected to be different when the penalty is used, so the relative error tolerance is increased here
@@ -347,7 +346,6 @@
                 InterfaceKernels/interface/use_flux_penalty=true
                 InterfaceKernels/interface/flux_penalty=1e1
                 Outputs/file_base=interface_sorption_transient_Henry_non_ad_penalty_scaling_comparison_out'
-    should_execute = false # this test relies on the output files from Henry_transient_non_ad_penalty_scaling, so it shouldn't be run twice
     exodiff = 'interface_sorption_transient_Henry_non_ad_penalty_scaling_comparison_out.e'
     # compared to Henry_transient_non_ad_scaling because it is supposed to be equivalent,
     # but the residuals are expected to be different when the penalty is used, so the relative error tolerance is increased here
