@@ -58,15 +58,15 @@ Due to the parameters from TMAP4 and TMAP7 are different, the case considers bot
 
 ## Results
 
-[val-2a_comparison_TMAP7] and [val-2a_comparison_TMAP4] shows the comparison of the TMAP8 calculation and the experimental data. There is reasonable agreement between the TMAP predictions and the experimental data with a root mean square percentage error of RMSPE =  %. Note that the agreement could be improved by adjusting the model parameters. It is also possible to perform this optimization with [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html).
+[val-2a_comparison_TMAP4] and [val-2a_comparison_TMAP7] shows the comparison of the TMAP8 calculation and the experimental data. There is reasonable agreement between the TMAP predictions and the experimental data with the root mean square percentage error of RMSPE = 29.91 % and RMSPE = 61.17 %, respectively. Note that the agreement could be improved by adjusting the model parameters. It is also possible to perform this optimization with [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html).
 
-### Comparison based on data from TMAP7
+### Comparison based on data from TMAP4
 
 !media comparison_val-2a.py
        image_name=val-2a_comparison_TMAP4.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2a_comparison_TMAP4
-       caption=Comparison of TMAP8 calculation with the experimental data on left, right, and both sides with unit of atom/m$^2$/s
+       caption=Comparison of TMAP8 calculation with the experimental data on right side with unit of atom/m$^2$/s
 
 ### Comparison based on data from TMAP7
 
@@ -74,7 +74,7 @@ Due to the parameters from TMAP4 and TMAP7 are different, the case considers bot
        image_name=val-2a_comparison_TMAP7.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2a_comparison_TMAP7
-       caption=Comparison of TMAP8 calculation with the experimental data on left, right, and both sides with unit of atom/m$^2$/s
+       caption=Comparison of TMAP8 calculation with the experimental data on right side with unit of atom/m$^2$/s
 
 ## Input files
 

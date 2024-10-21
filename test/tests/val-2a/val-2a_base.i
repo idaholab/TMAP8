@@ -103,13 +103,13 @@ recombination_coefficient_parameter_enclos1_TMAP7 = '${units 7e-27 m^4/at/s -> m
     property_name = 'flux_on_left'
     functor_names = 'Kr_left_func'
     functor_symbols = 'Kr_left_func'
-    expression = '- 2 * Kr_left_func * concentration ^ 2 / ${diffusivity_D}'
+    expression = '- 2 * Kr_left_func * concentration ^ 2'
   []
   [flux_on_right]
     type = DerivativeParsedMaterial
     coupled_variables = 'concentration'
     property_name = 'flux_on_right'
-    expression = '- 2 * ${recombination_parameter_enclos2} * concentration ^ 2 / ${diffusivity_D}'
+    expression = '- 2 * ${recombination_parameter_enclos2} * concentration ^ 2'
   []
 []
 
@@ -119,8 +119,6 @@ recombination_coefficient_parameter_enclos1_TMAP7 = '${units 7e-27 m^4/at/s -> m
     variable = concentration
     diffusivity = '${diffusivity_D}'
     boundary = 'left'
-    execute_on = 'initial nonlinear linear timestep_end'
-    outputs = 'console csv exodus'
   []
   [scaled_flux_surface_left]
     type = ScalePostprocessor
@@ -134,13 +132,35 @@ recombination_coefficient_parameter_enclos1_TMAP7 = '${units 7e-27 m^4/at/s -> m
     variable = concentration
     diffusivity = '${diffusivity_D}'
     boundary = 'right'
-    execute_on = 'initial nonlinear linear timestep_end'
-    outputs = 'console csv exodus'
   []
   [scaled_flux_surface_right]
     type = ScalePostprocessor
     scaling_factor = '${units 1 m^2 -> mum^2}'
     value = flux_surface_right
+    execute_on = 'initial nonlinear linear timestep_end'
+    outputs = 'console csv exodus'
+  []
+  [dcdx_left]
+    type = SideAverageMaterialProperty
+    boundary = left
+    property = flux_on_left
+  []
+  [scaled_recombination_flux_left]
+    type = ScalePostprocessor
+    scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
+    value = dcdx_left
+    execute_on = 'initial nonlinear linear timestep_end'
+    outputs = 'console csv exodus'
+  []
+  [dcdx_right]
+    type = SideAverageMaterialProperty
+    boundary = right
+    property = flux_on_right
+  []
+  [scaled_recombination_flux_right]
+    type = ScalePostprocessor
+    scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
+    value = dcdx_right
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = 'console csv exodus'
   []
@@ -170,8 +190,7 @@ recombination_coefficient_parameter_enclos1_TMAP7 = '${units 7e-27 m^4/at/s -> m
   end_time = ${simulation_time}
   automatic_scaling = true
   nl_abs_tol = 1e-12
-  nl_rel_tol = 1e-6
-  # nl_max_its = 9
+  nl_rel_tol = 1e-2
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 1e2
@@ -181,26 +200,3 @@ recombination_coefficient_parameter_enclos1_TMAP7 = '${units 7e-27 m^4/at/s -> m
     timestep_limiting_postprocessor = max_time_step_size
   []
 []
-
-# [Executioner]
-#   type = Transient
-#   scheme = bdf2
-#   solve_type = NEWTON
-#   petsc_options_iname = '-pc_type'
-#   petsc_options_value = 'lu'
-#   nl_rel_tol = 1e-8
-#   nl_abs_tol = 1e-5
-#   l_tol = 1e-4
-#   end_time = ${simulation_time}
-#   automatic_scaling = true
-#   line_search = 'none'
-
-#   [TimeStepper]
-#     type = IterationAdaptiveDT
-#     dt = 1
-#     optimal_iterations = 4
-#     growth_factor = 1.1
-#     cutback_factor = 0.9
-#     timestep_limiting_postprocessor = max_time_step_size
-#   []
-# []

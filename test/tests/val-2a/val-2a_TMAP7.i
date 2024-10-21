@@ -80,8 +80,7 @@ nx_scale = 5
 []
 
 [Outputs]
-  # checkpoint = true
-  file_base = 'val-2a_TMAP7_test_out'
+  file_base = 'val-2a_TMAP7_out'
   csv = true
   [exodus]
     type = Exodus
