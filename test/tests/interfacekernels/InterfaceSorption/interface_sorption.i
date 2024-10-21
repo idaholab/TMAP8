@@ -8,7 +8,7 @@
 # In this input file, we apply the Sievert law with n_sorption=1/2.
 
 # Physical Constants
-R = 8.31446261815324 # J/mol/K Based on PhysicalConstants
+R = 8.31446261815324 # J/mol/K, based on number used in include/utils/PhysicalConstants.h
 
 solubility = 1.e-2
 n_sorption = 0.5

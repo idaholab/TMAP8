@@ -3,12 +3,13 @@
 # InterfaceSorption is used to enforce the sorption law and preserve flux between the blocks.
 # Checks are performed to verify concentration conservation, sorption behavior, and flux preservation.
 # This input file uses BreakMeshByBlockGenerator, which is currently only supported for replicated
-# meshes, so this file should not be run with the `parallel_type = DISTRIBUTED` flag
+# meshes, so this file should not be run with distributed meshes turned on
+# (i.e., using the `parallel_type = DISTRIBUTED` flag)!
 
 # In this input file, we apply the Sievert law with n_sorption=1/2.
 
 # Physical Constants
-R = 8.31446261815324 # J/mol/K Based on PhysicalConstants
+R = 8.31446261815324 # J/mol/K, based on number used in include/utils/PhysicalConstants.h
 
 temperature = 1000 # K
 initial_concentration = 1
