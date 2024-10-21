@@ -5,41 +5,28 @@
   nx = 20
 []
 
-[Variables]
-  [temp]
-    initial_condition = 300.0
-  []
-[]
+[Physics]
+  [HeatConduction]
+    [FiniteElement]
+      [h1]
+        temperature_name = 'temp'
 
-[Kernels]
-  [heat]
-    type = HeatConduction
-    variable = temp
-  []
-  [HeatTdot]
-    type = HeatConductionTimeDerivative
-    variable = temp
-  []
-[]
+        initial_temperature = 300
 
-[BCs]
-  [lefttemp]
-    type = DirichletBC
-    boundary = right
-    variable = temp
-    value = 300
-  []
-  [rightflux]
-    type = DirichletBC
-    boundary = left
-    variable = temp
-    value = 400
+        # Thermal properties
+        thermal_conductivity = 'thermal_conductivity'
+
+        # Boundary conditions
+        fixed_temperature_boundaries = 'right left'
+        boundary_temperatures = '300 400'
+      []
+    []
   []
 []
 
 [Materials]
   [diffusivity]
-    type = GenericConstantMaterial
+    type = ADGenericConstantMaterial
     prop_names = 'density  thermal_conductivity specific_heat'
     prop_values = '1.0 10.0 10.0' # arbitrary values for diffusivity (=k/rho-Cp) to be 1.0
   []

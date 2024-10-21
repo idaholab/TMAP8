@@ -13,57 +13,27 @@ Na = 6.02214076E23 # Avogadro's constant (from PhysicalConstants.h - https://phy
   dim = 2
 []
 
-[Variables]
-  [c_a]
-  []
-  [c_b]
-  []
-  [c_ab]
-    initial_condition = 0
-  []
-[]
+[Physics]
+  [FieldMigration]
+    [ContinuousGalerkin]
+      [all]
+        block = '0'
+        species = 'c_a c_b c_ab'
 
-[Kernels]
-  [timeDerivative_c_a]
-    type = ADTimeDerivative
-    variable = c_a
-  []
-  [timeDerivative_c_b]
-    type = TimeDerivative
-    variable = c_b
-  []
-  [timeDerivative_c_ab]
-    type = TimeDerivative
-    variable = c_ab
-  []
-  [MatReaction_b]
-    type = ADMatReactionFlexible
-    variable = c_b
-    vs = 'c_a c_b'
-    coeff = -1
-    reaction_rate_name = K
-  []
-  [MatReaction_a]
-    type = ADMatReactionFlexible
-    variable = c_a
-    vs = 'c_b c_a'
-    coeff = -1
-    reaction_rate_name = K
-  []
-  [MatReaction_ab]
-    type = ADMatReactionFlexible
-    variable = c_ab
-    vs = 'c_b c_a'
-    coeff = 1
-    reaction_rate_name = K
+        # Be careful to only enter the reaction once
+        reacting_species = 'c_b'
+        product_species = 'c_ab'
+        reaction_coefficients = 'K' #'-1; -1; 1 1'
+      []
+    []
   []
 []
 
 [Materials]
   [K]
     type = ADParsedMaterial
-    f_name = 'K'
-    function = '4.14e3' # units: molecule.micrometer^3/atom/second
+    property_name = 'K'
+    expression = '4.14e3' # units: molecule.micrometer^3/atom/second
   []
 []
 

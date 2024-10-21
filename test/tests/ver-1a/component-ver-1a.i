@@ -14,75 +14,79 @@ temperature = 2373 # K
 initial_pressure = 1e6 # Pa
 volume_enclosure = '${fparse 5.20e-11*length_unit^3}' # microns^3
 surface_area = '${fparse 2.16e-6*length_unit^2}' # microns^2
-diffusivity_SiC = '${fparse 1.58e-4*exp(-308000.0/(R*temperature))*length_unit^2}' # microns^2/s
-solubility_constant = '${fparse  7.244e22/(temperature * length_unit^3)}' # atoms/microns^3/Pa = atoms*s^2/m^2/kg
-slab_thickness = '${fparse  3.30e-5*length_unit}' # microns
+diffusivity_SiC = '${fparse 1.58e-4 * exp(-308000.0 / (R * temperature)) * length_unit^2}' # microns^2/s
+solubility_constant = '${fparse 7.244e22 / (temperature)}' # atoms/microns^3/Pa
+slab_thickness = '${fparse  3.30e-5 * length_unit}' # microns
 
 # Useful equations/conversions
 concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_unit^3}' # J = Pa*microns^3
+pressure_unit = 1 # number of pressure units in a Pascal
 
-[Mesh]
-  type = GeneratedMesh
-  dim = 1
-  nx = 150
-  xmax = '${slab_thickness}'
-[]
+[Physics]
+  [SpeciesTrapping]
+    [ODE]
+      [0d_trapping]
+        species = 'v'
+        # should not be scaled
+        equilibrium_constants = ${solubility_constant}
 
-[Variables]
-  # concentration in the SiC layer in atoms/microns^3
-  [u]
-  []
-  # pressure of the enclosure in Pa
-  [v]
-    family = SCALAR
-    order = FIRST
-    initial_condition = '${fparse initial_pressure}'
-  []
-[]
+        # These parameters can be passed for each component here in lieu of fetching them from the components
+        # initial_values = '${initial_pressure}'
+        # temperatures = ${temperature}
 
-[Kernels]
-  [diff]
-    type = MatDiffusion
-    variable = u
-    diffusivity = '${diffusivity_SiC}'
-  []
-  [time]
-    type = TimeDerivative
-    variable = u
-  []
-[]
+        verbose = true
 
-[ScalarKernels]
-  [time]
-    type = ODETimeDerivative
-    variable = v
+        # If the initial pressure had not been scaled (=1 right now)
+        pressure_unit_scaling = ${pressure_unit}
+        # Volume and area of the enclosure have not been pre-scaled
+        length_unit_scaling = ${length_unit}
+      []
+    []
   []
-  [flux_sink]
-    type = EnclosureSinkScalarKernel
-    variable = v
-    flux = scaled_flux_surface_left
-    surface_area = '${surface_area}'
-    volume = '${volume_enclosure}'
-    concentration_to_pressure_conversion_factor = '${concentration_to_pressure_conversion_factor}'
+  [Diffusion]
+    [ContinuousGalerkin]
+      [multi-D]
+        variable_name = 'u'
+        diffusivity_matprop = ${diffusivity_SiC}
+
+        # To help coupling to trapping
+        compute_diffusive_fluxes_on = 'structure_left'
+
+        dirichlet_boundaries = 'structure_right'
+        boundary_values = '0'
+      []
+    []
   []
 []
 
-[BCs]
-  # The concentration on the outer boundary of the SiC layer is kept at 0
-  [right]
-    type = DirichletBC
-    value = 0
-    variable = u
-    boundary = 'right'
+[SystemComponents]
+  [structure]
+    type = Structure1D
+    species = 'u'
+    physics = 'multi-D'
+
+    # Geometry
+    nx = 150
+    xmax = ${slab_thickness}
+    length_unit_scaling = 1
   []
-  # The surface of the slab in contact with the source is assumed to be in equilibrium with the source enclosure
-  [left]
-    type = EquilibriumBC
-    variable = u
-    enclosure_var = v
-    boundary = 'left'
-    Ko = '${solubility_constant}'
+
+  [enc]
+    type = Enclosure0D
+    species = 'v'
+    physics = '0d_trapping'
+
+    # Conditions
     temperature = ${temperature}
+    species_initial_pressures = '${initial_pressure}'
+
+    # Geometry
+    surface_area = 2.16e-6
+    volume = 5.2e-11
+
+    # Connection to structures
+    connected_structure = 'structure'
+    boundary = 'structure_left'
   []
 []
 
@@ -92,7 +96,7 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
     type = SideDiffusiveFluxIntegral
     variable = u
     diffusivity = '${diffusivity_SiC}'
-    boundary = 'right'
+    boundary = 'structure_right'
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = 'console csv exodus'
   []
@@ -101,7 +105,7 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
     type = SideDiffusiveFluxIntegral
     variable = u
     diffusivity = '${diffusivity_SiC}'
-    boundary = 'left'
+    boundary = 'structure_left'
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = ''
   []
@@ -117,7 +121,7 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
   [integral_release_flux_right]
     type = PressureReleaseFluxIntegral
     variable = u
-    boundary = 'right'
+    boundary = 'structure_right'
     diffusivity = '${diffusivity_SiC}'
     surface_area = '${surface_area}'
     volume = '${volume_enclosure}'
@@ -140,7 +144,7 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
   # Make a postprocessor take the value of the scalar value v
   [v_value]
     type = ScalarVariable
-    variable = v
+    variable = v_enc
   []
   # released fraction based on inner layer flux on v - compare to TMAP7
   [released_fraction_left]
@@ -148,6 +152,13 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
     pp_names = 'v_value'
     pp_coefs = '${fparse -1./(initial_pressure)}'
     b = 1
+  []
+[]
+
+[Preconditioning]
+  [smp]
+    type = SMP
+    full = true
   []
 []
 
