@@ -19,16 +19,16 @@ One known non-physical feature in the modeling is that the cleanup of the upstre
 | 17678 - 20000 | 9$\times 10^{-6}$          | 0                            |
 
 !table id=val-2a_set_up_values_TMAP7 caption=Values of material properties.
-| Parameter | Description                       | Value                                               | Units           |
-| --------- | --------------------------------- | --------------------------------------------------- | --------------- |
-| $K_{d,l}$ | dissociation constant on left     | 8.959$\times 10^{18} (1-0.999997 \exp(-1.2e-4))$    | at/m^2/s/Pa^0.5 |
-| $K_{d,r}$ | dissociation constant on right    | 1.7918$\times 10^{15}$                              | at/m^2/s/Pa^0.5 |
-| $K_{r,l}$ | recombination constant on left    | 7$\times 10^{-27} (1-0.999997 \exp(-1.2e-4))$       | m^4/at/s        |
-| $K_{r,r}$ | recombination constant on right   | 2$\times 10^{-31}$                                  | m^4/at/s        |
-| $D$       | deuterium diffusivity in PCA      | 3$\times 10^{-10}$                                  | m$^2$/2         |
-| $d$       | diameter of PCA                   | 0.025                                               | m               |
-| $l$       | thickness of PCA                  | 5\times 10^{-4}                                     | m               |
-| $T$       | temperature                       | 703                                                 | K               |
+| Parameter | Description                       | Value                                                           | Units                 |
+| --------- | --------------------------------- | --------------------------------------------------------------- | --------------------- |
+| $K_{d,l}$ | dissociation constant on left     | 8.959 $\times 10^{18} (1-0.999997 \exp(-1.2 \times 10^{-4} t))$ | at/m$^2$/s/Pa$^{0.5}$ |
+| $K_{d,r}$ | dissociation constant on right    | 1.7918 $\times 10^{15}$                                         | at/m$^2$/s/Pa$^{0.5}$ |
+| $K_{r,l}$ | recombination constant on left    | 7$\times 10^{-27} (1-0.999997 \exp(-1.2 \times 10^{-4} t))$     | m$^4$/at/s            |
+| $K_{r,r}$ | recombination constant on right   | 2$\times 10^{-31}$                                              | m$^4$/at/s            |
+| $D$       | deuterium diffusivity in PCA      | 3$\times 10^{-10}$                                              | m$^2$/2               |
+| $d$       | diameter of PCA                   | 0.025                                                           | m                     |
+| $l$       | thickness of PCA                  | 5$\times 10^{-4}$                                               | m                     |
+| $T$       | temperature                       | 703                                                             | K                     |
 
 
 !table id=val-2a_flux_and_pressure_TMAP4 caption=Values of beam flux and pressure on the left side during experiment.
@@ -42,16 +42,16 @@ One known non-physical feature in the modeling is that the cleanup of the upstre
 | 18180 - 20000 | 9$\times 10^{-6}$          | 0                            |
 
 !table id=val-2a_set_up_values_TMAP4 caption=Values of material properties.
-| Parameter | Description                       | Value                                               | Units           |
-| --------- | --------------------------------- | --------------------------------------------------- | --------------- |
-| $K_{d,l}$ | dissociation constant on left     | 8.959$\times 10^{18} (1-0.999997 \exp(-6e-5))$    | at/m^2/s/Pa^0.5 |
-| $K_{d,r}$ | dissociation constant on right    | 1.7918$\times 10^{15}$                              | at/m^2/s/Pa^0.5 |
-| $K_{r,l}$ | recombination constant on left    | 1$\times 10^{-27} (1-0.999997 \exp(-6e-5))$       | m^4/at/s        |
-| $K_{r,r}$ | recombination constant on right   | 2$\times 10^{-31}$                                  | m^4/at/s        |
-| $D$       | deuterium diffusivity in PCA      | 3$\times 10^{-10}$                                  | m$^2$/2         |
-| $d$       | diameter of PCA                   | 0.025                                               | m               |
-| $l$       | thickness of PCA                  | 5\times 10^{-4}                                     | m               |
-| $T$       | temperature                       | 703                                                 | K               |
+| Parameter | Description                       | Value                                                       | Units                 |
+| --------- | --------------------------------- | ----------------------------------------------------------- | --------------------- |
+| $K_{d,l}$ | dissociation constant on left     | 8.959 $\times 10^{18} (1-0.9999 \exp(-6 \times 10^{-5} t))$ | at/m$^2$/s/Pa$^{0.5}$ |
+| $K_{d,r}$ | dissociation constant on right    | 1.7918$\times 10^{15}$                                      | at/m$^2$/s/Pa$^{0.5}$ |
+| $K_{r,l}$ | recombination constant on left    | 1$\times 10^{-27} (1-0.9999 \exp(-6 \times 10^{-5} t))$     | m$^4$/at/s            |
+| $K_{r,r}$ | recombination constant on right   | 2$\times 10^{-31}$                                          | m$^4$/at/s            |
+| $D$       | deuterium diffusivity in PCA      | 3$\times 10^{-10}$                                          | m$^2$/2               |
+| $d$       | diameter of PCA                   | 0.025                                                       | m                     |
+| $l$       | thickness of PCA                  | 5$\times 10^{-4}$                                           | m                     |
+| $T$       | temperature                       | 703                                                         | K                     |
 
 Due to the parameters from TMAP4 and TMAP7 are different, the case considers both situations. In TMAP7, the beam flux and the pressure on the left during the experiment are presented in [val-2a_flux_and_pressure_TMAP7]. Other parameters are shown in [val-2a_set_up_values_TMAP7]. From TRIM, the peak flux from 5 nm to 9 nm is 0.15 $\times$ beam flux, the peak flux from 9 nm to 13 nm is 0.70 $\times$ beam flux, and peak beam flux from 13 nm to 17 nm is 0.15 $\times$ beam flux. The permeation flux from the sample gives a good fit to the experimental data as shown in [val-2a_comparison_TMAP7]. In TMAP4, the beam flux and the pressure on the left during the experiment are presented in [val-2a_flux_and_pressure_TMAP4]. Other parameters are shown in [val-2a_set_up_values_TMAP4]. From TRIM, the peak flux from 8 nm to 12 nm is 0.25 $\times$ beam flux, the peak flux from 12 nm to 16 nm is 1.0 $\times$ beam flux, and peak beam flux from 16 nm to 20 nm is 0.25 $\times$ beam flux. The permeation flux from the sample gives a good fit to the experimental data as shown in [val-2a_comparison_TMAP4].
 
@@ -79,6 +79,6 @@ Due to the parameters from TMAP4 and TMAP7 are different, the case considers bot
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/val-2a.i], which is also used as test in TMAP8 at [/val-2a/tests].
+The input files for this case can be found at [/val-2a_base.i], [/val-2a_TMAP4.i], and [/val-2a_TMAP7.i], which are also used as test in TMAP8 at [/val-2a/tests].
 
 !bibtex bibliography
