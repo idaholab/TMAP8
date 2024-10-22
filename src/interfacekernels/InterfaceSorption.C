@@ -32,7 +32,7 @@ InterfaceSorptionTempl<is_ad>::validParams()
                                 "The pre-exponential factor for the Arrhenius law for the "
                                 "solubility $K$ for the relationship $C_i = KP_i^n$");
   params.addParam<Real>("Ea",
-                        0,
+                        0.,
                         "The activation energy for the Arrhenius law for the solubility $K$ for "
                         "the relationship $C_i = KP_i^n$");
   params.addRequiredParam<Real>("n_sorption",
@@ -96,30 +96,33 @@ InterfaceSorptionTempl<is_ad>::computeQpResidual(Moose::DGResidualType type)
   const GenericReal<is_ad> temperature_limited = std::max(small, _T[_qp]);
   const auto R = PhysicalConstants::ideal_gas_constant; // ideal gas constant (J/K/mol)
 
-  GenericReal<is_ad> r = 0; // residual
+  GenericReal<is_ad> residual = 0.;
+
+  // The unit scaling affects the residual of the sorption equation, but not the flux equation.
+  // Otherwise mass is not conserved.
 
   switch (type)
   {
     case Moose::Element:
     {
-      r = _test[_i][_qp] * _sorption_penalty *
-          (u - _K0 * std::exp(-_Ea / R / temperature_limited) *
-                   std::pow(u_neighbor * R * temperature_limited, _n_sorption));
+      residual = _test[_i][_qp] * _sorption_penalty *
+                 (u - _K0 * std::exp(-_Ea / R / temperature_limited) *
+                          std::pow(u_neighbor * R * temperature_limited, _n_sorption));
       break;
     }
 
     case Moose::Neighbor:
     {
       if (_use_flux_penalty)
-        r = _test_neighbor[_i][_qp] * _flux_penalty * _normals[_qp] *
-            (_diffusivity[_qp] * _grad_u[_qp] -
-             (*_diffusivity_neighbor)[_qp] * _grad_neighbor_value[_qp]);
+        residual = _test_neighbor[_i][_qp] * _flux_penalty * _normals[_qp] *
+                   (_diffusivity[_qp] * _grad_u[_qp] -
+                    (*_diffusivity_neighbor)[_qp] * _grad_neighbor_value[_qp]);
       else
-        r = _test_neighbor[_i][_qp] * _normals[_qp] * _diffusivity[_qp] * _grad_u[_qp];
+        residual = _test_neighbor[_i][_qp] * _normals[_qp] * _diffusivity[_qp] * _grad_u[_qp];
       break;
     }
   }
-  return r;
+  return residual;
 }
 
 template <>
@@ -132,36 +135,40 @@ InterfaceSorptionTempl<false>::computeQpJacobian(Moose::DGJacobianType type)
   const Real temperature_limited = std::max(small, _T[_qp]);
   const auto R = PhysicalConstants::ideal_gas_constant; // ideal gas constant (J/K/mol)
 
-  Real jac = 0; // jacobian
+  Real jacobian = 0.; // jacobian
+
+  // The unit scaling affects the jacobian of the sorption equation, but not the flux equation.
+  // Otherwise mass is not conserved.
 
   switch (type)
   {
     case Moose::ElementElement:
-      jac = _test[_i][_qp] * _sorption_penalty * _phi[_j][_qp] * (1);
+      jacobian = _test[_i][_qp] * _sorption_penalty * _phi[_j][_qp] * (1);
       break;
 
     case Moose::ElementNeighbor:
-      jac = -_test[_i][_qp] * _sorption_penalty * _phi_neighbor[_j][_qp] *
-            (_K0 * std::exp(-_Ea / R / temperature_limited) *
-             std::pow(R * temperature_limited, _n_sorption) * _n_sorption *
-             std::pow(u_neighbor, _n_sorption - 1));
+      jacobian = -_test[_i][_qp] * _sorption_penalty * _unit_scale_neighbor / _unit_scale *
+                 _phi_neighbor[_j][_qp] *
+                 (_K0 * std::exp(-_Ea / R / temperature_limited) *
+                  std::pow(R * temperature_limited, _n_sorption) * _n_sorption *
+                  std::pow(u_neighbor, _n_sorption - 1.));
       break;
 
     case Moose::NeighborElement:
       if (_use_flux_penalty)
-        jac = _test_neighbor[_i][_qp] * _flux_penalty * _normals[_qp] * _diffusivity[_qp] *
-              _grad_phi[_j][_qp];
+        jacobian = _test_neighbor[_i][_qp] * _flux_penalty * _normals[_qp] * _diffusivity[_qp] *
+                   _grad_phi[_j][_qp];
       else
-        jac = _test_neighbor[_i][_qp] * _diffusivity[_qp] * _grad_phi[_j][_qp] * _normals[_qp];
+        jacobian = _test_neighbor[_i][_qp] * _diffusivity[_qp] * _grad_phi[_j][_qp] * _normals[_qp];
       break;
 
     case Moose::NeighborNeighbor:
       if (_use_flux_penalty)
-        jac = -_test_neighbor[_i][_qp] * _flux_penalty * _normals[_qp] *
-              (*_diffusivity_neighbor)[_qp] * _grad_phi_neighbor[_j][_qp];
+        jacobian = -_test_neighbor[_i][_qp] * _flux_penalty * _normals[_qp] *
+                   (*_diffusivity_neighbor)[_qp] * _grad_phi_neighbor[_j][_qp];
       break;
   }
-  return jac;
+  return jacobian;
 }
 
 template <>

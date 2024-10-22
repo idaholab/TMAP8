@@ -1,4 +1,4 @@
-# This test is to verify the implementation of InterfaceSorption and its AD counterpart.
+# This test is to verify the implementation of InterfaceSorption and its AD counterpart in transient conditions.
 # It contains two 1D blocks separated by a continuous interface.
 # InterfaceSorption is used to enforce the sorption law and preserve flux between the blocks.
 # Checks are performed to verify concentration conservation, sorption behavior, and flux preservation.
@@ -10,8 +10,10 @@
 # Physical Constants
 R = 8.31446261815324 # J/mol/K, based on number used in include/utils/PhysicalConstants.h
 
-solubility = 1.e-2
+temperature = 1000 # K
+initial_concentration = 1
 n_sorption = 0.5
+solubility = ${fparse 2/R^n_sorption/temperature^n_sorption}
 
 unit_scale = 1
 unit_scale_neighbor = 1
@@ -54,69 +56,58 @@ unit_scale_neighbor = 1
 [Variables]
   [u1]
     block = 1
+    initial_condition = ${initial_concentration}
   []
   [u2]
     block = 2
+    initial_condition = ${initial_concentration}
   []
   [temperature]
+    initial_condition = ${temperature}
   []
 []
 
 [Kernels]
-  [u1]
+  [u1_time_derivative]
+    type = TimeDerivative
+    variable = u1
+    block = 1
+  []
+  [u1_diffusion]
     type = MatDiffusion
     variable = u1
     diffusivity = diffusivity
     block = 1
   []
-  [u2]
+  [u2_time_derivative]
+    type = TimeDerivative
+    variable = u2
+    block = 2
+  []
+  [u2_diffusion]
     type = MatDiffusion
     variable = u2
     diffusivity = diffusivity
     block = 2
   []
   [temperature]
-    type = HeatConduction
+    type = TimeDerivative
     variable = temperature
   []
 []
 
 [BCs]
   [left_u1]
-    type = DirichletBC
-    value = 1
+    type = NeumannBC
+    value = 0
     variable = u1
     boundary = left
   []
   [right_u2]
-    type = DirichletBC
-    value = 1
+    type = NeumannBC
+    value = 0
     variable = u2
     boundary = right
-  []
-  [left_temperature]
-    type = DirichletBC
-    value = 1100
-    variable = temperature
-    boundary = left
-  []
-  [right_temperature]
-    type = DirichletBC
-    value = 0
-    variable = temperature
-    boundary = right
-  []
-  [block1_2_temperature]
-    type = DirichletBC
-    value = 1000
-    variable = temperature
-    boundary = Block1_Block2
-  []
-  [block2_1_temperature]
-    type = DirichletBC
-    value = 900
-    variable = temperature
-    boundary = Block2_Block1
   []
 []
 
@@ -140,14 +131,14 @@ unit_scale_neighbor = 1
 [Materials]
   [properties_1]
     type = GenericConstantMaterial
-    prop_names = 'thermal_conductivity diffusivity'
-    prop_values = '1 1'
-    block = 1
+    prop_names = 'diffusivity thermal_conductivity '
+    prop_values = '0.2 1'
+    block = '1'
   []
   [properties_2]
     type = GenericConstantMaterial
-    prop_names = 'thermal_conductivity diffusivity solubility'
-    prop_values = '2 2 ${solubility}'
+    prop_names = 'diffusivity solubility thermal_conductivity'
+    prop_values = '0.2 ${solubility} 1'
     block = 2
   []
 []
@@ -161,9 +152,9 @@ unit_scale_neighbor = 1
   []
   [residual_concentration]
     type = ParsedFunction
-    symbol_names = 'u_mid_inner u_mid_outer T'
-    symbol_values = 'u_mid_inner u_mid_outer temperature_mid_inner'
-    expression = 'u_mid_outer*${unit_scale} - ${solubility}*(u_mid_inner*${unit_scale_neighbor}*${R}*T)^${n_sorption}'
+    symbol_names = 'u_mid_inner u_mid_outer'
+    symbol_values = 'u_mid_inner u_mid_outer '
+    expression = 'u_mid_outer*${unit_scale} - ${solubility}*(u_mid_inner*${unit_scale_neighbor}*${R}*${temperature})^${n_sorption}'
   []
   [flux_error]
     type = ParsedFunction
@@ -181,16 +172,13 @@ unit_scale_neighbor = 1
 []
 
 [Executioner]
-  type = Steady
+  type = Transient
   solve_type = NEWTON
 
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
   petsc_options_value = 'lu superlu_dist'
-  line_search = none
-
-  nl_rel_tol = 1e-15
-  nl_abs_tol = 1e-9
-  l_tol = 1e-3
+  dt = 0.1
+  end_time = 5
 []
 
 [Postprocessors]
@@ -211,17 +199,20 @@ unit_scale_neighbor = 1
     function = u_mid_diff
     outputs = 'csv console'
   []
-  [temperature_mid_inner]
-    type = PointValue
-    variable = temperature
-    point = '0.49999 0 0'
-    outputs = csv
+  [u1_inventory]
+    type = ElementIntegralVariablePostprocessor
+    variable = u1
+    block = 1
   []
-  [temperature_mid_outer]
-    type = PointValue
-    variable = temperature
-    point = '0.50001 0 0'
-    outputs = csv
+  [u2_inventory]
+    type = ElementIntegralVariablePostprocessor
+    variable = u2
+    block = 2
+  []
+  [mass_conservation_sum_u1_u2]
+    type = LinearCombinationPostprocessor
+    pp_names = 'u1_inventory u2_inventory'
+    pp_coefs = '1            1'
   []
   [residual_concentration]
     type = FunctionValuePostprocessor
