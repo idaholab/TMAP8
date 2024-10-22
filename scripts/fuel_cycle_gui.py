@@ -41,7 +41,7 @@ class fuel_cycle_form(tk.Tk):
             raise OSError('Unable to locate a working TMAP8 executable')
         pattern = re.compile('\[(?P<variable>[0-9a-zA-Z_]+)\]\ntype = ConstantPostprocessor\nexecute_on = \'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR\'\nvalue\s?=\s*(?P<valnum>[0-9e.-]+)\n\[]',re.MULTILINE)
         instring = ''
-        test_path = os.path.join(dir_path,'..','test','tests','fuel-cycle','fuel_cycle.i') 
+        test_path = os.path.join(dir_path,'..','test','tests','fuel-cycle','fuel_cycle.i')
         if not os.path.isfile(test_path):
             raise OSError('Unable to locate the fuel cycle input file')
         with open(test_path,'r') as infile:
