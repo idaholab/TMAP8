@@ -7,8 +7,8 @@
     requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions.'
     type = 'Exodiff'
     input = 'interface_sorption.i'
-    cli_args = 'Outputs/file_base=interface_sorption_Sievert_out'
-    exodiff = 'interface_sorption_Sievert_out.e'
+    cli_args = 'Outputs/file_base=interface_sorption_Sievert_non_ad_out'
+    exodiff = 'interface_sorption_Sievert_non_ad_out.e'
     abs_zero = 1e-7
     mesh_mode = REPLICATED
   []
@@ -18,9 +18,8 @@
     input = 'interface_sorption.i'
     cli_args = 'InterfaceKernels/interface/use_flux_penalty=true
                 InterfaceKernels/interface/flux_penalty=1e5
-                Outputs/file_base=interface_sorption_Sievert_out'
-    exodiff = 'interface_sorption_Sievert_out.e'
-    prereq = Sievert_non_ad
+                Outputs/file_base=interface_sorption_Sievert_non_ad_penalty_out'
+    exodiff = 'interface_sorption_Sievert_non_ad_penalty_out.e'
     abs_zero = 1e-7
     mesh_mode = REPLICATED
   []
@@ -37,9 +36,8 @@
                 Materials/properties_2/type=ADGenericConstantMaterial
                 Postprocessors/flux_inner/type=ADSideDiffusiveFluxIntegral
                 Postprocessors/flux_outer/type=ADSideDiffusiveFluxIntegral
-                Outputs/file_base=interface_sorption_Sievert_out'
-    exodiff = 'interface_sorption_Sievert_out.e'
-    prereq = Sievert_non_ad
+                Outputs/file_base=interface_sorption_Sievert_ad_out'
+    exodiff = 'interface_sorption_Sievert_ad_out.e'
     abs_zero = 1e-7
     mesh_mode = REPLICATED
   []
@@ -57,9 +55,8 @@
                 Materials/properties_2/type=ADGenericConstantMaterial
                 Postprocessors/flux_inner/type=ADSideDiffusiveFluxIntegral
                 Postprocessors/flux_outer/type=ADSideDiffusiveFluxIntegral
-                Outputs/file_base=interface_sorption_Sievert_out'
-    exodiff = 'interface_sorption_Sievert_out.e'
-    prereq = Sievert_ad
+                Outputs/file_base=interface_sorption_Sievert_ad_penalty_out'
+    exodiff = 'interface_sorption_Sievert_ad_penalty_out.e'
     abs_zero = 1e-7
     mesh_mode = REPLICATED
   []
@@ -68,8 +65,8 @@
     requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions.'
     type = 'Exodiff'
     input = 'interface_sorption.i'
-    cli_args = 'InterfaceKernels/interface/n_sorption=1 Outputs/file_base=interface_sorption_Henry_out'
-    exodiff = 'interface_sorption_Henry_out.e'
+    cli_args = 'InterfaceKernels/interface/n_sorption=1 Outputs/file_base=interface_sorption_Henry_non_ad_out'
+    exodiff = 'interface_sorption_Henry_non_ad_out.e'
     abs_zero = 1e-7
     mesh_mode = REPLICATED
   []
@@ -80,9 +77,8 @@
     cli_args = 'InterfaceKernels/interface/use_flux_penalty=true
                 InterfaceKernels/interface/flux_penalty=1e5
                 InterfaceKernels/interface/n_sorption=1
-                Outputs/file_base=interface_sorption_Henry_out'
-    exodiff = 'interface_sorption_Henry_out.e'
-    prereq = Henry_non_ad
+                Outputs/file_base=interface_sorption_Henry_non_ad_penalty_out'
+    exodiff = 'interface_sorption_Henry_non_ad_penalty_out.e'
     abs_zero = 1e-7
     mesh_mode = REPLICATED
   []
@@ -100,9 +96,8 @@
                 Materials/properties_2/type=ADGenericConstantMaterial
                 Postprocessors/flux_inner/type=ADSideDiffusiveFluxIntegral
                 Postprocessors/flux_outer/type=ADSideDiffusiveFluxIntegral
-                Outputs/file_base=interface_sorption_Henry_out'
-    exodiff = 'interface_sorption_Henry_out.e'
-    prereq = Henry_non_ad
+                Outputs/file_base=interface_sorption_Henry_ad_out'
+    exodiff = 'interface_sorption_Henry_ad_out.e'
     abs_zero = 1e-7
     mesh_mode = REPLICATED
   []
@@ -121,10 +116,271 @@
                 Materials/properties_2/type=ADGenericConstantMaterial
                 Postprocessors/flux_inner/type=ADSideDiffusiveFluxIntegral
                 Postprocessors/flux_outer/type=ADSideDiffusiveFluxIntegral
-                Outputs/file_base=interface_sorption_Henry_out'
-    exodiff = 'interface_sorption_Henry_out.e'
-    prereq = Henry_ad
+                Outputs/file_base=interface_sorption_Henry_ad_penalty_out'
+    exodiff = 'interface_sorption_Henry_ad_penalty_out.e'
     abs_zero = 1e-7
     mesh_mode = REPLICATED
+  []
+
+  [Sievert_transient_non_ad]
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions during transient simulations.'
+    type = 'Exodiff'
+    input = 'interface_sorption_transient.i'
+    cli_args = 'Outputs/file_base=interface_sorption_transient_Sievert_non_ad_out'
+    exodiff = 'interface_sorption_transient_Sievert_non_ad_out.e'
+    mesh_mode = REPLICATED
+    recover = false # this is discussed in #196
+  []
+  [Sievert_transient_ad]
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using automatic differentiation during transient simulations.'
+    type = 'Exodiff'
+    input = 'interface_sorption_transient.i'
+    cli_args = 'Kernels/u1_time_derivative/type=ADTimeDerivative
+                Kernels/u2_time_derivative/type=ADTimeDerivative
+                Kernels/temperature/type=ADTimeDerivative
+                Kernels/u1_diffusion/type=ADMatDiffusion
+                Kernels/u2_diffusion/type=ADMatDiffusion
+                Kernels/temperature/type=ADHeatConduction
+                InterfaceKernels/interface/type=ADInterfaceSorption
+                Materials/properties_1/type=ADGenericConstantMaterial
+                Materials/properties_1/type=ADGenericConstantMaterial
+                Materials/properties_2/type=ADGenericConstantMaterial
+                Postprocessors/flux_inner/type=ADSideDiffusiveFluxIntegral
+                Postprocessors/flux_outer/type=ADSideDiffusiveFluxIntegral
+                Outputs/file_base=interface_sorption_transient_Sievert_ad_out
+                Executioner/nl_rel_tol=1e-7
+                Executioner/nl_abs_tol=1e-12'
+    exodiff = 'interface_sorption_transient_Sievert_ad_out.e'
+    mesh_mode = REPLICATED
+    recover = false # this is discussed in #196
+  []
+
+  [Sievert_transient_non_ad_scaling]
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions during transient simulations with unit scaling on both variables.'
+    type = 'Exodiff'
+    input = 'interface_sorption_transient.i'
+    cli_args = 'unit_scale=4
+                unit_scale_neighbor=6
+                Outputs/file_base=interface_sorption_transient_Sievert_non_ad_scaling_out'
+    exodiff = 'interface_sorption_transient_Sievert_non_ad_scaling_out.e'
+    mesh_mode = REPLICATED
+    recover = false # this is discussed in #196
+  []
+  [Sievert_transient_ad_scaling]
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using automatic differentiation during transient simulations with unit scaling on both variables.'
+    type = 'Exodiff'
+    input = 'interface_sorption_transient.i'
+    cli_args = 'unit_scale=4
+                unit_scale_neighbor=6
+                Kernels/u1_time_derivative/type=ADTimeDerivative
+                Kernels/u2_time_derivative/type=ADTimeDerivative
+                Kernels/temperature/type=ADTimeDerivative
+                Kernels/u1_diffusion/type=ADMatDiffusion
+                Kernels/u2_diffusion/type=ADMatDiffusion
+                Kernels/temperature/type=ADHeatConduction
+                InterfaceKernels/interface/type=ADInterfaceSorption
+                Materials/properties_1/type=ADGenericConstantMaterial
+                Materials/properties_1/type=ADGenericConstantMaterial
+                Materials/properties_2/type=ADGenericConstantMaterial
+                Postprocessors/flux_inner/type=ADSideDiffusiveFluxIntegral
+                Postprocessors/flux_outer/type=ADSideDiffusiveFluxIntegral
+                Outputs/file_base=interface_sorption_transient_Sievert_ad_scaling_out
+                Executioner/nl_abs_tol=5e-12'
+    exodiff = 'interface_sorption_transient_Sievert_ad_scaling_out.e'
+    mesh_mode = REPLICATED
+    recover = false # this is discussed in #196
+  []
+  [Sievert_transient_non_ad_penalty_scaling]
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using a penalty-enforced flux balance during transient simulations with unit scaling on both variables.'
+    type = 'Exodiff'
+    input = 'interface_sorption_transient.i'
+    cli_args = 'unit_scale=4
+                unit_scale_neighbor=6
+                InterfaceKernels/interface/use_flux_penalty=true
+                InterfaceKernels/interface/flux_penalty=1e1
+                Outputs/file_base=interface_sorption_transient_Sievert_non_ad_penalty_scaling_out'
+    exodiff = 'interface_sorption_transient_Sievert_non_ad_penalty_scaling_out.e'
+    mesh_mode = REPLICATED
+    recover = false # this is discussed in #196
+  []
+  [Sievert_transient_non_ad_penalty_scaling_comparison]
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using a penalty-enforced flux balance during transient simulations with unit scaling on both variables and provide similar results to the approach without the penalty-enforced flux balance.'
+    type = 'Exodiff'
+    input = 'interface_sorption_transient.i'
+    cli_args = 'unit_scale=4
+                unit_scale_neighbor=6
+                InterfaceKernels/interface/use_flux_penalty=true
+                InterfaceKernels/interface/flux_penalty=1e1
+                Outputs/file_base=interface_sorption_transient_Sievert_non_ad_penalty_scaling_comparison_out'
+    exodiff = 'interface_sorption_transient_Sievert_non_ad_penalty_scaling_comparison_out.e'
+    # compared to Sievert_transient_non_ad_scaling because it is supposed to be equivalent,
+    # but the residuals are expected to be different when the penalty is used, so the relative error tolerance is increased here
+    rel_err = 8.5e-2
+    mesh_mode = REPLICATED
+    recover = false # this is discussed in #196
+  []
+
+  [Sievert_transient_ad_penalty_scaling]
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Sievert law in isothermal conditions using automatic differentiation and a penalty-enforced flux balance during transient simulations with unit scaling on both variables.'
+    type = 'Exodiff'
+    input = 'interface_sorption_transient.i'
+    cli_args = 'unit_scale=4
+                unit_scale_neighbor=6
+                Kernels/u1_time_derivative/type=ADTimeDerivative
+                Kernels/u2_time_derivative/type=ADTimeDerivative
+                Kernels/temperature/type=ADTimeDerivative
+                Kernels/u1_diffusion/type=ADMatDiffusion
+                Kernels/u2_diffusion/type=ADMatDiffusion
+                Kernels/temperature/type=ADHeatConduction
+                InterfaceKernels/interface/type=ADInterfaceSorption
+                Materials/properties_1/type=ADGenericConstantMaterial
+                Materials/properties_1/type=ADGenericConstantMaterial
+                Materials/properties_2/type=ADGenericConstantMaterial
+                Postprocessors/flux_inner/type=ADSideDiffusiveFluxIntegral
+                Postprocessors/flux_outer/type=ADSideDiffusiveFluxIntegral
+                InterfaceKernels/interface/use_flux_penalty=true
+                InterfaceKernels/interface/flux_penalty=1e1
+                Outputs/file_base=interface_sorption_transient_Sievert_ad_penalty_scaling_out
+                Executioner/nl_abs_tol=1e-12'
+    exodiff = 'interface_sorption_transient_Sievert_ad_penalty_scaling_out.e'
+    # compared to Sievert_transient_non_ad_scaling because it is supposed to be equivalent,
+    # but the residuals are expected to be different when the penalty is used, so the relative error tolerance is increased here
+    rel_err = 8.5e-2
+    mesh_mode = REPLICATED
+    recover = false # this is discussed in #196
+  []
+
+  [Henry_transient_non_ad]
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions during transient simulations.'
+    type = 'Exodiff'
+    input = 'interface_sorption_transient.i'
+    cli_args = 'n_sorption=1
+                Outputs/file_base=interface_sorption_transient_Henry_non_ad_out'
+    exodiff = 'interface_sorption_transient_Henry_non_ad_out.e'
+    mesh_mode = REPLICATED
+    recover = false # this is discussed in #196
+  []
+  [Henry_transient_ad]
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions using automatic differentiation during transient simulations.'
+    type = 'Exodiff'
+    input = 'interface_sorption_transient.i'
+    cli_args = 'n_sorption=1
+                Kernels/u1_time_derivative/type=ADTimeDerivative
+                Kernels/u2_time_derivative/type=ADTimeDerivative
+                Kernels/temperature/type=ADTimeDerivative
+                Kernels/u1_diffusion/type=ADMatDiffusion
+                Kernels/u2_diffusion/type=ADMatDiffusion
+                Kernels/temperature/type=ADHeatConduction
+                InterfaceKernels/interface/type=ADInterfaceSorption
+                Materials/properties_1/type=ADGenericConstantMaterial
+                Materials/properties_1/type=ADGenericConstantMaterial
+                Materials/properties_2/type=ADGenericConstantMaterial
+                Postprocessors/flux_inner/type=ADSideDiffusiveFluxIntegral
+                Postprocessors/flux_outer/type=ADSideDiffusiveFluxIntegral
+                Outputs/file_base=interface_sorption_transient_Henry_ad_out
+                Executioner/nl_rel_tol=1e-7
+                Executioner/nl_abs_tol=1e-12'
+    exodiff = 'interface_sorption_transient_Henry_ad_out.e'
+    mesh_mode = REPLICATED
+    recover = false # this is discussed in #196
+  []
+
+  [Henry_transient_non_ad_scaling]
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions during transient simulations with unit scaling on both variables.'
+    type = 'Exodiff'
+    input = 'interface_sorption_transient.i'
+    cli_args = 'n_sorption=1
+                unit_scale=4
+                unit_scale_neighbor=6
+                Outputs/file_base=interface_sorption_transient_Henry_non_ad_scaling_out'
+    exodiff = 'interface_sorption_transient_Henry_non_ad_scaling_out.e'
+    mesh_mode = REPLICATED
+    recover = false # this is discussed in #196
+  []
+  [Henry_transient_ad_scaling]
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions using automatic differentiation during transient simulation with unit scaling on both variables.'
+    type = 'Exodiff'
+    input = 'interface_sorption_transient.i'
+    cli_args = 'n_sorption=1
+                unit_scale=4
+                unit_scale_neighbor=6
+                Kernels/u1_time_derivative/type=ADTimeDerivative
+                Kernels/u2_time_derivative/type=ADTimeDerivative
+                Kernels/temperature/type=ADTimeDerivative
+                Kernels/u1_diffusion/type=ADMatDiffusion
+                Kernels/u2_diffusion/type=ADMatDiffusion
+                Kernels/temperature/type=ADHeatConduction
+                InterfaceKernels/interface/type=ADInterfaceSorption
+                Materials/properties_1/type=ADGenericConstantMaterial
+                Materials/properties_1/type=ADGenericConstantMaterial
+                Materials/properties_2/type=ADGenericConstantMaterial
+                Postprocessors/flux_inner/type=ADSideDiffusiveFluxIntegral
+                Postprocessors/flux_outer/type=ADSideDiffusiveFluxIntegral
+                Outputs/file_base=interface_sorption_transient_Henry_ad_scaling_out
+                Executioner/nl_abs_tol=5e-12'
+    exodiff = 'interface_sorption_transient_Henry_ad_scaling_out.e'
+    mesh_mode = REPLICATED
+    recover = false # this is discussed in #196
+  []
+  [Henry_transient_non_ad_penalty_scaling]
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions using a penalty-enforced flux balance during transient simulations with unit scaling on both variables.'
+    type = 'Exodiff'
+    input = 'interface_sorption_transient.i'
+    cli_args = 'n_sorption=1
+                unit_scale=4
+                unit_scale_neighbor=6
+                InterfaceKernels/interface/use_flux_penalty=true
+                InterfaceKernels/interface/flux_penalty=1e1
+                Outputs/file_base=interface_sorption_transient_Henry_non_ad_penalty_scaling_out'
+    exodiff = 'interface_sorption_transient_Henry_non_ad_penalty_scaling_out.e'
+    mesh_mode = REPLICATED
+    recover = false # this is discussed in #196
+  []
+  [Henry_transient_non_ad_penalty_scaling_comparison]
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions using a penalty-enforced flux balance during transient simulations with unit scaling on both variables and provide similar results to the approach without the penalty-enforced flux balance.'
+    type = 'Exodiff'
+    input = 'interface_sorption_transient.i'
+    cli_args = 'n_sorption=1
+                unit_scale=4
+                unit_scale_neighbor=6
+                InterfaceKernels/interface/use_flux_penalty=true
+                InterfaceKernels/interface/flux_penalty=1e1
+                Outputs/file_base=interface_sorption_transient_Henry_non_ad_penalty_scaling_comparison_out'
+    exodiff = 'interface_sorption_transient_Henry_non_ad_penalty_scaling_comparison_out.e'
+    # compared to Henry_transient_non_ad_scaling because it is supposed to be equivalent,
+    # but the residuals are expected to be different when the penalty is used, so the relative error tolerance is increased here
+    rel_err = 5.4e-2
+    mesh_mode = REPLICATED
+    recover = false # this is discussed in #196
+  []
+  [Henry_transient_ad_penalty_scaling]
+    requirement = 'The system shall have the capability to enforce interfacial conditions based on the Henry law in isothermal conditions using automatic differentiation and a penalty-enforced flux balance during transient simulations with unit scaling on both variables.'
+    type = 'Exodiff'
+    input = 'interface_sorption_transient.i'
+    cli_args = 'n_sorption=1
+                unit_scale=4
+                unit_scale_neighbor=6
+                Kernels/u1_time_derivative/type=ADTimeDerivative
+                Kernels/u2_time_derivative/type=ADTimeDerivative
+                Kernels/temperature/type=ADTimeDerivative
+                Kernels/u1_diffusion/type=ADMatDiffusion
+                Kernels/u2_diffusion/type=ADMatDiffusion
+                Kernels/temperature/type=ADHeatConduction
+                InterfaceKernels/interface/type=ADInterfaceSorption
+                Materials/properties_1/type=ADGenericConstantMaterial
+                Materials/properties_1/type=ADGenericConstantMaterial
+                Materials/properties_2/type=ADGenericConstantMaterial
+                Postprocessors/flux_inner/type=ADSideDiffusiveFluxIntegral
+                Postprocessors/flux_outer/type=ADSideDiffusiveFluxIntegral
+                InterfaceKernels/interface/use_flux_penalty=true
+                InterfaceKernels/interface/flux_penalty=1e1
+                Outputs/file_base=interface_sorption_transient_Henry_ad_penalty_scaling_out
+                Executioner/nl_abs_tol=1e-12'
+    exodiff = 'interface_sorption_transient_Henry_ad_penalty_scaling_out.e'
+    # compared to Henry_transient_non_ad_scaling because it is supposed to be equivalent,
+    # but the residuals are expected to be different when the penalty is used, so the relative error tolerance is increased here
+    rel_err = 5.4e-2
+    mesh_mode = REPLICATED
+    recover = false # this is discussed in #196
   []
 []
