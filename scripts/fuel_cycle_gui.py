@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 Created on Fri Oct 11 15:33:07 2024
@@ -15,15 +16,35 @@ from matplotlib.figure import Figure
 import numpy as np
 import scipy.constants as scc
 import atexit
-import asyncio
+#import asyncio
 import os
+import shutil
+import argparse
 dir_path = os.path.dirname(os.path.realpath(__file__))
 class fuel_cycle_form(tk.Tk):
-    def __init__(self, interval=1/120):
+    def __init__(self, interval=1/120,tmap8_path=None):
         super().__init__()
+        if tmap8_path is None:
+            check_paths = [os.path.join(dir_path,'..','tmap8-opt'),
+                           os.path.join(dir_path,'..','tmap8-dbg'),
+                           os.path.join(dir_path,'..','tmap8-devel'),
+                           os.path.join(dir_path,'..','tmap8-oprof')]
+            for check_path in check_paths:
+                if tmap8_path is None:
+                    if os.path.isfile(check_path) and os.access(check_path, os.X_OK):
+                        tmap8_path = check_path
+            for check_path in check_paths:
+                if tmap8_path is None:
+                    tmap8_path = shutil.which(check_path[check_path.rfind('/')+1:])
+        self.tmap8_path = tmap8_path
+        if tmap8_path is None or not (os.path.isfile(self.tmap8_path) and os.access(self.tmap8_path, os.X_OK)):
+            raise OSError('Unable to locate a working TMAP8 executable')
         pattern = re.compile('\[(?P<variable>[0-9a-zA-Z_]+)\]\ntype = ConstantPostprocessor\nexecute_on = \'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR\'\nvalue\s?=\s*(?P<valnum>[0-9e.-]+)\n\[]',re.MULTILINE)
         instring = ''
-        with open(os.path.join(dir_path,'..','test','tests','fuel-cycle','fuel_cycle.i'),'r') as infile:
+        test_path = os.path.join(dir_path,'..','test','tests','fuel-cycle','fuel_cycle.i') 
+        if not os.path.isfile(test_path):
+            raise OSError('Unable to locate the fuel cycle input file')
+        with open(test_path,'r') as infile:
             instring = infile.read()
         ic_loc = instring.find('initial_condition')
         ic_end = instring.find('\n',ic_loc)
@@ -136,7 +157,7 @@ class fuel_cycle_form(tk.Tk):
         output_string = self.apply_template(self.labeldict)
         with open(self.tmpfile,'w') as outfile:
             outfile.write(output_string)
-        self.proc = subprocess.Popen([os.path.join(dir_path,'..','tmap8-opt'), '-i',self.tmpfile],stdout=subprocess.PIPE,stderr=subprocess.PIPE,cwd=os.path.dirname(self.tmpfile))
+        self.proc = subprocess.Popen([self.tmap8_path, '-i',self.tmpfile],stdout=subprocess.PIPE,stderr=subprocess.PIPE,cwd=os.path.dirname(self.tmpfile))
         stdout, stderr = self.proc.communicate()
         with open(self.tmpfile[:-2]+'_out.csv','r') as infile:
             self.data_labels = infile.readline()[:-1].split(',')
@@ -179,7 +200,8 @@ class fuel_cycle_form(tk.Tk):
 
             j+=1
         self.ax.set_ylim(minimum, maximum*1.1)
-        self.ax.legend(loc='best')
+        if not self.ax.get_legend_handles_labels() == ([], []):
+            self.ax.legend(loc='best')
         self.canvas.draw()
 
     def update_ydata(self):
@@ -210,8 +232,21 @@ class fuel_cycle_form(tk.Tk):
                 os.remove(self.tmpfile[:-2]+'_out.csv')
         if os.path.exists(self.tmpfile):
             os.remove(self.tmpfile)
-
-
-window = fuel_cycle_form()
-window.title("Tritium Inventory Plot")
-window.mainloop()
+parser = argparse.ArgumentParser(
+        description='Graphical interface to run the fuel cycle example with different input parameters')
+parser.add_argument('--test',help='for use in TMAP8 testing to verify successful script execution\
+        No GUI will be shown when using this flag',action='store_true')
+parsed_vals = parser.parse_args()
+if parsed_vals.test==True:
+    window = fuel_cycle_form()
+    window.buttonClick()
+    window.update_plot()
+    window.plot_ints[0].set(1)
+    window.update_plot()
+    #window.mainloop()
+    window.destroy()
+else:
+    if __name__ == "__main__":
+        window = fuel_cycle_form()
+        window.title("Tritium Inventory Plot")
+        window.mainloop()
