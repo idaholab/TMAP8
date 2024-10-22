@@ -1,21 +1,14 @@
 high_dt_max = 100
 low_dt_max = 1
-# Temperature = '${units 703 K}'
 simulation_time = '${units 2e4 s}'
 diffusivity_D = '${units 3e-10 m^2/s -> mum^2/s}'
-# dissociation_parameter_enclos2 = '${units 1.7918e15 at/m^2/s/Pa -> at/mum^2/s/Pa}' # d2/m^2/s/pa
 recombination_parameter_enclos2 = '${units 2e-31 m^4/at/s -> mum^4/at/s}'    # m^4/atom/s
 pressure_high = '${units 4e-5 Pa}'
 pressure_low =  '${units 9e-6 Pa}'
-# pressure_right = '${units 2e-6 Pa}'
 flux_high = '${units 4.9e19 at/m^2/s -> at/mum^2/s}'
 flux_low =  '${units 0      at/mum^2/s}'
 dissociation_coefficient_parameter_enclos1 = '${units 8.959e18 at/m^2/s/Pa -> at/mum^2/s/Pa}'  # d2/m^2/s/pa
-# Data in TMAP4
 recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> mum^4/at/s}'    # m^4/atom/s
-# Data in TMAP7
-recombination_coefficient_parameter_enclos1_TMAP7 = '${units 7e-27 m^4/at/s -> mum^4/at/s}'    # m^4/atom/s
-
 
 [Variables]
   [concentration]
@@ -48,8 +41,6 @@ recombination_coefficient_parameter_enclos1_TMAP7 = '${units 7e-27 m^4/at/s -> m
   []
   [recombination_TMAP4]
   []
-  [recombination_TMAP7]
-  []
 []
 
 [AuxKernels]
@@ -69,12 +60,6 @@ recombination_coefficient_parameter_enclos1_TMAP7 = '${units 7e-27 m^4/at/s -> m
     type = FunctionAux
     variable = recombination_TMAP4
     function = '${recombination_coefficient_parameter_enclos1_TMAP4}'
-    execute_on = 'INITIAL TIMESTEP_END'
-  []
-  [recombination_aux_TMAP7]
-    type = FunctionAux
-    variable = recombination_TMAP7
-    function = '${recombination_coefficient_parameter_enclos1_TMAP7}'
     execute_on = 'INITIAL TIMESTEP_END'
   []
 []
@@ -190,10 +175,10 @@ recombination_coefficient_parameter_enclos1_TMAP7 = '${units 7e-27 m^4/at/s -> m
   end_time = ${simulation_time}
   automatic_scaling = true
   nl_abs_tol = 1e-12
-  nl_rel_tol = 1e-2
+  nl_rel_tol = 1e-3
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 1e2
+    dt = 3.125
     optimal_iterations = 12
     growth_factor = 1.1
     cutback_factor = 0.9

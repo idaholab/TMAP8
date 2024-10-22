@@ -24,27 +24,22 @@ nx_scale = 5
     expression = '${recombination_coefficient_parameter_enclos1_TMAP4} * (1 - 0.9999 * exp(-6e-5 * t))'
   []
 
-  [Kr_left_time_dependent_func]
-    type = ParsedFunction
-    expression = '1 - 0.9999 * exp(-6e-5 * t)'
-  []
-
   [pressure_func]
     type = ParsedFunction
-    expression = 'if(t<6420.0, ${pressure_high},
-                  if(t<9420.0, ${pressure_low},
-                  if(t<12480,  ${pressure_high},
-                  if(t<14940,  ${pressure_low},
-                  if(t<18180,  ${pressure_high}, ${pressure_low})))))'
+    expression = 'if(t<5820.0, ${pressure_high},
+                  if(t<9056.0, ${pressure_low},
+                  if(t<12062,  ${pressure_high},
+                  if(t<14572,  ${pressure_low},
+                  if(t<17678,  ${pressure_high}, ${pressure_low})))))'
   []
 
   [surface_flux_func]
     type = ParsedFunction
-    expression = 'if(t<6420.0, ${flux_high},
-                  if(t<9420.0, ${flux_low},
-                  if(t<12480,  ${flux_high},
-                  if(t<14940,  ${flux_low},
-                  if(t<18180,  ${flux_high}, ${flux_low}))))) * 0.75'
+    expression = 'if(t<5820.0, ${flux_high},
+                  if(t<9056.0, ${flux_low},
+                  if(t<12062,  ${flux_high},
+                  if(t<14572,  ${flux_low},
+                  if(t<17678,  ${flux_high}, ${flux_low}))))) * 0.75'
   []
 
   [source_distribution]
@@ -63,16 +58,16 @@ nx_scale = 5
 
   [max_dt_size_func]
     type = ParsedFunction
-    expression = 'if(t<6420.0-100, ${high_dt_max},
-                  if(t<6420.0+100.0, ${low_dt_max},
-                  if(t<9420.0-100, ${high_dt_max},
-                  if(t<9420.0+100, ${low_dt_max},
-                  if(t<12480-100,  ${high_dt_max},
-                  if(t<12480+100,  ${low_dt_max},
-                  if(t<14940-100,  ${high_dt_max},
-                  if(t<14940+100,  ${low_dt_max},
-                  if(t<18180-100,  ${high_dt_max},
-                  if(t<18180+100,  ${low_dt_max}, ${high_dt_max}))))))))))'
+    expression = 'if(t<5820.0-100, ${high_dt_max},
+                  if(t<5820.0+100.0, ${low_dt_max},
+                  if(t<9056.0-100, ${high_dt_max},
+                  if(t<9056.0+100, ${low_dt_max},
+                  if(t<12062-100,  ${high_dt_max},
+                  if(t<12062+100,  ${low_dt_max},
+                  if(t<14572-100,  ${high_dt_max},
+                  if(t<14572+100,  ${low_dt_max},
+                  if(t<17678-100,  ${high_dt_max},
+                  if(t<17678+100,  ${low_dt_max}, ${high_dt_max}))))))))))'
   []
 []
 
