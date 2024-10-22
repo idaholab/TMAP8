@@ -6,6 +6,7 @@
     input = val-2c.i
     csvdiff = val-2c_csv.csv
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c).'
+    recover = false
   []
   [val-2c_exodus]
     type = Exodiff
@@ -14,5 +15,12 @@
     should_execute = false # this test relies on the output files from val-2c_csv, so it shouldn't be run twice
     exodiff = val-2c_out.e
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) and properly compute the exodus file.'
+    recover = false
+  []
+  [val-2c_comparison]
+    type = RunCommand
+    command = 'python3 comparison_val-2c.py'
+    requirement = 'The system shall be able to generate comparison plots between simulated solutions and experimental data of validation cases val-2c, modeling a Test Cell Release Experiment.'
+    required_python_packages = 'matplotlib numpy pandas scipy os'
   []
 []

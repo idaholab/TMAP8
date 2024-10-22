@@ -17,6 +17,7 @@ NA = ${units 6.02214076e23 at/mol} # Avogadro's number from PhysicalConstants
 paint_thickness = ${units 0.16 mm -> mum}
 mesh_num_nodes_paint = 12 # impose by manual mesh
 mesh_node_size_paint = ${fparse paint_thickness/mesh_num_nodes_paint}
+length_domain = ${fparse paint_thickness + 2*mesh_node_size_paint}
 volume_enclosure = ${units 0.96 m^3 -> mum^3}
 #### surface_area = ${units 5.6 m^2 -> mum^2}
 
@@ -24,17 +25,17 @@ volume_enclosure = ${units 0.96 m^3 -> mum^3}
 temperature = ${units 303 K}
 
 ## Conversion
-Curie = ${units 3.7e10 1/s} # desintegrations/s - activitiy of one curie
+Curie = ${units 3.7e10 1/s} # desintegrations/s - activity of one Curie
 decay_rate_tritium = ${units 1.78199e-9 1/s/at} # desintegrations/s/atoms
 conversion_Ci_atom = ${units ${fparse decay_rate_tritium / Curie} 1/at} # 1 tritium at = ~4.81e-20 Ci
 concentration_to_pressure_conversion_factor = '${units ${fparse kb * temperature} Pa*m^3 -> Pa*mum^3}' # J = Pa*m^3
 
 ## Material properties
 diffusivity_elemental_tritium = ${units 4.0e-12 m^2/s -> mum^2/s}
-diffusivity_artificial_enclosure = ${fparse diffusivity_elemental_tritium*1e3}
 diffusivity_tritiated_water = ${units 1.0e-14 m^2/s -> mum^2/s}
+diffusivity_artificial_enclosure = ${fparse diffusivity_elemental_tritium*1e3}
 reaction_rate = '${units ${fparse 2.0e-10*conversion_Ci_atom} m^3/at/s -> mum^3/at/s}' # ~9.62e-30 m^3/at/s, close to the 1.0e-29 m3/atoms/s in TMAP4 ////// that seems OK, but I want to change it in my simulations to double check.
-solubility_elemental_tritium = '${units ${fparse 4.0e19} 1/m^3/Pa -> 1/mum^3/Pa}' # molecules/microns^3/Pa = molecules*s^2/m^2/kg ////////// check starting units - might be mol/m^3/Pa, but the paper is unclear also, chcek molecule vs atoms.
+solubility_elemental_tritium = '${units ${fparse 4.0e19} 1/m^3/Pa -> 1/mum^3/Pa}' # molecules/microns^3/Pa = molecules*s^2/m^2/kg ////////// check starting units - might be mol/m^3/Pa, but the paper is unclear also, check molecule vs atoms.
 solubility_tritiated_water = '${units ${fparse 6.0e24} 1/m^3/Pa -> 1/mum^3/Pa}' # molecules/microns^3/Pa = molecules*s^2/m^2/kg ////////// check starting units - might be mol/m^3/Pa, but the paper is unclear
 # solubility_tritiated_water = '${units ${fparse 6.0e19} 1/m^3/Pa -> 1/mum^3/Pa}' # ////// THIS IS WRONG, BUT LOOS MORE REASONABLE -- molecules/microns^3/Pa = molecules*s^2/m^2/kg ////////// check starting units - might be mol/m^3/Pa, but the paper is unclear
 
@@ -43,26 +44,25 @@ solubility_tritiated_water = '${units ${fparse 6.0e24} 1/m^3/Pa -> 1/mum^3/Pa}' 
 initial_T2_inventory = ${units ${fparse 10 / 2 / conversion_Ci_atom} at} # (equivalent to 10 Ci) - the 1/2 is to account for 2 tritium atoms per molecules, both contributing to activity
 initial_T2_concentration = ${units ${fparse initial_T2_inventory / volume_enclosure} at/mum^3}
 # initial_T2_pressure = ${units ${fparse initial_T2_concentration * concentration_to_pressure_conversion_factor} Pa} # ~0.453 Pa (different from 0.434 in TMAP4 because of volume_enclosure = 0.96 m^3 != 1 m^3)
-initial_H2O_pressure = ${units 714 Pa} # ######## VERY WRONG FOR NOW FOR TESTING PURPOSES - 714 # ///////////
+initial_H2O_pressure = ${units 714 Pa} # ######## PROBABLY WRONG FOR NOW FOR TESTING PURPOSES - 714 # ///////////
 initial_H2O_concentration = ${units ${fparse initial_H2O_pressure / concentration_to_pressure_conversion_factor} at/mum^3}
 
 ## Inflow and outflow
 inflow = ${units 0.54 m^3/h -> mum^3/s} # inflow of normally moist (20% relative humidity) air at the same temperature as the enclosure
 inflow_concentration = ${fparse initial_H2O_concentration * inflow / volume_enclosure}
-outflow = ${units 0.06 m^3/h -> mum^3/s} # outflow of enclosure air
-
-##### purge_gas_H2O_concentration = 714 # ///////////
+outflow = ${units 0.54 m^3/h -> mum^3/s} # outflow of enclosure air # even if only 0.06 m^3/h is used to do measurments, all that air is purged out.
 
 ## Numerical parameters
-time_step = ${units ${fparse 60*1} s} # clean up ./////////
-time_end = ${units ${fparse 180000*1} s} # clean up ./////////
+time_step = ${units ${fparse 60} s} # clean up /////////
+time_end = ${units 180000 s}
+lower_value_threshold =  ${units -1e-8 at/mum^3}  # lower limit for concentration
 
 [Mesh]
   [base_mesh]
     type = GeneratedMeshGenerator
     dim = 1
     nx = ${fparse mesh_num_nodes_paint + 2}
-    xmax = ${fparse paint_thickness + 2*mesh_node_size_paint}
+    xmax = ${length_domain}
   []
   [subdomain_id]
     input = base_mesh
@@ -83,6 +83,14 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
     paired_block = '0' # paint
     new_boundary = 'interface_other'
   []
+[]
+
+[Problem]
+  type = ReferenceResidualProblem
+  reference_vector = 'ref'
+  extra_tag_vectors = 'ref'
+  group_variables = 'hto_enclosure_concentration hto_paint_concentration'
+  converge_on = 't2_enclosure_concentration ht_enclosure_concentration hto_enclosure_concentration h2o_enclosure_concentration t2_paint_concentration ht_paint_concentration hto_paint_concentration h2o_paint_concentration'
 []
 
 [Variables]
@@ -124,6 +132,22 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
 
 [AuxVariables]
   # Used to prevent negative concentrations
+  [bounds_dummy_t2_paint_concentration]
+    order = FIRST
+    family = LAGRANGE
+  []
+  [bounds_dummy_t2_enclosure_concentration]
+    order = FIRST
+    family = LAGRANGE
+  []
+  [bounds_dummy_hto_paint_concentration]
+    order = FIRST
+    family = LAGRANGE
+  []
+  [bounds_dummy_hto_enclosure_concentration]
+    order = FIRST
+    family = LAGRANGE
+  []
   [bounds_dummy_h2o_paint_concentration]
     order = FIRST
     family = LAGRANGE
@@ -136,19 +160,47 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
 
 [Bounds]
   # To prevent negative concentrations
+  [t2_paint_concentration_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy_t2_paint_concentration
+    bounded_variable = t2_paint_concentration
+    bound_type = lower
+    bound_value = ${lower_value_threshold}
+  []
+  [t2_enclosure_concentration_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy_t2_enclosure_concentration
+    bounded_variable = t2_enclosure_concentration
+    bound_type = lower
+    bound_value = ${lower_value_threshold}
+  []
+  [hto_paint_concentration_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy_hto_paint_concentration
+    bounded_variable = hto_paint_concentration
+    bound_type = lower
+    bound_value = ${lower_value_threshold}
+  []
+  [hto_enclosure_concentration_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy_hto_enclosure_concentration
+    bounded_variable = hto_enclosure_concentration
+    bound_type = lower
+    bound_value = ${lower_value_threshold}
+  []
   [h2o_paint_concentration_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy_h2o_paint_concentration
     bounded_variable = h2o_paint_concentration
     bound_type = lower
-    bound_value = -1e-3
+    bound_value = -1e-4
   []
   [h2o_enclosure_concentration_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy_h2o_enclosure_concentration
     bounded_variable = h2o_enclosure_concentration
     bound_type = lower
-    bound_value = -1e-3
+    bound_value = -1e-4
   []
 []
 
@@ -158,6 +210,7 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
     type = TimeDerivative
     variable = t2_enclosure_concentration
     block = 1
+    extra_vector_tags = 'ref'
   []
   [t2_outflow]
     type = MaskedBodyForce
@@ -165,17 +218,20 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
     value = '-1'
     mask = t2_enclosure_concentration_outflow
     block = 1
+    extra_vector_tags = 'ref'
   []
   [t2_diffusion]
     type = MatDiffusion
     variable = t2_enclosure_concentration
     block = 1
     diffusivity = ${diffusivity_artificial_enclosure}
+    extra_vector_tags = 'ref'
   []
   [ht_time_derivative]
     type = TimeDerivative
     variable = ht_enclosure_concentration
     block = 1
+    extra_vector_tags = 'ref'
   []
   [ht_outflow]
     type = MaskedBodyForce
@@ -183,17 +239,20 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
     value = '-1'
     mask = ht_enclosure_concentration_outflow
     block = 1
+    extra_vector_tags = 'ref'
   []
   [ht_diffusion]
     type = MatDiffusion
     variable = ht_enclosure_concentration
     block = 1
     diffusivity = ${diffusivity_artificial_enclosure}
+    extra_vector_tags = 'ref'
   []
   [hto_time_derivative]
     type = TimeDerivative
     variable = hto_enclosure_concentration
     block = 1
+    extra_vector_tags = 'ref'
   []
   [hto_outflow]
     type = MaskedBodyForce
@@ -201,23 +260,27 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
     value = '-1'
     mask = hto_enclosure_concentration_outflow
     block = 1
+    extra_vector_tags = 'ref'
   []
   [hto_diffusion]
     type = MatDiffusion
     variable = hto_enclosure_concentration
     block = 1
     diffusivity = ${diffusivity_artificial_enclosure}
+    extra_vector_tags = 'ref'
   []
   [h2o_time_derivative]
     type = TimeDerivative
     variable = h2o_enclosure_concentration
     block = 1
+    extra_vector_tags = 'ref'
   []
   [h2o_inflow]
     type = MaskedBodyForce
     variable = h2o_enclosure_concentration
     mask = ${inflow_concentration}
     block = 1
+    extra_vector_tags = 'ref'
   []
   [h2o_outflow]
     type = MaskedBodyForce
@@ -225,13 +288,16 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
     value = '-1'
     mask = h2o_enclosure_concentration_outflow
     block = 1
+    extra_vector_tags = 'ref'
   []
   [h2o_diffusion]
     type = MatDiffusion
     variable = h2o_enclosure_concentration
     block = 1
     diffusivity = ${diffusivity_artificial_enclosure}
+    extra_vector_tags = 'ref'
   []
+
   # reaction T2+H2O->HTO+HT
   [reaction_1_t2]
     type = ADMatReactionFlexible
@@ -239,6 +305,7 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
     block = 1
     coeff = -1
     reaction_rate_name = reaction_rate_t2
+    extra_vector_tags = 'ref'
   []
   [reaction_1_h2o]
     type = ADMatReactionFlexible
@@ -246,6 +313,7 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
     block = 1
     coeff = -1
     reaction_rate_name = reaction_rate_t2
+    extra_vector_tags = 'ref'
   []
   [reaction_1_hto]
     type = ADMatReactionFlexible
@@ -253,6 +321,7 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
     block = 1
     coeff = 1
     reaction_rate_name = reaction_rate_t2
+    extra_vector_tags = 'ref'
   []
   [reaction_1_ht]
     type = ADMatReactionFlexible
@@ -260,6 +329,7 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
     block = 1
     coeff = 1
     reaction_rate_name = reaction_rate_t2
+    extra_vector_tags = 'ref'
   []
   # reaction HT+H2O->HTO+H2
   [reaction_2_HT]
@@ -268,6 +338,7 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
     block = 1
     coeff = -1
     reaction_rate_name = reaction_rate_ht
+    extra_vector_tags = 'ref'
   []
   [reaction_2_h2o]
     type = ADMatReactionFlexible
@@ -275,6 +346,7 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
     block = 1
     coeff = -1
     reaction_rate_name = reaction_rate_ht
+    extra_vector_tags = 'ref'
   []
   [reaction_2_hto]
     type = ADMatReactionFlexible
@@ -282,57 +354,61 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
     block = 1
     coeff = 1
     reaction_rate_name = reaction_rate_ht
+    extra_vector_tags = 'ref'
   []
-
-
-  # Injection of purge gas /////////////////////////////
-  # extraction for analysis ////////////////////////////
-
 
   # In the paint
   [t2_paint_time]
     type = TimeDerivative
     variable = t2_paint_concentration
     block = 0
+    extra_vector_tags = 'ref'
   []
   [t2_paint_diffusion]
     type = MatDiffusion
     variable = t2_paint_concentration
     block = 0
     diffusivity = '${diffusivity_elemental_tritium}'
+    extra_vector_tags = 'ref'
   []
   [ht_paint_time]
     type = TimeDerivative
     variable = ht_paint_concentration
     block = 0
+    extra_vector_tags = 'ref'
   []
   [ht_paint_diffusion]
     type = MatDiffusion
     variable = ht_paint_concentration
     block = 0
     diffusivity = '${diffusivity_elemental_tritium}'
+    extra_vector_tags = 'ref'
   []
   [hto_paint_time]
     type = TimeDerivative
     variable = hto_paint_concentration
     block = 0
+    extra_vector_tags = 'ref'
   []
   [hto_paint_diffusion]
     type = MatDiffusion
     variable = hto_paint_concentration
     block = 0
     diffusivity = '${diffusivity_tritiated_water}'
+    extra_vector_tags = 'ref'
   []
   [h2o_paint_time]
     type = TimeDerivative
     variable = h2o_paint_concentration
     block = 0
+    extra_vector_tags = 'ref'
   []
   [h2o_paint_diffusion]
     type = MatDiffusion
     variable = h2o_paint_concentration
     block = 0
     diffusivity = '${diffusivity_tritiated_water}'
+    extra_vector_tags = 'ref'
   []
 []
 
@@ -380,7 +456,7 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
     diffusivity = diffusivity_tritiated_water
     # use_flux_penalty = true
     # flux_penalty = 5e5
-    # sorption_penalty = 1e4 #2.5 # default = 1
+    # sorption_penalty = 1e2 #2.5 # default = 1
     boundary = 'interface'
   []
   [h2o_solubility]
@@ -395,7 +471,7 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
     diffusivity = diffusivity_tritiated_water
     # use_flux_penalty = true
     # flux_penalty = 5e5
-    # sorption_penalty = 1e4 #2.5 # default = 1
+    # sorption_penalty = 1e2 #2.5 # default = 1
     boundary = 'interface'
   []
 []
@@ -404,7 +480,7 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
   [reaction_rate_t2]
     type = ADDerivativeParsedMaterial
     coupled_variables = 't2_enclosure_concentration ht_enclosure_concentration hto_enclosure_concentration'
-    expression = '2 * ${reaction_rate} * t2_enclosure_concentration * (2*t2_enclosure_concentration + ht_enclosure_concentration + hto_enclosure_concentration)'
+    expression = '${reaction_rate} * 2 * t2_enclosure_concentration * (2*t2_enclosure_concentration + ht_enclosure_concentration + hto_enclosure_concentration)'
     property_name = reaction_rate_t2
     block = 1
   []
@@ -470,81 +546,82 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
   []
 []
 
-[BCs]
-  # No flux toward the foil behind the paint, and no flux outside the enclosure
-  # The inflow and outflow in the enclosure are modeled as volumetric sources
-  # [right]
-  #   type = NeumannBC
-  #   value = 0
-  #   variable = 'all'
-  #   boundary = 'right left'
-  # []
-[]
-
 [Postprocessors]
   # Pressures in enclosure
-  [t2_enclosure_edge_concentration] # (Pa)
+  [t2_enclosure_edge_concentration] # (atoms/mum^3)
     type = PointValue
-    point = '${fparse paint_thickness} 0 0' # on the far side of the enclosure ##################################
+    point = '${length_domain} 0 0' # on the far side of the enclosure
     variable = t2_enclosure_concentration
+    execute_on = 'initial timestep_end'
   []
-  [ht_enclosure_edge_concentration] # (Pa)
-  type = PointValue
-  point = '${fparse paint_thickness} 0 0' # on the far side of the enclosure ##################################
+  [ht_enclosure_edge_concentration] # (atoms/mum^3)
+    type = PointValue
+    point = '${length_domain} 0 0' # on the far side of the enclosure
     variable = ht_enclosure_concentration
+    execute_on = 'initial timestep_end'
   []
-  [hto_enclosure_edge_concentration] # (Pa)
-  type = PointValue
-  point = '${fparse paint_thickness} 0 0' # on the far side of the enclosure ##################################
+  [hto_enclosure_edge_concentration] # (atoms/mum^3)
+    type = PointValue
+    point = '${length_domain} 0 0' # on the far side of the enclosure
     variable = hto_enclosure_concentration
+    execute_on = 'initial timestep_end'
   []
-  [h2o_enclosure_edge_concentration] # (Pa)
-  type = PointValue
-  point = '${fparse paint_thickness} 0 0' # on the far side of the enclosure ##################################
+  [h2o_enclosure_edge_concentration] # (atoms/mum^3)
+    type = PointValue
+    point = '${length_domain} 0 0' # on the far side of the enclosure
     variable = h2o_enclosure_concentration
+    execute_on = 'initial timestep_end'
   []
 
   # Inventory in enclosure
-  [t2_enclosure_inventory] # (atoms/m^2)
+  [t2_enclosure_inventory] # (atoms/mum^2)
     type = ElementIntegralVariablePostprocessor
     variable = t2_enclosure_concentration
+    execute_on = 'initial timestep_end'
     block = 1
   []
-  [ht_enclosure_inventory] # (atoms/m^2)
+  [ht_enclosure_inventory] # (atoms/mum^2)
     type = ElementIntegralVariablePostprocessor
     variable = ht_enclosure_concentration
+    execute_on = 'initial timestep_end'
     block = 1
   []
-  [hto_enclosure_inventory] # (atoms/m^2)
+  [hto_enclosure_inventory] # (atoms/mum^2)
     type = ElementIntegralVariablePostprocessor
     variable = hto_enclosure_concentration
+    execute_on = 'initial timestep_end'
     block = 1
   []
-  [h2o_enclosure_inventory] # (atoms/m^2)
+  [h2o_enclosure_inventory] # (atoms/mum^2)
     type = ElementIntegralVariablePostprocessor
     variable = h2o_enclosure_concentration
+    execute_on = 'initial timestep_end'
     block = 1
   []
 
   # Inventory in paint
-  [t2_paint_inventory] # (atoms/m^2)
+  [t2_paint_inventory] # (atoms/mum^2)
     type = ElementIntegralVariablePostprocessor
     variable = t2_paint_concentration
+    execute_on = 'initial timestep_end'
     block = 0
   []
-  [ht_paint_inventory] # (atoms/m^2)
+  [ht_paint_inventory] # (atoms/mum^2)
     type = ElementIntegralVariablePostprocessor
     variable = ht_paint_concentration
+    execute_on = 'initial timestep_end'
     block = 0
   []
-  [hto_paint_inventory] # (atoms/m^2)
+  [hto_paint_inventory] # (atoms/mum^2)
     type = ElementIntegralVariablePostprocessor
     variable = hto_paint_concentration
+    execute_on = 'initial timestep_end'
     block = 0
   []
-  [h2o_paint_inventory] # (atoms/m^2)
+  [h2o_paint_inventory] # (atoms/mum^2)
     type = ElementIntegralVariablePostprocessor
     variable = h2o_paint_concentration
+    execute_on = 'initial timestep_end'
     block = 0
   []
 
@@ -552,6 +629,7 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
     type = LinearCombinationPostprocessor
     pp_names = 't2_enclosure_inventory ht_enclosure_inventory hto_enclosure_inventory t2_paint_inventory ht_paint_inventory hto_paint_inventory'
     pp_coefs = '2                      1                      1                       2                  1                  1'
+    execute_on = 'initial timestep_end'
   []
 []
 
@@ -570,12 +648,12 @@ time_end = ${units ${fparse 180000*1} s} # clean up ./////////
   type = Transient
   solve_type = NEWTON #PJFNK
   scheme = 'bdf2'
-  automatic_scaling = true
+  # automatic_scaling = true
   # compute_scaling_once = false
   # dtmin = 1e-5
   # l_max_its = 15
   # nl_abs_tol = 1e-50 ###########
-  # nl_rel_tol = 1e-8 ########### 1e-7
+  nl_rel_tol = 1e-11 ########### 1e-7
   # l_max_its = 10000
   # l_abs_tol = 1e-50
   # l_tol = 1e-05
