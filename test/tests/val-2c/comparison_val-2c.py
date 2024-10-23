@@ -170,7 +170,7 @@ RMSPE = RMSE*100/np.mean(experimental_hto_enclosure_concentration_delay_sampled)
 ax.text(7.5,1.2e-5, 'RMSPE (delay) = %.2f '%RMSPE+'%',fontweight='bold')
 
 # save figure
-plt.savefig('val-2c_comparison_TMAP8_Exp_Ci.png', bbox_inches='tight', dpi=300);
+plt.savefig('val-2c_comparison_TMAP8_Exp_HTO_Ci.png', bbox_inches='tight', dpi=300);
 plt.close(fig)
 
 fig = plt.figure(figsize=[6.5,5.5])
