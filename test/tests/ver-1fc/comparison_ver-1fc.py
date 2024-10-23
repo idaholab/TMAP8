@@ -110,7 +110,7 @@ ax.minorticks_on()
 RMSE = np.linalg.norm(tmap8_sol_steady_state_temperature-analytical_sol_steady_state_x)
 err_percent = RMSE*100/np.mean(analytical_sol_steady_state_x)
 ax.text(0.55, 400, 'RMSPE = %.2f '%err_percent+'% \n',fontweight='bold')
-plt.savefig('ver-1fc_comparison_temperature_steady_state.png', bbox_inches='tight');
+plt.savefig('ver-1fc_comparison_temperature_steady_state.png', bbox_inches='tight', dpi=300);
 plt.close(fig)
 
 #===============================================================================
@@ -130,7 +130,7 @@ ax.set_xlim(right=max(tmap8_sol_transient_x))
 ax.set_ylim(bottom=0)
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
-plt.savefig('ver-1fc_comparison_temperature_transient_t150.png', bbox_inches='tight');
+plt.savefig('ver-1fc_comparison_temperature_transient_t150.png', bbox_inches='tight', dpi=300);
 plt.close(fig)
 
 #===============================================================================
@@ -150,6 +150,6 @@ ax.set_xlim(right=max(tmap8_sol_transient_t)/10)
 ax.set_ylim(bottom=0)
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
-plt.savefig('ver-1fc_comparison_temperature_transient_x0.09.png', bbox_inches='tight');
+plt.savefig('ver-1fc_comparison_temperature_transient_x0.09.png', bbox_inches='tight', dpi=300);
 plt.close(fig)
 

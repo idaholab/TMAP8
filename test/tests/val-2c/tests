@@ -1,6 +1,6 @@
 [Tests]
   design = 'val-2c.md'
-  issues = '#98'
+  issues = '#12 #98'
   [val-2c_immediate_injection_csv]
     type = CSVDiff
     input = val-2c_immediate_injection.i
