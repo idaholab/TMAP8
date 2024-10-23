@@ -1,23 +1,39 @@
 [Tests]
   design = 'val-2c.md'
   issues = '#98'
-  [val-2c_csv]
+  [val-2c_immediate_injection_csv]
     type = CSVDiff
-    input = val-2c.i
-    csvdiff = val-2c_csv.csv
-    requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c).'
+    input = val-2c_immediate_injection.i
+    csvdiff = val-2c_immediate_injection_csv.csv
+    requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with immediate T2 injection.'
     recover = false
   []
-  [val-2c_exodus]
+  [val-2c_immediate_injection_exodus]
     type = Exodiff
-    input = val-2c.i
-    prereq = val-2c_csv
+    input = val-2c_immediate_injection.i
+    prereq = val-2c_immediate_injection_csv
     should_execute = false # this test relies on the output files from val-2c_csv, so it shouldn't be run twice
-    exodiff = val-2c_out.e
-    requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) and properly compute the exodus file.'
+    exodiff = val-2c_immediate_injection_out.e
+    requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with immediate T2 injection and properly compute the exodus file.'
     recover = false
   []
-  [val-2c_comparison]
+  [val-2c_delay_csv]
+    type = CSVDiff
+    input = val-2c_delay.i
+    csvdiff = val-2c_delay_csv.csv
+    requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection.'
+    recover = false
+  []
+  [val-2c_delay_exodus]
+    type = Exodiff
+    input = val-2c_delay.i
+    prereq = val-2c_delay_csv
+    should_execute = false # this test relies on the output files from val-2c_csv, so it shouldn't be run twice
+    exodiff = val-2c_delay_out.e
+    requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection and properly compute the exodus file.'
+    recover = false
+  []
+  [val-2c_delay_comparison]
     type = RunCommand
     command = 'python3 comparison_val-2c.py'
     requirement = 'The system shall be able to generate comparison plots between simulated solutions and experimental data of validation cases val-2c, modeling a Test Cell Release Experiment.'
