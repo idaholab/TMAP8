@@ -3,17 +3,16 @@
 Two problems ([ver-1ja](ver-1ja.md) and ver-1jb) demonstrate tritium decay, though any other isotope could have been chosen.
 The first ([ver-1ja](ver-1ja.md)) models simple decay of mobile species in a slab.
 The second (ver-1jb) models decay of trapped atoms in a similar slab but with a distributed trap concentration.
-This page presents ver-1jb.
+This page presents ver-1jb, based on the case published in the TMAP7 verification and validation suite [!citep](ambrosek2008verification).
 
 # Radioactive Decay of Tritium in a Distributed Trap
 
 ## General Case Description
 
-This verification case is an extension of[ver-1ja](ver-1ja.md), which tests the first order radioactive decay capabilities of TMAP8.
-In ver-1jb, however, tritium decay is coupled with trapping, which was verified in several verification cases, including [ver-1d](ver-1d.md).
-As [ver-1ja](ver-1ja.md), ver-1jb is based on the case published in the TMAP7 V&V suite [!citep](ambrosek2008verification).
-Similarly to [ver-1ja](ver-1ja.md), the model assumes pre-charging of an $l=1.5$ m long slab with tritium (with an assumed width and thickness of 1 m). Further complexity is added to the problem by introducing traps with a normal distribution centered at the mid-plane of the slab and a standard deviation of $l/4$, and mobile tritium.
-The peak atomic fraction of traps is $C_{trap} = 0.001$, and the trap energy is $E=4.2$ eV. The material density used to calculate the number of traps is based on tungsten, and defined as 6.34 $\times 10^{28}$ atoms/m$^3$. The traps are initially filled with trapped tritium to 50% of trap concentration.
+This verification case is an extension of[ver-1ja](ver-1ja.md), which tests radioactive decay capabilities of TMAP8 on their own.
+In ver-1jb, tritium decay is coupled with trapping, which itself was verified in several TMAP8 verification cases including [ver-1d](ver-1d.md).
+Similarly to [ver-1ja](ver-1ja.md), the model assumes pre-charging of an $l=1.5$ m long slab (with an assumed width and thickness of 1 m) with tritium. Further complexity is added to the problem by introducing mobile tritium and trapping sites whose locations follow a normal distribution centered at the mid-plane of the slab with a standard deviation of $l/4$.
+The peak atomic fraction of traps is $C_{trap} = 0.001$, and the trap energy is $E=4.2$ eV. The material density used to calculate the number of traps is based on tungsten, and is defined as 6.34 $\times 10^{28}$ atoms/m$^3$. The traps are initially filled with trapped tritium to 50% of trap concentration.
 
 The evolution of the mobile tritium, trapped tritium, and helium concentrations, i.e.,
 $C_M$, $C_T$, and $C_{He}$, respectively, is governed by
@@ -46,7 +45,7 @@ The tritium diffusivity is defined as
 \begin{equation}
     D_T = 1.58 \times 10^{-4} \exp \left(- \frac{308 \times 10^{3}}{RT}\right),
 \end{equation}
-where $R$ is the ideal gas constant in J/K/mol from [Physical Constants](https://mooseframework.inl.gov/tmap8/source/utils/PhysicalConstants.html) and $T=300$ K is the temperature of the domain.
+where $R$ is the ideal gas constant in J/K/mol from [Physical Constants](utils/PhysicalConstants.md) and $T=300$ K is the temperature of the domain.
 The trapping frequency is defined as
 \begin{equation}
     \alpha_t = 2.096 \times 10^{15} \exp \left(- \frac{308 \times 10^{3}}{RT}\right),
@@ -55,7 +54,7 @@ and the release frequency is equal to
 \begin{equation}
     \alpha_r = 1 \times 10^{13} \exp \left(- \frac{4.2}{k_bT}\right),
 \end{equation}
-where $k_b$ is the Boltzmann constant in eV/K from [Physical Constants](https://mooseframework.inl.gov/tmap8/source/utils/PhysicalConstants.html).
+where $k_b$ is the Boltzmann constant in eV/K from [Physical Constants](utils/PhysicalConstants.md).
 
 !alert warning title=TMAP8 uses different model parameters than TMAP7
 $k$ is defined as $k= 0.693/t_{1/2}=1.78199 \times 10^{-9}$ 1/s instead of $1.78241 \times 10^{-9}$ 1/s to be fully consistent with the half-life value (assuming 365.25 days in a year).
@@ -65,9 +64,9 @@ Note also that TMAP7 uses a temperature of $T = 273$ K instead of $T = 300$ K.
 We define two different initial conditions for the mobile tritium concentration $C_M^0$:
 
 - $C_M^0 = 1$ atoms/m$^3$, which is much lower than the initial trapped tritium concentration. This case corresponds to the TMAP7 case in [!citep](ambrosek2008verification).
-- $C_M^0 = 1 \times 10^{25}$ atoms/m$^3$, which makes it equivalent to the initial trapped tritium concentration. This new case demonstrate TMAP8's ability to model the decay, trapping, detrapping, and diffusion of tritium better than when the concentration of mobile tritium is negligible, as in the other case.
+- $C_M^0 = 1 \times 10^{25}$ atoms/m$^3$, which makes it equivalent to the initial trapped tritium concentration. This new case demonstrates TMAP8's improved ability (over TMAP7) to model the decay, trapping, detrapping, and diffusion of tritium when the concentration of mobile tritium is non-negligible.
 
-To limit the computational challenges related to the orders of magnitude difference in trapped and mobile tritium in the first case, we make the concentration dimensionless by dividing them by $1 \times 10^{25}$ atoms/m$^3$ and setting $\text{trap\_per\_free} = 1 \times 10^{25}$ (-). In the second case, when the concentration are equivalent, $\text{trap\_per\_free} = 1$ (-).
+To limit the computational challenges related to the orders-of-magnitude difference in trapped and mobile tritium in the first case, we make the concentration dimensionless by dividing them by $1 \times 10^{25}$ atoms/m$^3$ and setting $\text{trap\_per\_free} = 1 \times 10^{25}$ (-). In the second case, when the concentrations are equivalent, $\text{trap\_per\_free} = 1$ (-).
 
 ## Analytical Solution
 
@@ -78,7 +77,7 @@ The total inventory of T in atoms, $I_{tot} = I_M + I_T$ where $I_M$ and $I_T$ a
 \end{equation}
 
 where $I_{tot}^0 = I_M^0 + I_T^0$ atoms/m is the initial total inventory of tritium
-($I_M^0$ and $I_T^0$ are the initial mobile and trapped tritium inventories).
+($I_M^0$ and $I_T^0$ are the initial mobile and trapped tritium inventories, respectively).
 Applying a mass balance over the system, the inventory of helium in atoms, $I_{He}$, is given by
 \begin{equation}
     I_{He} = I_{tot}^0 \left[1- \exp(-kt) \right].
@@ -101,9 +100,9 @@ and can also provide the trapped and mobile tritium concentrations.
        caption=Comparison of TMAP8 predictions against the analytical solution for the decay of tritium and associated growth of $^3$He in a distributed trap with a small concentration of mobile tritium compared to trapped tritium.
 
 [ver-1jb_results_profile_1] shows the depth profile of the initial trapped atoms of tritium, the concentration of trapped atoms of
-tritium after 45 years, and the distribution of $^3$He at the end of that time across the distributed trap as predicted by TMAP8. The concentration of mobile tritium remains very low.
+tritium after 45 years, and the distribution of $^3$He at the end of that time period across the distributed trapping sites as predicted by TMAP8. The concentration of mobile tritium remains very low.
 
-Note that because of $^3$He is given a null diffusivity in this verification problem, the shape of the $^3$He does not broaden.
+Note that because $^3$He is given a null diffusivity in this verification problem, the shape of the $^3$He concentration does not broaden.
 This could be easily implemented with existing TMAP8 diffusive capabilities, as was shown in many other TMAP8 cases,
 including [ver-1d](ver-1d.md).
 
@@ -125,7 +124,7 @@ including [ver-1d](ver-1d.md).
        caption=Comparison of TMAP8 predictions against the analytical solution for the decay of tritium and associated growth of $^3$He in a distributed trap with equivalent initial concentrations of mobile and trapped tritium.
 
 [ver-1jb_results_profile_2] shows the depth profile of the initial trapped atoms of tritium, the concentration of mobile and trapped atoms of
-tritium after 45 years, and the distribution of $^3$He at the end of that time across the distributed trap as predicted by TMAP8.
+tritium after 45 years, and the distribution of $^3$He at the end of that time period across the distributed trapping sites as predicted by TMAP8.
 
 !media comparison_ver-1jb.py
        image_name=ver-1jb_equivalent_concentrations_profile.png
