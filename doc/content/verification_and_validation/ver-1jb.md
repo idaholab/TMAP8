@@ -35,7 +35,7 @@ and
 where $t$ is the time in s, concentrations are in atoms/m$^3$,
 $D_T$ is the tritium diffusivity in m$^2$/s,
 $\text{trap\_per\_free}$ is a factor converting the magnitude of $C_T$ to be closer to $C_M$ for better numerical convergence,
-$k= 0.693/t_{1/2}$ is the decay rate constant in 1/s, $t_{1/2} = 12.3232$ years is the half life of tritium decay to helium-3,
+$k= 0.693/t_{1/2}$ is the decay rate constant in 1/s, $t_{1/2} = 12.3232$ years is the half life of tritium decay to $^3$He,
 $C_T^{empty}$ is the concentration of empty trapping sites,
 $N$ is the host density,
 $\alpha_t$ and $\alpha_r$ are the trapping and release rate coefficients,
