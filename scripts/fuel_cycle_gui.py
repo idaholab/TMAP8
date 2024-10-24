@@ -21,9 +21,71 @@ import os
 import shutil
 import argparse
 dir_path = os.path.dirname(os.path.realpath(__file__))
+class fake_tk():
+    def __init__(self,x=0,text=None,row=0,column=0,grid=None,textvariable=None,validate=None,validatecommand=None, width=True, height=True,master=None,**kwargs):
+        if text is not None:
+            self.x = text
+            self.text = text
+        else:
+            self.x = x
+        if textvariable is not None:
+            self.x = textvariable
+        self.__dict__[0] = 1
+        self.__dict__.update(**kwargs)
+        self._tkcanvas = self
+        self.figure = self
+        self.bbox = self
+        self.width = 1
+        self.height = 1
+        self.mpl_connect = self
+    def get(self):
+        if 'values' in self.__dict__.keys():
+            return self.values[0]
+        if type(self.x) is type(self):
+            return str(self.x)
+        else:
+            return self.x
+    def cget(self,index):
+        return self[index]
+    def __call__(self,*args,**kwargs):
+        pass
+    def set(self,x):
+        self.x = x
+    def grid(self,row=0,column=0,**kwargs):
+        return True
+    def update(self):
+        return True
+    def current(self, indice):
+        self.x.set(indice)
+    def __setitem__(self, key, value):
+        setattr(self, key, value)
+    def __getitem__(self, key):
+        getattr(self, key)
+    def trace(self,*args,**kwargs):
+        pass
+    def draw(self):
+        pass
+    def __str__(self):
+        if type(self.x) is type(self):
+            return self.x.__str__()
+        else:
+            return self.x
+    def __repr__(self):
+        if type(self.x) is type(self):
+            return self.x.__str__()
+        else:
+            return str(self.x)
+
+
 class fuel_cycle_form(tk.Tk):
-    def __init__(self, interval=1/120,tmap8_path=None):
-        super().__init__()
+    def __init__(self, interval=1/120,tmap8_path=None,headless=False):
+        self.headless = headless
+        if not headless:
+            super().__init__()
+        else:
+            self.register = lambda x, *args, **kwargs: True
+            self.update = lambda: True
+            self.destroy = self.cleanup
         if tmap8_path is None:
             check_paths = [os.path.join(dir_path,'..','tmap8-opt'),
                            os.path.join(dir_path,'..','tmap8-dbg'),
@@ -42,6 +104,7 @@ class fuel_cycle_form(tk.Tk):
         pattern = re.compile('\[(?P<variable>[0-9a-zA-Z_]+)\]\ntype = ConstantPostprocessor\nexecute_on = \'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR\'\nvalue\s?=\s*(?P<valnum>[0-9e.-]+)\n\[]',re.MULTILINE)
         instring = ''
         test_path = os.path.join(dir_path,'..','test','tests','fuel-cycle','fuel_cycle.i')
+        self.gold_path = os.path.join(dir_path,'..','test','tests','fuel-cycle','gold','fuel_cycle_out.csv')
         if not os.path.isfile(test_path):
             raise OSError('Unable to locate the fuel cycle input file')
         with open(test_path,'r') as infile:
@@ -61,7 +124,10 @@ class fuel_cycle_form(tk.Tk):
         self.plot_vars = []
         tvariables = {}
         row_i = 1
-        label = tk.Label(self, text='Variable')
+        if not headless:
+            label = tk.Label(self, text='Variable')
+        else:
+            label = fake_tk(grid=lambda row, column: True)
         _,self.tmpfile = tempfile.mkstemp(suffix='.i')
         atexit.register(self.cleanup)
         label.grid(row=0,column=0)
@@ -75,7 +141,8 @@ class fuel_cycle_form(tk.Tk):
         self.first_run = True
         label = tk.Label(self, text="Initial storage")
         entryval = tk.StringVar()
-        textwidget = tk.Entry(self,textvariable=entryval)
+        self.float_validator = (self.register(self.float_validation), '%d','%i', '%P', '%s', '%S', '%v', '%V', '%W')
+        textwidget = tk.Entry(self,textvariable=entryval,validate='key', validatecommand=self.float_validator)
         entryval.set("225.4215")
         self.init_storage = textwidget
         labels.append(label)
@@ -88,7 +155,7 @@ class fuel_cycle_form(tk.Tk):
         for match in self.matches:
             label = tk.Label(self, text=match[1][0])
             entryval = tk.StringVar()
-            textwidget = tk.Entry(self, text=match[1][0],textvariable=entryval)
+            textwidget = tk.Entry(self, text=match[1][0],textvariable=entryval, validate='key', validatecommand=self.float_validator)
             entryval.set(match[1][1])
             self.entries.append(textwidget)
             labels.append(label)
@@ -105,29 +172,77 @@ class fuel_cycle_form(tk.Tk):
         self.time_combobox = ttk.Combobox(self,width=20,textvariable=self.time_unit)
         self.time_combobox['values'] = ('seconds','hours','days','months','years')
         self.time_combobox.current(0)
-        self.time_divisors = {'seconds':1,'minutes':scc.minute,'hours':scc.hour,'days':scc.day,'months':scc.year/12,'years':scc.year}
+        self.time_divisors = {0:1,'seconds':1,'minutes':scc.minute,'hours':scc.hour,'days':scc.day,'months':scc.year/12,'years':scc.year}
         self.old_timescale = self.time_divisors[self.time_unit.get()]
         self.time_unit.trace('w',self.change_scale)
         self.create_plot()
-        self.update()
+        if not headless:
+            self.update()
         self.entries.append(self.time_combobox)
         self.time_combobox.grid(row=row_i,column=1)
         row_i+=1
-        self.labeldict = { label[1][0]:float(x.get()) for label, x in zip(self.matches, self.input_entries)}
+        self.labeldict = {}
+        for label, x in zip(self.matches, self.input_entries):
+            try:
+                self.labeldict[label[1][0]]=float(x.get())
+            except ValueError:
+                x_str = x.get()
+                try:
+                    self.labeldict[label[1][0]]=float(x.get().replace('e','').replace('-',''))
+                except ValueError:
+                    raise ValueError('Non-numeric value in parameter definition during creation')
+                    self.destroy()
+
 
         run_button = tk.Button(self,text="Run",command=self.buttonClick)
         run_button.grid(row=row_i,column=1)
-        #test = self.apply_template(instring,self.matches,vals={x[1][0]:float(x[1][1]) for x in self.matches})
+    def float_validation(self,action,index,value_if_allowed, prior_value, text, validation_type, trigger_type, widget_name):
+        if value_if_allowed:
+            try:
+                float(value_if_allowed)
+                return True
+            except ValueError:
+                try:
+                    float(value_if_allowed.replace('e','').replace('-',''))
+                    return True
+                except ValueError:
+                    return False
+                return False
+        else:
+            return False
+
+    def test_compare(self):
+        check_one = np.genfromtxt(self.tmpfile[:-2]+'_out.csv',skip_header=1,delimiter=',')
+        check_two = np.genfromtxt(self.gold_path,              skip_header=1,delimiter=',')
+        return np.array_equal(check_one, check_two)
 
     def apply_template(self,vals):
         outstring = self.top_header
         pointer = 0
-        outstring+='initial_condition = {:f}'.format(float(self.init_storage.get()))
+        try:
+            ins = float(self.init_storage.get())
+            outstring+='initial_condition = {:f}'.format(ins)
+        except ValueError:
+            try:
+                ins=float(self.init_storage.get().replace('e','').replace('-',''))
+                outstring+='initial_condition = {:f}'.format(ins)
+            except ValueError:
+                raise ValueError('Non-numeric value in initial storage definition')
+                self.destroy()
+
         outstring+=self.bottom_header
         for match in self.matches:
             outstring+=self.filtstring[pointer:match[0][0]]
             outstring+='  [{:s}]\n    type = ConstantPostprocessor\n    execute_on = \'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR\'\n'.format(match[1][0])
-            outstring+='    value = {:g}\n  []\n'.format(vals[match[1][0]])
+            try:
+                outstring+='    value = '+str(vals[match[1][0]])+'\n  []\n'
+            except ValueError:
+                try:
+                    ins=float(vals[match[1][0]].replace('e','').replace('-',''))
+                    outstring+='    value = '+str(ins)+'\n  []\n'
+                except ValueError:
+                    raise ValueError('Non-numeric value in parameter definition {:s}'.format(match[1][0]))
+                    self.destroy()
             pointer = match[0][1]
         outstring+= self.filtstring[pointer:]
         outstring+=self.footer
@@ -145,9 +260,10 @@ class fuel_cycle_form(tk.Tk):
         self.toolbar.grid(row=len(self.entries)+3,column=2,columnspan=2)
         self.canvas.mpl_connect("key_press_event", self.on_key_press)
         self.lines = self.ax.plot([],[])
-        self.ax.set_xlabel('Time [{:s}]'.format(self.time_unit.get()))
-        self.ax.set_ylabel('Tritium [kg]')
-        self.ax.set_xlim(0,8.64e8/self.time_divisors[self.time_unit.get()])
+        if not self.headless:
+            self.ax.set_xlabel('Time [{:s}]'.format(self.time_unit.get()))
+            self.ax.set_ylabel('Tritium [kg]')
+            self.ax.set_xlim(0,8.64e8/self.time_divisors[self.time_unit.get()])
 
     def on_key_press(self,event):
         key_press_handler(event,self.canvas,self.toolbar)
@@ -192,7 +308,7 @@ class fuel_cycle_form(tk.Tk):
                 self.lines[i].set_xdata(self.iz_data[:,0]/self.time_divisors[self.time_unit.get()])
                 self.lines[i].set_ydata(self.iz_data[:,j])
                 self.lines[i].set_label(self.checkboxes[j-1].cget("text"))
-                self.ax.set_xlabel('Time [{:s}]'.format(self.time_unit.get()))
+                self.ax.set_xlabel('Time [{:s}]'.format(str(self.time_unit.get())))
                 self.ax.set_xlim(0, np.max(self.iz_data[:,0]/self.time_divisors[self.time_unit.get()]))
                 maximum = max(np.max(self.iz_data[:,j]), maximum)
                 minimum = min(np.min(self.iz_data[:,j]), minimum)
@@ -238,11 +354,22 @@ parser.add_argument('--test',help='for use in TMAP8 testing to verify successful
         No GUI will be shown when using this flag',action='store_true')
 parsed_vals = parser.parse_args()
 if parsed_vals.test==True:
-    window = fuel_cycle_form()
+    tk.Tk = fake_tk
+    tk.Label = fake_tk
+    tk.StringVar = fake_tk
+    tk.Entry = fake_tk
+    tk.Button = fake_tk
+    ttk.Combobox = fake_tk
+    tk.Checkbutton = fake_tk
+    FigureCanvasTkAgg = fake_tk
+    NavigationToolbar2Tk = fake_tk
+    tk.IntVar = fake_tk
+    window = fuel_cycle_form(headless=True)
     window.buttonClick()
     window.update_plot()
     window.plot_ints[0].set(1)
     window.update_plot()
+    assert(window.test_compare()==True)
     #window.mainloop()
     window.destroy()
 else:

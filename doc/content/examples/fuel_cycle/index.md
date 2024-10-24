@@ -142,6 +142,9 @@ lines are model results.
 
 !listing test/tests/fuel-cycle/fuel_cycle.i
 
-A python-based graphical interactive script is available at [scripts/fuel_cycle_gui.py](/scripts/fuel_cycle_gui.py) as a demonstration of the various effects of individual parameters.
+A python-based graphical interactive script is available at [/test/tests/fuel_cycle/fuel_cycle_gui.py](/scripts/fuel_cycle_gui.py) as a demonstration of the various effects of 
+individual parameters. To use it, navigate to the scripts directory and run the script. All of the input parameters for the model can be changed by editing the associated entry, 
+then clicking the "Run" button. Once the simulation has run, checkboxes will appear for each system-level tritium inventory. Time units can also be adjusted by selecting the appropriate
+timescale.
 
 !bibtex bibliography

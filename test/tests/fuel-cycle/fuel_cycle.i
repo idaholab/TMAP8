@@ -371,7 +371,7 @@
   [residence8] #FCU
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value =  1
+    value = 1
     #value = 4680 # 1.3 h as per Day
     #value = 5 h Coleman
     #value = 8640 Abdou
