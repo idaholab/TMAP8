@@ -553,7 +553,9 @@
   petsc_options_iname = '-pc_type -sub_pc_type -snes_type'
   petsc_options_value = 'asm      lu           vinewtonrsls' # This petsc option helps prevent negative concentrations with bounds'
 
-  nl_rel_tol = 2.e-10
+  nl_rel_tol = 1.e-10
+  automatic_scaling = true
+  compute_scaling_once = false
 
   end_time = ${time_end}
   dtmax = ${dtmax}

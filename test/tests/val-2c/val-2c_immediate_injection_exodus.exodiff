@@ -1,0 +1,60 @@
+#  *****************************************************************
+#    EXODIFF  EXODIFF  EXODIFF  EXODIFF  EXODIFF  EXODIFF  EXODIFF
+#
+#                       Version 2.46 (2011-07-11)
+#             Authors:  Richard Drake, rrdrake@sandia.gov
+#                       Greg Sjaardema, gdsjaar@sandia.gov
+#                       2012/02/21   12:01:29 MST
+#
+#    EXODIFF  EXODIFF  EXODIFF  EXODIFF  EXODIFF  EXODIFF  EXODIFF
+#  *****************************************************************
+
+#  FILE 1: ~/projects/TMAP8/test/tests/val-2c/gold/val-2c_immediate_injection_out.e
+#   Title: polypole1_intergranular_coarsening_out.e
+#          Dim = 1, Blocks = 2, Nodes = 15, Elements = 14, Nodesets = 2, Sidesets = 2
+#          Vars: Global = 13, Nodal = 8, Element = 0, Nodeset = 0, Sideset = 0, Times = 201
+
+
+# ==============================================================
+#  NOTE: All node and element ids are reported as global ids.
+
+# NOTES:  - The min/max values are reporting the min/max in absolute value.
+#         - Time values (t) are 1-offset time step numbers.
+#         - Element block numbers are the block ids.
+#         - Node(n) and element(e) numbers are 1-offset.
+
+# COORDINATES absolute 1.e-6
+
+# TIME STEPS relative 1.e-6 floor 0.0
+
+GLOBAL VARIABLES relative 5.5.e-6 floor 1e-10
+	h2o_enclosure_edge_concentration       relative 5.5e-06 absolute 1e-10
+	h2o_enclosure_inventory                relative 5.5e-06 absolute 1e-10
+	h2o_paint_inventory                    relative 5.5e-06 absolute 1e-10
+	ht_enclosure_edge_concentration        relative 5.5e-06 absolute 1e-10
+	ht_enclosure_inventory                 relative 5.5e-06 absolute 1e-10
+	ht_paint_inventory                     relative 5.5e-06 absolute 1e-10
+	hto_enclosure_edge_concentration       relative 5.5e-06 absolute 1e-10
+	hto_enclosure_inventory                relative 5.5e-06 absolute 1e-10
+	hto_paint_inventory                    relative 5.5e-06 absolute 1e-10
+	t2_enclosure_edge_concentration        relative 5.5e-06 absolute 1e-10
+	t2_enclosure_inventory                 relative 5.5e-06 absolute 1e-10
+	t2_paint_inventory                     relative 5.5e-06 absolute 1e-10
+	tritium_total_inventory                relative 5.5e-06 absolute 1e-10
+
+NODAL VARIABLES relative 5.5.e-6 floor 1e-10
+	h2o_enclosure_concentration            relative 5.5e-06 absolute 1e-10
+	h2o_paint_concentration                relative 5.5e-06 absolute 1e-10
+	ht_enclosure_concentration             relative 5.5e-06 absolute 1e-10
+	ht_paint_concentration                 relative 5.5e-06 absolute 1e-10
+	hto_enclosure_concentration            relative 5.5e-06 absolute 1e-10
+	hto_paint_concentration                relative 1.0e-04 absolute 1e-7
+	t2_enclosure_concentration             relative 5.5e-06 absolute 1e-10
+	t2_paint_concentration                 relative 5.5e-06 absolute 1e-10
+
+# No ELEMENT VARIABLES
+
+# No NODESET VARIABLES
+
+# No SIDESET VARIABLES
+
