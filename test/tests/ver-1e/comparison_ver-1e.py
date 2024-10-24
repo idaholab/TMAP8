@@ -104,7 +104,7 @@ ax.set_ylim(0,45)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()
-plt.savefig('ver-1e_comparison_time.png', bbox_inches='tight')
+plt.savefig('ver-1e_comparison_time.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 
 # ============ Closeup of analytical solution ============
@@ -130,7 +130,7 @@ ax.set_ylim(-1,20)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()
-plt.savefig('ver-1e_comparison_time_closeup.png', bbox_inches='tight')
+plt.savefig('ver-1e_comparison_time_closeup.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 # ============ Comparison of concentration as a function of distance ============
 
@@ -201,5 +201,5 @@ ax.legend(loc="best")
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()
-plt.savefig('ver-1e_comparison_dist.png', bbox_inches='tight')
+plt.savefig('ver-1e_comparison_dist.png', bbox_inches='tight', dpi=300)
 plt.close(fig)

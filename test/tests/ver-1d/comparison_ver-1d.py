@@ -89,7 +89,7 @@ RMSE = np.sqrt(np.mean((tmap_perm-analytical_permeation)[idx:]**2) )
 RMSPE = RMSE*100/np.mean(analytical_permeation[idx:])
 ax.text(1.0,0.5e18, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
-plt.savefig('ver-1d_comparison_diffusion.png', bbox_inches='tight')
+plt.savefig('ver-1d_comparison_diffusion.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 
 # ========================= Trapping limited ====================================
@@ -127,5 +127,5 @@ ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()
-plt.savefig('ver-1d_comparison_trapping.png', bbox_inches='tight')
+plt.savefig('ver-1d_comparison_trapping.png', bbox_inches='tight', dpi=300)
 plt.close(fig)

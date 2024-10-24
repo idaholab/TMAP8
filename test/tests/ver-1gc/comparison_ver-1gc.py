@@ -79,6 +79,6 @@ ax.text(80, 1.70e14, '(B) RMSPE = %.2f '%err_percent_B+'%',fontweight='bold',col
 RMSE_C = np.linalg.norm(tmap8_sol_concentration_C-concentration_C)
 err_percent_C = RMSE_C*100/np.mean(concentration_C)
 ax.text(1010, 2.05e14, '(C) RMSPE = %.2f '%err_percent_C+'%',fontweight='bold',color = 'tab:green')
-plt.savefig('ver-1gc_comparison_diff_conc.png', bbox_inches='tight');
+plt.savefig('ver-1gc_comparison_diff_conc.png', bbox_inches='tight', dpi=300);
 plt.close(fig)
 

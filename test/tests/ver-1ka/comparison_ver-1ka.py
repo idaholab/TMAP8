@@ -61,4 +61,4 @@ ax.legend(loc="best")
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 
 # Save the plot as a PNG file
-plt.savefig('ver-1ka_comparison_time.png', bbox_inches='tight')
+plt.savefig('ver-1ka_comparison_time.png', bbox_inches='tight', dpi=300)

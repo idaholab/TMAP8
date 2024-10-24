@@ -71,7 +71,7 @@ ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()
-plt.savefig('ver-1c_comparison_time_TMAP4.png', bbox_inches='tight')
+plt.savefig('ver-1c_comparison_time_TMAP4.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 
 #========= Comparison of concentration as a function of time (TMAP7 case) ===================
@@ -106,4 +106,4 @@ ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()
-plt.savefig('ver-1c_comparison_time_TMAP7.png', bbox_inches='tight')
+plt.savefig('ver-1c_comparison_time_TMAP7.png', bbox_inches='tight', dpi=300)
