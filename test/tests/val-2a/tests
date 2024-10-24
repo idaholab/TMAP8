@@ -2,7 +2,7 @@
   design = 'EquilibriumBC.md'
   issues = '#12 #188'
   validation = 'val-2a.md'
-  [val-2a_TMAP4_csvdiff]
+  [val-2a_TMAP4_csvdiff_heavy]
     type = CSVDiff
     input = 'val-2a_base.i val-2a_TMAP4.i'
     csvdiff = val-2a_TMAP4_out.csv

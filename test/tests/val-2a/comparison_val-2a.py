@@ -9,11 +9,6 @@ import os
 script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
 
-# Necessary parameters
-length = 5e-4 # m
-radius =  2.5e-2 / 2 # m
-area = np.pi * radius ** 2 # m^2
-Temperature = 703 # K
 
 def numerical_solution_on_experiment_input(experiment_input, tmap_input, tmap_output):
     """Get new numerical solution based on the experimental input data points

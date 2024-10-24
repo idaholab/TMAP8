@@ -2,13 +2,13 @@ high_dt_max = 100
 low_dt_max = 1
 simulation_time = '${units 2e4 s}'
 diffusivity_D = '${units 3e-10 m^2/s -> mum^2/s}'
-recombination_parameter_enclos2 = '${units 2e-31 m^4/at/s -> mum^4/at/s}'    # m^4/atom/s
+recombination_parameter_enclos2 = '${units 2e-31 m^4/at/s -> mum^4/at/s}'
 pressure_high = '${units 4e-5 Pa}'
 pressure_low =  '${units 9e-6 Pa}'
 flux_high = '${units 4.9e19 at/m^2/s -> at/mum^2/s}'
 flux_low =  '${units 0      at/mum^2/s}'
-dissociation_coefficient_parameter_enclos1 = '${units 8.959e18 at/m^2/s/Pa -> at/mum^2/s/Pa}'  # d2/m^2/s/pa
-recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> mum^4/at/s}'    # m^4/atom/s
+dissociation_coefficient_parameter_enclos1 = '${units 8.959e18 at/m^2/s/Pa -> at/mum^2/s/Pa}'
+recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> mum^4/at/s}'
 
 [Variables]
   [concentration]
@@ -65,20 +65,20 @@ recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> m
 []
 
 [BCs]
-  [./left]
+  [left]
     type = MatNeumannBC
     variable = concentration
     boundary = left
     value = 1
     boundary_material = flux_on_left
-  [../]
-  [./right]
+  []
+  [right]
     type = MatNeumannBC
     variable = concentration
     boundary = right
     value = 1
     boundary_material = flux_on_right
-  [../]
+  []
 []
 
 [Materials]
