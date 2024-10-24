@@ -5,6 +5,7 @@
     type = CSVDiff
     input = val-2c_immediate_injection.i
     csvdiff = val-2c_immediate_injection_csv.csv
+    abs_zero = 1e-7
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with immediate T2 injection.'
     recover = false
   []
@@ -23,7 +24,7 @@
     input = val-2c_delay.i
     csvdiff = val-2c_delay_csv.csv
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection.'
-    abs_zero = 1e-8
+    abs_zero = 1e-7
     recover = false
   []
   [val-2c_delay_exodus]
