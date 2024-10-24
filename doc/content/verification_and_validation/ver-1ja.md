@@ -1,8 +1,8 @@
 # ver-1ja
 
 Two problems (ver-1ja and [ver-1jb](ver-1jb.md)) demonstrate tritium decay, though any other isotope could have been chosen.
-The first (ver-1ja) is simple decay of mobile species in a slab.
-The second ([ver-1jb](ver-1jb.md)) is decay of trapped atoms in a similar slab but with a distributed trap concentration.
+The first (ver-1ja) models simple decay of mobile species in a slab.
+The second ([ver-1jb](ver-1jb.md)) models decay of trapped atoms in a similar slab but with a distributed trap concentration.
 This page presents ver-1ja.
 
 # Radioactive Decay of Mobile Tritium in a Slab
@@ -66,6 +66,6 @@ The TMAP8 predictions match the analytical solution, with root mean square perce
 ### Input file
 
 !style halign=left
-The input file for this case can be found at [/ver-1ja.i].
+The input file for this case can be found at [/ver-1ja.i], which is also used as test in TMAP8 at [/ver-1ja/tests].
 
 !bibtex bibliography
