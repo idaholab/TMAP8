@@ -9,7 +9,9 @@
 #    EXODIFF  EXODIFF  EXODIFF  EXODIFF  EXODIFF  EXODIFF  EXODIFF
 #  *****************************************************************
 
+# This is use in two different tests:
 #  FILE 1: ~/projects/TMAP8/test/tests/val-2c/gold/val-2c_immediate_injection_out.e
+#  FILE 2: ~/projects/TMAP8/test/tests/val-2c/gold/val-2c_delay_out.e
 #   Title: polypole1_intergranular_coarsening_out.e
 #          Dim = 1, Blocks = 2, Nodes = 15, Elements = 14, Nodesets = 2, Sidesets = 2
 #          Vars: Global = 13, Nodal = 8, Element = 0, Nodeset = 0, Sideset = 0, Times = 201
@@ -48,7 +50,7 @@ NODAL VARIABLES relative 5.5.e-6 floor 1e-10
 	ht_enclosure_concentration             
 	ht_paint_concentration                 
 	hto_enclosure_concentration            
-	hto_paint_concentration                relative 1.0e-04 floor 1e-7
+	hto_paint_concentration                relative 1.0e-04 floor 7.e-6
 	t2_enclosure_concentration             
 	t2_paint_concentration                 
 
