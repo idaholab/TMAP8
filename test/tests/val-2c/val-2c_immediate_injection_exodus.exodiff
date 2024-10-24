@@ -28,29 +28,29 @@
 # TIME STEPS relative 1.e-6 floor 0.0
 
 GLOBAL VARIABLES relative 5.5.e-6 floor 1e-10
-	h2o_enclosure_edge_concentration       relative 5.5e-06 absolute 1e-10
-	h2o_enclosure_inventory                relative 5.5e-06 absolute 1e-10
-	h2o_paint_inventory                    relative 5.5e-06 absolute 1e-10
-	ht_enclosure_edge_concentration        relative 5.5e-06 absolute 1e-10
-	ht_enclosure_inventory                 relative 5.5e-06 absolute 1e-10
-	ht_paint_inventory                     relative 5.5e-06 absolute 1e-10
-	hto_enclosure_edge_concentration       relative 5.5e-06 absolute 1e-10
-	hto_enclosure_inventory                relative 5.5e-06 absolute 1e-10
-	hto_paint_inventory                    relative 5.5e-06 absolute 1e-10
-	t2_enclosure_edge_concentration        relative 5.5e-06 absolute 1e-10
-	t2_enclosure_inventory                 relative 5.5e-06 absolute 1e-10
-	t2_paint_inventory                     relative 5.5e-06 absolute 1e-10
-	tritium_total_inventory                relative 5.5e-06 absolute 1e-10
+	h2o_enclosure_edge_concentration       
+	h2o_enclosure_inventory                
+	h2o_paint_inventory                    
+	ht_enclosure_edge_concentration        
+	ht_enclosure_inventory                 
+	ht_paint_inventory                     
+	hto_enclosure_edge_concentration       
+	hto_enclosure_inventory                
+	hto_paint_inventory                    
+	t2_enclosure_edge_concentration        
+	t2_enclosure_inventory                 
+	t2_paint_inventory                     
+	tritium_total_inventory                
 
 NODAL VARIABLES relative 5.5.e-6 floor 1e-10
-	h2o_enclosure_concentration            relative 5.5e-06 absolute 1e-10
-	h2o_paint_concentration                relative 5.5e-06 absolute 1e-10
-	ht_enclosure_concentration             relative 5.5e-06 absolute 1e-10
-	ht_paint_concentration                 relative 5.5e-06 absolute 1e-10
-	hto_enclosure_concentration            relative 5.5e-06 absolute 1e-10
-	hto_paint_concentration                relative 1.0e-04 absolute 1e-7
-	t2_enclosure_concentration             relative 5.5e-06 absolute 1e-10
-	t2_paint_concentration                 relative 5.5e-06 absolute 1e-10
+	h2o_enclosure_concentration            
+	h2o_paint_concentration                
+	ht_enclosure_concentration             
+	ht_paint_concentration                 
+	hto_enclosure_concentration            
+	hto_paint_concentration                relative 1.0e-04 floor 1e-7
+	t2_enclosure_concentration             
+	t2_paint_concentration                 
 
 # No ELEMENT VARIABLES
 

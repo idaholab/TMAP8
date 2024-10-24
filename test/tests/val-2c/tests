@@ -12,7 +12,7 @@
     type = Exodiff
     input = val-2c_immediate_injection.i
     prereq = val-2c_immediate_injection_csv
-    should_execute = false # this test relies on the output files from val-2c_csv, so it shouldn't be run twice
+    should_execute = false # this test relies on the output files from val-2c_immediate_injection_csv, so it shouldn't be run twice
     exodiff = val-2c_immediate_injection_out.e
     custom_cmp = 'val-2c_immediate_injection_exodus.exodiff'
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with immediate T2 injection and properly compute the exodus file.'
@@ -30,7 +30,7 @@
     type = Exodiff
     input = val-2c_delay.i
     prereq = val-2c_delay_csv
-    should_execute = false # this test relies on the output files from val-2c_csv, so it shouldn't be run twice
+    should_execute = false # this test relies on the output files from val-2c_delay_csv, so it shouldn't be run twice
     exodiff = val-2c_delay_out.e
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection and properly compute the exodus file.'
     recover = false
