@@ -3,7 +3,6 @@ import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 import os
-from numpy import sin,tan,sqrt,exp
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
 script_folder = os.path.dirname(__file__)
