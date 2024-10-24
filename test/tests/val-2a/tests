@@ -1,0 +1,18 @@
+[Tests]
+  design = 'EquilibriumBC.md'
+  issues = '#12 #188'
+  validation = 'val-2a.md'
+  [val-2a_TMAP4_csvdiff_heavy]
+    type = CSVDiff
+    input = 'val-2a_base.i val-2a_TMAP4.i'
+    csvdiff = val-2a_TMAP4_out.csv
+    heavy = true
+    requirement = 'The system shall be able to model Ion implantation based on the requirements and conditions listed in the TMAP4 V&V report'
+  []
+  [val-2a_comparison]
+    type = RunCommand
+    command = 'python3 comparison_val-2a.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of validation case 2a, modeling ion implantation experiment.'
+    required_python_packages = 'matplotlib numpy pandas os'
+  []
+[]
