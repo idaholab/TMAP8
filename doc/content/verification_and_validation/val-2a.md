@@ -43,7 +43,7 @@ where $\sigma$ is the characteristic width of the normal distribution, and $\mu$
 
 The pressures on the upstream and downstream sides are close to the vacuum situation, and have less impact for the recommendation on two sides. Thus, TMAP8 ignore the impact of pressure on the boundary conditions to simplify the model. The recommendation is described as:
 
-\begin{equation} \label{eq:recommendation}
+\begin{equation} \label{eq:recommendation_ignore_Pressure}
 J = A K_r C^2.
 \end{equation}
 
@@ -88,6 +88,7 @@ Both TMAP4 [!citep](longhurst1992verification) and TMAP7 [!citep](ambrosek2008ve
 ## Results
 
 [val-2a_comparison] shows the comparison of the TMAP8 calculation and the experimental data from [!cite](anderl1985tritium). There is reasonable agreement between the TMAP predictions and the experimental data with a root mean square percentage error of RMSPE = 26.10 %. Note that the agreement could be improved by adjusting the model parameters. It is also possible to perform this optimization with [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html).
+
 !media comparison_val-2a.py
        image_name=val-2a_comparison.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
