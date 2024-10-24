@@ -9,11 +9,62 @@ flux_high = '${units 4.9e19 at/m^2/s -> at/mum^2/s}'
 flux_low =  '${units 0      at/mum^2/s}'
 dissociation_coefficient_parameter_enclos1 = '${units 8.959e18 at/m^2/s/Pa -> at/mum^2/s/Pa}'
 recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> mum^4/at/s}'
+width = '${units 2.4e-9 m -> mum}'
+depth = '${units 14e-9 m -> mum}'
+time_1 = '${units 5820 s}'
+time_2 = '${units 9056 s}'
+time_3 = '${units 12062 s}'
+time_4 = '${units 14572 s}'
+time_5 = '${units 17678 s}'
+
+## Modeling parameters
+sample_thickness = '${units 5e-4 m -> mum}'
+desired_mesh_size_surface = '${units 2e-9 m -> mum}' # defined by the refinement of the implantation profile and the need to have a fine mesh at BC
+refinement_depth_left = '${units 1e-6 m -> mum}'
+largest_mesh_size = ${refinement_depth_left}
+refinement_steps = ${fparse floor((log(largest_mesh_size)-log(desired_mesh_size_surface)) / log(2))} # design to reach desired_mesh_size_surface and refine refinement_depth_left from the start (otherwise refinment does not happen)
+node_size = ${fparse desired_mesh_size_surface*2^refinement_steps} # defined by the refinement of the implantation profile
+num_nodes = ${fparse floor(sample_thickness/node_size)}
 
 [Variables]
   [concentration]
     order = FIRST
     family = LAGRANGE
+  []
+[]
+
+[Mesh]
+  # [cartesian_mesh_TMAP4]
+  #   type = CartesianMeshGenerator
+  #   dim = 1
+  #   #     num
+  #   dx = '${fparse 5 * ${units 4e-9 m -> mum}}  ${units 1e-8 m -> mum}  ${units 1e-7 m -> mum}
+  #         ${units 1e-6 m -> mum}                ${units 1e-5 m -> mum}  ${fparse 10 * ${units 4.88e-5 m -> mum}}'
+  #   ix = '${fparse 5 * ${nx_scale}}             ${nx_scale}             ${nx_scale}
+  #         ${nx_scale}                           ${nx_scale}             ${fparse 10 * ${nx_scale}}'
+  # []
+
+  [gen]
+    type = GeneratedMeshGenerator
+    dim = 1
+    nx = ${num_nodes}
+    xmax = ${sample_thickness}
+  []
+[]
+
+[Adaptivity] # refines the mesh on BCs (to limit errors from flux calculations)
+  steps = ${refinement_steps}
+  initial_steps = ${refinement_steps}
+  max_h_level = ${refinement_steps}
+  marker = box
+  [Markers]
+    [box]
+      type = BoxMarker
+      bottom_left = '${refinement_depth_left} -1 -1'
+      top_right = '${sample_thickness} 1 1'
+      inside = DO_NOTHING
+      outside = REFINE
+    []
   []
 []
 
@@ -35,8 +86,6 @@ recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> m
 []
 
 [AuxVariables]
-  [pressure_left]
-  []
   [concentration_source]
   []
   [recombination_TMAP4]
@@ -44,12 +93,6 @@ recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> m
 []
 
 [AuxKernels]
-  [pressure_aux]
-    type = FunctionAux
-    variable = pressure_left
-    function = pressure_func
-    execute_on = 'INITIAL TIMESTEP_END'
-  []
   [concentration_source_aux]
     type = FunctionAux
     variable = concentration_source
@@ -95,6 +138,54 @@ recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> m
     coupled_variables = 'concentration'
     property_name = 'flux_on_right'
     expression = '- 2 * ${recombination_parameter_enclos2} * concentration ^ 2'
+  []
+[]
+
+[Functions]
+  ################# TMAP4
+  [Kd_left_func]
+    type = ParsedFunction
+    expression = '${dissociation_coefficient_parameter_enclos1} * (1 - 0.9999 * exp(-6e-5 * t))'
+  []
+
+  [Kr_left_func]
+    type = ParsedFunction
+    expression = '${recombination_coefficient_parameter_enclos1_TMAP4} * (1 - 0.9999 * exp(-6e-5 * t))'
+  []
+
+  [surface_flux_func]
+    type = ParsedFunction
+    expression = 'if(t < ${time_1}, ${flux_high},
+                  if(t < ${time_2}, ${flux_low},
+                  if(t < ${time_3},  ${flux_high},
+                  if(t < ${time_4},  ${flux_low},
+                  if(t < ${time_5},  ${flux_high}, ${flux_low}))))) * 0.75'
+  []
+
+  [source_distribution]
+    type = ParsedFunction
+    expression = '1.5 / ( ${width} * sqrt(2 * pi) ) * exp(-0.5 * ((x - ${depth}) / ${width}) ^ 2)'
+  []
+
+  [concentration_source_norm_func]
+    type = ParsedFunction
+    symbol_names = 'source_distribution surface_flux_func'
+    symbol_values = 'source_distribution surface_flux_func'
+    expression = 'source_distribution * surface_flux_func'
+  []
+
+  [max_dt_size_func]
+    type = ParsedFunction
+    expression = 'if(t<${time_1}-100,  ${high_dt_max},
+                  if(t<${time_1}+100,  ${low_dt_max},
+                  if(t<${time_2}-100,  ${high_dt_max},
+                  if(t<${time_2}+100,  ${low_dt_max},
+                  if(t<${time_3}-100,  ${high_dt_max},
+                  if(t<${time_3}+100,  ${low_dt_max},
+                  if(t<${time_4}-100,  ${high_dt_max},
+                  if(t<${time_4}+100,  ${low_dt_max},
+                  if(t<${time_5}-100,  ${high_dt_max},
+                  if(t<${time_5}+100,  ${low_dt_max}, ${high_dt_max}))))))))))'
   []
 []
 
@@ -175,7 +266,7 @@ recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> m
   end_time = ${simulation_time}
   automatic_scaling = true
   nl_abs_tol = 1e-12
-  nl_rel_tol = 1e-3
+  nl_rel_tol = 1e-4
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 3.125
@@ -183,5 +274,14 @@ recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> m
     growth_factor = 1.1
     cutback_factor = 0.9
     timestep_limiting_postprocessor = max_time_step_size
+  []
+[]
+
+[Outputs]
+  file_base = 'val-2a_out'
+  csv = true
+  [exodus]
+    type = Exodus
+    output_material_properties = true
   []
 []
