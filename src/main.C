@@ -12,7 +12,5 @@
 int
 main(int argc, char * argv[])
 {
-  Moose::main<TMAP8TestApp>(argc, argv);
-
-  return 0;
+  return Moose::main<TMAP8TestApp>(argc, argv);
 }
