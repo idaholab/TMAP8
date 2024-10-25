@@ -2,14 +2,14 @@ nx_scale = 1
 high_dt_max = 100
 low_dt_max = 1
 simulation_time = '${units 2e4 s}'
-diffusivity_D = '${units 3e-10 m^2/s -> mum^2/s}'
-recombination_parameter_enclos2 = '${units 2e-31 m^4/at/s -> mum^4/at/s}'
-flux_high = '${units 4.9e19 at/m^2/s -> at/mum^2/s}'
-flux_low =  '${units 0      at/mum^2/s}'
-dissociation_coefficient_parameter_enclos1 = '${units 8.959e18 at/m^2/s/Pa -> at/mum^2/s/Pa}'
-recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> mum^4/at/s}'
-width = '${units 2.4e-9 m -> mum}'
-depth = '${units 14e-9 m -> mum}'
+diffusivity_D = '${units 3e-10 m^2/s -> nm^2/s}'
+recombination_parameter_enclos2 = '${units 2e-31 m^4/at/s -> nm^4/at/s}'
+flux_high = '${units 4.9e19 at/m^2/s -> at/nm^2/s}'
+flux_low =  '${units 0      at/nm^2/s}'
+dissociation_coefficient_parameter_enclos1 = '${units 8.959e18 at/m^2/s/Pa -> at/nm^2/s/Pa}'
+recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> nm^4/at/s}'
+width = '${units 2.4e-9 m -> nm}'
+depth = '${units 14e-9 m -> nm}'
 time_1 = '${units 5820 s}'
 time_2 = '${units 9056 s}'
 time_3 = '${units 12062 s}'
@@ -17,9 +17,9 @@ time_4 = '${units 14572 s}'
 time_5 = '${units 17678 s}'
 
 ## Modeling parameters
-sample_thickness = '${units 5e-4 m -> mum}'
-desired_mesh_size_surface = '${units 2e-9 m -> mum}' # defined by the refinement of the implantation profile and the need to have a fine mesh at BC
-refinement_depth_left = '${units 1e-6 m -> mum}'
+sample_thickness = '${units 5e-4 m -> nm}'
+desired_mesh_size_surface = '${units 1e-9 m -> nm}' # defined by the refinement of the implantation profile and the need to have a fine mesh at BC
+refinement_depth_left = '${units 1e-5 m -> nm}'
 largest_mesh_size = ${refinement_depth_left}
 refinement_steps = ${fparse floor((log(largest_mesh_size)-log(desired_mesh_size_surface)) / log(2))} # design to reach desired_mesh_size_surface and refine refinement_depth_left from the start (otherwise refinment does not happen)
 node_size = ${fparse desired_mesh_size_surface*2^refinement_steps} # defined by the refinement of the implantation profile
@@ -38,8 +38,8 @@ num_nodes = ${fparse floor(sample_thickness/node_size)}
     type = CartesianMeshGenerator
     dim = 1
     #     num
-    dx = '${fparse 5 * ${units 4e-9 m -> mum}}  ${units 1e-8 m -> mum}  ${units 1e-7 m -> mum}
-          ${units 1e-6 m -> mum}                ${units 1e-5 m -> mum}  ${fparse 10 * ${units 4.88e-5 m -> mum}}'
+    dx = '${fparse 5 * ${units 4e-9 m -> nm}}  ${units 1e-8 m -> nm}  ${units 1e-7 m -> nm}
+          ${units 1e-6 m -> nm}                ${units 1e-5 m -> nm}  ${fparse 10 * ${units 4.88e-5 m -> nm}}'
     ix = '${fparse 5 * ${nx_scale}}             ${nx_scale}             ${nx_scale}
           ${nx_scale}                           ${nx_scale}             ${fparse 10 * ${nx_scale}}'
   []
@@ -190,40 +190,15 @@ num_nodes = ${fparse floor(sample_thickness/node_size)}
 []
 
 [Postprocessors]
-  [flux_surface_left]
-    type = SideDiffusiveFluxIntegral
-    variable = concentration
-    diffusivity = '${diffusivity_D}'
-    boundary = 'left'
-  []
-  [scaled_flux_surface_left]
-    type = ScalePostprocessor
-    scaling_factor = '${units 1 m^2 -> mum^2}'
-    value = flux_surface_left
-    execute_on = 'initial nonlinear linear timestep_end'
-    outputs = 'console csv exodus'
-  []
-  [flux_surface_right]
-    type = SideDiffusiveFluxIntegral
-    variable = concentration
-    diffusivity = '${diffusivity_D}'
-    boundary = 'right'
-  []
-  [scaled_flux_surface_right]
-    type = ScalePostprocessor
-    scaling_factor = '${units 1 m^2 -> mum^2}'
-    value = flux_surface_right
-    execute_on = 'initial nonlinear linear timestep_end'
-    outputs = 'console csv exodus'
-  []
   [dcdx_left]
     type = SideAverageMaterialProperty
     boundary = left
     property = flux_on_left
+    outputs = none
   []
   [scaled_recombination_flux_left]
     type = ScalePostprocessor
-    scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
+    scaling_factor = '${fparse -1 * ${units 1 m^2 -> nm^2}}'
     value = dcdx_left
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = 'console csv exodus'
@@ -232,10 +207,11 @@ num_nodes = ${fparse floor(sample_thickness/node_size)}
     type = SideAverageMaterialProperty
     boundary = right
     property = flux_on_right
+    outputs = none
   []
   [scaled_recombination_flux_right]
     type = ScalePostprocessor
-    scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
+    scaling_factor = '${fparse -1 * ${units 1 m^2 -> nm^2}}'
     value = dcdx_right
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = 'console csv exodus'
@@ -265,8 +241,8 @@ num_nodes = ${fparse floor(sample_thickness/node_size)}
 
   end_time = ${simulation_time}
   automatic_scaling = true
-  nl_abs_tol = 1e-12
-  nl_rel_tol = 1e-4
+  # nl_abs_tol = 1e-12
+  nl_rel_tol = 1e-2
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 3.125
@@ -283,5 +259,6 @@ num_nodes = ${fparse floor(sample_thickness/node_size)}
   [exodus]
     type = Exodus
     output_material_properties = true
+    interval = 100
   []
 []
