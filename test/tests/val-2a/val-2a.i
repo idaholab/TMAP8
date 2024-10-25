@@ -225,6 +225,6 @@ time_5 = '${units 17678 s}'
   [exodus]
     type = Exodus
     output_material_properties = true
-    interval = 100
+    time_step_interval = 100
   []
 []
