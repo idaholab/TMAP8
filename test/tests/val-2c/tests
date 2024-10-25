@@ -6,7 +6,8 @@
     input = val-2c_immediate_injection.i
     csvdiff = val-2c_immediate_injection_csv.csv
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with immediate T2 injection.'
-    recover = false
+    max_parallel = 1 # see #200
+    recover = false # see #196
   []
   [val-2c_immediate_injection_exodus]
     type = Exodiff
@@ -16,7 +17,8 @@
     exodiff = val-2c_immediate_injection_out.e
     custom_cmp = 'val-2c_exodus.exodiff'
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with immediate T2 injection and properly compute the exodus file.'
-    recover = false
+    max_parallel = 1 # see #200
+    recover = false # see #196
   []
   [val-2c_delay_csv]
     type = CSVDiff
@@ -24,7 +26,8 @@
     csvdiff = val-2c_delay_csv.csv
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection.'
     abs_zero = 1e-8
-    recover = false
+    max_parallel = 1 # see #200
+    recover = false # see #196
   []
   [val-2c_delay_exodus]
     type = Exodiff
@@ -34,7 +37,8 @@
     exodiff = val-2c_delay_out.e
     custom_cmp = 'val-2c_exodus.exodiff'
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection and properly compute the exodus file.'
-    recover = false
+    max_parallel = 1 # see #200
+    recover = false # see #196
   []
   [val-2c_delay_comparison]
     type = RunCommand
