@@ -2,6 +2,22 @@
   design = 'MatNeumannBC.md'
   issues = '#12 #188'
   validation = 'val-2a.md'
+  [val-2a_csvdiff]
+    type = CSVDiff
+    input = 'val-2a.i'
+    cli_args = "simulation_time='${units 4e3 s}' Mesh/active='cartesian' inactive='Adaptivity' Executioner/nl_rel_tol=1e-1 Outputs/file_base='val-2a_limited_out'"
+    csvdiff = val-2a_limited_out.csv
+    requirement = 'The system shall be able to model Ion implantation based on the requirements and conditions listed in the TMAP4 V&V report'
+  []
+  [val-2a_exodiff]
+    type = Exodiff
+    input = 'val-2a.i'
+    cli_args = "simulation_time='${units 4e3 s}' Mesh/active='cartesian' inactive='Adaptivity' Executioner/nl_rel_tol=1e-1 Outputs/file_base='val-2a_limited_out'"
+    exodiff = val-2a_limited_out.e
+    prereq = val-2a_csvdiff
+    should_execute = false # this test relies on the output files from val-2a_csvdiff_heavy, so it shouldn't be run twice
+    requirement = 'The system shall be able to model Ion implantation based on the requirements and conditions listed in the TMAP4 V&V report and generate an exodus file'
+  []
   [val-2a_csvdiff_heavy]
     type = CSVDiff
     input = 'val-2a.i'
@@ -9,7 +25,7 @@
     heavy = true
     requirement = 'The system shall be able to model Ion implantation based on the requirements and conditions listed in the TMAP4 V&V report'
   []
-  [val-2a_TMAP4_exodiff_heavy]
+  [val-2a_exodiff_heavy]
     type = Exodiff
     input = 'val-2a.i'
     exodiff = val-2a_out.e

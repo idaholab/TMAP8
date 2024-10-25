@@ -1,10 +1,9 @@
+nx_scale = 1
 high_dt_max = 100
 low_dt_max = 1
 simulation_time = '${units 2e4 s}'
 diffusivity_D = '${units 3e-10 m^2/s -> mum^2/s}'
 recombination_parameter_enclos2 = '${units 2e-31 m^4/at/s -> mum^4/at/s}'
-pressure_high = '${units 4e-5 Pa}'
-pressure_low =  '${units 9e-6 Pa}'
 flux_high = '${units 4.9e19 at/m^2/s -> at/mum^2/s}'
 flux_low =  '${units 0      at/mum^2/s}'
 dissociation_coefficient_parameter_enclos1 = '${units 8.959e18 at/m^2/s/Pa -> at/mum^2/s/Pa}'
@@ -34,15 +33,16 @@ num_nodes = ${fparse floor(sample_thickness/node_size)}
 []
 
 [Mesh]
-  # [cartesian_mesh_TMAP4]
-  #   type = CartesianMeshGenerator
-  #   dim = 1
-  #   #     num
-  #   dx = '${fparse 5 * ${units 4e-9 m -> mum}}  ${units 1e-8 m -> mum}  ${units 1e-7 m -> mum}
-  #         ${units 1e-6 m -> mum}                ${units 1e-5 m -> mum}  ${fparse 10 * ${units 4.88e-5 m -> mum}}'
-  #   ix = '${fparse 5 * ${nx_scale}}             ${nx_scale}             ${nx_scale}
-  #         ${nx_scale}                           ${nx_scale}             ${fparse 10 * ${nx_scale}}'
-  # []
+  active = 'gen'
+  [cartesian]
+    type = CartesianMeshGenerator
+    dim = 1
+    #     num
+    dx = '${fparse 5 * ${units 4e-9 m -> mum}}  ${units 1e-8 m -> mum}  ${units 1e-7 m -> mum}
+          ${units 1e-6 m -> mum}                ${units 1e-5 m -> mum}  ${fparse 10 * ${units 4.88e-5 m -> mum}}'
+    ix = '${fparse 5 * ${nx_scale}}             ${nx_scale}             ${nx_scale}
+          ${nx_scale}                           ${nx_scale}             ${fparse 10 * ${nx_scale}}'
+  []
 
   [gen]
     type = GeneratedMeshGenerator
@@ -52,7 +52,7 @@ num_nodes = ${fparse floor(sample_thickness/node_size)}
   []
 []
 
-[Adaptivity] # refines the mesh on BCs (to limit errors from flux calculations)
+[Adaptivity]
   steps = ${refinement_steps}
   initial_steps = ${refinement_steps}
   max_h_level = ${refinement_steps}
