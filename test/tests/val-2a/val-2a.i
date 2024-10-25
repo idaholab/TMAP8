@@ -2,14 +2,14 @@ nx_scale = 5
 high_dt_max = 100
 low_dt_max = 1
 simulation_time = '${units 2e4 s}'
-diffusivity_D = '${units 3e-10 m^2/s -> nm^2/s}'
-recombination_parameter_enclos2 = '${units 2e-31 m^4/at/s -> nm^4/at/s}'
-flux_high = '${units 4.9e19 at/m^2/s -> at/nm^2/s}'
-flux_low =  '${units 0      at/nm^2/s}'
-dissociation_coefficient_parameter_enclos1 = '${units 8.959e18 at/m^2/s/Pa -> at/nm^2/s/Pa}'
-recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> nm^4/at/s}'
-width = '${units 2.4e-9 m -> nm}'
-depth = '${units 14e-9 m -> nm}'
+diffusivity_D = '${units 3e-10 m^2/s -> mum^2/s}'
+recombination_parameter_enclos2 = '${units 2e-31 m^4/at/s -> mum^4/at/s}'
+flux_high = '${units 4.9e19 at/m^2/s -> at/mum^2/s}'
+flux_low =  '${units 0      at/mum^2/s}'
+dissociation_coefficient_parameter_enclos1 = '${units 8.959e18 at/m^2/s/Pa -> at/mum^2/s/Pa}'
+recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> mum^4/at/s}'
+width = '${units 2.4e-9 m -> mum}'
+depth = '${units 14e-9 m -> mum}'
 time_1 = '${units 5820 s}'
 time_2 = '${units 9056 s}'
 time_3 = '${units 12062 s}'
@@ -28,8 +28,8 @@ time_5 = '${units 17678 s}'
     type = CartesianMeshGenerator
     dim = 1
     #     num
-    dx = '${fparse 5 * ${units 4e-9 m -> nm}}  ${units 1e-8 m -> nm}  ${units 1e-7 m -> nm}
-          ${units 1e-6 m -> nm}                ${units 1e-5 m -> nm}  ${fparse 10 * ${units 4.88e-5 m -> nm}}'
+    dx = '${fparse 5 * ${units 4e-9 m -> mum}}  ${units 1e-8 m -> mum}  ${units 1e-7 m -> mum}
+          ${units 1e-6 m -> mum}                ${units 1e-5 m -> mum}  ${fparse 10 * ${units 4.88e-5 m -> mum}}'
     ix = '${fparse 5 * ${nx_scale}}             ${nx_scale}             ${nx_scale}
           ${nx_scale}                           ${nx_scale}             ${fparse 10 * ${nx_scale}}'
   []
@@ -164,7 +164,7 @@ time_5 = '${units 17678 s}'
   []
   [scaled_recombination_flux_left]
     type = ScalePostprocessor
-    scaling_factor = '${fparse -1 * ${units 1 m^2 -> nm^2}}'
+    scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
     value = dcdx_left
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = 'console csv exodus'
@@ -177,7 +177,7 @@ time_5 = '${units 17678 s}'
   []
   [scaled_recombination_flux_right]
     type = ScalePostprocessor
-    scaling_factor = '${fparse -1 * ${units 1 m^2 -> nm^2}}'
+    scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
     value = dcdx_right
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = 'console csv exodus'
