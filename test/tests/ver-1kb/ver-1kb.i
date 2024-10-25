@@ -5,8 +5,8 @@ simulation_time = ${units 10000 s}
 T = ${units 500 K}
 R = ${units 8.31446261815324 J/mol/K} # ideal gas constant from PhysicalConstants.h
 Na = ${units 6.02214076e23 /mol} # Avogadro's number from /PhysicalConstants.h
-initial_pressure_1 = ${units 1e5 Pa} 
-initial_pressure_2 = ${units 1e-10 Pa}  
+initial_pressure_1 = ${units 1e5 Pa}
+initial_pressure_2 = ${units 1e-10 Pa}
 initial_concentration_1 = ${fparse initial_pressure_1 / (R*T)} # mol/m^3
 initial_concentration_2 = ${fparse initial_pressure_2 / (R*T)} # mol/m^3
 solubility = ${fparse 1.082e20/Na} # Henry's law constant J/mol
@@ -121,12 +121,12 @@ unit_scale_neighbor = 1
     variable = concentration_enclosure_1
     neighbor_var = concentration_enclosure_2
     boundary = interface
-    D = ${diffusivity}  
+    D = ${diffusivity}
     D_neighbor = ${diffusivity}
   []
   [interface_sorption]
     type = InterfaceSorption
-    K0 = ${solubility}                    
+    K0 = ${solubility}
     Ea = 0
     n_sorption = ${n_sorption}
     diffusivity = ${diffusivity}
