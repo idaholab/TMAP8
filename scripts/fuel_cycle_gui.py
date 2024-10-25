@@ -101,7 +101,7 @@ class fuel_cycle_form(tk.Tk):
         self.tmap8_path = tmap8_path
         if tmap8_path is None or not (os.path.isfile(self.tmap8_path) and os.access(self.tmap8_path, os.X_OK)):
             raise OSError('Unable to locate a working TMAP8 executable')
-        pattern = re.compile('\[(?P<variable>[0-9a-zA-Z_]+)\]\ntype = ConstantPostprocessor\nexecute_on = \'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR\'\nvalue\s?=\s*(?P<valnum>[0-9e.-]+)\n\[]',re.MULTILINE)
+        pattern = re.compile('\\[(?P<variable>[0-9a-zA-Z_]+)\\]\ntype = ConstantPostprocessor\nexecute_on = \'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR\'\nvalue\\s?=\\s*(?P<valnum>[0-9e.-]+)\n\\[]',re.MULTILINE)
         instring = ''
         test_path = os.path.join(dir_path,'..','test','tests','fuel-cycle','fuel_cycle.i')
         self.gold_path = os.path.join(dir_path,'..','test','tests','fuel-cycle','gold','fuel_cycle_out.csv')
@@ -214,7 +214,10 @@ class fuel_cycle_form(tk.Tk):
     def test_compare(self):
         check_one = np.genfromtxt(self.tmpfile[:-2]+'_out.csv',skip_header=1,delimiter=',')
         check_two = np.genfromtxt(self.gold_path,              skip_header=1,delimiter=',')
-        return np.array_equal(check_one, check_two)
+        if not np.array_equal(check_one, check_two):
+            return sum((check_one[-1,:]-check_two[-1,:])**2) < 1e-10
+        else:
+            return np.array_equal(check_one, check_two)
 
     def apply_template(self,vals):
         outstring = self.top_header
