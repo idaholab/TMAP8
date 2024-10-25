@@ -1,4 +1,4 @@
-nx_scale = 1
+nx_scale = 5
 high_dt_max = 100
 low_dt_max = 1
 simulation_time = '${units 2e4 s}'
@@ -16,15 +16,6 @@ time_3 = '${units 12062 s}'
 time_4 = '${units 14572 s}'
 time_5 = '${units 17678 s}'
 
-## Modeling parameters
-sample_thickness = '${units 5e-4 m -> nm}'
-desired_mesh_size_surface = '${units 1e-9 m -> nm}' # defined by the refinement of the implantation profile and the need to have a fine mesh at BC
-refinement_depth_left = '${units 1e-5 m -> nm}'
-largest_mesh_size = ${refinement_depth_left}
-refinement_steps = ${fparse floor((log(largest_mesh_size)-log(desired_mesh_size_surface)) / log(2))} # design to reach desired_mesh_size_surface and refine refinement_depth_left from the start (otherwise refinment does not happen)
-node_size = ${fparse desired_mesh_size_surface*2^refinement_steps} # defined by the refinement of the implantation profile
-num_nodes = ${fparse floor(sample_thickness/node_size)}
-
 [Variables]
   [concentration]
     order = FIRST
@@ -33,7 +24,6 @@ num_nodes = ${fparse floor(sample_thickness/node_size)}
 []
 
 [Mesh]
-  active = 'gen'
   [cartesian]
     type = CartesianMeshGenerator
     dim = 1
@@ -42,29 +32,6 @@ num_nodes = ${fparse floor(sample_thickness/node_size)}
           ${units 1e-6 m -> nm}                ${units 1e-5 m -> nm}  ${fparse 10 * ${units 4.88e-5 m -> nm}}'
     ix = '${fparse 5 * ${nx_scale}}             ${nx_scale}             ${nx_scale}
           ${nx_scale}                           ${nx_scale}             ${fparse 10 * ${nx_scale}}'
-  []
-
-  [gen]
-    type = GeneratedMeshGenerator
-    dim = 1
-    nx = ${num_nodes}
-    xmax = ${sample_thickness}
-  []
-[]
-
-[Adaptivity]
-  steps = ${refinement_steps}
-  initial_steps = ${refinement_steps}
-  max_h_level = ${refinement_steps}
-  marker = box
-  [Markers]
-    [box]
-      type = BoxMarker
-      bottom_left = '${refinement_depth_left} -1 -1'
-      top_right = '${sample_thickness} 1 1'
-      inside = DO_NOTHING
-      outside = REFINE
-    []
   []
 []
 
@@ -142,7 +109,6 @@ num_nodes = ${fparse floor(sample_thickness/node_size)}
 []
 
 [Functions]
-  ################# TMAP4
   [Kd_left_func]
     type = ParsedFunction
     expression = '${dissociation_coefficient_parameter_enclos1} * (1 - 0.9999 * exp(-6e-5 * t))'
