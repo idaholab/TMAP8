@@ -12,7 +12,7 @@
 # This is use in two different tests:
 #  FILE 1: ~/projects/TMAP8/test/tests/val-2c/gold/val-2c_immediate_injection_out.e
 #  FILE 2: ~/projects/TMAP8/test/tests/val-2c/gold/val-2c_delay_out.e
-#   Title: polypole1_intergranular_coarsening_out.e
+#   Title: val-2c
 #          Dim = 1, Blocks = 2, Nodes = 15, Elements = 14, Nodesets = 2, Sidesets = 2
 #          Vars: Global = 13, Nodal = 8, Element = 0, Nodeset = 0, Sideset = 0, Times = 201
 
