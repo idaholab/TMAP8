@@ -9,7 +9,7 @@ initial_pressure_1 = ${units 1e5 Pa}
 initial_pressure_2 = ${units 1e-10 Pa}
 initial_concentration_1 = ${fparse initial_pressure_1 / (R*T)} # mol/m^3
 initial_concentration_2 = ${fparse initial_pressure_2 / (R*T)} # mol/m^3
-solubility = ${fparse 1.082e20/Na} # Henry's law constant J/mol
+solubility = ${fparse 1.082e20/Na} # Henry's law constant 
 diffusivity = ${fparse 4.31e-6 * exp(-2818/T)} # m^2/s
 n_sorption = 1
 unit_scale = 1
@@ -22,23 +22,23 @@ unit_scale_neighbor = 1
     nx = ${fparse nb_segments}
     xmax = ${fparse long_total}
   []
-  [left_block]
+  [enclosure_1]
     type = SubdomainBoundingBoxGenerator
     input = generated
     block_id = 1
     bottom_left = '0 0 0'
     top_right = '${fparse 1/3 * long_total} 0 0'
   []
-  [right_block]
+  [enclosure_2]
     type = SubdomainBoundingBoxGenerator
-    input = left_block
+    input = enclosure_1
     block_id = 2
     bottom_left = '${fparse 1/3 * long_total} 0 0'
     top_right = '${fparse long_total} 0 0'
   []
   [interface]
     type = SideSetsBetweenSubdomainsGenerator
-    input = right_block
+    input = enclosure_2
     primary_block = 1
     paired_block = 2
     new_boundary = interface
@@ -116,14 +116,6 @@ unit_scale_neighbor = 1
 []
 
 [InterfaceKernels]
-  [interface_diffusion]
-    type = InterfaceDiffusion
-    variable = concentration_enclosure_1
-    neighbor_var = concentration_enclosure_2
-    boundary = interface
-    D = ${diffusivity}
-    D_neighbor = ${diffusivity}
-  []
   [interface_sorption]
     type = InterfaceSorption
     K0 = ${solubility}
@@ -151,6 +143,33 @@ unit_scale_neighbor = 1
     variable = pressure_enclosure_2
     block = 2
   []
+  [concentration_enclosure_1_at_interface]
+    type = PointValue
+    variable = concentration_enclosure_1
+    point = '${fparse 1/3 * long_total - 1e-5} 0 0'
+    outputs = 'csv console'
+  []
+  [pressure_enclosure_2_at_interface]
+    type = PointValue
+    variable = pressure_enclosure_2
+    point = '${fparse 1/3 * long_total + 1e-5} 0 0'
+    outputs = 'csv console'
+  []
+  [concentration_encl_1_inventory]
+    type = ElementIntegralVariablePostprocessor
+    variable = concentration_enclosure_1
+    block = 1
+  []
+  [concentration_encl_2_inventory]
+    type = ElementIntegralVariablePostprocessor
+    variable = concentration_enclosure_2
+    block = 2
+  []
+  [mass_conservation_sum_encl1_encl2]
+    type = LinearCombinationPostprocessor
+    pp_names = 'concentration_encl_1_inventory concentration_encl_2_inventory'
+    pp_coefs = '1            1'
+  []
 []
 
 [Executioner]
@@ -158,17 +177,19 @@ unit_scale_neighbor = 1
   dt = 100
   end_time = ${simulation_time}
   dtmax = 10
-  nl_abs_tol = 1e-6
-  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-9
+  nl_rel_tol = 1e-15
+  l_tol = 1e-3
   scheme = 'bdf2'
-  petsc_options_iname = '-ksp_type -pc_type'
-  petsc_options_value = 'gmres ilu'
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
+  petsc_options_value = 'lu superlu_dist'
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 1
-    optimal_iterations = 8
+    dt = 60
+    optimal_iterations = 12
+    iteration_window = 1
     growth_factor = 1.1
-    cutback_factor = 0.5
+    cutback_factor = 0.9
   []
 []
 
