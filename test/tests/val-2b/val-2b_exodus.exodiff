@@ -1,0 +1,41 @@
+#  *****************************************************************
+#    EXODIFF  EXODIFF  EXODIFF  EXODIFF  EXODIFF  EXODIFF  EXODIFF
+#
+#                       Version 2.46 (2011-07-11)
+#             Authors:  Richard Drake, rrdrake@sandia.gov
+#                       Greg Sjaardema, gdsjaar@sandia.gov
+#                       2012/02/21   12:01:29 MST
+#
+#    EXODIFF  EXODIFF  EXODIFF  EXODIFF  EXODIFF  EXODIFF  EXODIFF
+#  *****************************************************************
+
+#  FILE 1: ~/projects/TMAP8/test/tests/val-2b/gold/val-2b_exodus.e
+#   Title: val-2b_exodus.e
+#          Dim = 3, Blocks = 2, Nodes = 59, Elements = 58, Nodesets = 4, Sidesets = 4
+#          Vars: Global = 5, Nodal = 4, Element = 5, Nodeset = 0, Sideset = 0, Times = 10001
+
+
+# ==============================================================
+#  NOTE: All node and element ids are reported as global ids.
+
+# NOTES:  - The min/max values are reporting the min/max in absolute value.
+#         - Time values (t) are 1-offset time step numbers.
+#         - Element block numbers are the block ids.
+#         - Node(n) and element(e) numbers are 1-offset.
+
+COORDINATES absolute .5e-9
+
+# TIME STEPS relative 1.e-6 floor 0.0
+
+GLOBAL VARIABLES relative 5.5.e-6 floor 1e-10
+	temperature
+
+NODAL VARIABLES relative 5.5.e-6 floor 1e-10
+	deuterium_concentration_Be
+	deuterium_concentration_BeO
+
+# No ELEMENT VARIABLES
+
+# No NODESET VARIABLES
+
+# No SIDESET VARIABLES
