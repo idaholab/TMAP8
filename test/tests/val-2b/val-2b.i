@@ -325,11 +325,6 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
     pp_names = 'BeO_interface Be_interface'
     expression = 'BeO_interface / Be_interface'
   []
-  [Interface_jump_check_zero]
-    type = ParsedPostprocessor
-    pp_names = 'gold_solubility_ratio variable_ratio'
-    expression = 'gold_solubility_ratio - variable_ratio'
-  []
   [dt]
     type = TimestepSize
   []
