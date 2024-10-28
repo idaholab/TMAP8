@@ -34,7 +34,7 @@ The source term in the model is described as a normal distribution instead of th
 S = F \frac{1.5}{\sigma \sqrt{2 \pi}} \exp \left( - \frac{(x - \mu )^2}{2 \sigma^2} \right),
 \end{equation}
 
-where $F$ is the implantation flux provided in [val-2a_flux_and_pressure_TMAP4], $\sigma = 2.4 \times 10^{-9}$ m is the characteristic width of the normal distribution, and $\mu = 14 \times 10^{-9}$ m is the depth of the normal distribution from the upstream side. The comparison between the normal distribution from TMAP8 and piecewise function from TMAP4 is shown in [val-2a_normal_distribution]. The normal distribution has a similar distribution to the piecewise function, but the distribution profile is closer to the expected implantation profile.
+where $F$ is the implantation flux provided in [val-2a_flux_and_pressure_TMAP4], $\sigma = 2.4 \times 10^{-9}$ m is the characteristic width of the normal distribution, and $\mu = 14 \times 10^{-9}$ m is the depth of the normal distribution from the upstream side. [eq:normal_distribution] uses the same factor of 1.5 from [!cite](longhurst1992verification) to better correspond to implantation of experiment from [!cite](anderl1985tritium). The comparison between the normal distribution from TMAP8 and piecewise function from TMAP4 is shown in [val-2a_normal_distribution]. The normal distribution has a similar distribution to the piecewise function, but the distribution profile is closer to the expected implantation profile.
 
 !media comparison_val-2a.py
        image_name=val-2a_comparison_normal_distribution.png
@@ -42,7 +42,7 @@ where $F$ is the implantation flux provided in [val-2a_flux_and_pressure_TMAP4],
        id=val-2a_normal_distribution
        caption= Comparison between the normal distribution from TMAP8 and piecewise function from TMAP4 for the source term due to deuterium ion beam implantation.
 
-The pressures on the upstream and downstream sides are close to vacuum pressures, and have only little impact for the recombination on both sides [!citep](longhurst1992verification,ambrosek2008verification). Thus, TMAP8 ignores the impact of pressure on the boundary conditions to simplify the model. The recombination is described a sa simplified version of [eq:recommendation]:
+The pressures on the upstream and downstream sides are close to vacuum pressures, and have only little impact for the recombination on both sides [!citep](longhurst1992verification,ambrosek2008verification). Thus, TMAP8 ignores the impact of pressure on the boundary conditions to simplify the model. The recombination is described as a simplified version of [eq:recommendation]:
 
 \begin{equation} \label{eq:recommendation_ignore_Pressure}
 J = A K_r C^2.
