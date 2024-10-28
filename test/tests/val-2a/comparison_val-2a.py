@@ -9,7 +9,6 @@ import os
 script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
 
-
 def numerical_solution_on_experiment_input(experiment_input, tmap_input, tmap_output):
     """Get new numerical solution based on the experimental input data points
 
@@ -37,7 +36,6 @@ simulation_TMAP4_data = pd.read_csv(csv_folder)
 simulation_time_TMAP4 = simulation_TMAP4_data['time']
 simulation_recom_flux_left_TMAP4 = simulation_TMAP4_data['scaled_recombination_flux_left']
 simulation_recom_flux_right_TMAP4 = simulation_TMAP4_data['scaled_recombination_flux_right']
-
 
 # Read experiment data
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder

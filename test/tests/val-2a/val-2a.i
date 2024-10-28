@@ -27,7 +27,6 @@ time_5 = '${units 17678 s}'
   [cartesian]
     type = CartesianMeshGenerator
     dim = 1
-    #     num
     dx = '${fparse 5 * ${units 4e-9 m -> mum}}  ${units 1e-8 m -> mum}  ${units 1e-7 m -> mum}
           ${units 1e-6 m -> mum}                ${units 1e-5 m -> mum}  ${fparse 10 * ${units 4.88e-5 m -> mum}}'
     ix = '${fparse 5 * ${nx_scale}}             ${nx_scale}             ${nx_scale}
