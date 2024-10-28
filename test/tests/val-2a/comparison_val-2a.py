@@ -48,7 +48,7 @@ experiment_time_TMAP4 = experiment_TMAP4_data['time (s)']
 experiment_flux_TMAP4 = experiment_TMAP4_data['permeation flux (atom/m^2/s)']
 
 TMAP4_file_base = 'val-2a_comparison'
-############################ recommendation flux - atom/m$^2$/s ############################
+############################ recombination flux - atom/m$^2$/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])

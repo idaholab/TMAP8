@@ -31,10 +31,10 @@ In this case, TMAP8 simulates a one-dimensional domain to represent the deuteriu
 The source term in the model is described as a normal distribution instead of the piecewise function from TMAP4 [!citep](longhurst1992verification). The source term of deuterium from ion beam implantation is defined as:
 
 \begin{equation} \label{eq:normal_distribution}
-S = F \frac{1.5}{\sigma \sqrt(2 \pi)} \exp \left( - \frac{(x - \mu )^2}{2 \sigma^2} \right),
+S = F \frac{1.5}{\sigma \sqrt{2 \pi}} \exp \left( - \frac{(x - \mu )^2}{2 \sigma^2} \right),
 \end{equation}
 
-where $F$ is the implantation flux, $\sigma = 2.4 \times 10^{-9}$ m is the characteristic width of the normal distribution, and $\mu = 14 \times 10^{-9}$ m is the depth of the normal distribution from the upstream side. The comparison between the normal distribution from TMAP8 and piecewise function from TMAP4 is shown in [val-2a_normal_distribution]. The normal distribution has a similar distribution to the piecewise function, but the distribution profile is closer to the expected implantation profile.
+where $F$ is the implantation flux provided in [val-2a_flux_and_pressure_TMAP4], $\sigma = 2.4 \times 10^{-9}$ m is the characteristic width of the normal distribution, and $\mu = 14 \times 10^{-9}$ m is the depth of the normal distribution from the upstream side. The comparison between the normal distribution from TMAP8 and piecewise function from TMAP4 is shown in [val-2a_normal_distribution]. The normal distribution has a similar distribution to the piecewise function, but the distribution profile is closer to the expected implantation profile.
 
 !media comparison_val-2a.py
        image_name=val-2a_comparison_normal_distribution.png
@@ -42,7 +42,7 @@ where $F$ is the implantation flux, $\sigma = 2.4 \times 10^{-9}$ m is the chara
        id=val-2a_normal_distribution
        caption= Comparison between the normal distribution from TMAP8 and piecewise function from TMAP4 for the source term due to deuterium ion beam implantation.
 
-The pressures on the upstream and downstream sides are close to vacuum pressures, and have only little impact for the recombination on both sides [!citep](longhurst1992verification,ambrosek2008verification). Thus, TMAP8 ignores the impact of pressure on the boundary conditions to simplify the model. The recombination is described asa simplified version of [eq:recommendation]:
+The pressures on the upstream and downstream sides are close to vacuum pressures, and have only little impact for the recombination on both sides [!citep](longhurst1992verification,ambrosek2008verification). Thus, TMAP8 ignores the impact of pressure on the boundary conditions to simplify the model. The recombination is described a sa simplified version of [eq:recommendation]:
 
 \begin{equation} \label{eq:recommendation_ignore_Pressure}
 J = A K_r C^2.
@@ -50,10 +50,10 @@ J = A K_r C^2.
 
 ## Case and Model Parameters
 
-The beam flux on the upstream side of the sample during the experiment is presented in [val-2a_flux_and_pressure_TMAP4], and only 75 % of the flux remain in the sample. Other case and model parameters used in TMAP8 are listed in [val-2a_set_up_values_TMAP4]. Some of the parameters are directly leveraged from [!cite](anderl1985tritium,longhurst1992verification,ambrosek2008verification), but others were adapted to better match the experimental data.
+The beam flux on the upstream side of the sample during the experiment is presented in [val-2a_flux_and_pressure_TMAP4], and only 75 % of the flux remain in the sample. Other case and model parameters used in TMAP8 are listed in [val-2a_set_up_values_TMAP4].
 
 !table id=val-2a_flux_and_pressure_TMAP4 caption=Values of beam flux on the upstream side of the sample during the experiment [!citep](longhurst1992verification).
-| time (s)      | Beam flux F (atom/m$^2$/s)   |
+| time (s)      | Beam flux $F$ (atom/m$^2$/s)   |
 | ---------     | ---------------------------- |
 | 0 - 5820      | 4.9$\times 10^{19}$          |
 | 5820 - 9056   | 0                            |
