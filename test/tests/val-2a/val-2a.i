@@ -1,12 +1,11 @@
 nx_scale = 5
-high_dt_max = 100
-low_dt_max = 1
+high_dt_max = 300
+low_dt_max = 4
 simulation_time = '${units 2e4 s}'
 diffusivity_D = '${units 3e-10 m^2/s -> mum^2/s}'
 recombination_parameter_enclos2 = '${units 2e-31 m^4/at/s -> mum^4/at/s}'
 flux_high = '${units 4.9e19 at/m^2/s -> at/mum^2/s}'
 flux_low =  '${units 0      at/mum^2/s}'
-dissociation_coefficient_parameter_enclos1 = '${units 8.959e18 at/m^2/s/Pa -> at/mum^2/s/Pa}'
 recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> mum^4/at/s}'
 width = '${units 2.4e-9 m -> mum}'
 depth = '${units 14e-9 m -> mum}'
@@ -17,7 +16,7 @@ time_4 = '${units 14572 s}'
 time_5 = '${units 17678 s}'
 
 [Variables]
-  [concentration]
+  [concentration]  # (atoms/mum^3/s)
     order = FIRST
     family = LAGRANGE
   []
@@ -75,14 +74,14 @@ time_5 = '${units 17678 s}'
 
 [BCs]
   [left]
-    type = MatNeumannBC
+    type = ADMatNeumannBC
     variable = concentration
     boundary = left
     value = 1
     boundary_material = flux_on_left
   []
   [right]
-    type = MatNeumannBC
+    type = ADMatNeumannBC
     variable = concentration
     boundary = right
     value = 1
@@ -92,7 +91,7 @@ time_5 = '${units 17678 s}'
 
 [Materials]
   [flux_on_left]
-    type = DerivativeParsedMaterial
+    type = ADDerivativeParsedMaterial
     coupled_variables = 'concentration'
     property_name = 'flux_on_left'
     functor_names = 'Kr_left_func'
@@ -100,7 +99,7 @@ time_5 = '${units 17678 s}'
     expression = '- 2 * Kr_left_func * concentration ^ 2'
   []
   [flux_on_right]
-    type = DerivativeParsedMaterial
+    type = ADDerivativeParsedMaterial
     coupled_variables = 'concentration'
     property_name = 'flux_on_right'
     expression = '- 2 * ${recombination_parameter_enclos2} * concentration ^ 2'
@@ -108,17 +107,12 @@ time_5 = '${units 17678 s}'
 []
 
 [Functions]
-  [Kd_left_func]
-    type = ParsedFunction
-    expression = '${dissociation_coefficient_parameter_enclos1} * (1 - 0.9999 * exp(-6e-5 * t))'
-  []
-
-  [Kr_left_func]
+  [Kr_left_func] # microns^4/at/s
     type = ParsedFunction
     expression = '${recombination_coefficient_parameter_enclos1_TMAP4} * (1 - 0.9999 * exp(-6e-5 * t))'
   []
 
-  [surface_flux_func]
+  [surface_flux_func] # atoms/mum^2/s
     type = ParsedFunction
     expression = 'if(t < ${time_1}, ${flux_high},
                   if(t < ${time_2}, ${flux_low},
@@ -127,19 +121,19 @@ time_5 = '${units 17678 s}'
                   if(t < ${time_5},  ${flux_high}, ${flux_low}))))) * 0.75'
   []
 
-  [source_distribution]
+  [source_distribution] # (-)
     type = ParsedFunction
-    expression = '1.5 / ( ${width} * sqrt(2 * pi) ) * exp(-0.5 * ((x - ${depth}) / ${width}) ^ 2)'
+    expression = '1.5 / (${width} * sqrt(2 * pi)) * exp(-0.5 * ((x - ${depth}) / ${width})^2)'
   []
 
-  [concentration_source_norm_func]
+  [concentration_source_norm_func] # atoms/microns^2/s
     type = ParsedFunction
     symbol_names = 'source_distribution surface_flux_func'
     symbol_values = 'source_distribution surface_flux_func'
     expression = 'source_distribution * surface_flux_func'
   []
 
-  [max_dt_size_func]
+  [max_dt_size_func] # s
     type = ParsedFunction
     expression = 'if(t<${time_1}-100,  ${high_dt_max},
                   if(t<${time_1}+100,  ${low_dt_max},
@@ -156,7 +150,7 @@ time_5 = '${units 17678 s}'
 
 [Postprocessors]
   [dcdx_left]
-    type = SideAverageMaterialProperty
+    type = ADSideAverageMaterialProperty
     boundary = left
     property = flux_on_left
     outputs = none
@@ -169,7 +163,7 @@ time_5 = '${units 17678 s}'
     outputs = 'console csv exodus'
   []
   [dcdx_right]
-    type = SideAverageMaterialProperty
+    type = ADSideAverageMaterialProperty
     boundary = right
     property = flux_on_right
     outputs = none
@@ -196,24 +190,21 @@ time_5 = '${units 17678 s}'
   []
 []
 
-
 [Executioner]
   type = Transient
   scheme = bdf2
   solve_type = NEWTON
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
-
   end_time = ${simulation_time}
   automatic_scaling = true
-  # nl_abs_tol = 1e-12
-  nl_rel_tol = 1e-2
+  nl_rel_tol = 5e-7
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 3.125
-    optimal_iterations = 12
+    dt = 1
+    optimal_iterations = 6
     growth_factor = 1.1
-    cutback_factor = 0.9
+    cutback_factor_at_failure = 0.9
     timestep_limiting_postprocessor = max_time_step_size
   []
 []
@@ -224,6 +215,6 @@ time_5 = '${units 17678 s}'
   [exodus]
     type = Exodus
     output_material_properties = true
-    time_step_interval = 200
+    time_step_interval = 2
   []
 []
