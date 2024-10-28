@@ -16,7 +16,7 @@ where $C$ is the concentration of deuterium in PCA, $t$ is the time, $D$ is the 
 
 Second, the deuterium recombines into gas on both sides of the PCA sample. By assuming that the recombination process is at steady state (which is not a necessary assumption in TMAP8, but appropriate in this case), it is described as the following surface flux:
 
-\begin{equation} \label{eq:recommendation}
+\begin{equation} \label{eq:recombination}
 J = A (K_r C^2 - K_d P),
 \end{equation}
 
@@ -42,9 +42,9 @@ where $F$ is the implantation flux provided in [val-2a_flux_and_pressure_TMAP4],
        id=val-2a_normal_distribution
        caption= Comparison between the normal distribution from TMAP8 and piecewise function from TMAP4 for the source term due to deuterium ion beam implantation.
 
-The pressures on the upstream and downstream sides are close to vacuum pressures, and have only little impact for the recombination on both sides [!citep](longhurst1992verification,ambrosek2008verification). Thus, TMAP8 ignores the impact of pressure on the boundary conditions to simplify the model. The recombination is described as a simplified version of [eq:recommendation]:
+The pressures on the upstream and downstream sides are close to vacuum pressures, and have only little impact for the recombination on both sides [!citep](longhurst1992verification,ambrosek2008verification). Thus, TMAP8 ignores the impact of pressure on the boundary conditions to simplify the model. The recombination is described as a simplified version of [eq:recombination]:
 
-\begin{equation} \label{eq:recommendation_ignore_Pressure}
+\begin{equation} \label{eq:recombination_ignore_Pressure}
 J = A K_r C^2.
 \end{equation}
 
