@@ -1,12 +1,12 @@
 [Tests]
   design = 'ADMatReactionFlexible.md'
   issues = '#12 #104'
+  verification = 'ver-1gc.md'
   [ver-1gc]
     type = Exodiff
     input = 'ver-1gc.i'
     exodiff = ver-1gc_out.e
     requirement = 'The system shall be able to model a series of chemical reactions involving three species and calculate the concentrations of each species as a function of time.'
-    verification = 'ver-1gc.md'
   []
   [ver-1gc_csv]
     type = CSVDiff
@@ -14,7 +14,6 @@
     should_execute = False # this test relies on the output files from ver-1gc, so it shouldn't be run twice
     csvdiff = ver-1gc_out.csv
     requirement = 'The system shall be able to model a series of chemical reactions involving three species and calculate the concentrations of each species as a function of time and to generate CSV data for use in comparisons with the analytic solution over time.'
-    verification = 'ver-1gc.md'
     prereq = ver-1gc
   []
   [ver-1gc_comparison]
