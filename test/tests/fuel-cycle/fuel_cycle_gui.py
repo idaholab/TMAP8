@@ -20,7 +20,10 @@ import atexit
 import os
 import shutil
 import argparse
+import PIL
 dir_path = os.path.dirname(os.path.realpath(__file__))
+icon_path = os.path.join(dir_path,'..','..','..','doc','content','figures','TMAP8_logo_blue.png')
+
 class fake_tk():
     def __init__(self,x=0,text=None,row=0,column=0,grid=None,textvariable=None,validate=None,validatecommand=None, width=True, height=True,master=None,**kwargs):
         if text is not None:
@@ -38,6 +41,12 @@ class fake_tk():
         self.width = 1
         self.height = 1
         self.mpl_connect = self
+        self.yview = None
+        self.columnconfigure = self.rowconfigure = self.create_window = self.configure
+        self.bind = self.configure
+
+    def configure(self,*args,**kwargs):
+        return True
     def get(self):
         if 'values' in self.__dict__.keys():
             return self.values[0]
@@ -135,27 +144,40 @@ class fuel_cycle_form(tk.Tk):
         newlabel.grid(row=0,column=1)
         newlabel = tk.Label(self, text='Plot')
         newlabel.grid(row=0,column=2)
+        self.param_frame = tk.Frame(self,borderwidth=0)
+        self.param_frame.grid(row=1,column=0,columnspan=2,rowspan=2,sticky='news')
+        self.scroll_can = tk.Canvas(self.param_frame,borderwidth=0)
+        self.scrollable = tk.Frame(self.scroll_can)
+        scrollbar = tk.Scrollbar(self.param_frame,orient="vertical",command=self.scroll_can.yview)
+        self.scroll_can.configure(yscrollcommand=scrollbar.set)
+        self.scroll_can.grid(row=0,column=0,sticky='news')
+        scrollbar.grid(row=0,column=1,sticky='news')
+        self.param_frame.columnconfigure(0,weight=1)
+        self.param_frame.rowconfigure(0,weight=1)
+        self.scroll_can.create_window((8,4),window=self.scrollable,tags="self.frame",anchor='nw')
+        self.scrollable.bind("<Configure>", self.onFrameConfigure)
         output_var = tk.StringVar()
         self.plot_ints = []
         self.checkboxes = []
         self.first_run = True
-        label = tk.Label(self, text="Initial storage")
+        label = tk.Label(self.scrollable, text="Initial storage")
         entryval = tk.StringVar()
         self.float_validator = (self.register(self.float_validation), '%d','%i', '%P', '%s', '%S', '%v', '%V', '%W')
-        textwidget = tk.Entry(self,textvariable=entryval,validate='key', validatecommand=self.float_validator)
+        textwidget = tk.Entry(self.scrollable,textvariable=entryval,validate='key', validatecommand=self.float_validator)
         entryval.set("225.4215")
         self.init_storage = textwidget
         labels.append(label)
         label.update()
         textwidget.update()
+        row_i = 0
         label.grid(row=row_i, column=0)
         textwidget.grid(row=row_i, column=1)
         row_i+=1
 
         for match in self.matches:
-            label = tk.Label(self, text=match[1][0])
+            label = tk.Label(self.scrollable, text=match[1][0])
             entryval = tk.StringVar()
-            textwidget = tk.Entry(self, text=match[1][0],textvariable=entryval, validate='key', validatecommand=self.float_validator)
+            textwidget = tk.Entry(self.scrollable, text=match[1][0],textvariable=entryval, validate='key', validatecommand=self.float_validator)
             entryval.set(match[1][1])
             self.entries.append(textwidget)
             labels.append(label)
@@ -166,16 +188,15 @@ class fuel_cycle_form(tk.Tk):
 
             row_i+=1
         self.input_entries = self.entries
-        plotlabel = tk.Label(self,text='Time Units')
+        plotlabel = tk.Label(self.scrollable,text='Time Units')
         plotlabel.grid(row=row_i,column=0)
         self.time_unit = tk.StringVar()
-        self.time_combobox = ttk.Combobox(self,width=20,textvariable=self.time_unit)
+        self.time_combobox = ttk.Combobox(self.scrollable,width=20,textvariable=self.time_unit)
         self.time_combobox['values'] = ('seconds','hours','days','months','years')
         self.time_combobox.current(0)
         self.time_divisors = {0:1,'seconds':1,'minutes':scc.minute,'hours':scc.hour,'days':scc.day,'months':scc.year/12,'years':scc.year}
         self.old_timescale = self.time_divisors[self.time_unit.get()]
         self.time_unit.trace('w',self.change_scale)
-        self.create_plot()
         if not headless:
             self.update()
         self.entries.append(self.time_combobox)
@@ -195,7 +216,9 @@ class fuel_cycle_form(tk.Tk):
 
 
         run_button = tk.Button(self,text="Run",command=self.buttonClick)
-        run_button.grid(row=row_i,column=1)
+        run_button.grid(row=3,column=1)
+        self.number_rows = row_i
+        self.create_plot()
     def float_validation(self,action,index,value_if_allowed, prior_value, text, validation_type, trigger_type, widget_name):
         if value_if_allowed:
             try:
@@ -210,6 +233,11 @@ class fuel_cycle_form(tk.Tk):
                 return False
         else:
             return False
+
+    def onFrameConfigure(self, event):
+        self.scroll_can.configure(scrollregion=self.scroll_can.bbox("all"))
+    def onListConfigure(self, event):
+        self.cbcanvas.configure(scrollregion=self.cbcanvas.bbox("all"))
 
     def test_compare(self):
         check_one = np.genfromtxt(self.tmpfile[:-2]+'_out.csv',skip_header=1,delimiter=',')
@@ -255,12 +283,12 @@ class fuel_cycle_form(tk.Tk):
         fig = Figure(figsize=(6,4), dpi=150)
         self.ax = fig.add_subplot(111)
         self.canvas = FigureCanvasTkAgg(fig, master=self)
-        self.canvas._tkcanvas.grid(row=len(self.checkboxes)+11,column=2,rowspan=len(self.entries)+1 - len(self.checkboxes),columnspan=2)
+        self.canvas._tkcanvas.grid(row=2,column=2)
         self.canvas.draw()
 
         self.toolbar = NavigationToolbar2Tk(self.canvas,self,pack_toolbar=False)
         self.toolbar.update()
-        self.toolbar.grid(row=len(self.entries)+3,column=2,columnspan=2)
+        self.toolbar.grid(row=3,column=2)
         self.canvas.mpl_connect("key_press_event", self.on_key_press)
         self.lines = self.ax.plot([],[])
         if not self.headless:
@@ -284,12 +312,25 @@ class fuel_cycle_form(tk.Tk):
         row_i=1
         self.ax.clear()
         if self.first_run:
+            self.cbframe = tk.Frame(self,borderwidth=0)
+            self.cbframe.rowconfigure(0,weight=1)
+            self.cbframe.columnconfigure(0,weight=1)
+            self.cbframe.grid(row=1,column=2,sticky='news')
+            self.cbcanvas = tk.Canvas(self.cbframe,borderwidth=0)
+            self.cblable = tk.Frame(self.cbcanvas)
+            scrollbar = tk.Scrollbar(self.cbframe,orient="vertical",command=self.cbcanvas.yview)
+            self.cbcanvas.configure(yscrollcommand=scrollbar.set)
+            self.cbcanvas.grid(row=0,column=0,sticky='news')
+            scrollbar.grid(row=0,column=1,sticky='nws')
+            self.cbcanvas.create_window((8,4),window=self.cblable,tags="self.frame",anchor='nw')
+            self.cblable.bind("<Configure>", self.onListConfigure)
             for label in self.data_labels[1:]:
                 plotint = tk.IntVar()
-                checkbutton = tk.Checkbutton(self,variable=plotint,onvalue=1,offvalue=0,command=self.update_ydata,text=label)
+                checkbutton = tk.Checkbutton(self.cblable,variable=plotint,onvalue=1,offvalue=0,command=self.update_ydata,text=label)
                 self.checkboxes.append(checkbutton)
                 self.plot_ints.append(plotint)
                 checkbutton.grid(row=row_i, column=2)
+                self.cbframe.columnconfigure(row_i,weight=1)
                 row_i+=1
             self.first_run = False
         self.update_ydata()
@@ -358,10 +399,13 @@ parser.add_argument('--test',help='for use in TMAP8 testing to verify successful
 parsed_vals = parser.parse_args()
 if parsed_vals.test==True:
     tk.Tk = fake_tk
+    tk.Frame = fake_tk
     tk.Label = fake_tk
     tk.StringVar = fake_tk
     tk.Entry = fake_tk
+    tk.Canvas = fake_tk
     tk.Button = fake_tk
+    tk.Scrollbar = fake_tk
     ttk.Combobox = fake_tk
     tk.Checkbutton = fake_tk
     FigureCanvasTkAgg = fake_tk
@@ -378,5 +422,13 @@ if parsed_vals.test==True:
 else:
     if __name__ == "__main__":
         window = fuel_cycle_form()
+        icon_obj = PIL.ImageTk.PhotoImage(file=icon_path)
+        window.wm_iconphoto(False,icon_obj)
+        window.columnconfigure(0,weight=1)
+        window.columnconfigure(1,weight=1)
+        window.columnconfigure(2,weight=3)
         window.title("Tritium Inventory Plot")
+        window.rowconfigure(1,weight=1)
+        window.rowconfigure(2,weight=1)
+
         window.mainloop()
