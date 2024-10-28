@@ -3,6 +3,7 @@ import numpy as np
 from matplotlib import gridspec
 import pandas as pd
 from scipy import special
+import scipy.stats as stats
 import os
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
@@ -47,7 +48,7 @@ experiment_time_TMAP4 = experiment_TMAP4_data['time (s)']
 experiment_flux_TMAP4 = experiment_TMAP4_data['permeation flux (atom/m^2/s)']
 
 TMAP4_file_base = 'val-2a_comparison'
-############################ TMAP4 atom/m$^2$/s ############################
+############################ recommendation flux - atom/m$^2$/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
@@ -68,4 +69,34 @@ ax.text(1e4/3600.0,40e15, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
 ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
 plt.savefig(f'{TMAP4_file_base}.png', bbox_inches='tight')
+plt.close(fig)
+
+
+############################ implantation - atom/m$^2$/s ############################
+sigma = 2.4e-9 # m
+mu = 14e-9 # m
+flux = 4.9e19 * 0.75 # atom/m$^2$/s
+coordinate_x = np.arange(0, 25e-9,0.1e-9)
+
+normal_distribution = flux * 1.5 * stats.norm.pdf(coordinate_x, mu, sigma)
+piecewise = np.zeros(len(coordinate_x))
+piecewise[80:120] = flux * 0.25 / 4e-9
+piecewise[120:160] = flux * 1.00 / 4e-9
+piecewise[160:200] = flux * 0.25 / 4e-9
+
+fig = plt.figure(figsize=[6.5, 5.5])
+gs = gridspec.GridSpec(1, 1)
+ax = fig.add_subplot(gs[0])
+
+ax.plot(coordinate_x, normal_distribution, linestyle='-', label=r"normal distribution", c='k')
+ax.plot(coordinate_x, piecewise, linestyle='-', label=r"piecewise", c='gray')
+
+ax.set_xlabel(u'depth (m)')
+ax.set_ylabel(u"Source rate (atom/m$^3$/s)")
+ax.legend(loc="best")
+ax.set_ylim(bottom=0)
+ax.set_xlim(left=0,right=3e-8)
+plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
+ax.minorticks_on()
+plt.savefig(f'val-2a_comparison_normal_distribution.png', bbox_inches='tight')
 plt.close(fig)

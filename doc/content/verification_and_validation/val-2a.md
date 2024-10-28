@@ -17,7 +17,7 @@ where $C$ is the concentration of deuterium in PCA, $t$ is the time, $D$ is the 
 Second, the deuterium recombines into gas on both sides of the PCA sample. By assuming that the recombination process is at steady state (which is not a necessary assumption in TMAP8, but appropriate in this case), it is described as the following surface flux:
 
 \begin{equation} \label{eq:recommendation}
-J = A (K_r C^2 - K_d P^2),
+J = A (K_r C^2 - K_d P),
 \end{equation}
 
 where $J$ is the recombination flux out of the sample sides, $A$ is the area on the upstream or downstream side, $P$ is the pressure on the corresponding side, and $K_r$ and $K_d$ are the recombination and dissociation coefficients, respectively.
@@ -31,12 +31,13 @@ In this case, TMAP8 simulates a one-dimensional domain to represent the deuteriu
 The source term in the model is described as a normal distribution instead of the piecewise function from TMAP4 [!citep](longhurst1992verification). The source term of deuterium from ion beam implantation is defined as:
 
 \begin{equation} \label{eq:normal_distribution}
-S = \frac{1.5}{\sigma \sqrt(2 \pi)} \exp \left( - \frac{(x - \mu )^2}{2 \sigma^2} \right),
+S = F \frac{1.5}{\sigma \sqrt(2 \pi)} \exp \left( - \frac{(x - \mu )^2}{2 \sigma^2} \right),
 \end{equation}
 
-where $\sigma = 2.4 \times 10^{-9}$ m is the characteristic width of the normal distribution, and $\mu = 14 \times 10^{-9}$ m is the depth of the normal distribution from the upstream side. The comparison between the normal distribution from TMAP8 and piecewise function from TMAP4 is shown in [val-2a_normal_distribution]. The normal distribution has a similar distribution to the piecewise function, but the distribution profile is closer to the expected implantation profile.
+where $F$ is the implantation flux, $\sigma = 2.4 \times 10^{-9}$ m is the characteristic width of the normal distribution, and $\mu = 14 \times 10^{-9}$ m is the depth of the normal distribution from the upstream side. The comparison between the normal distribution from TMAP8 and piecewise function from TMAP4 is shown in [val-2a_normal_distribution]. The normal distribution has a similar distribution to the piecewise function, but the distribution profile is closer to the expected implantation profile.
 
-!media figures/val-2a_normal_distribution.png
+!media comparison_val-2a.py
+       image_name=val-2a_comparison_normal_distribution.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2a_normal_distribution
        caption= Comparison between the normal distribution from TMAP8 and piecewise function from TMAP4 for the source term due to deuterium ion beam implantation.
@@ -49,10 +50,10 @@ J = A K_r C^2.
 
 ## Case and Model Parameters
 
-The beam flux on the upstream side of the sample during the experiment is presented in [val-2a_flux_and_pressure_TMAP4]. Other case and model parameters used in TMAP8 are listed in [val-2a_set_up_values_TMAP4]. Some of the parameters are directly leveraged from [!cite](anderl1985tritium,longhurst1992verification,ambrosek2008verification), but others were adapted to better match the experimental data.
+The beam flux on the upstream side of the sample during the experiment is presented in [val-2a_flux_and_pressure_TMAP4], and only 75 % of the flux remain in the sample. Other case and model parameters used in TMAP8 are listed in [val-2a_set_up_values_TMAP4]. Some of the parameters are directly leveraged from [!cite](anderl1985tritium,longhurst1992verification,ambrosek2008verification), but others were adapted to better match the experimental data.
 
 !table id=val-2a_flux_and_pressure_TMAP4 caption=Values of beam flux on the upstream side of the sample during the experiment [!citep](longhurst1992verification).
-| time (s)      | Beam flux (atom/m$^2$/s)     |
+| time (s)      | Beam flux F (atom/m$^2$/s)   |
 | ---------     | ---------------------------- |
 | 0 - 5820      | 4.9$\times 10^{19}$          |
 | 5820 - 9056   | 0                            |
@@ -65,18 +66,18 @@ The beam flux on the upstream side of the sample during the experiment is presen
 The times listed in [!cite](longhurst1992verification) for TMAP8 for the starts and ends the beam are not accurate. instead, TMAP8 uses the times directly from [!cite](anderl1985tritium) to better correspond to experimental conditions.
 
 !table id=val-2a_set_up_values_TMAP4 caption=Values of material properties.
-| Parameter | Description                          | Value                                                       | Units                 |
-| --------- | ------------------------------------ | ----------------------------------------------------------- | --------------------- |
-| $K_{d,l}$ | upstream dissociation coefficient       | 8.959 $\times 10^{18} (1-0.9999 \exp(-6 \times 10^{-5} t))$ | at/m$^2$/s/Pa$^{0.5}$ |
-| $K_{d,r}$ | downstream dissociation coefficient   | 1.7918$\times 10^{15}$                                      | at/m$^2$/s/Pa$^{0.5}$ |
-| $K_{r,l}$ | upstream recombination coefficient    | 1$\times 10^{-27} (1-0.9999 \exp(-6 \times 10^{-5} t))$     | m$^4$/at/s            |
-| $K_{r,r}$ | downstream recombination coefficient  | 2$\times 10^{-31}$                                          | m$^4$/at/s            |
-| $P_{l}$   | upstream pressure               | 0                                                           | Pa                    |
-| $P_{r}$   | downstream pressure               | 0                                                           | Pa                    |
-| $D$       | deuterium diffusivity in PCA         | 3$\times 10^{-10}$                                          | m$^2$/2               |
-| $d$       | diameter of PCA                      | 0.025                                                       | m                     |
-| $l$       | thickness of PCA                     | 5$\times 10^{-4}$                                           | m                     |
-| $T$       | temperature                          | 703                                                         | K                     |
+| Parameter | Description                          | Value                                                       | Units                 | Reference                 |
+| --------- | ------------------------------------ | ----------------------------------------------------------- | --------------------- | --------------------- |
+| $K_{d,l}$ | upstream dissociation coefficient    | 8.959 $\times 10^{18} (1-0.9999 \exp(-6 \times 10^{-5} t))$ | at/m$^2$/s/Pa$^{0.5}$ | [!cite](longhurst1992verification) |
+| $K_{d,r}$ | downstream dissociation coefficient  | 1.7918$\times 10^{15}$                                      | at/m$^2$/s/Pa$^{0.5}$ | [!cite](longhurst1992verification) |
+| $K_{r,l}$ | upstream recombination coefficient   | 1$\times 10^{-27} (1-0.9999 \exp(-6 \times 10^{-5} t))$     | m$^4$/at/s            | [!cite](longhurst1992verification) |
+| $K_{r,r}$ | downstream recombination coefficient | 2$\times 10^{-31}$                                          | m$^4$/at/s            | [!cite](anderl1985tritium) |
+| $P_{l}$   | upstream pressure                    | 0                                                           | Pa                    | [!cite](anderl1985tritium) |
+| $P_{r}$   | downstream pressure                  | 0                                                           | Pa                    | [!cite](anderl1985tritium) |
+| $D$       | deuterium diffusivity in PCA         | 3$\times 10^{-10}$                                          | m$^2$/2               | [!cite](anderl1985tritium) |
+| $d$       | diameter of PCA                      | 0.025                                                       | m                     | [!cite](anderl1985tritium) |
+| $l$       | thickness of PCA                     | 5$\times 10^{-4}$                                           | m                     | [!cite](anderl1985tritium) |
+| $T$       | temperature                          | 703                                                         | K                     | [!cite](anderl1985tritium) |
 
 
 !alert note title=This validation case replicates TMAP4 rather than TMAP7 due to inconsistent experiment results with [!cite](anderl1985tritium).
