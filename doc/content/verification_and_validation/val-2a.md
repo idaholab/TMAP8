@@ -17,10 +17,10 @@ where $C$ is the concentration of deuterium in PCA, $t$ is the time, $D$ is the 
 Second, the deuterium recombines into gas on both sides of the PCA sample. By assuming that the recombination process is at steady state (which is not a necessary assumption in TMAP8, but appropriate in this case), it is described as the following surface flux:
 
 \begin{equation} \label{eq:recombination}
-J =  2 A (K_r C^2 - K_d P),
+J = 2 A (K_r C^2 - K_d P),
 \end{equation}
 
-where $J$ is the recombination flux out of the sample sides, $A$ is the area on the upstream or downstream side, $P$ is the pressure on the corresponding side, and $K_r$ and $K_d$ are the recombination and dissociation coefficients, respectively. The factor 2 accounts for the fact that 2 deuterium atoms form one D$_2$ molecule.
+where $J$ is the recombination flux out of the sample sides, $A$ is the area on the upstream or downstream side, $P$ is the pressure on the corresponding side, and $K_r$ and $K_d$ are the recombination and dissociation coefficients, respectively. The coefficient of 2 accounts for the fact that 2 deuterium atoms form one D$_2$ molecule.
 
 The objective of this simulation is to determine the permeation flux on the downstream side and match the experimental data published in [!cite](anderl1985tritium) and reproduced in [val-2a_comparison].
 
@@ -63,9 +63,9 @@ The beam flux on the upstream side of the sample during the experiment is presen
 | 17678 - 20000 | 0                            |
 
 !alert warning title=Typo in [!cite](longhurst1992verification)
-The times listed in [!cite](longhurst1992verification) for TMAP8 for the starts and ends the beam are not accurate. instead, TMAP8 uses the times directly from [!cite](anderl1985tritium) to better correspond to experimental conditions.
+The times listed in [!cite](longhurst1992verification) for TMAP8 for the start and end times of the beam are not accurate. instead, TMAP8 uses the times directly from [!cite](anderl1985tritium) to better correspond to experimental conditions.
 
-!table id=val-2a_set_up_values_TMAP4 caption=Values of material properties. Note that $K_d$ are currently not used in teh input file since the upstream and downstream pressure do not noticeably influence the results.
+!table id=val-2a_set_up_values_TMAP4 caption=Values of material properties. Note that $K_d$ are currently not used in the input file since the upstream and downstream pressure do not noticeably influence the results.
 | Parameter | Description                          | Value                                                       | Units                 | Reference                 |
 | --------- | ------------------------------------ | ----------------------------------------------------------- | --------------------- | --------------------- |
 | $K_{d,l}$ | upstream dissociation coefficient    | 8.959 $\times 10^{18} (1-0.9999 \exp(-6 \times 10^{-5} t))$ | at/m$^2$/s/Pa$^{0.5}$ | [!cite](longhurst1992verification) |

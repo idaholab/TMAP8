@@ -6,7 +6,7 @@
     type = CSVDiff
     input = 'val-2a.i'
     csvdiff = val-2a_out.csv
-    requirement = 'The system shall be able to model Ion implantation based on the requirements and conditions listed in the TMAP4 V&V report with the fine mesh and time step required to match the experimental results'
+    requirement = 'The system shall be able to model tritium ion implantation in a steel alloy for comparison with experimental results, particularly focusing on the permeation flux.'
   []
   [val-2a_exodiff]
     type = Exodiff
@@ -14,12 +14,12 @@
     exodiff = val-2a_out.e
     prereq = val-2a_csvdiff
     should_execute = false # this test relies on the output files from val-2a_csvdiff, so it shouldn't be run twice
-    requirement = 'The system shall be able to model Ion implantation based on the requirements and conditions listed in the TMAP4 V&V report and generate an exodus file with the fine mesh and time step required to match the experimental results.'
+    requirement = 'The system shall be able to model tritium ion implantation in a steel alloy for comparison with experimental results, focused on the full set of simulation output including tritium concentration, recombination coefficient, and dissociation coefficient.'
   []
   [val-2a_comparison]
     type = RunCommand
     command = 'python3 comparison_val-2a.py'
-    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of validation case 2a, modeling ion implantation experiment.'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of validation case 2a, modeling tritium ion implantation in a steel alloy.'
     required_python_packages = 'matplotlib numpy pandas os'
   []
 []
