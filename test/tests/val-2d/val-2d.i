@@ -321,7 +321,7 @@ temperature_high = '${units 1273 K}'
     scaling_factor = '${units 1 m^2 -> mum^2}'
     value = flux_surface_right
     execute_on = 'initial nonlinear linear timestep_end'
-    outputs = 'console csv exodus'
+    outputs = none
   []
   [max_time_step_size]
     type = FunctionValuePostprocessor
@@ -367,5 +367,6 @@ temperature_high = '${units 1273 K}'
   [exodus]
     type = Exodus
     output_material_properties = true
+    time_step_interval = 4
   []
 []

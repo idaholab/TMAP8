@@ -1,5 +1,5 @@
 [Tests]
-  design = 'ADMatNeumannBC.md'
+  design = 'ADDirichletBC.md'
   issues = '#12 #203'
   validation = 'val-2d.md'
   [val-2d_csvdiff]

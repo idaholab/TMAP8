@@ -44,7 +44,7 @@ else:                                  # if in test folder
 simulation_TMAP7_data = pd.read_csv(csv_folder)
 simulation_time_TMAP7 = simulation_TMAP7_data['time']
 simulation_flux_left_TMAP7 = simulation_TMAP7_data['scaled_flux_surface_left']
-simulation_flux_right_TMAP7 = simulation_TMAP7_data['scaled_flux_surface_right']
+# simulation_flux_right_TMAP7 = simulation_TMAP7_data['scaled_flux_surface_right']
 # simulation_flux_left_TMAP7 = simulation_TMAP7_data['scaled_recombination_flux_left']
 # simulation_flux_right_TMAP7 = simulation_TMAP7_data['scaled_recombination_flux_right']
 
