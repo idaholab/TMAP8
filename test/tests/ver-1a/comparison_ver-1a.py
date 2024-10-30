@@ -221,7 +221,7 @@ RMSE = np.sqrt(np.mean((tmap8_release_fraction_right-analytical_release_fraction
 RMSPE = RMSE*100/np.mean(analytical_release_fraction_TMAP4[idx:])
 ax.text(60,0.6, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
-plt.savefig('ver-1a_comparison_analytical_TMAP4_release_fraction.png', bbox_inches='tight');
+plt.savefig('ver-1a_comparison_analytical_TMAP4_release_fraction.png', bbox_inches='tight', dpi=300);
 plt.close(fig)
 
 # Plot figure for verification of release fraction as determined in TMAP7 (SiC inner layer)
@@ -241,7 +241,7 @@ RMSE = np.sqrt(np.mean((tmap8_release_fraction_left-analytical_release_fraction_
 RMSPE = RMSE*100/np.mean(analytical_release_fraction_TMAP7[idx:])
 ax.text(40,0.6, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
-plt.savefig('ver-1a_comparison_analytical_TMAP7_release_fraction.png', bbox_inches='tight');
+plt.savefig('ver-1a_comparison_analytical_TMAP7_release_fraction.png', bbox_inches='tight', dpi=300);
 plt.close(fig)
 
 # Plot figure for verification of flux as determined in TMAP7 (SiC outer layer)
@@ -261,5 +261,5 @@ RMSE = np.sqrt(np.mean((tmap8_flux_right-analytical_flux_TMAP7)[idx:]**2) )
 RMSPE = RMSE*100/np.mean(analytical_flux_TMAP7 [idx:])
 ax.text(60,0.6e19, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
-plt.savefig('ver-1a_comparison_analytical_TMAP7_flux.png', bbox_inches='tight');
+plt.savefig('ver-1a_comparison_analytical_TMAP7_flux.png', bbox_inches='tight', dpi=300);
 plt.close(fig)
