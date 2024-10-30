@@ -18,7 +18,7 @@ desorption_heating_rate = ${units ${fparse 3/60} K/s}
 charge_time = ${units 50 h -> s}
 cooldown_time_constant = ${units ${fparse 45*60} s}
 # TMAP4 and TMAP7 used 40 minutes for the cooldown duration,
-# Ee use 5 hours to let the temperature decrease to around 300 K for the start of the desorption.
+# We use a 5 hour cooldown period to let the temperature decrease to around 300 K for the start of the desorption.
 # R.G. Macaulay-Newcombe et al. (1991) is not very clear on how long samples cooled down.
 cooldown_duration = ${units 5 h -> s}
 desorption_duration = ${fparse (temperature_desorption_max-temperature_desorption_min)/desorption_heating_rate}
@@ -201,7 +201,6 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
 []
 
 [Functions]
-
   [temperature_bc_func]
     type = ParsedFunction
     expression = 'if(t<${charge_time}, ${temperature_initial}, if(t<${fparse charge_time + cooldown_duration}, ${temperature_initial}-((1-exp(-(t-${charge_time})/${cooldown_time_constant}))*${fparse temperature_initial - temperature_cooldown_min}), ${temperature_desorption_min}+${desorption_heating_rate}*(t-${fparse charge_time + cooldown_duration})))'
@@ -240,7 +239,6 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
   []
 []
 
-
 [Materials]
   [diffusion_solubility]
     type = ADGenericFunctionMaterial
@@ -276,8 +274,8 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
     scaling_factor = '${fparse 2 * concentration_scaling}'
     # Factor of 2 because symmetry is assumed and only one-half of the specimen is modeled.
     # Thus, the total flux coming out of the specimen (per unit area)
-    # is twice of flux calculated at the left side of the domain.
-    # concentration_scaling is to get a consistant concentration unit
+    # is twice the flux calculated at the left side of the domain.
+    # The 'concentration_scaling' parameter is used to get a consistent concentration unit
   []
   [temperature]
     type = ElementAverageValue
@@ -373,7 +371,6 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
 
 [Outputs]
   csv = true
-  # hide = 'BeO_interface Be_interface solubility_Be solubility_BeO diffusion_BeO diffusion_Be dt variable_ratio gold_solubility_ratio'
   [exodus]
     type = Exodus
     output_material_properties = true
