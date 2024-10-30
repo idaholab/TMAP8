@@ -1,16 +1,16 @@
 nb_segments = 20
-long_segment = ${units 1.25e-5 m}
-long_total = ${fparse nb_segments * long_segment} # m
-simulation_time = ${units 10000 s}
-T = ${units 500 K}
-R = ${units 8.31446261815324 J/mol/K} # ideal gas constant from PhysicalConstants.h
-Na = ${units 6.02214076e23 1/mol} # Avogadro's number from /PhysicalConstants.h
-initial_pressure_1 = ${units 1e5 Pa}
-initial_pressure_2 = ${units 1e-10 Pa}
-initial_concentration_1 = ${units ${fparse initial_pressure_1 / (R*T)} mol/m^3}
-initial_concentration_2 = ${units ${fparse initial_pressure_2 / (R*T)} mol/m^3}
-solubility = ${fparse 1.082e20/Na} # Henry's law constant 
-diffusivity = ${units ${fparse 4.31e-6 * exp(-2818/T)} m^2/s}
+long_segment = '${units 1.25e-5 m}'
+long_total = '${units ${fparse nb_segments * long_segment} m}'
+simulation_time = '${units 10000 s}'
+T = '${units 500 K}'
+R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConstants.h
+Na = '${units 6.02214076e23 1/mol}' # Avogadro's number from PhysicalConstants.h
+initial_pressure_1 = '${units 1e5 Pa}'
+initial_pressure_2 = '${units 1e-10 Pa}'
+initial_concentration_1 = '${units ${fparse initial_pressure_1 / (R*T)} mol/m^3}'
+initial_concentration_2 = '${units ${fparse initial_pressure_2 / (R*T)} mol/m^3}'
+solubility = '${fparse 1.082e20/Na}' # Henry's law constant
+diffusivity = '${units ${fparse 4.31e-6 * exp(-2818/T)} m^2/s}'
 n_sorption = 1
 unit_scale = 1
 unit_scale_neighbor = 1
@@ -19,8 +19,8 @@ unit_scale_neighbor = 1
   [generated]
     type = GeneratedMeshGenerator
     dim = 1
-    nx = ${fparse nb_segments}
-    xmax = ${fparse long_total}
+    nx = '${fparse nb_segments}'
+    xmax = '${fparse long_total}'
   []
   [enclosure_1]
     type = SubdomainBoundingBoxGenerator
@@ -65,11 +65,13 @@ unit_scale_neighbor = 1
     order = CONSTANT
     family = MONOMIAL
     block = 1
+    initial_condition = '${fparse initial_pressure_1}'
   []
   [pressure_enclosure_2]
     order = CONSTANT
     family = MONOMIAL
     block = 2
+    initial_condition = '${fparse initial_pressure_2}'
   []
 []
 
@@ -105,6 +107,7 @@ unit_scale_neighbor = 1
     coupled_variables = 'concentration_enclosure_1'
     expression = '${fparse R*T}*concentration_enclosure_1'
     block = 1
+    execute_on = 'initial timestep_end'
   []
   [pressure_enclosure_2]
     type = ParsedAux
@@ -112,6 +115,7 @@ unit_scale_neighbor = 1
     coupled_variables = 'concentration_enclosure_2'
     expression = '${fparse R*T}*concentration_enclosure_2'
     block = 2
+    execute_on = 'initial timestep_end'
   []
 []
 
@@ -124,7 +128,7 @@ unit_scale_neighbor = 1
     diffusivity = ${diffusivity}
     unit_scale = ${unit_scale}
     unit_scale_neighbor = ${unit_scale_neighbor}
-    temperature = ${fparse T}
+    temperature = '${fparse T}'
     variable = concentration_enclosure_1
     neighbor_var = concentration_enclosure_2
     sorption_penalty = 1e1
@@ -137,38 +141,45 @@ unit_scale_neighbor = 1
     type = ElementAverageValue
     variable = pressure_enclosure_1
     block = 1
+    execute_on = 'initial timestep_end'
   []
   [pressure_enclosure_2]
     type = ElementAverageValue
     variable = pressure_enclosure_2
     block = 2
+    execute_on = 'initial timestep_end'
   []
   [concentration_enclosure_1_at_interface]
     type = PointValue
     variable = concentration_enclosure_1
     point = '${fparse 1/3 * long_total - 1e-5} 0 0'
     outputs = 'csv console'
+    execute_on = 'initial timestep_end'
   []
   [pressure_enclosure_2_at_interface]
     type = PointValue
     variable = pressure_enclosure_2
     point = '${fparse 1/3 * long_total + 1e-5} 0 0'
     outputs = 'csv console'
+    execute_on = 'initial timestep_end'
   []
   [concentration_encl_1_inventory]
     type = ElementIntegralVariablePostprocessor
     variable = concentration_enclosure_1
     block = 1
+    execute_on = 'initial timestep_end'
   []
   [concentration_encl_2_inventory]
     type = ElementIntegralVariablePostprocessor
     variable = concentration_enclosure_2
     block = 2
+    execute_on = 'initial timestep_end'
   []
   [mass_conservation_sum_encl1_encl2]
     type = LinearCombinationPostprocessor
     pp_names = 'concentration_encl_1_inventory concentration_encl_2_inventory'
     pp_coefs = '1            1'
+    execute_on = 'initial timestep_end'
   []
 []
 
@@ -176,8 +187,8 @@ unit_scale_neighbor = 1
   type = Transient
   end_time = ${simulation_time}
   dtmax = 10
-  nl_abs_tol = 1e-9
-  nl_rel_tol = 1e-15
+  nl_abs_tol = 1e-14
+  nl_rel_tol = 1e-10
   l_tol = 1e-3
   scheme = 'bdf2'
   solve_type = NEWTON
@@ -189,12 +200,12 @@ unit_scale_neighbor = 1
     optimal_iterations = 12
     iteration_window = 1
     growth_factor = 1.1
-    cutback_factor_at_failure
- = 0.9
+    cutback_factor_at_failure = 0.9
   []
 []
 
 [Outputs]
-  file_base = 'ver-1kb_out'
+  file_base = 'gold/ver-1kb_out'
   csv = true
+  execute_on = 'initial timestep_end'
 []
