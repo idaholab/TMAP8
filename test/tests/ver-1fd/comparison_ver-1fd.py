@@ -65,5 +65,5 @@ ax.minorticks_on()
 RMSE = np.linalg.norm(tmap8_sol_temperature-analytical_sol_temperature)
 err_percent = RMSE*100/np.mean(analytical_sol_temperature)
 ax.text(900, 151, 'RMSPE = %.2f '%err_percent+'%',fontweight='bold')
-plt.savefig('ver-1fd_comparison_convective_heating.png', bbox_inches='tight');
+plt.savefig('ver-1fd_comparison_convective_heating.png', bbox_inches='tight', dpi=300);
 plt.close(fig)

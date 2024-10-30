@@ -85,7 +85,7 @@ RMSE = np.sqrt(np.mean((tmap_concAB_TMAP7-analytical_concAB_diff_TMAP7)**2) ) # 
 RMSPE = RMSE*100/np.mean(analytical_concAB_diff_TMAP7)
 ax.text(10,11.5e-5, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',c='k')
 ax.minorticks_on()
-plt.savefig('ver-1g_comparison_diff_conc.png', bbox_inches='tight')
+plt.savefig('ver-1g_comparison_diff_conc.png', bbox_inches='tight', dpi=300)
 
 plt.close(fig)
 
@@ -127,6 +127,6 @@ RMSE = np.sqrt(np.mean((tmap_concAB-analytical_concAB_diff)**2) )
 RMSPE = RMSE*100/np.mean(analytical_concAB_diff)
 ax.text(10,21e-5, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',c='k')
 ax.minorticks_on()
-plt.savefig('ver-1g_comparison_equal_conc.png', bbox_inches='tight')
+plt.savefig('ver-1g_comparison_equal_conc.png', bbox_inches='tight', dpi=300)
 
 plt.close(fig)

@@ -97,5 +97,5 @@ RMSE = np.sqrt(np.mean((tmap_temp[3]-analytical_temp[3])**2) ) # 5.0 seconds
 RMSPE = RMSE*100/np.mean(analytical_temp[3])
 ax.text(2.75,340, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',c='c')
 ax.minorticks_on()
-plt.savefig('ver-1fb_comparison_temperature.png', bbox_inches='tight')
+plt.savefig('ver-1fb_comparison_temperature.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
