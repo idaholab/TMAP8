@@ -85,7 +85,6 @@ class fake_tk():
         else:
             return str(self.x)
 
-
 class fuel_cycle_form(tk.Tk):
     def __init__(self, interval=1/120,tmap8_path=None,headless=False):
         self.headless = headless
@@ -173,7 +172,6 @@ class fuel_cycle_form(tk.Tk):
         label.grid(row=row_i, column=0)
         textwidget.grid(row=row_i, column=1)
         row_i+=1
-
         for match in self.matches:
             label = tk.Label(self.scrollable, text=match[1][0])
             entryval = tk.StringVar()
@@ -185,7 +183,6 @@ class fuel_cycle_form(tk.Tk):
             textwidget.update()
             label.grid(row=row_i, column=0)
             textwidget.grid(row=row_i, column=1)
-
             row_i+=1
         self.input_entries = self.entries
         plotlabel = tk.Label(self.scrollable,text='Time Units')
@@ -213,7 +210,6 @@ class fuel_cycle_form(tk.Tk):
                 except ValueError:
                     raise ValueError('Non-numeric value in parameter definition during creation')
                     self.destroy()
-
 
         run_button = tk.Button(self,text="Run",command=self.buttonClick)
         run_button.grid(row=3,column=1)
@@ -285,7 +281,6 @@ class fuel_cycle_form(tk.Tk):
         self.canvas = FigureCanvasTkAgg(fig, master=self)
         self.canvas._tkcanvas.grid(row=2,column=2)
         self.canvas.draw()
-
         self.toolbar = NavigationToolbar2Tk(self.canvas,self,pack_toolbar=False)
         self.toolbar.update()
         self.toolbar.grid(row=3,column=2)
@@ -357,7 +352,6 @@ class fuel_cycle_form(tk.Tk):
                 maximum = max(np.max(self.iz_data[:,j]), maximum)
                 minimum = min(np.min(self.iz_data[:,j]), minimum)
                 i+=1
-
             j+=1
         self.ax.set_ylim(minimum, maximum*1.1)
         if not self.ax.get_legend_handles_labels() == ([], []):
@@ -370,8 +364,6 @@ class fuel_cycle_form(tk.Tk):
         count = sum([x.get() for x in self.plot_ints])
         self.ax.plot([]*count,[]*count)
         self.update_plot()
-
-
 
     def change_scale(self,*arg):
         xlims = list(self.ax.get_xlim())
@@ -430,5 +422,4 @@ else:
         window.title("Tritium Inventory Plot")
         window.rowconfigure(1,weight=1)
         window.rowconfigure(2,weight=1)
-
         window.mainloop()
