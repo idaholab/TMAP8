@@ -455,19 +455,19 @@
     variable = t2_enclosure_concentration
     execute_on = 'initial timestep_end'
   []
-  [ht_enclosure_edge_concentration] # (molecules/mum^3)
+  [ht_enclosure_edge_concentration] # (molecules/microns^3)
     type = PointValue
     point = '${length_domain} 0 0' # on the far side of the enclosure
     variable = ht_enclosure_concentration
     execute_on = 'initial timestep_end'
   []
-  [hto_enclosure_edge_concentration] # (molecules/mum^3)
+  [hto_enclosure_edge_concentration] # (molecules/microns^3)
     type = PointValue
     point = '${length_domain} 0 0' # on the far side of the enclosure
     variable = hto_enclosure_concentration
     execute_on = 'initial timestep_end'
   []
-  [h2o_enclosure_edge_concentration] # (molecules/mum^3)
+  [h2o_enclosure_edge_concentration] # (molecules/microns^3)
     type = PointValue
     point = '${length_domain} 0 0' # on the far side of the enclosure
     variable = h2o_enclosure_concentration
@@ -475,25 +475,25 @@
   []
 
   # Inventory in enclosure
-  [t2_enclosure_inventory] # (molecules/mum^2)
+  [t2_enclosure_inventory] # (molecules/microns^2)
     type = ElementIntegralVariablePostprocessor
     variable = t2_enclosure_concentration
     execute_on = 'initial timestep_end'
     block = 1
   []
-  [ht_enclosure_inventory] # (molecules/mum^2)
+  [ht_enclosure_inventory] # (molecules/microns^2)
     type = ElementIntegralVariablePostprocessor
     variable = ht_enclosure_concentration
     execute_on = 'initial timestep_end'
     block = 1
   []
-  [hto_enclosure_inventory] # (molecules/mum^2)
+  [hto_enclosure_inventory] # (molecules/microns^2)
     type = ElementIntegralVariablePostprocessor
     variable = hto_enclosure_concentration
     execute_on = 'initial timestep_end'
     block = 1
   []
-  [h2o_enclosure_inventory] # (molecules/mum^2)
+  [h2o_enclosure_inventory] # (molecules/microns^2)
     type = ElementIntegralVariablePostprocessor
     variable = h2o_enclosure_concentration
     execute_on = 'initial timestep_end'
@@ -501,25 +501,25 @@
   []
 
   # Inventory in paint
-  [t2_paint_inventory] # (molecules/mum^2)
+  [t2_paint_inventory] # (molecules/microns^2)
     type = ElementIntegralVariablePostprocessor
     variable = t2_paint_concentration
     execute_on = 'initial timestep_end'
     block = 0
   []
-  [ht_paint_inventory] # (molecules/mum^2)
+  [ht_paint_inventory] # (molecules/microns^2)
     type = ElementIntegralVariablePostprocessor
     variable = ht_paint_concentration
     execute_on = 'initial timestep_end'
     block = 0
   []
-  [hto_paint_inventory] # (molecules/mum^2)
+  [hto_paint_inventory] # (molecules/microns^2)
     type = ElementIntegralVariablePostprocessor
     variable = hto_paint_concentration
     execute_on = 'initial timestep_end'
     block = 0
   []
-  [h2o_paint_inventory] # (molecules/mum^2)
+  [h2o_paint_inventory] # (molecules/microns^2)
     type = ElementIntegralVariablePostprocessor
     variable = h2o_paint_concentration
     execute_on = 'initial timestep_end'

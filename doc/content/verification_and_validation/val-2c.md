@@ -9,14 +9,14 @@ Whenever tritium is released into a fusion reactor test cell, it is crucial to c
 This case models an experiment conducted at Los Alamos National Laboratory at the tritium systems test assembly (TSTA) to study the behavior of tritium once released in a test cell and the efficacy of the emergency tritium cleanup system (ETCS).
 
 The experimental set up, described in greater detail in [!cite](Holland1986), can be summarized as such:
-the surface of an enclosure of volume $V$ was covered with an aluminum foil and then covered in paint with an average thickness $l$.
+the inner walls of an enclosure of volume $V$ was covered with an aluminum foil and then covered in paint with an average thickness $l$, which is then in contact with the enclosure air.
 A given amount, T$_2^0$, of tritium, T$_2$, is injected in the enclosure, which initially contained ambient air.
 This represents the tritium release.
 A flow rate $f$ through the enclosure represents the air replacement time expected for large test cells.
 The purge gas is ambient air with 20% relative humidity.
 A fraction of that amount is diverted through the measurement system to determine the concentrations of chemical species within the enclosure.
 
-Several phenomena are taking place and need to be captured in the model.
+Several phenomena are taking place and need to be captured in the model to determine the concentrations of elemental tritium (i.e., T$_2$ and HT), tritiated water (i.e., HTO), and water (i.e., H$_2$O).
 First, The following chemical reactions occur inside the enclosure:
 \begin{equation} \label{eq:chemical_reaction_T2}
 \text{T}_2 + \text{H}_2\text{O} \longleftrightarrow{} \text{HTO} + \text{HT}
@@ -51,7 +51,7 @@ In the enclosure, to capture the purge gas and the chemical reactions, the conce
 \frac{d c_{\text{T}_2}}{dt} = - K_1 - \frac{f}{V}c_{\text{T}_2},
 \end{equation}
 \begin{equation} \label{eq:enclosure:HT}
-\frac{d c_{\text{HT}}}{dt} = - K_2 - \frac{f}{V}c_{\text{HT}},
+\frac{d c_{\text{HT}}}{dt} = K_1 - K_2 - \frac{f}{V}c_{\text{HT}},
 \end{equation}
 \begin{equation} \label{eq:enclosure:HTO}
 \frac{d c_{\text{HTO}}}{dt} = K_1 + K_2 - \frac{f}{V}c_{\text{HTO}},
@@ -82,7 +82,7 @@ At the interface between the enclosure air and the paint, sorption is captured i
 c_{i,enclosure} = K_S c_{i,paint} R T,
 \end{equation}
 where $c_{i,enclosure}$ and $c_{i,paint}$ are the concentrations of species $i$ in the enclosure and in the paint, respectively, and $K_S$ is the solubility (either $K_S^e$ or $K_S^w$).
-The boundary conditions are set to no flux since no permeation happens at the interface between the paint and the aluminum foil and the only flux leaving the enclosure is already captured by the purge gas [!citep](Holland1986).
+The boundary conditions are set to "no flux" since no permeation happens at the interface between the paint and the aluminum foil and the only flux leaving the enclosure is already captured by the purge gas [!citep](Holland1986).
 
 One of the assumptions made in the original paper and TMAP4 V&V case is that the tritium is immediately added to the enclosure [!citep](Holland1986,longhurst1992verification).
 However, this leads to an early HTO peak concentration, which does not exactly match the experimental data.
@@ -98,22 +98,22 @@ The results of these two approaches are presented and discussed below.
 The case and model parameters used in both approaches in TMAP8 are listed in [val-2c_parameters]. Some of the parameters are directly leveraged from [!cite](Holland1986,longhurst1992verification,ambrosek2008verification), but others were adapted to better match the experimental data.
 
 
-!table id=val-2c_parameters caption=Case and model parameters values used in both approaches in TMAP8 with $R$, the gas constant, and $N_A$, Avogadro's number, as defined in [PhysicalConstants](source/utils/PhysicalConstants.md). When values are the same for both approaches, they are noted as identical. Units are converted in the input file.
-| Parameter                  | Immediate injection approach                    | Delayed injection approach                      | Unit       | Reference                          |
-| -------------------------- | ----------------------------------------------- | ----------------------------------------------- | ---------- | ---------------------------------- |
-| $V$                        | 0.96                                            | Identical                                       | m$^3$      | [!cite](Holland1986)               |
-| $l$                        | 0.16 (between 0.1 and 0.2)                      | Identical                                       | mm         | [!cite](Holland1986)               |
-| T$_2^0$                    | 10                                              | Identical                                       | Ci/m$^{3}$ | [!cite](Holland1986)               |
-| $c_{\text{H}_2\text{O}}^0$ | 714                                             | Identical                                       | Pa         | [!cite](longhurst1992verification) |
-| $f$                        | 0.54                                            | Identical                                       | m$^3$/hr   | [!cite](Holland1986)               |
-| $T$                        | 303                                             | Identical                                       | K          | [!cite](Holland1986)               |
-| Total time                 | 180000                                          | Identical                                       | s          | [!cite](Holland1986)               |
-| $K^0$                      | $1.5 \times 2.0 \times 10^{-10}$                | $2.8 \times 2.0 \times 10^{-10}$                | m$^3$/Ci/s |                                    |
-| $D^e$                      | 4.0 $\times 10^{-12}$                           | Identical                                       | m$^2$/s    | [!cite](Holland1986)               |
-| $D^w$                      | 1.0 $\times 10^{-14}$                           | Identical                                       | m$^2$/s    | [!cite](Holland1986)               |
-| $K_S^e$                    | $5.0 \times 10^{-2} \times 4.0 \times 10^{-19}$ | $1.0 \times 10^{-3} \times 4.0 \times 10^{-19}$ | 1/m$^3$/Pa |                                    |
-| $K_S^w$                    | $3.5 \times 10^{-4} \times 6.0 \times 10^{-24}$ | $3.0 \times 10^{-4} \times 6.0 \times 10^{-24}$ | 1/m$^3$/Pa |                                    |
-| $t_{injection}$            | N/A                                             | 3                                               | hr         |                                    |
+!table id=val-2c_parameters caption=Case and model parameters values used in both approaches in TMAP8 with $R$, the gas constant, and $N_A$, Avogadro's number, as defined in [PhysicalConstants](source/utils/PhysicalConstants.md). When values are the same for both approaches, they are noted as identical. Model parameters that have been adapted from [!cite](longhurst1992verification) show a corrective factor in bold. Units are converted in the input file.
+| Parameter                  | Immediate injection approach                                 | Delayed injection approach                                   | Unit       | Reference                                       |
+| -------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ---------- | ----------------------------------------------- |
+| $V$                        | 0.96                                                         | Identical                                                    | m$^3$      | [!cite](Holland1986)                            |
+| $l$                        | 0.16 (between 0.1 and 0.2)                                   | Identical                                                    | mm         | [!cite](Holland1986)                            |
+| T$_2^0$                    | 10                                                           | Identical                                                    | Ci/m$^{3}$ | [!cite](Holland1986)                            |
+| $c_{\text{H}_2\text{O}}^0$ | 714                                                          | Identical                                                    | Pa         | [!cite](longhurst1992verification)              |
+| $f$                        | 0.54                                                         | Identical                                                    | m$^3$/hr   | [!cite](Holland1986)                            |
+| $T$                        | 303                                                          | Identical                                                    | K          | [!cite](Holland1986)                            |
+| Total time                 | 180000                                                       | Identical                                                    | s          | [!cite](Holland1986)                            |
+| $K^0$                      | $\boldsymbol{1.5} \times 2.0 \times 10^{-10}$                | $\boldsymbol{2.8} \times 2.0 \times 10^{-10}$                | m$^3$/Ci/s | Adapted from [!cite](longhurst1992verification) |
+| $D^e$                      | 4.0 $\times 10^{-12}$                                        | Identical                                                    | m$^2$/s    | [!cite](Holland1986)                            |
+| $D^w$                      | 1.0 $\times 10^{-14}$                                        | Identical                                                    | m$^2$/s    | [!cite](Holland1986)                            |
+| $K_S^e$                    | $\boldsymbol{5.0 \times 10^{-2}} \times 4.0 \times 10^{-19}$ | $\boldsymbol{1.0 \times 10^{-3}} \times 4.0 \times 10^{-19}$ | 1/m$^3$/Pa | Adapted from [!cite](longhurst1992verification) |
+| $K_S^w$                    | $\boldsymbol{3.5 \times 10^{-4}} \times 6.0 \times 10^{-24}$ | $\boldsymbol{3.0 \times 10^{-4}} \times 6.0 \times 10^{-24}$ | 1/m$^3$/Pa | Adapted from [!cite](longhurst1992verification) |
+| $t_{injection}$            | N/A                                                          | 3                                                            | hr         |                                                 |
 
 ## Results and discussion
 
