@@ -2,28 +2,35 @@
 
 # Heat Conduction with Heat Generation
 
-This heat transfer verification problem is taken from [!cite](longhurst1992verification). In this problem heat conduction through a slab is modeled. The slab has heat generation. One end of the slab is kept at a constant temperature of 300K while the other end acts as an adiabatic surface. The analytical solution for this case is given as:
+## General Case Description
 
-\begin{equation}
-T = T_s \;+\; \frac{QL^2}{2k} \left(1-\frac{x^2}{L^2}\right)
+This heat transfer verification problem is taken from [!cite](longhurst1992verification) and [!cite](ambrosek2008verification). This case models a heat conduction problem through a slab with a heat source.
+
+The heat conduction in the one-dimensional model is described as:
+
+\begin{equation} \label{eq:thermal_equation}
+\rho C_P \frac{d T}{d t} = \nabla k \nabla T + Q,
 \end{equation}
 
-where:
+where $T$ is the temperature, $\rho$ is the density, $C_P$ is the specific heat, $k$ is the thermal conductivity, and $Q$ is the internal volumetric heat generation rate.
 
-    $Q$ : internal heat generation rate (10,000 W/m$^3$)
+One end of the slab is kept at a constant temperature of 300K while the other end acts as an adiabatic surface.
 
-    $L$ : length of the slab (1.6 m)
+This case uses internal volumetric heat generation rate of $1 \times 10^{4}$ W/m$^3$ in the slab. The thickness of slab, $L$, is 1.6 m, and the thermal conductivity is 10 W/m/K. The surface temperature, $T_s$, on the constant temperature end is 300 K. The production of material density and specific heat is assumed to be 1 J/m$^3$/K.
 
-    $k$ : thermal conductivity (10 W/m-K)
+## Analytical solution
 
-    $T_s$ : imposed surface temperature (300 K)
+[!cite](longhurst1992verification) and [!cite](ambrosek2008verification) provide the analytical solution for the steady state temperature of this case as:
 
+\begin{equation}  \label{eq:thermal_analytical}
+T = T_s \;+\; \frac{QL^2}{2k} \left(1-\frac{x^2}{L^2}\right),
+\end{equation}
 
-The slab is assumed to have a density of 1 kg/m$^3$ and a specific heat capabity of 1 J/kg-K.
+where $L$ is the thickness of the slab, and $T_s$ is the imposed surface temperature.
 
-Comparison of the temperature computed through TMAP8 and calculated analytically is shown in
-[ver-1fa_comparison_temperature]. The TMAP8 code predictions match very well with
-the analytical solution with a root mean square percentage error of RMSPE = 0.05 %.
+## Results
+
+A comparison of the temperature calculated through TMAP8 and calculated analytically is shown in [ver-1fa_comparison_temperature]. The TMAP8 calculations are found to be in good agreement with the analytical solution, with a root mean square percentage error (RMSPE) of RMSPE = 0.05 %.
 
 !media comparison_ver-1fa.py
        image_name=ver-1fa_comparison_temperature.png
