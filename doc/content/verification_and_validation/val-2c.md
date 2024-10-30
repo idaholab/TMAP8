@@ -8,13 +8,13 @@ This validation problem is taken from [!cite](Holland1986) and was part of the v
 Whenever tritium is released into a fusion reactor test cell, it is crucial to clean it up to prevent exposure.
 This case models an experiment conducted at Los Alamos National Laboratory at the tritium systems test assembly (TSTA) to study the behavior of tritium once released in a test cell and the efficacy of the emergency tritium cleanup system (ETCS).
 
-The experimental set up, described in greater details in [!cite](Holland1986), can be summarized as such:
+The experimental set up, described in greater detail in [!cite](Holland1986), can be summarized as such:
 the surface of an enclosure of volume $V$ was covered with an aluminum foil and then covered in paint with an average thickness $l$.
-A given amount T$_2^0$ of tritium T$_2$ is injected in the enclosure, which initially contained ambient air.
+A given amount, T$_2^0$, of tritium, T$_2$, is injected in the enclosure, which initially contained ambient air.
 This represents the tritium release.
 A flow rate $f$ through the enclosure represents the air replacement time expected for large test cells.
 The purge gas is ambient air with 20% relative humidity.
-A fraction of that amount is diverted through the measurement system to determine the concentrations of the enclosure.
+A fraction of that amount is diverted through the measurement system to determine the concentrations of chemical species within the enclosure.
 
 Several phenomena are taking place and need to be captured in the model.
 First, The following chemical reactions occur inside the enclosure:
@@ -30,21 +30,21 @@ K_1 = 2 K^0 c_{\text{T}_2} \left( 2 c_{\text{T}_2} + c_{\text{HT}} + c_{\text{HT
 \end{equation}
 and
 \begin{equation} \label{eq:chemical_reaction_K_2}
-K_2 = K^0 c_{\text{HT}} \left( 2 c_{\text{T}_2} + c_{\text{HT}} + c_{\text{HTO}} \right)
+K_2 = K^0 c_{\text{HT}} \left( 2 c_{\text{T}_2} + c_{\text{HT}} + c_{\text{HTO}} \right).
 \end{equation}
-where $c_i$ represents the concentration of species $i$, and $K^0$ is a constant.
+Here, $c_i$ represents the concentration of species $i$, and $K^0$ is a constant.
 
 Second, the different species will permeate in the paint.
-The elemental tritium species, T$_2$ and HT, have a given solubility $K_S^e$ and diffusivity $D^e$, while the tritiated water HTO and water H$_2$O have a solubility $K_S^w$ and diffusivity $D^w$.
+The elemental tritium species, T$_2$ and HT, have a given solubility $K_S^e$ and diffusivity $D^e$, while the tritiated water, HTO, and water, H$_2$O, have a solubility $K_S^w$ and diffusivity $D^w$.
 It is expected that species will initially permeate into the paint and later get released as the purge gas cleans up the enclosure air.
 
-The objective of this case is to determine the time evolution of T$_2$ and HTO concentrations in the enclosure and match the experimental data published in [!cite](Holland1986) and reproduced in [val-2c_comparison_T2] and [val-2c_comparison_HTO].
+The objectives of this case are to determine the time evolution of T$_2$ and HTO concentrations in the enclosure, match the experimental data published in [!cite](Holland1986), and display this comparison with the appropriate error checking (see [val-2c_comparison_T2] and [val-2c_comparison_HTO]).
 
 ## Model Description
 
 To model the case described above, TMAP8 simulates a one-dimensional domain with one block to represent the air in the enclosure, and another block to represent the paint.
-In each block, it tracks the local concentration of T$_2$, HT, HTO, and H$_2$O.
-Note that this case can easily be extended to a two- or three-dimensional case.
+In each block, the simulation tracks the local concentration of T$_2$, HT, HTO, and H$_2$O.
+Note that this case can easily be extended to a two- or three-dimensional case, but, consistent with previous analyses, we will maintain the one-dimensional configuration here.
 
 In the enclosure, to capture the purge gas and the chemical reactions, the concentrations evolve as
 \begin{equation} \label{eq:enclosure:T2}
@@ -58,7 +58,7 @@ In the enclosure, to capture the purge gas and the chemical reactions, the conce
 \end{equation}
 and
 \begin{equation} \label{eq:enclosure:H2O}
-\frac{d c_{\text{H}_2\text{O}}}{dt} = - K_1 - K_1 + \frac{f}{V} \left(c_{\text{H}_2\text{O}}^0 - c_{\text{H}_2\text{O}} \right),
+\frac{d c_{\text{H}_2\text{O}}}{dt} = - K_1 - K_2 + \frac{f}{V} \left(c_{\text{H}_2\text{O}}^0 - c_{\text{H}_2\text{O}} \right),
 \end{equation}
 where $c_{\text{H}_2\text{O}}^0$ is the concentration of H$_2$O in the incoming purge gas.
 
@@ -88,7 +88,7 @@ One of the assumptions made in the original paper and TMAP4 V&V case is that the
 However, this leads to an early HTO peak concentration, which does not exactly match the experimental data.
 In [!cite](ambrosek2008verification), TMAP7 introduces a new enclosure to account for a slower injection of tritium.
 Here, we model this case with two different approaches.
-The first approach, like [!citep](Holland1986,longhurst1992verification), assumes that the entire tritium inventory is immediately injected in the enclosure at the beginning of the experience.
+The first approach, like [!citep](Holland1986,longhurst1992verification), assumes that the entire tritium inventory is immediately injected in the enclosure at the beginning of the experiment.
 The second approach assumes that the tritium inventory is being injected into the enclosure at a linear rate during a period of time $t_injection$ until the entire tritium inventory is injected.
 The results of these two approaches are presented and discussed below.
 
@@ -143,6 +143,6 @@ It is also possible to perform this optimization with [MOOSE's stochastic tools 
 ## Input files
 
 !style halign=left
-The input files for this case can be found at [/val-2c_immediate_injection.i] and [/val-2c_delay.i]. Note that both input files utilize the base file [/val-2c_base.i] with the line `!include val-2c_base.i`. The base input file [/val-2c_base.i] contains all the features common to both cases, and [/val-2c_immediate_injection.i] and [/val-2c_delay.i] focus on what is specific to each case. This approach reduces duplication. Note that [/val-2c_immediate_injection.i] and [/val-2c_delay.i] and also used as test in TMAP8 at [/val-2c/tests].
+The input files for this case can be found at [/val-2c_immediate_injection.i] and [/val-2c_delay.i]. Note that both input files utilize a common base file [/val-2c_base.i] with the line `!include val-2c_base.i`. The base input file contains all the features and TMAP8 objects common to both cases, reducing duplication, and this allows the immediate injection and delayed injection inputs to focus on what is specific to each case. Note that both input files are also used as TMAP8 tests, outlined at [/val-2c/tests].
 
 !bibtex bibliography

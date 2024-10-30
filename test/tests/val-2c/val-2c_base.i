@@ -2,7 +2,7 @@
 # Test Cell Release Experiment based on
 # D. F. Holland and R. A. Jalbert, "A Model for Tritium Concentration Following Tritium
 # Release into a Test Cell and Subsequent Operation of an Atmospheric Cleanup Systen,"
-# Proceedings, Eleventh Symposium of Fusion Engineering, Novermber 18-22, 1985,. Austin,
+# Proceedings, Eleventh Symposium of Fusion Engineering, November 18-22, 1985,. Austin,
 # TX, Vol I, pp. 638-43, IEEE Cat. No. CH2251-7.
 
 # Note that the approach to model this validation case is different in TMAP4 and TMAP7.
@@ -449,7 +449,7 @@
 
 [Postprocessors]
   # Pressures in enclosure
-  [t2_enclosure_edge_concentration] # (molecules/mum^3)
+  [t2_enclosure_edge_concentration] # (molecules/microns^3)
     type = PointValue
     point = '${length_domain} 0 0' # on the far side of the enclosure
     variable = t2_enclosure_concentration

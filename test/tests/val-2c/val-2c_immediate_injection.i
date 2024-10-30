@@ -32,7 +32,7 @@ solubility_tritiated_water = '${units ${fparse 3.5e-4 * 6.0e24} 1/m^3/Pa -> 1/mu
 # The units below are actually in molecules, not atoms
 initial_T2_inventory = ${units ${fparse 10 / 2 / conversion_Ci_atom} at} # (equivalent to 10 Ci) - the 1/2 is to account for 2 tritium atoms per molecules, both contributing to activity
 initial_T2_concentration = ${units ${fparse initial_T2_inventory / volume_enclosure} at/mum^3}
-initial_H2O_pressure = ${units 714 Pa} # Found in TMAP4 input file, which corresponds to ambiant air with 20% relative humidity.
+initial_H2O_pressure = ${units 714 Pa} # Found in TMAP4 input file, which corresponds to ambient air with 20% relative humidity.
 initial_H2O_concentration = ${units ${fparse initial_H2O_pressure / concentration_to_pressure_conversion_factor} at/mum^3}
 
 ## Numerical parameters
@@ -44,7 +44,7 @@ lower_value_threshold = ${units -1e-20 at/mum^3}  # lower limit for concentratio
 ## Inflow and outflow
 inflow = ${units 0.54 m^3/h -> mum^3/s} # inflow of normally moist (20% relative humidity) air at the same temperature as the enclosure
 inflow_concentration = ${fparse initial_H2O_concentration * inflow / volume_enclosure}
-outflow = ${units 0.54 m^3/h -> mum^3/s} # outflow of enclosure air # even if only 0.06 m^3/h is used to do measurments, all that air is purged out.
+outflow = ${units 0.54 m^3/h -> mum^3/s} # outflow of enclosure air # even if only 0.06 m^3/h is used to do measurements, all that air is purged out.
 
 !include val-2c_base.i
 
