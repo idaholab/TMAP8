@@ -1,0 +1,1 @@
+../test/tests/fuel-cycle/fuel_cycle_gui.py
