@@ -28,7 +28,7 @@ endtime = charge_time + cooldown_duration + desorption_duration
 # Define methods
 
 def numerical_solution_on_experiment_input(experiment_input, tmap_input, tmap_output):
-    """intrapolate numerical solution to the experimental time step
+    """interpolate numerical solution to the experimental time step
 
     Args:
         experiment_input (float, ndarray): experimental input data points

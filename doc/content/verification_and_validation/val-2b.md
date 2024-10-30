@@ -8,7 +8,9 @@ This validation problem is taken from [!cite](macaulay1991deuterium) and is part
 
 R.G. Macaulay-Newcombe et al. conducted thermal absorption and desorption experiments, as well as implantation experiments, on wafers of polished beryllium.
 Of the several data sets presented, the one modeled here is run 2a1 represented in Figure 2(a) in their publication. The beryllium sample was 0.4 mm thick and had an area of 104 mm$^2$, as illustrated in [val-2b_schematic].
-It was polished to a mirror finish and then exposed to 13.3 kPa of deuterium at 773 K for 50 hours. It was quickly cooled under a vacuum of about 1 $\mu$Pa. The cooling time constant for the apparatus is taken as 45 minutes. After removing the sample from the charging furnace, it was transferred in the air to a thermal desorption furnace where the temperature was increased from ambient (300 K) to 1073 K at the rate of 3 K/min. This was done under vacuum, and the pressure of the chamber was monitored by the residual gas analysis and calibrated against standard leaks. In that way, the emission rate from the sample could be measured as a function of temperature. The sample pressure and temperature histories are shown in [val-2b_temperature_pressure_history].
+It was polished to a mirror finish and then exposed to 13.3 kPa of deuterium at 773 K for 50 hours. It was quickly cooled under a vacuum of about 1 $\mu$Pa. The cooling time constant for the apparatus is taken as 45 minutes, which is consistent with the assumption made in [!citep](longhurst1992verification,ambrosek2008verification).
+After removing the sample from the charging furnace, it was transferred in the air to a thermal desorption furnace where the temperature was increased from ambient (300 K) to 1073 K at the rate of 3 K/min. This was done under vacuum, and the pressure of the chamber was monitored by the residual gas analysis and calibrated against standard leaks.
+In that way, the emission rate from the sample could be measured as a function of temperature. The sample pressure and temperature histories are shown in [val-2b_temperature_pressure_history].
 Experimental data from that measurement, given in Figure 2 (a) in [!cite](macaulay1991deuterium) are reproduced in [val-2b_comparison].
 
 !media figures/val-2b_schematic.jpg
@@ -21,6 +23,9 @@ Experimental data from that measurement, given in Figure 2 (a) in [!cite](macaul
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2b_temperature_pressure_history
     caption=Pressure and temperature histories.
+
+!alert note title=Uncertainty about cooldown duration.
+The exact duration of the cooldown period and its temperature history are uncertain. [!cite](macaulay1991deuterium) provides information about 24 hour-cooldown cycles, but it is unclear whether this applies to the charging chamber alone or to the sample as well. In parallel, [!citep](longhurst1992verification,ambrosek2008verification) assumes that the cooldown lasted for 40 minutes. With an assumed cooling time constant for the apparatus of 45 minutes, this did not enable the sample to cool down to the starting temperature of the desorption phase of the experiment (i.e., 300 K). To model this case in TMAP8, we decided to select a cooldown duration that is long enough to bring the temperature of the sample to around 300 K, but did not unnecessarily increase the length of the history since no significant changes happen to the deuterium distribution at 300 K due to slow kinetics. For these reasons, we selected a cooldown duration of 5 hours, as shown in [val-2b_temperature_pressure_history].
 
 From Rutherford backscattering measurements made on the samples before charging with deuterium, they deduced that the thickness of the oxide film was 18 nm. This is typical for polished beryllium. The metal is so reactive in air that the film forms almost immediately after any surface oxide removal. On the other hand, it is relatively stable and would only grow slightly when exposed to air between charging and thermal desorption.
 
