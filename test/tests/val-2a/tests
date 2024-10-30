@@ -1,0 +1,25 @@
+[Tests]
+  design = 'MatNeumannBC.md'
+  issues = '#12 #188'
+  validation = 'val-2a.md'
+  [val-2a_csvdiff]
+    type = CSVDiff
+    input = 'val-2a.i'
+    csvdiff = val-2a_out.csv
+    requirement = 'The system shall be able to model deuterium ion implantation in a steel alloy for comparison with experimental results, particularly focusing on the permeation flux.'
+  []
+  [val-2a_exodiff]
+    type = Exodiff
+    input = 'val-2a.i'
+    exodiff = val-2a_out.e
+    prereq = val-2a_csvdiff
+    should_execute = false # this test relies on the output files from val-2a_csvdiff, so it shouldn't be run twice
+    requirement = 'The system shall be able to model deuterium ion implantation in a steel alloy for comparison with experimental results, focused on the full set of simulation output including deuterium concentration, recombination coefficient, and dissociation coefficient.'
+  []
+  [val-2a_comparison]
+    type = RunCommand
+    command = 'python3 comparison_val-2a.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of validation case 2a, modeling deuterium ion implantation in a steel alloy.'
+    required_python_packages = 'matplotlib numpy pandas os'
+  []
+[]
