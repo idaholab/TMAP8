@@ -1,6 +1,7 @@
 [Tests]
   design = 'Diffusion.md TimeDerivative.md DirichletBC.md'
   issues = '#12'
+  verification = 'ver-1b.md'
     [ver-1b]
       type = Exodiff
       input = ver-1b.i

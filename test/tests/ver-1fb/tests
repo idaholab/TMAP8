@@ -1,11 +1,11 @@
 [Tests]
   design = 'HeatConduction.md HeatConductionTimeDerivative.md'
   issues = '#12'
+  verification = 'ver-1fb.md'
   [thermal_transient]
     type = Exodiff
     input = ver-1fb.i
     exodiff = ver-1fb_out.e
     requirement = 'The system shall be able to model thermal transient in a slab that has temperatures fixed at both the ends'
-    verification = 'ver-1fb.md'
   []
 []
