@@ -10,7 +10,7 @@
   [gui]
     type = RunCommand
     command = 'python3 fuel_cycle_gui.py --test'
-    requirement = 'The system shall be able to open a graphical interface for user training.'
+    requirement = 'The system shall be able to open a graphical interface for the tritium fuel cycle example for user training.'
     required_python_packages = 'tempfile tkinter re subprocess matplotlib numpy scipy atexit shutil atexit os'
   []
 []
