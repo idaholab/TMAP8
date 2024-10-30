@@ -4,13 +4,13 @@ long_total = ${fparse nb_segments * long_segment} # m
 simulation_time = ${units 10000 s}
 T = ${units 500 K}
 R = ${units 8.31446261815324 J/mol/K} # ideal gas constant from PhysicalConstants.h
-Na = ${units 6.02214076e23 /mol} # Avogadro's number from /PhysicalConstants.h
+Na = ${units 6.02214076e23 1/mol} # Avogadro's number from /PhysicalConstants.h
 initial_pressure_1 = ${units 1e5 Pa}
 initial_pressure_2 = ${units 1e-10 Pa}
-initial_concentration_1 = ${fparse initial_pressure_1 / (R*T)} # mol/m^3
-initial_concentration_2 = ${fparse initial_pressure_2 / (R*T)} # mol/m^3
+initial_concentration_1 = ${units ${fparse initial_pressure_1 / (R*T)} mol/m^3}
+initial_concentration_2 = ${units ${fparse initial_pressure_2 / (R*T)} mol/m^3}
 solubility = ${fparse 1.082e20/Na} # Henry's law constant 
-diffusivity = ${fparse 4.31e-6 * exp(-2818/T)} # m^2/s
+diffusivity = ${units ${fparse 4.31e-6 * exp(-2818/T)} m^2/s}
 n_sorption = 1
 unit_scale = 1
 unit_scale_neighbor = 1
@@ -174,13 +174,13 @@ unit_scale_neighbor = 1
 
 [Executioner]
   type = Transient
-  dt = 100
   end_time = ${simulation_time}
   dtmax = 10
   nl_abs_tol = 1e-9
   nl_rel_tol = 1e-15
   l_tol = 1e-3
   scheme = 'bdf2'
+  solve_type = NEWTON
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_package'
   petsc_options_value = 'lu superlu_dist'
   [TimeStepper]
@@ -189,7 +189,8 @@ unit_scale_neighbor = 1
     optimal_iterations = 12
     iteration_window = 1
     growth_factor = 1.1
-    cutback_factor = 0.9
+    cutback_factor_at_failure
+ = 0.9
   []
 []
 

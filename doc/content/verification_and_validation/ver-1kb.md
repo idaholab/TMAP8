@@ -10,7 +10,7 @@ Two enclosures are separated by a membrane that allows diffusion according to He
 
 This verification problem is taken from [!cite](ambrosek2008verification). 
 
-Over time, the pressures of H$_2$ and T$_2$, which diffuse across the membrane in accordance with Henry’s law, will gradually equilibrate between the two enclosures. 
+Over time, the pressures of T$_2$, which diffuses across the membrane in accordance with Henry’s law, will gradually equilibrate between the two enclosures. 
 
 The concentration in Enclosure 1 is related to the partial pressure and concentration in Enclosure 2 via the interface sorption law:
 
@@ -20,7 +20,6 @@ C_s = K P^n = K \left( \frac{C_g RT}{n} \right)
 
 where $R$ is the ideal gas constant in J/mol/K, $T$ is the temperature in K, $K$ is the solubility, and $n$ is the exponent of the sorption law. For the Henry’s law, $n=1$.
 
-Meanwhile, the heteronuclear species, HT, does not follow this diffusion process and remains stable, maintaining a constant pressure throughout the system.
 
 ## Results
 
@@ -30,7 +29,7 @@ The TMAP8 pressure evolutions in the two enclosures are shown in [ver-1kb_compar
        image_name=ver-1kb_comparison_time.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1kb_comparison_time
-       caption=Equilibration of species pressures under Henry’s law.
+       caption=Equilibration of species pressures under Henry’s law as predicted by TMAP8.
 
 ## Input files
 

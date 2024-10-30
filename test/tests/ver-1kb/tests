@@ -1,5 +1,5 @@
 [Tests]
-  design = 'MatDiffusion.md TimeDerivative.md'
+  design = 'InterfaceSorption.md MatDiffusion.md TimeDerivative.md'
   issues = '#12'
   verification = 'ver-1kb.md'
   [ver-1kb_csv]
