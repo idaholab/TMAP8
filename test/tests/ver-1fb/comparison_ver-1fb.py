@@ -26,28 +26,28 @@ def summation_terms(n, x, t, alph):
 
 tmap_temp = []
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-    csv_folder = "../../../../test/tests/ver-1fb/gold/u_vs_x_0pt1sec.csv"
+    csv_folder = "../../../../test/tests/ver-1fb/gold/ver-1fb_u_vs_x_line_0010.csv"
 else:                                  # if in test folder
-    csv_folder = "./gold/u_vs_x_0pt1sec.csv"
+    csv_folder = "./gold/ver-1fb_u_vs_x_line_0010.csv"
 tmap_sol = pd.read_csv(csv_folder)
 tmap_x = tmap_sol['id']
 tmap_temp.append(tmap_sol['temp'])
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-    csv_folder = "../../../../test/tests/ver-1fb/gold/u_vs_x_0pt5sec.csv"
+    csv_folder = "../../../../test/tests/ver-1fb/gold/ver-1fb_u_vs_x_line_0050.csv"
 else:                                  # if in test folder
-    csv_folder = "./gold/u_vs_x_0pt5sec.csv"
+    csv_folder = "./gold/ver-1fb_u_vs_x_line_0050.csv"
 tmap_sol = pd.read_csv(csv_folder)
 tmap_temp.append(tmap_sol['temp'])
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-    csv_folder = "../../../../test/tests/ver-1fb/gold/u_vs_x_1pt0sec.csv"
+    csv_folder = "../../../../test/tests/ver-1fb/gold/ver-1fb_u_vs_x_line_0100.csv"
 else:                                  # if in test folder
-    csv_folder = "./gold/u_vs_x_1pt0sec.csv"
+    csv_folder = "./gold/ver-1fb_u_vs_x_line_0100.csv"
 tmap_sol = pd.read_csv(csv_folder)
 tmap_temp.append(tmap_sol['temp'])
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-    csv_folder = "../../../../test/tests/ver-1fb/gold/u_vs_x_5pt0sec.csv"
+    csv_folder = "../../../../test/tests/ver-1fb/gold/ver-1fb_u_vs_x_line_0500.csv"
 else:                                  # if in test folder
-    csv_folder = "./gold/u_vs_x_5pt0sec.csv"
+    csv_folder = "./gold/ver-1fb_u_vs_x_line_0500.csv"
 tmap_sol = pd.read_csv(csv_folder)
 tmap_temp.append(tmap_sol['temp'])
 
