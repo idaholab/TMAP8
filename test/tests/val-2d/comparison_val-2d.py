@@ -44,9 +44,6 @@ else:                                  # if in test folder
 simulation_TMAP7_data = pd.read_csv(csv_folder)
 simulation_time_TMAP7 = simulation_TMAP7_data['time']
 simulation_flux_left_TMAP7 = simulation_TMAP7_data['scaled_flux_surface_left']
-# simulation_flux_right_TMAP7 = simulation_TMAP7_data['scaled_flux_surface_right']
-# simulation_flux_left_TMAP7 = simulation_TMAP7_data['scaled_recombination_flux_left']
-# simulation_flux_right_TMAP7 = simulation_TMAP7_data['scaled_recombination_flux_right']
 
 # build the environmental desorption flux
 flux_environment = flux_environment_max / ((final_temperature - initial_temperature) / temperature_rate) * (simulation_time_TMAP7 - 5000)
@@ -75,7 +72,7 @@ ax.plot(simulation_time_TMAP7, flux_environment, linestyle='-', label=r"environm
 ax.plot(experiment_time, experiment_flux, linestyle='--', label=r"experiment", c='k')
 
 ax.set_xlabel(u'time (s)')
-ax.set_ylabel(u"desorption flux (atom/m$^2$/s)")
+ax.set_ylabel(u"desorption flux (H$_2$/m$^2$/s)")
 ax.legend(loc="best")
 ax.set_ylim(bottom=0, top=1.8e18)
 ax.set_xlim(left=5000,right=6800)
@@ -85,6 +82,5 @@ RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe-experiment_flux)**2) )
 RMSPE = RMSE*100/np.mean(experiment_flux)
 ax.text(6000.0,0.85e18, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
-# ax.ticklabel_format(axis='y', style='sci', scilimits=(15,15))
 plt.savefig(f'{file_base}.png', bbox_inches='tight')
 plt.close(fig)

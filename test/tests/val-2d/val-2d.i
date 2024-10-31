@@ -2,7 +2,6 @@
 k = '${units 1.380649e-23 J/K}' # Boltzmann constant (from PhysicalConstants.h - https://physics.nist.gov/cgi-bin/cuu/Value?r)
 
 # Model parameters
-nx_scale = 2
 simulation_time = '${units 6.8e3 s}'
 
 # Diffusion parameters
@@ -35,18 +34,34 @@ width_trap1 = '${units 10e-9 m -> mum}'
 # thermal parameters
 temperature_low = '${units 300 K}'
 temperature_high = '${units 1273 K}'
+temperature_rate = '${units ${fparse 50 / 60} K/s}'
 
 [Mesh]
+  active = 'cartesian_mesh'
   [cartesian_mesh]
+    nx_scale = 5
     type = CartesianMeshGenerator
     dim = 1
     dx = '${fparse 10 * ${units 1.5e-9 m -> mum}}
           ${units 1e-9 m -> mum}       ${units 1e-8 m -> mum}     ${units 1e-7 m -> mum}
-          ${units 4e-6 m -> mum}     ${units 2e-6 m -> mum}  ${units 2.407e-6 m -> mum}   ${fparse 11 * ${units 7.407e-6 m -> mum}}'
+          ${units 4e-6 m -> mum}     ${units 4.407e-6 m -> mum}   ${fparse 11 * ${units 7.407e-6 m -> mum}}'
     ix = '${fparse 10 * ${nx_scale}}
-          ${fparse 1 * ${nx_scale}}    ${fparse 4 * ${nx_scale}}   ${fparse 4 * ${nx_scale}}
-          ${fparse 30 * ${nx_scale}} ${fparse 15 * ${nx_scale}}  ${fparse 1 * ${nx_scale}}   ${fparse 11 * ${nx_scale}}'
-    subdomain_id = '0 1 1 1 1 1 1 1'
+          ${fparse 1 * ${nx_scale}}    ${fparse 1 * ${nx_scale}}   ${fparse 1 * ${nx_scale}}
+          ${fparse 100 * ${nx_scale}} ${fparse 20 * ${nx_scale}}   ${fparse 11 * ${nx_scale}}'
+    subdomain_id = '0 1 1 1 1 1 1'
+  []
+
+  [cartesian_mesh_coarse]
+    nx_scale = 1
+    type = CartesianMeshGenerator
+    dim = 1
+    dx = '${fparse 10 * ${units 1.5e-9 m -> mum}}
+          ${units 1e-9 m -> mum}       ${units 1e-8 m -> mum}      ${units 1e-7 m -> mum}
+          ${units 4e-6 m -> mum}       ${units 4.407e-6 m -> mum}  ${fparse 11 * ${units 7.407e-6 m -> mum}}'
+    ix = '${fparse 10 * ${nx_scale}}
+          ${fparse 1 * ${nx_scale}}    ${fparse 1 * ${nx_scale}}   ${fparse 1 * ${nx_scale}}
+          ${fparse 6 * ${nx_scale}}    ${fparse 1 * ${nx_scale}}   ${fparse 1 * ${nx_scale}}'
+    subdomain_id = '0 1 1 1 1 1 1'
   []
 []
 
@@ -56,32 +71,83 @@ temperature_high = '${units 1273 K}'
   reference_vector = 'ref'
 []
 
+[Bounds]
+  [concentration_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = concentration
+    bound_type = lower
+    bound_value = 0
+  []
+  [trapped_1_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = trapped_1
+    bound_type = lower
+    bound_value = 0
+  []
+  [trapped_2_upper_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = trapped_2
+    bound_type = upper
+    bound_value = 2e4
+  []
+  [trapped_2_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = trapped_2
+    bound_type = lower
+    bound_value = 0
+  []
+  [trapped_3_upper_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = trapped_3
+    bound_type = upper
+    bound_value = 2e4
+  []
+  [trapped_3_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = trapped_3
+    bound_type = lower
+    bound_value = 0
+  []
+[]
+
 [Variables]
   [concentration]
     order = FIRST
     family = LAGRANGE
     initial_condition = ${initial_concentration}
   []
-
   [trapped_1]
     order = FIRST
     family = LAGRANGE
     block = 0
+    outputs = none
   []
   [trapped_2]
     order = FIRST
     family = LAGRANGE
     initial_condition = '${fparse ${initial_concentration_trap_2} * ${trapping_site_fraction_2} * ${N}}'
+    outputs = none
   []
   [trapped_3]
     order = FIRST
     family = LAGRANGE
     initial_condition = '${fparse ${initial_concentration_trap_3} * ${trapping_site_fraction_3} * ${N}}'
+    outputs = none
   []
 []
 
 [AuxVariables]
   [temperature]
+  []
+  [bounds_dummy]
+    order = FIRST
+    family = LAGRANGE
   []
 []
 
@@ -258,9 +324,10 @@ temperature_high = '${units 1273 K}'
 [Functions]
   [Temperature_func]
     type = ADParsedFunction
-    expression = 'if(t<5000.0,                                                      ${temperature_low},
-                  if(t<5000 + (${temperature_high} - ${temperature_low}) / (50/60), ${temperature_low} + (50/60) * (t - 5000),
-                                                                                    ${temperature_high}))'
+    expression = 'if(t<5000.0,              ${temperature_low},
+                  if(t<5000 + (${temperature_high} - ${temperature_low}) /
+                      ${temperature_rate},  ${temperature_low} + ${temperature_rate} * (t - 5000),
+                                            ${temperature_high}))'
   []
 
   [surface_flux_func]
@@ -342,14 +409,14 @@ temperature_high = '${units 1273 K}'
   type = Transient
   scheme = bdf2
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type'
-  petsc_options_value = 'lu'
+  petsc_options_iname = '-pc_type -snes_type'
+  petsc_options_value = 'lu vinewtonrsls'
 
   end_time = ${simulation_time}
   line_search = 'none'
   automatic_scaling = true
   nl_abs_tol = 1e-8
-  nl_rel_tol = 1e-5
+  nl_rel_tol = 8e-6
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 0.5
