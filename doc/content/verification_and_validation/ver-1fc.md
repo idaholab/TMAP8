@@ -15,7 +15,7 @@ This case provides both a verification (comparison against an analytical solutio
 In [!cite](ambrosek2008verification), Table 11 for TMAP7 and ABAQUS transient results and Table 13 for TMAP7 and ABAQUS steady-state results are identical, even though they should be different. Given the nature of the data, it corresponds to transient conditions and has been used as such for comparison below. As a result, no ABAQUS and TMAP7 data was used in the steady state case, only TMAP8 predictions and the analytical solution.
 Another issue is that the column labels for ABAQUS and TMAP7 are reversed in Table 11 and Table 13, casting doubt on which results correspond to ABAQUS and which to TMAP7. In this benchmarking exercise, we therefore refer to these results as `ABAQUS or TMAP7 (1)` and `ABAQUS or TMAP7 (2)`. Since they are close, we still consider the benchmarking exercise successful.
 
-## Steady State solution
+## Steady State solution and results
 
 The steady-state solution for this problem was compared to the analytical solution in addition to the ABAQUS prediction from [!cite](ambrosek2008verification).
 To solve for the steady state solution for this problem, the heat flux is given by
@@ -45,7 +45,7 @@ With TMAP8, the steady state solution can be obtained in different ways: by usin
        id=ver-1fc_comparison_temperature_steady_state
        caption=Comparison of temperature profiles from the analytical solution and TMAP8 in the composite structure at steady state ($t = 10000$ s). RMSPE is the root mean square percentage error between the analytical and TMAP8 profiles.
 
-## Transient solution
+## Transient solution and results
 
 For the transient case, TMAP8 predictions are compared against ABAQUS predictions from [!cite](ambrosek2008verification). This is therefore a benchmarking case.
 
