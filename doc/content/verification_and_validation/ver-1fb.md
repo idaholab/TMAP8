@@ -2,7 +2,9 @@
 
 # Thermal Transient in a Slab
 
-This heat transfer verification problem is taken from [!cite](longhurst1992verification) and [!cite](ambrosek2008verification) and builds on the capabilities verified in [ver-1fa](ver-1fa.md). The configuration is the same as in [ver-1fa](ver-1fa.md), except that, in the current case, there are no heat source in the slab. This case is simulated in [/ver-1fb.i].
+## General Case Description
+
+This heat transfer verification problem is taken from [!cite](longhurst1992verification) and [!cite](ambrosek2008verification) and builds on the capabilities verified in [ver-1fa](ver-1fa.md). The configuration is the same as in [ver-1fa](ver-1fa.md), except that, in the current case, there are no heat source in the slab and both ends with fixed temperature. This case is simulated in [/ver-1fb.i].
 
 The heat conduction in the one-dimensional model is described as:
 

@@ -4,9 +4,9 @@
 
 ## General Case Description
 
-This heat transfer verification problem is taken from [!cite](longhurst1992verification) and [!cite](ambrosek2008verification). This case models a heat conduction problem through a slab with a heat source.
+This heat transfer verification problem is taken from [!cite](longhurst1992verification) and [!cite](ambrosek2008verification).
 
-The heat conduction in the one-dimensional model is described as:
+This case models a heat conduction problem through a slab with a heat source. The heat conduction in the one-dimensional model is described as:
 
 \begin{equation} \label{eq:thermal_equation}
 \rho C_P \frac{d T}{d t} = \nabla k \nabla T + Q,

@@ -2,9 +2,11 @@
 
 # Conduction in composite structure with constant surface temperatures
 
-The third heat transfer problem (after [ver-1fa](ver-1fa.md) and [ver-1fb](ver-1fb.md)) studies heat transfer through a composite with constant surface temperatures.
-The composite is a 40 cm thick layer of Copper (Cu) followed by a 40 cm layer of iron (Fe) [!citep](ambrosek2008verification).
-The temperature of both layers is initially 0 K, but at time t = 0, the outside face of the Cu is held at 600 K while the outside face of the Fe is maintained at 0 K.
+## General Case Description
+
+This third heat transfer problem is taken from [!cite](ambrosek2008verification) and builds on the capabilities verified in [ver-1fa](ver-1fa.md) and [ver-1fb](ver-1fb.md). The configuration is the same as in [ver-1fb](ver-1fb.md), except that, the current case is in a composite structure with constant surface temperature. This case is simulated in [/ver-1fc.i] with both transient and steady state solutions.
+
+The composite is a 40 cm thick layer of Copper (Cu) followed by a 40 cm layer of iron (Fe) ([!citep](ambrosek2008verification)). The temperature of both layers is initially 0 K, but at time t = 0, the outside face of the Cu is held at 600 K while the outside face of the Fe is maintained at 0 K.
 The thermal conductivities of Cu and Fe are set to 401 W/m/K and 80.2 W/m/K, respectively. The TMAP7 documentation does not specify the materials' density $\rho$ or the specific heat $C_p$, but the TMAP7 input file lists $\rho C_p = 3.4392 \times 10^6$ J$\cdot$m$^{-3}\cdot$K$^{-1}$ for Cu and $3.5179 \times 10^6$ J$\cdot$m$^{-3}\cdot$K$^{-1}$ for Fe [!citep](ambrosek2008verification). TMAP8 uses $\rho = 8960$ kg/m$^{3}$ and $C_p =  383.8$ J$\cdot$kg$^{-1}\cdot$K$^{-1}$ for Cu and $\rho = 7870$ kg/m$^{3}$ and $C_p = 447.0$ J$\cdot$kg$^{-1}\cdot$K$^{-1}$ for Fe. The densities are from [!cite](Haynes2015), and the specific heat capacities are calculated to match the $\rho C_p$ values from TMAP7 in [!cite](ambrosek2008verification), which closely match values from [!cite](Haynes2015) ($C_p =  385$ J$\cdot$kg$^{-1}\cdot$K$^{-1}$ for Cu and $C_p =  449$ J$\cdot$kg$^{-1}\cdot$K$^{-1}$ for Fe).
 
 This case provides both a verification (comparison against an analytical solution) and a benchmarking (code-to-code comparison) exercise. The steady state solution (called ver-1fcs in [!cite](ambrosek2008verification)) is compared against an analytical solution, and the transient solution is compared against ABAQUS. ABAQUS is a finite element analysis (FEA) program that has been validated for both transient and steady state solutions in heat transfer modeling applications. The ABAQUS code was setup and run by R. G. Ambrosek and presented in [!cite](ambrosek2008verification).
@@ -17,6 +19,7 @@ Another issue is that the column labels for ABAQUS and TMAP7 are reversed in Tab
 
 The steady-state solution for this problem was compared to the analytical solution in addition to the ABAQUS prediction from [!cite](ambrosek2008verification).
 To solve for the steady state solution for this problem, the heat flux is given by
+
 \begin{equation} \label{eq:solution_analytical_heat_flux}
 q''=\frac{T_{SA} - T_{SB}}{\left(L_A / k_A \right) + \left(L_B / k_B \right)},
 \end{equation}
@@ -26,22 +29,15 @@ where
 - $L_i$ is Length of segment $i$ ($L_A=L_B=40$ cm),
 - $k_i$ is thermal conductivity of segment $i$ ($k_A = 401$ W/m/K, $k_B = 80.2$ W/m/K).
 
-At steady state, the flux in and out of any section of the slab are equal.
-The temperature at the interface ($T_I$) can be found by setting the flux through A equal to the flux
-through B, which leads to:
+At steady state, the flux in and out of any section of the slab are equal. The temperature at the interface ($T_I$) can be found by setting the flux through A equal to the flux through B, which leads to:
 
 \begin{equation} \label{eq:solution_analytical_steady_state}
 \frac{T_{SA} - T_{I}}{\left(L_A / k_A \right)} = \frac{T_{I} - T_{SB}}{\left(L_B / k_B \right)}.
 \end{equation}
 
-The interface temperature at steady state is therefore equal to $T_I = 500$ K. The temperature profile
-for conduction in steady state, with constant physical properties, is linear. The temperature
-profile of A and B can therefore be found through linear interpolation.
+The interface temperature at steady state is therefore equal to $T_I = 500$ K. The temperature profile for conduction in steady state, with constant physical properties, is linear. The temperature profile of A and B can therefore be found through linear interpolation.
 
-With TMAP8, the steady state solution can be obtained in different ways: by using the [steady state solve](source/executioners/Steady.md) or by running a [transient simulation](source/executioners/Transient.md) until steady state is reached.
-[!cite](ambrosek2008verification) indicates that the steady state solution was obtained by running the transient solution until $t=10,000$ s, which is what is reproduced with TMAP8 here.
-TMAP8 predictions were found to be identical to the analytical solution with a root mean square percentage error (RMSPE) of 0.23 %, as shown in
-[ver-1fc_comparison_temperature_steady_state].
+With TMAP8, the steady state solution can be obtained in different ways: by using the [steady state solve](source/executioners/Steady.md) or by running a [transient simulation](source/executioners/Transient.md) until steady state is reached. [!cite](ambrosek2008verification) indicates that the steady state solution was obtained by running the transient solution until $t=10,000$ s, which is what is reproduced with TMAP8 here. TMAP8 predictions were found to be identical to the analytical solution with a root mean square percentage error (RMSPE) of 0.23 %, as shown in [ver-1fc_comparison_temperature_steady_state].
 
 !media comparison_ver-1fc.py
        image_name=ver-1fc_comparison_temperature_steady_state.png
@@ -53,9 +49,7 @@ TMAP8 predictions were found to be identical to the analytical solution with a r
 
 For the transient case, TMAP8 predictions are compared against ABAQUS predictions from [!cite](ambrosek2008verification). This is therefore a benchmarking case.
 
-The transient solution was compared in two ways: where time, $t$, is held constant and where distance, $x$, through the structure is held constant. The constant time
-comparison between ABAQUS and TMAP8 was made at time $t = 150$ s. The constant time
-values are shown in [ver-1fc_comparison_temperature_transient_t150], and the comparison is satisfactory.
+The transient solution was compared in two ways: where time, $t$, is held constant and where distance, $x$, through the structure is held constant. The constant time comparison between ABAQUS and TMAP8 was made at time $t = 150$ s. The constant time values are shown in [ver-1fc_comparison_temperature_transient_t150], and the comparison is satisfactory.
 
 !media comparison_ver-1fc.py
        image_name=ver-1fc_comparison_temperature_transient_t150.png

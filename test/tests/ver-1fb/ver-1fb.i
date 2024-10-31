@@ -1,55 +1,63 @@
+length = '${units 4.0 m}'
+initial_temperature = '${units 300 K}'
+T_0 = '${units 300 K}'
+T_1 = '${units 400 K}'
+density = '${units 1 kg/m^3}'
+specific_heat = '${units 10 J/kg/K}'
+thermal_conductivity = '${units 10 W/m/K}'
+
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  xmax = 4.0
+  xmax = '${length}'
   nx = 20
 []
 
 [Variables]
-  [./temp]
-    initial_condition = 300.0
-  [../]
+  [temp]
+    initial_condition = '${initial_temperature}'
+  []
 []
 
 [Kernels]
-  [./heat]
+  [heat]
     type = HeatConduction
     variable = temp
-  [../]
-  [./HeatTdot]
+  []
+  [HeatTdot]
     type = HeatConductionTimeDerivative
     variable = temp
-  [../]
+  []
 []
 
 [BCs]
-  [./lefttemp]
+  [lefttemp]
     type = DirichletBC
     boundary = right
     variable = temp
-    value = 300
-  [../]
-  [./rightflux]
+    value = '${T_0}'
+  []
+  [rightflux]
     type = DirichletBC
     boundary = left
     variable = temp
-    value = 400
-  [../]
+    value = '${T_1}'
+  []
 []
 
 [Materials]
-  [./diffusivity]
+  [diffusivity]
     type = GenericConstantMaterial
     prop_names = 'density  thermal_conductivity specific_heat'
-    prop_values = '1.0 10.0 10.0' # arbitrary values for diffusivity (=k/rho-Cp) to be 1.0
-  [../]
+    prop_values = '${density} ${thermal_conductivity} ${specific_heat}' # arbitrary values for diffusivity (=k/rho-Cp) to be 1.0
+  []
 []
 
 [Preconditioning]
-  [./SMP]
+  [SMP]
     type = SMP
     full = true
-  [../]
+  []
 []
 
 [Executioner]
@@ -70,7 +78,7 @@
   [line]
     type = LineValueSampler
     start_point = '0 0 0'
-    end_point = '4.0 0 0'
+    end_point = '${length} 0 0'
     num_points = 40
     sort_by = 'x'
     variable = temp
@@ -78,7 +86,6 @@
 []
 
 [Outputs]
-  #execute_on = FINAL
   exodus = true
   csv = false
 []
