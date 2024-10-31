@@ -1,10 +1,46 @@
 [Tests]
   design = 'EquilibriumBC.md'
   issues = '#12'
-  [csv]
+  validation = 'val-2b.md'
+  [val-2b_heavy_csv]
     type = CSVDiff
     input = val-2b.i
-    csvdiff = val-2b_out.csv
-    requirement = 'The system shall be able to model diffusion of deuterium in beryllium sample'
+    cli_args = 'Outputs/file_base=val-2b_heavy_out'
+    csvdiff = val-2b_heavy_out.csv
+    heavy = true
+    requirement = 'The system shall be able to model diffusion of deuterium in a beryllium sample and generate CSV data output for comparison to experimental results.'
+  []
+  [val-2b_heavy_exodus]
+    type = Exodiff
+    input = val-2b.i
+    cli_args = 'Outputs/file_base=val-2b_heavy_out'
+    exodiff = val-2b_heavy_out.e
+    prereq = val-2b_heavy_csv
+    should_execute = false # this test relies on the output files from val-2b_heavy_csv, so it shouldn't be run twice
+    heavy = true
+    abs_zero = 1e-8
+    requirement = 'The system shall be able to model diffusion of deuterium in a beryllium sample and generate field and material property data output in the Exodus format for comparison to experimental results.'
+  []
+  [val-2b_exodus]
+    type = Exodiff
+    input = val-2b.i
+    cli_args = "Outputs/file_base=val-2b_out
+                Executioner/nl_abs_tol=1e-11
+                charge_time='${units 10 h -> s}'
+                cooldown_duration=$'{units 1 h -> s}'
+                dt_max_large=$'{units 500 s}'
+                dt_max_small=$'{units 200 s}'
+                dt_start_charging=$'{units 300 s}'
+                dt_start_cooldown=$'{units 100 s}'
+                dt_start_desorption=$'{units 10 s}'"
+    exodiff = val-2b_out.e
+    abs_zero = 1e-8
+    requirement = 'The system shall be able to model diffusion of deuterium in beryllium sample with a short runtime suitable for regular regression testing.'
+  []
+  [val-2b_comparison]
+    type = RunCommand
+    command = 'python3 comparison_val-2b.py'
+    requirement = 'The system shall be able to generate comparison plots between simulated solutions and experimental data of validation case val-2b, modeling diffusion and release of deuterium in a beryllium sample.'
+    required_python_packages = 'matplotlib numpy pandas scipy os'
   []
 []

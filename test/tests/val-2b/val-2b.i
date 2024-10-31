@@ -1,20 +1,73 @@
-endtime = 197860
-scale = 1e20
+
+# Physical constants
+R = ${units 8.31446261815324 J/mol/K} # ideal gas constant based on number used in include/utils/PhysicalConstants.h
+
+# Pressure conditions
+pressure_enclosure_init = ${units 13300 Pa}
+pressure_enclosure_cooldown = ${units 1e-6 Pa} # vaccum
+pressure_enclosure_desorption = ${units 1e-3 Pa} # vaccum, assumed
+
+# Temperature conditions
+temperature_initial = ${units 773 K}
+temperature_desorption_min = ${units 300 K}
+temperature_desorption_max = ${units 1073 K}
+temperature_cooldown_min = ${temperature_desorption_min}
+desorption_heating_rate = ${units ${fparse 3/60} K/s}
+
+# Important times
+charge_time = ${units 50 h -> s}
+cooldown_time_constant = ${units ${fparse 45*60} s}
+# TMAP4 and TMAP7 used 40 minutes for the cooldown duration,
+# We use a 5 hour cooldown period to let the temperature decrease to around 300 K for the start of the desorption.
+# R.G. Macaulay-Newcombe et al. (1991) is not very clear on how long samples cooled down.
+cooldown_duration = ${units 5 h -> s}
+desorption_duration = ${fparse (temperature_desorption_max-temperature_desorption_min)/desorption_heating_rate}
+endtime = ${fparse charge_time + cooldown_duration + desorption_duration}
+
+# Materials properties
+concentration_scaling = 1e10 # (-)
+diffusion_Be_preexponential = ${units 8.0e-9 m^2/s -> mum^2/s}
+diffusion_Be_energy = ${units 4220 K}
+diffusion_BeO_preexponential_charging = ${units 1.40e-4 m^2/s -> mum^2/s}
+diffusion_BeO_energy_charging = ${units 24408 K}
+diffusion_BeO_preexponential_desorption = ${units 7e-5 m^2/s -> mum^2/s}
+diffusion_BeO_energy_desorption = ${units 27000 K}
+solubility_order = .5 # order of the solubility law (Here, we use Sievert's law)
+solubility_constant_BeO = ${fparse 5.00e20 / 1e18 / concentration_scaling} # at/m^3/Pa^0.5 -> at/mum^3/Pa^0.5}
+solubility_energy_BeO = ${units -9377.7 K}
+solubility_constant_Be = ${fparse 7.156e27 / 1e18 / concentration_scaling} # at/m^3/Pa^0.5 -> at/mum^3/Pa^0.5}
+solubility_energy_Be = ${units 11606 K}
+jump_penalty = 1e0 # (-)
+
+# Numerical parameters
+dt_max_large = ${units 100 s}
+dt_max_small = ${units 10 s}
+dt_start_charging = ${units 1 s}
+dt_start_cooldown = ${units 10 s}
+dt_start_desorption = ${units 1 s}
+
+# Geometry and mesh
+length_BeO = ${units 18 nm -> mum}
+num_nodes_BeO = 18
+node_length_BeO = ${fparse length_BeO / num_nodes_BeO}
+length_Be = ${units 0.4 mm -> mum}
+length_Be_modeled = ${fparse length_Be/2}
+num_nodes_Be = 40
+node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
 
 [Mesh]
   [cmg]
     type = CartesianMeshGenerator
     dim = 1
 
-    #     0    1    2    3    4    5    6    7    8    9    10   11   12   13   14   15   16   17
-    dx = '0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9
-          0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9 0.5e-9
-        0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5
-        0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5 0.5e-5'
-    #     18   19   20   21   22   23   24   25   26   27   28   29   30   31   32   33   34   35   36   37
+    #     0                  1                  2                  3                  4                  5                  6                  7                  8                  9                  10                 11                 12                 13                 14                 15                 16                 17
+    dx = '${node_length_BeO} ${node_length_BeO} ${node_length_BeO} ${node_length_BeO} ${node_length_BeO} ${node_length_BeO} ${node_length_BeO} ${node_length_BeO} ${node_length_BeO} ${node_length_BeO} ${node_length_BeO} ${node_length_BeO} ${node_length_BeO} ${node_length_BeO} ${node_length_BeO} ${node_length_BeO} ${node_length_BeO} ${node_length_BeO}
+          ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be}
+          ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be}'
+    #     18                19                20                21                22                23                24                25                26                27                28                29                30                31                32                33                34                35                36                37
 
+    #               0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17
     subdomain_id = '0 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0
-                    0 0 0 0 0 0 0 0 0 0 0  0  0  0  0  0  0  0
                     1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
                     1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1'
     #               18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37'
@@ -37,16 +90,10 @@ scale = 1e20
 []
 
 [Variables]
-  [conc_Be]
-    order = FIRST
-    family = LAGRANGE
-    initial_condition = 0
+  [deuterium_concentration_Be] # (atoms/microns^3) / concentration_scaling
     block = 1
   []
-  [conc_BeO]
-    order = FIRST
-    family = LAGRANGE
-    initial_condition = 0
+  [deuterium_concentration_BeO] # (atoms/microns^3) / concentration_scaling
     block = 0
   []
 []
@@ -54,10 +101,10 @@ scale = 1e20
 [AuxVariables]
   [enclosure_pressure]
     family = SCALAR
-    initial_condition = 13300.0
+    initial_condition = ${pressure_enclosure_init}
   []
-  [temp]
-    initial_condition = 300
+  [temperature]
+    initial_condition = ${temperature_initial}
   []
   [flux_x]
     order = FIRST
@@ -66,36 +113,36 @@ scale = 1e20
 []
 
 [Kernels]
-  [diff_Be]
-    type = ADMatDiffusion
-    variable = conc_Be
-    diffusivity = diffusivity_Be
-    block = 1
+  [time_BeO]
+    type = TimeDerivative
+    variable = deuterium_concentration_BeO
+    block = 0
   []
-  [diff_BeO]
+  [diffusion_BeO]
     type = ADMatDiffusion
-    variable = conc_BeO
+    variable = deuterium_concentration_BeO
     diffusivity = diffusivity_BeO
     block = 0
   []
-  [time_diff_Be]
+  [time_Be]
     type = TimeDerivative
-    variable = conc_Be
+    variable = deuterium_concentration_Be
     block = 1
   []
-  [time_diff_BeO]
-    type = TimeDerivative
-    variable = conc_BeO
-    block = 0
+  [diffusion_Be]
+    type = ADMatDiffusion
+    variable = deuterium_concentration_Be
+    diffusivity = diffusivity_Be
+    block = 1
   []
 []
+
 [InterfaceKernels]
   [tied]
     type = ADPenaltyInterfaceDiffusion
-    variable = conc_BeO
-    neighbor_var = conc_Be
-    # penalty = 0.09 # for figure generation
-    penalty = 0.06 # to avoid cutting time-step on civet testing
+    variable = deuterium_concentration_BeO
+    neighbor_var = deuterium_concentration_Be
+    penalty = ${jump_penalty}
     jump_prop_name = solubility_ratio
     boundary = 'interface'
   []
@@ -110,17 +157,17 @@ scale = 1e20
 []
 
 [AuxKernels]
-  [temp_aux]
+  [temperature_aux]
     type = FunctionAux
-    variable = temp
-    function = temp_bc_func
+    variable = temperature
+    function = temperature_bc_func
     execute_on = 'INITIAL LINEAR'
   []
   [flux_x_Be]
     type = DiffusionFluxAux
     diffusivity = diffusivity_Be
     variable = flux_x
-    diffusion_variable = conc_Be
+    diffusion_variable = deuterium_concentration_Be
     component = x
     block = 1
   []
@@ -128,7 +175,7 @@ scale = 1e20
     type = DiffusionFluxAux
     diffusivity = diffusivity_BeO
     variable = flux_x
-    diffusion_variable = conc_BeO
+    diffusion_variable = deuterium_concentration_BeO
     component = x
     block = 0
   []
@@ -137,165 +184,147 @@ scale = 1e20
 [BCs]
   [left_flux]
     type = EquilibriumBC
-    Ko = 5.0
-    activation_energy = -77966.2
+    Ko = ${solubility_constant_BeO}
+    activation_energy = '${fparse solubility_energy_BeO * R}'
     boundary = left
     enclosure_var = enclosure_pressure
-    temperature = temp
-    variable = conc_BeO
-    p = 0.5
+    temperature = temperature
+    variable = deuterium_concentration_BeO
+    p = ${solubility_order}
   []
   [right_flux]
     type = ADNeumannBC
     boundary = right
-    variable = conc_Be
+    variable = deuterium_concentration_Be
     value = 0
   []
 []
 
 [Functions]
-  [temp_bc_func]
+  [temperature_bc_func]
     type = ParsedFunction
-    expression = 'if(t<180000.0, 773.0, if(t<182400.0, 773.0-((1-exp(-(t-180000)/2700))*475), 300+0.05*(t-182400)))'
+    expression = 'if(t<${charge_time}, ${temperature_initial}, if(t<${fparse charge_time + cooldown_duration}, ${temperature_initial}-((1-exp(-(t-${charge_time})/${cooldown_time_constant}))*${fparse temperature_initial - temperature_cooldown_min}), ${temperature_desorption_min}+${desorption_heating_rate}*(t-${fparse charge_time + cooldown_duration})))'
   []
-
   [diffusivity_BeO_func]
     type = ParsedFunction
     symbol_names = 'T'
-    symbol_values = 'temp_bc_func'
-    # expression = 'if(t<182400, 1.40e-4*exp(-24408/T), 7e-5*exp(-24408/T))'
-    expression = 'if(t<182400, 1.40e-4*exp(-24408/T), 7e-5*exp(-27000/T))' # TMAP7
+    symbol_values = 'temperature_bc_func'
+    expression = 'if(t<${fparse charge_time + cooldown_duration}, ${diffusion_BeO_preexponential_charging}*exp(-${diffusion_BeO_energy_charging}/T), ${diffusion_BeO_preexponential_desorption}*exp(-${diffusion_BeO_energy_desorption}/T))'
   []
-
   [diffusivity_Be_func]
     type = ParsedFunction
     symbol_names = 'T'
-    symbol_values = 'temp_bc_func'
-    expression = '8.0e-9*exp(-4220/T)'
+    symbol_values = 'temperature_bc_func'
+    expression = '${diffusion_Be_preexponential}*exp(-${diffusion_Be_energy}/T)'
   []
-
   [enclosure_pressure_func]
     type = ParsedFunction
-    expression = 'if(t<180015.0, 13300.0, if(t<182400.0, 1e-6, 0.001))'
+    expression = 'if(t<${charge_time}, ${pressure_enclosure_init}, if(t<${fparse charge_time + cooldown_duration}, ${pressure_enclosure_cooldown}, ${pressure_enclosure_desorption}))'
   []
-
   [solubility_BeO_func]
     type = ParsedFunction
     symbol_names = 'T'
-    symbol_values = 'temp_bc_func'
-    expression = '5.00e20 * exp(9377.7/T)/${scale}'
+    symbol_values = 'temperature_bc_func'
+    expression = '${solubility_constant_BeO} * exp(-${solubility_energy_BeO}/T)'
   []
-
   [solubility_Be_func]
     type = ParsedFunction
     symbol_names = 'T'
-    symbol_values = 'temp_bc_func'
-    expression = '7.156e27 * exp(-11606/T)/${scale}'
+    symbol_values = 'temperature_bc_func'
+    expression = '${solubility_constant_Be} * exp(-${solubility_energy_Be}/T)'
   []
-
   [max_time_step_size_func]
     type = ParsedFunction
-    expression = 'if(t < 170000, 10000, 100)'
-    # expression = 'if(t < 170000, 100, 10)' # for figure generation
+    expression = 'if(t < ${fparse charge_time-dt_max_large}, ${dt_max_large}, ${dt_max_small})'
   []
 []
 
 [Materials]
-  [diff_solu]
+  [diffusion_solubility]
     type = ADGenericFunctionMaterial
     prop_names = 'diffusivity_BeO diffusivity_Be solubility_Be solubility_BeO'
     prop_values = 'diffusivity_BeO_func diffusivity_Be_func solubility_Be_func solubility_BeO_func'
     outputs = all
   []
-
-  [converter_to_regular]
+  [converter_to_nonAD]
     type = MaterialADConverter
     ad_props_in = 'diffusivity_Be diffusivity_BeO'
     reg_props_out = 'diffusivity_Be_nonAD diffusivity_BeO_nonAD'
   []
-
   [interface_jump]
     type = SolubilityRatioMaterial
     solubility_primary = solubility_BeO
     solubility_secondary = solubility_Be
     boundary = interface
-    concentration_primary = conc_BeO
-    concentration_secondary = conc_Be
+    concentration_primary = deuterium_concentration_BeO
+    concentration_secondary = deuterium_concentration_Be
   []
 []
 
 [Postprocessors]
   [avg_flux_left]
     type = SideDiffusiveFluxAverage
-    variable = conc_BeO
+    variable = deuterium_concentration_BeO
     boundary = left
     diffusivity = diffusivity_BeO_nonAD
   []
-  [Temp]
-    type = ElementAverageValue
-    block = 1
-    variable = temp
+  [avg_flux_total] # total flux coming out of the sample in atoms/microns^2/s
+    type = ScalePostprocessor
+    value = avg_flux_left
+    scaling_factor = '${fparse 2 * concentration_scaling}'
+    # Factor of 2 because symmetry is assumed and only one-half of the specimen is modeled.
+    # Thus, the total flux coming out of the specimen (per unit area)
+    # is twice the flux calculated at the left side of the domain.
+    # The 'concentration_scaling' parameter is used to get a consistent concentration unit
   []
-  [diff_Be]
+  [temperature]
+    type = ElementAverageValue
+    block = 0
+    variable = temperature
+    execute_on = 'initial timestep_end'
+  []
+  [diffusion_Be]
     type = ElementAverageValue
     block = 1
     variable = diffusivity_Be
   []
-  [diff_BeO]
+  [diffusion_BeO]
     type = ElementAverageValue
     block = 0
     variable = diffusivity_BeO
   []
-  [sol_Be]
+  [solubility_Be]
     type = ElementAverageValue
     block = 1
     variable = solubility_Be
   []
-  [sol_BeO]
+  [solubility_BeO]
     type = ElementAverageValue
     block = 0
     variable = solubility_BeO
   []
   [gold_solubility_ratio]
     type = ParsedPostprocessor
-    expression = 'sol_BeO / sol_Be'
-    pp_names = 'sol_BeO sol_Be'
+    pp_names = 'solubility_BeO solubility_Be'
+    expression = 'solubility_BeO / solubility_Be'
   []
   [BeO_interface]
     type = SideAverageValue
     boundary = interface
-    variable = conc_BeO
+    variable = deuterium_concentration_BeO
   []
   [Be_interface]
     type = SideAverageValue
     boundary = interface_other
-    variable = conc_Be
+    variable = deuterium_concentration_Be
   []
   [variable_ratio]
     type = ParsedPostprocessor
-    expression = 'BeO_interface / Be_interface'
     pp_names = 'BeO_interface Be_interface'
+    expression = 'BeO_interface / Be_interface'
   []
   [dt]
     type = TimestepSize
-  []
-  [h0]
-    type = AverageElementSize
-    block = 0
-  []
-  [h1]
-    type = AverageElementSize
-    block = 1
-  []
-  [Fo0]
-    type = ParsedPostprocessor
-    expression = 'diff_BeO * dt / h0^2'
-    pp_names = 'dt h0 diff_BeO'
-  []
-  [Fo1]
-    type = ParsedPostprocessor
-    expression = 'diff_Be * dt / h1^2'
-    pp_names = 'dt h1 diff_Be'
   []
   [max_time_step_size_pp]
     type = FunctionValuePostprocessor
@@ -318,36 +347,32 @@ scale = 1e20
   solve_type = NEWTON
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-7
-  l_tol = 1e-4
+  nl_rel_tol = 1e-6
+  nl_abs_tol = 1e-12
   end_time = ${endtime}
   automatic_scaling = true
-  line_search = 'none'
-
+  compute_scaling_once = false
+  nl_max_its = 7
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 1
-    optimal_iterations = 4
+    dt = ${dt_start_charging}
+    optimal_iterations = 5
     growth_factor = 1.1
-    cutback_factor = 0.5
-
+    cutback_factor_at_failure = .9
     timestep_limiting_postprocessor = max_time_step_size_pp
+    time_t = ' 0                    ${charge_time}        ${fparse charge_time + cooldown_duration}'
+    time_dt = '${dt_start_charging} ${dt_start_cooldown}  ${dt_start_desorption}'
   []
 []
 
-# [Debug]
-#   show_var_residual_norms = true
-# []
+[Debug]
+  show_var_residual_norms = true
+[]
 
 [Outputs]
-  # execute_on = FINAL
-  # exodus = true
-  # checkpoint = true
   csv = true
-  hide = 'BeO_interface Be_interface sol_Be sol_BeO diff_BeO diff_Be dt h0 h1 Fo0 Fo1 variable_ratio gold_solubility_ratio'
-  # [exodus]
-  #   type = Exodus
-  #   output_material_properties = true
-  # []
+  [exodus]
+    type = Exodus
+    output_material_properties = true
+  []
 []
