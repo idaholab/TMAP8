@@ -1,17 +1,17 @@
 nb_segments_TMAP7 = 20
-node_size_TMAP7 = ${units 1.25e-5 m}
-long_total = ${fparse nb_segments_TMAP7 * node_size_TMAP7} # m
+node_size_TMAP7 = '${units 1.25e-5 m}'
+long_total = '${fparse nb_segments_TMAP7 * node_size_TMAP7}' # m
 nb_segments_TMAP8 = 100
-node_size_TMAP8 = ${fparse long_total / nb_segments_TMAP8} # m
-simulation_time = ${units 10000 s}
-temperature = ${units 500 K}
-R = ${units 8.31446261815324 J/mol/K} # ideal gas constant from PhysicalConstants.h
-initial_pressure_1 = ${units 1e5 Pa}
-initial_pressure_2 = ${units 1e-10 Pa}
-initial_concentration_1 = ${units ${fparse initial_pressure_1 / (R*temperature)} mol/m^3}
-initial_concentration_2 = ${units ${fparse initial_pressure_2 / (R*temperature)} mol/m^3}
-solubility = ${units ${fparse 1/(R*temperature)} mol/m^3/Pa} # Henry's law solubility
-diffusivity = ${units ${fparse 4.31e-6 * exp(-2818/temperature)} m^2/s}
+node_size_TMAP8 = '${fparse long_total / nb_segments_TMAP8}' # m
+simulation_time = '${units 10000 s}'
+temperature = '${units 500 K}'
+R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConstants.h
+initial_pressure_1 = '${units 1e5 Pa}'
+initial_pressure_2 = '${units 1e-10 Pa}'
+initial_concentration_1 = '${units ${fparse initial_pressure_1 / (R*temperature)} mol/m^3}'
+initial_concentration_2 = '${units ${fparse initial_pressure_2 / (R*temperature)} mol/m^3}'
+solubility = '${units ${fparse 1/(R*temperature)} mol/m^3/Pa}' # Henry's law solubility
+diffusivity = '${units ${fparse 4.31e-6 * exp(-2818/temperature)} m^2/s}'
 n_sorption = 1
 unit_scale = 1
 unit_scale_neighbor = 1
@@ -211,7 +211,7 @@ unit_scale_neighbor = 1
   nl_max_its = 6
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 1
+    dt = 0.1
     optimal_iterations = 4
     iteration_window = 1
     growth_factor = 1.1
@@ -220,7 +220,7 @@ unit_scale_neighbor = 1
 []
 
 [Outputs]
-  file_base = 'ver-1kb_out'
+  file_base = 'ver-1kb_out_k1'
   csv = true
   execute_on = 'initial timestep_end'
 []
