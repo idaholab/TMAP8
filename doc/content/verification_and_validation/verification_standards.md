@@ -5,24 +5,26 @@ To guarantee that all verification cases in TMAP8 are readily grasped, transpare
 ## Input files
 
 1. +Comprehensive Comments+: Include clear comments within the input file explaining its purpose and any specific requirements for running it successfully.
-2. +Documented Units+: Ensure all values within the input file have their units clearly documented.
-3. +Unit Conversions+: If unit conversions are necessary, utilize the built-in unit conversion functionality documented in the [MOOSE input file syntax](https://mooseframework.inl.gov/application_usage/input_syntax.html). Additional details on the units system can be found in the [MOOSE units](https://mooseframework.inl.gov/source/utils/Units.html) documentation.
+2. +Constants declaration+: Define all constant values used in the input file at the start of the input file, with self documenting variable names wherever possible.
+3. +Documented Units+: Ensure all values within the input file have their units clearly documented using the units functionality in [input file syntax](https://mooseframework.inl.gov/application_usage/input_syntax.html). Use the same functionality for unit conversions. Additional details on the units system can be found in the [MOOSE units](https://mooseframework.inl.gov/source/utils/Units.html) documentation. As a rule, use the easiest-to-read units and convert them to the required units for the numerical solve.
 4. +Outputs+: By default, all outputs required for verification should be enabled. These can be selectively disabled within the test specification for each specific test as needed.
-5. +Streamlined Input Files+: Whenever possible, leverage command-line arguments (CLI) to manage input files with minor variations instead of creating duplicate files.
+5. +Streamlined Input Files+: Whenever possible, leverage [command-line arguments (CLI)](https://mooseframework.inl.gov/moose/application_usage/command_line_usage.html) to manage input files with minor variations instead of creating duplicate files.
 
 ## Python scripts
 
 1. +Analytical Solution+: The Python script for verification should directly calculate the original analytical solution, not rely on pre-tabulated CSV data.
-2. +Unit Clarity+: Utilize comments within the script to specify the units for all values employed in the analytical solution.
-3. +Standardized Constants+: Whenever possible, employ values from the National Institute of Standards and Technology (NIST) CODATA NIST CODATA: https://pml.nist.gov/cuu/Constants/ for fundamental constants within the analytical solution.
-4. +Gold File Verification+: The Python scripts should run on the gold files associated with the verification case.
-5. +Visualization Consistency+: In verification plots, consistently use solid lines to represent TMAP8 results and dashed lines for analytical solutions. Points should only be used when the focus is on specific data points (e.g., validation or benchmarking).
+2. +Quantified Comparisons+: When performing a comparison of a TMAP8 result against an analytical equation or experimental data, a Root Mean Square Percentage Error (RMSPE) or other relevant quantitative metric should be calculated. This error metric should be clearly displayed next to the plot line in the comparison plot figures.
+3. +Unit Clarity+: Utilize comments within the script to specify the units for all values employed in the analytical solution.
+4. +Standardized Constants+: Whenever possible, employ values from [PhysicalConstants](source/utils/PhysicalConstants.md).
+5. +Gold File Verification+: The Python scripts should run on the gold files associated with the verification case.
+6. +Visualization Consistency+: In verification plots, consistently use solid lines to represent TMAP8 results and dashed lines for analytical solutions. Points should only be used when the focus is on specific data points (e.g., validation or benchmarking).
+7. +Write Pythonic code+: When writing Python scripts, aim to follow the [PEP8](https://peps.python.org/pep-0008/) style guide. A key principle is to use existing Python functionality whenever possible instead of writing your own code to do the same thing.
 
 ## Tests
 
-1. +Comprehensive Testing+: Every input file for verification should have corresponding EXODIFF and CSVDIFF tests to ensure accuracy.
+1. +Comprehensive Testing+: Every input file for verification should have corresponding [EXODIFF](https://mooseframework.inl.gov/moose/python/testers/Exodiff.html) and [CSVDIFF](https://mooseframework.inl.gov/moose/python/testers/CSVDiff_tester.html) tests to ensure accuracy. EXODIFF tests are not required if the simulation is 0D (single element), and the [PostProcessors](https://mooseframework.inl.gov/moose/syntax/Postprocessors/index.html) to the CSVDIFF already test all the important variables.
 2. +Test specification+: Test requirements should detail what the particular test is checking, as well as mention the general physics the tested input file is modeling.
-3. +Heavy tests+: If a heavy test is used for verification, the test specification should mention that a finer mesh and/or small time step size is being used for verification
+3. +Heavy tests+: If a heavy test is used for verification, the test specification should mention that a finer mesh and/or small time step size is being used for verification. A test can be declared to be a heavy test by adding the ```heavy = true``` to the test specification.
 4. +Script Verification+: The Python scripts used for verification should themselves be subjected to testing to guarantee their reliability.
 
 ## Documentation

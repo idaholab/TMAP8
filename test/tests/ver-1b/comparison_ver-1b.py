@@ -9,10 +9,10 @@ import os
 script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
 
-# ========= Comparison of concentration as a function of time =================
+#========= Comparison of concentration as a function of time ===================
 
-fig = plt.figure(figsize=[6.5, 5.5])
-gs = gridspec.GridSpec(1, 1)
+fig = plt.figure(figsize=[6.5,5.5])
+gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
@@ -28,10 +28,9 @@ analytical_time = tmap_time
 x = 0.2
 C_o = 1
 D = 1
-analytical_conc = C_o * special.erfc(x / (2 * np.sqrt(D*analytical_time)))
-ax.plot(tmap_time, tmap_conc, label=r"TMAP8", c='tab:gray')
-ax.plot(analytical_time, analytical_conc,
-        label=r"Analytical", c='k', linestyle='--')
+analytical_conc = C_o * special.erfc( x / (2 * np.sqrt(D*analytical_time)))
+ax.plot(tmap_time,tmap_conc,label=r"TMAP8",c='tab:gray')
+ax.plot(analytical_time,analytical_conc,label=r"Analytical",c='k', linestyle='--')
 
 
 ax.set_xlabel(u'Time(s)')
@@ -45,14 +44,14 @@ RMSE = np.sqrt(np.mean((tmap_conc-analytical_conc)[idx:]**2) )
 RMSPE = RMSE*100/np.mean(analytical_conc[idx:])
 ax.text(5,0.9, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
-plt.savefig('ver-1b_comparison_time.png', bbox_inches='tight')
+plt.savefig('ver-1b_comparison_time.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 
 
-# ============ Comparison of concentration as a function of distance ==========
+#============ Comparison of concentration as a function of distance ============
 
-fig = plt.figure(figsize=[6.5, 5.5])
-gs = gridspec.GridSpec(1, 1)
+fig = plt.figure(figsize=[6.5,5.5])
+gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
@@ -67,12 +66,10 @@ analytical_distance = tmap_distance
 time = 25
 C_o = 1
 D = 1
-analytical_conc = C_o * \
-    special.erfc(analytical_distance / (2 * np.sqrt(D * time)))
+analytical_conc = C_o * special.erfc( analytical_distance / (2 * np.sqrt(D * time)))
 
-ax.plot(tmap_distance, tmap_conc, label=r"TMAP8", c='tab:gray')
-ax.plot(analytical_distance, analytical_conc,
-        label=r"Analytical", c='k', linestyle='--')
+ax.plot(tmap_distance,tmap_conc,label=r"TMAP8",c='tab:gray')
+ax.plot(analytical_distance,analytical_conc,label=r"Analytical",c='k', linestyle='--')
 
 ax.set_xlabel(u'Distance (m)')
 ax.set_ylabel(r"Normalized specie concentration")
@@ -85,12 +82,12 @@ RMSE = np.sqrt(np.mean((tmap_conc-analytical_conc)[idx:]**2) )
 RMSPE = RMSE*100/np.mean(analytical_conc[idx:])
 ax.text(10,0.4, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
-plt.savefig('ver-1b_comparison_dist.png', bbox_inches='tight')
+plt.savefig('ver-1b_comparison_dist.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
-# ================== Comparison of flux as a function of time =================
+#================== Comparison of flux as a function of time ===================
 
-fig = plt.figure(figsize=[6.5, 5.5])
-gs = gridspec.GridSpec(1, 1)
+fig = plt.figure(figsize=[6.5,5.5])
+gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
@@ -106,10 +103,9 @@ x = 0.5
 C_o = 1
 D = 1
 analytical_flux = C_o * np.sqrt(D/(np.pi * analytical_time)) * \
-    np.exp(x / (2 * np.sqrt(D * analytical_time)))
-ax.plot(tmap_time, tmap_flux, label=r"TMAP8", c='tab:gray')
-ax.plot(analytical_time, analytical_flux,
-        label=r"Analytical", c='k', linestyle='--')
+                  np.exp( x / (2 * np.sqrt(D * analytical_time)))
+ax.plot(tmap_time[1:],tmap_flux[1:],label=r"TMAP8",c='tab:gray')
+ax.plot(analytical_time[1:],analytical_flux[1:],label=r"Analytical",c='k', linestyle='--')
 
 
 ax.set_xlabel(u'Time(s)')
@@ -124,5 +120,4 @@ RMSPE = RMSE*100/np.mean(analytical_flux[idx:])
 ax.text(10,0.25, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
 plt.savefig('ver-1b_comparison_flux.png', bbox_inches='tight', dpi=300)
-plt.savefig('ver-1b_comparison_flux.png', bbox_inches='tight')
 plt.close(fig)
