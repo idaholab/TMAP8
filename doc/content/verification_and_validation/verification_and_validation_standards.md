@@ -34,12 +34,13 @@ For an example of test specification file respecting these guidelines, see [/ver
 
 ## Documentation
 
-1. +Automated Figure Generation+: Figures used in the V&V process should be automatically generated during the build phase by executing the dedicated plotting Python script. This enables building on-the-fly documentation with the latest simulation results.
-2. +Analytical Equations+: Ensure the equations documented exactly match those used within the Python script. Always cite the original sources for the equations (not a V&V report) to maintain proper attribution.
-3. +Validation data+: Provide the reference for the original experimental source of the data used in validation cases.
-4. +Detailed Derivations+: If any quantity conversions are performed within the documentation, provide clear derivations to illustrate the conversion process. Show any derivations that are performed for converting quantities in the documentation.
-5. +Schematic Representation+: Whenever helpful, include schematic figures that visually represent what the specific V&V case is modeling to enhance understanding.
-6. +V&V vs Test+: If a coarser meshed simulation was used in the tests compared to what is used in the actual V&V, add a note at the end of the documentation page that mentions this and why it was done.
+1. +Content+: The document should (a) describe the case, (b) detail how it is  modeled, (c) provide the necessary model parameter values, (d) present the results of the TMAP8 simulation, (e) contain an active link to the input file and the test specification.
+2. +Automated Figure Generation+: Figures used in the V&V process should be automatically generated during the build phase by executing the dedicated plotting Python script. This enables building on-the-fly documentation with the latest simulation results.
+3. +Analytical Equations+: Ensure the equations documented exactly match those used within the Python script. Always cite the original sources for the equations (not a V&V report) to maintain proper attribution.
+4. +Validation data+: Provide the reference for the original experimental source of the data used in validation cases.
+5. +Detailed Derivations+: If any quantity conversions are performed within the documentation, provide clear derivations to illustrate the conversion process. Show any derivations that are performed for converting quantities in the documentation.
+6. +Schematic Representation+: Whenever helpful, include schematic figures that visually represent what the specific V&V case is modeling to enhance understanding.
+7. +V&V vs Test+: If a coarser meshed simulation was used in the tests compared to what is used in the actual V&V, add a note at the end of the documentation page that mentions this and why it was done.
 
 For an example of a documentation page respecting these guidelines, see [ver-1a](ver-1a.md).
 
