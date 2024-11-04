@@ -63,25 +63,23 @@ for i in range(len(time)):
     analytical_temp.append(To + (T1-To) * (1 - (analytical_x/L) - (2/L) *
                            summation_terms(num_summation_terms, analytical_x, time[i], alpha)))
 
-ax.scatter(analytical_x,
-           analytical_temp[0], label=r"Analytical 0.1 seconds", c='k', marker='^')
-ax.scatter(analytical_x,
-           analytical_temp[1], label=r"Analytical 0.5 seconds", c='r', marker='^')
-ax.scatter(analytical_x,
-           analytical_temp[2], label=r"Analytical 1.0 seconds", c='b', marker='^')
-ax.scatter(analytical_x,
-           analytical_temp[3], label=r"Analytical 5.0 seconds", c='c', marker='^')
+ax.plot(tmap_x, tmap_temp[0], label=r"TMAP8 0.1 seconds", c='k', alpha=0.6)
+ax.plot(tmap_x, tmap_temp[1], label=r"TMAP8 0.5 seconds", c='r', alpha=0.6)
+ax.plot(tmap_x, tmap_temp[2], label=r"TMAP8 1.0 seconds", c='b', alpha=0.6)
+ax.plot(tmap_x, tmap_temp[3], label=r"TMAP8 5.0 seconds", c='c', alpha=0.6)
 
-ax.plot(tmap_x, tmap_temp[0], label=r"TMAP8 0.1 seconds", c='k')
-ax.plot(tmap_x, tmap_temp[1], label=r"TMAP8 0.5 seconds", c='r')
-ax.plot(tmap_x, tmap_temp[2], label=r"TMAP8 1.0 seconds", c='b')
-ax.plot(tmap_x, tmap_temp[3], label=r"TMAP8 5.0 seconds", c='c')
-
+ax.plot(analytical_x,
+        analytical_temp[0], label=r"Analytical 0.1 seconds", c='k', linestyle='--')
+ax.plot(analytical_x,
+        analytical_temp[1], label=r"Analytical 0.5 seconds", c='r', linestyle='--')
+ax.plot(analytical_x,
+        analytical_temp[2], label=r"Analytical 1.0 seconds", c='b', linestyle='--')
+ax.plot(analytical_x,
+        analytical_temp[3], label=r"Analytical 5.0 seconds", c='c', linestyle='--')
 
 ax.set_xlabel(u'Distance along slab (m)')
 ax.set_ylabel(u"Temperature (K)")
 ax.legend(loc="best")
-# ax.set_xlim(left=0)
 ax.set_ylim(bottom=300)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 RMSE = np.sqrt(np.mean((tmap_temp[0]-analytical_temp[0])**2) ) # 0.1 seconds

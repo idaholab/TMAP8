@@ -1,22 +1,21 @@
-T_SA = 600 # K
-T_SB = 0 # K
-L_A = 40e-2 # m
-L_B = 40e-2 # m
-k_A = 401 # W/m/K
-k_B = 80.2 # W/m/K
+T_SA = '${units 600 K}'
+T_SB = '${units 0 K}'
+L_A = '${units 0.4 m}'
+L_B = '${units 0.4 m}'
+k_A = '${units 401 W/m/K}'
+k_B = '${units 80.2 W/m/K}'
 num_nodes = 800 # (-)
-position_measurement = 9e-2 # m
-
-density_Cu = 8960 # kg/m^3
-specific_heat_Cu= 383.8 # J/kg/K
-density_Fe = 7870 # kg/m^3
-specific_heat_Fe = 447.0 # J/kg/K
+position_measurement = '${units 9e-2 m}'
+density_Cu = '${units 8960 kg/m^3}'
+specific_heat_Cu = '${units 383.8 J/kg/K}'
+density_Fe = '${units 7870 kg/m^3}'
+specific_heat_Fe = '${units 447.0 J/kg/K}'
 
 [Mesh]
   [whole_domain]
     type = GeneratedMeshGenerator
     xmin = 0
-    xmax = ${fparse L_A + L_B}
+    xmax = '${fparse L_A + L_B}'
     dim = 1
     nx = ${num_nodes}
   []
