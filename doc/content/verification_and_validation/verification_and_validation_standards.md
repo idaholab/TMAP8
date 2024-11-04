@@ -13,12 +13,13 @@
 ## Python scripts
 
 1. +Analytical Solution+: The Python script for verification cases should directly calculate the original analytical solution, not rely on pre-tabulated CSV data.
-2. +Quantified Comparisons+: When performing a comparison of a TMAP8 result against an analytical equation or experimental data, a Root Mean Square Percentage Error (RMSPE) or other relevant quantitative metric should be calculated. This error metric should be clearly displayed next to the plot line in the comparison plot figures.
-3. +Unit Clarity+: Utilize comments within the script to specify the units for all values employed in the analytical solution.
-4. +Standardized Constants+: Whenever possible, employ values from [PhysicalConstants](source/utils/PhysicalConstants.md).
-5. +Gold File V&V+: The Python scripts should run on the gold files associated with the V&V case. This enables building on-the-fly documentation with the latest simulation results.
-6. +Visualization Consistency+: In V&V plots, consistently use solid lines to represent TMAP8 results and dashed lines for analytical solutions. Points should only be used when the focus is on specific data points (e.g., validation or benchmarking).
-7. +Write Pythonic code+: When writing Python scripts, aim to follow the [PEP8](https://peps.python.org/pep-0008/) style guide. A key principle is to use existing Python functionality whenever possible instead of writing your own code to do the same thing.
+2. +Validation data+: The experimental data used for validation cases should be in a CSV file in the gold folder, and properly referenced in the Python script.
+3. +Quantified Comparisons+: When performing a comparison of a TMAP8 result against an analytical equation or experimental data, a Root Mean Square Percentage Error (RMSPE) or other relevant quantitative metric should be calculated. This error metric should be clearly displayed next to the plot line in the comparison plot figures.
+4. +Unit Clarity+: Utilize comments within the script to specify the units for all values employed in the analytical solution.
+5. +Standardized Constants+: Whenever possible, employ values from [PhysicalConstants](source/utils/PhysicalConstants.md).
+6. +Gold File V&V+: The Python scripts should run on the gold files associated with the V&V case. This enables building on-the-fly documentation with the latest simulation results.
+7. +Visualization Consistency+: In V&V plots, consistently use solid lines to represent TMAP8 results and dashed lines for analytical solutions. Points should only be used when the focus is on specific data points (e.g., validation or benchmarking).
+8. +Write Pythonic code+: When writing Python scripts, aim to follow the [PEP8](https://peps.python.org/pep-0008/) style guide. A key principle is to use existing Python functionality whenever possible instead of writing your own code to do the same thing.
 
 For an example of a python script respecting these guidelines, see [/ver-1a/comparison_ver-1a.py].
 
@@ -34,7 +35,8 @@ For an example of test specification file respecting these guidelines, see [/ver
 ## Documentation
 
 1. +Automated Figure Generation+: Figures used in the V&V process should be automatically generated during the build phase by executing the dedicated plotting Python script. This enables building on-the-fly documentation with the latest simulation results.
-3. +Analytical Equations+: Ensure the equations documented exactly match those used within the Python script. Always cite the original sources for the equations (not a V&V report) to maintain proper attribution.
+2. +Analytical Equations+: Ensure the equations documented exactly match those used within the Python script. Always cite the original sources for the equations (not a V&V report) to maintain proper attribution.
+3. +Validation data+: Provide the reference for the original experimental source of the data used in validation cases.
 4. +Detailed Derivations+: If any quantity conversions are performed within the documentation, provide clear derivations to illustrate the conversion process. Show any derivations that are performed for converting quantities in the documentation.
 5. +Schematic Representation+: Whenever helpful, include schematic figures that visually represent what the specific V&V case is modeling to enhance understanding.
 6. +V&V vs Test+: If a coarser meshed simulation was used in the tests compared to what is used in the actual V&V, add a note at the end of the documentation page that mentions this and why it was done.
