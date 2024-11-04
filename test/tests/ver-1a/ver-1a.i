@@ -5,21 +5,20 @@
 # Physical Constants
 # Note that we do NOT use the same number of digits as in TMAP4/TMAP7.
 # This is to be consistent with PhysicalConstant.h
-kb = 1.380649e-23 # Boltzmann constant J/K
-R = 8.31446261815324 # Gas constant J/mol/K
+kb = '${units 1.380649e-23 J/K}' # Boltzmann constant
+R = '${units 8.31446261815324 J/mol/K}' # Gas constant
 
 # Data used in TMAP4/TMAP7 case
-length_unit = 1e6 # conversion from meters to microns
-temperature = 2373 # K
-initial_pressure = 1e6 # Pa
-volume_enclosure = '${fparse 5.20e-11*length_unit^3}' # microns^3
-surface_area = '${fparse 2.16e-6*length_unit^2}' # microns^2
-diffusivity_SiC = '${fparse 1.58e-4*exp(-308000.0/(R*temperature))*length_unit^2}' # microns^2/s
-solubility_constant = '${fparse  7.244e22/(temperature * length_unit^3)}' # atoms/microns^3/Pa = atoms*s^2/m^2/kg
-slab_thickness = '${fparse  3.30e-5*length_unit}' # microns
+temperature = '${units 2373 K}'
+initial_pressure = '${units 1e6 Pa}'
+volume_enclosure = '${units 5.20e-11 m^3 -> mum^3}'
+surface_area = '${units 2.16e-6 m^2 -> mum^2}'
+diffusivity_SiC = '${units ${fparse 1.58e-4*exp(-308000.0/(R*temperature))} m^2/s -> mum^2/s}'
+solubility_constant = '${units ${fparse 7.244e22 / temperature} at/m^3/Pa -> at/mum^3/Pa}'
+slab_thickness = '${units 3.30e-5 m -> mum}'
 
 # Useful equations/conversions
-concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_unit^3}' # J = Pa*microns^3
+concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} Pa*m^3 -> Pa*mum^3}'
 
 [Mesh]
   type = GeneratedMesh
@@ -143,12 +142,12 @@ concentration_to_pressure_conversion_factor = '${fparse kb*temperature*length_un
     variable = v
   []
   # released fraction based on inner layer flux on v - compare to TMAP7
-  [./released_fraction_left]
+  [released_fraction_left]
     type = LinearCombinationPostprocessor
     pp_names = 'v_value'
     pp_coefs = '${fparse -1./(initial_pressure)}'
     b = 1
-  [../]
+  []
 []
 
 [Executioner]
