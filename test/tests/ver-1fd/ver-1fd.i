@@ -42,14 +42,14 @@ num_nodes = 500 # (-)
 []
 
 [BCs]
-  # The right boundary of the slib is in adiabatic situation
+  # The right boundary of the slab is in adiabatic situation
   [rightflux]
     type = NeumannBC
     boundary = right
     variable = temperature
     value = 0
   []
-  # The left boundary of the slib is a convection boundary
+  # The left boundary of the slab is a convection boundary
   [leftconvection]
     type = ConvectiveHeatFluxBC
     boundary = left

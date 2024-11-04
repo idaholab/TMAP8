@@ -70,14 +70,14 @@ num_nodes = 800 # (-)
 []
 
 [BCs]
-  # The temerature on the left boundary of the slib is kept at 600 K
+  # The temperature on the left boundary of the slab is kept constant
   [lefttemperature]
     type = DirichletBC
     boundary = left
     variable = temperature
     value = ${T_SA}
   []
-  # The temerature on the right boundary of the slib is kept at 0 K
+  # The temperature on the right boundary of the slab is kept constant
   [righttemperature]
     type = DirichletBC
     boundary = right

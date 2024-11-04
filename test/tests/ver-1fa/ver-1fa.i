@@ -40,14 +40,14 @@ volumetric_heat = '${units 1e4 W/m^3}'
 []
 
 [BCs]
-  # The temerature on the right boundary of the slib is kept at 300 K
+  # The temperature on the right boundary of the slab is kept constant
   [right_temp]
     type = DirichletBC
     boundary = right
     variable = temperature
     value = '${initial_temperature}'
   []
-  # The left boundary of the slib is in adiabatic situation
+  # The left boundary of the slab is in adiabatic situation
   [left_flux]
     type = NeumannBC
     boundary = left

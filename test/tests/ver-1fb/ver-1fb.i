@@ -36,14 +36,14 @@ thermal_conductivity = '${units 10 W/m/K}'
 []
 
 [BCs]
-  # The temerature on the right boundary of the slib is kept at 300 K
+  # The temperature on the right boundary of the slab is kept constant
   [right_temp]
     type = DirichletBC
     boundary = right
     variable = temperature
     value = '${T_0}'
   []
-  # The temerature on the right boundary of the slib is kept at 400 K
+  # The temperature on the right boundary of the slab is kept constant
   [left_temp]
     type = DirichletBC
     boundary = left
