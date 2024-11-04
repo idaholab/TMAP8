@@ -28,7 +28,9 @@ In [!cite](ambrosek2008verification), the value of $k = 801$ W/m/K is provided, 
 
 ## Results
 
-The comparison between TMAP8 predictions and the analytical solution is performed at depth $x = 5$ cm. These results are shown in [ver-1fd_comparison_convective_heating]. They show great agreement between TMAP8 and the analytical solution with a root mean square percentage error of RMSPE = 0.29 %.
+The comparison between TMAP8 predictions and the analytical solution is performed at depth $x = 5$ cm. 
+These results are shown in [ver-1fd_comparison_convective_heating]. 
+They show great agreement between TMAP8 and the analytical solution with a root mean square percentage error of RMSPE = 0.29 %.
 
 !media comparison_ver-1fd.py
        image_name=ver-1fd_comparison_convective_heating.png

@@ -16,7 +16,7 @@ where $T$ is the temperature, $\rho$ is the density, $C_P$ is the specific heat,
 
 One end of the slab is kept at a constant temperature of 300K while the other end acts as an adiabatic surface.
 
-This case uses internal volumetric heat generation rate of $1 \times 10^{4}$ W/m$^3$ in the slab. The thickness of slab, $L$, is 1.6 m, and the thermal conductivity is 10 W/m/K. The surface temperature, $T_s$, on the constant temperature end is 300 K. The production of material density and specific heat is assumed to be 1 J/m$^3$/K.
+This case uses internal volumetric heat generation rate of $Q = 1 \times 10^{4}$ W/m$^3$ in the slab. The thickness of slab, $L$, is 1.6 m, and the thermal conductivity is $k = 10$ W/m/K. The surface temperature, $T_s$, on the end with a constant temperature, is 300 K. The production of material density and specific heat is assumed to be 1 J/m$^3$/K.
 
 ## Analytical solution
 
