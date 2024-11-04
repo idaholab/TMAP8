@@ -39,7 +39,7 @@ else:                                  # if in test folder
     csv_folder = "./gold/ver-1fa_csv_line_0011.csv"
 tmap_sol = pd.read_csv(csv_folder)
 tmap_x = tmap_sol['id']
-tmap_temp = tmap_sol['temp']
+tmap_temp = tmap_sol['temperature']
 
 #===============================================================================
 # Calculate analytical solution
