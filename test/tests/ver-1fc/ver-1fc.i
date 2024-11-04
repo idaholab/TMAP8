@@ -1,22 +1,27 @@
-T_SA = 600 # K
-T_SB = 0 # K
-L_A = 40e-2 # m
-L_B = 40e-2 # m
-k_A = 401 # W/m/K
-k_B = 80.2 # W/m/K
-num_nodes = 800 # (-)
-position_measurement = 9e-2 # m
+# Verification Problem #1fc from TMAP7 V&V document
+# Thermal conduction in composite structure with constant surface temperatures
 
-density_Cu = 8960 # kg/m^3
-specific_heat_Cu= 383.8 # J/kg/K
-density_Fe = 7870 # kg/m^3
-specific_heat_Fe = 447.0 # J/kg/K
+# Data used in TMAP7 case
+T_SA = '${units 600 K}'
+T_SB = '${units 0 K}'
+L_A = '${units 0.4 m}'
+L_B = '${units 0.4 m}'
+k_A = '${units 401 W/m/K}'
+k_B = '${units 80.2 W/m/K}'
+position_measurement = '${units 9e-2 m}'
+density_Cu = '${units 8960 kg/m^3}'
+specific_heat_Cu = '${units 383.8 J/kg/K}'
+density_Fe = '${units 7870 kg/m^3}'
+specific_heat_Fe = '${units 447.0 J/kg/K}'
+
+# Data selected for TMAP8 case
+num_nodes = 800 # (-)
 
 [Mesh]
   [whole_domain]
     type = GeneratedMeshGenerator
     xmin = 0
-    xmax = ${fparse L_A + L_B}
+    xmax = '${fparse L_A + L_B}'
     dim = 1
     nx = ${num_nodes}
   []
@@ -35,6 +40,7 @@ specific_heat_Fe = 447.0 # J/kg/K
 []
 
 [Variables]
+  # temperature parameter in the slab in K
   [temperature]
     initial_condition = 0.0
     scaling = 1e-6
@@ -64,12 +70,14 @@ specific_heat_Fe = 447.0 # J/kg/K
 []
 
 [BCs]
+  # The temperature on the left boundary of the slab is kept constant
   [lefttemperature]
     type = DirichletBC
     boundary = left
     variable = temperature
     value = ${T_SA}
   []
+  # The temperature on the right boundary of the slab is kept constant
   [righttemperature]
     type = DirichletBC
     boundary = right
@@ -79,18 +87,21 @@ specific_heat_Fe = 447.0 # J/kg/K
 []
 
 [Materials]
+  # the specific heat of Cu layer
   [specific_heat_Cu]
     type = GenericConstantMaterial
     block = '0'
     prop_names = 'density specific_heat'
     prop_values = '${density_Cu} ${specific_heat_Cu}'
   []
+  # the specific heat of Fe layer
   [specific_heat_Fe]
     type = GenericConstantMaterial
     block = '1'
     prop_names = 'density specific_heat'
     prop_values = '${density_Fe} ${specific_heat_Fe}'
   []
+  # the thermal conductivity of Cu layer
   [thermal_conductivity_Cu]
     type = GenericFunctionMaterial
     block = '0'
@@ -98,6 +109,7 @@ specific_heat_Fe = 447.0 # J/kg/K
     prop_names = thermal_conductivity
     outputs = exodus
   []
+  # the thermal conductivity of Fe layer
   [thermal_conductivity_Fe]
     type = GenericFunctionMaterial
     block = '1'
@@ -146,6 +158,7 @@ specific_heat_Fe = 447.0 # J/kg/K
 []
 
 [VectorPostprocessors]
+  # Used to obtain the temperature distribution with time at corresponding time
   [line]
     type = LineValueSampler
     start_point = '0 0 0'
