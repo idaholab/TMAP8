@@ -9,7 +9,7 @@ and development best practices for TMAP8 are outlined.
 
 !style halign=left
 When modifying TMAP8, the development team requests that all [Code Standards](tmap8_scs.md) be
-followed. These guidelines make sure that the repository code follows a consistent look and feel to
+followed. Additionally, if you are creating a new verification or validation case, make sure to follow the [V&V standards](/verification_and_validation_standards.md). These guidelines make sure that the repository code follows a consistent look and feel to
 make development easier.
 
 ## Creating and Referencing Issues
