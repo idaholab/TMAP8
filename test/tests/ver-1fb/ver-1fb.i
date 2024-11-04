@@ -1,3 +1,7 @@
+# Verification Problem #1fb from TMAP4/TMAP7 V&V document
+# Thermal transient in a slab whitout heat source
+
+# Data used in TMAP4/TMAP7 case
 length = '${units 4.0 m}'
 initial_temperature = '${units 300 K}'
 T_0 = '${units 300 K}'
@@ -14,7 +18,8 @@ thermal_conductivity = '${units 10 W/m/K}'
 []
 
 [Variables]
-  [temp]
+  # temperature parameter in the slab in K
+  [temperature]
     initial_condition = '${initial_temperature}'
   []
 []
@@ -22,30 +27,33 @@ thermal_conductivity = '${units 10 W/m/K}'
 [Kernels]
   [heat]
     type = HeatConduction
-    variable = temp
+    variable = temperature
   []
   [HeatTdot]
     type = HeatConductionTimeDerivative
-    variable = temp
+    variable = temperature
   []
 []
 
 [BCs]
-  [lefttemp]
+  # The temerature on the right boundary of the slib is kept at 300 K
+  [right_temp]
     type = DirichletBC
     boundary = right
-    variable = temp
+    variable = temperature
     value = '${T_0}'
   []
-  [rightflux]
+  # The temerature on the right boundary of the slib is kept at 400 K
+  [left_temp]
     type = DirichletBC
     boundary = left
-    variable = temp
+    variable = temperature
     value = '${T_1}'
   []
 []
 
 [Materials]
+  # The diffusivity of the sample
   [diffusivity]
     type = GenericConstantMaterial
     prop_names = 'density  thermal_conductivity specific_heat'
@@ -75,13 +83,14 @@ thermal_conductivity = '${units 10 W/m/K}'
 []
 
 [VectorPostprocessors]
+  # The temperature distribution on the sample at coresponding time
   [line]
     type = LineValueSampler
     start_point = '0 0 0'
     end_point = '${length} 0 0'
     num_points = 40
     sort_by = 'x'
-    variable = temp
+    variable = temperature
     outputs = vector_postproc
   []
 []

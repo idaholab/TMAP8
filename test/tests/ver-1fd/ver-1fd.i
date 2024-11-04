@@ -1,5 +1,7 @@
-# This input file models the heating of a semi-infinite slab by convection at the left boundary.
-# provided by TMAP7 V&V documentation
+# Verification Problem #1fd from TMAP7 V&V document
+# Heating of a semi-infinite slab by convection at the left boundary
+
+# Data used in TMAP7 case
 position_measurement = '${units 5e-2 m}'
 initial_temperature = '${units 100 K}' # T_i
 enclosure_temperature = '${units 500 K}' # T_infinity
@@ -11,8 +13,8 @@ rho_Cp = '${units 3.439e6 J/m^3/K}'
 slab_length = '${units 1 m}' # semi-infinite slab
 density = '${units 1000 kg/m^3}'
 specific_heat = '${units ${fparse rho_Cp/density} J/kg/K}'
-num_nodes = 500 # (-)
 end_time = '${units 1500 s}'
+num_nodes = 500 # (-)
 
 [Mesh]
   type = GeneratedMesh
@@ -22,6 +24,7 @@ end_time = '${units 1500 s}'
 []
 
 [Variables]
+  # temperature parameter in the slab in K
   [temperature]
     initial_condition = ${initial_temperature}
   []
@@ -39,12 +42,14 @@ end_time = '${units 1500 s}'
 []
 
 [BCs]
+  # The right boundary of the slib is in adiabatic situation
   [rightflux]
     type = NeumannBC
     boundary = right
     variable = temperature
     value = 0
   []
+  # The left boundary of the slib is a convection boundary
   [leftconvection]
     type = ConvectiveHeatFluxBC
     boundary = left
@@ -55,6 +60,7 @@ end_time = '${units 1500 s}'
 []
 
 [Materials]
+  # The diffusivity of the slab
   [diffusivity]
     type = GenericConstantMaterial
     prop_names = 'density thermal_conductivity specific_heat'

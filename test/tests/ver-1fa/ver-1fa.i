@@ -1,3 +1,7 @@
+# Verification Problem #1fa from TMAP4/TMAP7 V&V document
+# Heat conduction with heat generation
+
+# Data used in TMAP4/TMAP7 case
 length = '${units 1.6 m}'
 initial_temperature = '${units 300 K}'
 density = '${units 1 kg/m^3}'
@@ -13,7 +17,8 @@ volumetric_heat = '${units 1e4 W/m^3}'
 []
 
 [Variables]
-  [temp]
+  # temperature parameter in the slab in K
+  [temperature]
     initial_condition = '${initial_temperature}'
   []
 []
@@ -21,35 +26,38 @@ volumetric_heat = '${units 1e4 W/m^3}'
 [Kernels]
   [heat]
     type = HeatConduction
-    variable = temp
+    variable = temperature
   []
   [heatsource]
     type = HeatSource
     function = volumetric_heat
-    variable = temp
+    variable = temperature
   []
   [HeatTdot]
     type = HeatConductionTimeDerivative
-    variable = temp
+    variable = temperature
   []
 []
 
 [BCs]
-  [lefttemp]
+  # The temerature on the right boundary of the slib is kept at 300 K
+  [right_temp]
     type = DirichletBC
     boundary = right
-    variable = temp
+    variable = temperature
     value = '${initial_temperature}'
   []
-  [rightflux]
+  # The left boundary of the slib is in adiabatic situation
+  [left_flux]
     type = NeumannBC
     boundary = left
-    variable = temp
+    variable = temperature
     value = 0
   []
 []
 
 [Materials]
+  # The density of the sample slab
   [density]
     type = GenericConstantMaterial
     prop_names = 'density  thermal_conductivity specific_heat'
@@ -58,6 +66,7 @@ volumetric_heat = '${units 1e4 W/m^3}'
 []
 
 [Functions]
+  # The heat source in the sample slab
   [volumetric_heat]
     type = ParsedFunction
     expression = '${volumetric_heat}'
@@ -86,13 +95,14 @@ volumetric_heat = '${units 1e4 W/m^3}'
 []
 
 [VectorPostprocessors]
+  # The temperature distribution on the sample at end of the simulation
   [line]
     type = LineValueSampler
     start_point = '0 0 0'
     end_point = '${length} 0 0'
     num_points = 40
     sort_by = 'x'
-    variable = temp
+    variable = temperature
   []
 []
 
