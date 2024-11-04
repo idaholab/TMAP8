@@ -1,18 +1,20 @@
-# This input file models the heating of a semi-infinite slab by convection at the left boundary.
-# provided by TMAP7 V&V documentation
-position_measurement = 5e-2 # m
-initial_temperature = 100 # T_i in K
-enclosure_temperature = 500 # T_infinity in K
-conduction_coefficient = 200 # h in W/m^2/K
-thermal_conductivity = 401 # k in W/m/K
-rho_Cp = 3.439e6  # J/m^3/K
+# Verification Problem #1fd from TMAP7 V&V document
+# Heating of a semi-infinite slab by convection at the left boundary
+
+# Data used in TMAP7 case
+position_measurement = '${units 5e-2 m}'
+initial_temperature = '${units 100 K}' # T_i
+enclosure_temperature = '${units 500 K}' # T_infinity
+conduction_coefficient = '${units 200 W/m^2/K}' # h
+thermal_conductivity = '${units 401 W/m/K}' # k
+rho_Cp = '${units 3.439e6 J/m^3/K}'
 
 # Selected for TMAP8 case
-slab_length = 100e-2 # m semi-infinite slab
+slab_length = '${units 1 m}' # semi-infinite slab
+density = '${units 1000 kg/m^3}'
+specific_heat = '${units ${fparse rho_Cp/density} J/kg/K}'
+end_time = '${units 1500 s}'
 num_nodes = 500 # (-)
-end_time = 1500 # s
-density = 1000 # kg/m^3
-specific_heat = ${fparse rho_Cp/density} # J/kg/K
 
 [Mesh]
   type = GeneratedMesh
@@ -22,6 +24,7 @@ specific_heat = ${fparse rho_Cp/density} # J/kg/K
 []
 
 [Variables]
+  # temperature parameter in the slab in K
   [temperature]
     initial_condition = ${initial_temperature}
   []
@@ -39,12 +42,14 @@ specific_heat = ${fparse rho_Cp/density} # J/kg/K
 []
 
 [BCs]
+  # The right boundary of the slab is in adiabatic situation
   [rightflux]
     type = NeumannBC
     boundary = right
     variable = temperature
     value = 0
   []
+  # The left boundary of the slab is a convection boundary
   [leftconvection]
     type = ConvectiveHeatFluxBC
     boundary = left
@@ -55,6 +60,7 @@ specific_heat = ${fparse rho_Cp/density} # J/kg/K
 []
 
 [Materials]
+  # The diffusivity of the slab
   [diffusivity]
     type = GenericConstantMaterial
     prop_names = 'density thermal_conductivity specific_heat'
