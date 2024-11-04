@@ -10,8 +10,8 @@ and no trapping is included. The boundary condition on the left-hand side of the
 
 \begin{equation}
 \label{eq:c_func_4}
-C = \frac{C_0}{2} \left[ \text{erf}\bigg(\frac{h-x}{2\sqrt{Dt}}\bigg) +
-\text{erf}\bigg(\frac{h+x}{2\sqrt{Dt}}\bigg)  \right]
+C = \frac{C_0}{2} \left[ \text{erf}\left(\frac{h-x}{2\sqrt{Dt}}\right) +
+\text{erf}\left(\frac{h+x}{2\sqrt{Dt}}\right)  \right]
 \end{equation}
 
 but for TMAP7, which specifies $C(x=0 \mathrm{\:m})=0$, the analytical solution is [!citep](Carslaw1959conduction)
@@ -21,12 +21,14 @@ but for TMAP7, which specifies $C(x=0 \mathrm{\:m})=0$, the analytical solution 
 C = \frac{C_0}{2}\left[2\mathrm{erf}\left(\frac{x}{2\sqrt{Dt}}\right) - \mathrm{erf}\left(\frac{x-h}{2\sqrt{Dt}}\right) - \mathrm{erf}\left(\frac{x+h}{2\sqrt{Dt}}\right)\right]
 \end{equation}
 
-where $h=10$ m is the thickness of the pre-loaded portion of the layer.
+where $h=10$ m is the thickness of the pre-loaded portion of the layer, $C_0$ is the initial concentration in the pre-loaded section of the slab, erf is the error function, $x$ is the position along the slab, and $D$ is the diffusivity.
 
 !alert warning title=Typo in [!cite](longhurst1992verification)
 The value of $C$ found in [!cite](longhurst1992verification) has a typographical error, $\sqrt{Dt}$ should be at the denominator. [eq:c_func_4] follows the form of [!cite](Carslaw1959conduction).
 
 
+!alert warning title=Typo in [!cite](longhurst1992verification)
+The value of $C$ found in [!cite](longhurst1992verification) has a typographical error, $\sqrt{Dt}$ should be at the denominator. [eq:c_func_4] follows the form of [!cite](Carslaw1959conduction).
 TMAP4 and TMAP7 verification cases are also evaluated at slightly different locations: TMAP4 verifies the mobile species concentration at three points:
 
 1. a point at the free surface (x = 0 m)
@@ -50,20 +52,20 @@ The comparison of the values calculated with TMAP8 and analytically for the TMAP
        image_name=ver-1c_comparison_time_TMAP4.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1c_comparison_time_TMAP4
-       caption=Comparison of concentration as a function of time at x\=0 m, 10 m, and 12 m
+       caption=Comparison of concentration as a function of time at $x=0$ m, 10 m, and 12 m
        calculated with TMAP8 and analytically (TMAP4 cases)
 
 !media comparison_ver-1c.py
        image_name=ver-1c_comparison_time_TMAP7.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1c_comparison_time_TMAP7
-       caption=Comparison of concentration as a function of time at x\=0.25 m, 10 m, and 12 m
+       caption=Comparison of concentration as a function of time at $x=0.25$ m, 10 m, and 12 m
        calculated with TMAP8 and analytically (TMAP7 cases)
 
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/ver-1c.i], which is also used as test in TMAP8 at [/ver-1c/tests]. The TMAP4 and TMAP7 verification tests use the same input file, 
+The input file for this case can be found at [/ver-1c.i], which is also used as test in TMAP8 at [/ver-1c/tests]. The TMAP4 and TMAP7 verification tests use the same input file,
 but different command line arguments for TMAP4.
 
 !listing /test/tests/ver-1c/tests line=NeumannBC

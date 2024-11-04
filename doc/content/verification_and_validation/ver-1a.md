@@ -68,7 +68,7 @@ The expression in Eq. (1) of [!cite](longhurst1992verification) writes $-\alpha_
        image_name=ver-1a_comparison_analytical_TMAP4_release_fraction.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1a_comparison_analytical_TMAP4_release_fraction
-       caption=Comparison of TMAP8 calculation with the analytical solution for the release fraction from [!cite](longhurst1992verification).
+       caption=Comparison of TMAP8 calculation with the analytical solution for the release fraction on the outer surface of the SiC slab [!cite](longhurst1992verification).
 
 ## Verification of the release fraction on the inner surface of the SiC slab (TMAP7)
 
@@ -80,7 +80,7 @@ In [!cite](ambrosek2008verification), i.e., TMAP7, the verification test focuses
 \end{equation}
 where $P(t)$ is the pressure at the surface of the enclosure over time.
 
-To derive $FR(t)$, [!cite](ambrosek2008verification) first reference the analytical solution for an analogous heat transfer problem [!cite](Carslaw1959conduction), which provides the solute concentration profile in the membrane as
+To derive $FR(t)$, [!cite](ambrosek2008verification) first references the analytical solution for an analogous heat transfer problem [!cite](Carslaw1959conduction), which provides the solute concentration profile in the membrane as
 
 \begin{equation}
     C(x,t) = 2 S P_0 L' \sum_{n=1}^{\infty} \frac{\exp \left(-\alpha_{n}^2 D t\right) \sin (\alpha_{n} x)}{[l(\alpha_{n}^2 + L'^2)+L'] \sin (\alpha_{n} l)},
@@ -116,7 +116,7 @@ which leads to
        image_name=ver-1a_comparison_analytical_TMAP7_release_fraction.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1a_comparison_analytical_TMAP7_release_fraction
-       caption=Comparison of TMAP8 calculation with the analytical solution for the release fraction from [!cite](ambrosek2008verification).
+       caption=Comparison of TMAP8 calculation with the analytical solution for the release fraction on the inner surface of the SiC slab [!cite](ambrosek2008verification).
 
 ## Verification of the tritium flux at the outer surface of the SiC slab (TMAP7)
 
@@ -140,7 +140,7 @@ Again, be aware of the typos in [!cite](ambrosek2008verification) and the differ
        image_name=ver-1a_comparison_analytical_TMAP7_flux.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1a_comparison_analytical_TMAP7_flux
-       caption=Comparison of TMAP8 calculation with the analytical solution for the release fraction from [!cite](ambrosek2008verification).
+       caption=Comparison of TMAP8 calculation with the analytical solution for the tritium flux at the outer surface of the SiC slab [!cite](ambrosek2008verification).
 
 ## Input files
 

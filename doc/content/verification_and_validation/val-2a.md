@@ -52,7 +52,7 @@ J = 2 A K_r C^2.
 
 The beam flux on the upstream side of the sample during the experiment is presented in [val-2a_flux_and_pressure_TMAP4], and only 75 % of the flux remain in the sample. Other case and model parameters used in TMAP8 are listed in [val-2a_set_up_values_TMAP4].
 
-!table id=val-2a_flux_and_pressure_TMAP4 caption=Values of beam flux on the upstream side of the sample during the experiment [!citep](longhurst1992verification).
+!table id=val-2a_flux_and_pressure_TMAP4 caption=Values of beam flux on the upstream side of the sample during the experiment [!citep](anderl1985tritium,longhurst1992verification).
 | time (s)      | Beam flux $F$ (atom/m$^2$/s)   |
 | ---------     | ---------------------------- |
 | 0 - 5820      | 4.9$\times 10^{19}$          |
@@ -63,7 +63,7 @@ The beam flux on the upstream side of the sample during the experiment is presen
 | 17678 - 20000 | 0                            |
 
 !alert warning title=Typo in [!cite](longhurst1992verification)
-The times listed in [!cite](longhurst1992verification) for TMAP8 for the start and end times of the beam are not accurate. instead, TMAP8 uses the times directly from [!cite](anderl1985tritium) to better correspond to experimental conditions.
+The times listed in [!cite](longhurst1992verification) for TMAP8 for the start and end times of the beam are not accurate. Instead, TMAP8 uses the times directly from [!cite](anderl1985tritium) to better correspond to experimental conditions.
 
 !table id=val-2a_set_up_values_TMAP4 caption=Values of material properties. Note that $K_d$ are currently not used in the input file since the upstream and downstream pressure do not noticeably influence the results.
 | Parameter | Description                          | Value                                                       | Units                 | Reference                 |

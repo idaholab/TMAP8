@@ -64,17 +64,17 @@ where $c_{\text{H}_2\text{O}}^0$ is the concentration of H$_2$O in the incoming 
 
 In the paint, TMAP8 captures species diffusion through
 \begin{equation} \label{eq:paint:T2}
-\frac{d c_{\text{T}_2}}{dt} = - \nabla D^e \nabla c_{\text{T}_2},
+\frac{d c_{\text{T}_2}}{dt} = \nabla D^e \nabla c_{\text{T}_2},
 \end{equation}
 \begin{equation} \label{eq:paint:HT}
-\frac{d c_{\text{HT}}}{dt} = - \nabla D^e \nabla c_{\text{HT}},
+\frac{d c_{\text{HT}}}{dt} = \nabla D^e \nabla c_{\text{HT}},
 \end{equation}
 \begin{equation} \label{eq:paint:HTO}
-\frac{d c_{\text{HTO}}}{dt} = - \nabla D^w \nabla c_{\text{HTO}},
+\frac{d c_{\text{HTO}}}{dt} = \nabla D^w \nabla c_{\text{HTO}},
 \end{equation}
 and
 \begin{equation} \label{eq:paint:H2O}
-\frac{d c_{\text{H}_2\text{O}}}{dt} = - \nabla D^w \nabla  c_{\text{H}_2\text{O}}.
+\frac{d c_{\text{H}_2\text{O}}}{dt} = \nabla D^w \nabla  c_{\text{H}_2\text{O}}.
 \end{equation}
 
 At the interface between the enclosure air and the paint, sorption is captured in TMAP8 with Henry's law thanks to the  [InterfaceSorption.md] object:
@@ -111,8 +111,8 @@ The case and model parameters used in both approaches in TMAP8 are listed in [va
 | $K^0$                      | $\boldsymbol{1.5} \times 2.0 \times 10^{-10}$                | $\boldsymbol{2.8} \times 2.0 \times 10^{-10}$                | m$^3$/Ci/s | Adapted from [!cite](longhurst1992verification) |
 | $D^e$                      | 4.0 $\times 10^{-12}$                                        | Identical                                                    | m$^2$/s    | [!cite](Holland1986)                            |
 | $D^w$                      | 1.0 $\times 10^{-14}$                                        | Identical                                                    | m$^2$/s    | [!cite](Holland1986)                            |
-| $K_S^e$                    | $\boldsymbol{5.0 \times 10^{-2}} \times 4.0 \times 10^{-19}$ | $\boldsymbol{1.0 \times 10^{-3}} \times 4.0 \times 10^{-19}$ | 1/m$^3$/Pa | Adapted from [!cite](longhurst1992verification) |
-| $K_S^w$                    | $\boldsymbol{3.5 \times 10^{-4}} \times 6.0 \times 10^{-24}$ | $\boldsymbol{3.0 \times 10^{-4}} \times 6.0 \times 10^{-24}$ | 1/m$^3$/Pa | Adapted from [!cite](longhurst1992verification) |
+| $K_S^e$                    | $\boldsymbol{5.0 \times 10^{-2}} \times 4.0 \times 10^{19}$ | $\boldsymbol{1.0 \times 10^{-3}} \times 4.0 \times 10^{19}$ | 1/m$^3$/Pa | Adapted from [!cite](longhurst1992verification) |
+| $K_S^w$                    | $\boldsymbol{3.5 \times 10^{-4}} \times 6.0 \times 10^{24}$ | $\boldsymbol{3.0 \times 10^{-4}} \times 6.0 \times 10^{24}$ | 1/m$^3$/Pa | Adapted from [!cite](longhurst1992verification) |
 | $t_{injection}$            | N/A                                                          | 3                                                            | hr         |                                                 |
 
 ## Results and discussion
@@ -132,7 +132,7 @@ It is also possible to perform this optimization with [MOOSE's stochastic tools 
        image_name=val-2c_comparison_TMAP8_Exp_T2_Ci.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2c_comparison_T2
-       caption=Comparison of TMAP8 calculations against the experimental data for T$_2$ concentration in the enclosure over time. TMAP8 matches the experimental data well, with an improvement when T$_2$ is injected over  a given period rather than immediately.
+       caption=Comparison of TMAP8 calculations against the experimental data for T$_2$ concentration in the enclosure over time. TMAP8 matches the experimental data well, with an improvement when T$_2$ is injected over a given period rather than immediately.
 
 !media comparison_val-2c.py
        image_name=val-2c_comparison_TMAP8_Exp_HTO_Ci.png
