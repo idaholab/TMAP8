@@ -1,1 +1,1 @@
-/Users/lee/projects/TMAP8/test/tests/ver-1kb/comparison_ver-1kb.py
+../../../../test/tests/ver-1kb/comparison_ver-1kb.py
