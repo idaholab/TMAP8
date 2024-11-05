@@ -6,7 +6,7 @@
     type = CSVDiff
     input = ver-1kb.i
     csvdiff = ver-1kb_out_k1.csv
-    requirement = 'The system shall be able to model the diffusion of H2 across a membrane separating two enclosures in accordance with Henry’s law without any concentration jump at the interface.
+    requirement = 'The system shall be able to model the diffusion of H2 across a membrane separating two enclosures in accordance with Henry’s law without any concentration jump at the interface.'
   []
   [ver-1kb_csv_concentration_jump]
     type = CSVDiff
