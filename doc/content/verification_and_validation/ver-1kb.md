@@ -15,7 +15,7 @@ Over time, the pressures of T$_2$, which diffuses across the membrane in accorda
 The diffusion process in each of the two enclosures can be described by the following equations:
 
 \begin{equation}
-\frac{\partial C_1}{\partial t} = D \nabla^2 C_1
+\frac{\partial C_1}{\partial t} = \nabla D \nabla C_1
 \end{equation}
 
 \begin{equation}
