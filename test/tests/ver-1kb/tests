@@ -16,6 +16,14 @@
     csvdiff = ver-1kb_out_k10.csv
     requirement = 'The system shall be able to model the diffusion of H2 across a membrane separating two enclosures in accordance with Henry’s law with a concentration jump at the interface'
   []
+  [ver-1kb_exodus_concentration_jump]
+    type = Exodiff
+    input = ver-1kb.i
+    exodiff = ver-1kb_out_k10_exodus.e
+    cli_args = "solubility='${fparse 10/(R*temperature)}'
+                Outputs/file_base=ver-1kb_out_k10_exodus"
+    requirement = 'The system shall be able to model the diffusion of H2 across a membrane separating two enclosures in accordance with Henry’s law with a concentration jump at the interface'
+  []
   [ver-1kb_comparison]
     type = RunCommand
     command = 'python3 comparison_ver-1kb.py'
