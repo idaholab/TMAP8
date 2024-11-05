@@ -6,15 +6,15 @@
     type = CSVDiff
     input = ver-1kb.i
     csvdiff = ver-1kb_out_k1.csv
-    requirement = 'The system shall be able to model the diffusion of H2 across a membrane separating two enclosures in accordance with Henry’s law. Reproduce the TMAP7 case without any jump'
+    requirement = 'The system shall be able to model the diffusion of H2 across a membrane separating two enclosures in accordance with Henry’s law without any concentration jump at the interface.
   []
   [ver-1kb_csv_concentration_jump]
     type = CSVDiff
     input = ver-1kb.i
-    cli_args = 'solubility=${fparse 10/(8.31446261815324*500)}
-                Outputs/file_base=ver-1kb_out_k10'
+    cli_args = "solubility='${fparse 10/(R*temperature)}'
+                Outputs/file_base=ver-1kb_out_k10"
     csvdiff = ver-1kb_out_k10.csv
-    requirement = 'The system shall be able to model the diffusion of H2 across a membrane separating two enclosures in accordance with Henry’s law. Model a concentration jump at the interface'
+    requirement = 'The system shall be able to model the diffusion of H2 across a membrane separating two enclosures in accordance with Henry’s law with a concentration jump at the interface'
   []
   [ver-1kb_comparison]
     type = RunCommand

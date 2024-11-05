@@ -10,9 +10,9 @@ os.chdir(script_folder)
 
 # Extract columns for time, pressures, concentration_enclosure_1_at_interface, and concentration_enclosure_2_at_interface
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-    csv_folder = "../../../../test/tests/ver-1kb/gold/ver-1kb_out.csv"
+    csv_folder = "../../../../test/tests/ver-1kb/gold/ver-1kb_out_k1.csv"
 else:                                  # if in test folder
-    csv_folder = "./gold/ver-1kb_out.csv"
+    csv_folder = "./gold/ver-1kb_out_k1.csv"
 expt_data = pd.read_csv(csv_folder)
 TMAP8_time = expt_data['time']
 TMAP8_pressure_enclosure_1 = expt_data['pressure_enclosure_1']
