@@ -132,8 +132,9 @@ plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
 plt.savefig('ver-1e_comparison_time_closeup.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
-# ============ Comparison of concentration as a function of distance ============
 
+
+# ============ Comparison of concentration as a function of distance ============
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
@@ -197,6 +198,8 @@ ax.plot(tmap_distance_tmap7_microns, analytical_conc_tmap7,
 
 ax.set_xlabel(u'Distance ($\mu$m)')
 ax.set_ylabel(r"Concentration (moles/m$^3$)")
+ax.set_xlim(left=0)
+ax.set_ylim(bottom=0)
 ax.legend(loc="best")
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 

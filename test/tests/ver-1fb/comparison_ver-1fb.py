@@ -115,6 +115,8 @@ ax.plot(tmap_x,
 ax.set_xlabel(u'Distance along slab (m)')
 ax.set_ylabel(u"Temperature (K)")
 ax.legend(loc="best")
+ax.set_xlim(left=0)
+ax.set_xlim(left=max(tmap_x))
 ax.set_ylim(bottom=300)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 RMSE = np.sqrt(np.mean((tmap_temp[0]-analytical_temp[0])**2) ) # 0.1 seconds
