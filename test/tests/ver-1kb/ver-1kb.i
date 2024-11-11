@@ -2,7 +2,6 @@ nb_segments_TMAP7 = 20
 node_size_TMAP7 = '${units 1.25e-5 m}'
 long_total = '${fparse nb_segments_TMAP7 * node_size_TMAP7}' # m
 nb_segments_TMAP8 = 100
-node_size_TMAP8 = '${fparse long_total / nb_segments_TMAP8}' # m
 simulation_time = '${units 10000 s}'
 temperature = '${units 500 K}'
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConstants.h
@@ -130,10 +129,10 @@ unit_scale_neighbor = 1
     unit_scale = ${unit_scale}
     unit_scale_neighbor = ${unit_scale_neighbor}
     temperature = ${temperature}
-    variable = concentration_enclosure_2
-    neighbor_var = concentration_enclosure_1
+    variable = concentration_enclosure_1
+    neighbor_var = concentration_enclosure_2
     sorption_penalty = 1e1
-    boundary = Block2_Block1
+    boundary = Block1_Block2
   []
 []
 
@@ -151,30 +150,44 @@ unit_scale_neighbor = 1
     execute_on = 'initial timestep_end'
   []
   [concentration_enclosure_1_at_interface]
-    type = PointValue
+    type = SideAverageValue
+    boundary = Block1_Block2
     variable = concentration_enclosure_1
-    point = '${fparse 1/3 * long_total - node_size_TMAP8} 0 0'
     outputs = 'csv console'
     execute_on = 'initial timestep_end'
   []
   [concentration_enclosure_2_at_interface]
-    type = PointValue
+    type = SideAverageValue
+    boundary = Block2_Block1
     variable = concentration_enclosure_2
-    point = '${fparse 1/3 * long_total + node_size_TMAP8} 0 0'
     outputs = 'csv console'
     execute_on = 'initial timestep_end'
   []
+  [concentration_ratio]
+    type = ParsedPostprocessor
+    expression = 'concentration_enclosure_1_at_interface / concentration_enclosure_2_at_interface'
+    pp_names = 'concentration_enclosure_1_at_interface concentration_enclosure_2_at_interface'
+    execute_on = 'initial timestep_end'
+    outputs = 'csv console'
+  []
+  [solubility]
+    type = ParsedPostprocessor
+    expression = 'concentration_enclosure_1_at_interface / pressure_enclosure_2_at_interface'
+    pp_names = 'concentration_enclosure_1_at_interface pressure_enclosure_2_at_interface'
+    execute_on = 'initial timestep_end'
+    outputs = 'csv console'
+  []
   [pressure_enclosure_1_at_interface]
-    type = PointValue
+    type = SideAverageValue
+    boundary = Block1_Block2
     variable = pressure_enclosure_1
-    point = '${fparse 1/3 * long_total - node_size_TMAP8} 0 0'
     outputs = 'csv console'
     execute_on = 'initial timestep_end'
   []
   [pressure_enclosure_2_at_interface]
-    type = PointValue
+    type = SideAverageValue
+    boundary = Block2_Block1
     variable = pressure_enclosure_2
-    point = '${fparse 1/3 * long_total + node_size_TMAP8} 0 0'
     outputs = 'csv console'
     execute_on = 'initial timestep_end'
   []
@@ -202,8 +215,8 @@ unit_scale_neighbor = 1
   type = Transient
   end_time = ${simulation_time}
   dtmax = 10
-  nl_abs_tol = 1e-14
-  nl_rel_tol = 1e-10
+  nl_abs_tol = 1e-12
+  nl_rel_tol = 1e-8
   scheme = 'bdf2'
   solve_type = NEWTON
   petsc_options_iname = '-pc_type'
@@ -211,16 +224,17 @@ unit_scale_neighbor = 1
   nl_max_its = 6
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 0.1
-    optimal_iterations = 4
-    iteration_window = 1
-    growth_factor = 1.1
-    cutback_factor_at_failure = 0.9
+    dt = 0.01
+    optimal_iterations = 5
+    iteration_window = 3
+    growth_factor = 1.05
+    cutback_factor_at_failure = 0.8
   []
 []
 
 [Outputs]
   file_base = 'ver-1kb_out_k1'
   csv = true
+  exodus = true
   execute_on = 'initial timestep_end'
 []
