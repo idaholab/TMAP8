@@ -19,7 +19,7 @@ The diffusion process in each of the two enclosures can be described by
 \end{equation}
 and
 \begin{equation}
-\frac{\partial C_2}{\partial t} = - \nabla D \nabla C_2
+\frac{\partial C_2}{\partial t} = \nabla D \nabla C_2,
 \end{equation}
 
 where $C_1$ and $C_2$ represent the concentration fields in enclosures 1 and 2 respectively, and $D$ denotes the diffusivity.
