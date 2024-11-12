@@ -4,9 +4,9 @@
 
 ## Case Description
 
-This validation problem is taken from [!cite](hino1998hydrogen) with multiple trapping capability. This case is part of the validation suite of TMAP7 as val-2d [!citep](ambrosek2008verification). 
-In this experiment, tritium is implanted at 5 keV and a flux of 1 $\times 10^{19}$ atom/m$_2$/s for 5,000 seconds into a 0.1 mm thick polycrystalline tungsten foil with a surface area of 50 x 50 mm$^2$ at room temperature (300 K). 
-The background pressure in the implantation chamber is 10$^{-3}$ Pa while the implantation is going on and 10$^{-5}$ Pa the rest of the time. 
+This validation problem is taken from [!cite](hino1998hydrogen) with multiple trapping capability. This case is part of the validation suite of TMAP7 as val-2d [!citep](ambrosek2008verification).
+In this experiment, tritium is implanted at 5 keV and a flux of 1 $\times 10^{19}$ atom/m$_2$/s for 5,000 seconds into a 0.1 mm thick polycrystalline tungsten foil with a surface area of 50 x 50 mm$^2$ at room temperature (300 K).
+The background pressure in the implantation chamber is 10$^{-3}$ Pa while the implantation is going on and 10$^{-5}$ Pa the rest of the time.
 Following the implantation, the sample is subjected to thermal desorption spectroscopy by heating under vacuum at 50 K/min to 1,273 K and then held at that temperature for several minutes.
 
 The system is in the structure of [val-2d_schematic]. The implantation chamber (Enclosure 1) has a volume of 0.1 $m^3$ and is evacuated by a turbo-molecular vacuum pump. The implantation chamber is defined for this problem as a enclosure having a preprogrammed temperature of 300 K for 5,000 seconds followed by a ramp to 1,273 K at a ramp rate of 50 K/min. Gas leakage from the ion source is represented by a enclosure with a pressure of $1 \times 10^{-3}$ Pa during implantation followed by $1 \times 10^{-5}$ Pa and flow to the implantation chamber at the vacuum pumping rate. Flow rate from the implantation chamber is taken to be 0.07 m$^3$/s on the basis of the stated pressure in the test chamber during implantation, given that nearly all implanted gas re-emerges during that time. The vacuum pump is represented by a enclosure (Enclosure 2) held at 10-8 Pa.
@@ -18,8 +18,8 @@ The system is in the structure of [val-2d_schematic]. The implantation chamber (
 
 Based on TRIM calculations [!citep](eckstein2013computer,biersack1982stopping), implantation in the sample shows a normal distribution, which has a peak at 4.6 nm below the surface and a characteristic half width of 3 nm. Implantation is activated for 5,000 s and then terminated.
 
-Three traps are assumed in the sample. Trap concentrations and distributions are considered adjustable parameters while energies were determined by TDS peak temperatures. 
-The first trap is assumed to be associated with implantation (damage and precipitation) and to be normally distributed with a peak at 4.6 nm and a characteristic width of 10 nm, consistent with the observations of [!cite](haasz1999effect) that damage zone exceeds the implantation depth. 
+Three traps are assumed in the sample. Trap concentrations and distributions are considered adjustable parameters while energies were determined by TDS peak temperatures.
+The first trap is assumed to be associated with implantation (damage and precipitation) and to be normally distributed with a peak at 4.6 nm and a characteristic width of 10 nm, consistent with the observations of [!cite](haasz1999effect) that damage zone exceeds the implantation depth.
 Its trap energy is adjusted, based on the temperature of the first peak, to be 1.2 eV, and it is assumed to be 0.086 atom fraction at the peak. Its distribution is defined as:
 
 \begin{equation} \label{eq:normal_distribution_trap}
@@ -79,7 +79,7 @@ The thermal diffusion after 5000 s is governing by:
 
 where $\rho$ is the density of Tungsten, $C_P$ is the specific heat, and $D_T$ is the thermal conductivity.
 
-All the model parameters are taken from [!cite](hino1998hydrogen,haasz1999effect,anderl1992deuterium,frauenfelder1969solution,ambrosek2008verification) and listed in [val-2d_set_up_values]. Whenever the original values are updated, it is specified in [val-2d_set_up_values]. 
+All the model parameters are taken from [!cite](hino1998hydrogen,haasz1999effect,anderl1992deuterium,frauenfelder1969solution,ambrosek2008verification) and listed in [val-2d_set_up_values]. Whenever the original values are updated, it is specified in [val-2d_set_up_values].
 
 ## Model Description
 
@@ -119,7 +119,7 @@ The objective of this simulation is to determine the desorption flux on the samp
 
 All the model parameters are listed in [val-2d_set_up_values]:
 
-!table id=val-2d_set_up_values caption=Values of material properties. Note that parameters marked with * are currently not used in the input file. 
+!table id=val-2d_set_up_values caption=Values of material properties. Note that parameters marked with * are currently not used in the input file.
 | Parameter | Description                          | Value                                                       | Units                 | Reference                 |
 | --------- | ------------------------------------ | ----------------------------------------------------------- | --------------------- | --------------------- |
 | $k_b$     | Boltzmann constant                   | 1.380649 $\times 10^{-23}$                                  | J/K                   | [PhysicalConstants.h](https://physics.nist.gov/cgi-bin/cuu/Value?r) |
@@ -138,7 +138,7 @@ All the model parameters are listed in [val-2d_set_up_values]:
 | $\epsilon_r^3$ | release energy for trap 3       | 3.10 / k_b                                                  | K                     | [!cite](ambrosek2008verification,frauenfelder1969solution) |
 | $\chi^1$  | maximum atom fraction in trap 1      | 0.002156                                                    | -                     | [!cite](ambrosek2008verification) |
 | $\chi^2$  | maximum atom fraction in trap 2      | 0.00175                                                     | -                     | Adjusted from [!cite](ambrosek2008verification) |
-| $\chi^3$  | maximum atom fraction in trap 3      | 0.00200                                                     | -                     | Adjusted from [!cite](ambrosek2008verification) |
+| $\chi^3$  | maximum atom fraction in trap 3      | 0.00200                                                     | -                     | [!cite](ambrosek2008verification) |
 | $\alpha_{t0}$ | pre-factor of trapping rate coefficient | 9.1316 $\times 10^{12}$                              | 1/s                   | [!cite](ambrosek2008verification) |
 | $\alpha_{r0}$ | pre-factor of release rate coefficient  | 8.4 $\times 10^{12}$                                 | 1/s                   | [!cite](ambrosek2008verification) |
 | $A$       | * area of Tungsten sample              | 0.0025                                                      | m                     | [!cite](hino1998hydrogen) |
@@ -153,8 +153,8 @@ TMAP7 ([!cite](ambrosek2008verification)) adjusts the maximum atom fraction as 0
 
 ## Results
 
-In this case, there is a general background drift on desorption flux due to an increasing source of atoms going into the gas phase as the heated region spread with time. Thus, we add a ramped signal peaking at 4.87 $\times 10^{17}$ H$_2$/m$^2$/s to the results of the TMAP8 during the thermal desorption. 
-[val-2d_comparison] shows the comparison of the TMAP8 calculation and the experimental data. There is reasonable agreement between the TMAP predictions and the experimental data with the root mean square percentage error of RMSPE = 33.31 %. 
+In this case, there is a general background drift on desorption flux due to an increasing source of atoms going into the gas phase as the heated region spread with time. Thus, we add a ramped signal peaking at 4.87 $\times 10^{17}$ H$_2$/m$^2$/s to the results of the TMAP8 during the thermal desorption.
+[val-2d_comparison] shows the comparison of the TMAP8 calculation and the experimental data. There is reasonable agreement between the TMAP predictions and the experimental data with the root mean square percentage error of RMSPE = 33.31 %.
 Note that the agreement could be improved by adjusting the model parameters and adding more potential traps. TMAP7 is limited to three traps, but TMAP8 can introduce an arbitrarily number of trapping populations. It is also possible to perform this optimization with [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html).
 
 There are several reasons for the no exact fit with the data from [!cite](hino1998hydrogen): the most prominent one is the two-dimensionality of the experiment arising from beam non-uniformity and radial diffusion [!citep](anderl1992deuterium). The actual trap energies are probably a little lower than the ones indicated above if the time lag caused by two-dimensionality is significant. Exchange of hydrogen with chamber surfaces, particularly the sample support structure, may also be a factor.

@@ -2,7 +2,15 @@
 kB = '${units 1.380649e-23 J/K}' # Boltzmann constant (from PhysicalConstants.h - https://physics.nist.gov/cgi-bin/cuu/Value?r)
 
 # Model parameters
+TDS_initial_time = '${units 5e3 s}'
+TDS_critial_time_1 = '${units 5400 s}'
+TDS_critial_time_2 = '${units 5404 s}'
 simulation_time = '${units 6.8e3 s}'
+step_interval_max = 80 # (-)
+step_interval_mid = 15 # (-)
+step_interval_min = 6 # (-)
+bound_value_max = '${units 2e4 at/mum^3}'
+bound_value_min = '${units -1e-20 at/mum^3}'
 
 # Diffusion parameters
 flux_high = '${units 1e19 at/m^2/s -> at/mum^2/s}'
@@ -22,8 +30,8 @@ detrapping_energy_1 = '${fparse ${units 1.2 eV -> J} / ${kB}}'
 detrapping_energy_2 = '${fparse ${units 1.6 eV -> J} / ${kB}}'
 detrapping_energy_3 = '${fparse ${units 3.1 eV -> J} / ${kB}}'
 trapping_site_fraction_1 = 0.002156 # (-)
-trapping_site_fraction_2 = 0.00175 # (-) 0.00135
-trapping_site_fraction_3 = 0.0020 # (-) 0.0010
+trapping_site_fraction_2 = 0.00175 # (-)
+trapping_site_fraction_3 = 0.0020 # (-)
 trapping_rate_prefactor = '${units 9.1316e12 1/s}'
 release_rate_profactor = '${units 8.4e12 1/s}'
 trap_per_free_1 = 1e6 # (-)
@@ -77,42 +85,42 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
     variable = bounds_dummy
     bounded_variable = concentration
     bound_type = lower
-    bound_value = 0
+    bound_value = ${bound_value_min}
   []
   [trapped_1_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy
     bounded_variable = trapped_1
     bound_type = lower
-    bound_value = 0
+    bound_value = ${bound_value_min}
   []
   [trapped_2_upper_bound]
     type = ConstantBounds
     variable = bounds_dummy
     bounded_variable = trapped_2
     bound_type = upper
-    bound_value = 2e4
+    bound_value = ${bound_value_max}
   []
   [trapped_2_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy
     bounded_variable = trapped_2
     bound_type = lower
-    bound_value = 0
+    bound_value = ${bound_value_min}
   []
   [trapped_3_upper_bound]
     type = ConstantBounds
     variable = bounds_dummy
     bounded_variable = trapped_3
     bound_type = upper
-    bound_value = 2e4
+    bound_value = ${bound_value_max}
   []
   [trapped_3_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy
     bounded_variable = trapped_3
     bound_type = lower
-    bound_value = 0
+    bound_value = ${bound_value_min}
   []
 []
 
@@ -324,15 +332,15 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
 [Functions]
   [Temperature_function]
     type = ADParsedFunction
-    expression = 'if(t<5000.0,              ${temperature_low},
-                  if(t<5000 + (${temperature_high} - ${temperature_low}) /
-                      ${temperature_rate},  ${temperature_low} + ${temperature_rate} * (t - 5000),
-                                            ${temperature_high}))'
+    expression = 'if(t<${TDS_initial_time},   ${temperature_low},
+                  if(t<${TDS_initial_time} + (${temperature_high} - ${temperature_low}) /
+                        ${temperature_rate},  ${temperature_low} + ${temperature_rate} * (t - ${TDS_initial_time}),
+                                              ${temperature_high}))'
   []
 
   [surface_flux_function]
     type = ADParsedFunction
-    expression = 'if(t<5000.0, ${flux_high}, ${flux_low})'
+    expression = 'if(t<${TDS_initial_time}, ${flux_high}, ${flux_low})'
   []
 
   [source_distribution_function]
@@ -354,10 +362,9 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
 
   [max_dt_size_function]
     type = ADParsedFunction
-    expression = 'if(t<5000      , 15,
-                  if(t<5405-5.0 , 80,
-                  if(t<5405-1.0 ,  6,
-                  if(t<6800     ,  80, 100))))'
+    expression = 'if(t<${TDS_initial_time}  , ${step_interval_mid},
+                  if(t<${TDS_critial_time_1}, ${step_interval_max},
+                  if(t<${TDS_critial_time_2}, ${step_interval_min}, ${step_interval_max})))'
   []
 []
 
@@ -416,14 +423,15 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
   line_search = 'none'
   automatic_scaling = true
   nl_abs_tol = 1e-8
-  nl_rel_tol = 1e-5
-  nl_max_its = 14
+  nl_rel_tol = 5e-6
+  nl_max_its = 18
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 0.5
-    iteration_window = 3
-    optimal_iterations = 10
+    iteration_window = 2
+    optimal_iterations = 15
     growth_factor = 1.1
+    cutback_factor = 0.9
     cutback_factor_at_failure = 0.9
     timestep_limiting_postprocessor = max_time_step_size
   []
