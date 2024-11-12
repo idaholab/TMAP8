@@ -12,17 +12,17 @@ This verification problem is taken from [!cite](ambrosek2008verification).
 
 Over time, the pressures of T$_2$, which diffuses across the membrane in accordance with Henry’s law, will gradually equilibrate between the two enclosures.
 
-The diffusion process in each of the two enclosures can be described by the following equations:
+The diffusion process in each of the two enclosures can be described by
 
 \begin{equation}
-\frac{\partial C_1}{\partial t} = - \nabla D \nabla C_1
+\frac{\partial C_1}{\partial t} = \nabla D \nabla C_1,
 \end{equation}
-
+and
 \begin{equation}
 \frac{\partial C_2}{\partial t} = - \nabla D \nabla C_2
 \end{equation}
 
-where $C_1$, $C_2$ represent the concentration fields in enclosures 1 and 2 respectively, and $D$ denotes the diffusivity.
+where $C_1$ and $C_2$ represent the concentration fields in enclosures 1 and 2 respectively, and $D$ denotes the diffusivity.
 
 The concentration in Enclosure 1 is related to the partial pressure and concentration in Enclosure 2 via the interface sorption law:
 
@@ -34,8 +34,8 @@ where $R$ is the ideal gas constant in J/mol/K, $T$ is the temperature in K, $K$
 
 ## Results
 
-Two subcases are considered. In the first subcase, we assume that $K=1/RT$.
-Consistent with the results from TMAP7, the pressure evolution in both enclosures is shown in [ver-1kb_comparison_time] as a function of time. Both pressure find equilibrium and become equal, which is consistent with $C_1 = K \cdot RT \cdot C_2^n$ for $K=1/RT$ and $n=1$. The concentration ratio between enclosures 1 and 2 in [ver-1kb_concentration_ratio] shows that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K \cdot R \cdot T=1$. As shown in [ver-1kb_mass_conservation], mass is conserved between the two enclosures over time.
+Two subcases are considered. In the first subcase, we assume that $K=1/RT$ as is done in [!cite](ambrosek2008verification), which is expected to lead to $C_1 = C_2$ at equilibrium. In the second, $K=10/RT$, which is expected to lead to $C_1 = 10 C_2$. This second case is added to exercise TMAP8 in a case with a concentration jump.
+In the first subcase, consistent with the results from TMAP7, the pressure evolution in both enclosures is shown in [ver-1kb_comparison_time] as a function of time. Both pressures find equilibrium and become equal, which is consistent with $C_1 = K RT C_2^n$ for $K=1/RT$ and $n=1$. The concentration ratio between enclosures 1 and 2 in [ver-1kb_concentration_ratio] shows that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K R T=1$. As shown in [ver-1kb_mass_conservation], mass is conserved between the two enclosures over time, with a variation in mass of only xxx \%.
 
 !media comparison_ver-1kb.py
        image_name=ver-1kb_comparison_time.png
@@ -55,7 +55,7 @@ Consistent with the results from TMAP7, the pressure evolution in both enclosure
        id=ver-1kb_mass_conservation
        caption=Total mass conservation across both enclosures over time for $K = 1/RT$.
 
-In the second subcase, the sorption law with $K=10/RT$ does not lead to equal pressure in both enclosure. As illustrated in [ver-1kb_comparison_time_k10], the pressure jump maintains a ratio of $C_1/C_2 \approx 10$, which is consistent with the relationship $C_1 = K \cdot RT \cdot C_2^n$ for $K=10/RT$ and $n=1$. The concentration ratio between enclosures 1 and 2 in [ver-1kb_concentration_ratio_k10] shows that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K \cdot R \cdot T=10$. Additionally, [ver-1kb_mass_conservation_k10] verifies that mass is conserved between the two enclosures over time.
+In the second subcase, the sorption law with $K=10/RT$ does not lead to equal pressure in both enclosure. As illustrated in [ver-1kb_comparison_time_k10], the pressure jump maintains a ratio of $C_1/C_2 \approx 10$, which is consistent with the relationship $C_1 = K RT C_2^n$ for $K=10/RT$ and $n=1$. The concentration ratio between enclosures 1 and 2 in [ver-1kb_concentration_ratio_k10] shows that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K RT=10$. Additionally, [ver-1kb_mass_conservation_k10] verifies that mass is conserved between the two enclosures over time, with a variation in mass of only xxx \%..
 
 !media comparison_ver-1kb.py
        image_name=ver-1kb_comparison_time_k10.png
