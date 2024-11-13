@@ -296,6 +296,17 @@ class fuel_cycle_form(tk.Tk):
 
     def buttonClick(self):
         output_string = ""
+        for label, x in zip(self.matches, self.input_entries):
+            try:
+                self.labeldict[label[1][0]]=float(x.get())
+            except ValueError:
+                x_str = x.get()
+                try:
+                    self.labeldict[label[1][0]]=float(x.get().replace('e','').replace('-',''))
+                except ValueError:
+                    raise ValueError('Non-numeric value in parameter definition during creation')
+                    self.destroy()
+
         output_string = self.apply_template(self.labeldict)
         with open(self.tmpfile,'w') as outfile:
             outfile.write(output_string)
