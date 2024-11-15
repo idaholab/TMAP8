@@ -36,12 +36,19 @@ unit_scale_neighbor = 1
     bottom_left = '${fparse 1/3 * long_total} 0 0'
     top_right = '${fparse long_total} 0 0'
   []
-  [breakmesh]
+  [interface]
+    type = SideSetsBetweenSubdomainsGenerator
     input = enclosure_2
-    type = BreakMeshByBlockGenerator
-    block_pairs = '1 2'
-    split_interface = true
-    add_interface_on_two_sides = true
+    primary_block = 1
+    paired_block = 2
+    new_boundary = interface
+  []
+  [interface2]
+    type = SideSetsBetweenSubdomainsGenerator
+    input = interface
+    primary_block = 2
+    paired_block = 1
+    new_boundary = interface2
   []
 []
 
@@ -132,7 +139,7 @@ unit_scale_neighbor = 1
     variable = concentration_enclosure_1
     neighbor_var = concentration_enclosure_2
     sorption_penalty = 1e1
-    boundary = Block1_Block2
+    boundary = interface
   []
 []
 
@@ -151,14 +158,14 @@ unit_scale_neighbor = 1
   []
   [concentration_enclosure_1_at_interface]
     type = SideAverageValue
-    boundary = Block1_Block2
+    boundary = interface
     variable = concentration_enclosure_1
     outputs = 'csv console'
     execute_on = 'initial timestep_end'
   []
   [concentration_enclosure_2_at_interface]
     type = SideAverageValue
-    boundary = Block2_Block1
+    boundary = interface2
     variable = concentration_enclosure_2
     outputs = 'csv console'
     execute_on = 'initial timestep_end'
@@ -179,14 +186,14 @@ unit_scale_neighbor = 1
   []
   [pressure_enclosure_1_at_interface]
     type = SideAverageValue
-    boundary = Block1_Block2
+    boundary = interface
     variable = pressure_enclosure_1
     outputs = 'csv console'
     execute_on = 'initial timestep_end'
   []
   [pressure_enclosure_2_at_interface]
     type = SideAverageValue
-    boundary = Block2_Block1
+    boundary = interface2
     variable = pressure_enclosure_2
     outputs = 'csv console'
     execute_on = 'initial timestep_end'
