@@ -33,7 +33,8 @@ where $x$ is the distance across the slab, $t$ is the time, $\lambda_m$ is a coe
 \end{equation}
 
 !alert warning title=Typo in analytical solution from [!cite](longhurst1992verification)
-Both TMAP4 [!citep](longhurst1992verification) and TMAP7 [!citep](ambrosek2008verification) provide analytical solutions, but they use different equations. At the initial time and steady state, the solution from TMAP7 matches the real thermal distribution, whereas the solution from TMAP4 does not. Thus, TMAP8 select the solution from TMAP7 as the analytical solution.
+Both TMAP4 [!citep](longhurst1992verification) and TMAP7 [!citep](ambrosek2008verification) provide analytical solutions, but they use different equations.
+At the initial time and steady state, the solution from TMAP7 matches the real thermal distribution, whereas the solution from TMAP4 does not. Thus, TMAP8 selects the solution from TMAP7 as the analytical solution.
 
 ## Results
 

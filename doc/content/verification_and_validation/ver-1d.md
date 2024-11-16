@@ -72,7 +72,7 @@ where $l$ is the thickness of the slab and D is the diffusivity of the gas throu
 
 [!cite](longhurst2005verification) where $\tau_{b_e}$ is defined in [eqn:tau_be]
 
-In the deep-trapping limit, $\zeta$ $\approx$ c/$\rho$, and no permeation occurs until essentially all the traps have been filled. Then permeation rapidly turns on to its state value. The breakthrough time is given by
+In the deep-trapping limit, $\zeta$ $\approx$ c/$\rho$, and no permeation occurs until essentially all the traps have been filled. Then the system quickly reaches steady-state. The breakthrough time is given by
 
 \begin{equation}
 \label{eqn:tau_bd}
@@ -124,7 +124,8 @@ To keep the oscillations damped, the verification is run with nx=1000 and an ada
 \begin{equation}
     C_M(x=0) = \tanh(3t).
 \end{equation}
-This takes the BC to 99.5 % of it's actual value in 3 s, which is a small fraction of the breakthrough time of 500 s.
+
+This takes the BC to 99.5 % of its actual value in 3 s, which is a small fraction of the breakthrough time of 500 s.
 It therefore reduces numerical oscillations without affecting the expected solution.
 
 ## Input files

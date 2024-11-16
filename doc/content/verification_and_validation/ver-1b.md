@@ -46,7 +46,7 @@ J = C_0 \; \sqrt{\frac{D}{t\pi}} \; exp \left(\frac{x}{2\sqrt{Dt}}\right).
 The flux as given by [eq:flux] is compared with values calculated by TMAP8.
 The diffusivity, D, and the initial concentration, $C_0$, were both
 taken as unity, and the distance, $x$, was taken as 0.5 in this comparison.
-TMAP8 initially under predicts but the results match well subsequently. Comparison
+TMAP8 initially underpredicts but the results match well subsequently. Comparison
 results are shown in [ver-1b_comparison_flux] with a root mean square percentage
 error of RMSPE = 6.03 %. The error is calculated for $t \geq 10$ s due to infinite
 value at small $t$.

@@ -47,11 +47,11 @@ and $\lambda_n$ are the roots of
 
 \begin{equation}
 \label{eqn:roots}
-    \frac{1}{tan(\lambda a)} + \frac{1}{k \; tan(k l \lambda)} = 0.
+    \frac{1}{\tan(\lambda a)} + \frac{1}{k \; \tan(k l \lambda)} = 0.
 \end{equation}
 
-!alert warning title=Typo in [!cite](ambrosek2008verification)
-[eqn:roots] for the roots of $\lambda$ is obtained from [!cite](longhurst1992verification). The equation presented in [!cite](ambrosek2008verification) has a typographical error and gives incorrect results.
+!alert warning title=Typo in [!cite](longhurst1992verification,ambrosek2008verification)
+[eqn:roots] for the roots of $\lambda$ is different from the equations provided in [!cite](longhurst1992verification,ambrosek2008verification), as they both have typographical errors and give different analytical solutions from the one provided in the figures of these reports.
 
 ## Results
 

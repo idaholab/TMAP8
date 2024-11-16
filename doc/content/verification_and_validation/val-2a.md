@@ -50,7 +50,7 @@ J = 2 A K_r C^2.
 
 ## Case and Model Parameters
 
-The beam flux on the upstream side of the sample during the experiment is presented in [val-2a_flux_and_pressure_TMAP4], and only 75 % of the flux remain in the sample. Other case and model parameters used in TMAP8 are listed in [val-2a_set_up_values_TMAP4].
+The beam flux on the upstream side of the sample during the experiment is presented in [val-2a_flux_and_pressure_TMAP4], and only 75 % of the flux remains in the sample. Other case and model parameters used in TMAP8 are listed in [val-2a_set_up_values_TMAP4].
 
 !table id=val-2a_flux_and_pressure_TMAP4 caption=Values of beam flux on the upstream side of the sample during the experiment [!citep](anderl1985tritium,longhurst1992verification).
 | time (s)      | Beam flux $F$ (atom/m$^2$/s)   |
