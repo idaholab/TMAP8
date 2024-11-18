@@ -6,11 +6,12 @@ TDS_initial_time = '${units 5e3 s}'
 TDS_critial_time_1 = '${units 5400 s}'
 TDS_critial_time_2 = '${units 5404 s}'
 simulation_time = '${units 6.8e3 s}'
-step_interval_max = 80 # (-)
+outputs_initial_time = '${units 4000 s}'
+step_interval_max = 50 # (-)
 step_interval_mid = 15 # (-)
 step_interval_min = 6 # (-)
 bound_value_max = '${units 2e4 at/mum^3}'
-bound_value_min = '${units -1e-20 at/mum^3}'
+bound_value_min = '${units -1e-10 at/mum^3}'
 
 # Diffusion parameters
 flux_high = '${units 1e19 at/m^2/s -> at/mum^2/s}'
@@ -47,15 +48,15 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
 [Mesh]
   active = 'cartesian_mesh'
   [cartesian_mesh]
-    nx_scale = 5
+    nx_scale = 2
     type = CartesianMeshGenerator
     dim = 1
     dx = '${fparse 10 * ${units 1.5e-9 m -> mum}}
           ${units 1e-9 m -> mum}       ${units 1e-8 m -> mum}     ${units 1e-7 m -> mum}
-          ${units 4e-6 m -> mum}     ${units 4.407e-6 m -> mum}   ${fparse 11 * ${units 7.407e-6 m -> mum}}'
+          ${units 4e-6 m -> mum}       ${units 4.407e-6 m -> mum} ${fparse 11 * ${units 7.407e-6 m -> mum}}'
     ix = '${fparse 10 * ${nx_scale}}
           ${fparse 1 * ${nx_scale}}    ${fparse 1 * ${nx_scale}}   ${fparse 1 * ${nx_scale}}
-          ${fparse 100 * ${nx_scale}} ${fparse 20 * ${nx_scale}}   ${fparse 11 * ${nx_scale}}'
+          ${fparse 50 * ${nx_scale}}   ${fparse 2}                 ${fparse 1}'
     subdomain_id = '0 1 1 1 1 1 1'
   []
 
@@ -68,7 +69,7 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
           ${units 4e-6 m -> mum}       ${units 4.407e-6 m -> mum}  ${fparse 11 * ${units 7.407e-6 m -> mum}}'
     ix = '${fparse 10 * ${nx_scale}}
           ${fparse 1 * ${nx_scale}}    ${fparse 1 * ${nx_scale}}   ${fparse 1 * ${nx_scale}}
-          ${fparse 6 * ${nx_scale}}    ${fparse 1 * ${nx_scale}}   ${fparse 1 * ${nx_scale}}'
+          ${fparse 6 * ${nx_scale}}    ${fparse 1}                 ${fparse 1}'
     subdomain_id = '0 1 1 1 1 1 1'
   []
 []
@@ -423,13 +424,13 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
   line_search = 'none'
   automatic_scaling = true
   nl_abs_tol = 1e-8
-  nl_rel_tol = 5e-6
-  nl_max_its = 18
+  nl_rel_tol = 1e-6
+  nl_max_its = 30
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 0.5
-    iteration_window = 2
-    optimal_iterations = 15
+    dt = 1.0
+    iteration_window = 5
+    optimal_iterations = 22
     growth_factor = 1.1
     cutback_factor = 0.9
     cutback_factor_at_failure = 0.9
@@ -439,10 +440,14 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
 
 [Outputs]
   file_base = 'val-2d_out'
-  csv = true
+  [csv]
+    type = CSV
+    start_time = ${outputs_initial_time}
+  []
   [exodus]
     type = Exodus
+    start_time = ${outputs_initial_time}
     output_material_properties = true
-    time_step_interval = 10
+    time_step_interval = 20
   []
 []

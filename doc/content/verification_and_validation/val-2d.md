@@ -154,7 +154,7 @@ TMAP7 ([!cite](ambrosek2008verification)) adjusts the maximum atom fraction as 0
 ## Results
 
 In this case, there is a general background drift on desorption flux due to an increasing source of atoms going into the gas phase as the heated region spread with time. Thus, we add a ramped signal peaking at 4.87 $\times 10^{17}$ H$_2$/m$^2$/s to the results of the TMAP8 during the thermal desorption.
-[val-2d_comparison] shows the comparison of the TMAP8 calculation and the experimental data. There is reasonable agreement between the TMAP predictions and the experimental data with the root mean square percentage error of RMSPE = 33.31 %.
+[val-2d_comparison] shows the comparison of the TMAP8 calculation and the experimental data. There is reasonable agreement between the TMAP predictions and the experimental data with the root mean square percentage error of RMSPE = 32.83 %.
 Note that the agreement could be improved by adjusting the model parameters and adding more potential traps. TMAP7 is limited to three traps, but TMAP8 can introduce an arbitrarily number of trapping populations. It is also possible to perform this optimization with [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html).
 
 There are several reasons for the no exact fit with the data from [!cite](hino1998hydrogen): the most prominent one is the two-dimensionality of the experiment arising from beam non-uniformity and radial diffusion [!citep](anderl1992deuterium). The actual trap energies are probably a little lower than the ones indicated above if the time lag caused by two-dimensionality is significant. Exchange of hydrogen with chamber surfaces, particularly the sample support structure, may also be a factor.
