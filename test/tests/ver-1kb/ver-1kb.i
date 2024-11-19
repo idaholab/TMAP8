@@ -9,7 +9,7 @@ initial_pressure_1 = '${units 1e5 Pa}'
 initial_pressure_2 = '${units 1e-10 Pa}'
 initial_concentration_1 = '${units ${fparse initial_pressure_1 / (R*temperature)} mol/m^3}'
 initial_concentration_2 = '${units ${fparse initial_pressure_2 / (R*temperature)} mol/m^3}'
-solubility = '${units ${fparse 10/(R*temperature)} mol/m^3/Pa}' # Henry's law solubility
+solubility = '${units ${fparse 1/(R*temperature)} mol/m^3/Pa}' # Henry's law solubility
 diffusivity = '${units ${fparse 4.31e-6 * exp(-2818/temperature)} m^2/s}'
 n_sorption = 1 # Henry's Law
 unit_scale = 1
@@ -240,7 +240,7 @@ unit_scale_neighbor = 1
 []
 
 [Outputs]
-  file_base = 'ver-1kb_out_k10'
+  file_base = 'ver-1kb_out_k1'
   csv = true
   exodus = true
   execute_on = 'initial timestep_end'
