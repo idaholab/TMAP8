@@ -10,7 +10,7 @@ Two enclosures are separated by a membrane that allows diffusion according to He
 
 This verification problem is taken from [!cite](ambrosek2008verification).
 
-This setup describes a diffusion system in which tritium T$_2$ is modeled across a one-dimensional domain split into two enclosures. The total length of this domain is defined by the number of segments (20 segments) and the node size of $ 1.25\cdot 10^{-5}$ m, yielding a total system length of $ 2.5\cdot 10^{-4}$ m. The system operates at a constant temperature of $ 500$ Kelvin, with an ideal gas constant $ R=8.314$ J/(mol K). Initial tritium pressures are specified as $ 10^{5}$ Pa for Enclosure 1 and $ 10^{-10}$ Pa for Enclosure 2.
+This setup describes a diffusion system in which tritium T$_2$ is modeled across a one-dimensional domain split into two enclosures. The total length of this domain is defined by the number of segments (20 segments) and the node size of $1.25 \times 10^{-5}$ m, yielding a total system length of $2.5 \times 10^{-4}$ m. The system operates at a constant temperature of 500 Kelvin. Initial tritium pressures are specified as $10^{5}$ Pa for Enclosure 1 and $10^{-10}$ Pa for Enclosure 2.
 
 Over time, the pressures of T$_2$, which diffuses across the membrane in accordance with Henry’s law, will gradually equilibrate between the two enclosures.
 
