@@ -20,14 +20,12 @@ tmap_sol_4 = pd.read_csv(csv_folder4)
 tmap_sol_7 = pd.read_csv(csv_folder7)
 tmap_time_4 = tmap_sol_4['time'][1:]
 tmap_conc0_4 = tmap_sol_4['point0'][1:]
-tmap_conc0_25_4 = tmap_sol_4['point0.25'][1:]
 tmap_conc10_4 = tmap_sol_4['point10'][1:]
 tmap_conc12_4 = tmap_sol_4['point12'][1:]
 tmap_time_7 = tmap_sol_7['time'][1:]
-tmap_conc0_7 = tmap_sol_7['point0'][1:]
 tmap_conc0_25_7 = tmap_sol_7['point0.25'][1:]
 tmap_conc10_7 = tmap_sol_7['point10'][1:]
-tmap_conc12_b = tmap_sol_7['point12'][1:]
+tmap_conc12_7 = tmap_sol_7['point12'][1:]
 
 def get_c_analytical_4(x,t):
     c0 = 1 # atom/m^3
@@ -50,7 +48,7 @@ def get_c_analytical_7(x,t):
         output[(t==0) & (x< h) & (0 < x)] = c0
         output[(t==0) & (x> h)] = 0
     return output
-idx = np.where(tmap_time >= 10.0)[0][0]
+idx = np.where(tmap_time_4 >= 10.0)[0][0]
 
 analytical_conc0_4 = get_c_analytical_4(0,tmap_time_4)
 analytical_conc0_25_4 = get_c_analytical_4(0.25,tmap_time_4)
@@ -67,22 +65,22 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-ax.plot(tmap_time,tmap_conc0,label=r"TMAP8 x=0 m",c='tab:blue')
-ax.plot(tmap_time,analytical_conc0,label=r"Analytical x=0 m",c='tab:brown', linestyle='--', dashes=(5,5))
-RMSE = np.sqrt(np.mean((tmap_conc0-analytical_conc0)[idx:]**2) )
-RMSPE = RMSE*100/np.mean(analytical_conc0[idx:])
+ax.plot(tmap_time_4,tmap_conc0_4,label=r"TMAP8 x=0 m",c='tab:blue')
+ax.plot(tmap_time_4,analytical_conc0_4,label=r"Analytical x=0 m",c='tab:brown', linestyle='--', dashes=(5,5))
+RMSE = np.sqrt(np.mean((tmap_conc0_4-analytical_conc0_4)[idx:]**2) )
+RMSPE = RMSE*100/np.mean(analytical_conc0_4[idx:])
 ax.text(20,get_c_analytical_4(0,20), 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 
-ax.plot(tmap_time,tmap_conc10,label=r"TMAP8 x=10 m",c='tab:red')
-ax.plot(tmap_time,analytical_conc10,label=r"Analytical x=10 m",c='tab:cyan', linestyle='--', dashes=(5,5))
-RMSE = np.sqrt(np.mean((tmap_conc10-analytical_conc10)[idx:]**2) )
-RMSPE = RMSE*100/np.mean(analytical_conc10[idx:])
+ax.plot(tmap_time_4,tmap_conc10_4,label=r"TMAP8 x=10 m",c='tab:red')
+ax.plot(tmap_time_4,analytical_conc10_4,label=r"Analytical x=10 m",c='tab:cyan', linestyle='--', dashes=(5,5))
+RMSE = np.sqrt(np.mean((tmap_conc10_4-analytical_conc10_4)[idx:]**2) )
+RMSPE = RMSE*100/np.mean(analytical_conc10_4[idx:])
 ax.text(20,get_c_analytical_4(10,20), 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 
-ax.plot(tmap_time,tmap_conc12,label=r"TMAP8 x=12 m",c='tab:grey')
-ax.plot(tmap_time,analytical_conc12,label=r"Analytical x=12 m",c='k', linestyle='--', dashes=(5,5))
-RMSE = np.sqrt(np.mean((tmap_conc12-analytical_conc12)[idx:]**2) )
-RMSPE = RMSE*100/np.mean(analytical_conc12[idx:])
+ax.plot(tmap_time_4,tmap_conc12_4,label=r"TMAP8 x=12 m",c='tab:grey')
+ax.plot(tmap_time_4,analytical_conc12_4,label=r"Analytical x=12 m",c='k', linestyle='--', dashes=(5,5))
+RMSE = np.sqrt(np.mean((tmap_conc12_4-analytical_conc12_4)[idx:]**2) )
+RMSPE = RMSE*100/np.mean(analytical_conc12_4[idx:])
 ax.text(20,get_c_analytical_4(12,20), 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',ha='left',va='top')
 
 
