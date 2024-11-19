@@ -27,7 +27,7 @@ where $h=10$ m is the thickness of the pre-loaded portion of the layer.
 The value of $C$ found in [!cite](longhurst1992verification) has a typographical error, $\sqrt{Dt}$ should be at the denominator. [eq:c_func_4] follows the form of [!cite](Carslaw1959conduction).
 
 
-TMAP4 and TMAP7 verification cases are also evaluated at slightly different locations: TMAP4 verifies the mobile species concentration at three points - 
+TMAP4 and TMAP7 verification cases are also evaluated at slightly different locations: TMAP4 verifies the mobile species concentration at three points:
 
 1. a point at the free surface (x = 0 m)
 2. a point at the end of the pre-loaded region (x = 10 m)
