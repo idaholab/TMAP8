@@ -57,7 +57,7 @@ In the first subcase, consistent with the results from TMAP7, the pressure evolu
        id=ver-1kb_mass_conservation
        caption=Total mass conservation across both enclosures over time for $K = 1/RT$.
 
-In the second subcase, the sorption law with $K=10/RT$ does not lead to equal pressure in both enclosure. As illustrated in [ver-1kb_comparison_time_k10], the pressure jump maintains a ratio of $C_1/C_2 \approx 10$, which is consistent with the relationship $C_1 = K RT C_2^n$ for $K=10/RT$ and $n=1$. The concentration ratio between enclosures 1 and 2 in [ver-1kb_concentration_ratio_k10] shows that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K RT=10$. Additionally, [ver-1kb_mass_conservation_k10] verifies that mass is conserved between the two enclosures over time, with a variation in mass of only $8 \cdot 10^{—7}$ \%.
+In the second subcase, the sorption law with $K=10/RT$ does not lead to equal pressure in both enclosure. As illustrated in [ver-1kb_comparison_time_k10], the pressure jump maintains a ratio of $C_1/C_2 \approx 10$, which is consistent with the relationship $C_1 = K RT C_2^n$ for $K=10/RT$ and $n=1$. The concentration ratio between enclosures 1 and 2 in [ver-1kb_concentration_ratio_k10] shows that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K RT=10$. Additionally, [ver-1kb_mass_conservation_k10] verifies that mass is conserved between the two enclosures over time, with a variation in mass of only $8 \times 10^{-7}$ %.
 
 !media comparison_ver-1kb.py
        image_name=ver-1kb_comparison_time_k10.png
