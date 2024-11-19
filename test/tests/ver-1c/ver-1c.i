@@ -21,6 +21,15 @@
   []
 []
 
+[BCs]
+  [lhs]
+    type = DirichletBC
+    variable = u
+    value = 0
+    boundary = left
+  []
+[]
+
 [Kernels]
   [./diff]
     type = Diffusion
