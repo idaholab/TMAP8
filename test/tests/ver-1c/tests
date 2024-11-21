@@ -2,19 +2,35 @@
   design = 'Diffusion.md TimeDerivative.md'
   issues = '#12'
   verification = 'ver-1c.md'
-  [ver-1c]
+  [ver-1c_TMAP4]
     type = Exodiff
     input = 'ver-1c.i'
-    exodiff = ver-1c_out.e
-    requirement = 'The system shall be able to model species permeation into an unloaded portion of a slab from a pre-loaded portion.'
+    exodiff = ver-1c_tmap4.e
+    cli_args = 'BCs/lhs/type=NeumannBC Outputs/file_base=ver-1c_tmap4'
+    requirement = 'The system shall be able to model species permeation into an unloaded portion of a slab from a pre-loaded portion with boundary conditions consistent with TMAP4.'
   []
-  [ver-1c_csvdiff]
+  [ver-1c_TMAP7]
+    type = Exodiff
+    input = 'ver-1c.i'
+    exodiff = ver-1c_tmap7.e
+    cli_args = 'BCs/lhs/type=DirichletBC Outputs/file_base=ver-1c_tmap7'
+    requirement = 'The system shall be able to model species permeation into an unloaded portion of a slab from a pre-loaded portion with boundary conditions consistent with TMAP7'
+  []
+  [ver-1c_TMAP4_csvdiff]
     type = CSVDiff
     input = ver-1c.i
     should_execute = False  # this test relies on the output files from ver-1c, so it shouldn't be run twice
-    csvdiff = ver-1c_csv.csv
-    requirement = 'The system shall be able to model species permeation into an unloaded portion of a slab from a pre-loaded portion to generate CSV data for use in comparisons with the analytic solution over time for the TMAP4 and TMAP7 verification cases.'
-    prereq = ver-1c
+    csvdiff = ver-1c_tmap4.csv
+    requirement = 'The system shall be able to model species permeation into an unloaded portion of a slab from a pre-loaded portion to generate CSV data for use in comparisons with the analytic solution over time for the TMAP4 verification case.'
+    prereq = ver-1c_TMAP4
+  []
+  [ver-1c_TMAP7_csvdiff]
+    type = CSVDiff
+    input = ver-1c.i
+    should_execute = False  # this test relies on the output files from ver-1c, so it shouldn't be run twice
+    csvdiff = ver-1c_tmap7.csv
+    requirement = 'The system shall be able to model species permeation into an unloaded portion of a slab from a pre-loaded portion to generate CSV data for use in comparisons with the analytic solution over time for the TMAP7 verification case.'
+    prereq = ver-1c_TMAP7
   []
   [ver-1c_comparison]
     type = RunCommand
