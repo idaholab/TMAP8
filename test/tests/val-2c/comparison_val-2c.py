@@ -96,7 +96,7 @@ if "/TMAP8/doc/" in script_folder:     # if in documentation folder
 else:                                  # if in test folder
     csv_folder = "./gold/val-2c_delay_csv.csv"
 tmap8_prediction_delay = pd.read_csv(csv_folder)
-tmap8_time_delay = tmap8_prediction['time']
+tmap8_time_delay = tmap8_prediction_delay['time']
 tmap8_t2_enclosure_concentration_delay = tmap8_prediction_delay['t2_enclosure_edge_concentration']
 tmap8_hto_enclosure_concentration_delay = tmap8_prediction_delay['hto_enclosure_edge_concentration']
 
