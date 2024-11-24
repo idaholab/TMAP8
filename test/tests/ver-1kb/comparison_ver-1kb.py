@@ -70,8 +70,8 @@ ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda val, pos: '{:.3e}'.format(
 ax.set_xlabel('Time (s)')
 ax.set_ylabel(r"Mass Conservation Sum Encl 1 and 2 (mol/m$^3$)")
 ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
-std_mass_conservation = np.std(mass_conservation_sum_encl1_encl2)
-print("Standard deviation of mass conservation sum: ", std_mass_conservation)
+mass_variation_percentage = (np.max(mass_conservation_sum_encl1_encl2)-np.min(mass_conservation_sum_encl1_encl2))/np.min(mass_conservation_sum_encl1_encl2)*100
+print("Percentage of mass variation: ", mass_variation_percentage)
 fig.savefig('ver-1kb_mass_conservation.png', bbox_inches='tight', dpi=300)
 
 # Repeat the same for K=10/RT
@@ -139,7 +139,7 @@ ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda val, pos: '{:.3e}'.format(
 ax.set_xlabel('Time (s)')
 ax.set_ylabel(r"Mass Conservation Sum Encl 1 and 2 (mol/m$^3$)")
 ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
-std_mass_conservation = np.std(mass_conservation_sum_encl1_encl2_k10)
-print("Standard deviation of mass conservation sum: ", std_mass_conservation)
+mass_variation_percentage = (np.max(mass_conservation_sum_encl1_encl2)-np.min(mass_conservation_sum_encl1_encl2))/np.min(mass_conservation_sum_encl1_encl2)*100
+print("Percentage of mass variation: ", mass_variation_percentage)
 fig.savefig('ver-1kb_mass_conservation_k10.png', bbox_inches='tight', dpi=300)
 
