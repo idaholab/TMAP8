@@ -10,7 +10,7 @@ Two enclosures are separated by a membrane that allows diffusion according to He
 
 This verification problem is taken from [!cite](ambrosek2008verification).
 
-This setup describes a diffusion system in which tritium T$_2$ is modeled across a one-dimensional domain split into two enclosures. The total length of this domain is defined by the number of segments (100 segments) and the node size of $1.25 \times 10^{-5}$ m, yielding a total system length of $2.5 \times 10^{-4}$ m. The system operates at a constant temperature of 500 Kelvin. Initial tritium pressures are specified as $10^{5}$ Pa for Enclosure 1 and $10^{-10}$ Pa for Enclosure 2.
+This setup describes a diffusion system in which tritium T$_2$ is modeled across a one-dimensional domain split into two enclosures. The total system length is $2.5 \times 10^{-4}$ m, divided into 100 segments. The system operates at a constant temperature of 500 Kelvin. Initial tritium pressures are specified as $10^{5}$ Pa for Enclosure 1 and $10^{-10}$ Pa for Enclosure 2.
 
 Over time, the pressures of T$_2$, which diffuses across the membrane in accordance with Henry’s law, will gradually equilibrate between the two enclosures.
 
@@ -37,7 +37,7 @@ where $R$ is the ideal gas constant in J/mol/K, $T$ is the temperature in K, $K$
 ## Results
 
 Two subcases are considered. In the first subcase, we assume that $K=1/RT$ as is done in [!cite](ambrosek2008verification), which is expected to lead to $C_1 = C_2$ at equilibrium. In the second, $K=10/RT$, which is expected to lead to $C_1 = 10 C_2$. This second case is added to exercise TMAP8 in a case with a concentration jump.
-In the first subcase, consistent with the results from TMAP7, the pressure evolution in both enclosures is shown in [ver-1kb_comparison_time] as a function of time. Both pressures find equilibrium and become equal, which is consistent with $C_1 = K (RT C_2)^n$ for $K=1/RT$ and $n=1$. The concentration ratio between enclosures 1 and 2 in [ver-1kb_concentration_ratio] shows that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K R T=1$. As shown in [ver-1kb_mass_conservation], mass is conserved between the two enclosures over time, with a variation in mass of only $1.0$ %.
+In the first subcase, consistent with the results from TMAP7, the pressure evolution in both enclosures is shown in [ver-1kb_comparison_time] as a function of time. Both pressures find equilibrium and become equal, which is consistent with $C_1 = K (RT C_2)^n$ for $K=1/RT$ and $n=1$. The concentration ratio between enclosures 1 and 2 in [ver-1kb_concentration_ratio] shows that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K R T=1$. As shown in [ver-1kb_mass_conservation], mass is conserved between the two enclosures over time, with a variation in mass of only $1.0$ %. This variation in mass can be further minimized by refining the mesh, i.e., increasing the number of segments in the domain.
 
 !media comparison_ver-1kb.py
        image_name=ver-1kb_comparison_time.png
@@ -57,7 +57,7 @@ In the first subcase, consistent with the results from TMAP7, the pressure evolu
        id=ver-1kb_mass_conservation
        caption=Total mass conservation across both enclosures over time for $K = 1/RT$.
 
-In the second subcase, the sorption law with $K=10/RT$ does not lead to equal pressure in both enclosure. As illustrated in [ver-1kb_comparison_time_k10], the pressure jump maintains a ratio of $C_1/C_2 \approx 10$, which is consistent with the relationship $C_1 = K (RT C_2)^n$ for $K=10/RT$ and $n=1$. The concentration ratio between enclosures 1 and 2 in [ver-1kb_concentration_ratio_k10] shows that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K RT=10$. Additionally, [ver-1kb_mass_conservation_k10] verifies that mass is conserved between the two enclosures over time, with a variation in mass of only $0.25$ %.
+In the second subcase, the sorption law with $K=10/RT$ does not lead to equal pressure in both enclosure. As illustrated in [ver-1kb_comparison_time_k10], the pressure jump maintains a ratio of $C_1/C_2 \approx 10$, which is consistent with the relationship $C_1 = K (RT C_2)^n$ for $K=10/RT$ and $n=1$. The concentration ratio between enclosures 1 and 2 in [ver-1kb_concentration_ratio_k10] shows that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K RT=10$. Additionally, [ver-1kb_mass_conservation_k10] verifies that mass is conserved between the two enclosures over time, with a variation in mass of only $0.25$ %. As in the previous case, this variation in mass can be further reduced by refining the mesh.
 
 !media comparison_ver-1kb.py
        image_name=ver-1kb_comparison_time_k10.png
