@@ -23,7 +23,7 @@ This is one of the original problems introduced in [!cite](longhurst1992verifica
 | --------- | -------------------------- | -------------------------------------- | ---------- |
 | $V$       | Enclosure volume           | 5.20e-11                               | m$^3$      |
 | $A$       | SiC slab surface area      | 2.16e-6                                | m$^2$      |
-| $P_0$     | Initial enclosure pressure | 1e6                                    | mPa        |
+| $P_0$     | Initial enclosure pressure | 1e6                                    | Pa         |
 | $T$       | Temperature                | 2373                                   | K          |
 | $D$       | Tritium diffusivity in SiC | 1.58e-4 $\times \exp(-308000.0/(R*T))$ | m$^2$/2    |
 | $S$       | Tritium solubility in SiC  | 7.244e22 / $T$                         | 1/m$^3$/Pa |

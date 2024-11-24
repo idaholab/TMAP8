@@ -108,7 +108,7 @@ For the deep trapping limit we took $\epsilon/k = 10000$ K to give $\zeta = 1.00
 
 The trapping test input file can generate oscillations in the solution due to the feedback loop between the diffusion PDE and trap evolution ODE. In order for the oscillations to not take over the simulation, it seems
 that the ratio of the inverse of the Fourier number must be kept
-sufficiently high, e.g. `h^2 / (D * dt)`. Included in this directory are three
+sufficiently high, e.g. $h^2 / (D * dt)  \gg 1$. Included in this directory are three
 `png` files that show the permeation for different `h` and `dt` values. They are
 summarized below:
 
