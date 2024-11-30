@@ -2,38 +2,24 @@
   design = 'InterfaceSorption.md MatDiffusion.md TimeDerivative.md'
   issues = '#12'
   verification = 'ver-1kc.md'
-  [ver-1kc_csv_without_concentration_jump]
+  [ver-1kc_csv]
     type = CSVDiff
     input = ver-1kc.i
-    csvdiff = ver-1kc_out_k1.csv
-    requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Henry’s law without any concentration jump at the interface.'
-  []
-  [ver-1kc_csv_concentration_jump]
-    type = CSVDiff
-    input = ver-1kc.i
-    cli_args = "solubility='${fparse 10/sqrt(R*temperature)}'
-                Executioner/nl_abs_tol=1e-6
-                Executioner/nl_rel_tol=1e-4
-                Outputs/file_base=ver-1kc_out_k10"
     csvdiff = ver-1kc_out_k10.csv
-    requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Henry’s law with a concentration jump at the interface.'
+    requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Sieverts’ law without any concentration jump at the interface.'
   []
-  [ver-1kc_exodus_concentration_jump]
+  [ver-1kc_exodus]
     type = Exodiff
     input = ver-1kc.i
     exodiff = ver-1kc_out_k10.e
-    cli_args = "solubility='${fparse 10/sqrt(R*temperature)}'
-                Executioner/nl_abs_tol=1e-6
-                Executioner/nl_rel_tol=1e-4
-                Outputs/file_base=ver-1kc_out_k10"
-    prereq = ver-1kc_csv_concentration_jump
+    prereq = ver-1kc_csv
     should_execute = false # this test relies on the output files from ver-1kc_csv_concentration_jump, so it shouldn't be run twice
-    requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Henry’s law with a concentration jump at the interface'
+    requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface'
   []
   [ver-1kc_comparison]
     type = RunCommand
     command = 'python3 comparison_ver-1kc.py'
-    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1kb, modeling a diffusion across a membrane separating two enclosures in accordance with Henry’s law.'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1kc, modeling a diffusion across a membrane separating two enclosures in accordance with Sieverts’ law.'
     required_python_packages = 'matplotlib numpy pandas os git'
   []
 []
