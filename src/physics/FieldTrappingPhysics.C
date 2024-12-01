@@ -13,6 +13,9 @@
 
 // Register the actions for the objects actually used
 registerMooseAction("TMAP8App", FieldTrappingPhysics, "init_physics");
+registerMooseAction("TMAP8App", FieldTrappingPhysics, "init_component_physics");
+registerMooseAction("TMAP8App", FieldTrappingPhysics, "copy_vars_physics");
+registerMooseAction("TMAP8App", FieldTrappingPhysics, "check_integrity_early_physics");
 registerMooseAction("TMAP8App", FieldTrappingPhysics, "add_variable");
 registerMooseAction("TMAP8App", FieldTrappingPhysics, "add_ic");
 registerMooseAction("TMAP8App", FieldTrappingPhysics, "add_kernel");
@@ -42,8 +45,8 @@ FieldTrappingPhysics::validParams()
       "component");
   params.addParam<std::vector<Real>>(
       "N", "The atomic number density of the host material for each component and species.");
-  params.addParam<std::vector<Real>>("Ct0",
-                                     "The fraction of host sites that can contribute to trapping");
+  params.addParam<std::vector<FunctionName>>(
+      "Ct0", "The fraction of host sites that can contribute to trapping");
   params.addParam<std::vector<Real>>(
       "trap_per_free",
       {1.},
@@ -72,7 +75,7 @@ FieldTrappingPhysics::FieldTrappingPhysics(const InputParameters & parameters)
     _mobile_species_names(getParam<std::vector<std::vector<VariableName>>>("mobile")),
     _alpha_ts(getParam<std::vector<std::vector<Real>>>("alpha_t")),
     _Ns(getParam<std::vector<Real>>("N")),
-    _Ct0s(getParam<std::vector<Real>>("Ct0")),
+    _Ct0s(getParam<std::vector<FunctionName>>("Ct0")),
     _trap_per_frees(getParam<std::vector<Real>>("trap_per_free")),
     _alpha_rs(getParam<std::vector<std::vector<Real>>>("alpha_r")),
     _trapping_energies(getParam<std::vector<std::vector<Real>>>("trapping_energy")),
@@ -80,7 +83,7 @@ FieldTrappingPhysics::FieldTrappingPhysics(const InputParameters & parameters)
 {
   // TODO: do this after components have been processed
   if (_components.size())
-     _trap_per_frees.resize(_components.size());
+    _trap_per_frees.resize(_components.size());
   // TODO: check that there is no overlap between names so we don't add kernels multiple times
 }
 
@@ -93,7 +96,9 @@ FieldTrappingPhysics::addComponent(const ActionComponent & component)
   // TODO: add other quantities
   // TODO: check unique
 
-  mooseAssert(_alpha_ts.size() == _components.size(), "Wrong alpha_t size");
+  mooseAssert(_alpha_ts.size() == _components.size(),
+              "Wrong alpha_t size (" + std::to_string(_alpha_ts.size()) +
+                  ") Components: " + Moose::stringify(_components));
   mooseAssert(_Ns.size() == _components.size(), "Wrong N size");
   mooseAssert(_Ct0s.size() == _components.size(), "Wrong Ct0 size");
   mooseAssert(_trap_per_frees.size() == _components.size(), "Wrong trap per free size");
@@ -115,7 +120,7 @@ FieldTrappingPhysics::getSpeciesVariableName(unsigned int c_i, unsigned int s_j)
 }
 
 void
-FieldTrappingPhysics::addNonlinearVariables()
+FieldTrappingPhysics::addSolverVariables()
 {
   const std::string variable_type = "MooseVariable";
   InputParameters params = getFactory().getValidParams(variable_type);
@@ -186,10 +191,13 @@ FieldTrappingPhysics::addFEKernels()
         const std::string kernel_type = "TrappingNodalKernel";
         auto params = _factory.getValidParams(kernel_type);
         params.set<NonlinearVariableName>("variable") = species_name;
-        params.set<std::vector<VariableName>>("mobile") = {mobile_species_name};
+        params.set<std::vector<VariableName>>("mobile_concentration") = {mobile_species_name};
+        mooseAssert(c_i < _component_temperatures.size(), "Should not happen");
+        params.set<std::vector<VariableName>>("temperature") = {
+            VariableName(_component_temperatures[c_i])};
         params.set<Real>("alpha_t") = _alpha_ts[c_i][s_j];
         params.set<Real>("N") = _Ns[c_i];
-        params.set<Real>("Ct0") = _Ct0s[c_i];
+        params.set<FunctionName>("Ct0") = _Ct0s[c_i];
 
         // Add the other species as occupying traps
         std::vector<VariableName> copy_species;
@@ -208,7 +216,7 @@ FieldTrappingPhysics::addFEKernels()
         auto params = _factory.getValidParams(kernel_type);
         params.set<NonlinearVariableName>("variable") = species_name;
         params.set<Real>("alpha_r") = _alpha_rs[c_i][s_j];
-        params.set<Real>("trapping_energy") = _trapping_energies[c_i][s_j];
+        params.set<Real>("detrapping_energy") = _trapping_energies[c_i][s_j];
         // The default coupled value will not have been created by the Builder since we created
         // the parameter as a MooseFunctorName in the Physics
         if (MooseUtils::parsesToReal(_component_temperatures[c_i]))
@@ -217,10 +225,10 @@ FieldTrappingPhysics::addFEKernels()
           Real value;
           ss >> value;
           params.defaultCoupledValue("temp", value, 0);
-          params.set<std::vector<VariableName>>("temp") = {};
+          params.set<std::vector<VariableName>>("temperature") = {};
         }
         else
-          params.set<std::vector<VariableName>>("temp") = {_component_temperatures[c_i]};
+          params.set<std::vector<VariableName>>("temperature") = {_component_temperatures[c_i]};
 
         getProblem().addNodalKernel(kernel_type, species_name + "_enc_release", params);
       }

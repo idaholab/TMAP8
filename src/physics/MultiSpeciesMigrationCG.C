@@ -27,7 +27,8 @@ MultiSpeciesMigrationCG::validParams()
   params.addParam<std::vector<std::vector<VariableName>>>(
       "reacting_species", "For each species (outer indexing), the list of species they react with");
   params.addParam<std::vector<std::vector<VariableName>>>(
-      "product_species", "For each species (outer indexing), for each reactant, the species being created");
+      "product_species",
+      "For each species (outer indexing), for each reactant, the species being created");
   params.addParam<std::vector<std::vector<MaterialPropertyName>>>(
       "reaction_coefficients",
       "For each species (outer indexing), the reaction coefficient for the reaction");
@@ -57,8 +58,8 @@ MultiSpeciesMigrationCG::addFEKernels()
     return;
   const auto & reacting_species =
       getParam<std::vector<std::vector<VariableName>>>("reacting_species");
-    const auto & product_species =
-        getParam<std::vector<std::vector<VariableName>>>("product_species");
+  const auto & product_species =
+      getParam<std::vector<std::vector<VariableName>>>("product_species");
   const auto & reaction_coeffs =
       getParam<std::vector<std::vector<MaterialPropertyName>>>("reaction_coefficients");
 
@@ -80,7 +81,8 @@ MultiSpeciesMigrationCG::addFEKernels()
 
       for (const auto c : index_range(reacting_species[s]))
       {
-        _console << s << " " << c << " " << reacting_species.size() << " " << reacting_species[s].size() << std::endl;
+        _console << s << " " << c << " " << reacting_species.size() << " "
+                 << reacting_species[s].size() << std::endl;
         params.set<std::vector<VariableName>>("vs") = {var_name, reacting_species[s][c]};
         params.set<MaterialPropertyName>("reaction_rate_name") = reaction_coeffs[s][c];
         params.set<Real>("coeff") = -1;
@@ -91,7 +93,7 @@ MultiSpeciesMigrationCG::addFEKernels()
                                params);
 
         // only if the other reacting species is a nonlinear variable
-        if (nonlinearVariableExists(reacting_species[s][c], false))
+        if (variableExists(reacting_species[s][c], false))
         {
           params.set<NonlinearVariableName>("variable") = reacting_species[s][c];
           params.set<std::vector<VariableName>>("vs") = {var_name, reacting_species[s][c]};
@@ -104,7 +106,7 @@ MultiSpeciesMigrationCG::addFEKernels()
         }
 
         // only if the target species is a nonlinear variable
-        if (nonlinearVariableExists(product_species[s][c], false))
+        if (variableExists(product_species[s][c], false))
         {
           params.set<NonlinearVariableName>("variable") = product_species[s][c];
           params.set<std::vector<VariableName>>("vs") = {var_name, reacting_species[s][c]};
