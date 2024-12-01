@@ -36,7 +36,7 @@ protected:
   const Real _pressure_unit;
 
 private:
-  virtual void addNonlinearVariables() override;
+  virtual void addSolverVariables() override;
   virtual void addInitialConditions() override;
   virtual void addScalarKernels() override;
   virtual void addFEBCs() override;
