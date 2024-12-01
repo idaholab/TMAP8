@@ -81,13 +81,13 @@ we will need to create a new branch.
    git checkout devel
    ```
 
-1. Clean and reset devel to get it up to date (make sure you do not have any changes on devel, because you would lose that):
+2. Fetch and reset devel to get it up to date (make sure you do not have any changes on devel, because you would lose that):
 
    ```
-   git reset --hard upstream/devel && git submodule update --init
+   git fetch upstream && git reset --hard upstream/devel && git submodule update --init
    ```
 
-1. Create a new branch, selecting an appropriate branch name for your development activities:
+3. Create a new branch, selecting an appropriate branch name for your development activities:
 
    ```
    git checkout -b <BRANCH_NAME>
