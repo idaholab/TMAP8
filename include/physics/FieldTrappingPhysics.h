@@ -41,7 +41,7 @@ protected:
   /// Atomic number density of the host material
   std::vector<Real> _Ns;
   /// Fraction of host sites that contribute to trapping
-  std::vector<Real> _Ct0s;
+  std::vector<FunctionName> _Ct0s;
   /// Estimate for the ratio of the concentration magnitude of trapped species to free species for each component
   std::vector<Real> _trap_per_frees;
   ///
@@ -52,7 +52,7 @@ protected:
   const bool _single_variable_set;
 
 private:
-  virtual void addNonlinearVariables() override;
+  virtual void addSolverVariables() override;
   virtual void addInitialConditions() override;
   virtual void addFEKernels() override;
 };
