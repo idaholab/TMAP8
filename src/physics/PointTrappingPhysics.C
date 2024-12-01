@@ -22,6 +22,8 @@ registerMooseAction("TMAP8App", PointTrappingPhysics, "add_variable");
 registerMooseAction("TMAP8App", PointTrappingPhysics, "add_ic");
 registerMooseAction("TMAP8App", PointTrappingPhysics, "add_scalar_kernel");
 registerMooseAction("TMAP8App", PointTrappingPhysics, "add_bc");
+registerMooseAction("TMAP8App", PointTrappingPhysics, "check_integrity_early_physics");
+registerMooseAction("TMAP8App", PointTrappingPhysics, "copy_vars_physics");
 
 InputParameters
 PointTrappingPhysics::validParams()
@@ -108,7 +110,7 @@ PointTrappingPhysics::addComponent(const ActionComponent & component)
 }
 
 void
-PointTrappingPhysics::addNonlinearVariables()
+PointTrappingPhysics::addSolverVariables()
 {
   const std::string variable_type = "MooseVariableScalar";
   InputParameters params = getFactory().getValidParams(variable_type);
@@ -123,6 +125,7 @@ PointTrappingPhysics::addNonlinearVariables()
           (_scaling_factors.size() > 1)
               ? _scaling_factors[c_i][s_j]
               : ((_scaling_factors.size() == 1) ? _scaling_factors[0][s_j] : 1)};
+      params.set<SolverSystemName>("solver_sys") = getSolverSystem(species_name);
       getProblem().addVariable(variable_type, species_name, params);
     }
 }
@@ -176,6 +179,8 @@ PointTrappingPhysics::addScalarKernels()
       const auto flux_name =
           getConnectedStructurePhysics(c_i)[0]->name() + "_diffusive_flux_" + structure_boundary;
       static constexpr Real kb = 1.380649e-23;
+      // m3 to mum3
+      static constexpr Real conv_factor = 1e18;
 
       // Sink term
       {
@@ -187,7 +192,7 @@ PointTrappingPhysics::addScalarKernels()
           paramError("temperatures", "Only real values are supported");
         params.set<Real>("concentration_to_pressure_conversion_factor") =
             -kb * libMesh::Utility::pow<3>(_length_unit) * std::stod(_component_temperatures[c_i]) *
-            _pressure_unit;
+            _pressure_unit * conv_factor;
         params.set<PostprocessorName>("flux") = flux_name;
         params.set<Real>("surface_area") = scaled_area;
         params.set<Real>("volume") = scaled_volume;
@@ -213,11 +218,11 @@ PointTrappingPhysics::addFEBCs()
         const std::string bc_type = "EquilibriumBC";
         auto params = _factory.getValidParams(bc_type);
         params.set<NonlinearVariableName>("variable") = multi_D_species_name;
-        params.set<std::vector<VariableName>>("enclosure_scalar_var") = {species_name};
+        params.set<std::vector<VariableName>>("enclosure_var") = {species_name};
         params.set<Real>("Ko") =
             ((_species_Ks.size() > 1) ? _species_Ks[c_i][s_j] : _species_Ks[0][s_j]) * 1 /
             Utility::pow<3>(_length_unit) / _pressure_unit;
-        params.set<FunctionName>("temperature") = _component_temperatures[c_i];
+        params.set<FunctionName>("temperature_function") = _component_temperatures[c_i];
         params.set<std::vector<BoundaryName>>("boundary") = {structure_boundary};
         getProblem().addBoundaryCondition(bc_type, species_name + "_equi_bc", params);
       }
@@ -249,13 +254,13 @@ PointTrappingPhysics::getConnectedStructureVariableName(unsigned int c_i, unsign
         "connected_structure",
         "Connected structure does not have a diffusion Physics defined as its first 'physics'");
   // Note that DiffusionPhysicsBase only support one variable currently
-  if (multi_D_physics[0]->nonlinearVariableNames().size() != _species[c_i].size())
+  if (multi_D_physics[0]->solverVariableNames().size() != _species[c_i].size())
     component.paramError(
         "connected_structure",
         "The connected structure does not have the same number of nonlinear variables (" +
-            std::to_string(multi_D_physics[0]->nonlinearVariableNames().size()) +
+            std::to_string(multi_D_physics[0]->solverVariableNames().size()) +
             ") as the number of species (" + std::to_string(_species[c_i].size()) + ")");
-  return multi_D_physics[0]->nonlinearVariableNames()[s_j];
+  return multi_D_physics[0]->solverVariableNames()[s_j];
 }
 
 const BoundaryName &
