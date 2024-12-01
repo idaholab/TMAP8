@@ -19,7 +19,7 @@ TMAP8_pressure_enclosure_1_k10 = expt_data_k10['pressure_enclosure_1']
 TMAP8_pressure_enclosure_2_k10 = expt_data_k10['pressure_enclosure_2']
 concentration_enclosure_1_at_interface_k10 = expt_data_k10['concentration_enclosure_1_at_interface']
 pressure_enclosure_2_at_interface_k10 = expt_data_k10['pressure_enclosure_2_at_interface']
-mass_conservation_sum_encl1_encl2_k10 = expt_data_k10['mass_conservation_sum_encl1_encl2'].values
+mass_conservation_sum_encl1_encl2_k10 = expt_data_k10['mass_conservation_sum_encl1_encl2']
 concentration_ratio_k10 = expt_data_k10['concentration_ratio']
 
 # Subplot 1 : Pressure vs time
