@@ -24,8 +24,9 @@ EnclosureSinkScalarKernel::validParams()
       "flux",
       "Name of the Postprocessor whose value will be the flux. Note that this flux should "
       "represent the rate of species leaving the corresponding structure, so a positive value for "
-      "flux will correspond to species leaving the structure and entering the enclosure, and a "
-      "negative value will correspond to species entering the structure and leaving the enclosure");
+      "flux will correspond to species leaving the enclosure and entering the structure, and a "
+      "negative value will correspond to species entering the enclosure and leaving the structure. "
+      "The sign convention can be flipped using the conversion factor.");
   params.addRequiredParam<Real>("surface_area", "The surface area of the structure");
   params.addRequiredParam<Real>("volume", "The volume of the enclosure");
   params.addParam<Real>(
@@ -49,5 +50,5 @@ EnclosureSinkScalarKernel::EnclosureSinkScalarKernel(const InputParameters & par
 Real
 EnclosureSinkScalarKernel::computeQpResidual()
 {
-  return -_flux * _area / _volume * _concentration_to_pressure_conversion_factor;
+  return _flux * _area / _volume * _concentration_to_pressure_conversion_factor;
 }
