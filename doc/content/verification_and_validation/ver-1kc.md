@@ -24,7 +24,7 @@ and
 
 where $C_1$ and $C_2$ represent the concentration fields in enclosures 1 and 2 respectively, $t$ is the time, and $D$ denotes the diffusivity.
 
-This case is similar to the ver-1kb case, with the key difference being that the sorption law here follows Sieverts' law instead of Henry's law.
+This case is similar to the [ver-1kb](ver-1kb.md) case, with the key difference being that sorption here follows Sieverts' law instead of Henry's law.
 The concentration in Enclosure 1 is related to the partial pressure and concentration in Enclosure 2 via the interface sorption law:
 
 \begin{equation}

@@ -6,7 +6,7 @@
     type = CSVDiff
     input = ver-1kc.i
     csvdiff = ver-1kc_out_k10.csv
-    requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Sieverts’ law without any concentration jump at the interface.'
+    requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface.'
   []
   [ver-1kc_exodus]
     type = Exodiff
@@ -14,7 +14,7 @@
     exodiff = ver-1kc_out_k10.e
     prereq = ver-1kc_csv
     should_execute = false # this test relies on the output files from ver-1kc_csv_concentration_jump, so it shouldn't be run twice
-    requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface'
+    requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface and generate an exodus file.'
   []
   [ver-1kc_comparison]
     type = RunCommand

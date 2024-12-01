@@ -1,6 +1,6 @@
 nb_segments_TMAP7 = 20
 node_size_TMAP7 = '${units 1.25e-5 m}'
-long_total = '${fparse nb_segments_TMAP7 * node_size_TMAP7}' # m
+long_total = '${units ${fparse nb_segments_TMAP7 * node_size_TMAP7} m}'
 nb_segments_TMAP8 = 100
 simulation_time = '${units 10 s}'
 temperature = '${units 500 K}'
@@ -9,7 +9,7 @@ initial_pressure_1 = '${units 1e5 Pa}'
 initial_pressure_2 = '${units 1e-10 Pa}'
 initial_concentration_1 = '${units ${fparse initial_pressure_1 / (R*temperature)} mol/m^3}'
 initial_concentration_2 = '${units ${fparse initial_pressure_2 / (R*temperature)} mol/m^3}'
-solubility = '${units ${fparse 10/sqrt(R*temperature)} mol/m^3/Pa}' # Sieverts' law solubility
+solubility = '${units ${fparse 10/sqrt(R*temperature)} mol/m^3/Pa^(1/2)}' # Sieverts' law solubility
 diffusivity = '${units ${fparse 4.31e-6 * exp(-2818/temperature)} m^2/s}'
 n_sorption = 0.5 # Sieverts' Law
 unit_scale = 1
