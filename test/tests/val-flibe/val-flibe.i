@@ -49,11 +49,11 @@ num_nodes = 200 # (-)
 
 [Variables]
   [conc_Ni]
-    initial_condition = 1.0e-0
+    initial_condition = 1.8
     block = 0
   []
   [conc_salt]
-    initial_condition = 1.0e-0
+    initial_condition = 0.47
     block = 1
   []
 []
