@@ -79,7 +79,7 @@ ax.plot(analytical_time, analytical_permeation,
 
 ax.plot(tmap_time, tmap_perm, label=r"TMAP8", c='tab:gray')
 
-ax.set_xlabel(u'Time(s)')
+ax.set_xlabel(u'Time (s)')
 ax.set_ylabel(u"Permeation (atom/m$^2$s)")
 ax.legend(loc="best")
 ax.set_xlim(left=0)
@@ -119,7 +119,7 @@ ax.plot(analytical_time, analytical_sol,
 
 print(tmap_time[np.argmin(np.abs(tmap_perm-3.1622e18))])
 
-ax.set_xlabel(u'Time(s)')
+ax.set_xlabel(u'Time (s)')
 ax.set_ylabel(u"Permeation (atom/m$^2$s)")
 ax.legend(loc="lower right")
 ax.set_xlim(left=0)

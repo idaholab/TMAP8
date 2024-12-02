@@ -33,7 +33,7 @@ ax.plot(tmap_time,tmap_conc,label=r"TMAP8",c='tab:gray')
 ax.plot(analytical_time,analytical_conc,label=r"Analytical",c='k', linestyle='--')
 
 
-ax.set_xlabel(u'Time(s)')
+ax.set_xlabel(u'Time (s)')
 ax.set_ylabel(r"Normalized specie concentration")
 ax.legend(loc="best")
 ax.set_xlim(left=0)
@@ -108,7 +108,7 @@ ax.plot(tmap_time[1:],tmap_flux[1:],label=r"TMAP8",c='tab:gray')
 ax.plot(analytical_time[1:],analytical_flux[1:],label=r"Analytical",c='k', linestyle='--')
 
 
-ax.set_xlabel(u'Time(s)')
+ax.set_xlabel(u'Time (s)')
 ax.set_ylabel(r"Diffusive flux")
 ax.legend(loc="best")
 ax.set_xlim(left=0)

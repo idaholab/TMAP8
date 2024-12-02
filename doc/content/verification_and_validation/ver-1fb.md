@@ -16,7 +16,7 @@ where $T$ is the temperature, $\rho$ is the density, $C_P$ is the specific heat,
 
 The ends of a slab are kept fixed at different temperatures. The temperature distribution in the slab evolves from an initial state to steady-state.
 
-In this case, the thickness of slab, $L$, is 4.0 m, the thermal conductivity is $k =1$ W/m/K, the material density is assumed to be $\rho = 1$ kg/m$^3$, and the specific heat is assumed to be $C_P = 1$ J/kg/K. The fixed surface temperature, $T_0$ and $T_1$, on both ends are defined as 400 K and 300 K, respectively.
+In this case, the thickness of slab, $L$, is 4.0 m, the thermal conductivity is $k =10$ W/m/K, the material density is assumed to be $\rho = 1$ kg/m$^3$, and the specific heat is assumed to be $C_P = 10$ J/kg/K. The fixed surface temperature, $T_0$ and $T_1$, on both ends are defined as 400 K and 300 K, respectively.
 
 ## Analytical solution
 
@@ -32,8 +32,10 @@ where $x$ is the distance across the slab, $t$ is the time, $\lambda_m$ is a coe
 \alpha = \frac{k}{\rho C_p}.
 \end{equation}
 
-!alert warning title=Typo in analytical solution from [!cite](longhurst1992verification)
-Both TMAP4 ([!citep](longhurst1992verification)) and TMAP7 ([!citep](ambrosek2008verification)) provide analytical solutions, but they use different equations. At the initial time and steady state, the solution from TMAP7 matches the real thermal distribution, whereas the solution from TMAP4 does not. Thus, TMAP8 select the solution from TMAP7 as the analytical solution.
+!alert! warning title=Typo in analytical solution from [!cite](longhurst1992verification)
+Both TMAP4 [!citep](longhurst1992verification) and TMAP7 [!citep](ambrosek2008verification) provide analytical solutions, but they use different equations.
+At the initial time and steady state, the solution from TMAP7 matches the real thermal distribution, whereas the solution from TMAP4 does not. Thus, TMAP8 selects the solution from TMAP7 as the analytical solution.
+!alert-end!
 
 ## Results
 

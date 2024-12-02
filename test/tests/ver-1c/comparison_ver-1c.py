@@ -84,7 +84,7 @@ RMSPE = RMSE*100/np.mean(analytical_conc12_4[idx:])
 ax.text(20,get_c_analytical_4(12,20), 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',ha='left',va='top')
 
 
-ax.set_xlabel(u'Time(s)')
+ax.set_xlabel(u'Time (s)')
 ax.set_ylabel(r"Species concentration (atoms/m$^3$)")
 ax.legend(loc="best")
 ax.set_xlim(left=0,right=100)
@@ -119,7 +119,7 @@ RMSE = np.sqrt(np.mean((tmap_conc12_7-analytical_conc12_7)[idx:]**2) )
 RMSPE = RMSE*100/np.mean(analytical_conc12_7[idx:])
 ax.text(20,get_c_analytical_7(12,20), 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 
-ax.set_xlabel(u'Time(s)')
+ax.set_xlabel(u'Time (s)')
 ax.set_ylabel(r"Species concentration (atoms/m$^3$)")
 ax.legend(loc="best")
 ax.set_xlim(left=0,right=100)

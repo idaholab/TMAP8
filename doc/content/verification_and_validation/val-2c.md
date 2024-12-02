@@ -9,9 +9,8 @@ Whenever tritium is released into a fusion reactor test cell, it is crucial to c
 This case models an experiment conducted at Los Alamos National Laboratory at the tritium systems test assembly (TSTA) to study the behavior of tritium once released in a test cell and the efficacy of the emergency tritium cleanup system (ETCS).
 
 The experimental set up, described in greater detail in [!cite](Holland1986), can be summarized as such:
-the inner walls of an enclosure of volume $V$ was covered with an aluminum foil and then covered in paint with an average thickness $l$, which is then in contact with the enclosure air.
-A given amount, T$_2^0$, of tritium, T$_2$, is injected in the enclosure, which initially contained ambient air.
-This represents the tritium release.
+the inner walls of an enclosure of volume $V$ are covered with an aluminum foil and then covered in paint with an average thickness $l$, which is then in contact with the enclosure air.
+A given amount, T$_2^0$, of tritium, T$_2$, is injected in the enclosure, which initially contained ambient air, representing tritium release.
 A flow rate $f$ through the enclosure represents the air replacement time expected for large test cells.
 The purge gas is ambient air with 20% relative humidity.
 A fraction of that amount is diverted through the measurement system to determine the concentrations of chemical species within the enclosure.
@@ -36,7 +35,7 @@ Here, $c_i$ represents the concentration of species $i$, and $K^0$ is a constant
 
 Second, the different species will permeate in the paint.
 The elemental tritium species, T$_2$ and HT, have a given solubility $K_S^e$ and diffusivity $D^e$, while the tritiated water, HTO, and water, H$_2$O, have a solubility $K_S^w$ and diffusivity $D^w$.
-It is expected that species will initially permeate into the paint and later get released as the purge gas cleans up the enclosure air.
+It is expected that the species will initially permeate into the paint and later get released as the purge gas cleans up the enclosure air.
 
 The objectives of this case are to determine the time evolution of T$_2$ and HTO concentrations in the enclosure, match the experimental data published in [!cite](Holland1986), and display this comparison with the appropriate error checking (see [val-2c_comparison_T2] and [val-2c_comparison_HTO]).
 
@@ -44,7 +43,7 @@ The objectives of this case are to determine the time evolution of T$_2$ and HTO
 
 To model the case described above, TMAP8 simulates a one-dimensional domain with one block to represent the air in the enclosure, and another block to represent the paint.
 In each block, the simulation tracks the local concentration of T$_2$, HT, HTO, and H$_2$O.
-Note that this case can easily be extended to a two- or three-dimensional case, but, consistent with previous analyses, we will maintain the one-dimensional configuration here.
+Note that this case can easily be extended to a two- or three-dimensional case, but consistent with previous analyses, we will maintain the one-dimensional configuration here.
 
 In the enclosure, to capture the purge gas and the chemical reactions, the concentrations evolve as
 \begin{equation} \label{eq:enclosure:T2}
@@ -64,17 +63,17 @@ where $c_{\text{H}_2\text{O}}^0$ is the concentration of H$_2$O in the incoming 
 
 In the paint, TMAP8 captures species diffusion through
 \begin{equation} \label{eq:paint:T2}
-\frac{d c_{\text{T}_2}}{dt} = - \nabla D^e \nabla c_{\text{T}_2},
+\frac{d c_{\text{T}_2}}{dt} = \nabla D^e \nabla c_{\text{T}_2},
 \end{equation}
 \begin{equation} \label{eq:paint:HT}
-\frac{d c_{\text{HT}}}{dt} = - \nabla D^e \nabla c_{\text{HT}},
+\frac{d c_{\text{HT}}}{dt} = \nabla D^e \nabla c_{\text{HT}},
 \end{equation}
 \begin{equation} \label{eq:paint:HTO}
-\frac{d c_{\text{HTO}}}{dt} = - \nabla D^w \nabla c_{\text{HTO}},
+\frac{d c_{\text{HTO}}}{dt} = \nabla D^w \nabla c_{\text{HTO}},
 \end{equation}
 and
 \begin{equation} \label{eq:paint:H2O}
-\frac{d c_{\text{H}_2\text{O}}}{dt} = - \nabla D^w \nabla  c_{\text{H}_2\text{O}}.
+\frac{d c_{\text{H}_2\text{O}}}{dt} = \nabla D^w \nabla  c_{\text{H}_2\text{O}}.
 \end{equation}
 
 At the interface between the enclosure air and the paint, sorption is captured in TMAP8 with Henry's law thanks to the  [InterfaceSorption.md] object:
@@ -111,8 +110,8 @@ The case and model parameters used in both approaches in TMAP8 are listed in [va
 | $K^0$                      | $\boldsymbol{1.5} \times 2.0 \times 10^{-10}$                | $\boldsymbol{2.8} \times 2.0 \times 10^{-10}$                | m$^3$/Ci/s | Adapted from [!cite](longhurst1992verification) |
 | $D^e$                      | 4.0 $\times 10^{-12}$                                        | Identical                                                    | m$^2$/s    | [!cite](Holland1986)                            |
 | $D^w$                      | 1.0 $\times 10^{-14}$                                        | Identical                                                    | m$^2$/s    | [!cite](Holland1986)                            |
-| $K_S^e$                    | $\boldsymbol{5.0 \times 10^{-2}} \times 4.0 \times 10^{-19}$ | $\boldsymbol{1.0 \times 10^{-3}} \times 4.0 \times 10^{-19}$ | 1/m$^3$/Pa | Adapted from [!cite](longhurst1992verification) |
-| $K_S^w$                    | $\boldsymbol{3.5 \times 10^{-4}} \times 6.0 \times 10^{-24}$ | $\boldsymbol{3.0 \times 10^{-4}} \times 6.0 \times 10^{-24}$ | 1/m$^3$/Pa | Adapted from [!cite](longhurst1992verification) |
+| $K_S^e$                    | $\boldsymbol{5.0 \times 10^{-2}} \times 4.0 \times 10^{19}$ | $\boldsymbol{1.0 \times 10^{-3}} \times 4.0 \times 10^{19}$ | 1/m$^3$/Pa | Adapted from [!cite](longhurst1992verification) |
+| $K_S^w$                    | $\boldsymbol{3.5 \times 10^{-4}} \times 6.0 \times 10^{24}$ | $\boldsymbol{3.0 \times 10^{-4}} \times 6.0 \times 10^{24}$ | 1/m$^3$/Pa | Adapted from [!cite](longhurst1992verification) |
 | $t_{injection}$            | N/A                                                          | 3                                                            | hr         |                                                 |
 
 ## Results and discussion
@@ -132,7 +131,7 @@ It is also possible to perform this optimization with [MOOSE's stochastic tools 
        image_name=val-2c_comparison_TMAP8_Exp_T2_Ci.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2c_comparison_T2
-       caption=Comparison of TMAP8 calculations against the experimental data for T$_2$ concentration in the enclosure over time. TMAP8 matches the experimental data well, with an improvement when T$_2$ is injected over  a given period rather than immediately.
+       caption=Comparison of TMAP8 calculations against the experimental data for T$_2$ concentration in the enclosure over time. TMAP8 matches the experimental data well, with an improvement when T$_2$ is injected over a given period rather than immediately.
 
 !media comparison_val-2c.py
        image_name=val-2c_comparison_TMAP8_Exp_HTO_Ci.png

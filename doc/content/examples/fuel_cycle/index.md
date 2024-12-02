@@ -1,6 +1,6 @@
 # Fuel Cycle
 
-This demonstration re-creates the tritium fuel cycle model described by [!cite](Abdou2021). 
+This demonstration re-creates the tritium fuel cycle model described by [!cite](Abdou2021).
 
 ### Generating the Input File
 
@@ -144,8 +144,8 @@ lines are model results.
 
 ### Python-based Interactive Script
 
-A python-based graphical interactive script is available at [/test/tests/fuel_cycle/fuel_cycle_gui.py](/scripts/fuel_cycle_gui.py) as a demonstration of the various effects of 
-individual parameters. To use it, navigate to the scripts directory and run the script. All of the input parameters for the model can be changed by editing the associated entry, 
+A python-based graphical interactive script is available at [/test/tests/fuel_cycle/fuel_cycle_gui.py](/scripts/fuel_cycle_gui.py) as a demonstration of the various effects of
+individual parameters. To use it, navigate to the scripts directory and run the script. All of the input parameters for the model can be changed by editing the associated entry,
 then clicking the "Run" button. Once the simulation has run, checkboxes will appear for each system-level tritium inventory. Time units can also be adjusted by selecting the appropriate
 timescale.
 

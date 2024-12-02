@@ -10,7 +10,7 @@ This problem models permeation through a membrane with a constant source in whic
 
 \begin{equation}
     \label{eqn:diffusion_mobile}
-    \frac{dC_M}{dt} = - \nabla D \nabla C_M - \text{trap\_per\_free} \cdot \sum_{i=1}^{3} \frac{dC_{T_i}}{dt} ,
+    \frac{dC_M}{dt} = \nabla D \nabla C_M - \text{trap\_per\_free} \cdot \sum_{i=1}^{3} \frac{dC_{T_i}}{dt} ,
 \end{equation}
 and, for $i=1$, $i=2$, and $i=3$:
 \begin{equation}
@@ -26,7 +26,7 @@ where $C_M$ is the concentrations of the mobile, $C_{T_i}$ is the trapped specie
 The trapping parameter is defined by
 \begin{equation}
   \label{eqn:zeta}
-    \zeta = \frac{\lambda^2 \nu}{\rho D_o} exp \left( \frac{E_d - \epsilon}{kT} \right) + \frac{c}{\rho},
+    \zeta = \frac{\lambda^2 \nu}{\rho D_0} \exp \left( \frac{E_d - \epsilon}{kT} \right) + \frac{c}{\rho},
 \end{equation}
 
 where
@@ -37,7 +37,7 @@ $\nu$ = Debye frequency ($\approx$ $10^{13} \; s^{-1}$)
 
 $\rho$ = trapping site fraction
 
-$D_o$ = diffusivity pre-exponential
+$D_0$ = diffusivity pre-exponential
 
 $E_d$ = diffusion activation energy
 
@@ -60,9 +60,9 @@ Three traps that are relatively weak are assumed to be active in a slab. The tra
 
 \begin{equation}
 \label{eqn:Jp}
-    J_p = \frac{c_o D}{l} \Bigg\{ 1 + 2 \sum_{m=1}^{\infty} \left[ (-1)^m \exp \left( -m^2 \frac{t}{2 \; \tau_{b_e}} \right) \right] \Bigg\},
+    J_p = \frac{C_0 D}{l} \left\{ 1 + 2 \sum_{m=1}^{\infty} \left[ (-1)^m \exp \left( -m^2 \frac{t}{2 \; \tau_{b_e}} \right) \right] \right\},
 \end{equation}
-where $c_o$ is the steady dissolved gas concentration at the upstream (x = 0) side, $l$ is the thickness of the slab, $D$ is the diffusivity of the gas through the material, and $\tau_{b_e}$, the breakthrough time, is defined as
+where $C_0$ is the steady dissolved gas concentration at the upstream (x = 0) side, $l$ is the thickness of the slab, $D$ is the diffusivity of the gas through the material, and $\tau_{b_e}$, the breakthrough time, is defined as
 
 \begin{equation}
 \label{eqn:tau_be}
@@ -74,11 +74,11 @@ where $D_{eff}$, the effective diffusivity, is defined as
 \label{eqn:Deff}
     D_{eff} = \frac{D}{1 + \sum_{i=1}^3 1 / \zeta_i},
 \end{equation}
-where $\zeta_i$ is the trapping parameter of trap $i$. The trapping parameters, $\zeta_i$, calculated from [eqn:zeta] for the three traps are 91.47930 $c/\rho$, 61.65009 $c/\rho$, 45.93069 $c/\rho$.
+where $\zeta_i$ is the trapping parameter of trap $i$.
+The trapping parameters, $\zeta_i$, calculated from [eqn:zeta] for the three traps are 91.47930 $c/\rho$, 61.65009 $c/\rho$, 45.93069 $c/\rho$.
 
 !alert warning title=Typo in [!cite](ambrosek2008verification)
-The $\zeta_i$ values of the three traps from [!cite](ambrosek2008verification) have a typographical error: They are three orders of magnitude lower than the correct values. however, it dos not impact the final analytical solution.
-
+The $\zeta_i$ values of the three traps from [!cite](ambrosek2008verification) have a typographical error: They are three orders of magnitude lower than the correct values. However, it does not impact the final analytical solution.
 
 ## Results and comparison against analytical solution
 

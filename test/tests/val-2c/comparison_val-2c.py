@@ -163,11 +163,11 @@ ax.minorticks_on()
 time_sample, experimental_hto_enclosure_concentration_sampled, tmap8_hto_enclosure_concentration_Ci_sampled = common_times_generator(experimental_time_hto, experimental_hto_enclosure_concentration, tmap8_time,tmap8_hto_enclosure_concentration_Ci)
 RMSE = np.sqrt(np.mean((tmap8_hto_enclosure_concentration_Ci_sampled-experimental_hto_enclosure_concentration_sampled)**2))
 RMSPE = RMSE*100/np.mean(experimental_hto_enclosure_concentration_sampled)
-ax.text(0.8,3.9e-5, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
+ax.text(0.8,3.9e-5, '(immediate) RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 time_sample_delay, experimental_hto_enclosure_concentration_delay_sampled, tmap8_hto_enclosure_concentration_Ci_delay_sampled = common_times_generator(experimental_time_hto, experimental_hto_enclosure_concentration, tmap8_time_delay,tmap8_hto_enclosure_concentration_Ci_delay)
 RMSE = np.sqrt(np.mean((tmap8_hto_enclosure_concentration_Ci_delay_sampled-experimental_hto_enclosure_concentration_delay_sampled)**2))
 RMSPE = RMSE*100/np.mean(experimental_hto_enclosure_concentration_delay_sampled)
-ax.text(7.5,1.2e-5, 'RMSPE (delay) = %.2f '%RMSPE+'%',fontweight='bold')
+ax.text(7.5,1.2e-5, '(delay) RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 
 # save figure
 plt.savefig('val-2c_comparison_TMAP8_Exp_HTO_Ci.png', bbox_inches='tight', dpi=300);
@@ -200,11 +200,11 @@ ax.set_ylim(top=14)
 tmap8_t2_enclosure_concentration_Ci_sampled = sample_solution(experimental_time_t2[1:], tmap8_time, tmap8_t2_enclosure_concentration_Ci)
 RMSE = np.sqrt(np.mean((tmap8_t2_enclosure_concentration_Ci_sampled-experimental_t2_enclosure_concentration[1:])**2))
 RMSPE = RMSE*100/np.mean(experimental_t2_enclosure_concentration[1:])
-ax.text(0.5,1.2e-4, 'RMSPE (delay) = %.2f '%RMSPE+'%',fontweight='bold')
+ax.text(0.5,1.2e-4, '(immediate) \n RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 tmap8_t2_enclosure_concentration_Ci_delay_sampled = sample_solution(experimental_time_t2[1:], tmap8_time_delay, tmap8_t2_enclosure_concentration_Ci_delay)
 RMSE = np.sqrt(np.mean((tmap8_t2_enclosure_concentration_Ci_delay_sampled-experimental_t2_enclosure_concentration[1:])**2))
 RMSPE = RMSE*100/np.mean(experimental_t2_enclosure_concentration[1:])
-ax.text(19,8e-4, 'RMSPE (delay) = %.2f '%RMSPE+'%',fontweight='bold')
+ax.text(19,8e-4, '(delay) RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 
 # save figure
 plt.savefig('val-2c_comparison_TMAP8_Exp_T2_Ci.png', bbox_inches='tight', dpi=300);
