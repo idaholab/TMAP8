@@ -26,9 +26,6 @@ where $h=10$ m is the thickness of the pre-loaded portion of the layer, $C_0$ is
 !alert warning title=Typo in [!cite](longhurst1992verification)
 The value of $C$ found in [!cite](longhurst1992verification) has a typographical error, $\sqrt{Dt}$ should be at the denominator. [eq:c_func_4] follows the form of [!cite](Carslaw1959conduction).
 
-
-!alert warning title=Typo in [!cite](longhurst1992verification)
-The value of $C$ found in [!cite](longhurst1992verification) has a typographical error, $\sqrt{Dt}$ should be at the denominator. [eq:c_func_4] follows the form of [!cite](Carslaw1959conduction).
 TMAP4 and TMAP7 verification cases are also evaluated at slightly different locations: TMAP4 verifies the mobile species concentration at three points:
 
 1. a point at the free surface ($x = 0$ m)
@@ -36,7 +33,7 @@ TMAP4 and TMAP7 verification cases are also evaluated at slightly different loca
 3. a point in the initially unloaded region ($x = 12$ m)
 
 
- The comparison of the values calculated with TMAP8 and analytically for the TMAP4 cases is shown in
+The comparison of the values calculated with TMAP8 and analytically for the TMAP4 cases is shown in
 [ver-1c_comparison_time_TMAP4]. TMAP7 verifies the mobile species concentration at similar points
 
 1. a point near the free surface ($x = 0.25$ m), as the concentration at the surface is specified
