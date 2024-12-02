@@ -33,7 +33,7 @@ good agreement with the analytical solution.
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1b_comparison_dist
        caption=Comparison of concentration as function of distance from the source
-       at $t = 25$s calculated through TMAP8 and analytically.
+       at $t = 25$ s calculated through TMAP8 and analytically.
 
 Finally, the diffusive flux ($J$) was compared with the analytic solution where the
 flux is proportional to the derivative of the concentration with respect to $x$ and

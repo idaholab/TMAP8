@@ -63,7 +63,7 @@ and $\lambda_n$ are the roots of
        id=ver-1e_comparison_dist
        caption=Comparison of TMAP8 calculation with the analytical solution. Bold text next to the plot curves shows the root mean square percentage error (RMSPE) between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
 
-For transient solution comparison, the concentration at a point, which is $x$ $\mu$m away from the PyC-SiC interface into the SiC layer, is obtained using the TMAP code and analytically. [ver-1e_comparison_time] shows comparison of the TMAP calculation with the analytical solution for this transient case. In the TMAP4 case, $x$ = 8 $\mu$m, and in the TMAP7 case $x$ = 15.75 $\mu$m. There is good agreement between TMAP and the analytical solution for both steady state and transient cases. In both cases, the root mean square percentage error (RMSPE) is under 0.2 %.
+For transient solution comparison, the concentration at a point, which is $x$ $\mu$m away from the PyC-SiC interface into the SiC layer, is obtained using the TMAP code and analytically. [ver-1e_comparison_time] shows comparison of the TMAP calculation with the analytical solution for this transient case. In the TMAP4 case, $x$ = 8 $\mu$m, and in the TMAP7 case $x$ = 15.75 $\mu$m. There is good agreement between TMAP and the analytical solution for both steady state and transient cases. In both cases, the root mean square percentage error (RMSPE) is under 0.2%.
 
 !media comparison_ver-1e.py
        image_name=ver-1e_comparison_time.png

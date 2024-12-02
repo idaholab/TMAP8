@@ -47,7 +47,7 @@ $T$ = temperature
 
 $c$ = dissolved gas atom fraction
 
-The discriminant for which regime is dominant is the ratio of $\zeta$ to c/$\rho$. If $\zeta$ $\gg$ c/$\rho$ then the effective diffusivity regime applies, and the permeation transient is identical to the standard diffusion transient but with the diffusivity replaced by an effective diffusivity
+The discriminant for which regime is dominant is the ratio of $\zeta$ to c/$\rho$. If $\zeta$ $\gg$ c/$\rho$, then the effective diffusivity regime applies, and the permeation transient is identical to the standard diffusion transient, with the diffusivity replaced by an effective diffusivity
 
 \begin{equation}
 \label{eqn:Deff}
@@ -86,7 +86,7 @@ Using TMAP8 we examine these two different regimes, one where diffusion is the r
 
 ## Diffusion-limited
 
-For the effective diffusivity limit, we selected $\epsilon/k = 100$ K to give $\zeta = 91.47 c/\rho$. The comparison results are presented in [ver-1d_comparison_diffusion] with a root mean square percentage error of RMSPE = 0.96 % for $t \geq 0.4$ s.
+For the effective diffusivity limit, we selected $\epsilon/k = 100$ K to give $\zeta = 91.47 c/\rho$. The comparison results are presented in [ver-1d_comparison_diffusion] with a root mean square percentage error of RMSPE = 0.96% for $t \geq 0.4$ s.
 
 !media comparison_ver-1d.py
        image_name=ver-1d_comparison_diffusion.png
@@ -125,7 +125,7 @@ To keep the oscillations damped, the verification is run with nx=1000 and an ada
     C_M(x=0) = \tanh(3t).
 \end{equation}
 
-This takes the BC to 99.5 % of its actual value in 3 s, which is a small fraction of the breakthrough time of 500 s.
+This takes the BC to 99.5% of its actual value in 3 s, which is a small fraction of the breakthrough time of 500 s.
 It therefore reduces numerical oscillations without affecting the expected solution.
 
 ## Input files

@@ -33,7 +33,7 @@ where $D_{eff}$, the effective diffusivity, is equal to $D$ due to the absence o
 
 ## Results and comparison against analytical solution
 
-The analytical solution for the permeation transient is compared with TMAP8 results in [ver-1dd_comparison_diffusion]. The graphs for the theoretical flux and the calculated flux are in good agreement, with root mean square percentage errors (RMSPE) of RMSPE = 0.14 % for $t \geq 0.01$ s. The breakthrough time calculated from the analytical solution provided by [eqn:tau_be] is 0.05 s, and the breakthrough time from TMAP8 is 0.05 s, which matches.
+The analytical solution for the permeation transient is compared with TMAP8 results in [ver-1dd_comparison_diffusion]. The graphs for the theoretical flux and the calculated flux are in good agreement, with root mean square percentage errors (RMSPE) of RMSPE = 0.14% for $t \geq 0.01$ s. The breakthrough time calculated from the analytical solution provided by [eqn:tau_be] is 0.05 s, and the breakthrough time from TMAP8 is 0.05 s, which matches.
 
 !media comparison_ver-1dd.py
        image_name=ver-1dd_comparison_diffusion.png

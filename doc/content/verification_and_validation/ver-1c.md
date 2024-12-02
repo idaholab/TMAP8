@@ -21,7 +21,7 @@ but for TMAP7, which specifies $C(x=0 \mathrm{\:m})=0$, the analytical solution 
 C = \frac{C_0}{2}\left[2\mathrm{erf}\left(\frac{x}{2\sqrt{Dt}}\right) - \mathrm{erf}\left(\frac{x-h}{2\sqrt{Dt}}\right) - \mathrm{erf}\left(\frac{x+h}{2\sqrt{Dt}}\right)\right]
 \end{equation}
 
-where $h=10$ m is the thickness of the pre-loaded portion of the layer, $C_0$ is the initial concentration in the pre-loaded section of the slab, erf is the error function, $x$ is the position along the slab, and $D$ is the diffusivity.
+where $h=10$ m is the thickness of the pre-loaded portion of the layer, $C_0$ is the initial concentration in the pre-loaded section of the slab, $\mathrm{erf}$ is the error function, $x$ is the position along the slab, and $D$ is the diffusivity.
 
 !alert warning title=Typo in [!cite](longhurst1992verification)
 The value of $C$ found in [!cite](longhurst1992verification) has a typographical error, $\sqrt{Dt}$ should be at the denominator. [eq:c_func_4] follows the form of [!cite](Carslaw1959conduction).

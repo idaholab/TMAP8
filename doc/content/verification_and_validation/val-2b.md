@@ -63,7 +63,7 @@ The model applies 13.3 kPa of D$_2$ for 50 hours and 15 seconds followed by cool
        caption=Comparison of TMAP8 calculation against experimental data, which shows TMAP8's ability to accurately model this validation case.
 
 !alert note title=Experimental data from [!cite](macaulay1991deuterium).
-The experimental data used in this case comes directly from Figure (2) in [!cite](macaulay1991deuterium). This is in contrast with the data used in [!cite](longhurst1992verification,ambrosek2008verification), which, although the scale of the data is very similar, differ slightly. Also, note that the units in Figure (2) from [!cite](macaulay1991deuterium) should be atoms/mm$^2$/s $\times 10^{10}$ instead of atoms/mm$^2$ $\times 10^{10}$, which is corrected in [val-2b_comparison].
+The experimental data used in this case comes directly from Figure (2) in [!cite](macaulay1991deuterium). This is in contrast with the data used in [!cite](longhurst1992verification,ambrosek2008verification), which, although the scale of the data is very similar, differs slightly. Also, note that the units in Figure (2) from [!cite](macaulay1991deuterium) should be atoms/mm$^2$/s $\times 10^{10}$ instead of atoms/mm$^2$ $\times 10^{10}$, which is corrected in [val-2b_comparison].
 
 To verify that the solubility ratio at the interface between the beryllium and its oxide is appropriately modeled, [val-2b_ratio] compares the known solubility ratio with the calculated deuterium concentration ratio at the interface, and they match, as expected.
 
