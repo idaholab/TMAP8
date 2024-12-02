@@ -1,5 +1,5 @@
 [Tests]
-  design = 'ADMatDiffusion.md TimeDerivative.md InterfaceSorption.md EquilibriumBC.md ADDirichletBC.md'
+  design = 'ADMatDiffusion.md TimeDerivative.md EquilibriumBC.md ADDirichletBC.md'
   issues = '#193'
     [val-flibe]
       type = CSVDiff

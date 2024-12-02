@@ -49,11 +49,11 @@ num_nodes = 200 # (-)
 
 [Variables]
   [conc_Ni]
-    initial_condition = 0.9e-0
+    initial_condition = 1.0e-0
     block = 0
   []
   [conc_salt]
-    initial_condition = 0.3e-0
+    initial_condition = 1.0e-0
     block = 1
   []
 []
@@ -66,14 +66,6 @@ num_nodes = 200 # (-)
   [flux_x]
     order = FIRST
     family = MONOMIAL
-  []
-  [p_div_RT_salt]
-    block = 1
-    initial_condition = 0.001
-  []
-  [p_div_RT_Ni]
-    block = 0
-    initial_condition = 0.001
   []
 []
 
@@ -102,23 +94,6 @@ num_nodes = 200 # (-)
   []
 []
 
-[InterfaceKernels]
-  [tied]
-    type = InterfaceSorption
-    K0 = 0.564
-    Ea = 15800.0
-    n_sorption = 0.5
-    diffusivity = diffusivity_Ni_nonAD
-    unit_scale = 1
-    unit_scale_neighbor = 1
-    temperature = ${T}
-    variable = conc_Ni
-    neighbor_var = p_div_RT_salt
-    sorption_penalty = 0.1
-    boundary = 'interface'
-  []
-[]
-
 [AuxKernels]
   [flux_x_Ni]
     type = DiffusionFluxAux
@@ -136,18 +111,6 @@ num_nodes = 200 # (-)
     component = x
     block = 1
   []
-  [p_div_RT_Ni_kernel]
-    variable = p_div_RT_Ni
-    type = ParsedAux
-    expression = '(conc_Ni / (${R} * ${T} * 0.564 * exp(-15800/(${R}*${T}))))^2'
-    coupled_variables = 'conc_Ni'
-  []
-  [p_div_RT_salt_kernel]
-    variable = p_div_RT_salt
-    type = ParsedAux
-    expression = '(conc_salt / (${R} * ${T} * 0.079 * exp(-35000/(${R}*${T}))))'
-    coupled_variables = 'conc_salt'
-  []
 []
 
 [BCs]
@@ -160,6 +123,16 @@ num_nodes = 200 # (-)
     temperature = ${T}
     variable = conc_Ni
     p = 0.5
+  []
+  [interfaceBC]
+    type = EquilibriumBC
+    Ko = 0.151119063
+    activation_energy = 0.0
+    boundary = 'interface'
+    enclosure_var = conc_Ni
+    temperature = ${T}
+    variable = conc_salt
+    p = 2.0
   []
   [right_flux]
     type = ADDirichletBC
@@ -243,7 +216,7 @@ num_nodes = 200 # (-)
   nl_max_its = 13
   nl_rel_tol = 1e-8 # nonlinear relative tolerance
   nl_abs_tol = 1e-20 #1e-30 # nonlinear absolute tolerance
-  l_tol = 1e-6 # 1e-3 - 1e-5 # linear tolerance
+  l_tol = 1e-5 # 1e-3 - 1e-5 # linear tolerance
   end_time = ${endtime}
   automatic_scaling = true
   line_search = none
