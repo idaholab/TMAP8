@@ -4,7 +4,11 @@
 
 ## General Case Description
 
-This verification problem is taken from [!cite](longhurst1992verification, ambrosek2008verification). In this problem, a composite structure of PyC and SiC is modeled with a constant concentration boundary condition of the free surface of PyC and zero concentration boundary condition on the free surface of the SiC. The steady-state solution for the PyC is given as:
+This verification problem is taken from [!cite](longhurst1992verification, ambrosek2008verification). In this problem, a composite structure of PyC and SiC is modeled with a constant concentration boundary condition of the free surface of PyC and zero concentration boundary condition on the free surface of the SiC.
+
+## Analytical solution at steady state
+
+The steady state solution for the PyC is given in [!cite](longhurst1992verification, ambrosek2008verification) as:
 
 \begin{equation}
 \label{eqn:steady_state_pyc}
@@ -32,20 +36,20 @@ where
 
     $D_{SiC}$ = diffusivity in SiC (2.622 $\times$ 10$^{-11}$ m$^2$/sec)
 
-## Analytical solution
+## Analytical solution during transient
 
-The analytical transient solution from [!cite](li2010analytical) for the concentration in the PyC and SiC side of the composite slab is given as:
+The analytical transient solution from Table 3, row 1 in [!cite](li2010analytical) for the concentration in the PyC and SiC side of the composite slab is given as:
 
 \begin{equation}
 \label{eqn:transient_PyC}
-C = C_0 \left\{ \frac{(a-x) D_{SiC} + l D_{PyC}}{l D_{PyC} + a D_{SiC}} - 2 \sum_{n=1}^{\infty} B_m \sin(\lambda_n \frac{x}{a}) \exp(-D_{PyC} \frac{\lambda^2_n}{a^2} t) \right\}
+C = C_0 \left\{ \frac{(a-x) D_{SiC} + l D_{PyC}}{l D_{PyC} + a D_{SiC}} - 2 \sum_{n=1}^{\infty} B_m \sin\left(\lambda_n \frac{x}{a}\right) \exp\left(-D_{PyC} \frac{\lambda^2_n}{a^2} t \right) \right\}
 \end{equation}
 
 and
 
 \begin{equation}
 \label{eqn:transient_SiC}
-C = C_0 \left\{ \frac{(l+a-x) D_{PyC}}{l D_{PyC} + a D_{SiC}} - 2 \sum_{n=1}^{\infty} B_m \frac{\sin(\lambda_n)}{\sin(k \lambda_n l/a)} \sin(k \lambda_n \frac{l+a-x}{a}) \exp(-D_{PyC} \frac{\lambda^2_n}{a^2} t) \right\}
+C = C_0 \left\{ \frac{(l+a-x) D_{PyC}}{l D_{PyC} + a D_{SiC}} - 2 \sum_{n=1}^{\infty} B_m \frac{\sin(\lambda_n)}{\sin(k \lambda_n l/a)} \sin\left(k \lambda_n \frac{l+a-x}{a}\right) \exp\left(-D_{PyC} \frac{\lambda^2_n}{a^2} t \right) \right\}
 \end{equation}
 
 where
@@ -66,7 +70,7 @@ and $\lambda_n$ are the roots of
 \end{equation}
 
 !alert warning title=Typo in [!cite](ambrosek2008verification)
-Due to the missing reference of analytical solution in TMAP4 ([!cite](longhurst1992verification)) and TMAP7 ([!cite](ambrosek2008verification)), we use the different analytical transient solution and roots of $\lambda$ for the concentration in PyC and SiC layer from [!cite](li2010analytical).
+The expressions of the analytical solution for the transient case in TMAP4 ([!cite](longhurst1992verification)) and TMAP7 ([!cite](ambrosek2008verification)) are inconsistent with the results, which suggest typographical errors. Moreover, no reference is provided. For these reasons, we use a different analytical transient solution and roots of $\lambda$ for the concentration in PyC and SiC layer from [!cite](li2010analytical).
 
 ## Results
 
@@ -76,9 +80,13 @@ Due to the missing reference of analytical solution in TMAP4 ([!cite](longhurst1
        image_name=ver-1e_comparison_dist.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1e_comparison_dist
-       caption=Comparison of TMAP8 calculation with the analytical solution. Bold text next to the plot curves shows the root mean square percentage error (RMSPE) between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
+       caption=Comparison of TMAP8 calculation with the analytical solution at steady state. Bold text next to the plot curves shows the root mean square percentage error (RMSPE) between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
 
-For transient solution comparison, the concentration at a point, which is $x$ $\mu m$ away from the PyC free surface, is obtained using the TMAP code as well as analytically. [ver-1e_comparison_time_PyC] shows comparison of the TMAP calculation with the analytical solution for this transient case at $x$ = 23 $\mu m$ in PyC layer. We only use the parameters from TMAP7 because the trivial difference between TMAP4 and TMAP7 in PyC layer. [ver-1e_comparison_time] shows comparison of the TMAP calculation with the analytical solution in SiC layer. In the TMAP4 case, $x$ = 41 $\mu m$, and in the TMAP7 case $x$ = 48.75 $\mu m$. There is good agreement between TMAP and the analytical solution for both steady state as well as transient cases. In both cases, the root mean square percentage error (RMSPE) is under 0.2 %.
+For transient solution comparisons, we select two different points: One in the PyC layer at $x = 23$ $\mu$ m, and one in the SiC layer.
+The concentration at these two points is calculated using TMAP8 and with the analytical equations ([eqn:transient_PyC,eqn:transient_SiC]).
+[ver-1e_comparison_time_PyC] shows the comparison of the TMAP8 calculation against the analytical solution for this transient case in the PyC layer. Note that we only use the parameters from TMAP7 because the trivial difference between TMAP4 and TMAP7 in PyC layer.
+[ver-1e_comparison_time] shows the comparison of the TMAP8 calculation against the analytical solution in the SiC layer. In the TMAP4 case, $x$ = 41 $\mu m$, and in the TMAP7 case, $x$ = 48.75 $\mu m$.
+There is good agreement between TMAP8 and the analytical solution for both steady state as well as transient cases. In both cases, the root mean square percentage error (RMSPE) is under 0.2 %.
 
 !media comparison_ver-1e.py
        image_name=ver-1e_comparison_time_PyC.png
