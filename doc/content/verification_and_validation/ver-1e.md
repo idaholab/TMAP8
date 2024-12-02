@@ -2,7 +2,7 @@
 
 # Diffusion in a composite layer
 
-## Test Description
+## General Case Description
 
 This verification problem is taken from [!cite](longhurst1992verification, ambrosek2008verification). In this problem, a composite structure of PyC and SiC is modeled with a constant concentration boundary condition of the free surface of PyC and zero concentration boundary condition on the free surface of the SiC. The steady-state solution for the PyC is given as:
 
@@ -30,28 +30,43 @@ where
 
     $D_{PyC}$ = diffusivity in PyC (1.274 $\times$ 10$^{-7}$ m$^2$/s)
 
-    $D_{SiC}$ = diffusivity in SiC (2.622 $\times$ 10$^{-11}$ m$^2$/s)
+    $D_{SiC}$ = diffusivity in SiC (2.622 $\times$ 10$^{-11}$ m$^2$/sec)
 
-The analytical transient solution for the concentration in the SiC side of the composite slab is given as:
+## Analytical solution
+
+The analytical transient solution from [!cite](li2010analytical) for the concentration in the PyC and SiC side of the composite slab is given as:
 
 \begin{equation}
-\label{eqn:transient}
-    C = C_0 \left\{ \frac{D_{PyC}(l-x)}{l D_{PyC} + a D_{SiC}} - 2 \sum_{n=1}^{\infty} \frac{\sin(a \lambda_n) \sin(k l \lambda_n) \sin \left[k (l-x) \lambda_n \right]}{\lambda_n \left[ a \sin^2(k l \lambda_n) + l \sin^2 (a \lambda_n) \right]} \exp(-D_{PyC} \lambda_n^2 t) \right\}
+\label{eqn:transient_PyC}
+C = C_0 \left\{ \frac{(a-x) D_{SiC} + l D_{PyC}}{l D_{PyC} + a D_{SiC}} - 2 \sum_{n=1}^{\infty} B_m \sin(\lambda_n \frac{x}{a}) \exp(-D_{PyC} \frac{\lambda^2_n}{a^2} t) \right\}
+\end{equation}
+
+and
+
+\begin{equation}
+\label{eqn:transient_SiC}
+C = C_0 \left\{ \frac{(l+a-x) D_{PyC}}{l D_{PyC} + a D_{SiC}} - 2 \sum_{n=1}^{\infty} B_m \frac{\sin(\lambda_n)}{\sin(k \lambda_n l/a)} \sin(k \lambda_n \frac{l+a-x}{a}) \exp(-D_{PyC} \frac{\lambda^2_n}{a^2} t) \right\}
 \end{equation}
 
 where
 
-$k$ = $\sqrt{\frac{D_{PyC}}{D_{SiC}}}$
+\begin{equation}
+k = \sqrt{\frac{D_{PyC}}{D_{SiC}}},
+\end{equation}
+
+\begin{equation}
+B_m = \frac{D_{PyC} l \sin^2(k \lambda_n l/a) (\cos(\lambda_n) - 1) + D_{SiC} \sin(k \lambda_n l/a) (k l \sin(\lambda_n) \cos(k \lambda_n l/a) - a \sin(k \lambda_n l/a))}{ \lambda_n (a D_{SiC} + l D_{PyC}) (\sin^2(k \lambda_n l/a) + l/a sin^2(\lambda_n))},
+\end{equation}
 
 and $\lambda_n$ are the roots of
 
 \begin{equation}
 \label{eqn:roots}
-    \frac{1}{\tan(\lambda a)} + \frac{1}{k \; \tan(k l \lambda)} = 0.
+\frac{\sin(\lambda_n) \cos(k \lambda_n l/a)}{k} + \cos(\lambda_n) \sin(k \lambda_n l/a) = 0.
 \end{equation}
 
-!alert warning title=Typo in [!cite](longhurst1992verification,ambrosek2008verification)
-[eqn:roots] for the roots of $\lambda$ is different from the equations provided in [!cite](longhurst1992verification,ambrosek2008verification), as they both have typographical errors and give different analytical solutions from the one provided in the figures of these reports.
+!alert warning title=Typo in [!cite](ambrosek2008verification)
+Due to the missing reference of analytical solution in TMAP4 ([!cite](longhurst1992verification)) and TMAP7 ([!cite](ambrosek2008verification)), we use the different analytical transient solution and roots of $\lambda$ for the concentration in PyC and SiC layer from [!cite](li2010analytical).
 
 ## Results
 
@@ -63,13 +78,19 @@ and $\lambda_n$ are the roots of
        id=ver-1e_comparison_dist
        caption=Comparison of TMAP8 calculation with the analytical solution. Bold text next to the plot curves shows the root mean square percentage error (RMSPE) between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
 
-For transient solution comparison, the concentration at a point, which is $x$ $\mu$m away from the PyC-SiC interface into the SiC layer, is obtained using the TMAP code and analytically. [ver-1e_comparison_time] shows comparison of the TMAP calculation with the analytical solution for this transient case. In the TMAP4 case, $x$ = 8 $\mu$m, and in the TMAP7 case $x$ = 15.75 $\mu$m. There is good agreement between TMAP and the analytical solution for both steady state and transient cases. In both cases, the root mean square percentage error (RMSPE) is under 0.2%.
+For transient solution comparison, the concentration at a point, which is $x$ $\mu m$ away from the PyC free surface, is obtained using the TMAP code as well as analytically. [ver-1e_comparison_time_PyC] shows comparison of the TMAP calculation with the analytical solution for this transient case at $x$ = 23 $\mu m$ in PyC layer. We only use the parameters from TMAP7 because the trivial difference between TMAP4 and TMAP7 in PyC layer. [ver-1e_comparison_time] shows comparison of the TMAP calculation with the analytical solution in SiC layer. In the TMAP4 case, $x$ = 41 $\mu m$, and in the TMAP7 case $x$ = 48.75 $\mu m$. There is good agreement between TMAP and the analytical solution for both steady state as well as transient cases. In both cases, the root mean square percentage error (RMSPE) is under 0.2 %.
+
+!media comparison_ver-1e.py
+       image_name=ver-1e_comparison_time_PyC.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1e_comparison_time_PyC
+       caption=Comparison of TMAP8 calculation with the analytical solution in PyC layer. Bold text next to the plot curves shows the RMSPE for the match between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
 
 !media comparison_ver-1e.py
        image_name=ver-1e_comparison_time.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1e_comparison_time
-       caption=Comparison of TMAP8 calculation with the analytical solution. Bold text next to the plot curves shows the RMSPE for the match between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
+       caption=Comparison of TMAP8 calculation with the analytical solution in SiC layer. Bold text next to the plot curves shows the RMSPE for the match between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
 
 The error is calculated between the TMAP8 and analytical solution values after $t$ = 0.2 s. This is in order to ignore the unphysical predictions of the analytical solution at very small times as shown in [ver-1e_comparison_time_zoomed], which is a close-up view of [ver-1e_comparison_time] close to the start of the simulation.
 
