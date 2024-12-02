@@ -81,13 +81,13 @@ we will need to create a new branch.
    git checkout devel
    ```
 
-2. Fetch and reset devel to get it up to date (make sure you do not have any changes on devel, because you would lose that):
+1. Fetch and reset devel to get it up to date (make sure you do not have any changes on devel, because you would lose that):
 
    ```
    git fetch upstream && git reset --hard upstream/devel && git submodule update --init
    ```
 
-3. Create a new branch, selecting an appropriate branch name for your development activities:
+1. Create a new branch, selecting an appropriate branch name for your development activities:
 
    ```
    git checkout -b <BRANCH_NAME>
@@ -148,7 +148,7 @@ unrelated changes all at once.
    git commit
    ```
 
-2. A file editor will appear. Now enter a short description of the commit.
+1. A file editor will appear. Now enter a short description of the commit.
    If you use VIM / VI as the default terminal editor, press the `i` key, and you’ll be able to edit the file.
    It is good practice to have a short title, and then a list of items describing the
    changes in more detail. At the bottom, you should add `(Ref. #<ISSUE_NUMBER>)`. It will look
@@ -164,8 +164,8 @@ unrelated changes all at once.
    (Ref. #1234)
    ```
 
-3. To exit and save, press `esc`, then type `:wq` if you use VIM / VI as the editor. The commit file will close.
-4. You might have to do several commits to capture all your changes.
+1. To exit and save, press `esc`, then type `:wq` if you use VIM / VI as the editor. The commit file will close.
+1. You might have to do several commits to capture all your changes.
 
 ## Generating new documentation pages using MooseDocs
 
