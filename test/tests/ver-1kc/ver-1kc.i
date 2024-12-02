@@ -1,7 +1,7 @@
 nb_segments_TMAP7 = 20
 node_size_TMAP7 = '${units 1.25e-5 m}'
 long_total = '${units ${fparse nb_segments_TMAP7 * node_size_TMAP7} m}'
-nb_segments_TMAP8 = 100
+nb_segments_TMAP8 = 1e2
 simulation_time = '${units 10 s}'
 temperature = '${units 500 K}'
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConstants.h
