@@ -162,7 +162,7 @@ Note that the agreement could be improved by adjusting the model parameters and 
 
 There are several reasons for the no exact fit with the data from [!cite](hino1998hydrogen): the most prominent one is the two-dimensionality of the experiment arising from beam non-uniformity and radial diffusion [!citep](anderl1992deuterium). The actual trap energies are probably a little lower than the ones indicated above if the time lag caused by two-dimensionality is significant. Exchange of hydrogen with chamber surfaces, particularly the sample support structure, may also be a factor.
 
-One reason the measured signal falls off after \approx 6300 s while the computed one remains steady is that the source of additional atoms in the experiment may be an expanding area that grow non-linearly, while the sample is being heated but stopped growing and thus stops emitting when the heating stops.
+One reason the measured signal falls off after $\approx$ 6300 s while the computed one remains steady is that the source of additional atoms in the experiment may be an expanding area that grow non-linearly, while the sample is being heated but stopped growing and thus stops emitting when the heating stops.
 
 !media comparison_val-2d.py
        image_name=val-2d_comparison.png
