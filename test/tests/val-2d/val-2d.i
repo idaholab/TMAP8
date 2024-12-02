@@ -363,6 +363,11 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
 
   [max_dt_size_function]
     type = ADParsedFunction
+    expression = 'if(t<${TDS_initial_time}  , ${step_interval_mid}, ${step_interval_min})'
+  []
+
+  [max_dt_size_function_coarse]
+    type = ADParsedFunction
     expression = 'if(t<${TDS_initial_time}  , ${step_interval_mid},
                   if(t<${TDS_critial_time_1}, ${step_interval_max},
                   if(t<${TDS_critial_time_2}, ${step_interval_min}, ${step_interval_max})))'

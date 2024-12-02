@@ -9,9 +9,9 @@ In this experiment, tritium is implanted at 5 keV and a flux of 1 $\times 10^{19
 The background pressure in the implantation chamber is 10$^{-3}$ Pa while the implantation is going on and 10$^{-5}$ Pa the rest of the time.
 Following the implantation, the sample is subjected to thermal desorption spectroscopy by heating under vacuum at 50 K/min to 1,273 K and then held at that temperature for several minutes.
 
-The system is in the structure of [val-2d_schematic]. The implantation chamber (Enclosure 1) has a volume of 0.1 $m^3$ and is evacuated by a turbo-molecular vacuum pump. 
-The implantation chamber is defined for this problem as a enclosure having a preprogrammed temperature of 300 K for 5,000 seconds followed by a ramp to 1,273 K at a ramp rate of 50 K/min. 
-Gas leakage from the ion source is represented by a enclosure with a pressure of $1 \times 10^{-3}$ Pa during implantation followed by $1 \times 10^{-5}$ Pa and flow to the implantation chamber at the vacuum pumping rate. 
+The system is in the structure of [val-2d_schematic]. The implantation chamber (Enclosure 1) has a volume of 0.1 $m^3$ and is evacuated by a turbo-molecular vacuum pump.
+The implantation chamber is defined for this problem as a enclosure having a preprogrammed temperature of 300 K for 5,000 seconds followed by a ramp to 1,273 K at a ramp rate of 50 K/min.
+Gas leakage from the ion source is represented by a enclosure with a pressure of $1 \times 10^{-3}$ Pa during implantation followed by $1 \times 10^{-5}$ Pa and flow to the implantation chamber at the vacuum pumping rate.
 Flow rate from the implantation chamber is taken to be 0.07 m$^3$/s on the basis of the stated pressure in the test chamber during implantation, given that nearly all implanted gas re-emerges during that time. The vacuum pump is represented by a enclosure (Enclosure 2) held at 10$^{-8}$ Pa.
 
 !media figures/val-2d_schematic.png
@@ -157,7 +157,7 @@ TMAP7 ([!cite](ambrosek2008verification)) adjusts the maximum atom fraction as 0
 ## Results
 
 In this case, there is a general background drift on desorption flux due to an increasing source of atoms going into the gas phase as the heated region spread with time. Thus, we add a ramped signal peaking at 4.87 $\times 10^{17}$ H$_2$/m$^2$/s to the results of the TMAP8 during the thermal desorption.
-[val-2d_comparison] shows the comparison of the TMAP8 calculation and the experimental data. There is reasonable agreement between the TMAP predictions and the experimental data with the root mean square percentage error of RMSPE = 32.83 %.
+[val-2d_comparison] shows the comparison of the TMAP8 calculation and the experimental data. There is reasonable agreement between the TMAP predictions and the experimental data with the root mean square percentage error of RMSPE = 32.81 %.
 Note that the agreement could be improved by adjusting the model parameters and adding more potential traps. TMAP7 is limited to three traps, but TMAP8 can introduce an arbitrarily number of trapping populations. It is also possible to perform this optimization with [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html).
 
 There are several reasons for the no exact fit with the data from [!cite](hino1998hydrogen): the most prominent one is the two-dimensionality of the experiment arising from beam non-uniformity and radial diffusion [!citep](anderl1992deuterium). The actual trap energies are probably a little lower than the ones indicated above if the time lag caused by two-dimensionality is significant. Exchange of hydrogen with chamber surfaces, particularly the sample support structure, may also be a factor.
