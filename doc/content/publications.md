@@ -8,6 +8,10 @@ your work should be included on this list, please make a post in the
 
 !bibtex list bib_files=articles_using_tmap8.bib
 
+## Conference Proceedings
+
+!bibtex list bib_files=proceedings_using_tmap8.bib
+
 !! The below commented out sections should be added in as publications are created and available
 
 !! ## Technical Reports
