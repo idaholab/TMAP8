@@ -12,7 +12,7 @@ os.chdir(script_folder)
 
 def get_lambdas_analytical(k,l,a):
     # Calculate lambda values for analytical solution
-        lambda_range = np.arange(1e-12,1e0,1e-5)
+        lambda_range = np.arange(1e-12,1e2,1e-5)
         f = 1/k * sin(lambda_range) * cos(lambda_range*l/a*k)
         g = cos(lambda_range) * sin(lambda_range*l/a*k)
         idx = np.where(np.diff(np.sign(f+g)))
@@ -44,7 +44,7 @@ ax.plot(tmap_time_tmap4, tmap_conc_tmap4, label=r"TMAP8-SiC (TMAP4 case)", c='ta
 ax.plot(tmap_time_tmap7, tmap_conc_tmap7, label=r"TMAP8-SiC (TMAP7 case)", c='tab:brown')
 
 # Analytical parameters
-t0 = 0.1
+t0 = 0.01
 c0 = 50.7079            # concentration at the PyC free surface (moles/m^3)
 a  = 33e-6              # thickness of the PyC layer (m)
 D_PyC = 1.274e-7        # diffusivity in PyC (m^2/s)
@@ -166,7 +166,7 @@ analytical_conc_tmap7 = c0 * ((D_PyC * l + (a - x1) * D_SiC)  / (l * D_PyC + a *
 idx = np.where(tmap_time_tmap7>=t0)[0]
 RMSE = np.sqrt(np.mean((tmap_conc_tmap7_PyC[idx]-analytical_conc_tmap7[idx])**2))
 err_percent = RMSE*100/np.mean(analytical_conc_tmap7[idx])
-ax.text(15, 45, 'RMSPE = %.2f '%err_percent+'%',fontweight='bold')
+ax.text(0.6, 45, 'RMSPE = %.2f '%err_percent+'%',fontweight='bold')
 
 ax.plot(tmap_time_tmap7, analytical_conc_tmap7,
         label=r"Analytical-PyC", c='tab:cyan', linestyle='--', dashes=(5,5))
@@ -174,7 +174,7 @@ ax.plot(tmap_time_tmap7, analytical_conc_tmap7,
 ax.set_xlabel(u'Time (s)')
 ax.set_ylabel(r"Concentration (moles/m$^3$)")
 ax.legend(loc="best")
-ax.set_xlim(0,50)
+ax.set_xlim(0,1)
 ax.set_ylim(0,65)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 

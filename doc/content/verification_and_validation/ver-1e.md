@@ -85,7 +85,7 @@ The expressions of the analytical solution for the transient case in TMAP4 ([!ci
 
 For transient solution comparisons, we select two different points: One in the PyC layer at $x = 32$ $\mu$ m, and one in the SiC layer.
 The concentration at these two points is calculated using TMAP8 and with the analytical equations ([eqn:transient_PyC,eqn:transient_SiC]).
-[ver-1e_comparison_time_PyC] shows the comparison of the TMAP8 calculation against the analytical solution for this transient case in the PyC layer. Note that we only use the parameters from TMAP7 because the trivial difference between TMAP4 and TMAP7 in PyC layer.
+[ver-1e_comparison_time_PyC] shows the comparison of the TMAP8 calculation against the analytical solution for this transient case in the PyC layer from 0 s to 1 s. Note that we only use the parameters from TMAP7 because the trivial difference between TMAP4 and TMAP7 in PyC layer.
 [ver-1e_comparison_time] shows the comparison of the TMAP8 calculation against the analytical solution in the SiC layer. In the TMAP4 case, $x$ = 41 $\mu$ m, and in the TMAP7 case, $x$ = 48.75 $\mu$ m.
 There is good agreement between TMAP8 and the analytical solution for both steady state as well as transient cases. In both cases, the root mean square percentage error (RMSPE) is under 0.2 %.
 
@@ -101,7 +101,7 @@ There is good agreement between TMAP8 and the analytical solution for both stead
        id=ver-1e_comparison_time
        caption=Comparison of TMAP8 calculation with the analytical solution in SiC layer. The compared distances are $x$ = 41 $\mu$ m in the TMAP4 case and $x$ = 48.75 $\mu$ m in the TMAP7 case. Bold text next to the plot curves shows the RMSPE for the match between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
 
-The error is calculated between the TMAP8 and analytical solution values after $t$ = 0.1 s. This is in order to ignore the unphysical predictions of the analytical solution at very small times as shown in [ver-1e_comparison_time_zoomed], which is a close-up view of [ver-1e_comparison_time] close to the start of the simulation.
+The error is calculated between the TMAP8 and analytical solution values after $t$ = 0.01 s. This is in order to ignore the unphysical predictions of the analytical solution at very small times as shown in [ver-1e_comparison_time_zoomed], which is a close-up view of [ver-1e_comparison_time] close to the start of the simulation. The departure from physical results at low $t$ is due to the limited number of $\lambda_n$ values being used from [eqn:roots]. We use the $\lambda_n$ values from 0 to 100 in this case. The $\lambda_n$ values in larger range will only have limited improvement in the accuracy but increase the running time of the analytical solutions.
 
 !media comparison_ver-1e.py
        image_name=ver-1e_comparison_time_closeup.png
