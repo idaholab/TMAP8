@@ -5,6 +5,7 @@
 ## General Case Description
 
 This verification problem is taken from [!cite](longhurst1992verification, ambrosek2008verification). In this problem, a composite structure of PyC and SiC is modeled with a constant concentration boundary condition of the free surface of PyC and zero concentration boundary condition on the free surface of the SiC.
+This verification problem is taken from [!cite](longhurst1992verification, ambrosek2008verification). In this problem, a composite structure of PyC and SiC is modeled with a constant concentration boundary condition of the free surface of PyC and zero concentration boundary condition on the free surface of the SiC.
 
 ## Analytical solution at steady state
 
@@ -26,9 +27,9 @@ where
 
     $x$ = distance from free surface of PyC
 
-    $a$ = thickness of the PyC layer (33 $\mu$m)
+    $a$ = thickness of the PyC layer (33 $\mu$ m)
 
-    $l$ = thickness of the SiC layer (63 $\mu$m in TMAP4 verification case, and 66 $\mu$m in TMAP7 verification case)
+    $l$ = thickness of the SiC layer (63 $\mu$ m in TMAP4 verification case, and 66 $\mu$ m in TMAP7 verification case)
 
     $C_0$ = concentration at the PyC free surface (50.7079 moles/m$^3$)
 
@@ -74,7 +75,7 @@ The expressions of the analytical solution for the transient case in TMAP4 ([!ci
 
 ## Results
 
-[ver-1e_comparison_dist] shows the comparison of the TMAP8 calculation and the analytical solution for concentration after steady-state is reached. The plots show the TMAP8 and analytical solution comparisons for both the TMAP4 case ($l = 63$ $\mu$m) and the TMAP7 case ($l = 66$ $\mu$m).
+[ver-1e_comparison_dist] shows the comparison of the TMAP8 calculation and the analytical solution for concentration after steady-state is reached. The plots show the TMAP8 and analytical solution comparisons for both the TMAP4 case ($l$ = 63 $\mu$ m) and the TMAP7 case ($l$ = 66 $\mu$ m).
 
 !media comparison_ver-1e.py
        image_name=ver-1e_comparison_dist.png
@@ -82,25 +83,25 @@ The expressions of the analytical solution for the transient case in TMAP4 ([!ci
        id=ver-1e_comparison_dist
        caption=Comparison of TMAP8 calculation with the analytical solution at steady state. Bold text next to the plot curves shows the root mean square percentage error (RMSPE) between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
 
-For transient solution comparisons, we select two different points: One in the PyC layer at $x = 23$ $\mu$ m, and one in the SiC layer.
+For transient solution comparisons, we select two different points: One in the PyC layer at $x = 32$ $\mu$ m, and one in the SiC layer.
 The concentration at these two points is calculated using TMAP8 and with the analytical equations ([eqn:transient_PyC,eqn:transient_SiC]).
 [ver-1e_comparison_time_PyC] shows the comparison of the TMAP8 calculation against the analytical solution for this transient case in the PyC layer. Note that we only use the parameters from TMAP7 because the trivial difference between TMAP4 and TMAP7 in PyC layer.
-[ver-1e_comparison_time] shows the comparison of the TMAP8 calculation against the analytical solution in the SiC layer. In the TMAP4 case, $x$ = 41 $\mu m$, and in the TMAP7 case, $x$ = 48.75 $\mu m$.
+[ver-1e_comparison_time] shows the comparison of the TMAP8 calculation against the analytical solution in the SiC layer. In the TMAP4 case, $x$ = 41 $\mu$ m, and in the TMAP7 case, $x$ = 48.75 $\mu$ m.
 There is good agreement between TMAP8 and the analytical solution for both steady state as well as transient cases. In both cases, the root mean square percentage error (RMSPE) is under 0.2 %.
 
 !media comparison_ver-1e.py
        image_name=ver-1e_comparison_time_PyC.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1e_comparison_time_PyC
-       caption=Comparison of TMAP8 calculation with the analytical solution in PyC layer. Bold text next to the plot curves shows the RMSPE for the match between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
+       caption=Comparison of TMAP8 calculation with the analytical solution at $x = 32$ $\mu$ m in PyC layer. Bold text next to the plot curves shows the RMSPE for the match between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
 
 !media comparison_ver-1e.py
        image_name=ver-1e_comparison_time.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1e_comparison_time
-       caption=Comparison of TMAP8 calculation with the analytical solution in SiC layer. Bold text next to the plot curves shows the RMSPE for the match between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
+       caption=Comparison of TMAP8 calculation with the analytical solution in SiC layer. The compared distances are $x$ = 41 $\mu$ m in the TMAP4 case and $x$ = 48.75 $\mu$ m in the TMAP7 case. Bold text next to the plot curves shows the RMSPE for the match between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
 
-The error is calculated between the TMAP8 and analytical solution values after $t$ = 0.2 s. This is in order to ignore the unphysical predictions of the analytical solution at very small times as shown in [ver-1e_comparison_time_zoomed], which is a close-up view of [ver-1e_comparison_time] close to the start of the simulation.
+The error is calculated between the TMAP8 and analytical solution values after $t$ = 0.1 s. This is in order to ignore the unphysical predictions of the analytical solution at very small times as shown in [ver-1e_comparison_time_zoomed], which is a close-up view of [ver-1e_comparison_time] close to the start of the simulation.
 
 !media comparison_ver-1e.py
        image_name=ver-1e_comparison_time_closeup.png

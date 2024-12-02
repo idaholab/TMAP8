@@ -44,7 +44,7 @@ ax.plot(tmap_time_tmap4, tmap_conc_tmap4, label=r"TMAP8-SiC (TMAP4 case)", c='ta
 ax.plot(tmap_time_tmap7, tmap_conc_tmap7, label=r"TMAP8-SiC (TMAP7 case)", c='tab:brown')
 
 # Analytical parameters
-t0 = 0.2
+t0 = 0.1
 c0 = 50.7079            # concentration at the PyC free surface (moles/m^3)
 a  = 33e-6              # thickness of the PyC layer (m)
 D_PyC = 1.274e-7        # diffusivity in PyC (m^2/s)
@@ -150,7 +150,7 @@ ax.plot(tmap_time_tmap7, tmap_conc_tmap7_PyC, label=r"TMAP8-PyC", c='tab:brown')
 l  = 63e-6              # thickness of the SiC layer (m)
 lambdas = get_lambdas_analytical(k,l,a)
 t = np.expand_dims(tmap_time_tmap7,axis=0)
-x = -10e-6            # depth into PyC layer from IPyC/SiC interface
+x = -1e-6            # depth into PyC layer from IPyC/SiC interface
                         # where we compare analytical and numerical model concentration predictions (m)
 x1 = x + a
 
