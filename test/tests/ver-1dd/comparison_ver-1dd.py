@@ -55,7 +55,7 @@ ax.plot(analytical_time, analytical_flux, label=r"Analytical", c='k', linestyle=
 ax.plot([tmap_intercept, 0.221], [0, (0.221 - tmap_intercept) * np.max(tmap_slope)],
         label=r"Numerical breakthrough time", c='tab:brown')
 ax.plot([tau_be, tau_be], [0, 3.15e18], label=r"Analytical breakthrough time", c='tab:brown', linestyle='--')
-ax.set_xlabel(u'Time(s)')
+ax.set_xlabel(u'Time (s)')
 ax.set_ylabel(u"Flux (atom/m$^2$s)")
 ax.legend(loc="best")
 ax.set_xlim(left=0, right=1.5)

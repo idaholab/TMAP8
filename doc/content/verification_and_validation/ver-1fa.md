@@ -14,7 +14,7 @@ This case models a heat conduction problem through a slab with a heat source. Th
 
 where $T$ is the temperature, $\rho$ is the density, $C_P$ is the specific heat, $k$ is the thermal conductivity, and $Q$ is the internal volumetric heat generation rate.
 
-One end of the slab is kept at a constant temperature of 300K while the other end acts as an adiabatic surface.
+One end of the slab is kept at a constant temperature of 300 K while the other end acts as an adiabatic surface.
 
 This case uses internal volumetric heat generation rate of $Q = 1 \times 10^{4}$ W/m$^3$ in the slab. The thickness of slab, $L$, is 1.6 m, and the thermal conductivity is $k = 10$ W/m/K. The surface temperature, $T_s$, on the end with a constant temperature, is 300 K. The material density and specific heat are assumed to be $\rho = 1$ kg/m$^3$ and $C_P = 1$ J/kg/K, respectively.
 
