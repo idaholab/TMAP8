@@ -5,11 +5,14 @@
 ## Case Description
 
 This validation problem is taken from [!cite](hino1998hydrogen) with multiple trapping capability. This case is part of the validation suite of TMAP7 as val-2d [!citep](ambrosek2008verification).
-In this experiment, tritium is implanted at 5 keV and a flux of 1 $\times 10^{19}$ atom/m$_2$/s for 5,000 seconds into a 0.1 mm thick polycrystalline tungsten foil with a surface area of 50 x 50 mm$^2$ at room temperature (300 K).
+In this experiment, tritium is implanted at 5 keV and a flux of 1 $\times 10^{19}$ atom/m$_2$/s for 5,000 seconds into a 0.1 mm thick polycrystalline tungsten foil with a surface area of 50 $\times$ 50 mm$^2$ at room temperature (300 K).
 The background pressure in the implantation chamber is 10$^{-3}$ Pa while the implantation is going on and 10$^{-5}$ Pa the rest of the time.
 Following the implantation, the sample is subjected to thermal desorption spectroscopy by heating under vacuum at 50 K/min to 1,273 K and then held at that temperature for several minutes.
 
-The system is in the structure of [val-2d_schematic]. The implantation chamber (Enclosure 1) has a volume of 0.1 $m^3$ and is evacuated by a turbo-molecular vacuum pump. The implantation chamber is defined for this problem as a enclosure having a preprogrammed temperature of 300 K for 5,000 seconds followed by a ramp to 1,273 K at a ramp rate of 50 K/min. Gas leakage from the ion source is represented by a enclosure with a pressure of $1 \times 10^{-3}$ Pa during implantation followed by $1 \times 10^{-5}$ Pa and flow to the implantation chamber at the vacuum pumping rate. Flow rate from the implantation chamber is taken to be 0.07 m$^3$/s on the basis of the stated pressure in the test chamber during implantation, given that nearly all implanted gas re-emerges during that time. The vacuum pump is represented by a enclosure (Enclosure 2) held at 10-8 Pa.
+The system is in the structure of [val-2d_schematic]. The implantation chamber (Enclosure 1) has a volume of 0.1 $m^3$ and is evacuated by a turbo-molecular vacuum pump. 
+The implantation chamber is defined for this problem as a enclosure having a preprogrammed temperature of 300 K for 5,000 seconds followed by a ramp to 1,273 K at a ramp rate of 50 K/min. 
+Gas leakage from the ion source is represented by a enclosure with a pressure of $1 \times 10^{-3}$ Pa during implantation followed by $1 \times 10^{-5}$ Pa and flow to the implantation chamber at the vacuum pumping rate. 
+Flow rate from the implantation chamber is taken to be 0.07 m$^3$/s on the basis of the stated pressure in the test chamber during implantation, given that nearly all implanted gas re-emerges during that time. The vacuum pump is represented by a enclosure (Enclosure 2) held at 10$^{-8}$ Pa.
 
 !media figures/val-2d_schematic.png
         style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
@@ -18,7 +21,7 @@ The system is in the structure of [val-2d_schematic]. The implantation chamber (
 
 Based on TRIM calculations [!citep](eckstein2013computer,biersack1982stopping), implantation in the sample shows a normal distribution, which has a peak at 4.6 nm below the surface and a characteristic half width of 3 nm. Implantation is activated for 5,000 s and then terminated.
 
-Three traps are assumed in the sample. Trap concentrations and distributions are considered adjustable parameters while energies were determined by TDS peak temperatures.
+Three trapping site populations are accounted for in the sample. Trap concentrations and distributions are considered adjustable parameters while energies were determined by TDS peak temperatures.
 The first trap is assumed to be associated with implantation (damage and precipitation) and to be normally distributed with a peak at 4.6 nm and a characteristic width of 10 nm, consistent with the observations of [!cite](haasz1999effect) that damage zone exceeds the implantation depth.
 Its trap energy is adjusted, based on the temperature of the first peak, to be 1.2 eV, and it is assumed to be 0.086 atom fraction at the peak. Its distribution is defined as:
 
@@ -55,7 +58,7 @@ where $C$ is the concentration of tritium, $t$ is the time, $S$ is the source te
 D = D_{0} \exp \left( - \frac{E_{D}}{k_b T} \right),
 \end{equation}
 
-where $E_{D}$ is the diffusion activation energy, $k_b$ is the Boltzmann’s constant, $T$ is the temperature, and $D_{0}$ is the maximum diffusivity coefficient. TMAP7 ([!cite](ambrosek2008verification)) assigns two different value, $D_{0,l}$ and $D_{0,r}$, for implantation zone ($x < 15 \times 10 ^ {-9}$ m) and other zone ($x > 15 \times 10 ^ {-9}$ m).
+where $E_{D}$ is the diffusion activation energy, $k_b$ is the Boltzmann’s constant, $T$ is the temperature, and $D_{0}$ is the maximum diffusivity coefficient. TMAP7 ([!cite](ambrosek2008verification)) assigns two different value, $D_{0,l}$ and $D_{0,r}$, for implantation zone ($x < 15 \times 10^{-9}$ m) and other zone ($x > 15 \times 10^{-9}$ m).
 
 $\alpha_t^i$ and $\alpha_r^i$ are defined as:
 
