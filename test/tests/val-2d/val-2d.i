@@ -332,7 +332,7 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
 
 [Functions]
   [Temperature_function]
-    type = ADParsedFunction
+    type = ParsedFunction
     expression = 'if(t<${TDS_initial_time},   ${temperature_low},
                   if(t<${TDS_initial_time} + (${temperature_high} - ${temperature_low}) /
                         ${temperature_rate},  ${temperature_low} + ${temperature_rate} * (t - ${TDS_initial_time}),
@@ -340,34 +340,34 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
   []
 
   [surface_flux_function]
-    type = ADParsedFunction
+    type = ParsedFunction
     expression = 'if(t<${TDS_initial_time}, ${flux_high}, ${flux_low})'
   []
 
   [source_distribution_function]
-    type = ADParsedFunction
+    type = ParsedFunction
     expression = '1 / ( ${width_source} * sqrt(2 * pi) ) * exp(-0.5 * ((x - ${depth_source}) / ${width_source} ) ^ 2)'
   []
 
   [trap_1_distribution_function]
-    type = ADParsedFunction
+    type = ParsedFunction
     expression = ' ${trapping_site_fraction_1} / ( ${width_trap1} * sqrt(2 * pi) ) * exp(-0.5 * ((x - ${depth_source}) / ${width_trap1}) ^ 2)'
   []
 
   [concentration_source_norm_function]
-    type = ADParsedFunction
+    type = ParsedFunction
     symbol_names = 'source_distribution_function surface_flux_function'
     symbol_values = 'source_distribution_function surface_flux_function'
     expression = 'source_distribution_function * surface_flux_function'
   []
 
   [max_dt_size_function]
-    type = ADParsedFunction
+    type = ParsedFunction
     expression = 'if(t<${TDS_initial_time}  , ${step_interval_mid}, ${step_interval_min})'
   []
 
   [max_dt_size_function_coarse]
-    type = ADParsedFunction
+    type = ParsedFunction
     expression = 'if(t<${TDS_initial_time}  , ${step_interval_mid},
                   if(t<${TDS_critial_time_1}, ${step_interval_max},
                   if(t<${TDS_critial_time_2}, ${step_interval_min}, ${step_interval_max})))'
@@ -428,14 +428,13 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
   end_time = ${simulation_time}
   line_search = 'none'
   automatic_scaling = true
-  nl_abs_tol = 1e-8
-  nl_rel_tol = 1e-6
-  nl_max_its = 30
+  nl_rel_tol = 1e-10
+  nl_max_its = 34
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 1.0
     iteration_window = 5
-    optimal_iterations = 22
+    optimal_iterations = 26
     growth_factor = 1.1
     cutback_factor = 0.9
     cutback_factor_at_failure = 0.9
