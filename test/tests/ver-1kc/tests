@@ -5,9 +5,10 @@
   [ver-1kc_csv]
     type = CSVDiff
     input = ver-1kc.i
-    cli_args = "nb_segments_TMAP8='${fparse 1e3}'
-                Executioner/nl_abs_tol='${fparse 1e-3}'
-                Executioner/nl_rel_tol='${fparse 1e-2}'
+    cli_args = "nb_segments_TMAP8=1e1
+                simulation_time=4
+                Executioner/nl_abs_tol=1e-8
+                Executioner/nl_rel_tol=1e-6
                 Outputs/exodus=false
                 Outputs/file_base=ver-1kc_out_k10_light"
     csvdiff = ver-1kc_out_k10_light.csv
@@ -18,7 +19,7 @@
     heavy = true
     input = ver-1kc.i
     csvdiff = ver-1kc_out_k10.csv
-    requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface.'
+    requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface with a fine mesh and tight tolerances for higher accuracy.'
   []
   [ver-1kc_exodus_heavy]
     type = Exodiff
@@ -27,7 +28,7 @@
     exodiff = ver-1kc_out_k10.e
     prereq = ver-1kc_csv_heavy
     should_execute = false # this test relies on the output files from ver-1kc_csv_concentration_jump, so it shouldn't be run twice
-    requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface and generate an exodus file.'
+    requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface with a fine mesh and tight tolerances for higher accuracy and generate an exodus file.'
   []
   [ver-1kc_comparison]
     type = RunCommand
