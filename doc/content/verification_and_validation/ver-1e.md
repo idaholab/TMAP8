@@ -100,13 +100,13 @@ There is good agreement between TMAP8 and the analytical solution for both stead
        id=ver-1e_comparison_time
        caption=Comparison of TMAP8 calculation with the analytical solution in SiC layer. The compared distances are $x$ = 41 $\mu$m in the TMAP4 case and $x$ = 48.75 $\mu$m in the TMAP7 case. Bold text next to the plot curves shows the RMSPE for the match between the TMAP8 prediction and analytical solution for the TMAP4 and TMAP7 verification cases.
 
-The error is calculated between the TMAP8 and analytical solution values after $t$ = 0.01 s. This is in order to ignore the unphysical predictions of the analytical solution at very small times as shown in [ver-1e_comparison_time_zoomed], which is a close-up view of [ver-1e_comparison_time] close to the start of the simulation. The departure from physical results at low $t$ is due to the limited number of $\lambda_n$ values being used from [eqn:roots]. We use the $\lambda_n$ values from 0 to 100 in this case. The $\lambda_n$ values in larger range will only have limited improvement in the accuracy but increase the running time for the computation of the analytical solutions.
+The error is calculated between the TMAP8 and analytical solution values after $t$ = 0.2 s. This is in order to ignore the unphysical predictions of the analytical solution at very small times as shown in [ver-1e_comparison_time_zoomed], which is a close-up view of [ver-1e_comparison_time] close to the start of the simulation. The departure from physical results at low $t$ is due to the limited number of $\lambda_n$ values being used from [eqn:roots]. We use the $\lambda_n$ values from 0 to 100 in this case. The $\lambda_n$ values in larger range will only have limited improvement in the accuracy but increase the running time for the computation of the analytical solutions.
 
 !media comparison_ver-1e.py
        image_name=ver-1e_comparison_time_closeup.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1e_comparison_time_zoomed
-       caption=Zoomed-in view of comparison of TMAP8 calculation with the analytical solution for $t$ < 0.3 s. The analytical solution shows unphysical predictions close to $t$ = 0 s, whereas TMAP8's predictions are reasonable.
+       caption=Zoomed-in view of comparison of TMAP8 calculation with the analytical solution for $t$ < 0.4 s. The analytical solution shows unphysical predictions close to $t$ = 0 s, whereas TMAP8's predictions are reasonable.
 
 ## Input files
 
