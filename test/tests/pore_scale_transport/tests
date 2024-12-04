@@ -1,0 +1,27 @@
+[Tests]
+  design = 'pore_scale_transport/index.md'
+  issues = '#229'
+  [pore_scale_microstructure_formation_slice]
+    type = Exodiff
+    input = '2D_microstructure_reader_smoothing_base.i pore_structure_closed.params'
+    cli_args = "output_name=pore_structure_closed_slice/pore_structure_closed_slice
+                num_nodes_x=60
+                num_nodes_y=2
+                domain_start_x=4000
+                domain_end_x=5000
+                domain_end_y=1"
+    exodiff = pore_structure_closed_slice/pore_structure_closed_slice.e
+    requirement = 'The system shall be able to read a microstructure image and import it to perform a simulation to smoothen the interfaces.'
+  []
+  [pore_scale_transport_slice]
+    type = Exodiff
+    input = '2D_absorption_base.i pore_structure_closed_absorption.params'
+    cli_args = "input_name=gold/pore_structure_closed_slice/pore_structure_closed_slice.e
+                output_name=pore_structure_closed_slice/pore_structure_closed_absorption_slice
+                BCs/tritium_2g_sides_d/boundary=right
+                Executioner/num_steps=20"
+    exodiff = pore_structure_closed_slice/pore_structure_closed_absorption_slice.e
+    requirement = 'The system shall be able to import an existing microstructure and perform a simulation of tritium transport during
+                   absorption at the pore scale.'
+  []
+[]
