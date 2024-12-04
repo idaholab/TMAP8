@@ -1,0 +1,43 @@
+[Tests]
+  design = 'TrappingNodalKernel.md ReleasingNodalKernel.md ADDirichletBC.md'
+  issues = '#12 #203'
+  validation = 'val-2d.md'
+  [val-2d_csvdiff]
+    type = CSVDiff
+    input = 'val-2d.i'
+    cli_args = 'Mesh/active=cartesian_mesh_coarse Postprocessors/max_time_step_size/function=max_dt_size_function_coarse Executioner/nl_rel_tol=8e-9 Outputs/file_base=val-2d_limited_out'
+    csvdiff = val-2d_limited_out.csv
+    requirement = 'The system shall be able to model thermal desorption spectroscopy on Tungsten.'
+  []
+  [val-2d_exodiff]
+    type = Exodiff
+    input = 'val-2d.i'
+    cli_args = 'Mesh/active=cartesian_mesh_coarse Postprocessors/max_time_step_size/function=max_dt_size_function_coarse Executioner/nl_rel_tol=8e-9 Outputs/file_base=val-2d_limited_out'
+    exodiff = val-2d_limited_out.e
+    prereq = val-2d_csvdiff
+    should_execute = false # this test relies on the output files from val-2d_csvdiff, so it shouldn't be run twice
+    requirement = 'The system shall be able to model thermal desorption spectroscopy on Tungsten to include full set of simulation outputs, including tritium concentration, diffusion flux, and trapping properties.'
+  []
+  [val-2d_heavy_csvdiff]
+    type = CSVDiff
+    input = 'val-2d.i'
+    csvdiff = val-2d_out.csv
+    heavy = true
+    requirement = 'The system shall be able to model thermal desorption spectroscopy on Tungsten with fine mesh and time step to compare with the desorption flux from experiment results.'
+  []
+  [val-2d_heavy_exodiff]
+    type = Exodiff
+    input = 'val-2d.i'
+    exodiff = val-2d_out.e
+    prereq = val-2d_csvdiff
+    heavy = true
+    should_execute = false # this test relies on the output files from val-2d_csvdiff, so it shouldn't be run twice
+    requirement = 'The system shall be able to model thermal desorption spectroscopy on Tungsten with fine mesh and time step to include full set of simulation outputs, including tritium concentration, diffusion flux, and trapping properties.'
+  []
+  [val-2d_comparison]
+    type = RunCommand
+    command = 'python3 comparison_val-2d.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of validation case 2d, modeling thermal desorption spectroscopy on Tungsten.'
+    required_python_packages = 'matplotlib numpy pandas scipy os'
+  []
+[]
