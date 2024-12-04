@@ -1,10 +1,21 @@
+# Numerical parameters
+nx_num = 1000 # -
+simulation_time = ${units 5000 s}
+
+# Data used in TMAP4/TMAP7 case
 T_PyC = ${units 33 mum -> m}
 T_SiC = ${units 66 mum -> m}
 D_ver = ${units 15.75 mum -> m}
+D_ver_PyC = ${units 32 mum -> m}
+Diffusivity_PyC = ${units 1.274e-7 m^2/s}
+Diffusivity_SiC = ${units 2.622e-11 m^2/s}
+length_PyC = ${units 33 mum -> m}
+initial_concentration = ${units 50.7079 mol/m^3}
+
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 1000
+  nx = ${nx_num}
   xmax = ${fparse ${T_PyC} + ${T_SiC} }
   allow_renumbering = false
 []
@@ -17,7 +28,7 @@ D_ver = ${units 15.75 mum -> m}
 [Functions]
   [diffusivity_value]
     type = ParsedFunction
-    expression = 'if(x< ${units 33 mum -> m}, 1.274e-7, 2.622e-11)'
+    expression = 'if(x < ${length_PyC}, ${Diffusivity_PyC}, ${Diffusivity_SiC} )'
   []
 []
 
@@ -38,7 +49,7 @@ D_ver = ${units 15.75 mum -> m}
     type = DirichletBC
     variable = u
     boundary = left
-    value = 50.7079 # moles/m^3
+    value = ${initial_concentration}
   []
   [right]
     type = DirichletBC
@@ -67,17 +78,23 @@ D_ver = ${units 15.75 mum -> m}
   # point in SiC layer 'x' um from IPyC/SiC boundary
   # x = 8 um for TMAP4 verification case,
   # x = 15.75 um for TMAP7 verification case
-  [conc_at_x]
+  [concentration_at_x_SiC]
     type = PointValue
     variable = u
     point = '${fparse ${T_PyC} + ${D_ver}} 0 0'
+    outputs = 'csv'
+  []
+  [concentration_at_x_PyC]
+    type = PointValue
+    variable = u
+    point = '${D_ver_PyC} 0 0'
     outputs = 'csv'
   []
 []
 
 [Executioner]
   type = Transient
-  end_time = 5000
+  end_time = ${simulation_time}
   dtmax = 10
   solve_type = NEWTON
   petsc_options_iname = '-pc_type'
@@ -105,7 +122,7 @@ D_ver = ${units 15.75 mum -> m}
   []
   [vector_postproc]
     type = CSV
-    sync_times = 5000
+    sync_times = ${simulation_time}
     sync_only = true
   []
 []
