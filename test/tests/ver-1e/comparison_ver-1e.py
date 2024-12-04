@@ -130,8 +130,8 @@ ax.plot(tmap_time_tmap7, analytical_conc_tmap7,
 ax.set_xlabel(u'Time (s)')
 ax.set_ylabel(r"Concentration (moles/m$^3$)")
 ax.legend(loc="best")
-ax.set_xlim(0,1.0)
-ax.set_ylim(-1,20)
+ax.set_xlim(0,0.3)
+ax.set_ylim(-0.2,1)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
 ax.minorticks_on()

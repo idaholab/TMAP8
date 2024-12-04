@@ -106,7 +106,7 @@ The error is calculated between the TMAP8 and analytical solution values after $
        image_name=ver-1e_comparison_time_closeup.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1e_comparison_time_zoomed
-       caption=Zoomed-in view of comparison of TMAP8 calculation with the analytical solution for $t$ < 1 s. The analytical solution shows unphysical predictions close to $t$ = 0 s, whereas TMAP8's predictions are reasonable.
+       caption=Zoomed-in view of comparison of TMAP8 calculation with the analytical solution for $t$ < 0.3 s. The analytical solution shows unphysical predictions close to $t$ = 0 s, whereas TMAP8's predictions are reasonable.
 
 ## Input files
 
