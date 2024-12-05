@@ -327,12 +327,6 @@ reactionRateSurface_gXYs_ref_0 = ${units 34.69205021 1/s}
 []
 
 [Postprocessors]
-  [tritium_2g_flux]
-    type = ADSideDiffusiveFluxIntegral
-    variable = tritium_2g
-    boundary = 'left right top bottom'
-    diffusivity = D_pore
-  []
   [Tritium_amount_free]
     type = ElementIntegralVariablePostprocessor
     variable = tritium_s
