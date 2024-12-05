@@ -19,3 +19,10 @@ fusion power plant.
 ## [Divertor Monoblock](examples/divertor_monoblock/index.md)
 
 TMAP8 is used to model tritium transport in a divertor monoblock to elucidate the effects of pulsed operation (up to fifty 1600-second plasma discharge and cool-down cycles) on the tritium in-vessel inventory source term and ex-vessel release term (i.e., tritium retention and permeation) for safety analysis. This example reproduces the results presented in [!cite](Shimada2024114438).
+
+
+## [Pore-Scale Tritium Transport in imported microstructures](examples/pore_scale_transport/index.md)
+
+This example demonstrates TMAP8's capability to (1) generate pore structures from input images,
+and (2) perform pore-scale simulations of tritium transport on these pore structures based on the model described in [!cite](Simon2022).
+This example highlights the effect of pore interconnectivity on tritium transport.

@@ -152,15 +152,6 @@ reactionRateSurface_gXYs_ref_0 = ${units 34.69205021 1/s}
   []
 []
 
-[AuxKernels]
-  [pore_aux]
-    type = FunctionAux
-    variable = pore
-    function = 'pore_position_func'
-    execute_on = 'INITIAL'
-  []
-[]
-
 [Kernels]
   # ========================================== Time derivative for each variable
   [dtritium_sdt]
@@ -237,6 +228,15 @@ reactionRateSurface_gXYs_ref_0 = ${units 34.69205021 1/s}
     type = ADMatDiffusion
     variable = tritium_2g
     diffusivity = D_pore
+  []
+[]
+
+[AuxKernels]
+  [pore_aux]
+    type = FunctionAux
+    variable = pore
+    function = 'pore_position_func'
+    execute_on = 'INITIAL'
   []
 []
 
