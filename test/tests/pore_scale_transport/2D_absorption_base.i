@@ -37,7 +37,8 @@
 scale_quantity = ${units 1e-18 moles}
 scale_time = ${units 1 s}
 scale_length = ${units 1 mum}
-tritium_trap_scaling = 1e12 # (-)
+tritium_trap_scaling = 1e3 # (-)
+tritium_s_scaling = 1e2 # (-)
 
 # Conditions
 tritium_2g_concentration = ${units 0.1121 mol/um^3}
@@ -56,8 +57,6 @@ reactionRateSurface_gXYs_ref_0 = ${units 34.69205021 1/s}
 
 [Mesh]
   file = ${input_name}
-  #This method of restart is only supported on serial meshes
-  # distribution = serial
 []
 
 [UserObjects]
@@ -70,6 +69,7 @@ reactionRateSurface_gXYs_ref_0 = ${units 34.69205021 1/s}
 
 [Variables]
   [tritium_s]
+    scaling = ${tritium_s_scaling}
   []
   [tritium_trap]
     scaling = ${tritium_trap_scaling}
@@ -385,23 +385,14 @@ reactionRateSurface_gXYs_ref_0 = ${units 34.69205021 1/s}
   type = Transient
   scheme = bdf2
 
-  l_tol = 1e-4
-  nl_abs_tol = 1e-8 # e-15
-  nl_rel_tol = 1e-6 #8e-07 # e-08
-
-  # automatic_scaling = true # automatic scaling causes convergence issues and equations do not behave properly (generation)
-  # compute_scaling_once = false
-  # verbose = true
-
+  nl_rel_tol = 1e-10
   end_time = 2000
-  num_steps = 100000000
   dtmax = 50
-
   nl_max_its = 14
   [TimeStepper]
     type = IterationAdaptiveDT
     optimal_iterations = 12
-    iteration_window = 0
+    iteration_window = 1
     growth_factor = 1.2
     dt = 2.37e-7
     cutback_factor = 0.75

@@ -9,7 +9,8 @@
                 num_nodes_y=2
                 domain_start_x=4000
                 domain_end_x=5000
-                domain_end_y=1"
+                domain_end_y=1
+                Outputs/exodus/execute_on='INITIAL TIMESTEP_END FINAL'"
     exodiff = pore_structure_closed_slice/pore_structure_closed_slice.e
     requirement = 'The system shall be able to read a microstructure image and import it to perform a simulation to smoothen the interfaces.'
   []
@@ -21,6 +22,7 @@
                 BCs/tritium_2g_sides_d/boundary=right
                 Executioner/num_steps=20"
     exodiff = pore_structure_closed_slice/pore_structure_closed_absorption_slice.e
+    custom_cmp = '2D_absorption_closed_slice.exodiff' # neeeded for -p2 tests
     requirement = 'The system shall be able to import an existing microstructure and perform a simulation of tritium transport during
                    absorption at the pore scale.'
   []
