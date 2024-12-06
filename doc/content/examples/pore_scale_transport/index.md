@@ -5,7 +5,7 @@ and (2) perform pore-scale simulations of tritium transport on these pore struct
 [!cite](Simon2022) provides additional context and details about this example, including a description of the calibration efforts.
 Note this approach can be extended to three-dimensional microstructures.
 
-THis example, like stated in [!cite](Simon2022), showcases how TMAP8 can simulate complex geometries and help investigate the effect of pore microstructure on tritium absorption.
+This example, like stated in [!cite](Simon2022), showcases how TMAP8 can simulate complex geometries and help investigate the effect of pore microstructure on tritium absorption.
 
 ## General Description of the Simulation Case and Corresponding Input Files
 
@@ -53,12 +53,12 @@ Although both samples have a density of 80%, they exhibit very different pore in
 !media examples/figures/2D_pore_structure_closed.png
   id=fig:initial_image_closed
   caption= Initial image used to generate the microstructure with closed pores. This corresponds to the original image to generate Fig. 5.a in [!cite](Simon2022).
-  style=display:block;margin-left:auto;margin-right:auto;width:50%
+  style=display:block;margin-left:auto;margin-right:auto;width:40%
 
 !media examples/figures/2D_pore_structure_open.png
   id=fig:initial_image_open
   caption= Initial image used to generate the microstructure with open pores. This corresponds to the original image to generate Fig. 5.b in [!cite](Simon2022).
-  style=display:block;margin-left:auto;margin-right:auto;width:50%
+  style=display:block;margin-left:auto;margin-right:auto;width:40%
 
 TMAP8 can import these images using [ImageFunction](ImageFunction.md) and, using a threshold, attribute different contrast values to given phases.
 Here, the bright areas are identified as ceramic material, while dark areas are identified as pores.
@@ -108,7 +108,7 @@ These pore structures correspond to the ones shown in Fig. 5 in [!cite](Simon202
 
 !media examples/figures/Pore_Microstructures.png
   id=fig:pore_microstructures
-  caption= Smooth pore microstructures obtained with the simulation described above. This corresponds Fig. 5 in [!cite](Simon2022).
+  caption=Smooth pore microstructures obtained with the simulation described above. This corresponds Fig. 5 in [!cite](Simon2022).
   style=display:block;margin-left:auto;margin-right:auto;width:50%
 
 ### Model tritium transport on pore-scale microstructures
