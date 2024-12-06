@@ -28,8 +28,8 @@ This process is illustrated in [fig:pore_scale_process_illustration].
 
 !media figures/pore_scale_process_illustration.png
   id=fig:pore_scale_process_illustration
-  caption= Illustration of the process for pore scale simulation of tritium transport in TMAP8 based on a microstructure image.
-  style=display:block;margin-left:auto;margin-right:auto;width:50%
+  caption= Illustration of the process for pore scale simulation of tritium transport in TMAP8 based on a microstructure image. Step 1 takes an image and creates a corresponding microstructure, and step 2 performs tritium transport calculations on this microstructure (figures are reproduced from [!cite](Simon2022)).
+  style=display:block;margin-left:auto;margin-right:auto;width:75%
 
 !alert note title=TMAP8 can also automatically generate microstructures, or import other simulation results
 TMAP8 can also automatically generate microstructures using the [initial condition](ICs/index.md) system since [MOOSE] is equipped with a set of user-friendly, built-in mesh generators for creating meshes based on simple geometries. It was also import EBSD data or import microstructures generated via other means.
@@ -53,7 +53,7 @@ Although both samples have a density of 80%, they exhibit very different pore in
 !media examples/figures/2D_pore_structure_closed.png
   id=fig:initial_image_closed
   caption= Initial image used to generate the microstructure with closed pores. This corresponds to the original image to generate Fig. 5.a in [!cite](Simon2022).
-  style=display:block;margin-left:auto;margin-right:auto;width:40%
+  style=display:block;margin-left:auto;margin-right:auto;width:40%;border-style:solid
 
 !media examples/figures/2D_pore_structure_open.png
   id=fig:initial_image_open
