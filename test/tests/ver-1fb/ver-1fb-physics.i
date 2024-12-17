@@ -9,7 +9,7 @@
   [HeatConduction]
     [FiniteElement]
       [h1]
-        temperature_name = 'temp'
+        temperature_name = 'temperature'
 
         initial_temperature = 300
 
@@ -60,7 +60,7 @@
     end_point = '4.0 0 0'
     num_points = 40
     sort_by = 'x'
-    variable = temp
+    variable = temperature
   []
 []
 
