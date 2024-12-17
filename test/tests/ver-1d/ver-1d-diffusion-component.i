@@ -6,6 +6,8 @@ cl = 3.1622e18
     species = 'trapped'
 
     physics = 'mobile_diff'
+    # cannot be added to SpeciesTrapping there because it requires
+    # additional data that is specified there
 
     # Geometry
     nx = 200
@@ -40,15 +42,21 @@ cl = 3.1622e18
         # Trapping parameters
         alpha_t = 1e15
         N = '${fparse 3.1622e22 / cl}'
-        Ct0 = 0.1
+        Ct0 = '0.1'
         trap_per_free = 1
 
         # Releasing parameters
         alpha_r = 1e13
-        temperatures = '1000'
+        temperatures = 'temp'
         trapping_energy = 100
       []
     []
+  []
+[]
+
+[AuxVariables]
+  [temp]
+    initial_condition = 1000
   []
 []
 
@@ -89,4 +97,6 @@ cl = 3.1622e18
 [Outputs]
   csv = true
   exodus = true
+  # Not present in the test we compare to
+  hide = 'temp'
 []
