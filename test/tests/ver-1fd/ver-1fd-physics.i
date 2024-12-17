@@ -35,7 +35,7 @@ specific_heat = '${fparse rho_Cp/density}' # J/kg/K
         # Boundary conditions
         insulated_boundaries = 'right'
         fixed_convection_boundaries = 'left'
-        fixed_convection_T_infinity = ${enclosure_temperature}
+        fixed_convection_T_fluid = ${enclosure_temperature}
         fixed_convection_htc = ${conduction_coefficient}
 
         # Default hypre preconditioning fails
