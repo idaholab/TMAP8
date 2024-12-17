@@ -13,7 +13,7 @@
       type = Exodiff
       input = ver-1b-component.i
       exodiff = ver-1b-component_out.e
-      cli_args = 'Executioner/dt=10 SystemComponents/structure/nx=100 Outputs/exodus/file_base=ver-1b-component_out'
+      cli_args = 'Executioner/dt=10 ActionComponents/structure/nx=100 Outputs/exodus/file_base=ver-1b-component_out'
       requirement = 'The system shall be able to model transient diffusion through a slab with a constant concentration boundary condition as the species source using a Physics and Components syntax.'
     []
     [ver-1b_heavy]

@@ -11,10 +11,11 @@
   []
   [ver-1a-components]
     type = Exodiff
-    input = component-ver-1a.i
-    exodiff = component-ver-1a_out.e
-    cli_args = 'Executioner/dt=5 Components/structure/nx=5'
+    input = ver-1a-component.i
+    exodiff = ver-1a-component_out.e
+    cli_args = 'Executioner/dt=5 ActionComponents/structure/nx=10'
     detail = 'The system shall be able to model species diffusion through a structure, originating from a depleting source enclosure using component syntax.'
+    custom_cmp = 'custom.cmp'
   []
   [ver-1a_heavy]
     type = Exodiff
