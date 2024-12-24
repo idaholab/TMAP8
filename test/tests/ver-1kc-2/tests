@@ -1,0 +1,25 @@
+[Tests]
+  design = 'InterfaceSorption.md MatDiffusion.md TimeDerivative.md ADMatReactionFlexible.md'
+  issues = '#12'
+  verification = 'ver-1kc-2.md'
+  [ver-1kc-2_csv]
+    type = CSVDiff
+    input = ver-1kc-2.i
+    csvdiff = ver-1kc-2_out_k10.csv
+    requirement = 'The system shall be able to model the diffusion of T2, H2 and HT across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface.'
+  []
+  [ver-1kc-2_exodus]
+    type = Exodiff
+    input = ver-1kc-2.i
+    exodiff = ver-1kc-2_out_k10.e
+    prereq = ver-1kc_csv
+    should_execute = false # this test relies on the output files from ver-1kc-2_csv, so it shouldn't be run twice
+    requirement = 'The system shall be able to model the diffusion of T2, H2 and HT across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface and generate an exodus file.'
+  []
+  [ver-1kc-2_comparison]
+    type = RunCommand
+    command = 'python3 comparison_ver-1kc-2.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1kc-2, modeling a diffusion across a membrane separating two enclosures in accordance with Sieverts’ law.'
+    required_python_packages = 'matplotlib numpy pandas os git'
+  []
+[]
