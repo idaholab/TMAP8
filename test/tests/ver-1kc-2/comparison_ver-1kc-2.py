@@ -67,21 +67,6 @@ all_labels = [l.get_label() for l in all_lines]
 ax.legend(all_lines, all_labels, loc='best')
 fig.savefig('ver-1kc-2_comparison_time_k10.png', bbox_inches='tight', dpi=300)
 
-# ax.plot(TMAP8_time_k10, TMAP8_pressure_H2_enclosure_1_k10, label=r"H$_2$ Enclosure 1", c='tab:red', linestyle='-')
-# ax.plot(TMAP8_time_k10, TMAP8_pressure_H2_enclosure_2_k10, label=r"H$_2$ Enclosure 2", c='tab:blue', linestyle='-')
-# ax.plot(TMAP8_time_k10, TMAP8_pressure_T2_enclosure_1_k10, label=r"T$_2$ Enclosure 1", c='tab:orange', linestyle='--')
-# ax.plot(TMAP8_time_k10, TMAP8_pressure_T2_enclosure_2_k10, label=r"T$_2$ Enclosure 2", c='tab:green', linestyle='--')
-# ax.plot(TMAP8_time_k10, TMAP8_pressure_HT_enclosure_1_k10, label=r"HT Enclosure 1", c='tab:purple', linestyle='-')
-# ax.plot(TMAP8_time_k10, TMAP8_pressure_HT_enclosure_2_k10, label=r"HT Enclosure 2", c='tab:cyan', linestyle='-')
-# ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda val, pos: '{:.1e}'.format(val)))
-# ax.set_xlabel('Time (s)')
-# ax.set_ylabel('Pressure (Pa)')
-# ax.set_xlim(0, TMAP8_time_k10.max())
-# ax.set_ylim(bottom=0)
-# ax.legend(loc="best")
-# ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
-# fig.savefig('ver-1kc_comparison_time_k10.png', bbox_inches='tight', dpi=300)
-
 # Subplot 2: Solubility and concentration ratios vs time
 
 ## Subplot 2.1: for H2
