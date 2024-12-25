@@ -65,7 +65,7 @@ all_lines = lines_left + lines_right
 all_labels = [l.get_label() for l in all_lines]
 
 ax.legend(all_lines, all_labels, loc='best')
-fig.savefig('ver-1kc_comparison_time_k10.png', bbox_inches='tight', dpi=300)
+fig.savefig('ver-1kc-2_comparison_time_k10.png', bbox_inches='tight', dpi=300)
 
 # ax.plot(TMAP8_time_k10, TMAP8_pressure_H2_enclosure_1_k10, label=r"H$_2$ Enclosure 1", c='tab:red', linestyle='-')
 # ax.plot(TMAP8_time_k10, TMAP8_pressure_H2_enclosure_2_k10, label=r"H$_2$ Enclosure 2", c='tab:blue', linestyle='-')
@@ -103,7 +103,7 @@ RMSPE = RMSE*100/np.mean(solubility_ratio)
 x_pos = TMAP8_time_k10.max() / 7200
 y_pos = 0.9 * ax.get_ylim()[1]
 ax.text(x_pos, y_pos, 'RMSPE = %.3f ' % RMSPE + '%', fontweight='bold')
-fig.savefig('ver-1kc_concentration_ratio_H2_k10.png', bbox_inches='tight', dpi=300)
+fig.savefig('ver-1kc-2_concentration_ratio_H2_k10.png', bbox_inches='tight', dpi=300)
 
 ## Subplot 2.2: for T2
 fig = plt.figure(figsize=[6.5,5.5])
@@ -124,7 +124,7 @@ RMSPE = RMSE*100/np.mean(solubility_ratio)
 x_pos = TMAP8_time_k10.max() / 7200
 y_pos = 0.9 * ax.get_ylim()[1]
 ax.text(x_pos, y_pos, 'RMSPE = %.3f ' % RMSPE + '%', fontweight='bold')
-fig.savefig('ver-1kc_concentration_ratio_T2_k10.png', bbox_inches='tight', dpi=300)
+fig.savefig('ver-1kc-2_concentration_ratio_T2_k10.png', bbox_inches='tight', dpi=300)
 
 ## Subplot 2.3: for HT
 fig = plt.figure(figsize=[6.5,5.5])
@@ -145,7 +145,7 @@ RMSPE = RMSE*100/np.mean(solubility_ratio)
 x_pos = TMAP8_time_k10.max() / 7200
 y_pos = 0.9 * ax.get_ylim()[1]
 ax.text(x_pos, y_pos, 'RMSPE = %.3f ' % RMSPE + '%', fontweight='bold')
-fig.savefig('ver-1kc_concentration_ratio_HT_k10.png', bbox_inches='tight', dpi=300)
+fig.savefig('ver-1kc-2_concentration_ratio_HT_k10.png', bbox_inches='tight', dpi=300)
 
 
 # Subplot 3 : Mass Conservation Sum Encl 1 and 2 vs Time
@@ -164,7 +164,7 @@ ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 mass_variation_percentage_H2 = (np.max(mass_conservation_sum_H2_encl1_encl2_k10)-np.min(mass_conservation_sum_H2_encl1_encl2_k10))/np.min(mass_conservation_sum_H2_encl1_encl2_k10)*100
 mass_variation_percentage_T2 = (np.max(mass_conservation_sum_T2_encl1_encl2_k10)-np.min(mass_conservation_sum_T2_encl1_encl2_k10))/np.min(mass_conservation_sum_T2_encl1_encl2_k10)*100
 print("Percentage of mass variation: ", mass_variation_percentage_H2, mass_variation_percentage_T2)
-fig.savefig('ver-1kc_mass_conservation_k10.png', bbox_inches='tight', dpi=300)
+fig.savefig('ver-1kc-2_mass_conservation_k10.png', bbox_inches='tight', dpi=300)
 
 # Subplot 4 : Equilibrium constant in enclosures 1 and 2 vs Time
 
@@ -178,7 +178,7 @@ ax.set_xlabel('Time (s)')
 ax.set_ylabel(r"Equilibrium constant in Enclosure 1")
 ax.legend(loc="best")
 ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
-fig.savefig('ver-1kc_equilibrium_constant_k10.png', bbox_inches='tight', dpi=300)
+fig.savefig('ver-1kc-2_equilibrium_constant_k10.png', bbox_inches='tight', dpi=300)
 
 
 

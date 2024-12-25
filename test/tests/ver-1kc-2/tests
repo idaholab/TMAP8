@@ -12,7 +12,7 @@
     type = Exodiff
     input = ver-1kc-2.i
     exodiff = ver-1kc-2_out_k10.e
-    prereq = ver-1kc_csv
+    prereq = ver-1kc-2_csv
     should_execute = false # this test relies on the output files from ver-1kc-2_csv, so it shouldn't be run twice
     requirement = 'The system shall be able to model the diffusion of T2, H2 and HT across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface and generate an exodus file.'
   []
