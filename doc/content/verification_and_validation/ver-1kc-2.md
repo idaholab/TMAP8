@@ -114,6 +114,6 @@ As shown in [ver-1kc-2_mass_conservation_k10], mass is conserved between the two
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/ver-1kc-2.i]. To limit the computational costs of the test cases, the tests run a version of the file with a coarser mesh and fewer time steps. More information about the changes can be found in the test specification file for this case [/ver-1kc-2/tests].
+The input file for this case can be found at [/ver-1kc-2.i].
 
 !bibtex bibliography
