@@ -52,6 +52,7 @@ where the equilibrium constant $\eta$ is defined as
 \eta = \sqrt{\frac{2K_1}{K_2}}
 \end{equation}
 
+Similarly to TMAP7, the equilibrium constant $\eta$ has been set to a fixed value of $\eta = 2$.
 
 The diffusion process for each species in the two enclosures can be expressed by
 
@@ -77,7 +78,12 @@ where $R$ is the ideal gas constant in J/mol/K, $T$ is the temperature in K, $K$
 ## Results
 
 We assume that $K = 10/\sqrt{RT}$, which is expected to result in $C_1 = 10 \sqrt{C_2}$ at equilibrium.
-As illustrated in [ver-1kc-2_comparison_time_k10], similarly to ver-1kc-1, T$_2$ and H$_2$ pressures reach equilibrium in both enclosures. What is new, however, is that HT is produced in both enclosures following the sorption law. The concentration ratios for T$_2$, H$_2$, and HT between enclosures 1 and 2, shown in [ver-1kc-2_concentration_ratio_T2_k10], [ver-1kc-2_concentration_ratio_H2_k10], and [ver-1kc-2_concentration_ratio_HT_k10], demonstrate that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K \sqrt{RT} = 10$.
+As illustrated in [ver-1kc-2_comparison_time_k10], similarly to ver-1kc-1, T$_2$ and H$_2$ pressures reach equilibrium in both enclosures. What is new, however, is that HT is produced in both enclosures following the sorption law.
+
+Thus, it is crucial to ensure that the chemical equilibrium between HT, T$_2$ and H$_2$ is achieved. This can be verified in both enclosures by examining the ratio between $P_{\text{HT}}$ and $\sqrt{P_{\text{H}_2} P_{\text{T}_2}}$, which must equal $\eta=2$.
+As shown in [ver-1kc-2_equilibrium_constant_k10], this ratio approaches $\eta=2$ for both enclosures, as observed in TMAP7. However, achieving this balance involves a compromise. On one hand, $K_1$ must be sufficiently large to ensure that the chemical kinetics in Enclosure 1 are significantly faster than other processes, such as diffusion and surface sorption. On the other hand, $K_2$ should not be excessively large, as this could hinder the diffusion of species into Enclosure 2, where no species are initially present.
+
+The concentration ratios for T$_2$, H$_2$, and HT between enclosures 1 and 2, shown in [ver-1kc-2_concentration_ratio_T2_k10], [ver-1kc-2_concentration_ratio_H2_k10], and [ver-1kc-2_concentration_ratio_HT_k10], demonstrate that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K \sqrt{RT} = 10$.
 
 As shown in [ver-1kc-2_mass_conservation_k10], mass is conserved between the two enclosures over time for all species. The variation in mass is only $0.4$ % for T$_2$ and H$_2$. This variation in mass can be further minimized by refining the mesh, i.e., increasing the number of segments in the domain.
 
@@ -86,6 +92,12 @@ As shown in [ver-1kc-2_mass_conservation_k10], mass is conserved between the two
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1kc-2_comparison_time_k10
        caption=Evolution of species concentration over time governed by Sieverts' law with $K = 10/\sqrt{RT}$.
+
+!media comparison_ver-1kc-2.py
+       image_name=ver-1kc-2_equilibrium_constant_k10.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=ver-1kc-2_equilibrium_constant_k10
+       caption=Equilibrium constant as a function of time.
 
 !media comparison_ver-1kc-2.py
        image_name=ver-1kc-2_concentration_ratio_T2_k10.png
