@@ -2,7 +2,7 @@ nb_segments_TMAP7 = 20
 node_size_TMAP7 = '${units 1.25e-5 m}'
 long_total = '${units ${fparse nb_segments_TMAP7 * node_size_TMAP7} m}'
 nb_segments_TMAP8 = 1e2
-simulation_time = '${units 3 s}'
+simulation_time = '${units 1 s}'
 temperature = '${units 500 K}'
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConstants.h
 initial_pressure_1 = '${units 1e5 Pa}'
@@ -12,7 +12,9 @@ initial_concentration_2 = '${units ${fparse initial_pressure_2 / (R*temperature)
 solubility = '${units ${fparse 10/sqrt(R*temperature)} mol/m^3/Pa^(1/2)}' # Sieverts' law solubility
 diffusivity = '${units ${fparse 4.31e-6 * exp(-2818/temperature)} m^2/s}'
 n_sorption = 0.5 # Sieverts' Law
-reaction_rate = 10.0
+K1 = '${units 1.5 mol/m^3/s}' # reaction rate for H2+T2->2HT
+equilibrium_constant = 2.0
+K2 = '${units ${fparse (2*K1) / (equilibrium_constant)^2} mol/m^3/s}' # reaction rate for 2HT->H2+T2
 unit_scale = 1
 unit_scale_neighbor = 1
 
@@ -213,49 +215,107 @@ unit_scale_neighbor = 1
   []
 
   # Reaction H2+T2->2HT in enclosure 1
-  [reaction_H2_encl_1]
+  [reaction_H2_encl_1_1]
     type = ADMatReactionFlexible
     variable = concentration_H2_enclosure_1
+    vs = 'concentration_H2_enclosure_1 concentration_T2_enclosure_1'
     block = 1
-    coeff = -0.5
-    reaction_rate_name = ${reaction_rate}
+    coeff = -1
+    reaction_rate_name = ${K1}
   []
-  [reaction_T2_encl_1]
+  [reaction_T2_encl_1_1]
     type = ADMatReactionFlexible
     variable = concentration_T2_enclosure_1
+    vs = 'concentration_H2_enclosure_1 concentration_T2_enclosure_1'
     block = 1
-    coeff = -0.5
-    reaction_rate_name = ${reaction_rate}
+    coeff = -1
+    reaction_rate_name = ${K1}
   []
-  [reaction_HT_encl_1]
+  [reaction_HT_encl_1_1]
     type = ADMatReactionFlexible
     variable = concentration_HT_enclosure_1
+    vs = 'concentration_H2_enclosure_1 concentration_T2_enclosure_1'
     block = 1
-    coeff = 1
-    reaction_rate_name = ${reaction_rate}
+    coeff = 2
+    reaction_rate_name = ${K1}
+  []
+
+  # Reaction 2HT->H2+T2 in enclosure 1
+  [reaction_H2_encl_1_2]
+    type = ADMatReactionFlexible
+    variable = concentration_H2_enclosure_1
+    vs = 'concentration_HT_enclosure_1 concentration_HT_enclosure_1'
+    block = 1
+    coeff = 0.5
+    reaction_rate_name = ${K2}
+  []
+  [reaction_T2_encl_1_2]
+    type = ADMatReactionFlexible
+    variable = concentration_T2_enclosure_1
+    vs = 'concentration_HT_enclosure_1 concentration_HT_enclosure_1'
+    block = 1
+    coeff = 0.5
+    reaction_rate_name = ${K2}
+  []
+  [reaction_HT_encl_1_2]
+    type = ADMatReactionFlexible
+    variable = concentration_HT_enclosure_1
+    vs = 'concentration_HT_enclosure_1 concentration_HT_enclosure_1'
+    block = 1
+    coeff = -1
+    reaction_rate_name = ${K2}
   []
 
   # Reaction H2+T2->2HT in enclosure 2
-  [reaction_H2_encl_2]
+  [reaction_H2_encl_2_1]
     type = ADMatReactionFlexible
     variable = concentration_H2_enclosure_2
+    vs = 'concentration_H2_enclosure_2 concentration_T2_enclosure_2'
     block = 2
-    coeff = -0.5
-    reaction_rate_name = ${reaction_rate}
+    coeff = -1
+    reaction_rate_name = ${K1}
   []
-  [reaction_T2_encl_2]
+  [reaction_T2_encl_2_1]
     type = ADMatReactionFlexible
     variable = concentration_T2_enclosure_2
+    vs = 'concentration_H2_enclosure_2 concentration_T2_enclosure_2'
     block = 2
-    coeff = -0.5
-    reaction_rate_name = ${reaction_rate}
+    coeff = -1
+    reaction_rate_name = ${K1}
   []
-  [reaction_HT_encl_2]
+  [reaction_HT_encl_2_1]
     type = ADMatReactionFlexible
     variable = concentration_HT_enclosure_2
+    vs = 'concentration_H2_enclosure_2 concentration_T2_enclosure_2'
     block = 2
-    coeff = 1
-    reaction_rate_name = ${reaction_rate}
+    coeff = 2
+    reaction_rate_name = ${K1}
+  []
+
+  # Reaction 2HT->H2+T2 in enclosure 2
+  [reaction_H2_encl_2_2]
+    type = ADMatReactionFlexible
+    variable = concentration_H2_enclosure_2
+    vs = 'concentration_HT_enclosure_2 concentration_HT_enclosure_2'
+    block = 2
+    coeff = 0.5
+    reaction_rate_name = ${K2}
+  []
+  [reaction_T2_encl_2_2]
+    type = ADMatReactionFlexible
+    variable = concentration_T2_enclosure_2
+    vs = 'concentration_HT_enclosure_2 concentration_HT_enclosure_2'
+    block = 2
+    coeff = 0.5
+    reaction_rate_name = ${K2}
+  []
+  [reaction_HT_encl_2_2]
+    type = ADMatReactionFlexible
+    variable = concentration_HT_enclosure_2
+    vs = 'concentration_HT_enclosure_2 concentration_HT_enclosure_2'
+    block = 2
+    coeff = -1
+    reaction_rate_name = ${K2}
   []
 []
 
