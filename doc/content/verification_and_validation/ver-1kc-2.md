@@ -1,6 +1,6 @@
 # ver-1kc-2
 
-# Sieverts’ Law Boundaries with No Volumetric Source
+# Sieverts’ Law Boundaries with Chemical Reactions and No Volumetric Source
 
 ## General Case Description
 
@@ -18,7 +18,41 @@ The reaction between the species is described as follows
 \text{H}_2 + \text{T}_2 \leftrightarrow 2\text{HT}
 \end{equation}
 
-The reaction rate for this reaction is defined as:
+The kinematic evolutions of the species are given by the following equations
+
+\begin{equation}
+\frac{d C_{\text{HT}}}{dt} = 2K_1 C_{\text{H}_2} C_{\text{T}_2} - K_2 C_{\text{HT}}^2
+\end{equation}
+
+\begin{equation}
+\frac{d C_{\text{H}_2}}{dt} = -K_1 C_{\text{H}_2} C_{\text{T}_2} + \frac{1}{2} K_2 C_{\text{HT}}^2
+\end{equation}
+
+\begin{equation}
+\frac{d C_{\text{T}_2}}{dt} = -K_1 c_{\text{H}_2} C_{\text{T}_2} + \frac{1}{2} K_2 C_{\text{HT}}^2
+\end{equation}
+
+where $K_1$ and $K_2$ represent the reaction rates for the forward and reverse reactions, respectively.
+
+At equilibrium, the time derivatives are zero
+
+\begin{equation}
+2K_1 C_{\text{H}_2} C_{\text{T}_2} - K_2 C_{\text{HT}}^2 = 0
+\end{equation}
+
+From this, we deduce
+
+\begin{equation}
+P_{\text{HT}} = \eta \sqrt{P_{\text{H}_2} P_{\text{T}_2}}
+\end{equation}
+
+where the equilibrium constant $\eta$ is defined as
+
+\begin{equation}
+\eta = \sqrt{\frac{2K_1}{K_2}}
+\end{equation}
+
+
 The diffusion process for each species in the two enclosures can be expressed by
 
 \begin{equation}
@@ -30,7 +64,7 @@ and
 \end{equation}
 
 where $C_1$ and $C_2$ represent the concentration fields in enclosures 1 and 2 respectively, $t$ is the time, and $D$ denotes the diffusivity.
-Note that the diffusivity can be different for different species and enclosures, but is defined the same for all in this case. 
+Note that the diffusivity may vary across different species and enclosures. However, in this case, it is assumed to be identical for all.
 
 The concentration in Enclosure 1 is related to the partial pressure and concentration in Enclosure 2 via the interface sorption law:
 
