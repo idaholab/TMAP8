@@ -481,12 +481,6 @@ unit_scale_neighbor = 1
     block = 2
     execute_on = 'initial timestep_end'
   []
-  [mass_conservation_sum_H2_encl1_encl2]
-    type = LinearCombinationPostprocessor
-    pp_names = 'concentration_H2_encl_1_inventory concentration_H2_encl_2_inventory'
-    pp_coefs = '1            1'
-    execute_on = 'initial timestep_end'
-  []
 
   # postprocessors for T2
   [pressure_T2_enclosure_1]
@@ -534,12 +528,6 @@ unit_scale_neighbor = 1
     block = 2
     execute_on = 'initial timestep_end'
   []
-  [mass_conservation_sum_T2_encl1_encl2]
-    type = LinearCombinationPostprocessor
-    pp_names = 'concentration_T2_encl_1_inventory concentration_T2_encl_2_inventory'
-    pp_coefs = '1            1'
-    execute_on = 'initial timestep_end'
-  []
 
   # postprocessors for HT
   [pressure_HT_enclosure_1]
@@ -574,6 +562,26 @@ unit_scale_neighbor = 1
     pp_names = 'concentration_HT_enclosure_1_at_interface concentration_HT_enclosure_2_at_interface'
     execute_on = 'initial timestep_end'
     outputs = 'csv console'
+  []
+  [concentration_HT_encl_1_inventory]
+    type = ElementIntegralVariablePostprocessor
+    variable = concentration_HT_enclosure_1
+    block = 1
+    execute_on = 'initial timestep_end'
+  []
+  [concentration_HT_encl_2_inventory]
+    type = ElementIntegralVariablePostprocessor
+    variable = concentration_HT_enclosure_2
+    block = 2
+    execute_on = 'initial timestep_end'
+  []
+
+  # postprocessors for mass conservation
+  [mass_conservation_sum_encl1_encl2]
+    type = LinearCombinationPostprocessor
+    pp_names = 'concentration_HT_encl_1_inventory concentration_HT_encl_2_inventory concentration_H2_encl_1_inventory concentration_H2_encl_2_inventory concentration_T2_encl_1_inventory concentration_T2_encl_2_inventory'
+    pp_coefs = '1            1           1            1            1            1'
+    execute_on = 'initial timestep_end'
   []
 
   # postprocessors for equilibrium constant

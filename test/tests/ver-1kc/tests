@@ -1,7 +1,7 @@
 [Tests]
   design = 'InterfaceSorption.md MatDiffusion.md TimeDerivative.md'
   issues = '#12'
-  verification = 'ver-1kc.md'
+  verification = 'ver-1kc-1.md'
   [ver-1kc_csv]
     type = CSVDiff
     input = ver-1kc.i

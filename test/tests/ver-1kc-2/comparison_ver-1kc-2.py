@@ -21,8 +21,7 @@ TMAP8_pressure_T2_enclosure_1_k10 = expt_data_k10['pressure_T2_enclosure_1']
 TMAP8_pressure_T2_enclosure_2_k10 = expt_data_k10['pressure_T2_enclosure_2']
 TMAP8_pressure_HT_enclosure_1_k10 = expt_data_k10['pressure_HT_enclosure_1']
 TMAP8_pressure_HT_enclosure_2_k10 = expt_data_k10['pressure_HT_enclosure_2']
-mass_conservation_sum_H2_encl1_encl2_k10 = expt_data_k10['mass_conservation_sum_H2_encl1_encl2']
-mass_conservation_sum_T2_encl1_encl2_k10 = expt_data_k10['mass_conservation_sum_T2_encl1_encl2']
+mass_conservation_sum_encl1_encl2_k10 = expt_data_k10['mass_conservation_sum_encl1_encl2']
 concentration_ratio_H2_k10 = expt_data_k10['concentration_ratio_H2']
 concentration_ratio_T2_k10 = expt_data_k10['concentration_ratio_T2']
 concentration_ratio_HT_k10 = expt_data_k10['concentration_ratio_HT']
@@ -139,16 +138,14 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-ax.plot(TMAP8_time_k10, mass_conservation_sum_H2_encl1_encl2_k10, label = r"H$_2$", c='tab:blue')
-ax.plot(TMAP8_time_k10, mass_conservation_sum_T2_encl1_encl2_k10, label = r"T$_2$", c='tab:red', linestyle='--')
+ax.plot(TMAP8_time_k10, mass_conservation_sum_encl1_encl2_k10, c='tab:blue')
 ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda val, pos: '{:.3e}'.format(val)))
 ax.set_xlabel('Time (s)')
 ax.set_ylabel(r"Mass Conservation Sum Encl 1 and 2 (mol/m$^3$)")
 ax.legend(loc="best")
 ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
-mass_variation_percentage_H2 = (np.max(mass_conservation_sum_H2_encl1_encl2_k10)-np.min(mass_conservation_sum_H2_encl1_encl2_k10))/np.min(mass_conservation_sum_H2_encl1_encl2_k10)*100
-mass_variation_percentage_T2 = (np.max(mass_conservation_sum_T2_encl1_encl2_k10)-np.min(mass_conservation_sum_T2_encl1_encl2_k10))/np.min(mass_conservation_sum_T2_encl1_encl2_k10)*100
-print("Percentage of mass variation: ", mass_variation_percentage_H2, mass_variation_percentage_T2)
+mass_variation_percentage = (np.max(mass_conservation_sum_encl1_encl2_k10)-np.min(mass_conservation_sum_encl1_encl2_k10))/np.max(mass_conservation_sum_encl1_encl2_k10)*100
+print("Percentage of mass variation: ", mass_variation_percentage)
 fig.savefig('ver-1kc-2_mass_conservation_k10.png', bbox_inches='tight', dpi=300)
 
 # Subplot 4 : Equilibrium constant in enclosures 1 and 2 vs Time
