@@ -40,7 +40,7 @@ At equilibrium, the time derivatives are zero
 2K_1 C_{\text{H}_2} C_{\text{T}_2} - K_2 C_{\text{HT}}^2 = 0
 \end{equation}
 
-From this, we deduce
+From this, we can derive the same equilibrium condition as used in TMAP7:
 
 \begin{equation}
 P_{\text{HT}} = \eta \sqrt{P_{\text{H}_2} P_{\text{T}_2}}
@@ -48,7 +48,7 @@ P_{\text{HT}} = \eta \sqrt{P_{\text{H}_2} P_{\text{T}_2}}
 
 where the equilibrium constant $\eta$ is defined as
 
-\begin{equation}
+\begin{equation} \label{eq:eta}
 \eta = \sqrt{\frac{2K_1}{K_2}}
 \end{equation}
 
