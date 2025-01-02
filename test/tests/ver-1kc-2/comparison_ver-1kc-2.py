@@ -143,7 +143,6 @@ ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda val, pos: '{:.3e}'.format(
 ax.set_xlabel('Time (s)')
 ax.set_ylabel(r"Mass Conservation Sum Encl 1 and 2 (mol/m$^3$)")
 ax.set_xlim(0,TMAP8_time_k10.max())
-ax.legend(loc="best")
 ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 mass_variation_percentage = (np.max(mass_conservation_sum_encl1_encl2_k10)-np.min(mass_conservation_sum_encl1_encl2_k10))/np.max(mass_conservation_sum_encl1_encl2_k10)*100
 print("Percentage of mass variation: ", mass_variation_percentage)
@@ -164,6 +163,8 @@ ax.set_xlim(0,TMAP8_time_k10.max())
 ax.set_ylim(bottom=0)
 ax.legend(loc="best")
 ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
+print("Relative variation to equilibrium constant in enclosure 1", abs(equilibrium_constant_encl_1[len(equilibrium_constant_encl_1)-1]-2)/2 * 100)
+print("Relative variation to equilibrium constant in enclosure 2", abs(equilibrium_constant_encl_2[len(equilibrium_constant_encl_2)-1]-2)/2 * 100)
 fig.savefig('ver-1kc-2_equilibrium_constant_k10.png', bbox_inches='tight', dpi=300)
 
 

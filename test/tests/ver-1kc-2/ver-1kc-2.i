@@ -2,7 +2,7 @@ nb_segments_TMAP7 = 20
 node_size_TMAP7 = '${units 1.25e-5 m}'
 long_total = '${units ${fparse nb_segments_TMAP7 * node_size_TMAP7} m}'
 nb_segments_TMAP8 = 1e2
-simulation_time = '${units 1 s}'
+simulation_time = '${units 0.25 s}'
 temperature = '${units 500 K}'
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConstants.h
 initial_pressure_1 = '${units 1e5 Pa}'
@@ -12,7 +12,7 @@ initial_concentration_2 = '${units ${fparse initial_pressure_2 / (R*temperature)
 solubility = '${units ${fparse 10/sqrt(R*temperature)} mol/m^3/Pa^(1/2)}' # Sieverts' law solubility
 diffusivity = '${units ${fparse 4.31e-6 * exp(-2818/temperature)} m^2/s}'
 n_sorption = 0.5 # Sieverts' Law
-K1 = '${units 1.5 mol/m^3/s}' # reaction rate for H2+T2->2HT
+K1 = '${units 4000 mol/m^3/s}' # reaction rate for H2+T2->2HT
 equilibrium_constant = 2.0
 K2 = '${units ${fparse (2*K1) / (equilibrium_constant)^2} mol/m^3/s}' # reaction rate for 2HT->H2+T2
 unit_scale = 1
@@ -604,21 +604,22 @@ unit_scale_neighbor = 1
 [Executioner]
   type = Transient
   end_time = ${simulation_time}
-  dtmax = 10
-  nl_abs_tol = 1e-3
-  nl_rel_tol = 1e-2
+  dtmax = 1e-1
+  nl_abs_tol = 1e-6
+  nl_rel_tol = 1e-5
+  nl_max_its = 20
   scheme = 'bdf2'
   solve_type = NEWTON
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
-  nl_max_its = 6
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 0.01
-    optimal_iterations = 5
-    iteration_window = 3
-    growth_factor = 1.05
-    cutback_factor_at_failure = 0.8
+    dt = 1e-3
+    optimal_iterations = 20
+    iteration_window = 10
+    growth_factor = 1.1
+    cutback_factor = 0.9
+    cutback_factor_at_failure = 0.9
   []
 []
 

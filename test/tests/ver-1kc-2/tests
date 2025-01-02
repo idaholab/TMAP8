@@ -5,14 +5,26 @@
   [ver-1kc-2_csv]
     type = CSVDiff
     input = ver-1kc-2.i
+    cli_args = "Executioner/nl_abs_tol=1e-3
+                Executioner/nl_rel_tol=1e-2
+                Outputs/exodus=false
+                Outputs/file_base=ver-1kc-2_out_k10_light"
+    csvdiff = ver-1kc-2_out_k10_light.csv
+    requirement = 'The system shall be able to model the diffusion of T2, H2 and HT across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface.'
+  []
+  [ver-1kc-2_csv_heavy]
+    type = CSVDiff
+    heavy = true
+    input = ver-1kc-2.i
     csvdiff = ver-1kc-2_out_k10.csv
     requirement = 'The system shall be able to model the diffusion of T2, H2 and HT across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface.'
   []
-  [ver-1kc-2_exodus]
+  [ver-1kc-2_exodus_heavy]
     type = Exodiff
+    heavy = true
     input = ver-1kc-2.i
     exodiff = ver-1kc-2_out_k10.e
-    prereq = ver-1kc-2_csv
+    prereq = ver-1kc-2_csv_heavy
     should_execute = false # this test relies on the output files from ver-1kc-2_csv, so it shouldn't be run twice
     requirement = 'The system shall be able to model the diffusion of T2, H2 and HT across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface and generate an exodus file.'
   []
