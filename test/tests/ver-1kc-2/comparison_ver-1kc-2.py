@@ -43,7 +43,6 @@ line3 = ax.plot(TMAP8_time_k10, TMAP8_pressure_HT_enclosure_1_k10, label=r"HT En
 ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda val, pos: '{:.1e}'.format(val)))
 ax.set_xlabel('Time (s)')
 ax.set_ylabel('Pressure Enclosure 1 (Pa)')
-ax.set_xlim(0, TMAP8_time_k10.max())
 ax.set_ylim(bottom=0)
 ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 
@@ -63,7 +62,7 @@ lines_right = line4 + line5 + line6
 all_lines = lines_left + lines_right
 all_labels = [l.get_label() for l in all_lines]
 
-ax.legend(all_lines, all_labels, loc='best')
+ax.legend(all_lines, all_labels, loc='lower right')
 fig.savefig('ver-1kc-2_comparison_time_k10.png', bbox_inches='tight', dpi=300)
 
 # Subplot 2: Solubility and concentration ratios vs time

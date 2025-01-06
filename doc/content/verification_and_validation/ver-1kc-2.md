@@ -85,7 +85,7 @@ As shown in [ver-1kc-2_equilibrium_constant_k10], this ratio approaches $\eta=2$
 
 The concentration ratios for T$_2$, H$_2$, and HT between enclosures 1 and 2, shown in [ver-1kc-2_concentration_ratio_T2_k10], [ver-1kc-2_concentration_ratio_H2_k10], and [ver-1kc-2_concentration_ratio_HT_k10], demonstrate that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K \sqrt{RT} = 10$.
 
-As shown in [ver-1kc-2_mass_conservation_k10], mass is conserved between the two enclosures over time. The variation in mass is only $0.4$ %. This variation in mass can be further minimized by refining the mesh, i.e., increasing the number of segments in the domain.
+As shown in [ver-1kc-2_mass_conservation_k10], mass is conserved between the two enclosures over time. The variation in mass is only $0.7$ %. This variation in mass can be further minimized by refining the mesh, i.e., increasing the number of segments in the domain.
 
 !media comparison_ver-1kc-2.py
        image_name=ver-1kc-2_comparison_time_k10.png
