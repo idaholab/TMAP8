@@ -9,7 +9,7 @@
 # Info:
 # - This input file used to generate polycrystals for SiC.
 # - This simulation predicts phase evolution based on a grain growth phase field model.
-# - The pore and the ceramics represent two different phases and the initial conditions
+# - The pore and the ceramics represent two different phases, and the initial conditions
 #   are provided with a black and white picture, which is read by ImageFunction.
 # - The simulation smoothens the interface between the two phases.
 #
@@ -95,7 +95,7 @@ threshold_image_function = 255.5 # (-)
 
 [Variables]
   [PolycrystalVariables]
-    # Custom action that created all of the phase variables and sets their initial condition
+    # Custom action that creates all of the phase variables and sets their initial condition
   []
 []
 

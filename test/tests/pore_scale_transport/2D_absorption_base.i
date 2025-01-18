@@ -9,7 +9,7 @@
 # Phase Field Model:   Isotropic bulk diffusion, pore surface reactions, isotropic pore diffusion
 # Type:                Transient
 # Phase structure:     Contains two phases: the bulk of a material, and the pores. An interface separates the two
-# Physics:             tritium trapping and detrapping, surface reactions, diffusion.
+# Physics:             tritium trapping and detrapping, surface reactions, diffusion
 # Species variable:    tritium_s (Ts), tritium_trap (trapped T), tritium_2g (T2(g))
 # Species AuxVariable: --
 # Chemistry:           at the pore surface: (s) means in the solid, (g) means in gas form
@@ -315,14 +315,14 @@ reactionRateSurface_gXYs_ref_0 = ${units 34.69205021 1/s}
     type = ADDerivativeParsedMaterial
     property_name = ReactionRateSurface_sXYg
     material_property_names = 'hsurfaceAD(pore)'
-    expression = '${scale_time}*${scale_quantity}/${scale_length}^3*${reactionRateSurface_sXYg_ref_0}*hsurfaceAD'#-1e-5'#-1e-6'
+    expression = '${scale_time}*${scale_quantity}/${scale_length}^3*${reactionRateSurface_sXYg_ref_0}*hsurfaceAD'
   []
   [ReactionRateSurface_gXYs_ref] # from gaseous to surface for diatomic molecules # from 1/s to non-dimensional
     type = ADDerivativeParsedMaterial
     property_name = ReactionRateSurface_gXYs
     coupled_variables = 'pore tritium_s tritium_trap'
     material_property_names = 'hsurfaceAD(pore) theta(tritium_s,tritium_trap)'
-    expression = '${scale_time}*${reactionRateSurface_gXYs_ref_0}*hsurfaceAD*(1-theta)^2'#-1e-5'#-1e-6'
+    expression = '${scale_time}*${reactionRateSurface_gXYs_ref_0}*hsurfaceAD*(1-theta)^2'
   []
 []
 

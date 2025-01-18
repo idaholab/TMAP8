@@ -3,9 +3,9 @@
 This example demonstrates TMAP8's capability to (1) generate pore structures from input images,
 and (2) perform pore-scale simulations of tritium transport on these pore structures based on the model described in [!cite](Simon2022).
 [!cite](Simon2022) provides additional context and details about this example, including a description of the calibration efforts.
-Note this approach can be extended to three-dimensional microstructures.
+Note that this approach can be extended to three-dimensional microstructures.
 
-This example, like stated in [!cite](Simon2022), showcases how TMAP8 can simulate complex geometries and help investigate the effect of pore microstructure on tritium absorption.
+This example, as stated in [!cite](Simon2022), showcases how TMAP8 can simulate complex geometries and help investigate the effects of pore microstructure on tritium absorption.
 
 ## General Description of the Simulation Case and Corresponding Input Files
 
@@ -32,7 +32,7 @@ This process is illustrated in [fig:pore_scale_process_illustration].
   style=display:block;margin-left:auto;margin-right:auto;width:75%
 
 !alert note title=TMAP8 can also automatically generate microstructures, or import other simulation results
-TMAP8 can also automatically generate microstructures using the [initial condition](ICs/index.md) system since [MOOSE] is equipped with a set of user-friendly, built-in mesh generators for creating meshes based on simple geometries. It was also import EBSD data or import microstructures generated via other means.
+TMAP8 can also automatically generate microstructures using the [initial condition](ICs/index.md) system, as [MOOSE] is equipped with the user-friendly, built-in [MeshGenerators system](Mesh/index.md) for creating meshes based on simple geometries. It can also import EBSD data or import microstructures generated via other means.
 
 ### Generating the pore microstructure based on an image
 
@@ -48,7 +48,7 @@ Note that the input file also contains extensive comments meant to help users.
 
 !style halign=left
 [fig:initial_image_closed] and [fig:initial_image_open] show the initial images used to generate the microstructures from Fig. 5 in [!cite](Simon2022).
-Although both samples have a density of 80%, they exhibit very different pore interconnectivities, which was demonstrated to affect tritium absorption [!cite](Simon2022).
+Although both samples have a density of 80%, they exhibit very different pore interconnectivities, which was demonstrated to affect tritium absorption [!citep](Simon2022).
 
 !media examples/figures/2D_pore_structure_closed.png
   id=fig:initial_image_closed
@@ -60,7 +60,7 @@ Although both samples have a density of 80%, they exhibit very different pore in
   caption= Initial image used to generate the microstructure with open pores. This corresponds to the original image to generate Fig. 5.b in [!cite](Simon2022).
   style=display:block;margin-left:auto;margin-right:auto;width:40%
 
-TMAP8 can import these images using [ImageFunction](ImageFunction.md) and, using a threshold, attribute different contrast values to given phases.
+TMAP8 can import these images using the [ImageFunction](ImageFunction.md) object and, using a threshold, attribute different contrast values to given phases.
 Here, the bright areas are identified as ceramic material, while dark areas are identified as pores.
 
 The size of the microstructure is not directly provided by the images in [fig:initial_image_closed] and [fig:initial_image_open].
@@ -79,7 +79,7 @@ As discussed in [!cite](Simon2022), using a phase field approach with a continuo
 Since TMAP8 inherits the [phase field module](phase_field/index.md) from [MOOSE], it can perform phase field simulations.
 
 In this case, we use a two-phase model with arbitrary parameter values to quickly obtain, from the pore structures illustrated in [fig:initial_image_closed] and [fig:initial_image_open], corresponding microstructures with the desired interface width, i.e., $l$=50 $\mu$m in this case.
-The simulation time is selected to (1) be large enough to obtain a smooth interface, while (2) staying small enough to prevent significant changes in the microstructure.
+The simulation time is selected to be large enough to obtain a smooth interface, while staying small enough to prevent significant changes in the microstructure.
 
 #### Run simulations
 
@@ -97,14 +97,14 @@ cd ~/projects/TMAP8/test/tests/pore_scale_transport/
 mpirun -np 4 ~/projects/TMAP8/tmap8-opt -i 2D_microstructure_reader_smoothing_base.i pore_structure_open.params
 ```
 
-Note that [pore_structure_closed.params](pore_structure_closed.params) and [pore_structure_open.params](pore_structure_open.params) complement the base input file [2D_microstructure_reader_smoothing_base.i](2D_microstructure_reader_smoothing_base.i) by providing input and output names.
+Note that the [pore_structure_closed.params](pore_structure_closed.params) and [pore_structure_open.params](pore_structure_open.params) files complement the base input file [2D_microstructure_reader_smoothing_base.i](2D_microstructure_reader_smoothing_base.i) by providing input and output names.
 
 
 #### Resulting smooth pore microstructures
 
 !style halign=left
 [fig:pore_microstructures] shows the smooth pore microstructures obtained with the simulation described above.
-These pore structures correspond to the ones shown in Fig. 5 in [!cite](Simon2022) and can be found in `~/projects/TMAP8/test/tests/pore_scale_transport/` as `pore_structure_close/pore_structure_close.e` and `pore_structure_open/pore_structure_open.e` once the simulations are completed
+These pore structures correspond to the ones shown in Fig. 5 in [!cite](Simon2022) and can be found in `~/projects/TMAP8/test/tests/pore_scale_transport/` as `pore_structure_close/pore_structure_close.e` and `pore_structure_open/pore_structure_open.e` once the simulations are completed. These can be viewed in a visualization software such as [ParaView](https://www.paraview.org/).
 
 !media examples/figures/Pore_Microstructures.png
   id=fig:pore_microstructures
@@ -131,7 +131,7 @@ The evolution of tritium concentration in solid solution within the ceramic mate
 \frac{\partial c_s}{\partial t} = \nabla \cdot (h_c D_c \nabla c_s) - \frac{\partial c_t}{\partial t} + 2(K_{gs} - K_{sg}) h_s
 \end{equation}
 
-where $t$ is time (s), $D_c$ is the diffusion coefficient of tritium in the ceramic material ($\mu$m$^2$/s), $c_t$ is the concentration of trapped tritium (mol/$\mu$m$^{3}$), $K_{gs}$ and $K_{sg}$ are the reaction rates at the surface (mol/$\mu$m$^{3}$/s), and $h_c$ and $h_s$ are dimensionless interpolation functions that delimit the ceramic material and pore surface, respectively (see section below).
+where $t$ is time (s), $D_c$ is the diffusion coefficient of tritium in the ceramic material ($\mu$m$^2$/s), $c_t$ is the concentration of trapped tritium (mol/$\mu$m$^{3}$), $K_{gs}$ and $K_{sg}$ are the reaction rates at the surface (mol/$\mu$m$^{3}$/s), and $h_c$ and $h_s$ are dimensionless interpolation functions that delimit the ceramic material and pore surface, respectively (see the next section below).
 
 The concentration of trapped tritium is governed by:
 
@@ -153,7 +153,7 @@ These concentration variables are defined in the input file as:
 
 !listing test/tests/pore_scale_transport/2D_absorption_base.i link=false block=Variables
 
-The equations are encoded into the input file as kernels, which each implement a specific term from the equations
+The equations are encoded into the input file as [kernels](Kernels/index.md), which each implement a specific term from the equations
 
 !listing test/tests/pore_scale_transport/2D_absorption_base.i link=false block=Kernels
 
@@ -185,7 +185,7 @@ where $\theta_0 \geq 1$ is a dimensionless multiplier that ensures the concentra
 
 !style halign=left
 The microstructure is defined by a dimensionless order parameter $\eta$, which equals 1 in the pores, 0 in the ceramic, and varies continuously at the pore surface.
-This is commonly used in phase field modeling to describe continuous microstructures.
+This is commonly used in [phase field modeling](phase_field/index.md) to describe continuous microstructures.
 The interpolation functions, which help ensure that diffusion coefficients (or other material properties) are restricted to the appropriate domains, are defined as:
 
 \begin{equation} \label{eq:hc}
@@ -240,8 +240,8 @@ The resulting model parameter values are summarized in [tab:model_parameters].
 !style halign=left
 As shown in [fig:pore_microstructures], the simulated domain represents a quarter of the sample, whose radius is 4.5 mm.
 
-The same numerical methods as described in [!cite](Simon2022) is used here.
-The numerical methods, including time step, time adaptivity, time integration method, preconditioning, and others are defines in the `Preconditioning` and `Executioner` blocks, as:
+The same numerical methods as described in [!cite](Simon2022) are used here.
+The numerical methods, including time step, time adaptivity, time integration method, preconditioning, and others are defined in the `Preconditioning` and `Executioner` blocks, as:
 
 !listing test/tests/pore_scale_transport/2D_absorption_base.i link=false block=Preconditioning
 
@@ -258,7 +258,7 @@ where $P$ is the tritium pressure (Pa), $R$ is the gas constant from [PhysicalCo
 
 !listing test/tests/pore_scale_transport/2D_absorption_base.i link=false block=BCs
 
-As initial conditions, the ceramic initially contains no tritium, and the pore is filled with $T_2$ with the value from Eq. [eq:BC].
+As initial conditions, the ceramic initially contains no tritium, and the pore is filled with $T_2$ with the value from [eq:BC].
 
 !listing test/tests/pore_scale_transport/2D_absorption_base.i link=false block=ICs
 
@@ -291,7 +291,7 @@ These outputs are obtained via the postprocessor blocks:
 
 !listing test/tests/pore_scale_transport/2D_absorption_base.i link=false block=Postprocessors
 
-Note that these simulations are not run to generate  Fig. 6 from [!cite](Simon2022) on the fly in the documentation like it is custom to do in other [examples](examples/tmap_index.md) and [V&V](verification_and_validation/index.md) cases due to the significant time these simulations can take when using a fine mesh. However, using the instructions and details provided above, users can replicate the results presented in [!cite](Simon2022). If any challenge arise or if you have a question while working through this example case, feel free to reach out to the TMAP8 development team on the [TMAP8 GitHub discussion page](https://github.com/idaholab/TMAP8/discussions).
+Note that these simulations are not run to generate  Fig. 6 from [!cite](Simon2022) on-the-fly in the documentation like it is custom to do in other [examples](examples/tmap_index.md) and [V&V](verification_and_validation/index.md) cases due to the significant time these simulations can take when using a fine mesh. However, using the instructions and details provided above, users can replicate the results presented in [!cite](Simon2022). If any challenge arise or if you have a question while working through this example case, feel free to reach out to the TMAP8 development team on the [TMAP8 GitHub discussion page](https://github.com/idaholab/TMAP8/discussions).
 
 ## Complete input file
 
