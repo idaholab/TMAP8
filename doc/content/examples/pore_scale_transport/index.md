@@ -83,14 +83,14 @@ The simulation time is selected to be large enough to obtain a smooth interface,
 
 #### Run simulations
 
-To run the input file to reproduce the microstructures shown in Fig. 5 in [!cite](Simon2022), users need to first [install TMAP8](installation.md). Then, to generate the microstructure with closed pores, run:
+To run the input file to reproduce the microstructures shown in Fig. 5 in [!cite](Simon2022), users need to first [install TMAP8](installation.md). Then, to generate the microstructure with closed pores using 4 GPU cores in parallel with `mpirun`, run:
 
 ```
 cd ~/projects/TMAP8/test/tests/pore_scale_transport/
 mpirun -np 4 ~/projects/TMAP8/tmap8-opt -i 2D_microstructure_reader_smoothing_base.i pore_structure_closed.params
 ```
 
-and to generate the microstructure with open pores, run:
+and to generate the microstructure with open pores using 4 GPU cores in parallel with `mpirun`, run:
 
 ```
 cd ~/projects/TMAP8/test/tests/pore_scale_transport/
@@ -204,7 +204,8 @@ for the pore area, and
 h_s = 16 \eta^2 (1 - \eta)^2
 \end{equation}
 
-to describe the interface between the ceramic material and the pore.
+to describe the interface between the ceramic material and the pore
+Note that the factor 16 ensures that at the middle of the interface, $h_s(\eta = 0.5) = 1$, as desired.
 
 !listing test/tests/pore_scale_transport/2D_absorption_base.i link=false block=Materials/hmatAD Materials/hporeAD Materials/hsurfaceAD
 
@@ -291,7 +292,9 @@ These outputs are obtained via the postprocessor blocks:
 
 !listing test/tests/pore_scale_transport/2D_absorption_base.i link=false block=Postprocessors
 
-Note that these simulations are not run to generate  Fig. 6 from [!cite](Simon2022) on-the-fly in the documentation like it is custom to do in other [examples](examples/tmap_index.md) and [V&V](verification_and_validation/index.md) cases due to the significant time these simulations can take when using a fine mesh. However, using the instructions and details provided above, users can replicate the results presented in [!cite](Simon2022). If any challenge arise or if you have a question while working through this example case, feel free to reach out to the TMAP8 development team on the [TMAP8 GitHub discussion page](https://github.com/idaholab/TMAP8/discussions).
+Note that these simulations are not run to generate Fig. 6 from [!cite](Simon2022) on-the-fly in the documentation like it is custom to do in other [examples](examples/tmap_index.md) and [V&V](verification_and_validation/index.md) cases due to the significant time these simulations can take when using a fine mesh.
+However, using the instructions and details provided above, users can replicate the results presented in Fig. 6 from [!cite](Simon2022) and reproduced in [fig:pore_scale_process_illustration].
+If any challenge arise or if you have a question while working through this example case, feel free to reach out to the TMAP8 development team on the [TMAP8 GitHub discussion page](https://github.com/idaholab/TMAP8/discussions).
 
 ## Complete input file
 

@@ -26,10 +26,10 @@ domain_end_x = ${units 5425 mum}
 domain_end_y = ${units 5425 mum}
 
 # grain growth parameters (since the point of the simulation is only to get a smooth interface, the model parameters can be selected arbitrarily)
-op_num = 2 # Number of grains
-mobility_prefactor = 2.5e-6
-GB_energy = 0.7
-activation_energy = 0.23
+op_num = 2 # Number of grains (-)
+mobility_prefactor = ${units 2.5e-6 mum^4/J/s}
+GB_energy = ${units 0.7 J/mum^2}
+activation_energy = ${units 0.23 eV}
 temperature = ${units 700 K}
 width_diffuse_GB = ${units 50 mum} # Width of the diffuse GB
 
@@ -58,7 +58,7 @@ threshold_image_function = 255.5 # (-)
   [grain_tracker]
     type = GrainTracker
     flood_entity_type = ELEMENTAL
-    compute_halo_maps = true # For displaying HALO fields
+    compute_halo_maps = true
   []
 []
 
