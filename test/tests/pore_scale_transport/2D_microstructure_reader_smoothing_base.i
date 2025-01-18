@@ -7,7 +7,6 @@
 # in IEEE Transactions on Plasma Science, 2022, doi: 10.1109/TPS.2022.3183525.
 #
 # Info:
-# - This input file used to generate polycrystals for SiC.
 # - This simulation predicts phase evolution based on a grain growth phase field model.
 # - The pore and the ceramics represent two different phases, and the initial conditions
 #   are provided with a black and white picture, which is read by ImageFunction.
@@ -131,7 +130,7 @@ threshold_image_function = 255.5 # (-)
 []
 
 [Materials]
-  [CuGrGr]
+  [InterfaceEvolution]
     type = GBEvolution
     GBmob0 = ${mobility_prefactor}
     GBenergy = ${GB_energy}
