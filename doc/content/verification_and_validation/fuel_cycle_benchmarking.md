@@ -1,27 +1,31 @@
 # Fuel Cycle Benchmarking
 
-## Case Description
+## Case and Model Description
 
-This benchmarking case is taken from [!cite](meschini2023modeling) to simulate a fuel cycle model using resident time method. The model assign a resident time instead of complex techinical detail for each fuel cycle system in fuel energy plant. The model help us to understand the urgent difficulty in the development of fusion area in system-level. Lowering the tritium inventory
+This benchmarking case is taken from [!cite](meschini2023modeling) to simulate a fuel cycle model using resident time method. The model only assign a resident time to simulate the tritium flow for each system in fuel energy plant. The model avoid the complex techinical detail and the un finished technical. The model help us to understand the challenges and potential solutions to lowering the requirement for the tritium inventory and accelerate the development of fusion energy.
 
 In the model, we have 11 systems to finish the tritium recycling in fuel cycle. The detail and corresponding ODE for each system are listed in below:
 
 !table id=tritsystems caption=Systems and labels used in this example.
 | System Name | System number | Tritium inventory variable| system equation |
 | --- | --- | --- | --- |
-| Breeding zone | 1 | `T_01_BZ` | [eqn:t1] |
-| Tritium Extraction System | 2 | `T_02_TES` | [eqn:t2] |
-| First Wall | 3 | `T_03_FW` | [eqn:t3] |
-| Divertor | 4 | `T_04_DIV` | [eqn:t4] |
-| Heat Exchanger | 5 | `T_05_HX` | [eqn:t5] |
-| Coolant Purification System | 6 | `T_06_CPS` | [eqn:t6] |
-| Vaccum Pump | 7 | `T_07_vacuum` | [eqn:t7] |
-| Fuel Clean-up  | 8 | `T_08_FCU` | [eqn:t8] |
-| Isotope Separation System | 9 | `T_09_ISS` | [eqn:t9] |
-| Exhaust and Water Detritiation System | 10 | `T_10_exhaust` | [eqn:t10] |
-| Storage and Management | 11 | `T_11_storage` | [eqn:t11] |
+| Breeding Blanket                       | 1  | `T_01_BB`       | [eqn:t1] |
+| Tritium Extraction System              | 2  | `T_02_TES`      | [eqn:t2] |
+| First Wall                             | 3  | `T_03_FW`       | [eqn:t3] |
+| Divertor                               | 4  | `T_04_DIV`      | [eqn:t4] |
+| Heat Exchanger                         | 5  | `T_05_HX`       | [eqn:t5] |
+| Detritiation System                    | 6  | `T_06_DS`       | [eqn:t6] |
+| Vaccum Pump                            | 7  | `T_07_vacuum`   | [eqn:t7] |
+| Fuel Clean-up                          | 8  | `T_08_FCU`      | [eqn:t8] |
+| Isotope Separation System              | 9  | `T_09_ISS`      | [eqn:t9] |
+| Storage and Management                 | 10 | `T_10_storage`  | [eqn:t10] |
+| Fueling System                         | 11 | -               | -         |
+| Tritium Separation Membrane            | 12 | `T_11_membrane` | [eqn:t11] |
 
+!alert note title=The fuel cycle of Tritium in Fueling System is ignored
+Fueling system only injects fresh fuel in the vacuum chamber and is not modeled in the fuel cycle to simplify the model. Instead, an outflux equal to the tritium fueling rate is added to the equation describing the storage and management system.
 
+<!-- Waiting updates -->
 
 \begin{equation}
 \label{eqn:t1}
@@ -75,9 +79,6 @@ In the model, we have 11 systems to finish the tritium recycling in fuel cycle. 
 \label{eqn:t11}
 \frac{dI_{11}}{dt} = f_{8-11}\frac{I_8}{\tau_8} + (1-f_{9-10})\frac{I_9}{\tau_9} - \frac{\dot{N}^{-}}{\eta_f f_b} - I_{11}\lambda
 \end{equation}
-
-
-## Model Description
 
 We use the ScalarKernels to calculate the ODE from 11 systems.
 
