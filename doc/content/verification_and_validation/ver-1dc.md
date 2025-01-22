@@ -90,12 +90,12 @@ The analytical solution for the permeation transient is compared with TMAP8 resu
        id=ver-1dc_comparison_diffusion
        caption=Comparison of TMAP8 calculation with the analytical solution for the permeation transient from [!cite](ambrosek2008verification).
 
-## Further verification using the method of manufactured solution (MMS)
+## Further verification using the method of manufactured solutions (MMS)
 
 Although the flux and breakthrough time can be verified using analytical solutions as presented above, the [MMS](mms.md) approach is a powerful method to verify complex system of PDEs such as the one studied in this case.
-Here, we apply the [MMS](mms.md) approach available in the [MOOSE framework](https://mooseframework.inl.gov) to verify TMAP8's predictions for ver-1dc.
+Here, we apply the [MMS](mms.md) approach available as a Python-based utility in the [MOOSE framework](https://mooseframework.inl.gov) to verify TMAP8's predictions for ver-1dc.
 
-Below, we (1) describe how to derive the weak form of the equation, which is necessary to apply the MMS, detail how we apply the MMS approach to this case, and (3) discuss the results.
+Below, we (1) describe how to derive the weak form of the equation, which is necessary to apply the MMS, (2) detail how we apply the MMS approach to this case, and (3) discuss the results.
 
 ### Derivation of the weak forms of the equations
 
@@ -144,7 +144,7 @@ For the divergence term in [eqn:diffusion_mobile_step3], applying integration by
 \begin{equation}
     \int_\Omega \psi \nabla \cdot \left( D \nabla C_M \right) \, d\Omega = - \int_\Omega \nabla \psi \cdot \left( D \nabla C_M \right) \, d\Omega + \oint\limits_{\partial \Omega} \psi \left( D \nabla C_M \right) \cdot \mathbf{n} \, d\partial \Omega,
 \end{equation}
-where $\partial \Omega$ is the boundary of the domain and $\mathbf{n}$ is the outward normal vector.
+where $\partial \Omega$ is the boundary of the domain and $\mathbf{n}$ is the outward-facing normal vector.
 
 This update term is then substituted back into [eqn:diffusion_mobile_step3], which leads to:
 \begin{equation} \label{eqn:diffusion_mobile_step4}
@@ -155,7 +155,7 @@ Since no divergence terms exist in [eqn:trapped_rate_step3], no integration by p
 
 #### Step 5: Derive the final weak form in inner product notation
 
-[eqn:diffusion_mobile_step4] and [eqn:trapped_rate_step3] can be expressed in inner product notation, where $\langle a, b \rangle = \int_\Omega a b \, d\Omega$:
+[eqn:diffusion_mobile_step4] and [eqn:trapped_rate_step3] can be expressed in inner product notation, where $\langle a, b \rangle = \int_\Omega a b \, d\Omega$.
 
 [eqn:diffusion_mobile_step4] becomes
 \begin{equation}
