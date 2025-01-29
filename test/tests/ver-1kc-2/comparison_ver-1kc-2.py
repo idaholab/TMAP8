@@ -55,6 +55,7 @@ line6 = ax2.plot(TMAP8_time_k10, TMAP8_pressure_HT_enclosure_2_k10, label=r"HT E
 ax2.yaxis.set_major_formatter(plt.FuncFormatter(lambda val, pos: '{:.1e}'.format(val)))
 ax2.set_ylabel('Pressure Enclosure 2 (Pa)')
 ax2.set_ylim(bottom=0)
+ax.set_xlim(0,TMAP8_time_k10.max())
 
 # Combine legends
 lines_left  = line1 + line2 + line3
@@ -140,6 +141,7 @@ ax = fig.add_subplot(gs[0])
 ax.plot(TMAP8_time_k10, mass_conservation_sum_encl1_encl2_k10, c='tab:blue')
 ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda val, pos: '{:.3e}'.format(val)))
 ax.set_xlabel('Time (s)')
+ax.set_xlim(-TMAP8_time_k10.max()/100,TMAP8_time_k10.max())
 ax.set_ylabel(r"Mass Conservation Sum Encl 1 and 2 (mol/m$^3$)")
 ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 mass_variation_percentage = (np.max(mass_conservation_sum_encl1_encl2_k10)-np.min(mass_conservation_sum_encl1_encl2_k10))/np.max(mass_conservation_sum_encl1_encl2_k10)*100
@@ -156,6 +158,7 @@ ax.plot(TMAP8_time_k10, equilibrium_constant_encl_2, label = r"Enclosure 2", c='
 ax.plot(TMAP8_time_k10, equilibrium_constant_encl_1, label = r"Enclosure 1", c='tab:blue')
 ax.axhline(y=2, color='tab:green', linestyle='--', label='TMAP7 Equilibrium Constant')
 ax.set_xlabel('Time (s)')
+ax.set_xlim(0,TMAP8_time_k10.max())
 ax.set_ylabel(r"Equilibrium constant $P_{\text{HT}} / \sqrt{P_{\text{H}_2} P_{\text{T}_2}}$")
 ax.set_ylim(bottom=0)
 ax.legend(loc="best")
