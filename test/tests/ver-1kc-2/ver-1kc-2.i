@@ -60,40 +60,28 @@ unit_scale_neighbor = 1
   # Variables for H2, T2, and HT in enclosure 1
   [concentration_H2_enclosure_1]
     block = 1
-    order = FIRST
-    family = LAGRANGE
     initial_condition = '${initial_concentration_1}'
   []
   [concentration_T2_enclosure_1]
     block = 1
-    order = FIRST
-    family = LAGRANGE
     initial_condition = '${initial_concentration_1}'
   []
   [concentration_HT_enclosure_1]
     block = 1
-    order = FIRST
-    family = LAGRANGE
     initial_condition = '${initial_concentration_2}'
   []
 
   # Variables for H2, T2, and HT in enclosure 2
   [concentration_H2_enclosure_2]
     block = 2
-    order = FIRST
-    family = LAGRANGE
     initial_condition = '${initial_concentration_2}'
   []
   [concentration_T2_enclosure_2]
     block = 2
-    order = FIRST
-    family = LAGRANGE
     initial_condition = '${initial_concentration_2}'
   []
   [concentration_HT_enclosure_2]
     block = 2
-    order = FIRST
-    family = LAGRANGE
     initial_condition = '${initial_concentration_2}'
   []
 []
@@ -601,21 +589,27 @@ unit_scale_neighbor = 1
   []
 []
 
+[Preconditioning]
+  [smp]
+    type = SMP
+    full = true
+  []
+[]
+
 [Executioner]
   type = Transient
   end_time = ${simulation_time}
-  dtmax = 1e-4
-  nl_abs_tol = 1e-8
-  nl_rel_tol = 1e-6
-  nl_max_its = 7
+  dtmax = 1e-2
+  nl_max_its = 6
+  l_max_its = 30
   scheme = 'bdf2'
-  solve_type = JFNK
+  solve_type = PJFNK
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 1e-3
-    optimal_iterations = 5
+    dt = 1e-6
+    optimal_iterations = 4
     iteration_window = 1
     growth_factor = 1.1
     cutback_factor = 0.9
