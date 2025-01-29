@@ -169,11 +169,21 @@ These weak forms of the equations can now be used for finite element analysis an
 
 ### Application of the MMS
 
-TBD
+To perform MMS we select a smoothly varying sinusoidal spatial solution for the mobile and trapped species. In order to prevent temporal error from polluting the spatial error we pick temporal dependence that can be exactly represented by the time integrator we choose. In this MMS case we use implicit or backwards Euler which is first order accurate; consequently we choose a linear dependence on time. For our 1D case this leads us to select the following MMS solution for the mobile species:
+
+\begin{equation}
+\cos(x) t
+\end{equation}
+
+The trapping species concentrations are represented similarly. With the manufactured solutions selected we generate forcing functions by substituting the exact solutions into the strong-form PDEs, [eqn:diffusion_mobile_step1] and [eqn:trapped_rate_step1]. These forcing functions are then imposed in the TMAP8 input file using [BodyForce.md] and [UserForcingFunctionNodalKernel.md] respectively. Dirichlet boundary conditions for the mobile species are imposed using the selected exact/MMS solution. For the spatial discretization, we select first order Lagrange basis functions for the mobile concentration and for projecting the trapped species concentrations from nodes into element interiors for coupling in the trapped specie time derivative term in the mobile specie governing equation.
 
 ### Results
 
-TBD
+!media run_spatial_mms.py
+       image_name=mms_spatial.png
+       id=ver-1dc_mms
+       caption=Spatial convergence for a diffusion-trapping-release problem modeled after the physics of ver-1dc using first order Lagrange basis functions. The expected quadratic convergence rate of the $L^2$ error is observed.
+
 
 ## Input files
 
