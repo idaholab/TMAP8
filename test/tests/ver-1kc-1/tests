@@ -1,39 +1,39 @@
 [Tests]
   design = 'InterfaceSorption.md MatDiffusion.md TimeDerivative.md'
   issues = '#12'
-  verification = 'ver-1kc.md'
-  [ver-1kc_csv]
+  verification = 'ver-1kc-1.md'
+  [ver-1kc-1_csv]
     type = CSVDiff
-    input = ver-1kc.i
+    input = ver-1kc-1.i
     cli_args = "nb_segments_TMAP8=1e1
                 simulation_time=4
                 Executioner/nl_abs_tol=1e-5
                 Executioner/nl_rel_tol=1e-4
                 Outputs/exodus=false
-                Outputs/file_base=ver-1kc_out_k10_light"
-    csvdiff = ver-1kc_out_k10_light.csv
+                Outputs/file_base=ver-1kc-1_out_k10_light"
+    csvdiff = ver-1kc-1_out_k10_light.csv
     requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface.'
   []
-  [ver-1kc_csv_heavy]
+  [ver-1kc-1_csv_heavy]
     type = CSVDiff
     heavy = true
-    input = ver-1kc.i
-    csvdiff = ver-1kc_out_k10.csv
+    input = ver-1kc-1.i
+    csvdiff = ver-1kc-1_out_k10.csv
     requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface with a fine mesh and tight tolerances for higher accuracy.'
   []
-  [ver-1kc_exodus_heavy]
+  [ver-1kc-1_exodus_heavy]
     type = Exodiff
     heavy = true
-    input = ver-1kc.i
-    exodiff = ver-1kc_out_k10.e
-    prereq = ver-1kc_csv_heavy
-    should_execute = false # this test relies on the output files from ver-1kc_csv_concentration_jump, so it shouldn't be run twice
+    input = ver-1kc-1.i
+    exodiff = ver-1kc-1_out_k10.e
+    prereq = ver-1kc-1_csv_heavy
+    should_execute = false # this test relies on the output files from ver-1kc-1_csv_concentration_jump, so it shouldn't be run twice
     requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface with a fine mesh and tight tolerances for higher accuracy and generate an exodus file.'
   []
-  [ver-1kc_comparison]
+  [ver-1kc-1_comparison]
     type = RunCommand
-    command = 'python3 comparison_ver-1kc.py'
-    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1kc, modeling a diffusion across a membrane separating two enclosures in accordance with Sieverts’ law.'
+    command = 'python3 comparison_ver-1kc-1.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1kc-1, modeling a diffusion across a membrane separating two enclosures in accordance with Sieverts’ law.'
     required_python_packages = 'matplotlib numpy pandas os git'
   []
 []
