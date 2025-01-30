@@ -55,7 +55,7 @@ def summation_term(num_terms, time):
         sum += (-1)**m * np.exp(-1 * m**2 * time / (2*tau_be))
     return sum
 
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1d/gold/ver-1d-diffusion_out.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/ver-1d-diffusion_out.csv"
@@ -101,7 +101,7 @@ analytical_time = [tau_bd, tau_bd]
 # breakthrough time.
 analytical_sol = [0, 3.2e18]
 
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1d/gold//ver-1d-trapping_out.csv"
 else:                                  # if in test folder
     csv_folder = "./gold//ver-1d-trapping_out.csv"

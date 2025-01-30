@@ -15,7 +15,7 @@ kb = 1.380649e-23  # J/K Boltzmann constant
 
 # ===============================================================================
 # Extract TMAP8 results
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1ie/gold/ver-1ie_out.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/ver-1ie_out.csv"

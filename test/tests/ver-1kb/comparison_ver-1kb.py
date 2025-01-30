@@ -9,7 +9,7 @@ script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
 
 # Extract columns for time, pressures, concentration_enclosure_1_at_interface, and concentration_enclosure_2_at_interface
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1kb/gold/ver-1kb_out_k1.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/ver-1kb_out_k1.csv"
@@ -76,7 +76,7 @@ fig.savefig('ver-1kb_mass_conservation.png', bbox_inches='tight', dpi=300)
 
 # Repeat the same for K=10/RT
 
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder_k10 = "../../../../test/tests/ver-1kb/gold/ver-1kb_out_k10.csv"
 else:                                  # if in test folder
     csv_folder_k10 = "./gold/ver-1kb_out_k10.csv"

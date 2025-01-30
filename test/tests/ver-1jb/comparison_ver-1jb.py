@@ -14,7 +14,7 @@ os.chdir(script_folder)
 
 # ===============================================================================
 # Extract TMAP8 predictions - time evolution
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1jb/gold/ver-1jb_time_dependent_out.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/ver-1jb_time_dependent_out.csv"
@@ -80,7 +80,7 @@ plt.close(fig)
 
 # ===============================================================================
 # Extract TMAP8 predictions - concentration profile
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder_profile = "../../../../test/tests/ver-1jb/gold/ver-1jb_profile_out_line_0048.csv"
 else:                                  # if in test folder
     csv_folder_profile = "./gold/ver-1jb_profile_out_line_0048.csv"
@@ -119,7 +119,7 @@ plt.close(fig)
 
 # ===============================================================================
 # Extract TMAP8 predictions - time evolution
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1jb/gold/ver-1jb_equivalent_concentrations_time_dependent_out.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/ver-1jb_equivalent_concentrations_time_dependent_out.csv"
@@ -185,7 +185,7 @@ plt.close(fig)
 
 # ===============================================================================
 # Extract TMAP8 predictions - concentration profile
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder_profile = "../../../../test/tests/ver-1jb/gold/ver-1jb_equivalent_concentrations_profile_out_line_0048.csv"
 else:                                  # if in test folder
     csv_folder_profile = "./gold/ver-1jb_equivalent_concentrations_profile_out_line_0048.csv"

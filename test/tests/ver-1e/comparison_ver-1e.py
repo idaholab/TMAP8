@@ -25,7 +25,7 @@ fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-if "/TMAP8/doc/" in script_folder:      # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():      # if in documentation folder
     csv_folder_tmap4 = "../../../../test/tests/ver-1e/gold/TMAP4.csv"
     csv_folder_tmap7 = "../../../../test/tests/ver-1e/gold/TMAP7.csv"
 else:                                   # if in test folder
@@ -187,7 +187,7 @@ fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1e/gold/TMAP4_vector_postproc_line_0548.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/TMAP4_vector_postproc_line_0548.csv"
@@ -197,7 +197,7 @@ tmap_distance_tmap4_microns = tmap_distance_tmap4*1e6
 tmap_conc_tmap4 = tmap_sol['u']
 ax.plot(tmap_distance_tmap4_microns, tmap_conc_tmap4, label=r"TMAP8 (TMAP4 case)", c='tab:gray')
 
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1e/gold/TMAP7_vector_postproc_line_0548.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/TMAP7_vector_postproc_line_0548.csv"

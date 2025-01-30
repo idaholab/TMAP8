@@ -81,7 +81,7 @@ time_scale = 60*60 # h -> s
 
 #===============================================================================
 # Extract TMAP8 predictions
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/val-2c/gold/val-2c_immediate_injection_csv.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/val-2c_immediate_injection_csv.csv"
@@ -91,7 +91,7 @@ tmap8_t2_enclosure_concentration = tmap8_prediction['t2_enclosure_edge_concentra
 tmap8_hto_enclosure_concentration = tmap8_prediction['hto_enclosure_edge_concentration']
 
 # Extract TMAP8 predictions - delay
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/val-2c/gold/val-2c_delay_csv.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/val-2c_delay_csv.csv"
@@ -102,7 +102,7 @@ tmap8_hto_enclosure_concentration_delay = tmap8_prediction_delay['hto_enclosure_
 
 #===============================================================================
 # Extract Experimental data
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/val-2c/gold/Experimental_data_HTO_concentration.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/Experimental_data_HTO_concentration.csv"
@@ -110,7 +110,7 @@ experimental_data_hto = pd.read_csv(csv_folder)
 experimental_time_hto = experimental_data_hto['time (hr)']
 experimental_hto_enclosure_concentration = experimental_data_hto['Concentration (Ci/m3)']
 
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/val-2c/gold/Experimental_data_T2_concentration.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/Experimental_data_T2_concentration.csv"

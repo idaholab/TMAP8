@@ -17,7 +17,7 @@ amu_to_kg = 1.6605390666e-27 # kg/amu
 
 # ===============================================================================
 # Extract TMAP8 results
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1ic/gold/ver-1ic_out.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/ver-1ic_out.csv"

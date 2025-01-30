@@ -48,7 +48,7 @@ def numerical_solution_on_experiment_input(experiment_input, tmap_input, tmap_ou
 #===============================================================================
 # Extract TMAP8 predictions
 
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/val-2b/gold/val-2b_heavy_out.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/val-2b_heavy_out.csv"
@@ -77,7 +77,7 @@ tmap_flux_desorption = np.array(tmap_flux_desorption)
 #===============================================================================
 # Extract experimental data
 
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/val-2b/gold/experimental_data.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/experimental_data.csv"
