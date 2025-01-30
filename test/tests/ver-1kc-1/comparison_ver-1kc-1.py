@@ -10,9 +10,9 @@ os.chdir(script_folder)
 
 # Load experimental data
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-    csv_folder_k10 = "../../../../test/tests/ver-1kc/gold/ver-1kc_out_k10.csv"
+    csv_folder_k10 = "../../../../test/tests/ver-1kc-1/gold/ver-1kc-1_out_k10.csv"
 else:                                  # if in test folder
-    csv_folder_k10 = "./gold/ver-1kc_out_k10.csv"
+    csv_folder_k10 = "./gold/ver-1kc-1_out_k10.csv"
 expt_data_k10 = pd.read_csv(csv_folder_k10)
 TMAP8_time_k10 = expt_data_k10['time']
 TMAP8_pressure_enclosure_1_k10 = expt_data_k10['pressure_enclosure_1']
@@ -37,7 +37,7 @@ ax.set_xlim(0, TMAP8_time_k10.max())
 ax.set_ylim(bottom=0)
 ax.legend(loc="best")
 ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
-fig.savefig('ver-1kc_comparison_time_k10.png', bbox_inches='tight', dpi=300)
+fig.savefig('ver-1kc-1_comparison_time_k10.png', bbox_inches='tight', dpi=300)
 
 # Subplot 2: Solubility and concentration ratios vs time
 
@@ -59,7 +59,7 @@ RMSPE = RMSE*100/np.mean(solubility_ratio)
 x_pos = TMAP8_time_k10.max() / 7200
 y_pos = 0.9 * ax.get_ylim()[1]
 ax.text(x_pos, y_pos, 'RMSPE = %.3f ' % RMSPE + '%', fontweight='bold')
-fig.savefig('ver-1kc_concentration_ratio_k10.png', bbox_inches='tight', dpi=300)
+fig.savefig('ver-1kc-1_concentration_ratio_k10.png', bbox_inches='tight', dpi=300)
 
 # Subplot 3 : Mass Conservation Sum Encl 1 and 2 vs Time
 
@@ -74,5 +74,5 @@ ax.set_ylabel(r"Mass Conservation Sum Encl 1 and 2 (mol/m$^3$)")
 ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 mass_variation_percentage = (np.max(mass_conservation_sum_encl1_encl2_k10)-np.min(mass_conservation_sum_encl1_encl2_k10))/np.min(mass_conservation_sum_encl1_encl2_k10)*100
 print("Percentage of mass variation: ", mass_variation_percentage)
-fig.savefig('ver-1kc_mass_conservation_k10.png', bbox_inches='tight', dpi=300)
+fig.savefig('ver-1kc-1_mass_conservation_k10.png', bbox_inches='tight', dpi=300)
 

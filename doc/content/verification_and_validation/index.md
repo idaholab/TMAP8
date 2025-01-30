@@ -33,7 +33,8 @@ TMAP8 also contains [example cases](examples/tmap_index.md), which showcase how 
 | ver-1jb | [Radioactive Decay of Mobile Tritium in a Slab with a Distributed Trap Concentration](ver-1jb.md) |
 | ver-1ka | [Simple Volumetric Source](ver-1ka.md)                                                            |
 | ver-1kb | [Henry’s Law Boundaries with No Volumetric Source](ver-1kb.md)                                    |
-| ver-1kc | [Sieverts’ Law Boundaries with No Volumetric Source](ver-1kc.md)                                  |
+| ver-1kc-1 | [Sieverts’ Law Boundaries with No Volumetric Source](ver-1kc-1.md)                              |
+| ver-1kc-2 | [Sieverts’ Law Boundaries with Chemical Reaction and No Volumetric Source](ver-1kc-2.md)        |
 
 # List of benchmarking cases
 

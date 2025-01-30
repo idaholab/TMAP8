@@ -1,0 +1,1 @@
+../../../../test/tests/ver-1kc-2/comparison_ver-1kc-2.py

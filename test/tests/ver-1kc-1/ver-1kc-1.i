@@ -240,7 +240,7 @@ unit_scale_neighbor = 1
 []
 
 [Outputs]
-  file_base = 'ver-1kc_out_k10'
+  file_base = 'ver-1kc-1_out_k10'
   csv = true
   exodus = true
   execute_on = 'initial timestep_end'
