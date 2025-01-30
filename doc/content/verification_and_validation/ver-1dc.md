@@ -179,7 +179,7 @@ The trapping species concentrations are represented similarly. With the manufact
 
 ### Results
 
-!media run_spatial_mms.py
+!media spatial_mms.py
        image_name=mms_spatial.png
        id=ver-1dc_mms
        caption=Spatial convergence for a diffusion-trapping-release problem modeled after the physics of ver-1dc using first order Lagrange basis functions. The expected quadratic convergence rate of the $L^2$ error is observed.
