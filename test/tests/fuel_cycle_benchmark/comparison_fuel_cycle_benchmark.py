@@ -94,10 +94,10 @@ ax = fig.add_subplot(gs[0])
 for i in range(len(parameter_names)-1):
     if i==0:
         ax.plot(simulation_results[parameter_names.index('time')], simulation_results[i+1], linestyle='-', label=r"TMAP8", c='tab:grey')
-        ax.plot(experiment_results[parameter_names_experiment.index('time [s]')], experiment_results[i+1], '--', label=r"MatLab", c='tab:red')
+        ax.plot(experiment_results[parameter_names_experiment.index('time [s]')], experiment_results[i+1], '--', label=r"MatLab", c='tab:blue')
     else:
         ax.plot(simulation_results[parameter_names.index('time')], simulation_results[i+1], linestyle='-', c='tab:grey')
-        ax.plot(experiment_results[parameter_names_experiment.index('time [s]')], experiment_results[i+1], '--', c='tab:red')
+        ax.plot(experiment_results[parameter_names_experiment.index('time [s]')], experiment_results[i+1], '--', c='tab:blue')
 ax.text(10, 5.5e-3, 'BZ',fontweight='bold')
 ax.text(10, 1e-1, 'TES',fontweight='bold')
 ax.text(10, 2.05e-1, 'ISS',fontweight='bold')

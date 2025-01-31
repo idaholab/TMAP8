@@ -1,17 +1,17 @@
 [Tests]
-  issues = '#82'
   design = 'ParsedODEKernel.md ODETimeDerivative.md'
-  [Abdou2021]
+  issues = '#12'
+  [fuel_cycle_benchmarking_csvdiff]
     type = CSVDiff
     input = 'fuel_cycle.i'
-    csvdiff = 'fuel_cycle_out.csv'
-    requirement = 'The system shall reproduce a consistent solution to an ODE system of equations modeling the tritium fuel cycle.'
+    cli_args = 'accuracy_time="${units 864000 s}" Outputs/file_base=fuel_cycle_limited_out'
+    csvdiff = fuel_cycle_limited_out.csv
+    requirement = 'The system shall be able to model tritium fuel cycle from Meschini et al. (2023).'
   []
-  [gui]
+  [fuel_cycle_benchmarking_comparison]
     type = RunCommand
-    command = 'python3 fuel_cycle_gui.py --test'
-    installation_type = 'in_tree' # See #207
-    requirement = 'The system shall be able to open a graphical interface for the tritium fuel cycle example for user training.'
-    required_python_packages = 'tempfile tkinter re subprocess matplotlib numpy scipy atexit shutil atexit os'
+    command = 'python3 comparison_fuel_cycle_benchmark.py'
+    requirement = 'The system shall be able to generate comparison plots between the simulated solution from TMAP8 and Meschini et al. (2023), modeling tritium fuel cycle.'
+    required_python_packages = 'matplotlib numpy pandas scipy os'
   []
 []
