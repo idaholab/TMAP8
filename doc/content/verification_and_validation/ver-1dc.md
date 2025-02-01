@@ -93,9 +93,11 @@ The analytical solution for the permeation transient is compared with TMAP8 resu
 ## Further verification using the method of manufactured solutions (MMS)
 
 Although the flux and breakthrough time can be verified using analytical solutions as presented above, the [MMS](mms.md) approach is a powerful method to verify complex system of PDEs such as the one studied in this case.
-Here, we apply the [MMS](mms.md) approach available as a Python-based utility in the [MOOSE framework](https://mooseframework.inl.gov) to verify TMAP8's predictions for ver-1dc.
+Here, we apply the [MMS](mms.md) approach available as a Python-based utility in the [MOOSE framework](https://mooseframework.inl.gov) to verify TMAP8's predictions for ver-1dc through spatial convergence.
 
-Below, we (1) describe how to derive the weak form of the equation, which is necessary to apply the MMS, (2) detail how we apply the MMS approach to this case, and (3) discuss the results.
+Below, we (1) describe how to derive the weak form of the equation, which is necessary to apply the MMS,
+(2) detail how we apply the MMS approach to this case, and
+(3) discuss the results.
 
 ### Derivation of the weak forms of the equations
 
@@ -165,25 +167,41 @@ and, for $i=1$, $i=2$, and $i=3$, [eqn:trapped_rate_step3] becomes
 \begin{equation}
     \langle \psi_i, \frac{\partial C_{T_i}}{\partial t} \rangle - \langle \psi_i, \alpha_t^i \frac{C_{T_i}^{\text{empty}} C_M}{N \cdot \text{trap\_per\_free}} \rangle + \langle \psi_i, \alpha_r^i C_{T_i} \rangle = 0.
 \end{equation}
-These weak forms of the equations can now be used for finite element analysis and MMS.
+These weak forms of the equations can now be used for finite element analysis.
 
 ### Application of the MMS
 
-To perform MMS, we select a smoothly-varying sinusoidal spatial solution for the mobile and trapped species. In order to prevent temporal error from polluting the spatial error, we pick temporal dependence that can be exactly represented by the time integrator we choose. In this MMS case, we use implicit or backwards Euler which is first-order accurate; consequently, we choose a linear dependence on time. For our 1D case, this leads us to select the following MMS solution for the mobile species:
+A detailed and step by step description of the MMS approach is available on the [MOOSE MMS page](mms.md).
+To perform a spatial convergence study with the MMS, we select a smoothly-varying sinusoidal spatial solution for the mobile and trapped species. In order to prevent temporal error from polluting the spatial error, we pick temporal dependence that can be exactly represented by the time integrator we choose. In this MMS case, we use implicit or backwards Euler which is first-order accurate; consequently we choose a linear dependence on time. For our 1D case, this leads us to select the following MMS solution for the mobile species:
 
-\begin{equation}
-\cos(x) t
+\begin{equation} \label{eqn:exact_solution_mms}
+u(x,t) = \cos(x) t
 \end{equation}
 
-The trapping species concentrations are represented similarly. With the manufactured solutions selected, we generate forcing functions by substituting the exact solutions into the strong-form PDEs, [eqn:diffusion_mobile_step1] and [eqn:trapped_rate_step1]. These forcing functions are then imposed in the TMAP8 input file using [BodyForce.md] and [UserForcingFunctionNodalKernel.md] respectively. Dirichlet boundary conditions for the mobile species are imposed using the selected exact/MMS solution. For the spatial discretization, we select first order Lagrange basis functions for the mobile concentration and for projecting the trapped species concentrations from nodes into element interiors for coupling in the trapped specie time derivative term in the mobile specie governing equation.
+with $x$ the position along the 1D domain, and $t$ the time.
+The trapping species concentrations are represented similarly with $u_i$ for $i=1$, $i=2$, and $i=3$.
+With the manufactured solutions selected, we generate forcing functions $f$ and $f_i$ by substituting the exact solutions into the strong-form PDEs, [eqn:diffusion_mobile_step1] and [eqn:trapped_rate_step1], leading to:
+
+\begin{equation} \label{eqn:diffusion_mobile_mms}
+    \frac{\partial u}{\partial t} - \nabla \cdot \left( D \nabla u \right) + \text{trap\_per\_free} \cdot \sum_{i=1}^{3} \frac{\partial u_i}{\partial t} - f = 0,
+\end{equation}
+and, for $i=1$, $i=2$, and $i=3$:
+\begin{equation} \label{eqn:trapped_rate_mms}
+    \frac{\partial u_i}{\partial t} - \alpha_t^i \frac{u_i^{\text{empty}} u}{N \cdot \text{trap\_per\_free}} + \alpha_r^i u_i - f_i = 0.
+\end{equation}
+[eqn:diffusion_mobile_mms] and [eqn:trapped_rate_mms] now form a system of equation that can be solved and compared against the exact solutions defined in [eqn:exact_solution_mms].
+
+These forcing functions are then imposed in the TMAP8 input file using [BodyForce.md] and [UserForcingFunctionNodalKernel.md], respectively. Dirichlet boundary conditions for the mobile species are imposed using the selected exact/MMS solution. For the spatial discretization, we select first order Lagrange basis functions for the mobile concentration and for projecting the trapped species concentrations from nodes into element interiors for coupling in the trapped specie time derivative term in the mobile specie governing equation.
 
 ### Results
+
+The results of the spatial convergence study using the MMS is shown in [ver-1dc_mms].
+The expected quadratic convergence rate of the $L^2$ error is observed, hence verifying the proper implementation of the diffusion and multi-trapping capabilities.
 
 !media spatial_mms.py
        image_name=ver-1dc-mms-spatial.png
        id=ver-1dc_mms
        caption=Spatial convergence for a diffusion-trapping-release problem modeled after the physics of ver-1dc using first order Lagrange basis functions. The expected quadratic convergence rate of the $L^2$ error is observed.
-
 
 ## Input files
 
