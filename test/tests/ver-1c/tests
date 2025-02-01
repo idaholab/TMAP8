@@ -23,6 +23,7 @@
     requirement = 'The system shall be able to model species permeation into an unloaded portion of a slab from a pre-loaded portion, using a Physics and Components syntax.'
     # Different preconditioning
     abs_zero = 1e-8
+    method = 'opt'
   []
   [ver-1c_TMAP4_csvdiff]
     type = CSVDiff
