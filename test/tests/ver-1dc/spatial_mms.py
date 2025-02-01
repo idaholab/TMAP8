@@ -35,9 +35,9 @@ def run():
         mms_input = "../../../../test/tests/ver-1dc/ver-1dc_mms.i"
     else:                                  # if in test folder
         mms_input = "ver-1dc_mms.i"
-    df1 = mms.run_spatial(mms_input, 4, y_pp=['L2u'])
+    df1 = mms.run_spatial(mms_input, 10, y_pp=['L2u'])
     fig = mms.ConvergencePlot(xlabel=r'Element Size ($h$)', ylabel='$L_2$ Error')
-    fig.plot(df1, label=['L$_2$u'], marker='o', markersize=8, num_fitted_points=3, slope_precision=4)
+    fig.plot(df1, label=['L$_2$u'], marker='o', markersize=8, num_fitted_points=3, slope_precision=6)
     fig.save('ver-1dc-mms-spatial.png')
     return fig
 

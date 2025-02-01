@@ -36,6 +36,7 @@
     type = PythonUnitTest
     input = test.py
     test_case = TestMMS
+    heavy = true
     requirement = 'The system shall show second order spatial convergence for a diffusion-trapping-release test case.'
     method = '!dbg'
     required_python_packages = 'pandas matplotlib'
