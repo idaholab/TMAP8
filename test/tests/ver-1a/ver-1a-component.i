@@ -42,6 +42,9 @@ concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} 
         variable_name = 'u'
         diffusivity_matprop = ${diffusivity_SiC}
 
+        # Dont add the default preconditioning
+        preconditioning = 'none'
+
         # To help coupling to trapping
         compute_diffusive_fluxes_on = 'structure_left'
 
