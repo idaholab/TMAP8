@@ -200,7 +200,7 @@ and, for $i=1$, $i=2$, and $i=3$:
 $f$ and $f_i$ are therefore defined as:
 
 \begin{equation} \label{eqn:diffusion_mobile_mms_forced}
-    f = \cos(x) + Dt\cos(x) + \sum{i=1}^{3} \frac{ N u_{i,0}}{2} \cos(x),
+    f = \cos(x) + Dt\cos(x) + \sum_{i=1}^{3} \frac{ N u_{i,0}}{2} \cos(x),
 \end{equation}
 and, for $i=1$, $i=2$, and $i=3$:
 \begin{equation} \label{eqn:trapped_rate_mms_forced}
