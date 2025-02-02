@@ -1,0 +1,37 @@
+[Tests]
+  design = 'InterfaceSorption.md MatDiffusion.md TimeDerivative.md ADMatReactionFlexible.md BodyForce.md'
+  issues = '#12'
+  verification = 'ver-1kd.md'
+  [ver-1kd_csv]
+    type = CSVDiff
+    input = ver-1kd.i
+    cli_args = "simulation_time=0.05
+                Executioner/nl_rel_tol=1e-6
+                Outputs/exodus=false
+                Outputs/file_base=ver-1kd_out_k10_light"
+    csvdiff = ver-1kd_out_k10_light.csv
+    requirement = 'The system shall be able to model the diffusion of T2, H2 and HT across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface. Additionally, enclosure 1 includes a T2 volumetric source term.'
+  []
+  [ver-1kd_csv_heavy]
+    type = CSVDiff
+    heavy = true
+    input = ver-1kd.i
+    csvdiff = ver-1kd_out_k10.csv
+    requirement = 'The system shall be able to model the diffusion of T2, H2 and HT across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface with tight tolerances for higher accuracy. Additionally, enclosure 1 includes a T2 volumetric source term.'
+  []
+  [ver-1kd_exodus_heavy]
+    type = Exodiff
+    heavy = true
+    input = ver-1kd.i
+    exodiff = ver-1kd_out_k10.e
+    prereq = ver-1kd_csv_heavy
+    should_execute = false # this test relies on the output files from ver-1kd_csv_heavy, so it shouldn't be run twice
+    requirement = 'The system shall be able to model the diffusion of T2, H2 and HT across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface and generate an exodus file with tight tolerances for higher accuracy. Additionally, enclosure 1 includes a T2 volumetric source term.'
+  []
+  [ver-1kd_comparison]
+    type = RunCommand
+    command = 'python3 comparison_ver-1kd.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1kd, modeling a diffusion across a membrane separating two enclosures in accordance with Sieverts’ law. Additionally, enclosure 1 includes a T2 volumetric source term.'
+    required_python_packages = 'matplotlib numpy pandas os git'
+  []
+[]
