@@ -43,6 +43,7 @@ def read_csv_from_TMAP8(file_name, parameter_names):
 # reserve inventory
 time_unit = 3600 * 24 # time unit - days
 two_year = 3600 * 24 * 365 * 2 # double time
+twenty_days = 3600 * 24 * 20 # double time
 tritium_burn_rate = 8.99e-7 # kg/s
 TBE = 0.02
 q = 0.25
@@ -62,15 +63,14 @@ simulation_results[parameter_names.index('time')] = simulation_results[parameter
 inflection_y = np.min(simulation_results[parameter_names.index('T_10_storage')])
 inflection_x = simulation_results[parameter_names.index('time')][np.argmin(simulation_results[parameter_names.index('T_10_storage')])]
 print(f"TMAP8_base: Inflection time = {round(inflection_x,5)} days, and inventory = {round(inflection_y,5)} kg")
-
 # end inventory
-end_inventory = interpolation_on_expected_input(simulation_results[parameter_names.index('time')],
-                                                simulation_results[parameter_names.index('T_10_storage')],
-                                                two_year / time_unit)
-print(f"TMAP8_base: End inventory = {round(end_inventory,5)} ({round(end_inventory / initial_inventory, 3)} I_startup)")
+# end_inventory = interpolation_on_expected_input(simulation_results[parameter_names.index('time')],
+#                                                 simulation_results[parameter_names.index('T_10_storage')],
+#                                                 ten_days / time_unit)
+# print(f"TMAP8_base: End inventory = {round(end_inventory,5)} ({round(end_inventory / initial_inventory, 3)} I_startup)")
 
 # ======================== Experiment data extraction ======================== #
-file_name = "inventory_paper.csv"
+file_name = "inventory_paper_20days.csv"
 parameter_names_experiment = ['time [s]','blanket inventory [kg]','TES inventory [kg]','ISS inventory [kg]','storage inventory [kg]']
 experiment_results = read_csv_from_TMAP8(file_name, parameter_names_experiment) # read csv file
 experiment_results[parameter_names_experiment.index('time [s]')] = experiment_results[parameter_names_experiment.index('time [s]')] / time_unit # update time unit
@@ -80,10 +80,10 @@ inflection_y = np.min(experiment_results[parameter_names_experiment.index('stora
 inflection_x = experiment_results[parameter_names_experiment.index('time [s]')][np.argmin(experiment_results[parameter_names_experiment.index('storage inventory [kg]')])]
 print(f"experiment: Inflection time = {round(inflection_x,5)} days, and inventory = {round(inflection_y,5)} kg")
 # end inventory
-end_inventory = interpolation_on_expected_input(experiment_results[parameter_names_experiment.index('time [s]')],
-                                                experiment_results[parameter_names_experiment.index('storage inventory [kg]')],
-                                                two_year / time_unit)
-print(f"experiment: End inventory = {round(end_inventory,5)} ({round(end_inventory / initial_inventory, 3)} I_startup)")
+# end_inventory = interpolation_on_expected_input(experiment_results[parameter_names_experiment.index('time [s]')],
+#                                                 experiment_results[parameter_names_experiment.index('storage inventory [kg]')],
+#                                                 ten_days / time_unit)
+# print(f"experiment: End inventory = {round(end_inventory,5)} ({round(end_inventory / initial_inventory, 3)} I_startup)")
 
 figure_base = 'fuel_cycle_comparison'
 # =================================== Plot =================================== #

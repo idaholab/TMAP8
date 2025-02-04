@@ -8,6 +8,13 @@
     csvdiff = fuel_cycle_limited_out.csv
     requirement = 'The system shall be able to model tritium fuel cycle from Meschini et al. (2023).'
   []
+  [fuel_cycle_benchmarking_heavy_csvdiff]
+    type = CSVDiff
+    input = 'fuel_cycle.i'
+    csvdiff = fuel_cycle_out.csv
+    heavy = true
+    requirement = 'The system shall be able to model tritium fuel cycle from Meschini et al. (2023) with fine time step.'
+  []
   [fuel_cycle_benchmarking_comparison]
     type = RunCommand
     command = 'python3 comparison_fuel_cycle_benchmark.py'

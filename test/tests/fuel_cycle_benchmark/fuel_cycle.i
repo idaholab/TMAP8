@@ -11,9 +11,9 @@
 
 pulse_time = '${units 1800 s}'
 initial_inventory = '${units 1.14 kg}'
-accuracy_time = '${units 94608000 s}' # 864000 s}
+accuracy_time = '${units 1728000 s}'
 time_interval_middle = '${units 1e6 s}'
-simulation_time = '${units 94608000 s}' # 3 years
+simulation_time = '${units 1728000 s}' # 20 days
 
 # Modeling parameters
 resident_time_1 = '${units 4500 s}'
@@ -90,27 +90,6 @@ tritium_burn_rate_value = 8.99e-7 # -
     family = SCALAR
   []
 []
-
-# Tritium burn fraction is going to be small. Much
-# will be lost to the scrape-off-layer (SOL) and
-# recycled.
-
-# TES - tritium extraction system pulls tritium from
-# the blanket
-
-# CPS - Coolant purification system pulls tritium from
-# the coolant (CPS is signored in ARC reactor)
-# Ignored in ARC due to liquid FLiBe
-
-# An ODE is defined in TMAP8 such that all of the terms must
-# be on the left hand side. The terms can be split
-# across multiple "ScalarKernels", which are additive,
-# so that we have one ODETimeDerivative for each tritium
-# inventory and a ParsedODEKernel for the rest of the
-# terms. These equations should reflect those described
-# in Appendix A of the paper (A.1-A.13), with negation
-# on the ParsedODEKernels due to moving the terms to the
-# left hand side.
 
 [ScalarKernels]
   [I1t]
@@ -264,12 +243,6 @@ tritium_burn_rate_value = 8.99e-7 # -
   []
 []
 
-# These postprocessors define the constants referenced in
-# the equations above. The value of any of these constants
-# could be informed by more detailed models (using sub-apps
-# and transfers), but it is important that the postprocessor
-# is evaluated before the executioner attempts to solve the
-# ODE, which is not the default behavior.
 [Postprocessors]
   [burn_pulse]
     type = FunctionValuePostprocessor
@@ -311,7 +284,7 @@ tritium_burn_rate_value = 8.99e-7 # -
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
     value = ${f_Pto3}
   []
-  [TES_efficiency] #eta_2 from Abdou et al. 2020
+  [TES_efficiency]
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
     value = ${eta_2}
@@ -319,32 +292,32 @@ tritium_burn_rate_value = 8.99e-7 # -
   [TBR]
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = ${TBR_value} # for t_d = 2 yrs
+    value = ${TBR_value}
   []
   [DIR_fraction] #f_DIR
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = ${f_DIR} # (0.1 - 0.9)
+    value = ${f_DIR}
   []
   [AF]
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = ${AF_value} # (0.75 from Meschini)
+    value = ${AF_value}
   []
   [tdecay]
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = ${t_decay} # (from Meschini) 1.7828336471961835e-9 (from Abdou)
+    value = ${t_decay}
   []
   [TBE]
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = ${TBE_value} # (0.005 - 0.1) Meschini
+    value = ${TBE_value}
   []
   [tritium_burn_rate]
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = ${tritium_burn_rate_value} # (5.3125e-6 from Abdou) (9.3e-7 Kg/s from Meschini paper) (8.99e-7 Kg/s from Meschini matlab)
+    value = ${tritium_burn_rate_value}
   []
   [epsilon1] #BZ
     type = ConstantPostprocessor
@@ -399,61 +372,53 @@ tritium_burn_rate_value = 8.99e-7 # -
   [residence1] #BZ
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = ${resident_time_1} # s 1.25 h, (Meschini) and (Ferrero et al) T_BZ = 3 g,  864000 # s 10 days
+    value = ${resident_time_1}
   []
   [residence2] #TES
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = ${resident_time_2} # s Meschini
-    #value = 1 h - 240 h Riva
+    value = ${resident_time_2}
   []
   [residence3] #FW
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = ${resident_time_3} # s Riva
+    value = ${resident_time_3}
   []
   [residence4] #DIV
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = ${resident_time_4} # s Riva
+    value = ${resident_time_4}
   []
   [residence5] #HX
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = ${resident_time_5} # s Abdou 2021 paper chosen for analysis
+    value = ${resident_time_5}
   []
   [residence6] #DS
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = ${resident_time_6} # s Meschini
+    value = ${resident_time_6}
   []
   [residence7] #Vac
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = ${resident_time_7} # s
+    value = ${resident_time_7}
   []
   [residence8] #FCU
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = ${resident_time_8} # 0.1625 h 3600 # s 1 h Meschini
-    # value = 0.1 - 1 h  Meschini
-    #value = 5 h Coleman
-    #value = 8640 Abdou
-    #value = 86400 Abdou
+    value = ${resident_time_8}
   []
   [residence9] #ISS
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = ${resident_time_9} # s 6.3375 h Meschini
-    #value = 0.9 - 11 h # (for four hour overall residence time in inner loop)
+    value = ${resident_time_9}
   []
   [residence11] #TSM
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = ${resident_time_11} # (from Meschini) 1958.25 # s (1899.50 m / 0.97 m/s = 1958.25) (from Papa et al. 2021)
+    value = ${resident_time_11}
   []
-  # These postprocessors exist to sum up the tritium inventory
-  #  across the entirety of the system
   [T_BZ]
     type = ScalarVariable
     variable = T_01_BZ
@@ -538,8 +503,13 @@ tritium_burn_rate_value = 8.99e-7 # -
     type = FunctionDT
     function = dt_function
   []
+  # [TimeStepper]
+  #   type = CSVTimeSequenceStepper
+  #   file_name = 'gold/inventory_paper_20days.csv'
+  #   column_name = 'time [s]'
+  # []
   solve_type = 'PJFNK'
-  nl_rel_tol = 1e-08
+  nl_rel_tol = 1e-10
   nl_abs_tol = 1e-14
 []
 

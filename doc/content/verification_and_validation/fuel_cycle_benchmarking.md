@@ -25,8 +25,6 @@ In the model, we have 11 systems to finish the tritium recycling in fuel cycle. 
 !alert note title=The fuel cycle of Tritium in Fueling System is ignored
 Fueling system only injects fresh fuel in the vacuum chamber and is not modeled in the fuel cycle to simplify the model. Instead, an outflux equal to the tritium fueling rate is added to the equation describing the storage and management system.
 
-<!-- Waiting updates -->
-
 \begin{equation}
 \label{eqn:t1}
 \frac{dI_1}{dt} = TBR \cdot \dot{N}_{T,burn} + \frac{I_3}{\tau_3} + \frac{I_4}{\tau_4} + f_{5-1} \frac{I_5}{\tau_5} - \frac{I_1}{\tau_1}- \frac{I_1\varepsilon_1}{\tau_1} - I_1\lambda ,
@@ -97,25 +95,25 @@ We use the ScalarKernels in MOOSE to calculate the ODEs from 11 systems. All the
 !table id=fuel_cycle_benchmark_table2=Values of material properties.
 | Parameter | Description                          | Value                                                       | Units                 |
 | --------- | ------------------------------------ | ----------------------------------------------------------- | --------------------- |
-| TBR     | Tritium breeding ratio                   | 1.067                                  | -                   |
-| TBE     | Tritium burn efficiency in plasma        | 0.025                                          | -         |
-| AF | Availability factor | 0.75           | -               |
+| TBR       | Tritium breeding ratio               | 1.067                                                       | -                     |
+| TBE       | Tritium burn efficiency in plasma    | 0.025                                                       | -                     |
+| AF        | Availability factor                  | 0.75                                                        | -                     |
 | $\varepsilon_i$ | Fraction of tritium lost from non-radioactive phenomena in the $i$th component | 1e-4 except for FW and DIV system            | -               |
-| $\eta_f$     | Fueling efficiency        | 0.25                                                        | -                    |
-| $f_b$     | Tritium burn fraction in the plasma        | 0.10                                                        | -                    |
-| $\eta_2$     | Tritium extraction efficiency     | 0.7                                         | -              |
-| $f_{DIR}$       | Direct internal recycling fraction                         | 0.5                                       | -              |
-| $I_i$ | Tritium inventory in the $i$th component     | -                                                           | kg                     |
-| $\dot{N}_{T,burn}$ | Tritium burn rate     | 8.99e-7                                       | -                     |
-| $\lambda$ | Tritium decay rate     | 1.73e-9                                       | s$^{-1}$                     |
-| $t$ | time   | -                                                  | s                     |
-| $\tau_i$ | Tritium residence time in the $i$th component       | 4500 in $\tau_1$, 86400 in $\tau_2$, 1000 in $\tau_3$, $\tau_4$, $\tau_5$, 3600 in $\tau_6$, 600 in $\tau_7$, 585 in $\tau_8$, 22815 in $\tau_9$, 100 in $\tau_11$                                                | s                     |
+| $\eta_f$  | Fueling efficiency                   | 0.25                                                        | -                     |
+| $f_b$     | Tritium burn fraction in the plasma  | 0.10                                                        | -                     |
+| $\eta_2$  | Tritium extraction efficiency        | 0.7                                                         | -                     |
+| $f_{DIR}$ | Direct internal recycling fraction   | 0.5                                                         | -                     |
+| $I_i$     | Tritium inventory in the $i$th component | -                                                       | kg                    |
+| $\dot{N}_{T,burn}$ | Tritium burn rate           | 8.99e-7                                                     | -                     |
+| $\lambda$ | Tritium decay rate                   | 1.73e-9                                                     | s$^{-1}$              |
+| $t$       | time                                 | -                                                           | s                     |
+| $\tau_i$  | Tritium residence time in the $i$th component | 4500 in $\tau_1$, 86400 in $\tau_2$, 1000 in $\tau_3$, $\tau_4$, $\tau_5$, 3600 in $\tau_6$, 600 in $\tau_7$, 585 in $\tau_8$, 22815 in $\tau_9$, 100 in $\tau_11$ | s                     |
 
 
 
 ## Results
 
-We compare results from TMAP8 with MatLab results from [!cite](meschini2023modeling) in [comparison_fuel_cycle_benchmarking]. The agreements between the four chosen systems are quite good.
+We compare results from TMAP8 with MatLab results from [!cite](meschini2023modeling) in [comparison_fuel_cycle_benchmarking] at first 10 days. The agreements between the four chosen systems are quite good.
 
 !media comparison_fuel_cycle_benchmark.py
        image_name=fuel_cycle_comparison.png
