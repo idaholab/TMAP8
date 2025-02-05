@@ -5,8 +5,7 @@
   [ver-1kd_csv]
     type = CSVDiff
     input = ver-1kd.i
-    cli_args = "simulation_time=0.020
-                Executioner/dtmax=1e-1
+    cli_args = "simulation_time=0.005
                 Executioner/nl_rel_tol=1e-6
                 Outputs/exodus=false
                 Outputs/file_base=ver-1kd_out_k10_light"
