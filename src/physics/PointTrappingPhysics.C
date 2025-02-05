@@ -38,7 +38,8 @@ PointTrappingPhysics::validParams()
       "for each species on each component. Note that they will be scaled using the scaling "
       "parameters specified. If a single vector is "
       "specified, the same equilibrium constants will be used on every component");
-  // TODO is equilibrium constant same as solubility?
+  // TODO: is equilibrium constant same as solubility?
+  // TODO: should this input be moved to components? Or is it a constant for the species?
 
   // Units
   params.addParam<Real>("pressure_unit_scaling", 1, "");
@@ -58,17 +59,22 @@ PointTrappingPhysics::PointTrappingPhysics(const InputParameters & parameters)
 {
   // Fill in the species vector of vectors for convenience
   // TODO: do this later so we can turn on this Physics from a component
+  // TODO: handle multiple species with a components list
   if (_species.size() == 1 && _components.size())
     _species.resize(_components.size(), _species[0]);
   // The initial conditions and scaling double-vectors use logic to work with a size 1 vector
 
   // TODO: check that the components actually exists
-  // TODO: choose input from components or input from Physics
+  // TODO: choose between:
+  // - input from components
+  // - input from Physics on components
 }
 
 void
 PointTrappingPhysics::addComponent(const ActionComponent & component)
 {
+  // TODO: handle other types of ActionComponents
+  // We need some sort of "connectedStructure / connectedComponent ?" concept
   checkComponentType<Enclosure0D>(component);
   const auto & comp = dynamic_cast<const Enclosure0D &>(component);
 
@@ -250,6 +256,7 @@ PointTrappingPhysics::getConnectedStructureVariableName(unsigned int c_i, unsign
   if (multi_D_physics.empty())
     component.paramError("connected_structure",
                          "Connected structure does not have any Physics defined");
+  // TODO: handle multiple multi_D_physics being defined
   if (!dynamic_cast<DiffusionPhysicsBase *>(multi_D_physics[0]))
     component.paramError(
         "connected_structure",
