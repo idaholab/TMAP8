@@ -207,7 +207,8 @@ PointTrappingPhysics::addFEBCs()
 {
   for (const auto c_i : index_range(_components))
   {
-    // This could belong somewhere else, on the diffusion side
+    // This could be done in the Diffusion/Migration Physics instead
+    // That Physics could add this term when coupled to a PointTrappingPhysics
     const auto & structure_boundary = getConnectedStructureBoundary(c_i);
 
     for (const auto s_j : index_range(_species[c_i]))
