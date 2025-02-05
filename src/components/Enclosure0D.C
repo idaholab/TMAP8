@@ -35,13 +35,15 @@ Enclosure0D::Enclosure0D(const InputParameters & params)
     _volume(getParam<Real>("volume")),
     _outer_boundaries({getParam<BoundaryName>("boundary")})
 {
+  // Species parameter checks
   if (_species.size() != _scaling_factors.size())
     paramError("species_scaling_factors",
                "The number of species scaling factors must match the number of species.");
-
   if (_ics.size() && (_ics.size() != _species.size()))
     paramError("species_initial_pressures",
                "The number of species partial pressures must match the number of species.");
+
+  // Physics checks
   if (_physics.empty())
     paramError("physics", "A physics must be specified in the enclosure");
   if (_physics.size() > 1)
