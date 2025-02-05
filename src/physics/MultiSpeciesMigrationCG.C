@@ -24,16 +24,18 @@ MultiSpeciesMigrationCG::validParams()
       "Discretizes a diffusion equation with the continuous Galerkin finite element method");
 
   // Add reaction parameters
-  params.addParam<std::vector<std::vector<VariableName>>>(
+  // Until we support a Component-based input, these are required in the Physics parameters
+  params.addRequiredParam<std::vector<std::vector<VariableName>>>(
       "reacting_species", "For each species (outer indexing), the list of species they react with");
-  params.addParam<std::vector<std::vector<VariableName>>>(
+  params.addRequiredParam<std::vector<std::vector<VariableName>>>(
       "product_species",
       "For each species (outer indexing), for each reactant, the species being created");
-  params.addParam<std::vector<std::vector<MaterialPropertyName>>>(
+  params.addRequiredParam<std::vector<std::vector<MaterialPropertyName>>>(
       "reaction_coefficients",
       "For each species (outer indexing), the reaction coefficient for the reaction");
 
-  // Remove diffusion parameters for now: talk to PC
+  // Remove diffusion parameters for now
+  // TODO: Discuss with PC if we need them
   params.suppressParameter<std::vector<MooseFunctorName>>("diffusivity_functors");
   params.suppressParameter<std::vector<MaterialPropertyName>>("diffusivity_matprops");
 
@@ -81,8 +83,6 @@ MultiSpeciesMigrationCG::addFEKernels()
 
       for (const auto c : index_range(reacting_species[s]))
       {
-        _console << s << " " << c << " " << reacting_species.size() << " "
-                 << reacting_species[s].size() << std::endl;
         params.set<std::vector<VariableName>>("vs") = {var_name, reacting_species[s][c]};
         params.set<MaterialPropertyName>("reaction_rate_name") = reaction_coeffs[s][c];
         params.set<Real>("coeff") = -1;
