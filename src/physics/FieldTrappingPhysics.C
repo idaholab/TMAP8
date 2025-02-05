@@ -137,6 +137,7 @@ FieldTrappingPhysics::addSolverVariables()
 
   for (const auto c_i : index_range(_components))
   {
+    assignBlocks(params, getActionComponent(_components[c_i]).blocks());
     for (const auto s_j : index_range(_species[c_i]))
     {
       const auto species_name = getSpeciesVariableName(c_i, s_j);
@@ -144,6 +145,7 @@ FieldTrappingPhysics::addSolverVariables()
           (_scaling_factors.size() > 1)
               ? _scaling_factors[c_i][s_j]
               : ((_scaling_factors.size() == 1) ? _scaling_factors[0][s_j] : 1)};
+      params.set<SolverSystemName>("solver_sys") = getSolverSystem(species_name);
       getProblem().addVariable(variable_type, species_name, params);
 
       // Keep track of variables
