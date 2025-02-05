@@ -28,6 +28,7 @@ FieldTrappingPhysics::validParams()
       "Add Physics for the trapping of species on multi-dimensional components.");
   params.addParam<std::vector<std::vector<VariableName>>>(
       "mobile",
+      {},
       "The variable(s) representing the mobile concentration(s) of solute species on each "
       "component."
       " If a single vector is specified, the same mobile species are used on each component.");
@@ -39,14 +40,17 @@ FieldTrappingPhysics::validParams()
 
   params.addParam<std::vector<std::vector<Real>>>(
       "alpha_t",
+      {},
       "The trapping rate coefficient for each component and species. This has units of 1/time "
       "(e.g. no number densities are involved)"
       "If a single vector is specified, the same trapping rate coefficient will be used on every "
       "component");
   params.addParam<std::vector<Real>>(
-      "N", "The atomic number density of the host material for each component and species.");
+      "N", {}, "The atomic number density of the host material for each component and species.");
   params.addParam<std::vector<FunctionName>>(
-      "Ct0", "The fraction of host sites that can contribute to trapping");
+      "Ct0", {}, "The fraction of host sites that can contribute to trapping");
+
+  // TODO: unused?
   params.addParam<std::vector<Real>>(
       "trap_per_free",
       {1.},
@@ -56,10 +60,12 @@ FieldTrappingPhysics::validParams()
 
   params.addParam<std::vector<std::vector<Real>>>(
       "alpha_r",
+      {},
       "The release rate coefficient. If a single vector is specified, "
       "the same release rate coefficient will be used on every component");
   params.addParam<std::vector<std::vector<Real>>>(
       "trapping_energy",
+      {},
       "The trapping energy in units of Kelvin. If a single vector is specified, "
       "the same trapping energy will be used on every component");
 
@@ -72,6 +78,7 @@ FieldTrappingPhysics::validParams()
 
 FieldTrappingPhysics::FieldTrappingPhysics(const InputParameters & parameters)
   : SpeciesTrappingPhysicsBase(parameters),
+    // If specified in the Physics block, all parameters are retrieved here
     _mobile_species_names(getParam<std::vector<std::vector<VariableName>>>("mobile")),
     _alpha_ts(getParam<std::vector<std::vector<Real>>>("alpha_t")),
     _Ns(getParam<std::vector<Real>>("N")),
@@ -84,7 +91,8 @@ FieldTrappingPhysics::FieldTrappingPhysics(const InputParameters & parameters)
   // TODO: do this after components have been processed
   if (_components.size())
     _trap_per_frees.resize(_components.size());
-  // TODO: check that there is no overlap between names so we don't add kernels multiple times
+  // TODO: check for any overlap between species names so we don't add kernels multiple times
+  // TODO: Add size checks on every parameter
 }
 
 void
@@ -94,7 +102,7 @@ FieldTrappingPhysics::addComponent(const ActionComponent & component)
     _blocks.push_back(block);
   _components.push_back(component.name());
   // TODO: add other quantities
-  // TODO: check unique
+  // TODO: check unique component names
 
   mooseAssert(_alpha_ts.size() == _components.size(),
               "Wrong alpha_t size (" + std::to_string(_alpha_ts.size()) +
