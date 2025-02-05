@@ -33,6 +33,8 @@ MultiSpeciesMigrationCG::validParams()
   params.addRequiredParam<std::vector<std::vector<MaterialPropertyName>>>(
       "reaction_coefficients",
       "For each species (outer indexing), the reaction coefficient for the reaction");
+  params.addParamNamesToGroup("reacting_species product_species reaction_coefficients",
+                              "Reaction Network");
 
   // Remove diffusion parameters for now
   // TODO: Discuss with PC if we need them
