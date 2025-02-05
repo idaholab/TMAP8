@@ -133,6 +133,9 @@ PointTrappingPhysics::addSolverVariables()
               : ((_scaling_factors.size() == 1) ? _scaling_factors[0][s_j] : 1)};
       params.set<SolverSystemName>("solver_sys") = getSolverSystem(species_name);
       getProblem().addVariable(variable_type, species_name, params);
+
+      // Keep track of variable
+      saveSolverVariableName(species_name);
     }
 }
 

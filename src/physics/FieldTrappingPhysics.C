@@ -145,6 +145,9 @@ FieldTrappingPhysics::addSolverVariables()
               ? _scaling_factors[c_i][s_j]
               : ((_scaling_factors.size() == 1) ? _scaling_factors[0][s_j] : 1)};
       getProblem().addVariable(variable_type, species_name, params);
+
+      // Keep track of variables
+      saveSolverVariableName(species_name);
     }
     if (_single_variable_set)
       break;

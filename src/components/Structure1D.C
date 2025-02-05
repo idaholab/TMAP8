@@ -22,6 +22,8 @@ Structure1D::validParams()
   params.addRequiredParam<unsigned int>("nx", "The number of elements in the structure.");
   params.addRequiredParam<Real>("xmax", "The maximum x-value.");
   params.addRequiredParam<Real>("length_unit_scaling", "Scaling to apply on the mesh");
+  params.addParamNamesToGroup("nx xmax length_unit_scaling", "Geometry");
+  // TODO: add a spatial offset
   return params;
 }
 
