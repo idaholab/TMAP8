@@ -612,7 +612,7 @@ unit_scale_neighbor = 1
   type = Transient
   end_time = ${simulation_time}
   dtmax = 1e-2
-  nl_max_its = 9
+  nl_max_its = 11
   l_max_its = 30
   scheme = 'bdf2'
   solve_type = PJFNK
@@ -621,7 +621,7 @@ unit_scale_neighbor = 1
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 1e-6
-    optimal_iterations = 7
+    optimal_iterations = 9
     iteration_window = 1
     growth_factor = 1.1
     cutback_factor = 0.9
