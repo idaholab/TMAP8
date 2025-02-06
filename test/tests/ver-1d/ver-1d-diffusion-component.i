@@ -9,6 +9,10 @@ cl = 3.1622e18
     # cannot be added to SpeciesTrapping there because it requires
     # additional data that is specified there
 
+
+    material_property_names = 'alpha_t1 alpha_t2'
+    material_property_values = '1e-15 1e-12' # functor
+
     # Geometry
     nx = 200
     xmax = 1
@@ -32,24 +36,22 @@ cl = 3.1622e18
     []
   []
   [SpeciesTrapping]
-    [ContinuousGalerkin]
-      [trapped]
-        species = 'trapped'
-        mobile = 'mobile'
-        components = structure
-        verbose = true
+    [trapped]
+      species = 'trapped1 trapped2'
+      mobile = 'mobile'
+      components = structure
+      verbose = true
 
-        # Trapping parameters
-        alpha_t = 1e15
-        N = '${fparse 3.1622e22 / cl}'
-        Ct0 = '0.1'
-        trap_per_free = 1
+      # Trapping parameters
+      alpha_t = 'alpha_t1 alpha_t2'
+      N = '${fparse 3.1622e22 / cl}'  # ok distribute
+      Ct0 = '0.1'
+      trap_per_free = 1
 
-        # Releasing parameters
-        alpha_r = 1e13
-        temperatures = 'temp'
-        trapping_energy = 100
-      []
+      # Releasing parameters
+      alpha_r = 1e13
+      temperatures = 'temp'  # ok distribute
+      trapping_energy = 100
     []
   []
 []
