@@ -1,5 +1,5 @@
 ## Run this file with one of three input files to simulate various verification cases
-## a. equal_conc.i        -> TMAP4 and TMAP7 equal concentration case
+## a. equal_conc.i       -> TMAP4 and TMAP7 equal concentration case
 ## b. diff_conc_TMAP4.i  -> TMAP4 different concentration case
 ## c. diff_conc_TMAP7.i  -> TMAP7 different concentration case
 ## Example: ~/projects/TMAP8/tmap8-opt -i ver-1g.i equal_conc.i
@@ -14,17 +14,15 @@ Na = 6.02214076E23 # Avogadro's constant (from PhysicalConstants.h - https://phy
 []
 
 [Physics]
-  [FieldMigration]
-    [ContinuousGalerkin]
-      [all]
-        block = '0'
-        species = 'c_a c_b c_ab'
+  [ChemicalReactions]
+    [all]
+      block = '0'
+      species = 'c_a c_b c_ab'
 
-        # Be careful to only enter the reaction once
-        reacting_species = 'c_b'
-        product_species = 'c_ab'
-        reaction_coefficients = 'K' #'-1; -1; 1 1'
-      []
+      # Be careful to only enter the reaction once
+      reacting_species = 'c_b'
+      product_species = 'c_ab'
+      reaction_coefficients = 'K' #'-1; -1; 1 1'
     []
   []
 []
