@@ -21,12 +21,13 @@ slab_thickness = '${units 3.30e-5 m -> mum}'
 concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} Pa*m^3 -> Pa*mum^3}'
 
 [Physics]
-  [SpeciesTrapping]
+  [balance/solubility/sink]
     [ODE]
       [0d_trapping]
         species = 'v'
         # should not be scaled
-        equilibrium_constants = ${solubility_constant}
+        # Move to a matprop
+        # equilibrium_constants = ${solubility_constant}
 
         # These parameters can be passed for each component here in lieu of fetching them from the components
         # initial_values = '${initial_pressure}'
@@ -48,8 +49,7 @@ concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} 
         # To help coupling to trapping
         compute_diffusive_fluxes_on = 'structure_left'
 
-        dirichlet_boundaries = 'structure_right'
-        boundary_values = '0'
+
       []
     []
   []
@@ -61,6 +61,11 @@ concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} 
     species = 'u'
     physics = 'multi-D'
 
+    # Make it define the matprop based on the coefficient
+
+
+            dirichlet_boundaries = 'structure_right'
+        boundary_values = '0'
     # Geometry
     nx = 150
     xmax = ${slab_thickness}
@@ -69,8 +74,8 @@ concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} 
 
   [enc]
     type = Enclosure0D
-    species = 'v'
-    physics = '0d_trapping'
+    species = 'v t'
+    physics = '0d_trapping '
 
     # Conditions
     temperature = ${temperature}
