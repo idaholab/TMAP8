@@ -32,4 +32,15 @@
     requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solutions of verification cases 1dc, modeling a breakthrough problem of multiple traps.'
     required_python_packages = 'matplotlib numpy pandas os'
   []
+  [ver-1dc-mms]
+    type = PythonUnitTest
+    input = test.py
+    test_case = TestMMS
+    heavy = true
+    requirement = 'The system shall show second order spatial convergence for a diffusion-trapping-release test case.'
+    method = '!dbg'
+    required_python_packages = 'pandas matplotlib'
+    # skip test if test is being run out-of-tree. Issue Ref: idaholab/moose#25279
+    installation_type = in_tree
+  []
 []

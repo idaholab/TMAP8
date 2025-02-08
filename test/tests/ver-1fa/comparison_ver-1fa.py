@@ -33,7 +33,7 @@ def get_analytical_solution(x):
 #===============================================================================
 # Extract TMAP8 results
 
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1fa/gold/ver-1fa_csv_line_0011.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/ver-1fa_csv_line_0011.csv"

@@ -15,7 +15,7 @@ kb = 1.380649e-23  # J/K Boltzmann constant
 
 # ===============================================================================
 # Extract TMAP8 results
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1if/gold/ver-1if_out.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/ver-1if_out.csv"
@@ -26,7 +26,7 @@ tmap8_solution_A2 = tmap8_solution['pressure_A2']
 tmap8_solution_AB = tmap8_solution['pressure_AB']
 
 # Extract TMAP7 results
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1if/gold/simulation_data_TMAP7.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/simulation_data_TMAP7.csv"

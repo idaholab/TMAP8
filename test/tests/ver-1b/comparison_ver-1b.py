@@ -15,7 +15,7 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1b/gold/ver-1b_csv.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/ver-1b_csv.csv"
@@ -54,7 +54,7 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1b/gold/ver-1b_vector_postproc_line_0250.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/ver-1b_vector_postproc_line_0250.csv"
@@ -90,7 +90,7 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1b/gold/ver-1b_csv.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/ver-1b_csv.csv"

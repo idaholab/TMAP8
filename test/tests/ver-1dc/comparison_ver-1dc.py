@@ -62,7 +62,7 @@ def summation_term(num_terms, time):
     return sum
 
 # Extract data from 'gold' TMAP8 run
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1dc/gold/ver-1dc_out.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/ver-1dc_out.csv"

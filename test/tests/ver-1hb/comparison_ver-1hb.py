@@ -10,7 +10,7 @@ import math
 script_folder = os.path.dirname(__file__)
 # Changes working directory to script directory (for consistent MooseDocs usage)
 os.chdir(os.path.dirname(__file__))
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
    csv_folder = "../../../../test/tests/ver-1hb/gold/ver-1hb_out.csv"
 else:                                  # if in test folder
    csv_folder = "./gold/ver-1hb_out.csv"

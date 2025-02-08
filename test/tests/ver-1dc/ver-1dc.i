@@ -1,42 +1,17 @@
-cl = 3.1622e18 # atom/m^3
-N = 3.1622e22 # atom/m^3
-epsilon_1 = 100 # K
-epsilon_2 = 500 # K
-epsilon_3 = 800 # K
-temperature = 1000 # K
+# This is the input file for case ver-1dc.i.
+# It leverages ver-1dc_base.i to form a complete input file.
+
+cl = ${units 3.1622e18 atom/m^3}
+N = ${units 3.1622e22 atom/m^3}
 nx_num = 1000 # (-)
-trapping_site_fraction_1 = 0.10 # (-)
-trapping_site_fraction_2 = 0.15 # (-)
-trapping_site_fraction_3 = 0.20 # (-)
-trapping_rate_coefficient = 1e15 # 1/s
-release_rate_coefficient = 1e13 # 1/s
-diffusivity = 1 # m^2/s
-simulation_time = 60 # s
-time_interval_max = 0.3 # s
+trapping_rate_coefficient = ${units 1e15 1/s}
+release_rate_coefficient = ${units 1e13 1/s}
+simulation_time = ${units 60 s}
+time_interval_max = ${units 0.3 s}
+time_step = ${units 1e-6 s}
+scheme = BDF2
 
-[Mesh]
-  type = GeneratedMesh
-  dim = 1
-  nx = ${nx_num}
-  xmax = 1
-[]
-
-[Problem]
-  type = ReferenceResidualProblem
-  extra_tag_vectors = 'ref'
-  reference_vector = 'ref'
-[]
-
-[Variables]
-  [mobile]
-  []
-  [trapped_1]
-  []
-  [trapped_2]
-  []
-  [trapped_3]
-  []
-[]
+!include ver-1dc_base.i
 
 [AuxVariables]
   [empty_sites_1]
@@ -124,106 +99,6 @@ time_interval_max = 0.3 # s
   []
 []
 
-[Kernels]
-  [diff]
-    type = Diffusion
-    variable = mobile
-    extra_vector_tags = ref
-  []
-  [time]
-    type = TimeDerivative
-    variable = mobile
-    extra_vector_tags = ref
-  []
-  [coupled_time_1]
-    type = CoupledTimeDerivative
-    variable = mobile
-    v = trapped_1
-    extra_vector_tags = ref
-  []
-  [coupled_time_2]
-    type = CoupledTimeDerivative
-    variable = mobile
-    v = trapped_2
-    extra_vector_tags = ref
-  []
-  [coupled_time_3]
-    type = CoupledTimeDerivative
-    variable = mobile
-    v = trapped_3
-    extra_vector_tags = ref
-  []
-[]
-
-[NodalKernels]
-  # For first traps
-  [time_1]
-    type = TimeDerivativeNodalKernel
-    variable = trapped_1
-  []
-  [trapping_1]
-    type = TrappingNodalKernel
-    variable = trapped_1
-    alpha_t = '${trapping_rate_coefficient}'
-    N = '${fparse N / cl}'
-    Ct0 = '${trapping_site_fraction_1}'
-    mobile_concentration = 'mobile'
-    temperature = '${temperature}'
-    extra_vector_tags = ref
-  []
-  [release_1]
-    type = ReleasingNodalKernel
-    alpha_r = '${release_rate_coefficient}'
-    temperature = '${temperature}'
-    detrapping_energy = '${epsilon_1}'
-    variable = trapped_1
-  []
-  # For second traps
-  [time_2]
-    type = TimeDerivativeNodalKernel
-    variable = trapped_2
-  []
-  [trapping_2]
-    type = TrappingNodalKernel
-    variable = trapped_2
-    alpha_t = '${trapping_rate_coefficient}'
-    N = '${fparse N / cl}'
-    Ct0 = '${trapping_site_fraction_2}'
-    mobile_concentration = 'mobile'
-    temperature = '${temperature}'
-    extra_vector_tags = ref
-  []
-  [release_2]
-    type = ReleasingNodalKernel
-    alpha_r = '${release_rate_coefficient}'
-    temperature = '${temperature}'
-    detrapping_energy = '${epsilon_2}'
-    variable = trapped_2
-  []
-  # For third traps
-  [time_3]
-    type = TimeDerivativeNodalKernel
-    variable = trapped_3
-  []
-  [trapping_3]
-    type = TrappingNodalKernel
-    variable = trapped_3
-    alpha_t = '${trapping_rate_coefficient}'
-    N = '${fparse N / cl}'
-    Ct0 = '${trapping_site_fraction_3}'
-    mobile_concentration = 'mobile'
-    temperature = '${temperature}'
-    extra_vector_tags = ref
-  []
-  [release_3]
-    type = ReleasingNodalKernel
-    alpha_r = '${release_rate_coefficient}'
-    temperature = '${temperature}'
-    detrapping_energy = '${epsilon_3}'
-    variable = trapped_3
-  []
-[]
-
 [BCs]
   [left]
     type = DirichletBC
@@ -253,25 +128,10 @@ time_interval_max = 0.3 # s
   []
 []
 
-[Preconditioning]
-  [smp]
-    type = SMP
-    full = true
-  []
-[]
-
 [Executioner]
-  type = Transient
-  end_time = ${simulation_time}
-  dtmax = ${time_interval_max}
-  solve_type = NEWTON
-  scheme = BDF2
-  petsc_options_iname = '-pc_type'
-  petsc_options_value = 'lu'
-  line_search = 'none'
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 1e-6
+    dt = ${time_step}
     optimal_iterations = 9
     growth_factor = 1.1
     cutback_factor = 0.909

@@ -9,7 +9,7 @@ script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
 
 # Load experimental data
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder_k10 = "../../../../test/tests/ver-1kc-1/gold/ver-1kc-1_out_k10.csv"
 else:                                  # if in test folder
     csv_folder_k10 = "./gold/ver-1kc-1_out_k10.csv"
