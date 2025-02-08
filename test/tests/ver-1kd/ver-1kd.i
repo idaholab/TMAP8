@@ -621,7 +621,7 @@ unit_scale_neighbor = 1
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 1e-6
-    optimal_iterations = 9
+    optimal_iterations = 10
     iteration_window = 1
     growth_factor = 1.1
     cutback_factor = 0.9
