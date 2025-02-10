@@ -51,3 +51,4 @@ TMAP8 also contains [example cases](examples/tmap_index.md), which showcase how 
 | val-2b | [Diffusion Experiment in Beryllium](val-2b.md) |
 | val-2c | [Test Cell Release Experiment](val-2c.md)      |
 | val-2d | [Thermal Desorption Spectroscopy on Tungsten](val-2d.md) |
+| val-2ea | [Deuterium Permeation through thick Pd in 825 K](val-2ea.md) |
