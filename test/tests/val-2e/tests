@@ -1,0 +1,80 @@
+[Tests]
+  design = 'EnclosureSinkScalarKernel.md PressureReleaseFluxIntegral.md EquilibriumBC.md'
+  verification = 'ver-1a.md'
+  issues = '#12 #75'
+  [val-2ea_csvdiff]
+    type = CSVDiff
+    input = val-2ea.i
+    csvdiff = val-2ea_out.csv
+    requirement = 'The system shall be able to model permeation of Deuterium from a thick membrane with 0.05 mm at 825 K to generate CSV data for use in comparisons with the experimental data.'
+  []
+  [val-2ea]
+    type = Exodiff
+    input = val-2ea.i
+    should_execute = False  # this test relies on the output files from ver-1a_heavy, so it shouldn't be run twice
+    exodiff = val-2ea_out.e
+    requirement = 'The system shall be able to model permeation of Deuterium from a thick membrane with 0.05 mm at 825 K.'
+  []
+  [val-2eb_csvdiff]
+    type = CSVDiff
+    input = val-2ea.i
+    csvdiff = val-2eb_out.csv
+    cli_args = 'slab_thickness="${units 2.5e-5 m -> mum}" file_name="val-2eb_out"'
+    requirement = 'The system shall be able to model permeation of Deuterium from a thin membrane with 0.025 mm at 825 K.'
+  []
+  [val-2eb]
+    type = Exodiff
+    input = val-2ea.i
+    should_execute = False  # this test relies on the output files from ver-1a_heavy, so it shouldn't be run twice
+    exodiff = val-2eb_out.e
+    cli_args = 'slab_thickness="${units 2.5e-5 m -> mum}" file_name="val-2eb_out"'
+    requirement = 'The system shall be able to model permeation of Deuterium from a thin membrane with 0.025 mm at 825 K to generate CSV data for use in comparisons with the experimental data.'
+  []
+  [val-2ec_csvdiff]
+    type = CSVDiff
+    input = val-2ea.i
+    csvdiff = val-2ec_out.csv
+    cli_args = 'temperature="${units 865 K}" slab_thickness="${units 2.5e-5 m -> mum}" file_name="val-2ec_out"'
+    requirement = 'The system shall be able to model permeation of Deuterium from a thin membrane with 0.025 mm at 865 K.'
+  []
+  [val-2ec]
+    type = Exodiff
+    input = val-2ea.i
+    should_execute = False  # this test relies on the output files from ver-1a_heavy, so it shouldn't be run twice
+    exodiff = val-2ec_out.e
+    cli_args = 'temperature="${units 865 K}" slab_thickness="${units 2.5e-5 m -> mum}" file_name="val-2ec_out"'
+    requirement = 'The system shall be able to model permeation of Deuterium from a thin membrane with 0.025 mm at 865 K to generate CSV data for use in comparisons with the experimental data.'
+  []
+  [val-2ed_csvdiff]
+    type = CSVDiff
+    input = val-2ed.i
+    csvdiff = val-2ed_out.csv
+    requirement = 'The system shall be able to model permeation of mixture gas from a thin membrane with 0.025 mm at 870 K using lawdep boundary conditions.'
+  []
+  [val-2ed]
+    type = Exodiff
+    input = val-2ed.i
+    should_execute = False  # this test relies on the output files from ver-1a_heavy, so it shouldn't be run twice
+    exodiff = val-2ed_out.e
+    requirement = 'The system shall be able to model permeation of mixture gas with chemical reaction from a thin membrane with 0.025 mm at 870 K using lawdep boundary conditions to generate CSV data for use in comparisons with the experimental data.'
+  []
+  [val-2ee_csvdiff]
+    type = CSVDiff
+    input = val-2ee.i
+    csvdiff = val-2ee_out.csv
+    requirement = 'The system shall be able to model permeation of mixture gas from a thin membrane with 0.025 mm at 870 K using ratedep boundary conditions.'
+  []
+  [val-2ee]
+    type = Exodiff
+    input = val-2ee.i
+    should_execute = False  # this test relies on the output files from ver-1a_heavy, so it shouldn't be run twice
+    exodiff = val-2ee_out.e
+    requirement = 'The system shall be able to model permeation of mixture gas with chemical reaction from a thin membrane with 0.025 mm at 870 K using ratedep boundary conditions to generate CSV data for use in comparisons with the experimental data.'
+  []
+  [ver-2ec_comparison]
+    type = RunCommand
+    command = 'python3 comparison_val-2e.py'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and experimental data of validation case 2e, modeling the permeation of Deuterium from a membrane.'
+    required_python_packages = 'matplotlib numpy pandas os'
+  []
+[]
