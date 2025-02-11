@@ -10,7 +10,7 @@ Two enclosures are separated by a membrane that allows diffusion according to Si
 
 This verification problem is taken from [!cite](ambrosek2008verification).
 
-This setup describes a diffusion system in which tritium T$_2$, dihydrogen H$_2$ and HT are modeled across a one-dimensional domain split into two enclosures. Compared to the [ver-1kc-2](ver-1kc-2.md) case, we now incorporate a T$_2$ tritium volumetric source in Enclosure 1. The volumetric source rate is set at $S = 10^{23} /m^3/s$.
+This setup describes a diffusion system in which tritium T$_2$, dihydrogen H$_2$ and HT are modeled across a one-dimensional domain split into two enclosures. Compared to the [ver-1kc-2](ver-1kc-2.md) case, we now incorporate a T$_2$ tritium volumetric source in Enclosure 1. The volumetric source rate is set to $S_{\text{T}_2} = 10^{23} mol/m^3/s$.
 The total system length is $2.5 \times 10^{-4}$ m, divided into 100 segments. The system operates at a constant temperature of 500 Kelvin. Initial tritium T$_2$ and dihydrogen H$_2$ pressures are specified as $10^{5}$ Pa for Enclosure 1 and $10^{-10}$ Pa for Enclosure 2. Initially, there is no HT in either enclosure.
 
 The reaction between the species is described as follows
@@ -55,10 +55,10 @@ where the equilibrium constant $\eta$ is defined as
 
 Similarly to TMAP7, the equilibrium constant $\eta$ has been set to a fixed value of $\eta = 2$.
 
-The diffusion process for each species in the two enclosures can be expressed by
+The diffusion and generation processes for each species in the two enclosures can be expressed by
 
 \begin{equation}
-\frac{\partial C_1}{\partial t} = \nabla D \nabla C_1 + \frac{S}{V_1} kT,
+\frac{\partial C_1}{\partial t} = \nabla D \nabla C_1 + S_1,
 \end{equation}
 and
 \begin{equation}
@@ -81,8 +81,8 @@ where $R$ is the ideal gas constant in J/mol/K, $T$ is the temperature in K, $K$
 We assume that $K = 10/\sqrt{RT}$, which is expected to result in $C_1 = 10 \sqrt{C_2}$ at equilibrium.
 As illustrated in [ver-1kd_comparison_time_k10], since the chemical reactions occur immediately, an initial quantity of HT is present in Enclosure 1, while T$_2$ and H$_2$ have initially dropped to half their original amounts. The volumetric source contributes to an increase in T$_2$ within Enclosure 1, thereby enhancing its chemical reactions with H$_2$. Consequently, in Enclosure 1, H$_2$ pressure gradually decreases over time, while HT pressure rises. Similarly, the volumetric source increases T$_2$ pressure in Enclosure 2. In Enclosure 2, the increasing presence of T$_2$ leads to H$_2$ saturation, which in turn causes HT pressure to rise.
 
-Thus, it is crucial to ensure that the chemical equilibrium between HT, T$_2$ and H$_2$ is achieved. This can be verified in both enclosures by examining the ratio between $P_{\text{HT}}$ and $\sqrt{P_{\text{H}_2} P_{\text{T}_2}}$, which must equal $\eta=2$.
-As shown in [ver-1kd_equilibrium_constant_k10], this ratio approaches $\eta=2$ for both enclosures, as observed in TMAP7. However, achieving this balance involves a compromise to reproduce TMAP7's results. The ratio of $K_1$ and $K_2$ must respect [eq:eta]. The values of $K_1$ and $K_2$ must also be large enough to ensure that the kinetics of chemical reactions are faster than diffusion or surface permeation to be closer to the equilibrium assumption used in TMAP7. Here, the equilibrium in enclosure 1 is achieved rapidly. Increasing $K_1$ and $K_2$ would also enable a quicker attainment of equilibrium in enclosure 2. However, using very high values for $K_1$ and $K_2$ would lead to an unnecessary increase in computational costs.
+For verification purposes, it is crucial to ensure that the chemical equilibrium between HT, T$_2$ and H$_2$ is achieved. This can be verified in both enclosures by examining the ratio between $P_{\text{HT}}$ and $\sqrt{P_{\text{H}_2} P_{\text{T}_2}}$, which must equal $\eta=2$.
+As shown in [ver-1kd_equilibrium_constant_k10], this ratio approaches $\eta=2$ for both enclosures at equilibrium. To reach this equilibrium, the ratio of $K_1$ and $K_2$ must respect [eq:eta]. The values of $K_1$ and $K_2$ must also be large enough to ensure that the kinetics of chemical reactions are faster than diffusion or surface permeation to be closer to the equilibrium assumption imposed in TMAP7. Here, the equilibrium in enclosure 1 is achieved rapidly. Increasing $K_1$ and $K_2$ would also enable a quicker attainment of equilibrium in enclosure 2. However, using very high values for $K_1$ and $K_2$ would lead to an unnecessary increase in computational costs.
 
 The concentration ratios for T$_2$, H$_2$, and HT between enclosures 1 and 2, shown in [ver-1kd_concentration_ratio_T2_k10], [ver-1kd_concentration_ratio_H2_k10], and [ver-1kd_concentration_ratio_HT_k10], demonstrate that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K \sqrt{RT} = 10$.
 

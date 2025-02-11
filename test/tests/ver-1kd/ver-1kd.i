@@ -4,7 +4,7 @@ long_total = '${units ${fparse nb_segments_TMAP7 * node_size_TMAP7} m}'
 nb_segments_TMAP8 = 1e2
 simulation_time = '${units 0.25 s}'
 kb = '${units 1.380649e-23 J/K}' # Boltzmann constant J/K - from PhysicalConstants.h
-source = '${units 1e23 1/m^3/s}' # Source term for T2 in enclosure 1
+source = '${units 1e23 mol/m^3/s}' # Source term for T2 in enclosure 1
 volume = '${units ${fparse 1/3 * long_total} m^3}'
 temperature = '${units 500 K}'
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConstants.h
@@ -138,8 +138,7 @@ unit_scale_neighbor = 1
     type = BodyForce
     variable = concentration_T2_enclosure_1
     block = '1'
-    value = '${fparse source/volume * kb * temperature}'
-    function = 'x+y'
+    value = '${fparse source}'
   []
 
   # Diffusion equation for H2
