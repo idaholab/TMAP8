@@ -79,7 +79,12 @@ where $R$ is the ideal gas constant in J/mol/K, $T$ is the temperature in K, $K$
 ## Results
 
 We assume that $K = 10/\sqrt{RT}$, which is expected to result in $C_1 = 10 \sqrt{C_2}$ at equilibrium.
-As illustrated in [ver-1kd_comparison_time_k10], since the chemical reactions occur immediately, an initial quantity of HT is present in Enclosure 1, while T$_2$ and H$_2$ have initially dropped to half their original amounts. The volumetric source contributes to an increase in T$_2$ within Enclosure 1, thereby enhancing its chemical reactions with H$_2$. Consequently, in Enclosure 1, H$_2$ pressure gradually decreases over time, while HT pressure rises. Similarly, the volumetric source increases T$_2$ pressure in Enclosure 2. In Enclosure 2, the increasing presence of T$_2$ leads to H$_2$ saturation, which in turn causes HT pressure to rise.
+
+As illustrated in [ver-1kd_comparison_time_k10], since the chemical reactions occur immediately, an initial quantity of HT is present in Enclosure 1, while T$_2$ and H$_2$ initially drop to half their original amounts.
+
+The pressures of T$_2$ and H$_2$ in Enclosure 1 decrease due to diffusion into Enclosure 2. The constant flow rate of the T$_2$ source slows down the pressure drop of T$_2$ in Enclosure 2. Moreover, the volumetric source increases the amount of T$_2$ in Enclosure 1, thereby enhancing its chemical reactions with H$_2$. Consequently, in Enclosure 1, H$_2$ pressure gradually decreases over time, while HT pressure rises.
+
+Similarly, in Enclosure 2, the pressures of T$_2$ and H$_2$ increase, with the rise being more pronounced for T$_2$ due to the continuous supply from the source. As a result, more H$_2$ reacts with T$_2$, further contributing to the increase in HT pressure.
 
 For verification purposes, it is crucial to ensure that the chemical equilibrium between HT, T$_2$ and H$_2$ is achieved. This can be verified in both enclosures by examining the ratio between $P_{\text{HT}}$ and $\sqrt{P_{\text{H}_2} P_{\text{T}_2}}$, which must equal $\eta=2$.
 As shown in [ver-1kd_equilibrium_constant_k10], this ratio approaches $\eta=2$ for both enclosures at equilibrium. To reach this equilibrium, the ratio of $K_1$ and $K_2$ must respect [eq:eta]. The values of $K_1$ and $K_2$ must also be large enough to ensure that the kinetics of chemical reactions are faster than diffusion or surface permeation to be closer to the equilibrium assumption imposed in TMAP7. Here, the equilibrium in enclosure 1 is achieved rapidly. Increasing $K_1$ and $K_2$ would also enable a quicker attainment of equilibrium in enclosure 2. However, using very high values for $K_1$ and $K_2$ would lead to an unnecessary increase in computational costs.
