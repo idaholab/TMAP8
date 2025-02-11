@@ -2,10 +2,9 @@ nb_segments_TMAP7 = 20
 node_size_TMAP7 = '${units 1.25e-5 m}'
 long_total = '${units ${fparse nb_segments_TMAP7 * node_size_TMAP7} m}'
 nb_segments_TMAP8 = 1e2
-simulation_time = '${units 0.25 s}'
-kb = '${units 1.380649e-23 J/K}' # Boltzmann constant J/K - from PhysicalConstants.h
-source = '${units 1e23 mol/m^3/s}' # Source term for T2 in enclosure 1
-volume = '${units ${fparse 1/3 * long_total} m^3}'
+simulation_time = '${units 2 s}'
+N_a = '${units 6.02214076e23 J/mol/K}' # Avogadro's number from PhysicalConstants.h
+source = '${units ${fparse 1e23 / N_a} mol/m^3/s}' # Source term for T2 in enclosure 1
 temperature = '${units 500 K}'
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConstants.h
 initial_pressure_1 = '${units 1e5 Pa}'
@@ -138,7 +137,7 @@ unit_scale_neighbor = 1
     type = BodyForce
     variable = concentration_T2_enclosure_1
     block = '1'
-    value = '${fparse source}'
+    value = ${source}
   []
 
   # Diffusion equation for H2
@@ -611,16 +610,16 @@ unit_scale_neighbor = 1
   type = Transient
   end_time = ${simulation_time}
   dtmax = 1e-2
-  nl_max_its = 11
+  nl_max_its = 9
   l_max_its = 30
   scheme = 'bdf2'
-  solve_type = PJFNK
+  solve_type = 'PJFNK'
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 1e-6
-    optimal_iterations = 10
+    optimal_iterations = 7
     iteration_window = 1
     growth_factor = 1.1
     cutback_factor = 0.9
