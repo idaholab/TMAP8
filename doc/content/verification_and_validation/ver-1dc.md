@@ -92,7 +92,7 @@ The analytical solution for the permeation transient is compared with TMAP8 resu
 
 ## Further verification using the method of manufactured solutions (MMS)
 
-Although the flux and breakthrough time can be verified using analytical solutions as presented above, the [MMS](mms.md) approach is a powerful method to verify complex system of PDEs such as the one studied in this case.
+Although the flux and breakthrough time can be verified using analytical solutions as presented above, the [MMS](mms.md) approach is a powerful method to verify complex systems of PDEs such as the one studied in this case.
 Here, we apply the [MMS](mms.md) approach available as a Python-based utility in the [MOOSE framework](https://mooseframework.inl.gov) to verify TMAP8's predictions for ver-1dc through spatial convergence.
 
 Below, we (1) describe how to derive the weak form of the equation, which is necessary to apply the MMS,
@@ -207,7 +207,7 @@ and, for $i=1$, $i=2$, and $i=3$:
     f_i = \frac{u_{i,0}}{2} \left(N\cos(x) + \alpha_r^i N (t \cos(x) + 1) - \alpha_t^i t \cos(x) (-t\cos(x) + 1)\right).
 \end{equation}
 
-[eqn:diffusion_mobile_mms] and [eqn:trapped_rate_mms] now form a system of equation that can be solved and compared against the exact solutions defined in [eqn:exact_solution_mobile_mms] and [eqn:exact_solution_trapped_mms].
+[eqn:diffusion_mobile_mms] and [eqn:trapped_rate_mms] now form a system of equations that can be solved and compared against the exact solutions defined in [eqn:exact_solution_mobile_mms] and [eqn:exact_solution_trapped_mms].
 
 These forcing functions are then imposed in the TMAP8 input file using [BodyForce.md] and [UserForcingFunctionNodalKernel.md], respectively. Dirichlet boundary conditions for the mobile species are imposed using the selected exact/MMS solution. For the spatial discretization, we select first order Lagrange basis functions for the mobile concentration and for projecting the trapped species concentrations from nodes into element interiors for coupling in the trapped specie time derivative term in the mobile specie governing equation.
 

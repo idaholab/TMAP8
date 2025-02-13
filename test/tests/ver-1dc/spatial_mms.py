@@ -33,7 +33,7 @@ def run():
     os.chdir(script_folder)
     if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
         mms_input = "../../../../test/tests/ver-1dc/ver-1dc_mms.i"
-    else:                                  # if in test folder
+    else:                                          # if in test folder
         mms_input = "ver-1dc_mms.i"
     df1 = mms.run_spatial(mms_input, 10, y_pp=['L2u'])
     fig = mms.ConvergencePlot(xlabel=r'Element Size ($h$)', ylabel='$L_2$ Error')

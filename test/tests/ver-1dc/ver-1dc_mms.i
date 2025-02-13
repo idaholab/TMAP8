@@ -1,4 +1,4 @@
-# This is the input file to apply the method of manufactured solution to the ver-1dc case.
+# This is the input file to apply the method of manufactured solutions to the ver-1dc case.
 # It leverages ver-1dc_base.i and functions.i to form a complete input file.
 
 cl = ${units 1 atom/m^3}

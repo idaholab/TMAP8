@@ -1,6 +1,6 @@
 # This is the base input file for the ver-1dc case.
-# This input file is meant to be included into the ver-1dc.i input file
-# and into the ver-1dc_mms.i input file to be full.
+# This input file is meant to be included within both the ver-1dc.i 
+# and ver-1dc_mms.i input files to be complete.
 # Its purpose is to centralize the capability common to the two cases
 # within one file to minimize redundancy and ease maintenance.
 # It is not meant to be run on its own.
