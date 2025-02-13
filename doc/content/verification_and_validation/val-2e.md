@@ -13,7 +13,7 @@ The membrane area is 1.8 $\times 10^{-4}$ m$^2$ and has thicknesses of either 0.
 Copper gaskets hold the membrane in place. Gas can only move from one chamber to the other by diffusing through the membrane.
 The membrane's temperature is controlled between 820 and 870 K using an electric heater and a thermocouple.
 Gas is supplied to one chamber (the upstream chamber) from regulated bottles at different compositions and pressures.
-he base pressure on both upstream and downstream chambers is maintained below 10 $\times 10^{-6}$ Pa using turbomolecular and rotary pumps.
+he base pressure on both upstream and downstream chambers is maintained below 1 $\times 10^{-6}$ Pa using turbomolecular and rotary pumps.
 Pressure is measured by an ion gage on each side, and downstream gas composition is measured with a quadrupole mass spectrometer.
 Flow rates through the membrane are determined by pressure increases in the downstream chamber at a fixed pumping rate of 0.1 m$^3$/s.
 
@@ -38,8 +38,8 @@ The first three test cases are permeation tests of D$_2$ alone through membranes
 For the 0.025 membrane, tests are conducted at both 825 K and 865 K whereas the 0.05 mm membrane is tested only at 825 K.
 [] shows the experimental data for deuterium permeation flux versus upstream D2 pressure. We run corresponding simulations for the three test cases separately, to calibrate the permeability of the membranes for hydrogen isotopes in TMAP8 model.
 
-The next test case is a co-permeation of H$_2$ and D$_2$ through membrane of 0.025 mm at 870 K.
-We separately compare the experiemntal permeation flux with two simulations using two lawdep and ratedep boundary condition on the membrane.
+The next two test cases are co-permeation of H$_2$ and D$_2$ through membrane of 0.025 mm at 870 K.
+We separately compare the experimental permeation flux with two simulations using two lawdep and ratedep boundary condition on the membrane.
 
 
 ## Model Description
@@ -98,7 +98,7 @@ The reaction rates for H$_2$, D$_2$, and HD are described by
 
 for lawdep boundary condition and
 
-\begin{equation} \label{eq:chemical_reaction_lawdep}
+\begin{equation} \label{eq:chemical_reaction_ratedep}
 \frac{- 2 d P_{H_2}}{dt} = \frac{- 2 d P_{D_2}}{dt} = \frac{d P_{HD}}{dt} = \frac{k_b T A}{V} (K_r C_H C_D - K_d P_{HD}),
 \end{equation}
 
@@ -185,12 +185,10 @@ The pressure history of D$_2$ on the enclosure 5 for next two simulations (val-2
 !alert note title=Updates of times and initial pressures in val-2ee to be consistent with val-2ed.
 In [!cite](ambrosek2008verification), the times and initial pressures in val-2ee are different from these values in val-2ed. However, we use the same values from val-2ed in val-2ee for consistency. The trivial difference on times and initial pressures will not impact the final results.
 
-Other case and model parameters used in TMAP8 are listed in [val-2e_abc_parameters] and [val-2e_de_parameters]:
+Other case and model parameters used in TMAP8 are listed in [val-2e_parameters]:
 
 
-
-
-!table id=val-2e_abc_parameters caption=Values of material properties.
+!table id=val-2e_parameters caption=Values of material properties.
 | Parameter | Description                          | Value                                                       | Units                 | Reference                 |
 | --------- | ------------------------------------ | ----------------------------------------------------------- | --------------------- | --------------------- |
 | $k_b$     | Boltzmann constant                   | 1.380649 $\times 10^{-23}$                                  | J/K                   | [PhysicalConstants.h](https://physics.nist.gov/cgi-bin/cuu/Value?r) |
@@ -218,7 +216,7 @@ Other case and model parameters used in TMAP8 are listed in [val-2e_abc_paramete
 ## Results
 
 [val-2e_comparison_diffusion] shows the comparison of the TMAP8 calculation and the experimental data from [!cite](kizu2001co), including simulations val-2ea, val-2eb, and val-2ec. There are reasonable agreements between the TMAP predictions and the experimental data with root mean square percentage errors of RMSPE = 22.17 %, 23.68 %, and 23.21 % for val-2ea, val-2eb, and val-2ec.
-[val-2e_comparison_mixture_diffusion] shows the comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation using lawdep condition and the experimental data. The effective D$_2$ pressure is calculated using $P_{D_2} + 0.5 P_HD$. There is not a good agreement except for H$_2$ at low pressure, and D$_2$ at high pressure. Which is similar to the results from TMAP7. The root mean square percentage errors are RMSPE = 66.07 %, 49.18 %, 119.67 %, 22.96 % for H$_2$, D$_2$, HD, and the summation of all gas.
+[val-2e_comparison_mixture_diffusion] shows the comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation using lawdep condition and the experimental data. The effective D$_2$ pressure is calculated using $P_{D_2} + 0.5 P_{HD}$. There is not a good agreement except for H$_2$ at low pressure, and D$_2$ at high pressure. Which is similar to the results from TMAP7. The root mean square percentage errors are RMSPE = 66.07 %, 49.18 %, 119.67 %, 22.96 % for H$_2$, D$_2$, HD, and the summation of all gas.
 [val-2e_comparison_mixture_diffusion_recombination] shows the comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation using ratedep condition and the experimental data. There are reasonable agreement between the TMAP predictions and the experimental data with root mean square percentage errors of RMSPE = 28.13 %, 38.22 %, 76.03 %, 46.92  % for H$_2$, D$_2$, HD, and the summation of all gas.
 Note that the agreement could be improved by adjusting the model parameters. It is also possible to perform this optimization with [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html).
 

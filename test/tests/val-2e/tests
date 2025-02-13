@@ -1,7 +1,7 @@
 [Tests]
-  design = 'EnclosureSinkScalarKernel.md PressureReleaseFluxIntegral.md EquilibriumBC.md'
+  design = 'MatReaction.md MatBodyForce.md EquilibriumBC.md MatNeumannBC.md'
   verification = 'ver-1a.md'
-  issues = '#12 #75'
+  issues = '#12'
   [val-2ea_csvdiff]
     type = CSVDiff
     input = val-2ea.i
