@@ -209,15 +209,15 @@ Other case and model parameters used in TMAP8 are listed in [val-2e_parameters]:
 | $K_{r,D_2}$ | D$_2$ recombination coefficient | 2.502$\times 10^{-24} / \sqrt(4T) \exp(11836/T)$        | m$^4$/s              | [!cite](ambrosek2008verification) |
 | $K_{r,H_2}$ | H$_2$ recombination coefficient | 2.502$\times 10^{-24} / \sqrt(2T) \exp(11836/T)$        | m$^4$/s              | [!cite](ambrosek2008verification) |
 | $K_{r,HD}$ | HD recombination coefficient | 2.502$\times 10^{-24} / \sqrt(3T) \exp(11836/T)$        | m$^4$/s              | [!cite](ambrosek2008verification) |
-| $K_{d,D_2}$ | D$_2$ dissociation coefficient | 2.8197$\times 10^{22} / \sqrt(4T)$     | molecular/m$^2$/Pa              | [!cite](ambrosek2008verification) |
-| $K_{d,H_2}$ | H$_2$ dissociation coefficient | 2.8197$\times 10^{22} / \sqrt(2T)$     | molecular/m$^2$/Pa              | [!cite](ambrosek2008verification) |
-| $K_{d,HD}$ | HD dissociation coefficient | 2.8197$\times 10^{22} / \sqrt(3T)$     | molecular/m$^2$/Pa              | [!cite](ambrosek2008verification) |
+| $K_{d,D_2}$ | D$_2$ dissociation coefficient | 2.1897$\times 10^{22} / \sqrt(4T)$     | molecular/m$^2$/Pa              | [!cite](ambrosek2008verification) |
+| $K_{d,H_2}$ | H$_2$ dissociation coefficient | 2.1897$\times 10^{22} / \sqrt(2T)$     | molecular/m$^2$/Pa              | [!cite](ambrosek2008verification) |
+| $K_{d,HD}$ | HD dissociation coefficient | 2.1897$\times 10^{22} / \sqrt(3T)$     | molecular/m$^2$/Pa              | [!cite](ambrosek2008verification) |
 
 ## Results
 
 [val-2e_comparison_diffusion] shows the comparison of the TMAP8 calculation and the experimental data from [!cite](kizu2001co), including simulations val-2ea, val-2eb, and val-2ec. There are reasonable agreements between the TMAP predictions and the experimental data with root mean square percentage errors of RMSPE = 22.17 %, 23.68 %, and 23.21 % for val-2ea, val-2eb, and val-2ec.
 [val-2e_comparison_mixture_diffusion] shows the comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation using lawdep condition and the experimental data. The effective D$_2$ pressure is calculated using $P_{D_2} + 0.5 P_{HD}$. There is not a good agreement except for H$_2$ at low pressure, and D$_2$ at high pressure. Which is similar to the results from TMAP7. The root mean square percentage errors are RMSPE = 66.07 %, 49.18 %, 119.67 %, 22.96 % for H$_2$, D$_2$, HD, and the summation of all gas.
-[val-2e_comparison_mixture_diffusion_recombination] shows the comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation using ratedep condition and the experimental data. There are reasonable agreement between the TMAP predictions and the experimental data with root mean square percentage errors of RMSPE = 28.13 %, 38.22 %, 76.03 %, 46.92  % for H$_2$, D$_2$, HD, and the summation of all gas.
+[val-2e_comparison_mixture_diffusion_recombination] shows the comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation using ratedep condition and the experimental data. There are reasonable agreement between the TMAP predictions and the experimental data with root mean square percentage errors of RMSPE = 14.14 %, 58.53  %, 85.22 %, 59.57  % for H$_2$, D$_2$, HD, and the summation of all gas.
 Note that the agreement could be improved by adjusting the model parameters. It is also possible to perform this optimization with [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html).
 
 !media comparison_val-2e.py

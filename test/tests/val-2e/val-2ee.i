@@ -32,9 +32,9 @@ K_r_pre_D2 = '${units ${fparse 2.502e-24 / sqrt(4 * temperature)} m^4/s -> mum^4
 K_r_pre_H2 = '${units ${fparse 2.502e-24 / sqrt(2 * temperature)} m^4/s -> mum^4/s}'
 K_r_pre_HD = '${units ${fparse 2.502e-24 / sqrt(3 * temperature)} m^4/s -> mum^4/s}'
 K_r_energy = '${units ${fparse -11836 * R} J/mol}'
-K_d_D2 = '${units ${fparse 2.8197e22 / sqrt(4 * temperature)} at/m^2/Pa -> at/mum^2/Pa}'
-K_d_H2 = '${units ${fparse 2.8197e22 / sqrt(2 * temperature)} at/m^2/Pa -> at/mum^2/Pa}'
-K_d_HD = '${units ${fparse 2.8197e22 / sqrt(3 * temperature)} at/m^2/Pa -> at/mum^2/Pa}'
+K_d_D2 = '${units ${fparse 2.1897e22 / sqrt(4 * temperature)} at/m^2/Pa -> at/mum^2/Pa}'
+K_d_H2 = '${units ${fparse 2.1897e22 / sqrt(2 * temperature)} at/m^2/Pa -> at/mum^2/Pa}'
+K_d_HD = '${units ${fparse 2.1897e22 / sqrt(3 * temperature)} at/m^2/Pa -> at/mum^2/Pa}'
 
 # Modeling data used in current case
 slab_thickness = '${units 2.5e-5 m -> mum}'
