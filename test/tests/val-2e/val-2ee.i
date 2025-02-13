@@ -231,14 +231,14 @@ simulation_time = '${units 1000 s}'
     variable = D2_pressure_upstream
     extra_vector_tags = 'ref'
   []
-  [MatReaction_upstream_D2_influx_1]
+  [MatReaction_upstream_D2_influx_5]
     type = ADMatReaction
     variable = D2_pressure_upstream
     v = 'D2_pressure_enclosure5'
     reaction_rate = ${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
-  [MatReaction_upstream_D2_influx_5]
+  [MatReaction_upstream_D2_influx_1]
     type = ADMatReaction
     variable = D2_pressure_upstream
     v = 'D2_pressure_enclosure1'
@@ -252,19 +252,33 @@ simulation_time = '${units 1000 s}'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
+  # [MatReaction_upstream_D2_reaction]
+  #   type = ADMatReactionFlexible
+  #   variable = D2_pressure_upstream
+  #   vs = 'D_concentration H_concentration'
+  #   reaction_rate_name = 'K_r_HD'
+  #   coeff = '${fparse -0.5 * kb * temperature * surface_area / volume_enclosure}'
+  #   extra_vector_tags = 'ref'
+  # []
+  # [MatReaction_upstream_D2_re_reaction]
+  #   type = ADMatReaction
+  #   variable = D2_pressure_upstream
+  #   v = 'HD_pressure_upstream'
+  #   reaction_rate = '${fparse 0.5 *  K_d_HD * kb * temperature * surface_area / volume_enclosure}'
+  #   extra_vector_tags = 'ref'
+  # []
   [MatReaction_upstream_D2_reaction]
-    type = ADMatReactionFlexible
+    type = ADMatReaction
     variable = D2_pressure_upstream
-    vs = 'D_concentration H_concentration'
-    reaction_rate_name = 'K_r_HD'
-    coeff = '${fparse -0.5 * kb * temperature * surface_area / volume_enclosure}'
+    v = 'sqrt_PH2_sqrt_PD2_upstream'
+    reaction_rate = -1
     extra_vector_tags = 'ref'
   []
   [MatReaction_upstream_D2_re_reaction]
     type = ADMatReaction
     variable = D2_pressure_upstream
     v = 'HD_pressure_upstream'
-    reaction_rate = '${fparse 0.5 *  K_d_HD * kb * temperature * surface_area / volume_enclosure}'
+    reaction_rate = 0.5
     extra_vector_tags = 'ref'
   []
   # Equation for H2 in enclosure upstream
@@ -273,14 +287,14 @@ simulation_time = '${units 1000 s}'
     variable = H2_pressure_upstream
     extra_vector_tags = 'ref'
   []
-  [MatReaction_upstream_H2_influx_1]
+  [MatReaction_upstream_H2_influx_5]
     type = ADMatReaction
     variable = H2_pressure_upstream
     v = 'H2_pressure_enclosure5'
     reaction_rate = ${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
-  [MatReaction_upstream_H2_influx_5]
+  [MatReaction_upstream_H2_influx_1]
     type = ADMatReaction
     variable = H2_pressure_upstream
     v = 'H2_pressure_enclosure1'
@@ -294,19 +308,33 @@ simulation_time = '${units 1000 s}'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
+  # [MatReaction_upstream_H2_reaction]
+  #   type = ADMatReactionFlexible
+  #   variable = H2_pressure_upstream
+  #   vs = 'D_concentration H_concentration'
+  #   reaction_rate_name = 'K_r_HD'
+  #   coeff = '${fparse -0.5 * kb * temperature * surface_area / volume_enclosure}'
+  #   extra_vector_tags = 'ref'
+  # []
+  # [MatReaction_upstream_H2_re_reaction]
+  #   type = ADMatReaction
+  #   variable = H2_pressure_upstream
+  #   v = 'HD_pressure_upstream'
+  #   reaction_rate = '${fparse 0.5 *  K_d_HD * kb * temperature * surface_area / volume_enclosure}'
+  #   extra_vector_tags = 'ref'
+  # []
   [MatReaction_upstream_H2_reaction]
-    type = ADMatReactionFlexible
+    type = ADMatReaction
     variable = H2_pressure_upstream
-    vs = 'D_concentration H_concentration'
-    reaction_rate_name = 'K_r_HD'
-    coeff = '${fparse -0.5 * kb * temperature * surface_area / volume_enclosure}'
+    v = 'sqrt_PH2_sqrt_PD2_upstream'
+    reaction_rate = -1
     extra_vector_tags = 'ref'
   []
   [MatReaction_upstream_H2_re_reaction]
     type = ADMatReaction
     variable = H2_pressure_upstream
     v = 'HD_pressure_upstream'
-    reaction_rate = '${fparse 0.5 *  K_d_HD * kb * temperature * surface_area / volume_enclosure}'
+    reaction_rate = 0.5
     extra_vector_tags = 'ref'
   []
   # Equation for HD in enclosure upstream
@@ -315,14 +343,14 @@ simulation_time = '${units 1000 s}'
     variable = HD_pressure_upstream
     extra_vector_tags = 'ref'
   []
-  [MatReaction_upstream_HD_influx_1]
+  [MatReaction_upstream_HD_influx_5]
     type = ADMatReaction
     variable = HD_pressure_upstream
     v = 'HD_pressure_enclosure5'
     reaction_rate = ${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
-  [MatReaction_upstream_HD_influx_5]
+  [MatReaction_upstream_HD_influx_1]
     type = ADMatReaction
     variable = HD_pressure_upstream
     v = 'HD_pressure_enclosure1'
@@ -336,34 +364,52 @@ simulation_time = '${units 1000 s}'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
+  # [MatReaction_upstream_HD_reaction]
+  #   type = ADMatReactionFlexible
+  #   variable = HD_pressure_upstream
+  #   vs = 'D_concentration H_concentration'
+  #   reaction_rate_name = 'K_r_HD'
+  #   coeff = '${fparse kb * temperature * surface_area / volume_enclosure}'
+  #   extra_vector_tags = 'ref'
+  # []
+  # [MatReaction_upstream_HD_re_reaction]
+  #   type = ADMatReaction
+  #   variable = HD_pressure_upstream
+  #   v = 'HD_pressure_upstream'
+  #   reaction_rate = '${fparse - K_d_HD * kb * temperature * surface_area / volume_enclosure}'
+  #   extra_vector_tags = 'ref'
+  # []
   [MatReaction_upstream_HD_reaction]
-    type = ADMatReactionFlexible
+    type = ADMatReaction
     variable = HD_pressure_upstream
-    vs = 'D_concentration H_concentration'
-    reaction_rate_name = 'K_r_HD'
-    coeff = '${fparse kb * temperature * surface_area / volume_enclosure}'
+    v = 'sqrt_PH2_sqrt_PD2_upstream'
+    reaction_rate = 2
     extra_vector_tags = 'ref'
   []
   [MatReaction_upstream_HD_re_reaction]
     type = ADMatReaction
     variable = HD_pressure_upstream
     v = 'HD_pressure_upstream'
-    reaction_rate = '${fparse - K_d_HD * kb * temperature * surface_area / volume_enclosure}'
+    reaction_rate = -1
     extra_vector_tags = 'ref'
   []
   # Membrane upstream
-  [MatReaction_upstream_outflux_membrane_D]
-    type = ADMatReaction
+  [MatReaction_upstream_outflux_membrane_D2]
+    type = ADMatBodyForce
     variable = D2_pressure_upstream
-    v = ''
-    reaction_rate = 'membrane_reaction_rate_right_D'
+    material_property = 'membrane_reaction_rate_right_D2'
     extra_vector_tags = 'ref'
   []
-  [MatReaction_upstream_outflux_membrane_H]
-    type = ADMatReaction
+  [MatReaction_upstream_outflux_membrane_H2]
+    type = ADMatBodyForce
     variable = H2_pressure_upstream
-    v = ''
-    reaction_rate = 'membrane_reaction_rate_right_H'
+    material_property = 'membrane_reaction_rate_right_H2'
+    extra_vector_tags = 'ref'
+  []
+  [MatReaction_upstream_outflux_membrane_HD]
+    type = ADMatBodyForce
+    variable = HD_pressure_upstream
+    material_property = 'membrane_reaction_rate_right_HD'
     extra_vector_tags = 'ref'
   []
 
@@ -387,19 +433,33 @@ simulation_time = '${units 1000 s}'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
+  # [MatReaction_downstream_D2_reaction]
+  #   type = ADMatReactionFlexible
+  #   variable = D2_pressure_downstream
+  #   vs = 'D_concentration H_concentration'
+  #   reaction_rate_name = 'K_r_HD'
+  #   coeff = '${fparse -0.5 * kb * temperature * surface_area / volume_enclosure}'
+  #   extra_vector_tags = 'ref'
+  # []
+  # [MatReaction_downstream_D2_re_reaction]
+  #   type = ADMatReaction
+  #   variable = D2_pressure_downstream
+  #   v = 'HD_pressure_downstream'
+  #   reaction_rate = '${fparse 0.5 * K_d_HD * kb * temperature * surface_area / volume_enclosure}'
+  #   extra_vector_tags = 'ref'
+  # []
   [MatReaction_downstream_D2_reaction]
-    type = ADMatReactionFlexible
+    type = ADMatReaction
     variable = D2_pressure_downstream
-    vs = 'D_concentration H_concentration'
-    reaction_rate_name = 'K_r_HD'
-    coeff = '${fparse -0.5 * kb * temperature * surface_area / volume_enclosure}'
+    v = 'sqrt_PH2_sqrt_PD2_downstream'
+    reaction_rate = -1
     extra_vector_tags = 'ref'
   []
   [MatReaction_downstream_D2_re_reaction]
     type = ADMatReaction
     variable = D2_pressure_downstream
     v = 'HD_pressure_downstream'
-    reaction_rate = '${fparse 0.5 * K_d_HD * kb * temperature * surface_area / volume_enclosure}'
+    reaction_rate = 0.5
     extra_vector_tags = 'ref'
   []
   # Equation for H2 enclosure downstream
@@ -422,19 +482,33 @@ simulation_time = '${units 1000 s}'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
+  # [MatReaction_downstream_H2_reaction]
+  #   type = ADMatReactionFlexible
+  #   variable = H2_pressure_downstream
+  #   vs = 'D_concentration H_concentration'
+  #   reaction_rate_name = 'K_r_HD'
+  #   coeff = '${fparse -0.5 * kb * temperature * surface_area / volume_enclosure}'
+  #   extra_vector_tags = 'ref'
+  # []
+  # [MatReaction_downstream_H2_re_reaction]
+  #   type = ADMatReaction
+  #   variable = H2_pressure_downstream
+  #   v = 'HD_pressure_downstream'
+  #   reaction_rate = '${fparse 0.5 * K_d_HD * kb * temperature * surface_area / volume_enclosure}'
+  #   extra_vector_tags = 'ref'
+  # []
   [MatReaction_downstream_H2_reaction]
-    type = ADMatReactionFlexible
+    type = ADMatReaction
     variable = H2_pressure_downstream
-    vs = 'D_concentration H_concentration'
-    reaction_rate_name = 'K_r_HD'
-    coeff = '${fparse -0.5 * kb * temperature * surface_area / volume_enclosure}'
+    v = 'sqrt_PH2_sqrt_PD2_downstream'
+    reaction_rate = -1
     extra_vector_tags = 'ref'
   []
   [MatReaction_downstream_H2_re_reaction]
     type = ADMatReaction
     variable = H2_pressure_downstream
     v = 'HD_pressure_downstream'
-    reaction_rate = '${fparse 0.5 * K_d_HD * kb * temperature * surface_area / volume_enclosure}'
+    reaction_rate = 0.5
     extra_vector_tags = 'ref'
   []
   # Equation for HD enclosure downstream
@@ -457,34 +531,52 @@ simulation_time = '${units 1000 s}'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
+  # [MatReaction_downstream_HD_reaction]
+  #   type = ADMatReactionFlexible
+  #   variable = HD_pressure_downstream
+  #   vs = 'D_concentration H_concentration'
+  #   reaction_rate_name = 'K_r_HD'
+  #   coeff = '${fparse kb * temperature * surface_area / volume_enclosure}'
+  #   extra_vector_tags = 'ref'
+  # []
+  # [MatReaction_downstream_HD_re_reaction]
+  #   type = ADMatReaction
+  #   variable = HD_pressure_downstream
+  #   v = 'HD_pressure_downstream'
+  #   reaction_rate = '${fparse - K_d_HD * kb * temperature * surface_area / volume_enclosure}'
+  #   extra_vector_tags = 'ref'
+  # []
   [MatReaction_downstream_HD_reaction]
-    type = ADMatReactionFlexible
+    type = ADMatReaction
     variable = HD_pressure_downstream
-    vs = 'D_concentration H_concentration'
-    reaction_rate_name = 'K_r_HD'
-    coeff = '${fparse kb * temperature * surface_area / volume_enclosure}'
+    v = 'sqrt_PH2_sqrt_PD2_downstream'
+    reaction_rate = 2
     extra_vector_tags = 'ref'
   []
   [MatReaction_downstream_HD_re_reaction]
     type = ADMatReaction
     variable = HD_pressure_downstream
     v = 'HD_pressure_downstream'
-    reaction_rate = '${fparse - K_d_HD * kb * temperature * surface_area / volume_enclosure}'
+    reaction_rate = -1
     extra_vector_tags = 'ref'
   []
   # Membrane downstream
-  [MatReaction_downstream_influx_membrane_D]
-    type = ADMatReaction
+  [MatReaction_downstream_influx_membrane_D2]
+    type = ADMatBodyForce
     variable = D2_pressure_downstream
-    v = ''
-    reaction_rate = 'membrane_reaction_rate_left_D'
+    material_property = 'membrane_reaction_rate_left_D2'
     extra_vector_tags = 'ref'
   []
-  [MatReaction_downstream_influx_membrane_H]
-    type = ADMatReaction
+  [MatReaction_downstream_influx_membrane_H2]
+    type = ADMatBodyForce
     variable = H2_pressure_downstream
-    v = ''
-    reaction_rate = 'membrane_reaction_rate_left_H'
+    material_property = 'membrane_reaction_rate_left_H2'
+    extra_vector_tags = 'ref'
+  []
+  [MatReaction_downstream_influx_membrane_HD]
+    type = ADMatBodyForce
+    variable = HD_pressure_downstream
+    material_property = 'membrane_reaction_rate_left_HD'
     extra_vector_tags = 'ref'
   []
 
@@ -539,29 +631,41 @@ simulation_time = '${units 1000 s}'
     property_name = 'K_r_HD'
     expression = '${K_r_pre_HD} * exp( - ${K_r_energy} / ${R} / ${temperature})'
   []
-  [membrane_reaction_rate_right_D]
+  [membrane_reaction_rate_right_D2]
     type = ADParsedMaterial
-    property_name = 'membrane_reaction_rate_right_D'
-    postprocessor_names = flux_surface_right_D
-    expression = 'flux_surface_right_D * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
+    property_name = 'membrane_reaction_rate_right_D2'
+    material_property_names = flux_on_right_D2
+    expression = '-flux_on_right_D2 * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
   []
-  [membrane_reaction_rate_left_D]
+  [membrane_reaction_rate_left_D2]
     type = ADParsedMaterial
-    property_name = 'membrane_reaction_rate_left_D'
-    postprocessor_names = flux_surface_left_D
-    expression = 'flux_surface_left_D * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
+    property_name = 'membrane_reaction_rate_left_D2'
+    material_property_names = flux_on_left_D2
+    expression = '-flux_on_left_D2 * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
   []
-  [membrane_reaction_rate_right_H]
+  [membrane_reaction_rate_right_H2]
     type = ADParsedMaterial
-    property_name = 'membrane_reaction_rate_right_H'
-    postprocessor_names = flux_surface_right_H
-    expression = 'flux_surface_right_H * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
+    property_name = 'membrane_reaction_rate_right_H2'
+    material_property_names = flux_on_right_H2
+    expression = '-flux_on_right_H2 * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
   []
-  [membrane_reaction_rate_left_H]
+  [membrane_reaction_rate_left_H2]
     type = ADParsedMaterial
-    property_name = 'membrane_reaction_rate_left_H'
-    postprocessor_names = flux_surface_left_H
-    expression = 'flux_surface_left_H * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
+    property_name = 'membrane_reaction_rate_left_H2'
+    material_property_names =flux_on_left_H2
+    expression = '-flux_on_left_H2 * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
+  []
+  [membrane_reaction_rate_right_HD]
+    type = ADParsedMaterial
+    property_name = 'membrane_reaction_rate_right_HD'
+    material_property_names = flux_on_right_HD
+    expression = '-flux_on_right_HD * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
+  []
+  [membrane_reaction_rate_left_HD]
+    type = ADParsedMaterial
+    property_name = 'membrane_reaction_rate_left_HD'
+    material_property_names =flux_on_left_HD
+    expression = '-flux_on_left_HD * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
   []
   [converter_to_regular]
     type = MaterialADConverter
@@ -625,6 +729,30 @@ simulation_time = '${units 1000 s}'
     property_name = 'flux_on_left_H2'
     material_property_names = 'K_r_H2'
     expression = '- K_r_H2 * H_concentration ^ 2 + ${K_d_H2} * H2_pressure_downstream'
+    outputs = 'exodus'
+  []
+  [flux_on_right_D2]
+    type = ADParsedMaterial
+    coupled_variables = 'D_concentration D2_pressure_upstream'
+    property_name = 'flux_on_right_D2'
+    material_property_names = 'K_r_D2'
+    expression = '- K_r_D2 * D_concentration ^ 2 + ${K_d_D2} * D2_pressure_upstream'
+    outputs = 'exodus'
+  []
+  [flux_on_right_HD]
+    type = ADParsedMaterial
+    coupled_variables = 'D_concentration H_concentration HD_pressure_upstream'
+    property_name = 'flux_on_right_HD'
+    material_property_names = 'K_r_HD'
+    expression = '- K_r_HD * D_concentration * H_concentration + ${K_d_HD} * HD_pressure_upstream'
+    outputs = 'exodus'
+  []
+  [flux_on_right_H2]
+    type = ADParsedMaterial
+    coupled_variables = 'H_concentration H2_pressure_upstream'
+    property_name = 'flux_on_right_H2'
+    material_property_names = 'K_r_H2'
+    expression = '- K_r_H2 * H_concentration ^ 2 + ${K_d_H2} * H2_pressure_upstream'
     outputs = 'exodus'
   []
 []
@@ -777,6 +905,24 @@ simulation_time = '${units 1000 s}'
     type = ADSideAverageMaterialProperty
     boundary = left
     property = flux_on_left_HD
+    outputs = 'console csv exodus'
+  []
+  [flux_on_right_H2]
+    type = ADSideAverageMaterialProperty
+    boundary = right
+    property = flux_on_right_H2
+    outputs = 'console csv exodus'
+  []
+  [flux_on_right_D2]
+    type = ADSideAverageMaterialProperty
+    boundary = right
+    property = flux_on_right_D2
+    outputs = 'console csv exodus'
+  []
+  [flux_on_right_HD]
+    type = ADSideAverageMaterialProperty
+    boundary = right
+    property = flux_on_right_HD
     outputs = 'console csv exodus'
   []
 []

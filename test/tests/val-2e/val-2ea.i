@@ -22,7 +22,7 @@ flow_rate_by_V = '${fparse flow_rate / volume_enclosure}'
 diffusivity_pre_D = '${units 2.636e-4 m^2/s -> mum^2/s}'
 diffusivity_energy_D = '${units ${fparse 1315.8 * R} J/mol}'
 solubility_exponent = 0.9297 # -
-solubility_pre = '${units ${fparse 9.355e22 / 1e18} at/mum^3/Pa^0.9297}'
+solubility_pre = '${units ${fparse 1.511e23 / 1e18} at/mum^3/Pa^0.9297}'
 solubility_energy = '${units ${fparse 5918 * R} J/mol}'
 
 # Modeling data used in current case
@@ -107,14 +107,14 @@ simulation_time = '${units 1900 s}'
     variable = D2_pressure_upstream
     extra_vector_tags = 'ref'
   []
-  [MatReaction_upstream_influx_1]
+  [MatReaction_upstream_influx_5]
     type = ADMatReaction
     variable = D2_pressure_upstream
     v = 'D2_pressure_enclosure5'
     reaction_rate = ${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
-  [MatReaction_upstream_influx_5]
+  [MatReaction_upstream_influx_1]
     type = ADMatReaction
     variable = D2_pressure_upstream
     v = 'D2_pressure_enclosure1'
@@ -129,10 +129,9 @@ simulation_time = '${units 1900 s}'
     extra_vector_tags = 'ref'
   []
   [MatReaction_upstream_outflux_membrane]
-    type = ADMatReaction
+    type = ADMatBodyForce
     variable = D2_pressure_upstream
-    v = ''
-    reaction_rate = 'membrane_reaction_rate_right'
+    material_property = 'membrane_reaction_rate_right'
     extra_vector_tags = 'ref'
   []
   # Equation for enclosure downstream
@@ -149,10 +148,9 @@ simulation_time = '${units 1900 s}'
     extra_vector_tags = 'ref'
   []
   [MatReaction_downstream_influx_membrane]
-    type = ADMatReaction
+    type = ADMatBodyForce
     variable = D2_pressure_downstream
-    v = ''
-    reaction_rate = 'membrane_reaction_rate_left'
+    material_property = 'membrane_reaction_rate_left'
     extra_vector_tags = 'ref'
   []
   [MatReaction_downstream_outflux_4]
@@ -162,6 +160,7 @@ simulation_time = '${units 1900 s}'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
+
   # Diffusion kernels
   [timeDerivative_diffusion]
     type = ADTimeDerivative
@@ -186,13 +185,15 @@ simulation_time = '${units 1900 s}'
     type = ADParsedMaterial
     property_name = 'membrane_reaction_rate_right'
     postprocessor_names = flux_surface_right
-    expression = 'flux_surface_right * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
+    expression = 'flux_surface_right * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor} / 2'
+    outputs = 'exodus'
   []
   [membrane_reaction_rate_left]
     type = ADParsedMaterial
     property_name = 'membrane_reaction_rate_left'
     postprocessor_names = flux_surface_left
-    expression = 'flux_surface_left * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
+    expression = 'flux_surface_left * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor} / 2'
+    outputs = 'exodus'
   []
   [converter_to_regular]
     type = MaterialADConverter

@@ -224,14 +224,14 @@ simulation_time = '${units 1000 s}'
     variable = D2_pressure_upstream
     extra_vector_tags = 'ref'
   []
-  [MatReaction_upstream_D2_influx_1]
+  [MatReaction_upstream_D2_influx_5]
     type = ADMatReaction
     variable = D2_pressure_upstream
     v = 'D2_pressure_enclosure5'
     reaction_rate = ${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
-  [MatReaction_upstream_D2_influx_5]
+  [MatReaction_upstream_D2_influx_1]
     type = ADMatReaction
     variable = D2_pressure_upstream
     v = 'D2_pressure_enclosure1'
@@ -265,14 +265,14 @@ simulation_time = '${units 1000 s}'
     variable = H2_pressure_upstream
     extra_vector_tags = 'ref'
   []
-  [MatReaction_upstream_H2_influx_1]
+  [MatReaction_upstream_H2_influx_5]
     type = ADMatReaction
     variable = H2_pressure_upstream
     v = 'H2_pressure_enclosure5'
     reaction_rate = ${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
-  [MatReaction_upstream_H2_influx_5]
+  [MatReaction_upstream_H2_influx_1]
     type = ADMatReaction
     variable = H2_pressure_upstream
     v = 'H2_pressure_enclosure1'
@@ -306,14 +306,14 @@ simulation_time = '${units 1000 s}'
     variable = HD_pressure_upstream
     extra_vector_tags = 'ref'
   []
-  [MatReaction_upstream_HD_influx_1]
+  [MatReaction_upstream_HD_influx_5]
     type = ADMatReaction
     variable = HD_pressure_upstream
     v = 'HD_pressure_enclosure5'
     reaction_rate = ${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
-  [MatReaction_upstream_HD_influx_5]
+  [MatReaction_upstream_HD_influx_1]
     type = ADMatReaction
     variable = HD_pressure_upstream
     v = 'HD_pressure_enclosure1'
@@ -343,17 +343,15 @@ simulation_time = '${units 1000 s}'
   []
   # Membrane upstream
   [MatReaction_upstream_outflux_membrane_D]
-    type = ADMatReaction
+    type = ADMatBodyForce
     variable = D2_pressure_upstream
-    v = ''
-    reaction_rate = 'membrane_reaction_rate_right_D'
+    material_property = 'membrane_reaction_rate_right_D'
     extra_vector_tags = 'ref'
   []
   [MatReaction_upstream_outflux_membrane_H]
-    type = ADMatReaction
+    type = ADMatBodyForce
     variable = H2_pressure_upstream
-    v = ''
-    reaction_rate = 'membrane_reaction_rate_right_H'
+    material_property = 'membrane_reaction_rate_right_H'
     extra_vector_tags = 'ref'
   []
 
@@ -461,17 +459,15 @@ simulation_time = '${units 1000 s}'
   []
   # Membrane downstream
   [MatReaction_downstream_influx_membrane_D]
-    type = ADMatReaction
+    type = ADMatBodyForce
     variable = D2_pressure_downstream
-    v = ''
-    reaction_rate = 'membrane_reaction_rate_left_D'
+    material_property = 'membrane_reaction_rate_left_D'
     extra_vector_tags = 'ref'
   []
   [MatReaction_downstream_influx_membrane_H]
-    type = ADMatReaction
+    type = ADMatBodyForce
     variable = H2_pressure_downstream
-    v = ''
-    reaction_rate = 'membrane_reaction_rate_left_H'
+    material_property = 'membrane_reaction_rate_left_H'
     extra_vector_tags = 'ref'
   []
 
@@ -515,26 +511,27 @@ simulation_time = '${units 1000 s}'
     type = ADParsedMaterial
     property_name = 'membrane_reaction_rate_right_D'
     postprocessor_names = flux_surface_right_D
-    expression = 'flux_surface_right_D * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
+    expression = 'flux_surface_right_D * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}/2'
   []
   [membrane_reaction_rate_left_D]
     type = ADParsedMaterial
     property_name = 'membrane_reaction_rate_left_D'
     postprocessor_names = flux_surface_left_D
-    expression = 'flux_surface_left_D * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
+    expression = 'flux_surface_left_D * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}/2'
   []
   [membrane_reaction_rate_right_H]
     type = ADParsedMaterial
     property_name = 'membrane_reaction_rate_right_H'
     postprocessor_names = flux_surface_right_H
-    expression = 'flux_surface_right_H * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
+    expression = 'flux_surface_right_H * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}/2'
   []
   [membrane_reaction_rate_left_H]
     type = ADParsedMaterial
     property_name = 'membrane_reaction_rate_left_H'
     postprocessor_names = flux_surface_left_H
-    expression = 'flux_surface_left_H * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
+    expression = 'flux_surface_left_H * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}/2'
   []
+
   [converter_to_regular]
     type = MaterialADConverter
     ad_props_in = 'diffusivity_D diffusivity_H'

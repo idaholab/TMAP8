@@ -56,6 +56,9 @@ kb = 1.380649e-23  # J/K Boltzmann constant
 R = 8.31446261815324 # J/mol/K Gas constant
 Na = 6.023e23 # atom/mol Avogadro's number
 
+Q = 0.1 # m^3/s flow rate
+T = [825, 825, 865]
+Area = 1.8e-4 # m^2 area
 ################################################################################
 ################################# Val-2e a/b/c #################################
 ################################################################################
@@ -63,7 +66,7 @@ Na = 6.023e23 # atom/mol Avogadro's number
 time_history = np.array([150,250,350,450,550,650,750,850,950,1050,1150,1250,1350,1900])
 pressure_history = np.array([1.20e-4,2.41e-4,6.06e-4,1.30e-3,2.53e-3,7.08e-3,1.45e-2,2.63e-2,6.51e-2,0.116,0.297,0.760,1.550,3.370])
 simulation_file_names = ["val-2ea_out.csv", "val-2eb_out.csv", "val-2ec_out.csv"]
-parameter_names = ['time','flux_surface_right','pressure_upstream'] # s, atoms/microns^2/s, atoms/microns^2/s
+parameter_names = ['time','flux_surface_right','pressure_upstream','pressure_downstream'] # s, atoms/microns^2/s, atoms/microns^2/s
 simulation_results_list = []
 for i in range(len(simulation_file_names)):
     file_name = simulation_file_names[i]
@@ -72,23 +75,33 @@ for i in range(len(simulation_file_names)):
     simulation_results_list.append(simulation_results)
 
 # find the pressure and flux
-pressure_array = []
+pressure_up_array = []
+pressure_down_array = []
 flux_array = []
+flux_calculated_array = []
 time_array = []
 for index in range(len(simulation_results_list)):
-    tmp_pressure_array = []
+    tmp_pressure_up_array = []
+    tmp_pressure_down_array = []
     tmp_flux_array = []
+    tmp_flux_calculated_array = []
     tmp_time_array = []
     time_history_copy = np.copy(time_history)
     for i in range(len(simulation_results_list[index][parameter_names.index('time')])):
         if len(time_history_copy) == 0: break
         if (time_history_copy[0] - simulation_results_list[index][parameter_names.index('time')][i]) < 5:
-            tmp_pressure_array.append(simulation_results_list[index][parameter_names.index('pressure_upstream')][i])
+            tmp_pressure_up_array.append(simulation_results_list[index][parameter_names.index('pressure_upstream')][i])
+            tmp_pressure_down_array.append(simulation_results_list[index][parameter_names.index('pressure_downstream')][i])
             tmp_flux_array.append(simulation_results_list[index][parameter_names.index('flux_surface_right')][i])
             tmp_time_array.append(simulation_results_list[index][parameter_names.index('time')])
+
+            tmp_flux_calculated = (simulation_results_list[index][parameter_names.index('pressure_downstream')][i] - 1e-6) * Q / R / T[index] / Area
+            tmp_flux_calculated_array.append(tmp_flux_calculated)
             time_history_copy = time_history_copy[1:]
-    pressure_array.append(tmp_pressure_array)
+    pressure_up_array.append(tmp_pressure_up_array)
+    pressure_down_array.append(tmp_pressure_down_array)
     flux_array.append(tmp_flux_array)
+    flux_calculated_array.append(tmp_flux_calculated_array)
     time_array.append(tmp_time_array)
     if len(tmp_time_array) < len(time_history):
         print(f"Some data missing: \n{time_array} \nand \n{time_history}")
@@ -141,7 +154,7 @@ ax = fig.add_subplot(gs[0])
 
 label_name = ["0.05mm, 825K", "0.025mm, 825K", "0.025mm, 865K"]
 for index in range(len(simulation_results_list)):
-    ax.plot(pressure_array[index], flux_array[index], label=f'{label_name[index]} (TMAP8)', c=f'C{index}')
+    ax.plot(pressure_up_array[index], flux_calculated_array[index], label=f'{label_name[index]} (TMAP8)', c=f'C{index}')
     ax.plot(experiment_results_list[index][experiment_parameter_names.index('Pressure [Pa]')],
             experiment_results_list[index][experiment_parameter_names.index('Flux [mol/m^2/s]')],
             label=f'{label_name[index]} (experiment)', c=f'C{index}', linestyle='--')
@@ -153,9 +166,15 @@ ax.set_xlim([1e-4,1e1])
 ax.set_xscale('log')
 ax.set_yscale('log')
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
-# RMSE = np.sqrt(np.mean((tmap8_release_fraction_right-analytical_release_fraction_TMAP4)[idx:]**2) )
-# RMSPE = RMSE*100/np.mean(analytical_release_fraction_TMAP4[idx:])
-# ax.text(60,0.6, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
+text_loc = [[1e-1,5e-6], [1e-1,3.1e-6], [1e-1,2e-6]]
+for index in range(len(simulation_results_list)):
+    experiment_input = experiment_results_list[index][experiment_parameter_names.index('Pressure [Pa]')]
+    experiment_output = experiment_results_list[index][experiment_parameter_names.index('Flux [mol/m^2/s]')]
+    tmap_flux_for_rmspe = numerical_solution_on_experiment_input(experiment_input,
+                                                                pressure_up_array[index],
+                                                                flux_calculated_array[index])
+    RMSPE = np.sqrt(np.mean(((tmap_flux_for_rmspe-experiment_output)/experiment_output)**2) )*100
+    ax.text(text_loc[index][0],text_loc[index][1], 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',color=f'C{index}')
 ax.minorticks_on()
 plt.savefig('val-2e_comparison_diffusion.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
@@ -190,6 +209,9 @@ for i in range(len(simulation_file_names)):
 pressure_array_H2 = []
 pressure_array_D2 = []
 pressure_array_HD = []
+pressure_down_array_H2 = []
+pressure_down_array_D2 = []
+pressure_down_array_HD = []
 flux_array_H2 = []
 flux_array_D2 = []
 flux_array_HD = []
@@ -199,6 +221,9 @@ for index in range(len(simulation_results_list)):
     tmp_pressure_array_H2 = []
     tmp_pressure_array_D2 = []
     tmp_pressure_array_HD = []
+    tmp_pressure_down_array_H2 = []
+    tmp_pressure_down_array_D2 = []
+    tmp_pressure_down_array_HD = []
     tmp_flux_array_H2 = []
     tmp_flux_array_D2 = []
     tmp_flux_array_HD = []
@@ -212,17 +237,13 @@ for index in range(len(simulation_results_list)):
             tmp_pressure_array_H2.append(simulation_results_list[index][parameter_names.index('pressure_upstream_H2')][i])
             tmp_pressure_array_D2.append(simulation_results_list[index][parameter_names.index('pressure_upstream_D2')][i])
             tmp_pressure_array_HD.append(simulation_results_list[index][parameter_names.index('pressure_upstream_HD')][i])
+            tmp_pressure_down_array_H2.append(simulation_results_list[index][parameter_names.index('pressure_downstream_H2')][i])
+            tmp_pressure_down_array_D2.append(simulation_results_list[index][parameter_names.index('pressure_downstream_D2')][i])
+            tmp_pressure_down_array_HD.append(simulation_results_list[index][parameter_names.index('pressure_downstream_HD')][i])
             # Get flux (calculate using J(HD)^2 = 4J(H2)*J(D2))
-            tmp_flux_H2 = diffusivity_H * (simulation_results_list[index][parameter_names.index('pressure_upstream_H2')][i] -
-                                        simulation_results_list[index][parameter_names.index('pressure_downstream_H2')][i]) / length / R / T
-            tmp_flux_D2 = diffusivity_D * (simulation_results_list[index][parameter_names.index('pressure_upstream_D2')][i] -
-                                        simulation_results_list[index][parameter_names.index('pressure_downstream_D2')][i]) / length / R / T
-            tmp_flux_HD = simulation_results_list[index][parameter_names.index('flux_surface_right_D')][i] - 2 * tmp_flux_D2
-            # tmp_flux_H2 = diffusivity_H * solubility * (simulation_results_list[index][parameter_names.index('pressure_upstream_H2')][i] ** solubility_exponent -
-            #                                             simulation_results_list[index][parameter_names.index('pressure_downstream_H2')][i] ** solubility_exponent) / length / 2 / Na
-            # tmp_flux_D2 = diffusivity_D * solubility * (simulation_results_list[index][parameter_names.index('pressure_upstream_D2')][i] ** solubility_exponent -
-            #                                             simulation_results_list[index][parameter_names.index('pressure_downstream_D2')][i] ** solubility_exponent) / length / 2 / Na
-            # tmp_flux_HD = simulation_results_list[index][parameter_names.index('flux_surface_right_D')][i] - 2 * tmp_flux_D2
+            tmp_flux_H2 = (simulation_results_list[index][parameter_names.index('pressure_downstream_H2')][i] - 1e-7) * Q / R / T / Area
+            tmp_flux_D2 = (simulation_results_list[index][parameter_names.index('pressure_downstream_D2')][i] - 1e-7) * Q / R / T / Area
+            tmp_flux_HD = (simulation_results_list[index][parameter_names.index('pressure_downstream_HD')][i] - 1e-7) * Q / R / T / Area
             # tmp_flux_H2 = 0.5 * simulation_results_list[index][parameter_names.index('flux_surface_right_H')][i] ** 2 / \
             #     (simulation_results_list[index][parameter_names.index('flux_surface_right_D')][i] + simulation_results_list[index][parameter_names.index('flux_surface_right_H')][i])
             # tmp_flux_D2 = 0.5 * simulation_results_list[index][parameter_names.index('flux_surface_right_D')][i] ** 2 / \
@@ -239,6 +260,9 @@ for index in range(len(simulation_results_list)):
     pressure_array_H2.append(tmp_pressure_array_H2)
     pressure_array_D2.append(tmp_pressure_array_D2)
     pressure_array_HD.append(tmp_pressure_array_HD)
+    pressure_down_array_H2.append(tmp_pressure_down_array_H2)
+    pressure_down_array_D2.append(tmp_pressure_down_array_D2)
+    pressure_down_array_HD.append(tmp_pressure_down_array_HD)
     flux_array_H2.append(tmp_flux_array_H2)
     flux_array_D2.append(tmp_flux_array_D2)
     flux_array_HD.append(tmp_flux_array_HD)
@@ -319,21 +343,28 @@ ax.plot(experiment_results_list[3][experiment_parameter_names.index('Pressure [P
         experiment_results_list[3][experiment_parameter_names.index('Flux [mol/m^2/s]')],
         label=f'{label_name[3]} (experiment)', c=f'C{3}', linestyle='--')
 
-# for i in range(len(label_name)):
-#     ax.plot(experiment_results_list[i][experiment_parameter_names.index('Pressure [Pa]')],
-#             experiment_results_list[i][experiment_parameter_names.index('Flux [mol/m^2/s]')],
-#             label=f'{label_name[i]} (experiment)', c=f'C{i}', linestyle='--')
 ax.set_xlabel(u'Effective deuterium pressure (Pa)')
 ax.set_ylabel(r"Partial release rates (mol/m$^2$/s)")
 ax.legend(loc="best")
 ax.set_xlim([1e-3, 1e0])
-# ax.set_ylim([])
+ax.set_ylim([2e-8,4e-4])
 ax.set_xscale('log')
 ax.set_yscale('log')
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
-# RMSE = np.sqrt(np.mean((tmap8_release_fraction_right-analytical_release_fraction_TMAP4)[idx:]**2) )
-# RMSPE = RMSE*100/np.mean(analytical_release_fraction_TMAP4[idx:])
-# ax.text(60,0.6, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
+# error
+simulation_output_list = [flux_array_H2[0], flux_array_D2[0], flux_array_HD[0], flux_array_sum[0]]
+text_loc = [[1.05e-2,2e-7], [1.05e-2,1.5e-7], [1.05e-2,1.1e-7], [1.05e-2,0.8e-7]]
+for index in range(len(simulation_output_list)):
+    simulation_input = pressure_array_D2[0] + pressure_array_HD[0] / 2
+    simulation_output = simulation_output_list[index]
+    experiment_input = experiment_results_list[index][experiment_parameter_names.index('Pressure [Pa]')][:-1]
+    experiment_output = experiment_results_list[index][experiment_parameter_names.index('Flux [mol/m^2/s]')][:-1]
+    tmap_flux_for_rmspe = numerical_solution_on_experiment_input(experiment_input,
+                                                                simulation_input,
+                                                                simulation_output)
+    RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe-experiment_output)**2) )
+    RMSPE = RMSE*100/np.mean(experiment_output)
+    ax.text(text_loc[index][0],text_loc[index][1], 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',color=f'C{index}')
 ax.minorticks_on()
 plt.savefig('val-2e_comparison_mixture_diffusion.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
@@ -357,6 +388,9 @@ for i in range(len(simulation_file_names)):
 pressure_array_H2 = []
 pressure_array_D2 = []
 pressure_array_HD = []
+pressure_down_array_H2 = []
+pressure_down_array_D2 = []
+pressure_down_array_HD = []
 flux_array_H2 = []
 flux_array_D2 = []
 flux_array_HD = []
@@ -366,6 +400,9 @@ for index in range(len(simulation_results_list)):
     tmp_pressure_array_H2 = []
     tmp_pressure_array_D2 = []
     tmp_pressure_array_HD = []
+    tmp_pressure_down_array_H2 = []
+    tmp_pressure_down_array_D2 = []
+    tmp_pressure_down_array_HD = []
     tmp_flux_array_H2 = []
     tmp_flux_array_D2 = []
     tmp_flux_array_HD = []
@@ -379,10 +416,16 @@ for index in range(len(simulation_results_list)):
             tmp_pressure_array_H2.append(simulation_results_list[index][parameter_names.index('pressure_upstream_H2')][i])
             tmp_pressure_array_D2.append(simulation_results_list[index][parameter_names.index('pressure_upstream_D2')][i])
             tmp_pressure_array_HD.append(simulation_results_list[index][parameter_names.index('pressure_upstream_HD')][i])
+            tmp_pressure_down_array_H2.append(simulation_results_list[index][parameter_names.index('pressure_downstream_H2')][i])
+            tmp_pressure_down_array_D2.append(simulation_results_list[index][parameter_names.index('pressure_downstream_D2')][i])
+            tmp_pressure_down_array_HD.append(simulation_results_list[index][parameter_names.index('pressure_downstream_HD')][i])
             # Get flux (calculate using J(HD)^2 = 4J(H2)*J(D2))
-            tmp_flux_H2 = simulation_results_list[index][parameter_names.index('flux_on_left_H2')][i]
-            tmp_flux_D2 = simulation_results_list[index][parameter_names.index('flux_on_left_D2')][i]
-            tmp_flux_HD = simulation_results_list[index][parameter_names.index('flux_on_left_HD')][i]
+            tmp_flux_H2 = (tmp_pressure_down_array_H2[-1] - 1e-7) * Q / R / T / Area
+            tmp_flux_D2 = (tmp_pressure_down_array_D2[-1] - 1e-7) * Q / R / T / Area
+            tmp_flux_HD = (tmp_pressure_down_array_HD[-1] - 1e-7) * Q / R / T / Area
+            # tmp_flux_H2 = simulation_results_list[index][parameter_names.index('flux_on_left_H2')][i]
+            # tmp_flux_D2 = simulation_results_list[index][parameter_names.index('flux_on_left_D2')][i]
+            # tmp_flux_HD = simulation_results_list[index][parameter_names.index('flux_on_left_HD')][i]
             tmp_flux_sum_refer = 0.5 * (simulation_results_list[index][parameter_names.index('flux_surface_right_D')][i] + simulation_results_list[index][parameter_names.index('flux_surface_right_H')][i]) # test total
             tmp_flux_array_H2.append(tmp_flux_H2)
             tmp_flux_array_D2.append(tmp_flux_D2)
@@ -393,6 +436,9 @@ for index in range(len(simulation_results_list)):
     pressure_array_H2.append(tmp_pressure_array_H2)
     pressure_array_D2.append(tmp_pressure_array_D2)
     pressure_array_HD.append(tmp_pressure_array_HD)
+    pressure_down_array_H2.append(tmp_pressure_down_array_H2)
+    pressure_down_array_D2.append(tmp_pressure_down_array_D2)
+    pressure_down_array_HD.append(tmp_pressure_down_array_HD)
     flux_array_H2.append(tmp_flux_array_H2)
     flux_array_D2.append(tmp_flux_array_D2)
     flux_array_HD.append(tmp_flux_array_HD)
@@ -448,13 +494,24 @@ ax.set_xlabel(u'Effective deuterium pressure (Pa)')
 ax.set_ylabel(r"Partial release rates (mol/m$^2$/s)")
 ax.legend(loc="best")
 ax.set_xlim([1e-3, 1e0])
-# ax.set_ylim([])
+ax.set_ylim([2e-8,4e-4])
 ax.set_xscale('log')
 ax.set_yscale('log')
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
-# RMSE = np.sqrt(np.mean((tmap8_release_fraction_right-analytical_release_fraction_TMAP4)[idx:]**2) )
-# RMSPE = RMSE*100/np.mean(analytical_release_fraction_TMAP4[idx:])
-# ax.text(60,0.6, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
+# error
+simulation_output_list = [flux_array_H2[0], flux_array_D2[0], flux_array_HD[0], flux_array_sum[0]]
+text_loc = [[1.05e-2,2e-7], [1.05e-2,1.5e-7], [1.05e-2,1.1e-7], [1.05e-2,0.8e-7]]
+for index in range(len(simulation_output_list)):
+    simulation_input = pressure_array_D2[0] + pressure_array_HD[0] / 2
+    simulation_output = simulation_output_list[index]
+    experiment_input = experiment_results_list[index][experiment_parameter_names.index('Pressure [Pa]')][:-1]
+    experiment_output = experiment_results_list[index][experiment_parameter_names.index('Flux [mol/m^2/s]')][:-1]
+    tmap_flux_for_rmspe = numerical_solution_on_experiment_input(experiment_input,
+                                                                simulation_input,
+                                                                simulation_output)
+    RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe-experiment_output)**2) )
+    RMSPE = RMSE*100/np.mean(experiment_output)
+    ax.text(text_loc[index][0],text_loc[index][1], 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',color=f'C{index}')
 ax.minorticks_on()
 plt.savefig('val-2e_comparison_mixture_diffusion_recombination.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
