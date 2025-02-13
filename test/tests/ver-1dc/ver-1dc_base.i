@@ -5,21 +5,14 @@
 # within one file to minimize redundancy and ease maintenance.
 # It is not meant to be run on its own.
 
-# cl = 3.1622e18 # atom/m^3
-# N = 3.1622e22 # atom/m^3
 epsilon_1 = ${units 100 K}
 epsilon_2 = ${units 500 K}
 epsilon_3 = ${units 800 K}
 temperature = ${units 1000 K}
-# nx_num = 1000 # (-)
 trapping_site_fraction_1 = 0.10 # (-)
 trapping_site_fraction_2 = 0.15 # (-)
 trapping_site_fraction_3 = 0.20 # (-)
-# trapping_rate_coefficient = 1e15 # 1/s
-# release_rate_coefficient = 1e13 # 1/s
 diffusivity = 1 # m^2/s
-# simulation_time = 60 # s
-# time_interval_max = 0.3 # s
 
 [Mesh]
   type = GeneratedMesh
