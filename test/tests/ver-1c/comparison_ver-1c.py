@@ -10,7 +10,7 @@ import os
 script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
 
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder4 = "../../../../test/tests/ver-1c/gold/ver-1c_tmap4.csv"
     csv_folder7 = "../../../../test/tests/ver-1c/gold/ver-1c_tmap7.csv"
 else:                                  # if in test folder

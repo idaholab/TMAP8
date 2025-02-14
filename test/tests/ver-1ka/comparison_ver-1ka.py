@@ -15,7 +15,7 @@ kb = 1.380649e-23 # Boltzmann constant (J/K)
 T = 500 # Temperature (K)
 
 # Extract time and pressure data
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1ka/gold/ver-1ka_out.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/ver-1ka_out.csv"

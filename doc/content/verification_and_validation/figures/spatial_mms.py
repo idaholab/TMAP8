@@ -1,0 +1,1 @@
+../../../../test/tests/ver-1dc/spatial_mms.py

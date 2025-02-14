@@ -16,7 +16,7 @@ ax = fig.add_subplot(gs[0])
 # ==============================================================================
 
 #TMAP4 case
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1g/gold/diff_conc_TMAP4_out.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/diff_conc_TMAP4_out.csv"
@@ -26,7 +26,7 @@ tmap_concAB_TMAP4 = tmap_sol['conc_ab']
 ax.plot(tmap_time, tmap_concAB_TMAP4, linewidth = 2, label=r"TMAP8 (TMAP4 case)", c='tab:brown')
 
 #TMAP7 case
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1g/gold/diff_conc_TMAP7_out.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/diff_conc_TMAP7_out.csv"
@@ -94,7 +94,7 @@ fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1g/gold/equal_conc_out.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/equal_conc_out.csv"
