@@ -6,35 +6,35 @@ TMAP8 also contains [example cases](examples/tmap_index.md), which showcase how 
 
 # List of verification cases
 
-| Case    | Title                                                                                             |
-| ------- | ------------------------------------------------------------------------------------------------- |
-| ver-1a  | [Depleting Source Problem](ver-1a.md)                                                             |
-| ver-1b  | [Diffusion Problem with Constant Source Boundary Condition](ver-1b.md)                            |
-| ver-1c  | [Diffusion Problem with Partially Preloaded Slab](ver-1c.md)                                      |
-| ver-1d  | [Permeation Problem with Trapping](ver-1d.md)                                                     |
-| ver-1dc | [Permeation Problem with Multiple Trapping](ver-1dc.md)                                           |
-| ver-1dd | [Permeation Problem without Trapping](ver-1dd.md)                                                 |
-| ver-1e  | [Diffusion in Composite Material Layers](ver-1e.md)                                               |
-| ver-1fa | [Heat Conduction with Heat Generation](ver-1fa.md)                                                |
-| ver-1fb | [Thermal Transient](ver-1fb.md)                                                                   |
-| ver-1fc | [Conduction in Composite Structure with Constant Surface Temperatures](ver-1fc.md)                |
-| ver-1fd | [Convective Heating](ver-1fd.md)                                                                  |
-| ver-1g  | [Simple Forward Chemical Reaction](ver-1g.md)                                                     |
-| ver-1gc | [Series Chemical Reactions](ver-1gc.md)                                                           |
-| ver-1ha | [Convective Gas Outflow Problem in Three Enclosures](ver-1ha.md)                                  |
-| ver-1hb | [Convective Gas Outflow Problem in Equilibrating Enclosures](ver-1hb.md)                          |
-| ver-1ia | [Species Equilibration Problem in Ratedep Condition with Equal Starting Pressures](ver-1ia.md)    |
-| ver-1ib | [Species Equilibration Problem in Ratedep Condition with Unequal Starting Pressures](ver-1ib.md)  |
-| ver-1ic | [Species Equilibration Problem in Surfdep Conditions with Low Barrier Energy](ver-1ic.md)         |
-| ver-1id | [Species Equilibration Problem in Surfdep Conditions with High Barrier Energy](ver-1id.md)        |
-| ver-1ie | [Species Equilibration Problem in Lawdep Condition with Equal Starting Pressures](ver-1ie.md)     |
-| ver-1if | [Species Equilibration Problem in Lawdep Condition with Unequal Starting Pressures](ver-1if.md)   |
-| ver-1ja | [Radioactive Decay of Mobile Tritium in a Slab](ver-1ja.md)                                       |
-| ver-1jb | [Radioactive Decay of Mobile Tritium in a Slab with a Distributed Trap Concentration](ver-1jb.md) |
-| ver-1ka | [Simple Volumetric Source](ver-1ka.md)                                                            |
-| ver-1kb | [Henry’s Law Boundaries with No Volumetric Source](ver-1kb.md)                                    |
-| ver-1kc-1 | [Sieverts’ Law Boundaries with No Volumetric Source](ver-1kc-1.md)                              |
-| ver-1kc-2 | [Sieverts’ Law Boundaries with Chemical Reaction and No Volumetric Source](ver-1kc-2.md)        |
+| Case      | Title                                                                                               |
+| --------- | --------------------------------------------------------------------------------------------------- |
+| ver-1a    | [Depleting Source Problem](ver-1a.md)                                                               |
+| ver-1b    | [Diffusion Problem with Constant Source Boundary Condition](ver-1b.md)                              |
+| ver-1c    | [Diffusion Problem with Partially Preloaded Slab](ver-1c.md)                                        |
+| ver-1d    | [Permeation Problem with Trapping](ver-1d.md)                                                       |
+| ver-1dc   | [Permeation Problem with Multiple Trapping - including the method of manufactured solutions](ver-1dc.md) |
+| ver-1dd   | [Permeation Problem without Trapping](ver-1dd.md)                                                   |
+| ver-1e    | [Diffusion in Composite Material Layers](ver-1e.md)                                                 |
+| ver-1fa   | [Heat Conduction with Heat Generation](ver-1fa.md)                                                  |
+| ver-1fb   | [Thermal Transient](ver-1fb.md)                                                                     |
+| ver-1fc   | [Conduction in Composite Structure with Constant Surface Temperatures](ver-1fc.md)                  |
+| ver-1fd   | [Convective Heating](ver-1fd.md)                                                                    |
+| ver-1g    | [Simple Forward Chemical Reaction](ver-1g.md)                                                       |
+| ver-1gc   | [Series Chemical Reactions](ver-1gc.md)                                                             |
+| ver-1ha   | [Convective Gas Outflow Problem in Three Enclosures](ver-1ha.md)                                    |
+| ver-1hb   | [Convective Gas Outflow Problem in Equilibrating Enclosures](ver-1hb.md)                            |
+| ver-1ia   | [Species Equilibration Problem in Ratedep Condition with Equal Starting Pressures](ver-1ia.md)      |
+| ver-1ib   | [Species Equilibration Problem in Ratedep Condition with Unequal Starting Pressures](ver-1ib.md)    |
+| ver-1ic   | [Species Equilibration Problem in Surfdep Conditions with Low Barrier Energy](ver-1ic.md)           |
+| ver-1id   | [Species Equilibration Problem in Surfdep Conditions with High Barrier Energy](ver-1id.md)          |
+| ver-1ie   | [Species Equilibration Problem in Lawdep Condition with Equal Starting Pressures](ver-1ie.md)       |
+| ver-1if   | [Species Equilibration Problem in Lawdep Condition with Unequal Starting Pressures](ver-1if.md)     |
+| ver-1ja   | [Radioactive Decay of Mobile Tritium in a Slab](ver-1ja.md)                                         |
+| ver-1jb   | [Radioactive Decay of Mobile Tritium in a Slab with a Distributed Trap Concentration](ver-1jb.md)   |
+| ver-1ka   | [Simple Volumetric Source](ver-1ka.md)                                                              |
+| ver-1kb   | [Henry’s Law Boundaries with No Volumetric Source](ver-1kb.md)                                      |
+| ver-1kc-1 | [Sieverts’ Law Boundaries with No Volumetric Source](ver-1kc-1.md)                                  |
+| ver-1kc-2 | [Sieverts’ Law Boundaries with Chemical Reaction and No Volumetric Source](ver-1kc-2.md)            |
 
 # List of benchmarking cases
 
@@ -45,9 +45,9 @@ TMAP8 also contains [example cases](examples/tmap_index.md), which showcase how 
 
 # List of validation cases
 
-| Case   | Title                                          |
-| ------ | ---------------------------------------------- |
-| val-2a | [Ion Implantation Experiment](val-2a.md)               |
-| val-2b | [Diffusion Experiment in Beryllium](val-2b.md) |
-| val-2c | [Test Cell Release Experiment](val-2c.md)      |
+| Case   | Title                                                    |
+| ------ | -------------------------------------------------------- |
+| val-2a | [Ion Implantation Experiment](val-2a.md)                 |
+| val-2b | [Diffusion Experiment in Beryllium](val-2b.md)           |
+| val-2c | [Test Cell Release Experiment](val-2c.md)                |
 | val-2d | [Thermal Desorption Spectroscopy on Tungsten](val-2d.md) |

@@ -29,7 +29,7 @@ def numerical_solution_on_experiment_input(experiment_input, tmap_input, tmap_ou
     return new_tmap_output
 
 # Read simulation data
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/val-2a/gold/val-2a_out.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/val-2a_out.csv"
@@ -39,7 +39,7 @@ simulation_recom_flux_left_TMAP4 = simulation_TMAP4_data['scaled_recombination_f
 simulation_recom_flux_right_TMAP4 = simulation_TMAP4_data['scaled_recombination_flux_right']
 
 # Read experiment data
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/val-2a/gold/experiment_data_paper.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/experiment_data_paper.csv"
