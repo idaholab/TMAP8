@@ -9,12 +9,15 @@
 #pragma once
 
 #include "ActionComponent.h"
-#include "PhysicsComponentBase.h"
+#include "ComponentPhysicsInterface.h"
+#include "ComponentMaterialPropertyInterface.h"
 
 /**
  * Enclosure component which can trap a species, e.g. Tritium
  */
-class Enclosure0D : public virtual ActionComponent, public PhysicsComponentBase
+class Enclosure0D : public virtual ActionComponent,
+                    public virtual ComponentPhysicsInterface,
+                    public virtual ComponentMaterialPropertyInterface
 {
 public:
   Enclosure0D(const InputParameters & params);
@@ -46,7 +49,7 @@ public:
   }
 
 protected:
-  virtual void initComponentPhysics() override;
+  virtual void addPhysics() override;
 
   /// Vector of the names of the species to track
   std::vector<NonlinearVariableName> _species;
