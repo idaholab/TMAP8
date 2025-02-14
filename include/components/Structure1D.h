@@ -9,12 +9,17 @@
 #pragma once
 
 #include "ActionComponent.h"
-#include "PhysicsComponentBase.h"
+#include "ComponentPhysicsInterface.h"
+#include "ComponentMaterialPropertyInterface.h"
+#include "ComponentBoundaryConditionInterface.h"
 
 /**
  * A 1D structure on which a species can diffuse
  */
-class Structure1D : public virtual ActionComponent, public PhysicsComponentBase
+class Structure1D : public virtual ActionComponent,
+                    public virtual ComponentPhysicsInterface,
+                    public virtual ComponentMaterialPropertyInterface,
+                    public virtual ComponentBoundaryConditionInterface
 {
 public:
   Structure1D(const InputParameters & params);
