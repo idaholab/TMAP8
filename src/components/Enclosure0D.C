@@ -16,7 +16,8 @@ InputParameters
 Enclosure0D::validParams()
 {
   auto params = ActionComponent::validParams();
-  params += PhysicsComponentBase::validParams();
+  params += ComponentPhysicsInterface::validParams();
+  params += ComponentMaterialPropertyInterface::validParams();
   params += TMAP::enclosureCommonParams();
   params.makeParamRequired<std::vector<PhysicsName>>("physics");
   return params;
@@ -24,7 +25,8 @@ Enclosure0D::validParams()
 
 Enclosure0D::Enclosure0D(const InputParameters & params)
   : ActionComponent(params),
-    PhysicsComponentBase(params),
+    ComponentPhysicsInterface(params),
+    ComponentMaterialPropertyInterface(params),
     _species(getParam<std::vector<NonlinearVariableName>>("species")),
     _scaling_factors(isParamValid("species_scaling_factors")
                          ? getParam<std::vector<Real>>("species_scaling_factors")
@@ -52,14 +54,15 @@ Enclosure0D::Enclosure0D(const InputParameters & params)
 }
 
 void
-Enclosure0D::initComponentPhysics()
+Enclosure0D::addPhysics()
 {
   // Check the type of the Physics. This component is not implemented for all types
   if (!physicsExists<PointTrappingPhysics>(_physics_names[0]))
-    paramError("physics",
-               "Physics '" + _physics_names[0] +
-                   "' not a 'PointTrappingPhysics'. This component has only been implemented for "
-                   "'PointTrappingPhysics'.");
+    paramError(
+        "physics",
+        "Physics '" + _physics_names[0] +
+            "' is not a 'PointTrappingPhysics'. This component has only been implemented for "
+            "'PointTrappingPhysics'.");
 
   if (_verbose)
     mooseInfoRepeated("Adding Physics '" + _physics[0]->name() + "'.");

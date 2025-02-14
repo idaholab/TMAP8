@@ -17,19 +17,26 @@ InputParameters
 Structure1D::validParams()
 {
   auto params = ActionComponent::validParams();
-  params += PhysicsComponentBase::validParams();
+  params += ComponentPhysicsInterface::validParams();
+  params += ComponentMaterialPropertyInterface::validParams();
+  params += ComponentBoundaryConditionInterface::validParams();
   params += TMAP::structureCommonParams();
   params.addRequiredParam<unsigned int>("nx", "The number of elements in the structure.");
   params.addRequiredParam<Real>("xmax", "The maximum x-value.");
   params.addRequiredParam<Real>("length_unit_scaling", "Scaling to apply on the mesh");
   params.addParamNamesToGroup("nx xmax length_unit_scaling", "Geometry");
+
   // TODO: add a spatial offset
+  // Note: this could potentially be done in a helper class for all 1D components
+  // so we also have rotation, scaling, mesh refinement, ...
   return params;
 }
 
 Structure1D::Structure1D(const InputParameters & params)
   : ActionComponent(params),
-    PhysicsComponentBase(params),
+    ComponentPhysicsInterface(params),
+    ComponentMaterialPropertyInterface(params),
+    ComponentBoundaryConditionInterface(params),
     _species(getParam<std::vector<NonlinearVariableName>>("species")),
     _ics(getParam<std::vector<Real>>("species_initial_concentrations")),
     _length_unit(getParam<Real>("length_unit_scaling"))
