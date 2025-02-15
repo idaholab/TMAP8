@@ -7,22 +7,20 @@
 
 [Physics]
   [HeatConduction]
-    [FiniteElement]
-      [h1]
-        temperature_name = 'temperature'
-        heat_source_functor = 'volumetric_heat'
+    [h1]
+      temperature_name = 'temperature'
+      heat_source_functor = 'volumetric_heat'
 
-        initial_temperature = 300
+      initial_temperature = 300
 
-        # Thermal properties
-        thermal_conductivity = 'thermal_conductivity'
+      # Thermal properties
+      thermal_conductivity = 'thermal_conductivity'
 
-        # Boundary conditions
-        fixed_temperature_boundaries = 'right'
-        boundary_temperatures = '300'
-        heat_flux_boundaries = 'left'
-        boundary_heat_fluxes = '0'
-      []
+      # Boundary conditions
+      fixed_temperature_boundaries = 'right'
+      boundary_temperatures = '300'
+      heat_flux_boundaries = 'left'
+      boundary_heat_fluxes = '0'
     []
   []
 []

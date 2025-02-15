@@ -23,24 +23,22 @@ specific_heat = '${fparse rho_Cp/density}' # J/kg/K
 
 [Physics]
   [HeatConduction]
-    [FiniteElement]
-      [h1]
-        temperature_name = 'temperature'
+    [h1]
+      temperature_name = 'temperature'
 
-        initial_temperature = ${initial_temperature}
+      initial_temperature = ${initial_temperature}
 
-        # Thermal properties
-        thermal_conductivity = 'thermal_conductivity'
+      # Thermal properties
+      thermal_conductivity = 'thermal_conductivity'
 
-        # Boundary conditions
-        insulated_boundaries = 'right'
-        fixed_convection_boundaries = 'left'
-        fixed_convection_T_fluid = ${enclosure_temperature}
-        fixed_convection_htc = ${conduction_coefficient}
+      # Boundary conditions
+      insulated_boundaries = 'right'
+      fixed_convection_boundaries = 'left'
+      fixed_convection_T_fluid = ${enclosure_temperature}
+      fixed_convection_htc = ${conduction_coefficient}
 
-        # Default hypre preconditioning fails
-        preconditioning = 'none'
-      []
+      # Default hypre preconditioning fails
+      preconditioning = 'none'
     []
   []
 []
