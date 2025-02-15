@@ -21,36 +21,24 @@ slab_thickness = '${units 3.30e-5 m -> mum}'
 concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} Pa*m^3 -> Pa*mum^3}'
 
 [Physics]
-  [balance/solubility/sink]
-    [ODE]
-      [0d_trapping]
-        species = 'v'
-        # should not be scaled
-        # Move to a matprop
-        # equilibrium_constants = ${solubility_constant}
+  [SpeciesSolubility]
+    [0d_solub]
+      species = 'v'
 
-        # These parameters can be passed for each component here in lieu of fetching them from the components
-        # initial_values = '${initial_pressure}'
-        # temperatures = ${temperature}
-
-        verbose = true
-      []
+      equilibrium_constants = 'K_sol'
+      verbose = true
     []
   []
   [Diffusion]
-    [ContinuousGalerkin]
-      [multi-D]
-        variable_name = 'u'
-        diffusivity_matprop = ${diffusivity_SiC}
+    [multi-D]
+      variable_name = 'u'
+      diffusivity_matprop = 'diff'
 
-        # Dont add the default preconditioning
-        preconditioning = 'none'
+      # Dont add the default preconditioning
+      preconditioning = 'none'
 
-        # To help coupling to trapping
-        compute_diffusive_fluxes_on = 'structure_left'
-
-
-      []
+      # To help coupling to trapping
+      compute_diffusive_fluxes_on = 'structure_left'
     []
   []
 []
@@ -61,11 +49,15 @@ concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} 
     species = 'u'
     physics = 'multi-D'
 
-    # Make it define the matprop based on the coefficient
+    # Material properties
+    property_names = 'diff'
+    property_values = '${diffusivity_SiC}'
 
+    # Boundary conditions
+    fixed_value_bc_variables = 'u'
+    fixed_value_bc_boundaries = 'structure_right'
+    fixed_value_bc_values = '0'
 
-            dirichlet_boundaries = 'structure_right'
-        boundary_values = '0'
     # Geometry
     nx = 150
     xmax = ${slab_thickness}
@@ -74,12 +66,16 @@ concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} 
 
   [enc]
     type = Enclosure0D
-    species = 'v t'
-    physics = '0d_trapping '
+    species = 'v'
+    physics = '0d_solub'
 
     # Conditions
-    temperature = ${temperature}
+    temperature = '${temperature}'
     species_initial_pressures = '${initial_pressure}'
+
+    # Material properties
+    property_names = 'K_sol'
+    property_values = '${solubility_constant}'
 
     # Geometry
     surface_area = '${surface_area}'
@@ -184,7 +180,6 @@ concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} 
   automatic_scaling = true
   l_max_its = 30
   nl_max_its = 5
-  # petsc_options = '-snes_converged_reason -ksp_monitor_true_residual'
   petsc_options_iname = '-pc_type -mat_mffd_err'
   petsc_options_value = 'lu       1e-5'
   line_search = 'bt'

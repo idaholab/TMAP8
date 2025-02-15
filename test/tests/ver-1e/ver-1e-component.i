@@ -18,17 +18,15 @@ D_ver = ${units 15.75 mum -> m}
 
 [Physics]
   [Diffusion]
-    [ContinuousGalerkin]
-      [diff]
-        variable_name = 'u'
-        diffusivity_matprop = diffusivity_value
+    [diff]
+      variable_name = 'u'
+      diffusivity_matprop = diffusivity_value
 
-        dirichlet_boundaries = 'structure_left structure_right'
-        boundary_values = '50.7079 0' # moles/m^3
+      dirichlet_boundaries = 'structure_left structure_right'
+      boundary_values = '50.7079 0' # moles/m^3
 
-        # Test differences are too large with default preconditioning
-        preconditioning = 'none'
-      []
+      # Test differences are too large with default preconditioning
+      preconditioning = 'none'
     []
   []
 []
