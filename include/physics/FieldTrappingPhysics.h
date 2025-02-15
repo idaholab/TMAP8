@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "SpeciesTrappingPhysicsBase.h"
+#include "SpeciesPhysicsBase.h"
 
 class ActionComponent;
 
@@ -17,7 +17,7 @@ class ActionComponent;
  * Creates all the objects needed to solve for the concentration of a scalar in traps distributed
  * over a mesh.
  */
-class FieldTrappingPhysics : public SpeciesTrappingPhysicsBase
+class FieldTrappingPhysics : public SpeciesPhysicsBase
 {
 public:
   static InputParameters validParams();
@@ -44,8 +44,9 @@ protected:
   std::vector<FunctionName> _Ct0s;
   /// Estimate for the ratio of the concentration magnitude of trapped species to free species for each component
   std::vector<Real> _trap_per_frees;
-  ///
+  /// Releasing rate for each component (outer indexing) and species (inner)
   std::vector<std::vector<Real>> _alpha_rs;
+  /// Trapping energies for each component (outer indexing) and species (inner)
   std::vector<std::vector<Real>> _trapping_energies;
 
   /// Whether to define a single variable for each species for all components, or a different one for each component
