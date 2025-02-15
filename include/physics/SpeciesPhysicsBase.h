@@ -1,11 +1,10 @@
-//* This file is part of the MOOSE framework
-//* https://www.mooseframework.org
-//*
-//* All rights reserved, see COPYRIGHT for full restrictions
-//* https://github.com/idaholab/moose/blob/master/COPYRIGHT
-//*
-//* Licensed under LGPL 2.1, please see LICENSE for details
-//* https://www.gnu.org/licenses/lgpl-2.1.html
+/********************************************************/
+/*             DO NOT MODIFY THIS HEADER                */
+/* TMAP8: Tritium Migration Analysis Program, Version 8 */
+/*                                                      */
+/*    Copyright 2021 Battelle Energy Alliance, LLC      */
+/*               ALL RIGHTS RESERVED                    */
+/********************************************************/
 
 #pragma once
 
@@ -39,8 +38,9 @@ protected:
    * @param param_name name of the parameter
    * @param physics_storage storage for those values on the Physics
    * @param component_value values on the component
-   * @param use_default whether to rely on a default value if the component does not provide
-   * @param default_value the default
+   * @param use_default whether to rely on a default value if the physics and the component do not
+   * have a parameter set
+   * @param default_value a default
    */
   template <typename T>
   void processComponentParameters(const std::string & param_name,
@@ -77,7 +77,7 @@ SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
   else if constexpr (std::is_same_v<T, MooseFunctorName>)
     component_value_valid = !component_values.empty();
   else
-    component_value_valid = true;
+    mooseError("Not implemented");
 
   // Parameter added by the Physics, just need to check consistency
   if (isParamSetByUser(param_name))
@@ -87,6 +87,8 @@ SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
                  "'" + param_name + "' in component '" + comp_name + "' :\n" +
                      Moose::stringify(component_values) + "\n differs from '" + param_name +
                      "' in " + type() + ":\n" + Moose::stringify(physics_storage[0]));
+    // Duplicate for simplicity
+    physics_storage.push_back(physics_storage[0]);
   }
   // Always add if it's been specified on a component instead
   else if (component_value_valid)
