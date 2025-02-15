@@ -14,7 +14,7 @@ Na = 6.02214076E23 # Avogadro's constant (from PhysicalConstants.h - https://phy
 []
 
 [Physics]
-  [ChemicalReactions]
+  [SpeciesDiffusionReaction]
     [all]
       block = '0'
       species = 'c_a c_b c_ab'
