@@ -12,6 +12,8 @@
 
 registerMooseAction("TMAP8App", Structure1D, "add_mesh_generator");
 registerMooseAction("TMAP8App", Structure1D, "init_component_physics");
+registerMooseAction("TMAP8App", Structure1D, "add_material");
+registerMooseAction("TMAP8App", Structure1D, "check_integrity");
 
 InputParameters
 Structure1D::validParams()

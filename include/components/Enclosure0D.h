@@ -50,6 +50,7 @@ public:
 
 protected:
   virtual void addPhysics() override;
+  virtual void addMeshGenerators() override;
 
   /// Vector of the names of the species to track
   std::vector<NonlinearVariableName> _species;
