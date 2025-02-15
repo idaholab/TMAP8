@@ -13,17 +13,15 @@
 
 [Physics]
   [Diffusion]
-    [ContinuousGalerkin]
-      [multi-D]
-        variable_name = 'u'
-        diffusivity_matprop = 1
+    [multi-D]
+      variable_name = 'u'
+      diffusivity_matprop = 1
 
-        dirichlet_boundaries = 'structure_left structure_right'
-        boundary_values = '1 0'
+      dirichlet_boundaries = 'structure_left structure_right'
+      boundary_values = '1 0'
 
-        # Keep closer results to original inputs
-        preconditioning = 'none'
-      []
+      # Keep closer results to original inputs
+      preconditioning = 'none'
     []
   []
 []

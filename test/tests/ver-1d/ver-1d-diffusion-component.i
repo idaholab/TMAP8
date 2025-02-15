@@ -1,4 +1,5 @@
 cl = 3.1622e18
+N = ${fparse 3.1622e22/cl}
 
 [ActionComponents]
   [structure]
@@ -10,8 +11,14 @@ cl = 3.1622e18
     # additional data that is specified there
 
 
-    material_property_names = 'alpha_t1 alpha_t2'
-    material_property_values = '1e-15 1e-12' # functor
+    # Material properties
+    property_names = 'alpha_t N    Ct_0 alpha_r trapping_E diff'
+    property_values = '1e15   ${N} 0.1  1e13    100        1'
+
+    # Boundary conditions
+    fixed_value_bc_variables = 'mobile'
+    fixed_value_bc_boundaries = 'structure_left structure_right'
+    fixed_value_bc_values = '${fparse 3.1622e18 / cl} 0'
 
     # Geometry
     nx = 200
@@ -22,36 +29,29 @@ cl = 3.1622e18
 
 [Physics]
   [Diffusion]
-    [ContinuousGalerkin]
-      [mobile_diff]
-        variable_name = 'mobile'
-        diffusivity_matprop = 1
+    [mobile_diff]
+      variable_name = 'mobile'
+      diffusivity_matprop = 'diff'
 
-        dirichlet_boundaries = 'structure_left structure_right'
-        boundary_values = '${fparse 3.1622e18 / cl} 0'
-
-        # Test differences are too large with default preconditioning
-        preconditioning = 'none'
-      []
+      # Test differences are too large with default preconditioning
+      preconditioning = 'none'
     []
   []
   [SpeciesTrapping]
     [trapped]
-      species = 'trapped1 trapped2'
+      species = 'trapped'
       mobile = 'mobile'
-      components = structure
       verbose = true
 
       # Trapping parameters
-      alpha_t = 'alpha_t1 alpha_t2'
-      N = '${fparse 3.1622e22 / cl}'  # ok distribute
-      Ct0 = '0.1'
-      trap_per_free = 1
+      alpha_t = 'alpha_t'
+      N = 'N'
+      Ct0 = 'Ct0'
 
       # Releasing parameters
-      alpha_r = 1e13
+      alpha_r = 'alpha_r'
       temperatures = 'temp'  # ok distribute
-      trapping_energy = 100
+      trapping_energy = 'trapping_E'
     []
   []
 []

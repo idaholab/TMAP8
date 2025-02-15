@@ -40,13 +40,13 @@ TMAP8App::registerAll(Factory & f, ActionFactory & af, Syntax & syntax)
   /* register custom execute flags, action syntax, etc. here */
 
   // TMAP8 specific Physics
-  registerSyntax("PointTrappingPhysics", "Physics/SpeciesTrapping/ODE/*");
-  registerSyntax("FieldTrappingPhysics", "Physics/SpeciesTrapping/ContinuousGalerkin/*");
-  registerSyntax("MultiSpeciesMigrationCG", "Physics/FieldMigration/ContinuousGalerkin/*");
+  registerSyntax("SpeciesSolubilityPhysics", "Physics/SpeciesSolubility/*");
+  registerSyntax("SpeciesTrappingPhysics", "Physics/SpeciesTrapping/*");
+  registerSyntax("SpeciesDiffusionReactionCG", "Physics/SpeciesDiffusionReaction/*");
 
   // Shorter syntax for MOOSE Physics used by TMAP8
   registerSyntax("DiffusionCG", "Physics/Diffusion/*");
-  registerSyntax("MultiSpeciesDiffusionCG", "Physics/MultiSpeciesDiffusion/*");
+  registerSyntax("MultiSpeciesDiffusionCG", "Physics/SpeciesDiffusion/*");
   registerSyntax("HeatConductionCG", "Physics/HeatConduction/*");
 }
 

@@ -36,21 +36,19 @@ specific_heat_Fe = 447.0 # J/kg/K
 
 [Physics]
   [HeatConduction]
-    [FiniteElement]
-      [h1]
-        temperature_name = 'temperature'
+    [h1]
+      temperature_name = 'temperature'
 
-        initial_temperature = 0
+      initial_temperature = 0
 
-        # Thermal properties
-        thermal_conductivity = 'thermal_conductivity'
+      # Thermal properties
+      thermal_conductivity = 'thermal_conductivity'
 
-        # Boundary conditions
-        fixed_temperature_boundaries = 'right left'
-        boundary_temperatures = '${T_SB} ${T_SA}'
-        # default preconditioning does not work
-        preconditioning = 'none'
-      []
+      # Boundary conditions
+      fixed_temperature_boundaries = 'right left'
+      boundary_temperatures = '${T_SB} ${T_SA}'
+      # default preconditioning does not work
+      preconditioning = 'none'
     []
   []
 []
