@@ -14,12 +14,12 @@
 /**
  * Base class for physics implementing the trapping of one or more species in a medium
  */
-class SpeciesTrappingPhysicsBase : public PhysicsBase
+class SpeciesPhysicsBase : public PhysicsBase
 {
 public:
   static InputParameters validParams();
 
-  SpeciesTrappingPhysicsBase(const InputParameters & parameters);
+  SpeciesPhysicsBase(const InputParameters & parameters);
 
 protected:
   /// Which components this Physics is defined on
@@ -63,12 +63,12 @@ struct is_vector<std::vector<T, A>> : public std::true_type
 
 template <typename T>
 void
-SpeciesTrappingPhysicsBase::processComponentParameters(const std::string & param_name,
-                                                       const std::string & comp_name,
-                                                       std::vector<T> & physics_storage,
-                                                       const T & component_values,
-                                                       bool use_default,
-                                                       const T & default_values)
+SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
+                                               const std::string & comp_name,
+                                               std::vector<T> & physics_storage,
+                                               const T & component_values,
+                                               bool use_default,
+                                               const T & default_values)
 {
   bool component_value_valid = false;
   // Create new cases as needed
@@ -77,7 +77,7 @@ SpeciesTrappingPhysicsBase::processComponentParameters(const std::string & param
   else if constexpr (std::is_same_v<T, MooseFunctorName>)
     component_value_valid = !component_values.empty();
   else
-    component_value_valid = (component_values != 0);
+    component_value_valid = true;
 
   // Parameter added by the Physics, just need to check consistency
   if (isParamSetByUser(param_name))
@@ -97,5 +97,5 @@ SpeciesTrappingPhysicsBase::processComponentParameters(const std::string & param
   else
     paramError(param_name,
                "This parameter should be specified, in the Physics '" + name() +
-                   "' or in component '" + comp_name + "'");
+                   "' (applying to all components) or in component '" + comp_name + "'");
 }
