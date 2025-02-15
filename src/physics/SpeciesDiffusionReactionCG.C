@@ -7,17 +7,17 @@
 //* Licensed under LGPL 2.1, please see LICENSE for details
 //* https://www.gnu.org/licenses/lgpl-2.1.html
 
-#include "MultiSpeciesMigrationCG.h"
+#include "SpeciesDiffusionReactionCG.h"
 #include "MooseVariableBase.h"
 
 // Register the actions for the objects actually used
-registerMooseAction("MooseApp", MultiSpeciesMigrationCG, "add_kernel");
-registerMooseAction("MooseApp", MultiSpeciesMigrationCG, "add_bc");
-registerMooseAction("MooseApp", MultiSpeciesMigrationCG, "add_variable");
-registerMultiSpeciesDiffusionPhysicsBaseTasks("MooseApp", MultiSpeciesMigrationCG);
+registerMooseAction("MooseApp", SpeciesDiffusionReactionCG, "add_kernel");
+registerMooseAction("MooseApp", SpeciesDiffusionReactionCG, "add_bc");
+registerMooseAction("MooseApp", SpeciesDiffusionReactionCG, "add_variable");
+registerMultiSpeciesDiffusionPhysicsBaseTasks("MooseApp", SpeciesDiffusionReactionCG);
 
 InputParameters
-MultiSpeciesMigrationCG::validParams()
+SpeciesDiffusionReactionCG::validParams()
 {
   InputParameters params = MultiSpeciesDiffusionCG::validParams();
   params.addClassDescription(
@@ -44,7 +44,7 @@ MultiSpeciesMigrationCG::validParams()
   return params;
 }
 
-MultiSpeciesMigrationCG::MultiSpeciesMigrationCG(const InputParameters & parameters)
+SpeciesDiffusionReactionCG::SpeciesDiffusionReactionCG(const InputParameters & parameters)
   : MultiSpeciesDiffusionCG(parameters)
 {
   checkTwoDVectorParamsSameLength<VariableName, MaterialPropertyName>("reacting_species",
@@ -54,7 +54,7 @@ MultiSpeciesMigrationCG::MultiSpeciesMigrationCG(const InputParameters & paramet
 }
 
 void
-MultiSpeciesMigrationCG::addFEKernels()
+SpeciesDiffusionReactionCG::addFEKernels()
 {
   MultiSpeciesDiffusionCG::addFEKernels();
 
