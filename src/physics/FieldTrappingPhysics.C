@@ -23,7 +23,7 @@ registerMooseAction("TMAP8App", FieldTrappingPhysics, "add_kernel");
 InputParameters
 FieldTrappingPhysics::validParams()
 {
-  InputParameters params = SpeciesTrappingPhysicsBase::validParams();
+  InputParameters params = SpeciesPhysicsBase::validParams();
   params.addClassDescription(
       "Add Physics for the trapping of species on multi-dimensional components.");
   params.addParam<std::vector<std::vector<VariableName>>>(
@@ -50,14 +50,6 @@ FieldTrappingPhysics::validParams()
   params.addParam<std::vector<FunctionName>>(
       "Ct0", {}, "The fraction of host sites that can contribute to trapping");
 
-  // TODO: unused?
-  params.addParam<std::vector<Real>>(
-      "trap_per_free",
-      {1.},
-      "An estimate for the ratio of the concentration magnitude of trapped species to free "
-      "species for each component. Setting a value for this can be helpful in producing a "
-      "well-scaled matrix");
-
   params.addParam<std::vector<std::vector<Real>>>(
       "alpha_r",
       {},
@@ -77,7 +69,7 @@ FieldTrappingPhysics::validParams()
 }
 
 FieldTrappingPhysics::FieldTrappingPhysics(const InputParameters & parameters)
-  : SpeciesTrappingPhysicsBase(parameters),
+  : SpeciesPhysicsBase(parameters),
     // If specified in the Physics block, all parameters are retrieved here
     _mobile_species_names(getParam<std::vector<std::vector<VariableName>>>("mobile")),
     _alpha_ts(getParam<std::vector<std::vector<Real>>>("alpha_t")),
