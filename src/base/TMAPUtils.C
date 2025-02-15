@@ -62,8 +62,10 @@ enclosureCommonParams()
       "species_initial_pressures",
       {},
       "Initial partial pressures for the enclosure species in Pascals");
+  params.addParam<std::vector<MooseFunctorName>>(
+      "equilibrium_constants", {}, "Solubility constants for each specie");
 
-  params.addParamNamesToGroup("species_initial_pressures", "Species");
+  params.addParamNamesToGroup("species_initial_pressures equilibrium_constants", "Species");
   params.addParamNamesToGroup("temperature", "Enclosure conditions");
   params.addParamNamesToGroup("volume surface_area connected_structure boundary", "Geometry");
   return params;
