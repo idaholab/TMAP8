@@ -16,15 +16,13 @@
 
 [Physics]
   [Diffusion]
-    [ContinuousGalerkin]
-      [diff]
-        variable_name = 'u'
-        diffusivity_matprop = 1
-        initial_condition = ic_u
+    [diff]
+      variable_name = 'u'
+      diffusivity_matprop = 1
+      initial_condition = ic_u
 
-        # Dont add the default preconditioning
-        preconditioning = 'none'
-      []
+      # Dont add the default preconditioning
+      preconditioning = 'none'
     []
   []
 []
