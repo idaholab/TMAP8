@@ -12,15 +12,15 @@
 #include "MultiSpeciesDiffusionCG.h"
 
 /**
- * Creates all the objects needed to solve diffusion equations for multiple species with a
+ * Creates all the objects needed to solve diffusion-reaction equations for multiple species with a
  * continuous Galerkin finite element discretization
  */
-class MultiSpeciesMigrationCG : public MultiSpeciesDiffusionCG
+class SpeciesDiffusionReactionCG : public MultiSpeciesDiffusionCG
 {
 public:
   static InputParameters validParams();
 
-  MultiSpeciesMigrationCG(const InputParameters & parameters);
+  SpeciesDiffusionReactionCG(const InputParameters & parameters);
 
 private:
   virtual void addFEKernels() override;
