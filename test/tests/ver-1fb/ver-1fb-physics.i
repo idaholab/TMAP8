@@ -7,19 +7,17 @@
 
 [Physics]
   [HeatConduction]
-    [FiniteElement]
-      [h1]
-        temperature_name = 'temperature'
+    [h1]
+      temperature_name = 'temperature'
 
-        initial_temperature = 300
+      initial_temperature = 300
 
-        # Thermal properties
-        thermal_conductivity = 'thermal_conductivity'
+      # Thermal properties
+      thermal_conductivity = 'thermal_conductivity'
 
-        # Boundary conditions
-        fixed_temperature_boundaries = 'right left'
-        boundary_temperatures = '300 400'
-      []
+      # Boundary conditions
+      fixed_temperature_boundaries = 'right left'
+      boundary_temperatures = '300 400'
     []
   []
 []
