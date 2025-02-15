@@ -11,6 +11,9 @@
 #include "PointTrappingPhysics.h"
 
 registerMooseAction("TMAP8App", Enclosure0D, "init_component_physics");
+registerMooseAction("TMAP8App", Enclosure0D, "add_material");
+registerMooseAction("TMAP8App", Enclosure0D, "check_integrity");
+registerMooseAction("TMAP8App", Enclosure0D, "add_mesh_generator");
 
 InputParameters
 Enclosure0D::validParams()
@@ -51,6 +54,30 @@ Enclosure0D::Enclosure0D(const InputParameters & params)
   if (_physics.size() > 1)
     paramError("physics",
                "Enclosure0D has only been implemented for a single 'PointTrappingPhysics'");
+}
+
+void
+Enclosure0D::addMeshGenerators()
+{
+  // Add a single elem
+  InputParameters params = _factory.getValidParams("ElementGenerator");
+  // If specified use the block, if not the component name
+  const auto block =
+      isParamValid("block") ? getParam<std::vector<SubdomainName>>("block")[0] : name();
+  params.set<SubdomainName>("subdomain_name") = block;
+
+  // TODO: use a nodeelem instead of a Quad4
+  params.set<std::vector<Point>>("nodal_positions") = {
+      Point(0, 0, 0), Point(0, 1e-8, 0), Point(1e-8, 1e-8, 0), Point(1e-8, 0, 0)};
+  params.set<std::vector<dof_id_type>>("element_connectivity") = {0, 1, 2, 3};
+  params.set<MooseEnum>("elem_type") = "QUAD4";
+
+  _app.getMeshGeneratorSystem().addMeshGenerator("ElementGenerator", name() + "_base", params);
+
+  // Keep track of the component mesh
+  _mg_names.push_back(name() + "_base");
+  _blocks.push_back(block);
+  _dimension = 0;
 }
 
 void
