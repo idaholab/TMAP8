@@ -1,6 +1,6 @@
-# Point Trapping Physics using Ordinary Differential Equations / PointTrappingPhysics
+# Species Solubility in 0D Structures / SpeciesSolubilityPhysics
 
-This [Physics](syntax/Physics/index.md) creates an ordinary differential equation to represent the local trapping / releasing of species
+This [Physics](syntax/Physics/index.md) creates an ordinary differential equation to represent the local solubility / releasing of species
 in a 0D enclosure, and mass exchange of that species at its boundaries. The 0D enclosure component is exchanging species with
 a structure.
 
@@ -29,12 +29,12 @@ This boundary condition connects the outgoing species flux 0D component with the
 
 ## Interaction with ActionComponents
 
-The `PointTrappingPhysics` can be defined on an [ActionComponent](syntax/ActionComponent/index.md) by specifying the `physics` parameter of that component to include the name of the particular `PointTrappingPhysics`. The name of the `Physics` can be found nested under `[Physics/SpeciesTrapping/ODE/<name>]`.
+The `SpeciesSolubilityPhysics` can be defined on an [ActionComponent](syntax/ActionComponent/index.md) by specifying the `physics` parameter of that component to include the name of the particular `SpeciesSolubilityPhysics`. The name of the `Physics` can be found nested under `[Physics/SpeciesSolubility/<name>]`.
 
-Certain parameters of the `PointTrappingPhysics` can be specified on components that are specifically implemented to interact with the
-`PointTrappingPhysics`. For example, the [!param](/ActionComponents/Component0D/species) and
+Certain parameters of the `SpeciesSolubilityPhysics` can be specified on components that are specifically implemented to interact with the
+`SpeciesSolubilityPhysics`. For example, the [!param](/ActionComponents/Component0D/species) and
 [!param](/ActionComponents/Component0D/species_initial_concentrations) parameters can be specified on a [Component0D.md].
-The `PointTrappingPhysics` will then take care of defining the variable and its initial condition.
+The `SpeciesSolubilityPhysics` will then take care of defining the variable and its initial condition.
 
 !syntax parameters /Physics/SpeciesTrapping/ContinuousGalerkin/FieldTrappingPhysics
 

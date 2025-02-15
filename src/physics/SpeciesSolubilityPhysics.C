@@ -7,7 +7,7 @@
 //* Licensed under LGPL 2.1, please see LICENSE for details
 //* https://www.gnu.org/licenses/lgpl-2.1.html
 
-#include "PointTrappingPhysics.h"
+#include "SpeciesSolubilityPhysics.h"
 #include "MooseUtils.h"
 #include "ActionComponent.h"
 #include "Enclosure0D.h"
@@ -17,27 +17,36 @@
 #include "DiffusionPhysicsBase.h"
 
 // Register the actions for the objects actually used
-registerMooseAction("TMAP8App", PointTrappingPhysics, "init_physics");
-registerMooseAction("TMAP8App", PointTrappingPhysics, "add_variable");
-registerMooseAction("TMAP8App", PointTrappingPhysics, "add_ic");
-registerMooseAction("TMAP8App", PointTrappingPhysics, "add_scalar_kernel");
-registerMooseAction("TMAP8App", PointTrappingPhysics, "add_bc");
-registerMooseAction("TMAP8App", PointTrappingPhysics, "check_integrity_early_physics");
-registerMooseAction("TMAP8App", PointTrappingPhysics, "copy_vars_physics");
+registerMooseAction("TMAP8App", SpeciesSolubilityPhysics, "init_physics");
+registerMooseAction("TMAP8App", SpeciesSolubilityPhysics, "add_variable");
+registerMooseAction("TMAP8App", SpeciesSolubilityPhysics, "add_ic");
+registerMooseAction("TMAP8App", SpeciesSolubilityPhysics, "add_scalar_kernel");
+registerMooseAction("TMAP8App", SpeciesSolubilityPhysics, "add_bc");
+registerMooseAction("TMAP8App", SpeciesSolubilityPhysics, "check_integrity_early_physics");
+registerMooseAction("TMAP8App", SpeciesSolubilityPhysics, "check_integrity");
+registerMooseAction("TMAP8App", SpeciesSolubilityPhysics, "copy_vars_physics");
 
 InputParameters
-PointTrappingPhysics::validParams()
+SpeciesSolubilityPhysics::validParams()
 {
-  InputParameters params = SpeciesTrappingPhysicsBase::validParams();
+  InputParameters params = SpeciesPhysicsBase::validParams();
   params.addClassDescription(
-      "Add Physics for the trapping of species on enclosures / 0D components.");
+      "Creates all the objects needed to solve for the concentration of one or more species in "
+      "each 0D enclosure in which the species can go into solution / release from.");
 
-  params.addRequiredParam<std::vector<MooseFunctorName>>(
+  // Not defined on blocks, but rather on components
+  params.suppressParameter<std::vector<SubdomainName>>("block");
+
+  // These parameters can be specified if all components have the same values
+  params.addParam<std::vector<Real>>(
+      "species_initial_pressures",
+      {},
+      "Initial values for each species. If specified, will be used for every component.");
+  params.addParam<std::vector<MooseFunctorName>>(
       "equilibrium_constants",
       "The equilibrium constants between gas partial pressure and adsorbed solute concentration "
-      "for each species on each component. Note that they will be scaled using the scaling "
-      "parameters specified. If a single vector is "
-      "specified, the same equilibrium constants will be used on every component");
+      "for each species. Note that they will be scaled using the scaling "
+      "parameters specified. If specified, will be used for every component.");
 
   // Units
   params.addParam<Real>("pressure_unit_scaling", 1, "");
@@ -49,24 +58,17 @@ PointTrappingPhysics::validParams()
   return params;
 }
 
-PointTrappingPhysics::PointTrappingPhysics(const InputParameters & parameters)
-  : SpeciesTrappingPhysicsBase(parameters),
-    _species_Ks(getParam<std::vector<MooseFunctorName>>("equilibrium_constants")),
+SpeciesSolubilityPhysics::SpeciesSolubilityPhysics(const InputParameters & parameters)
+  : SpeciesPhysicsBase(parameters),
+    _initial_conditions({getParam<std::vector<Real>>("species_initial_pressures")}),
+    _species_Ks({getParam<std::vector<MooseFunctorName>>("equilibrium_constants")}),
     _length_unit(getParam<Real>("length_unit_scaling")),
     _pressure_unit(getParam<Real>("pressure_unit_scaling"))
 {
-  // Fill in the species vector of vectors for convenience
-  // TODO: do this later so we can turn on this Physics from a component
-  // TODO: handle multiple species with a components list
-  if (_species.size() == 1 && _components.size())
-    _species.resize(_components.size(), _species[0]);
-  // The initial conditions and scaling double-vectors use logic to work with a size 1 vector
-
-  // TODO: check that the components actually exists
 }
 
 void
-PointTrappingPhysics::addComponent(const ActionComponent & component)
+SpeciesSolubilityPhysics::addComponent(const ActionComponent & component)
 {
   // TODO: handle other types of ActionComponents
   // We need some sort of "connectedStructure / connectedComponent ?" concept
@@ -92,27 +94,22 @@ PointTrappingPhysics::addComponent(const ActionComponent & component)
                                                 comp.scalingFactors(),
                                                 true,
                                                 std::vector<Real>(1, n_species_component));
-  processComponentParameters<std::vector<Real>>("species_initial_conditions",
-                                                comp.name(),
-                                                _initial_conditions,
-                                                comp.ics(),
-                                                true,
-                                                std::vector<Real>(0, n_species_component));
+  processComponentParameters<std::vector<Real>>(
+      "species_initial_conditions", comp.name(), _initial_conditions, comp.ics(), false, {});
+  processComponentParameters<std::vector<MooseFunctorName>>(
+      "equilibrium_constants", comp.name(), _species_Ks, comp.equilibriumConstants(), false, {});
   processComponentParameters<MooseFunctorName>("temperatures",
                                                comp.name(),
                                                _component_temperatures,
                                                std::to_string(comp.temperature()),
                                                false,
-                                               "0");
+                                               "");
 
-  // TODO: check that inputs are consistent once all components have been added.
-  // - the pressure, temperature and the scaling factors should be positive (defense in depth from
-  // Components)
   addBlocks(component.blocks());
 }
 
 void
-PointTrappingPhysics::addSolverVariables()
+SpeciesSolubilityPhysics::addSolverVariables()
 {
   const std::string variable_type = "MooseVariableScalar";
   InputParameters params = getFactory().getValidParams(variable_type);
@@ -136,7 +133,7 @@ PointTrappingPhysics::addSolverVariables()
 }
 
 void
-PointTrappingPhysics::addInitialConditions()
+SpeciesSolubilityPhysics::addInitialConditions()
 {
   const std::string ic_type = "ScalarConstantIC";
   InputParameters params = getFactory().getValidParams(ic_type);
@@ -156,14 +153,14 @@ PointTrappingPhysics::addInitialConditions()
 }
 
 void
-PointTrappingPhysics::addScalarKernels()
+SpeciesSolubilityPhysics::addScalarKernels()
 {
   for (const auto c_i : index_range(_components))
   {
     // Get the boundary from the component
     const auto & comp_name = _components[c_i];
     const auto & component = getActionComponent(comp_name);
-    const auto & structure_boundary = getConnectedStructureBoundary(c_i);
+    const auto & structure_boundary = getConnectedStructureBoundary(comp_name);
     const auto scaled_volume = component.volume() * Utility::pow<3>(_length_unit);
     const auto scaled_area = component.outerSurfaceArea() * Utility::pow<2>(_length_unit);
 
@@ -181,8 +178,8 @@ PointTrappingPhysics::addScalarKernels()
         getProblem().addScalarKernel(kernel_type, prefix() + species_name + "_time", params);
       }
 
-      const auto flux_name =
-          getConnectedStructurePhysics(c_i)[0]->name() + "_diffusive_flux_" + structure_boundary;
+      const auto flux_name = getConnectedStructurePhysics(comp_name)[0]->name() +
+                             "_diffusive_flux_" + structure_boundary;
       static constexpr Real kb = 1.380649e-23;
       // m3 to mum3
       static constexpr Real conv_factor = 1e18;
@@ -208,27 +205,28 @@ PointTrappingPhysics::addScalarKernels()
 }
 
 void
-PointTrappingPhysics::addFEBCs()
+SpeciesSolubilityPhysics::addFEBCs()
 {
   for (const auto c_i : index_range(_components))
   {
+    const auto & comp_name = _components[c_i];
     // This could be done in the Diffusion/Migration Physics instead
-    // That Physics could add this term when coupled to a PointTrappingPhysics
-    const auto & structure_boundary = getConnectedStructureBoundary(c_i);
+    // That Physics could add this term when coupled to a SpeciesSolubilityPhysics
+    const auto & structure_boundary = getConnectedStructureBoundary(comp_name);
 
     for (const auto s_j : index_range(_species[c_i]))
     {
-      const auto species_name = _species[c_i][s_j] + "_" + _components[c_i];
+      const auto species_name = _species[c_i][s_j] + "_" + comp_name;
       const auto multi_D_species_name = getConnectedStructureVariableName(c_i, s_j);
       {
         const std::string bc_type = "EquilibriumBC";
         auto params = _factory.getValidParams(bc_type);
         params.set<NonlinearVariableName>("variable") = multi_D_species_name;
         params.set<std::vector<VariableName>>("enclosure_var") = {species_name};
-        if (!getActionComponent(_components[c_i]).blocks().empty())
-          params.set<SubdomainName>("enclosure_block") =
-              getActionComponent(_components[c_i]).blocks()[0];
-        params.set<MooseFunctorName>("Ko") = _species_Ks[s_j];
+        if (getActionComponent(comp_name).blocks().empty())
+          mooseError("Should have a block in the component");
+        params.set<SubdomainName>("enclosure_block") = getActionComponent(comp_name).blocks()[0];
+        params.set<MooseFunctorName>("Ko") = _species_Ks[c_i][s_j];
         params.set<Real>("Ko_scaling_factor") = 1 / Utility::pow<3>(_length_unit) / _pressure_unit;
         params.set<FunctionName>("temperature_function") = _component_temperatures[c_i];
         params.set<std::vector<BoundaryName>>("boundary") = {structure_boundary};
@@ -239,8 +237,8 @@ PointTrappingPhysics::addFEBCs()
 }
 
 void
-PointTrappingPhysics::checkSingleBoundary(const std::vector<BoundaryName> & boundaries,
-                                          const ComponentName & comp_name) const
+SpeciesSolubilityPhysics::checkSingleBoundary(const std::vector<BoundaryName> & boundaries,
+                                              const ComponentName & comp_name) const
 {
   if (boundaries.size() != 1)
     paramError("components",
@@ -249,11 +247,12 @@ PointTrappingPhysics::checkSingleBoundary(const std::vector<BoundaryName> & boun
 }
 
 const VariableName &
-PointTrappingPhysics::getConnectedStructureVariableName(unsigned int c_i, unsigned int s_j)
+SpeciesSolubilityPhysics::getConnectedStructureVariableName(unsigned int c_i,
+                                                            unsigned int s_j) const
 {
   const auto & comp_name = _components[c_i];
   const auto & component = getActionComponent(comp_name);
-  const auto multi_D_physics = getConnectedStructurePhysics(c_i);
+  const auto multi_D_physics = getConnectedStructurePhysics(comp_name);
   if (multi_D_physics.empty())
     component.paramError("connected_structure",
                          "Connected structure does not have any Physics defined");
@@ -273,9 +272,8 @@ PointTrappingPhysics::getConnectedStructureVariableName(unsigned int c_i, unsign
 }
 
 const BoundaryName &
-PointTrappingPhysics::getConnectedStructureBoundary(unsigned int c_i)
+SpeciesSolubilityPhysics::getConnectedStructureBoundary(const ComponentName & comp_name) const
 {
-  const auto & comp_name = _components[c_i];
   const auto & component = getActionComponent(comp_name);
   const auto & boundaries = component.outerSurfaceBoundaries();
   checkSingleBoundary(boundaries, comp_name);
@@ -283,11 +281,33 @@ PointTrappingPhysics::getConnectedStructureBoundary(unsigned int c_i)
 }
 
 const std::vector<PhysicsBase *>
-PointTrappingPhysics::getConnectedStructurePhysics(unsigned int c_i)
+SpeciesSolubilityPhysics::getConnectedStructurePhysics(const ComponentName & comp_name) const
 {
-  const auto comp_name = _components[c_i];
   const auto & component = dynamic_cast<const Enclosure0D &>(getActionComponent(comp_name));
   const auto & structure = getActionComponent(component.connectedStructure());
   checkComponentType<Structure1D>(structure);
   return dynamic_cast<const Structure1D &>(structure).getPhysics();
+}
+
+void
+SpeciesSolubilityPhysics::checkIntegrity() const
+{
+  for (const auto & vec : _scaling_factors)
+    for (const auto scale : vec)
+      if (scale <= 0)
+        mooseError("Scaling factor '", scale, "' inferior or equal to 0");
+
+  for (const auto & vec : _initial_conditions)
+    for (const auto ic : vec)
+      if (ic < 0)
+        mooseError("Initial condition '", ic, "' inferior to 0");
+
+  for (const auto & vec : _species_Ks)
+    for (const auto & K : vec)
+      if (MooseUtils::parsesToReal(K) && MooseUtils::convert<Real>(K) <= 0)
+        mooseError("Equilibrium constant '", K, "' inferior or equal to 0");
+
+  for (const auto & temp : _component_temperatures)
+    if (MooseUtils::parsesToReal(temp) && MooseUtils::convert<Real>(temp) <= 0)
+      mooseError("Temperature '", temp, "' inferior or equal to 0");
 }
