@@ -30,6 +30,8 @@ public:
   const std::vector<Real> & scalingFactors() const { return _scaling_factors; }
   /// Return the initial conditions to use for these species
   const std::vector<Real> & ics() const { return _ics; }
+  /// Return the equilibrium constants to use for these species
+  const std::vector<MooseFunctorName> & equilibriumConstants() const { return _species_Ks; }
   /// Return the temperature of this enclosure
   Real temperature() const { return _temperature; }
   /// Returns the scaled volume of the enclosure
@@ -58,6 +60,8 @@ protected:
   std::vector<Real> _scaling_factors;
   /// Initial conditions for each species
   std::vector<Real> _ics;
+  /// Equilibrium constants for each species
+  std::vector<MooseFunctorName> _species_Ks;
   /// Temperature of the enclosure
   const Real _temperature;
   /// Outer surface area of the enclosure
