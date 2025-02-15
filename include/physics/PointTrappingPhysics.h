@@ -27,8 +27,8 @@ public:
   void addComponent(const ActionComponent & component) override;
 
 protected:
-  /// Equilibrium constants / solubilities?
-  std::vector<std::vector<Real>> _species_Ks;
+  /// Equilibrium constants / solubilities
+  const std::vector<MooseFunctorName> _species_Ks;
 
   /// Scaling factor for lengths
   const Real _length_unit;

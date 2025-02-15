@@ -32,14 +32,12 @@ PointTrappingPhysics::validParams()
   params.addClassDescription(
       "Add Physics for the trapping of species on enclosures / 0D components.");
 
-  params.addRequiredParam<std::vector<std::vector<Real>>>(
+  params.addRequiredParam<std::vector<MooseFunctorName>>(
       "equilibrium_constants",
       "The equilibrium constants between gas partial pressure and adsorbed solute concentration "
       "for each species on each component. Note that they will be scaled using the scaling "
       "parameters specified. If a single vector is "
       "specified, the same equilibrium constants will be used on every component");
-  // TODO: is equilibrium constant same as solubility?
-  // TODO: should this input be moved to components? Or is it a constant for the species?
 
   // Units
   params.addParam<Real>("pressure_unit_scaling", 1, "");
@@ -53,7 +51,7 @@ PointTrappingPhysics::validParams()
 
 PointTrappingPhysics::PointTrappingPhysics(const InputParameters & parameters)
   : SpeciesTrappingPhysicsBase(parameters),
-    _species_Ks(getParam<std::vector<std::vector<Real>>>("equilibrium_constants")),
+    _species_Ks(getParam<std::vector<MooseFunctorName>>("equilibrium_constants")),
     _length_unit(getParam<Real>("length_unit_scaling")),
     _pressure_unit(getParam<Real>("pressure_unit_scaling"))
 {
@@ -65,9 +63,6 @@ PointTrappingPhysics::PointTrappingPhysics(const InputParameters & parameters)
   // The initial conditions and scaling double-vectors use logic to work with a size 1 vector
 
   // TODO: check that the components actually exists
-  // TODO: choose between:
-  // - input from components
-  // - input from Physics on components
 }
 
 void
@@ -113,6 +108,7 @@ PointTrappingPhysics::addComponent(const ActionComponent & component)
   // TODO: check that inputs are consistent once all components have been added.
   // - the pressure, temperature and the scaling factors should be positive (defense in depth from
   // Components)
+  addBlocks(component.blocks());
 }
 
 void
@@ -229,9 +225,11 @@ PointTrappingPhysics::addFEBCs()
         auto params = _factory.getValidParams(bc_type);
         params.set<NonlinearVariableName>("variable") = multi_D_species_name;
         params.set<std::vector<VariableName>>("enclosure_var") = {species_name};
-        params.set<Real>("Ko") =
-            ((_species_Ks.size() > 1) ? _species_Ks[c_i][s_j] : _species_Ks[0][s_j]) * 1 /
-            Utility::pow<3>(_length_unit) / _pressure_unit;
+        if (!getActionComponent(_components[c_i]).blocks().empty())
+          params.set<SubdomainName>("enclosure_block") =
+              getActionComponent(_components[c_i]).blocks()[0];
+        params.set<MooseFunctorName>("Ko") = _species_Ks[s_j];
+        params.set<Real>("Ko_scaling_factor") = 1 / Utility::pow<3>(_length_unit) / _pressure_unit;
         params.set<FunctionName>("temperature_function") = _component_temperatures[c_i];
         params.set<std::vector<BoundaryName>>("boundary") = {structure_boundary};
         getProblem().addBoundaryCondition(bc_type, species_name + "_equi_bc", params);
