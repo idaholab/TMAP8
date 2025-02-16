@@ -12,7 +12,7 @@ TMAP8 also contains [example cases](examples/tmap_index.md), which showcase how 
 | ver-1b  | [Diffusion Problem with Constant Source Boundary Condition](ver-1b.md)                            |
 | ver-1c  | [Diffusion Problem with Partially Preloaded Slab](ver-1c.md)                                      |
 | ver-1d  | [Permeation Problem with Trapping](ver-1d.md)                                                     |
-| ver-1dc | [Permeation Problem with Multiple Trapping](ver-1dc.md)                                           |
+| ver-1dc | [Permeation Problem with Multiple Trapping - including the method of manufactured solutions](ver-1dc.md) |
 | ver-1dd | [Permeation Problem without Trapping](ver-1dd.md)                                                 |
 | ver-1e  | [Diffusion in Composite Material Layers](ver-1e.md)                                               |
 | ver-1fa | [Heat Conduction with Heat Generation](ver-1fa.md)                                                |
