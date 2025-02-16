@@ -11,7 +11,7 @@ os.chdir(script_folder)
 
 #===============================================================================
 # Extract TMAP8 results
-if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/ver-1gc/gold/ver-1gc_out.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/ver-1gc_out.csv"
