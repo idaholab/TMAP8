@@ -10,7 +10,7 @@ Two enclosures are separated by a membrane that allows diffusion according to Si
 
 This verification problem is taken from [!cite](ambrosek2008verification).
 
-This setup describes a diffusion system in which tritium T$_2$, dihydrogen H$_2$ and HT are modeled across a one-dimensional domain split into two enclosures. Compared to the [ver-1kc-2](ver-1kc-2.md) case, we now incorporate a T$_2$ tritium volumetric source in Enclosure 1. The volumetric source rate is set to $S_{\text{T}_2} = 10^{23}/N_A mol/m$^3$/s with $N_A = 6.02214076 \times 10^{23}$ 1/mol.
+This setup describes a diffusion system in which tritium T$_2$, dihydrogen H$_2$ and HT are modeled across a one-dimensional domain split into two enclosures. Compared to the [ver-1kc-2](ver-1kc-2.md) case, we now incorporate a T$_2$ tritium volumetric source in Enclosure 1. The volumetric source rate is set to $S_{\text{T}_2} = 10^{23}/N_A$ mol/m$^3$/s with $N_A = 6.02214076 \times 10^{23}$ 1/mol.
 The total system length is $2.5 \times 10^{-4}$ m, divided into 100 segments. The system operates at a constant temperature of 500 Kelvin. Initial tritium T$_2$ and dihydrogen H$_2$ pressures are specified as $10^{5}$ Pa for Enclosure 1 and $10^{-10}$ Pa for Enclosure 2. Initially, there is no HT in either enclosure.
 
 The reaction between the species is described as follows
