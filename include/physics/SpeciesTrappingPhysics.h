@@ -46,7 +46,7 @@ protected:
   /// Releasing rate for each component (outer indexing) and species (inner)
   std::vector<std::vector<Real>> _alpha_rs;
   /// Trapping energies for each component (outer indexing) and species (inner)
-  std::vector<std::vector<Real>> _trapping_energies;
+  std::vector<std::vector<Real>> _detrapping_energies;
 
   /// Whether to define a single variable for each species for all components, or a different one for each component
   const bool _single_variable_set;
