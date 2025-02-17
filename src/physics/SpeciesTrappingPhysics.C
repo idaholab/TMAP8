@@ -55,14 +55,14 @@ SpeciesTrappingPhysics::validParams()
       "The release rate coefficient. If a single vector is specified, "
       "the same release rate coefficient will be used on every component");
   params.addParam<std::vector<Real>>(
-      "trapping_energy",
+      "detrapping_energy",
       {},
       "The trapping energy in units of Kelvin. If a single vector is specified, "
       "the same trapping energy will be used on every component");
 
   // Parameter groups
   params.addParamNamesToGroup("alpha_t N Ct0 trap_per_free", "Trapping");
-  params.addParamNamesToGroup("alpha_r temperatures trapping_energy", "Releasing");
+  params.addParamNamesToGroup("alpha_r temperatures detrapping_energy", "Releasing");
 
   return params;
 }
@@ -76,11 +76,33 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
     _Ct0s({getParam<std::vector<FunctionName>>("Ct0")}),
     _trap_per_frees({getParam<std::vector<Real>>("trap_per_free")}),
     _alpha_rs({getParam<std::vector<Real>>("alpha_r")}),
-    _trapping_energies({getParam<std::vector<Real>>("trapping_energy")}),
+    _detrapping_energies({getParam<std::vector<Real>>("detrapping_energy")}),
     _single_variable_set(!getParam<bool>("separate_variables_per_component"))
 {
   // We allow overlaps between mobile species names because two trapped species could release to the
   // same mobile species and adding the two time derivative kernels is correct
+
+  // All the other parameters can vary on each component
+  if (_single_variable_set)
+    checkVectorParamNotEmpty<NonlinearVariableName>("species");
+
+  // Only set the other parameters if setting the species
+  checkSecondParamSetOnlyIfFirstOneSet("species", "mobile");
+  checkSecondParamSetOnlyIfFirstOneSet("species", "alpha_t");
+  checkSecondParamSetOnlyIfFirstOneSet("species", "N");
+  checkSecondParamSetOnlyIfFirstOneSet("species", "Ct0");
+  checkSecondParamSetOnlyIfFirstOneSet("species", "trap_per_free");
+  checkSecondParamSetOnlyIfFirstOneSet("species", "alpha_r");
+  checkSecondParamSetOnlyIfFirstOneSet("species", "detrapping_energy");
+
+  // Check sizes
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, VariableName>("species", "mobile");
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "alpha_t");
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "N");
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, FunctionName>("species", "Ct0");
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "trap_per_free");
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "alpha_r");
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "detrapping_energy");
 }
 
 void
@@ -206,7 +228,7 @@ SpeciesTrappingPhysics::addFEKernels()
         auto params = _factory.getValidParams(kernel_type);
         params.set<NonlinearVariableName>("variable") = species_name;
         params.set<Real>("alpha_r") = _alpha_rs[c_i][s_j];
-        params.set<Real>("detrapping_energy") = _trapping_energies[c_i][s_j];
+        params.set<Real>("detrapping_energy") = _detrapping_energies[c_i][s_j];
         // The default coupled value will not have been created by the Builder since we created
         // the parameter as a MooseFunctorName in the Physics
         if (MooseUtils::parsesToReal(_component_temperatures[c_i]))
