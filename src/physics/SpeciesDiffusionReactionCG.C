@@ -35,11 +35,6 @@ SpeciesDiffusionReactionCG::validParams()
   params.addParamNamesToGroup("reacting_species product_species reaction_coefficients",
                               "Reaction Network");
 
-  // Remove diffusion parameters for now
-  // TODO: Discuss with PC if we need them
-  params.suppressParameter<std::vector<MooseFunctorName>>("diffusivity_functors");
-  params.suppressParameter<std::vector<MaterialPropertyName>>("diffusivity_matprops");
-
   return params;
 }
 
@@ -77,8 +72,10 @@ SpeciesDiffusionReactionCG::addFEKernels()
       InputParameters params = getFactory().getValidParams(kernel_type);
       params.set<NonlinearVariableName>("variable") = var_name;
       assignBlocks(params, _blocks);
+      // Note: since we do not support per-component input of reacting species at this time,
+      // we use the Physics' block restriction rather than the Component's
 
-      // Double-indexed vectors arent initialized as expected
+      // Double-indexed vectors arent initialized as I expected
       if (reacting_species.size() <= s)
         continue;
 
