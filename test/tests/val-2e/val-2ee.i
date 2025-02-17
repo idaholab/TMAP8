@@ -1,4 +1,4 @@
-# Validation Problem #2ea from TMAP4/TMAP7 V&V document
+# Validation Problem #2ee from TMAP7'2 V&V document
 # Deuterium permeation through 0.05-mm Pd at 825 K.
 # No Soret effect, or trapping included.
 
@@ -59,7 +59,6 @@ simulation_time = '${units 1000 s}'
 []
 
 [Variables]
-  # concentration in the SiC layer in atoms/microns^3
   [D2_pressure_upstream]
     initial_condition = '${pressure_initial_enclosure2}'
   []
@@ -252,21 +251,6 @@ simulation_time = '${units 1000 s}'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
-  # [MatReaction_upstream_D2_reaction]
-  #   type = ADMatReactionFlexible
-  #   variable = D2_pressure_upstream
-  #   vs = 'D_concentration H_concentration'
-  #   reaction_rate_name = 'K_r_HD'
-  #   coeff = '${fparse -0.5 * kb * temperature * surface_area / volume_enclosure}'
-  #   extra_vector_tags = 'ref'
-  # []
-  # [MatReaction_upstream_D2_re_reaction]
-  #   type = ADMatReaction
-  #   variable = D2_pressure_upstream
-  #   v = 'HD_pressure_upstream'
-  #   reaction_rate = '${fparse 0.5 *  K_d_HD * kb * temperature * surface_area / volume_enclosure}'
-  #   extra_vector_tags = 'ref'
-  # []
   [MatReaction_upstream_D2_reaction]
     type = ADMatReaction
     variable = D2_pressure_upstream
@@ -308,21 +292,6 @@ simulation_time = '${units 1000 s}'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
-  # [MatReaction_upstream_H2_reaction]
-  #   type = ADMatReactionFlexible
-  #   variable = H2_pressure_upstream
-  #   vs = 'D_concentration H_concentration'
-  #   reaction_rate_name = 'K_r_HD'
-  #   coeff = '${fparse -0.5 * kb * temperature * surface_area / volume_enclosure}'
-  #   extra_vector_tags = 'ref'
-  # []
-  # [MatReaction_upstream_H2_re_reaction]
-  #   type = ADMatReaction
-  #   variable = H2_pressure_upstream
-  #   v = 'HD_pressure_upstream'
-  #   reaction_rate = '${fparse 0.5 *  K_d_HD * kb * temperature * surface_area / volume_enclosure}'
-  #   extra_vector_tags = 'ref'
-  # []
   [MatReaction_upstream_H2_reaction]
     type = ADMatReaction
     variable = H2_pressure_upstream
@@ -364,21 +333,6 @@ simulation_time = '${units 1000 s}'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
-  # [MatReaction_upstream_HD_reaction]
-  #   type = ADMatReactionFlexible
-  #   variable = HD_pressure_upstream
-  #   vs = 'D_concentration H_concentration'
-  #   reaction_rate_name = 'K_r_HD'
-  #   coeff = '${fparse kb * temperature * surface_area / volume_enclosure}'
-  #   extra_vector_tags = 'ref'
-  # []
-  # [MatReaction_upstream_HD_re_reaction]
-  #   type = ADMatReaction
-  #   variable = HD_pressure_upstream
-  #   v = 'HD_pressure_upstream'
-  #   reaction_rate = '${fparse - K_d_HD * kb * temperature * surface_area / volume_enclosure}'
-  #   extra_vector_tags = 'ref'
-  # []
   [MatReaction_upstream_HD_reaction]
     type = ADMatReaction
     variable = HD_pressure_upstream
@@ -433,21 +387,6 @@ simulation_time = '${units 1000 s}'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
-  # [MatReaction_downstream_D2_reaction]
-  #   type = ADMatReactionFlexible
-  #   variable = D2_pressure_downstream
-  #   vs = 'D_concentration H_concentration'
-  #   reaction_rate_name = 'K_r_HD'
-  #   coeff = '${fparse -0.5 * kb * temperature * surface_area / volume_enclosure}'
-  #   extra_vector_tags = 'ref'
-  # []
-  # [MatReaction_downstream_D2_re_reaction]
-  #   type = ADMatReaction
-  #   variable = D2_pressure_downstream
-  #   v = 'HD_pressure_downstream'
-  #   reaction_rate = '${fparse 0.5 * K_d_HD * kb * temperature * surface_area / volume_enclosure}'
-  #   extra_vector_tags = 'ref'
-  # []
   [MatReaction_downstream_D2_reaction]
     type = ADMatReaction
     variable = D2_pressure_downstream
@@ -482,21 +421,6 @@ simulation_time = '${units 1000 s}'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
-  # [MatReaction_downstream_H2_reaction]
-  #   type = ADMatReactionFlexible
-  #   variable = H2_pressure_downstream
-  #   vs = 'D_concentration H_concentration'
-  #   reaction_rate_name = 'K_r_HD'
-  #   coeff = '${fparse -0.5 * kb * temperature * surface_area / volume_enclosure}'
-  #   extra_vector_tags = 'ref'
-  # []
-  # [MatReaction_downstream_H2_re_reaction]
-  #   type = ADMatReaction
-  #   variable = H2_pressure_downstream
-  #   v = 'HD_pressure_downstream'
-  #   reaction_rate = '${fparse 0.5 * K_d_HD * kb * temperature * surface_area / volume_enclosure}'
-  #   extra_vector_tags = 'ref'
-  # []
   [MatReaction_downstream_H2_reaction]
     type = ADMatReaction
     variable = H2_pressure_downstream
@@ -531,21 +455,6 @@ simulation_time = '${units 1000 s}'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
-  # [MatReaction_downstream_HD_reaction]
-  #   type = ADMatReactionFlexible
-  #   variable = HD_pressure_downstream
-  #   vs = 'D_concentration H_concentration'
-  #   reaction_rate_name = 'K_r_HD'
-  #   coeff = '${fparse kb * temperature * surface_area / volume_enclosure}'
-  #   extra_vector_tags = 'ref'
-  # []
-  # [MatReaction_downstream_HD_re_reaction]
-  #   type = ADMatReaction
-  #   variable = HD_pressure_downstream
-  #   v = 'HD_pressure_downstream'
-  #   reaction_rate = '${fparse - K_d_HD * kb * temperature * surface_area / volume_enclosure}'
-  #   extra_vector_tags = 'ref'
-  # []
   [MatReaction_downstream_HD_reaction]
     type = ADMatReaction
     variable = HD_pressure_downstream
@@ -951,6 +860,7 @@ simulation_time = '${units 1000 s}'
   nl_abs_tol = 1e-10
   dtmax = 5
   end_time = ${simulation_time}
+  nl_max_its = 15
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 0.01
@@ -958,6 +868,7 @@ simulation_time = '${units 1000 s}'
     iteration_window = 1
     growth_factor = 1.1
     cutback_factor = 0.9
+    cutback_factor_at_failure = 0.9
   []
 []
 

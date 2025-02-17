@@ -1,4 +1,4 @@
-# Validation Problem #2ea from TMAP4/TMAP7 V&V document
+# Validation Problem #2ed from TMAP7's V&V document
 # Deuterium permeation through 0.05-mm Pd at 825 K.
 # No Soret effect, or trapping included.
 
@@ -52,7 +52,6 @@ simulation_time = '${units 1000 s}'
 []
 
 [Variables]
-  # concentration in the SiC layer in atoms/microns^3
   [D2_pressure_upstream]
     initial_condition = '${pressure_initial_enclosure2}'
   []
@@ -677,6 +676,7 @@ simulation_time = '${units 1000 s}'
   nl_abs_tol = 1e-10
   dtmax = 5
   end_time = ${simulation_time}
+  nl_max_its = 15
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 0.01
@@ -684,6 +684,7 @@ simulation_time = '${units 1000 s}'
     iteration_window = 1
     growth_factor = 1.1
     cutback_factor = 0.9
+    cutback_factor_at_failure = 0.9
   []
 []
 

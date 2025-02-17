@@ -1,75 +1,75 @@
 [Tests]
   design = 'MatReaction.md MatBodyForce.md EquilibriumBC.md MatNeumannBC.md'
-  verification = 'ver-1a.md'
+  verification = 'val-2e.md'
   issues = '#12'
   [val-2ea_csvdiff]
     type = CSVDiff
     input = val-2ea.i
     csvdiff = val-2ea_out.csv
-    requirement = 'The system shall be able to model permeation of Deuterium from a thick membrane with 0.05 mm at 825 K to generate CSV data for use in comparisons with the experimental data.'
+    requirement = 'The system shall be able to model permeation of Deuterium from a 0.05 mm thick membrane at 825 K to generate CSV data for use in comparisons with the experimental data.'
   []
   [val-2ea]
     type = Exodiff
     input = val-2ea.i
-    should_execute = False  # this test relies on the output files from ver-1a_heavy, so it shouldn't be run twice
+    should_execute = False  # this test relies on the output files from val-2ea_csvdiff, so it shouldn't be run twice
     exodiff = val-2ea_out.e
-    requirement = 'The system shall be able to model permeation of Deuterium from a thick membrane with 0.05 mm at 825 K.'
+    requirement = 'The system shall be able to model permeation of Deuterium from a 0.05 mm thick membrane at 825 K.'
   []
   [val-2eb_csvdiff]
     type = CSVDiff
     input = val-2ea.i
     csvdiff = val-2eb_out.csv
     cli_args = 'slab_thickness="${units 2.5e-5 m -> mum}" file_name="val-2eb_out"'
-    requirement = 'The system shall be able to model permeation of Deuterium from a thin membrane with 0.025 mm at 825 K.'
+    requirement = 'The system shall be able to model permeation of Deuterium from a 0.025 mm thin membrane at 825 K to generate CSV data for use in comparisons with the experimental data.'
   []
   [val-2eb]
     type = Exodiff
     input = val-2ea.i
-    should_execute = False  # this test relies on the output files from ver-1a_heavy, so it shouldn't be run twice
+    should_execute = False  # this test relies on the output files from val-2eb_csvdiff, so it shouldn't be run twice
     exodiff = val-2eb_out.e
     cli_args = 'slab_thickness="${units 2.5e-5 m -> mum}" file_name="val-2eb_out"'
-    requirement = 'The system shall be able to model permeation of Deuterium from a thin membrane with 0.025 mm at 825 K to generate CSV data for use in comparisons with the experimental data.'
+    requirement = 'The system shall be able to model permeation of Deuterium from a 0.025 mm thin membrane at 825 K.'
   []
   [val-2ec_csvdiff]
     type = CSVDiff
     input = val-2ea.i
     csvdiff = val-2ec_out.csv
     cli_args = 'temperature="${units 865 K}" slab_thickness="${units 2.5e-5 m -> mum}" file_name="val-2ec_out"'
-    requirement = 'The system shall be able to model permeation of Deuterium from a thin membrane with 0.025 mm at 865 K.'
+    requirement = 'The system shall be able to model permeation of Deuterium from a 0.025 mm thin membrane at 865 K to generate CSV data for use in comparisons with the experimental data.'
   []
   [val-2ec]
     type = Exodiff
     input = val-2ea.i
-    should_execute = False  # this test relies on the output files from ver-1a_heavy, so it shouldn't be run twice
+    should_execute = False  # this test relies on the output files from val-2ec_csvdiff, so it shouldn't be run twice
     exodiff = val-2ec_out.e
     cli_args = 'temperature="${units 865 K}" slab_thickness="${units 2.5e-5 m -> mum}" file_name="val-2ec_out"'
-    requirement = 'The system shall be able to model permeation of Deuterium from a thin membrane with 0.025 mm at 865 K to generate CSV data for use in comparisons with the experimental data.'
+    requirement = 'The system shall be able to model permeation of Deuterium from a 0.025 mm thin membrane at 865 K and generate an exodus file.'
   []
   [val-2ed_csvdiff]
     type = CSVDiff
     input = val-2ed.i
     csvdiff = val-2ed_out.csv
-    requirement = 'The system shall be able to model permeation of mixture gas from a thin membrane with 0.025 mm at 870 K using lawdep boundary conditions.'
+    requirement = 'The system shall be able to model permeation of mixture gas from a 0.025 mm thin membrane at 870 K using lawdep boundary conditions to generate CSV data for use in comparisons with the experimental data.'
   []
   [val-2ed]
     type = Exodiff
     input = val-2ed.i
-    should_execute = False  # this test relies on the output files from ver-1a_heavy, so it shouldn't be run twice
+    should_execute = False  # this test relies on the output files from val-2ed_csvdiff, so it shouldn't be run twice
     exodiff = val-2ed_out.e
-    requirement = 'The system shall be able to model permeation of mixture gas with chemical reaction from a thin membrane with 0.025 mm at 870 K using lawdep boundary conditions to generate CSV data for use in comparisons with the experimental data.'
+    requirement = 'The system shall be able to model permeation of mixture gas with chemical reaction from a  0.025 mm thin membrane at 870 K using lawdep boundary conditions and generate an exodus file.'
   []
   [val-2ee_csvdiff]
     type = CSVDiff
     input = val-2ee.i
     csvdiff = val-2ee_out.csv
-    requirement = 'The system shall be able to model permeation of mixture gas from a thin membrane with 0.025 mm at 870 K using ratedep boundary conditions.'
+    requirement = 'The system shall be able to model permeation of mixture gas from a 0.025 mm thin membrane at 870 K using ratedep boundary conditions to generate CSV data for use in comparisons with the experimental data.'
   []
   [val-2ee]
     type = Exodiff
     input = val-2ee.i
-    should_execute = False  # this test relies on the output files from ver-1a_heavy, so it shouldn't be run twice
+    should_execute = False  # this test relies on the output files from val-2ee_csvdiff, so it shouldn't be run twice
     exodiff = val-2ee_out.e
-    requirement = 'The system shall be able to model permeation of mixture gas with chemical reaction from a thin membrane with 0.025 mm at 870 K using ratedep boundary conditions to generate CSV data for use in comparisons with the experimental data.'
+    requirement = 'The system shall be able to model permeation of mixture gas with chemical reaction from a 0.025 mm thin membrane at 870 K using ratedep boundary conditions and generate an exodus file.'
   []
   [ver-2ec_comparison]
     type = RunCommand

@@ -1,9 +1,9 @@
-# Validation Problem #2ea from TMAP4/TMAP7 V&V document
+# Validation Problem #2ea from TMAP7's V&V document
 # Deuterium permeation through 0.05-mm Pd at 825 K.
 # No Soret effect, or trapping included.
 
 # Physical Constants
-# Note that we do NOT use the same number of digits as in TMAP4/TMAP7.
+# Note that we do NOT use the same number of digits as in TMAP7.
 # This is to be consistent with PhysicalConstant.h
 kb = '${units 1.380649e-23 J/K}' # Boltzmann constant
 R = '${units 8.31446261815324 J/mol/K}' # Gas constant
@@ -48,7 +48,6 @@ simulation_time = '${units 1900 s}'
 []
 
 [Variables]
-  # concentration in the SiC layer in atoms/microns^3
   [D2_pressure_upstream]
     initial_condition = '${pressure_initial}'
   []
@@ -294,6 +293,7 @@ simulation_time = '${units 1900 s}'
   nl_abs_tol = 1e-12
   dtmax = 5
   end_time = ${simulation_time}
+  nl_max_its = 15
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 0.1
@@ -301,6 +301,7 @@ simulation_time = '${units 1900 s}'
     iteration_window = 1
     growth_factor = 1.1
     cutback_factor = 0.9
+    cutback_factor_at_failure = 0.9
   []
 []
 

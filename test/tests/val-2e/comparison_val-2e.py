@@ -39,7 +39,7 @@ def read_csv_from_TMAP8(file_name, parameter_names):
     Returns:
         float, ndarray: the matrix keep the simulation results, first axis depended on len(parameter_names)
     """
-    if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
         csv_folder = f"../../../../test/tests/val-2e/gold/{file_name}"
     else:                                  # if in test folder
         csv_folder = f"./gold/{file_name}"
@@ -57,7 +57,7 @@ R = 8.31446261815324 # J/mol/K Gas constant
 Na = 6.023e23 # atom/mol Avogadro's number
 
 Q = 0.1 # m^3/s flow rate
-T = [825, 825, 865]
+T = [825, 825, 865] K
 Area = 1.8e-4 # m^2 area
 ################################################################################
 ################################# Val-2e a/b/c #################################
@@ -244,12 +244,6 @@ for index in range(len(simulation_results_list)):
             tmp_flux_H2 = (simulation_results_list[index][parameter_names.index('pressure_downstream_H2')][i] - 1e-7) * Q / R / T / Area
             tmp_flux_D2 = (simulation_results_list[index][parameter_names.index('pressure_downstream_D2')][i] - 1e-7) * Q / R / T / Area
             tmp_flux_HD = (simulation_results_list[index][parameter_names.index('pressure_downstream_HD')][i] - 1e-7) * Q / R / T / Area
-            # tmp_flux_H2 = 0.5 * simulation_results_list[index][parameter_names.index('flux_surface_right_H')][i] ** 2 / \
-            #     (simulation_results_list[index][parameter_names.index('flux_surface_right_D')][i] + simulation_results_list[index][parameter_names.index('flux_surface_right_H')][i])
-            # tmp_flux_D2 = 0.5 * simulation_results_list[index][parameter_names.index('flux_surface_right_D')][i] ** 2 / \
-            #     (simulation_results_list[index][parameter_names.index('flux_surface_right_D')][i] + simulation_results_list[index][parameter_names.index('flux_surface_right_H')][i])
-            # tmp_flux_HD = simulation_results_list[index][parameter_names.index('flux_surface_right_H')][i] * simulation_results_list[index][parameter_names.index('flux_surface_right_D')][i] \
-            #     / (simulation_results_list[index][parameter_names.index('flux_surface_right_D')][i] + simulation_results_list[index][parameter_names.index('flux_surface_right_H')][i])
             tmp_flux_sum_refer = 0.5 * (simulation_results_list[index][parameter_names.index('flux_surface_right_D')][i] + simulation_results_list[index][parameter_names.index('flux_surface_right_H')][i]) # test total
             tmp_flux_array_H2.append(tmp_flux_H2)
             tmp_flux_array_D2.append(tmp_flux_D2)
@@ -423,9 +417,6 @@ for index in range(len(simulation_results_list)):
             tmp_flux_H2 = (tmp_pressure_down_array_H2[-1] - 1e-7) * Q / R / T / Area
             tmp_flux_D2 = (tmp_pressure_down_array_D2[-1] - 1e-7) * Q / R / T / Area
             tmp_flux_HD = (tmp_pressure_down_array_HD[-1] - 1e-7) * Q / R / T / Area
-            # tmp_flux_H2 = simulation_results_list[index][parameter_names.index('flux_on_left_H2')][i]
-            # tmp_flux_D2 = simulation_results_list[index][parameter_names.index('flux_on_left_D2')][i]
-            # tmp_flux_HD = simulation_results_list[index][parameter_names.index('flux_on_left_HD')][i]
             tmp_flux_sum_refer = 0.5 * (simulation_results_list[index][parameter_names.index('flux_surface_right_D')][i] + simulation_results_list[index][parameter_names.index('flux_surface_right_H')][i]) # test total
             tmp_flux_array_H2.append(tmp_flux_H2)
             tmp_flux_array_D2.append(tmp_flux_D2)
@@ -487,8 +478,6 @@ ax.plot(experiment_results_list[3][experiment_parameter_names.index('Pressure [P
         experiment_results_list[3][experiment_parameter_names.index('Flux [mol/m^2/s]')],
         label=f'{label_name[3]} (experiment)', c=f'C{3}', linestyle='--')
 
-# ax.plot(pressure_array_D2[layer] + pressure_array_HD[layer] / 2,
-#         2*np.sqrt(flux_array_H2[layer]*flux_array_D2[layer]), label=f'HD test (TMAP8)', c=f'C{4}')
 
 ax.set_xlabel(u'Effective deuterium pressure (Pa)')
 ax.set_ylabel(r"Partial release rates (mol/m$^2$/s)")
