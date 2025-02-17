@@ -64,6 +64,11 @@ SpeciesSolubilityPhysics::SpeciesSolubilityPhysics(const InputParameters & param
     _length_unit(getParam<Real>("length_unit_scaling")),
     _pressure_unit(getParam<Real>("pressure_unit_scaling"))
 {
+  // Check sizes
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species",
+                                                                "species_initial_pressures");
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, MooseFunctorName>(
+      "species", "equilibrium_constants");
 }
 
 void
