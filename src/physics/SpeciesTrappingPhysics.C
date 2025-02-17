@@ -121,7 +121,7 @@ SpeciesTrappingPhysics::getSpeciesVariableName(unsigned int c_i, unsigned int s_
   if (_single_variable_set)
     return _species[0][s_j];
   else
-    // Add the component name if defining variables on a component-basis
+    // Add the component name if defining variables on a per-component basis
     return _species[c_i][s_j] + "_" + _components[c_i];
 }
 
@@ -135,7 +135,12 @@ SpeciesTrappingPhysics::addSolverVariables()
 
   for (const auto c_i : index_range(_components))
   {
-    assignBlocks(params, getActionComponent(_components[c_i]).blocks());
+    // Use the whole phyiscs block restriction if using the same species variable everywhere
+    if (_single_variable_set)
+      assignBlocks(params, _blocks);
+    else
+      assignBlocks(params, getActionComponent(_components[c_i]).blocks());
+
     for (const auto s_j : index_range(_species[c_i]))
     {
       const auto species_name = getSpeciesVariableName(c_i, s_j);
@@ -162,6 +167,12 @@ SpeciesTrappingPhysics::addInitialConditions()
 
   for (const auto c_i : index_range(_components))
   {
+    // Use the whole phyiscs block restriction if using the same species variable everywhere
+    if (_single_variable_set)
+      assignBlocks(params, _blocks);
+    else
+      assignBlocks(params, getActionComponent(_components[c_i]).blocks());
+
     for (const auto s_j : index_range(_species[c_i]))
     {
       const auto species_name = getSpeciesVariableName(c_i, s_j);
@@ -182,6 +193,10 @@ SpeciesTrappingPhysics::addFEKernels()
 {
   for (const auto c_i : index_range(_components))
   {
+    // Use the whole phyiscs block restriction if using the same species variable everywhere
+    const auto blocks =
+        _single_variable_set ? _blocks : getActionComponent(_components[c_i]).blocks();
+
     // Create the kernel for each species
     for (const auto s_j : index_range(_species[c_i]))
     {
@@ -194,6 +209,7 @@ SpeciesTrappingPhysics::addFEKernels()
         const std::string kernel_type = "TimeDerivativeNodalKernel";
         InputParameters params = getFactory().getValidParams(kernel_type);
         params.set<NonlinearVariableName>("variable") = species_name;
+        assignBlocks(params, blocks);
         getProblem().addNodalKernel(kernel_type, prefix() + species_name + "_time", params);
       }
 
@@ -201,6 +217,7 @@ SpeciesTrappingPhysics::addFEKernels()
       {
         const std::string kernel_type = "TrappingNodalKernel";
         auto params = _factory.getValidParams(kernel_type);
+        assignBlocks(params, blocks);
         params.set<NonlinearVariableName>("variable") = species_name;
         params.set<std::vector<VariableName>>("mobile_concentration") = {mobile_species_name};
         mooseAssert(c_i < _component_temperatures.size(), "Should not happen");
@@ -226,6 +243,7 @@ SpeciesTrappingPhysics::addFEKernels()
       {
         const std::string kernel_type = "ReleasingNodalKernel";
         auto params = _factory.getValidParams(kernel_type);
+        assignBlocks(params, blocks);
         params.set<NonlinearVariableName>("variable") = species_name;
         params.set<Real>("alpha_r") = _alpha_rs[c_i][s_j];
         params.set<Real>("detrapping_energy") = _detrapping_energies[c_i][s_j];
@@ -249,6 +267,7 @@ SpeciesTrappingPhysics::addFEKernels()
       {
         const std::string kernel_type = "CoupledTimeDerivative";
         auto params = _factory.getValidParams(kernel_type);
+        assignBlocks(params, blocks);
         params.set<NonlinearVariableName>("variable") = mobile_species_name;
         params.set<std::vector<VariableName>>("v") = {species_name};
 
