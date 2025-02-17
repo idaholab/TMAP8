@@ -10,12 +10,13 @@
     requirement = 'The system shall be able to model species diffusion through a structure, originating from a depleting source enclosure.'
   []
   [ver-1a-components]
-    type = Exodiff
+    type = CSVDiff
     input = ver-1a-component.i
-    exodiff = ver-1a-component_out.e
+    # Note that the additional element prevents an exodiff comparison
+    # with [ver-1a]
+    csvdiff = ver-1a-component_csv.csv
     cli_args = 'Executioner/dt=5 ActionComponents/structure/nx=10'
     requirement = 'The system shall be able to model species diffusion through a structure, originating from a depleting source enclosure using component syntax.'
-    custom_cmp = 'custom.cmp'
   []
   [ver-1a_heavy]
     type = Exodiff
