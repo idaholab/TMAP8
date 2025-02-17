@@ -41,4 +41,10 @@ SpeciesPhysicsBase::SpeciesPhysicsBase(const InputParameters & parameters)
     _scaling_factors({getParam<std::vector<Real>>("species_scaling_factors")}),
     _component_temperatures({getParam<MooseFunctorName>("temperature")})
 {
+  // Cant add kernels twice to the same species
+  checkVectorParamsNoOverlap<NonlinearVariableName>({"species"});
+
+  // Check sizes
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species",
+                                                                "species_scaling_factor");
 }
