@@ -16,12 +16,12 @@ class ActionComponent;
  * Creates all the objects needed to solve for the concentration of a scalar in traps distributed
  * over a mesh.
  */
-class FieldTrappingPhysics : public SpeciesPhysicsBase
+class SpeciesTrappingPhysics : public SpeciesPhysicsBase
 {
 public:
   static InputParameters validParams();
 
-  FieldTrappingPhysics(const InputParameters & parameters);
+  SpeciesTrappingPhysics(const InputParameters & parameters);
 
   void addComponent(const ActionComponent & component) override;
 

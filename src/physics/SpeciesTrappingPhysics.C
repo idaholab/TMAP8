@@ -6,26 +6,26 @@
 /*               ALL RIGHTS RESERVED                    */
 /********************************************************/
 
-#include "FieldTrappingPhysics.h"
+#include "SpeciesTrappingPhysics.h"
 #include "ActionComponent.h"
 #include "MooseUtils.h"
 
 // Register the actions for the objects actually used
-registerMooseAction("TMAP8App", FieldTrappingPhysics, "init_physics");
-registerMooseAction("TMAP8App", FieldTrappingPhysics, "init_component_physics");
-registerMooseAction("TMAP8App", FieldTrappingPhysics, "copy_vars_physics");
-registerMooseAction("TMAP8App", FieldTrappingPhysics, "check_integrity_early_physics");
-registerMooseAction("TMAP8App", FieldTrappingPhysics, "add_variable");
-registerMooseAction("TMAP8App", FieldTrappingPhysics, "add_ic");
-registerMooseAction("TMAP8App", FieldTrappingPhysics, "add_kernel");
+registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "init_physics");
+registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "init_component_physics");
+registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "copy_vars_physics");
+registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "check_integrity_early_physics");
+registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_variable");
+registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_ic");
+registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_kernel");
 
 InputParameters
-FieldTrappingPhysics::validParams()
+SpeciesTrappingPhysics::validParams()
 {
   InputParameters params = SpeciesPhysicsBase::validParams();
   params.addClassDescription(
       "Add Physics for the trapping of species on multi-dimensional components.");
-  params.addParam<std::vector<std::vector<VariableName>>>(
+  params.addParam<std::vector<VariableName>>(
       "mobile",
       {},
       "The variable(s) representing the mobile concentration(s) of solute species on each "
@@ -37,7 +37,7 @@ FieldTrappingPhysics::validParams()
                         "Whether to create new variables for each trapped species on every "
                         "component, or whether to only create variables.");
 
-  params.addParam<std::vector<std::vector<Real>>>(
+  params.addParam<std::vector<Real>>(
       "alpha_t",
       {},
       "The trapping rate coefficient for each component and species. This has units of 1/time "
@@ -49,12 +49,12 @@ FieldTrappingPhysics::validParams()
   params.addParam<std::vector<FunctionName>>(
       "Ct0", {}, "The fraction of host sites that can contribute to trapping");
 
-  params.addParam<std::vector<std::vector<Real>>>(
+  params.addParam<std::vector<Real>>(
       "alpha_r",
       {},
       "The release rate coefficient. If a single vector is specified, "
       "the same release rate coefficient will be used on every component");
-  params.addParam<std::vector<std::vector<Real>>>(
+  params.addParam<std::vector<Real>>(
       "trapping_energy",
       {},
       "The trapping energy in units of Kelvin. If a single vector is specified, "
@@ -62,52 +62,37 @@ FieldTrappingPhysics::validParams()
 
   // Parameter groups
   params.addParamNamesToGroup("alpha_t N Ct0 trap_per_free", "Trapping");
-  params.addParamNamesToGroup("alpha_r temperatures trapping_energy", "Release");
+  params.addParamNamesToGroup("alpha_r temperatures trapping_energy", "Releasing");
 
   return params;
 }
 
-FieldTrappingPhysics::FieldTrappingPhysics(const InputParameters & parameters)
+SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameters)
   : SpeciesPhysicsBase(parameters),
     // If specified in the Physics block, all parameters are retrieved here
-    _mobile_species_names(getParam<std::vector<std::vector<VariableName>>>("mobile")),
-    _alpha_ts(getParam<std::vector<std::vector<Real>>>("alpha_t")),
-    _Ns(getParam<std::vector<Real>>("N")),
-    _Ct0s(getParam<std::vector<FunctionName>>("Ct0")),
-    _trap_per_frees(getParam<std::vector<Real>>("trap_per_free")),
-    _alpha_rs(getParam<std::vector<std::vector<Real>>>("alpha_r")),
-    _trapping_energies(getParam<std::vector<std::vector<Real>>>("trapping_energy")),
+    _mobile_species_names({getParam<std::vector<VariableName>>("mobile")}),
+    _alpha_ts({getParam<std::vector<Real>>("alpha_t")}),
+    _Ns({getParam<std::vector<Real>>("N")}),
+    _Ct0s({getParam<std::vector<FunctionName>>("Ct0")}),
+    _trap_per_frees({getParam<std::vector<Real>>("trap_per_free")}),
+    _alpha_rs({getParam<std::vector<Real>>("alpha_r")}),
+    _trapping_energies({getParam<std::vector<Real>>("trapping_energy")}),
     _single_variable_set(!getParam<bool>("separate_variables_per_component"))
 {
-  // TODO: do this after components have been processed
-  if (_components.size())
-    _trap_per_frees.resize(_components.size());
-  // TODO: check for any overlap between species names so we don't add kernels multiple times
-  // TODO: Add size checks on every parameter
+  // We allow overlaps between mobile species names because two trapped species could release to the
+  // same mobile species and adding the two time derivative kernels is correct
 }
 
 void
-FieldTrappingPhysics::addComponent(const ActionComponent & component)
+SpeciesTrappingPhysics::addComponent(const ActionComponent & component)
 {
   for (const auto & block : component.blocks())
     _blocks.push_back(block);
   _components.push_back(component.name());
-  // TODO: add other quantities
-  // TODO: check unique component names
-
-  mooseAssert(_alpha_ts.size() == _components.size(),
-              "Wrong alpha_t size (" + std::to_string(_alpha_ts.size()) +
-                  ") Components: " + Moose::stringify(_components));
-  mooseAssert(_Ns.size() == _components.size(), "Wrong N size");
-  mooseAssert(_Ct0s.size() == _components.size(), "Wrong Ct0 size");
-  mooseAssert(_trap_per_frees.size() == _components.size(), "Wrong trap per free size");
-  mooseAssert(_alpha_rs.size() == _components.size(), "Wrong alpha_r size");
-  mooseAssert(_trapping_energies.size() == _components.size(), "Wrong trapping energy size");
-  mooseAssert(_component_temperatures.size() == _components.size(), "Wrong temperature size");
 }
 
 VariableName
-FieldTrappingPhysics::getSpeciesVariableName(unsigned int c_i, unsigned int s_j) const
+SpeciesTrappingPhysics::getSpeciesVariableName(unsigned int c_i, unsigned int s_j) const
 {
   mooseAssert(c_i < _species.size(), "component index higher than number of components");
   mooseAssert(s_j < _species[c_i].size(), "species index higher than number of species");
@@ -119,7 +104,7 @@ FieldTrappingPhysics::getSpeciesVariableName(unsigned int c_i, unsigned int s_j)
 }
 
 void
-FieldTrappingPhysics::addSolverVariables()
+SpeciesTrappingPhysics::addSolverVariables()
 {
   const std::string variable_type = "MooseVariable";
   InputParameters params = getFactory().getValidParams(variable_type);
@@ -148,7 +133,7 @@ FieldTrappingPhysics::addSolverVariables()
 }
 
 void
-FieldTrappingPhysics::addInitialConditions()
+SpeciesTrappingPhysics::addInitialConditions()
 {
   const std::string ic_type = "ConstantIC";
   InputParameters params = getFactory().getValidParams(ic_type);
@@ -171,7 +156,7 @@ FieldTrappingPhysics::addInitialConditions()
 }
 
 void
-FieldTrappingPhysics::addFEKernels()
+SpeciesTrappingPhysics::addFEKernels()
 {
   for (const auto c_i : index_range(_components))
   {
@@ -202,6 +187,7 @@ FieldTrappingPhysics::addFEKernels()
         params.set<Real>("alpha_t") = _alpha_ts[c_i][s_j];
         params.set<Real>("N") = _Ns[c_i];
         params.set<FunctionName>("Ct0") = _Ct0s[c_i];
+        params.set<Real>("trap_per_free") = _trap_per_frees[c_i];
 
         // Add the other species as occupying traps
         std::vector<VariableName> copy_species;
