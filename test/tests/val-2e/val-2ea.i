@@ -294,7 +294,6 @@ simulation_time = '${units 1900 s}'
   dtmax = 5
   end_time = ${simulation_time}
   nl_max_its = 15
-  nl_max_its = 15
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 0.1
@@ -302,7 +301,6 @@ simulation_time = '${units 1900 s}'
     iteration_window = 1
     growth_factor = 1.1
     cutback_factor = 0.9
-    cutback_factor_at_failure = 0.9
     cutback_factor_at_failure = 0.9
   []
 []

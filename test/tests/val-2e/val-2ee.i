@@ -3,7 +3,7 @@
 # No Soret effect, or trapping included.
 
 # Physical Constants
-# Note that we do NOT use the same number of digits as in TMAP4/TMAP7.
+# Note that we do NOT use the same number of digits as in TMAP7.
 # This is to be consistent with PhysicalConstant.h
 kb = '${units 1.380649e-23 J/K}' # Boltzmann constant
 R = '${units 8.31446261815324 J/mol/K}' # Gas constant
@@ -25,9 +25,6 @@ diffusivity_pre_D = '${units 2.636e-4 m^2/s -> mum^2/s}'
 diffusivity_energy_D = '${units ${fparse 1315.8 * R} J/mol}'
 diffusivity_pre_H = '${units 3.728e-4 m^2/s -> mum^2/s}'
 diffusivity_energy_H = '${units ${fparse 1315.8 * R} J/mol}'
-# solubility_exponent = 0.9297 # -
-# solubility_pre = '${units ${fparse 9.355e22 / 1e18} at/mum^3/Pa^0.9297}'
-# solubility_energy = '${units ${fparse 5918 * R} J/mol}'
 K_r_pre_D2 = '${units ${fparse 2.502e-24 / sqrt(4 * temperature)} m^4/s -> mum^4/s}'
 K_r_pre_H2 = '${units ${fparse 2.502e-24 / sqrt(2 * temperature)} m^4/s -> mum^4/s}'
 K_r_pre_HD = '${units ${fparse 2.502e-24 / sqrt(3 * temperature)} m^4/s -> mum^4/s}'
@@ -252,17 +249,18 @@ simulation_time = '${units 1000 s}'
     extra_vector_tags = 'ref'
   []
   [MatReaction_upstream_D2_reaction]
-    type = ADMatReaction
+    type = ADMatReactionFlexible
     variable = D2_pressure_upstream
-    v = 'sqrt_PH2_sqrt_PD2_upstream'
-    reaction_rate = -1
+    vs = 'D_concentration H_concentration'
+    reaction_rate_name = 'K_r_HD'
+    coeff = '${fparse -0.5 * kb * temperature * surface_area / volume_enclosure}'
     extra_vector_tags = 'ref'
   []
   [MatReaction_upstream_D2_re_reaction]
     type = ADMatReaction
     variable = D2_pressure_upstream
     v = 'HD_pressure_upstream'
-    reaction_rate = 0.5
+    reaction_rate = '${fparse 0.5 *  K_d_HD * kb * temperature * surface_area / volume_enclosure}'
     extra_vector_tags = 'ref'
   []
   # Equation for H2 in enclosure upstream
@@ -293,17 +291,18 @@ simulation_time = '${units 1000 s}'
     extra_vector_tags = 'ref'
   []
   [MatReaction_upstream_H2_reaction]
-    type = ADMatReaction
+    type = ADMatReactionFlexible
     variable = H2_pressure_upstream
-    v = 'sqrt_PH2_sqrt_PD2_upstream'
-    reaction_rate = -1
+    vs = 'D_concentration H_concentration'
+    reaction_rate_name = 'K_r_HD'
+    coeff = '${fparse -0.5 * kb * temperature * surface_area / volume_enclosure}'
     extra_vector_tags = 'ref'
   []
   [MatReaction_upstream_H2_re_reaction]
     type = ADMatReaction
     variable = H2_pressure_upstream
     v = 'HD_pressure_upstream'
-    reaction_rate = 0.5
+    reaction_rate = '${fparse 0.5 *  K_d_HD * kb * temperature * surface_area / volume_enclosure}'
     extra_vector_tags = 'ref'
   []
   # Equation for HD in enclosure upstream
@@ -334,17 +333,18 @@ simulation_time = '${units 1000 s}'
     extra_vector_tags = 'ref'
   []
   [MatReaction_upstream_HD_reaction]
-    type = ADMatReaction
+    type = ADMatReactionFlexible
     variable = HD_pressure_upstream
-    v = 'sqrt_PH2_sqrt_PD2_upstream'
-    reaction_rate = 2
+    vs = 'D_concentration H_concentration'
+    reaction_rate_name = 'K_r_HD'
+    coeff = '${fparse kb * temperature * surface_area / volume_enclosure}'
     extra_vector_tags = 'ref'
   []
   [MatReaction_upstream_HD_re_reaction]
     type = ADMatReaction
     variable = HD_pressure_upstream
     v = 'HD_pressure_upstream'
-    reaction_rate = -1
+    reaction_rate = '${fparse - K_d_HD * kb * temperature * surface_area / volume_enclosure}'
     extra_vector_tags = 'ref'
   []
   # Membrane upstream
@@ -388,17 +388,18 @@ simulation_time = '${units 1000 s}'
     extra_vector_tags = 'ref'
   []
   [MatReaction_downstream_D2_reaction]
-    type = ADMatReaction
+    type = ADMatReactionFlexible
     variable = D2_pressure_downstream
-    v = 'sqrt_PH2_sqrt_PD2_downstream'
-    reaction_rate = -1
+    vs = 'D_concentration H_concentration'
+    reaction_rate_name = 'K_r_HD'
+    coeff = '${fparse -0.5 * kb * temperature * surface_area / volume_enclosure}'
     extra_vector_tags = 'ref'
   []
   [MatReaction_downstream_D2_re_reaction]
     type = ADMatReaction
     variable = D2_pressure_downstream
     v = 'HD_pressure_downstream'
-    reaction_rate = 0.5
+    reaction_rate = '${fparse 0.5 * K_d_HD * kb * temperature * surface_area / volume_enclosure}'
     extra_vector_tags = 'ref'
   []
   # Equation for H2 enclosure downstream
@@ -422,17 +423,18 @@ simulation_time = '${units 1000 s}'
     extra_vector_tags = 'ref'
   []
   [MatReaction_downstream_H2_reaction]
-    type = ADMatReaction
+    type = ADMatReactionFlexible
     variable = H2_pressure_downstream
-    v = 'sqrt_PH2_sqrt_PD2_downstream'
-    reaction_rate = -1
+    vs = 'D_concentration H_concentration'
+    reaction_rate_name = 'K_r_HD'
+    coeff = '${fparse -0.5 * kb * temperature * surface_area / volume_enclosure}'
     extra_vector_tags = 'ref'
   []
   [MatReaction_downstream_H2_re_reaction]
     type = ADMatReaction
     variable = H2_pressure_downstream
     v = 'HD_pressure_downstream'
-    reaction_rate = 0.5
+    reaction_rate = '${fparse 0.5 * K_d_HD * kb * temperature * surface_area / volume_enclosure}'
     extra_vector_tags = 'ref'
   []
   # Equation for HD enclosure downstream
@@ -456,17 +458,18 @@ simulation_time = '${units 1000 s}'
     extra_vector_tags = 'ref'
   []
   [MatReaction_downstream_HD_reaction]
-    type = ADMatReaction
+    type = ADMatReactionFlexible
     variable = HD_pressure_downstream
-    v = 'sqrt_PH2_sqrt_PD2_downstream'
-    reaction_rate = 2
+    vs = 'D_concentration H_concentration'
+    reaction_rate_name = 'K_r_HD'
+    coeff = '${fparse kb * temperature * surface_area / volume_enclosure}'
     extra_vector_tags = 'ref'
   []
   [MatReaction_downstream_HD_re_reaction]
     type = ADMatReaction
     variable = HD_pressure_downstream
     v = 'HD_pressure_downstream'
-    reaction_rate = -1
+    reaction_rate = '${fparse - K_d_HD * kb * temperature * surface_area / volume_enclosure}'
     extra_vector_tags = 'ref'
   []
   # Membrane downstream
@@ -561,7 +564,7 @@ simulation_time = '${units 1000 s}'
   [membrane_reaction_rate_left_H2]
     type = ADParsedMaterial
     property_name = 'membrane_reaction_rate_left_H2'
-    material_property_names =flux_on_left_H2
+    material_property_names = flux_on_left_H2
     expression = '-flux_on_left_H2 * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
   []
   [membrane_reaction_rate_right_HD]
@@ -573,7 +576,7 @@ simulation_time = '${units 1000 s}'
   [membrane_reaction_rate_left_HD]
     type = ADParsedMaterial
     property_name = 'membrane_reaction_rate_left_HD'
-    material_property_names =flux_on_left_HD
+    material_property_names = flux_on_left_HD
     expression = '-flux_on_left_HD * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor}'
   []
   [converter_to_regular]
@@ -588,7 +591,7 @@ simulation_time = '${units 1000 s}'
     property_name = 'flux_on_left_D'
     material_property_names = 'K_r_D2 K_r_HD'
     expression = '- 2 * K_r_D2 * D_concentration ^ 2 + 2 * ${K_d_D2} * D2_pressure_downstream - K_r_HD * D_concentration * H_concentration + ${K_d_HD} * HD_pressure_downstream'
-                  # 2 J_A2 + J_AB (J_AB = (2K_r/K_r ?) C_A C_B - K_d P_AB)
+    # 2 J_A2 + J_AB (J_AB = (2K_r/K_r ?) C_A C_B - K_d P_AB)
     outputs = 'exodus'
   []
   [flux_on_right_D]
@@ -605,7 +608,7 @@ simulation_time = '${units 1000 s}'
     property_name = 'flux_on_left_H'
     material_property_names = 'K_r_H2 K_r_HD'
     expression = '- 2 * K_r_H2 * H_concentration ^ 2 + 2 * ${K_d_H2} * H2_pressure_downstream - K_r_HD * D_concentration * H_concentration + ${K_d_HD} * HD_pressure_downstream'
-                  # 2 J_A2 + J_AB (J_AB = (2K_r/K_r ?) C_A C_B - K_d P_AB)
+    # 2 J_A2 + J_AB (J_AB = (2K_r/K_r ?) C_A C_B - K_d P_AB)
     outputs = 'exodus'
   []
   [flux_on_right_H]
@@ -861,7 +864,6 @@ simulation_time = '${units 1000 s}'
   dtmax = 5
   end_time = ${simulation_time}
   nl_max_its = 15
-  nl_max_its = 15
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 0.01
@@ -869,7 +871,6 @@ simulation_time = '${units 1000 s}'
     iteration_window = 1
     growth_factor = 1.1
     cutback_factor = 0.9
-    cutback_factor_at_failure = 0.9
     cutback_factor_at_failure = 0.9
   []
 []

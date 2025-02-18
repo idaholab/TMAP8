@@ -1,4 +1,4 @@
-# val-2ea
+# val-2e
 
 # Co-permeation of H$_2$ and D$_2$ through Pd
 
@@ -37,15 +37,15 @@ Likewise in the downstream chamber, enclosure 3, HD is formed together with H$_2
 The first three test cases are permeation tests of D$_2$ alone through membranes of each thickness.
 For the 0.025 membrane, tests are conducted at both 825 K and 865 K whereas the 0.05 mm membrane is tested only at 825 K.
 
-[tab:val-2e_cases] described the different cases subcases being modeled in this validation effort. 
+[tab:val-2e_cases] described the different cases subcases being modeled in this validation effort.
 
 !table id=tab:val-2e_cases caption=Different subcases being modeled in this validation effort and their specific conditions.
 | case name  | Temperature (K) | Membrane thickness (mm) | Inlet gas composition            | Remark |
 | -----------  | ---------------- | --------------------------- | ---------------------------- | --------- |
-| val-2ea        | 825                      | 0.05                                       | D$_2$                                     | Assumes solubility equilibrium ([eq:seivert_concentration] |
-| val-2eb        | 825                      | 0.025                                     | D$_2$                                     | Assumes solubility equilibrium ([eq:seivert_concentration] |
-| val-2ec        | 865                      | 0.025                                     | D$_2$                                     | Assumes solubility equilibrium ([eq:seivert_concentration] |
-| val-2ed        | 870                      | 0.025                                     | D$_2$ + H$_2$ at 0.063 Pa | Assumes solubility equilibrium ([eq:seivert_concentration] |
+| val-2ea        | 825                      | 0.05                                       | D$_2$                                     | Assumes solubility equilibrium ([eq:seivert_concentration]) |
+| val-2eb        | 825                      | 0.025                                     | D$_2$                                     | Assumes solubility equilibrium ([eq:seivert_concentration]) |
+| val-2ec        | 865                      | 0.025                                     | D$_2$                                     | Assumes solubility equilibrium ([eq:seivert_concentration]) |
+| val-2ed        | 870                      | 0.025                                     | D$_2$ + H$_2$ at 0.063 Pa | Assumes solubility equilibrium ([eq:seivert_concentration]) |
 | val-2ee        | 870                      | 0.025                                     | D$_2$ + H$_2$ at 0.063 Pa | Accounts for recombination kinetics ([eq:recombination]) |
 
 
@@ -200,7 +200,7 @@ Other case and model parameters used in TMAP8 are listed in [val-2e_parameters]:
 !table id=val-2e_parameters caption=Values of material properties.
 | Parameter | Description                          | Value                                                       | Units                 | Reference                 |
 | --------- | ------------------------------------ | ----------------------------------------------------------- | --------------------- | --------------------- |
-| $k_b$     | Boltzmann constant                   | 1.380649 $\times 10^{-23}$                                  | J/K                   | [PhysicalConstants.h](https://physics.nist.gov/cgi-bin/cuu/Value?r) |
+| $k_b$     | Boltzmann constant                   | 1.380649 $\times 10^{-23}$                                  | J/K                   | [PhysicalConstants.h](https://physics.nist.gov/cgi-bin/cuu/Value?k) |
 | $R$       | Gas constant                         | 8.31446261815324                                            | J/mol/K               | [PhysicalConstants.h](https://physics.nist.gov/cgi-bin/cuu/Value?r) |
 | $A$ | surface area  | 1.8$\times 10^{-4}$                                      | m$^2$ | [!cite](kizu2001co) |
 | $V$ | enclosure volume   | 0.005     | m$^3$            | [!cite](kizu2001co) |
@@ -224,9 +224,9 @@ Other case and model parameters used in TMAP8 are listed in [val-2e_parameters]:
 
 ## Results
 
-[val-2e_comparison_diffusion] shows the comparison of the TMAP8 calculation and the experimental data from [!cite](kizu2001co), including simulations val-2ea, val-2eb, and val-2ec. There are reasonable agreements between the TMAP predictions and the experimental data with root mean square percentage errors (RMSPE) of RMSPE = 22.17 %, 23.68 %, and 23.21 % for val-2ea, val-2eb, and val-2ec.
-[val-2e_comparison_mixture_diffusion] shows the comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation using lawdep condition and the experimental data. The effective D$_2$ pressure is calculated using $P_{D_2} + 0.5 P_{HD}$. There is not a good agreement except for H$_2$ at low pressure, and D$_2$ at high pressure. Which is similar to the results from TMAP7. In this scenario, RMSPE = 66.07 %, 49.18 %, 119.67 %, 22.96 % for H$_2$, D$_2$, HD, and the summation of all gas.
-[val-2e_comparison_mixture_diffusion_recombination] shows the comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation using ratedep condition and the experimental data. There are reasonable agreement between the TMAP predictions and the experimental data with RMSPE = 14.14 %, 58.53 %, 85.22 %, 59.57 % for H$_2$, D$_2$, HD, and the summation of all gas.
+[val-2e_comparison_diffusion] shows the comparison of the TMAP8 calculation and the experimental data from [!cite](kizu2001co), including simulations val-2ea, val-2eb, and val-2ec. There are reasonable agreements between the TMAP predictions and the experimental data with root mean square percentage errors (RMSPE) of RMSPE = 23.51 %, 30.80 %, and 47.70 % for val-2ea, val-2eb, and val-2ec.
+[val-2e_comparison_mixture_diffusion] shows the comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation using lawdep condition and the experimental data. The effective D$_2$ pressure is calculated using $P_{D_2} + 0.5 P_{HD}$. There is not a good agreement except for H$_2$ at low pressure, and D$_2$ at high pressure. Which is similar to the results from TMAP7. In this scenario, RMSPE = 76.26 %, 100.83 %, 115.79 %, 10.77 % for H$_2$, D$_2$, HD, and the summation of all gas.
+[val-2e_comparison_mixture_diffusion_recombination] shows the comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation using ratedep condition and the experimental data. There are reasonable agreement between the TMAP predictions and the experimental data with RMSPE = 11.34 %, 30.70 %, 79.72 %, 43.99 % for H$_2$, D$_2$, HD, and the summation of all gas.
 Note that the agreement could be improved by adjusting the model parameters. It is also possible to perform this optimization with [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html).
 
 !media comparison_val-2e.py

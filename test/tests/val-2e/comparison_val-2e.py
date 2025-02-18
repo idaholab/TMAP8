@@ -54,10 +54,10 @@ def read_csv_from_TMAP8(file_name, parameter_names):
 # Physical constants and model parameters
 kb = 1.380649e-23  # J/K Boltzmann constant
 R = 8.31446261815324 # J/mol/K Gas constant
-Na = 6.023e23 # atom/mol Avogadro's number
+Na = 6.02214076e23 # atom/mol Avogadro's number
 
 Q = 0.1 # m^3/s flow rate
-T = [825, 825, 865] K
+T = [825, 825, 865] # K
 Area = 1.8e-4 # m^2 area
 ################################################################################
 ################################# Val-2e a/b/c #################################
@@ -153,11 +153,14 @@ gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
 label_name = ["0.05mm, 825K", "0.025mm, 825K", "0.025mm, 865K"]
+label_name_postfix = ["val-2ea", "val-2eb", "val-2ec"]
+signal_list = ['o','s','^']
 for index in range(len(simulation_results_list)):
-    ax.plot(pressure_up_array[index], flux_calculated_array[index], label=f'{label_name[index]} (TMAP8)', c=f'C{index}')
+    ax.plot(pressure_up_array[index], flux_calculated_array[index], label=f'{label_name[index]} (TMAP8,{label_name_postfix[index]})', c=f'C{index}')
+for index in range(len(simulation_results_list)):
     ax.plot(experiment_results_list[index][experiment_parameter_names.index('Pressure [Pa]')],
             experiment_results_list[index][experiment_parameter_names.index('Flux [mol/m^2/s]')],
-            label=f'{label_name[index]} (experiment)', c=f'C{index}', linestyle='--')
+            signal_list[index], label=f'{label_name[index]} (experiment)', c=f'C{index}')
 ax.set_xlabel(u'Pressure (Pa)')
 ax.set_ylabel(r"Flux (mol/m$^2$/s)")
 ax.legend(loc="best")
@@ -166,7 +169,7 @@ ax.set_xlim([1e-4,1e1])
 ax.set_xscale('log')
 ax.set_yscale('log')
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
-text_loc = [[1e-1,5e-6], [1e-1,3.1e-6], [1e-1,2e-6]]
+text_loc = [[5e-3,5e-7], [2.5e-4,1.8e-6], [8e-4,8e-6]]
 for index in range(len(simulation_results_list)):
     experiment_input = experiment_results_list[index][experiment_parameter_names.index('Pressure [Pa]')]
     experiment_output = experiment_results_list[index][experiment_parameter_names.index('Flux [mol/m^2/s]')]
@@ -277,13 +280,21 @@ flux_array_sum_refer = np.array(flux_array_sum_refer)
 # ============================================================================ #
 # Extract data from experiments
 experiment_results_list = []
-experiment_file_names = ["experiment_mixture_H2.csv", "experiment_mixture_D2.csv", "experiment_mixture_HD.csv", "experiment_mixture_sum.csv"]
+experiment_file_names = ["experiment_mixture_H2.csv", "experiment_mixture_D2.csv", "experiment_mixture_HD.csv"]
 
 experiment_parameter_names = ['Pressure [Pa]','Flux [mol/m^2/s]'] # s, atoms/microns^2/s, atoms/microns^2/s
 for i in range(len(experiment_file_names)):
     file_name = experiment_file_names[i]
     experiment_results = read_csv_from_TMAP8(file_name, experiment_parameter_names) # read csv file
     experiment_results_list.append(experiment_results)
+
+# get sum results
+experiment_results_pressure_sum =  (experiment_results_list[0][experiment_parameter_names.index('Pressure [Pa]')] +
+                                    experiment_results_list[1][experiment_parameter_names.index('Pressure [Pa]')] +
+                                    experiment_results_list[2][experiment_parameter_names.index('Pressure [Pa]')]) / 3
+experiment_results_flux_sum =  (experiment_results_list[0][experiment_parameter_names.index('Flux [mol/m^2/s]')] +
+                                experiment_results_list[1][experiment_parameter_names.index('Flux [mol/m^2/s]')] +
+                                experiment_results_list[2][experiment_parameter_names.index('Flux [mol/m^2/s]')])
 
 # ============================================================================ #
 # Plot pressure history
@@ -315,27 +326,28 @@ gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
 label_name = [r"H$_2$", r"D$_2$", r"HD", r"sum"]
+signal_list = ['o','s','^','+']
 
 ax.plot(pressure_array_D2[0] + pressure_array_HD[0] / 2,
-        flux_array_H2[0], label=f'{label_name[0]} (TMAP8)', c=f'C{0}')
+        flux_array_H2[0], label=f'{label_name[0]} (TMAP8,val-2ed)', c=f'C{0}')
+ax.plot(pressure_array_D2[0] + pressure_array_HD[0] / 2,
+        flux_array_D2[0], label=f'{label_name[1]} (TMAP8,val-2ed)', c=f'C{1}')
+ax.plot(pressure_array_D2[0] + pressure_array_HD[0] / 2,
+        flux_array_HD[0], label=f'{label_name[2]} (TMAP8,val-2ed)', c=f'C{2}')
+ax.plot(pressure_array_D2[0] + pressure_array_HD[0] / 2,
+        flux_array_sum[0], label=f'{label_name[3]} (TMAP8,val-2ed)', c=f'C{3}')
 ax.plot(experiment_results_list[0][experiment_parameter_names.index('Pressure [Pa]')],
         experiment_results_list[0][experiment_parameter_names.index('Flux [mol/m^2/s]')],
-        label=f'{label_name[0]} (experiment)', c=f'C{0}', linestyle='--')
-ax.plot(pressure_array_D2[0] + pressure_array_HD[0] / 2,
-        flux_array_D2[0], label=f'{label_name[1]} (TMAP8)', c=f'C{1}')
+        signal_list[0], label=f'{label_name[0]} (experiment)', c=f'C{0}')
 ax.plot(experiment_results_list[1][experiment_parameter_names.index('Pressure [Pa]')],
         experiment_results_list[1][experiment_parameter_names.index('Flux [mol/m^2/s]')],
-        label=f'{label_name[1]} (experiment)', c=f'C{1}', linestyle='--')
-ax.plot(pressure_array_D2[0] + pressure_array_HD[0] / 2,
-        flux_array_HD[0], label=f'{label_name[2]} (TMAP8)', c=f'C{2}')
+        signal_list[1], label=f'{label_name[1]} (experiment)', c=f'C{1}')
 ax.plot(experiment_results_list[2][experiment_parameter_names.index('Pressure [Pa]')],
         experiment_results_list[2][experiment_parameter_names.index('Flux [mol/m^2/s]')],
-        label=f'{label_name[2]} (experiment)', c=f'C{2}', linestyle='--')
-ax.plot(pressure_array_D2[0] + pressure_array_HD[0] / 2,
-        flux_array_sum[0], label=f'{label_name[3]} (TMAP8)', c=f'C{3}')
-ax.plot(experiment_results_list[3][experiment_parameter_names.index('Pressure [Pa]')],
-        experiment_results_list[3][experiment_parameter_names.index('Flux [mol/m^2/s]')],
-        label=f'{label_name[3]} (experiment)', c=f'C{3}', linestyle='--')
+        signal_list[2], label=f'{label_name[2]} (experiment)', c=f'C{2}')
+ax.plot(experiment_results_pressure_sum,
+        experiment_results_flux_sum,
+        signal_list[3], label=f'{label_name[3]} (experiment)', c=f'C{3}')
 
 ax.set_xlabel(u'Effective deuterium pressure (Pa)')
 ax.set_ylabel(r"Partial release rates (mol/m$^2$/s)")
@@ -347,12 +359,16 @@ ax.set_yscale('log')
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 # error
 simulation_output_list = [flux_array_H2[0], flux_array_D2[0], flux_array_HD[0], flux_array_sum[0]]
-text_loc = [[1.05e-2,2e-7], [1.05e-2,1.5e-7], [1.05e-2,1.1e-7], [1.05e-2,0.8e-7]]
+text_loc = [[1.0e-3,1.0e-5], [1.0e-3,1.9e-6], [1.0e-3,1.5e-7], [1.0e-3,3e-5]]
 for index in range(len(simulation_output_list)):
     simulation_input = pressure_array_D2[0] + pressure_array_HD[0] / 2
     simulation_output = simulation_output_list[index]
-    experiment_input = experiment_results_list[index][experiment_parameter_names.index('Pressure [Pa]')][:-1]
-    experiment_output = experiment_results_list[index][experiment_parameter_names.index('Flux [mol/m^2/s]')][:-1]
+    if index == 3:
+        experiment_input = experiment_results_pressure_sum[:-1]
+        experiment_output = experiment_results_flux_sum[:-1]
+    else:
+        experiment_input = experiment_results_list[index][experiment_parameter_names.index('Pressure [Pa]')][:-1]
+        experiment_output = experiment_results_list[index][experiment_parameter_names.index('Flux [mol/m^2/s]')][:-1]
     tmap_flux_for_rmspe = numerical_solution_on_experiment_input(experiment_input,
                                                                 simulation_input,
                                                                 simulation_output)
@@ -455,28 +471,29 @@ gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
 label_name = [r"H$_2$", r"D$_2$", r"HD", r"sum"]
+signal_list = ['o','s','^','+']
 
 layer = 0
 ax.plot(pressure_array_D2[layer] + pressure_array_HD[layer] / 2,
-        flux_array_H2[layer], label=f'{label_name[0]} (TMAP8)', c=f'C{0}')
+        flux_array_H2[layer], label=f'{label_name[0]} (TMAP8,val-2ee)', c=f'C{0}')
+ax.plot(pressure_array_D2[layer] + pressure_array_HD[layer] / 2,
+        flux_array_D2[layer], label=f'{label_name[1]} (TMAP8,val-2ee)', c=f'C{1}')
+ax.plot(pressure_array_D2[layer] + pressure_array_HD[layer] / 2,
+        flux_array_HD[layer], label=f'{label_name[2]} (TMAP8,val-2ee)', c=f'C{2}')
+ax.plot(pressure_array_D2[layer] + pressure_array_HD[layer] / 2,
+        flux_array_sum[layer], label=f'{label_name[3]} (TMAP8,val-2ee)', c=f'C{3}')
 ax.plot(experiment_results_list[0][experiment_parameter_names.index('Pressure [Pa]')],
         experiment_results_list[0][experiment_parameter_names.index('Flux [mol/m^2/s]')],
-        label=f'{label_name[0]} (experiment)', c=f'C{0}', linestyle='--')
-ax.plot(pressure_array_D2[layer] + pressure_array_HD[layer] / 2,
-        flux_array_D2[layer], label=f'{label_name[1]} (TMAP8)', c=f'C{1}')
+        signal_list[0], label=f'{label_name[0]} (experiment)', c=f'C{0}')
 ax.plot(experiment_results_list[1][experiment_parameter_names.index('Pressure [Pa]')],
         experiment_results_list[1][experiment_parameter_names.index('Flux [mol/m^2/s]')],
-        label=f'{label_name[1]} (experiment)', c=f'C{1}', linestyle='--')
-ax.plot(pressure_array_D2[layer] + pressure_array_HD[layer] / 2,
-        flux_array_HD[layer], label=f'{label_name[2]} (TMAP8)', c=f'C{2}')
+        signal_list[1], label=f'{label_name[1]} (experiment)', c=f'C{1}')
 ax.plot(experiment_results_list[2][experiment_parameter_names.index('Pressure [Pa]')],
         experiment_results_list[2][experiment_parameter_names.index('Flux [mol/m^2/s]')],
-        label=f'{label_name[2]} (experiment)', c=f'C{2}', linestyle='--')
-ax.plot(pressure_array_D2[layer] + pressure_array_HD[layer] / 2,
-        flux_array_sum[layer], label=f'{label_name[3]} (TMAP8)', c=f'C{3}')
-ax.plot(experiment_results_list[3][experiment_parameter_names.index('Pressure [Pa]')],
-        experiment_results_list[3][experiment_parameter_names.index('Flux [mol/m^2/s]')],
-        label=f'{label_name[3]} (experiment)', c=f'C{3}', linestyle='--')
+        signal_list[2], label=f'{label_name[2]} (experiment)', c=f'C{2}')
+ax.plot(experiment_results_pressure_sum,
+        experiment_results_flux_sum,
+        signal_list[3], label=f'{label_name[3]} (experiment)', c=f'C{3}')
 
 
 ax.set_xlabel(u'Effective deuterium pressure (Pa)')
@@ -489,12 +506,16 @@ ax.set_yscale('log')
 plt.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 # error
 simulation_output_list = [flux_array_H2[0], flux_array_D2[0], flux_array_HD[0], flux_array_sum[0]]
-text_loc = [[1.05e-2,2e-7], [1.05e-2,1.5e-7], [1.05e-2,1.1e-7], [1.05e-2,0.8e-7]]
+text_loc = [[1e-3,1.0e-5], [2.5e-3,4e-8 ], [1.0e-3,3.0e-7], [1.0e-3,2.5e-5]]
 for index in range(len(simulation_output_list)):
     simulation_input = pressure_array_D2[0] + pressure_array_HD[0] / 2
     simulation_output = simulation_output_list[index]
-    experiment_input = experiment_results_list[index][experiment_parameter_names.index('Pressure [Pa]')][:-1]
-    experiment_output = experiment_results_list[index][experiment_parameter_names.index('Flux [mol/m^2/s]')][:-1]
+    if index == 3:
+        experiment_input = experiment_results_pressure_sum[:-1]
+        experiment_output = experiment_results_flux_sum[:-1]
+    else:
+        experiment_input = experiment_results_list[index][experiment_parameter_names.index('Pressure [Pa]')][:-1]
+        experiment_output = experiment_results_list[index][experiment_parameter_names.index('Flux [mol/m^2/s]')][:-1]
     tmap_flux_for_rmspe = numerical_solution_on_experiment_input(experiment_input,
                                                                 simulation_input,
                                                                 simulation_output)

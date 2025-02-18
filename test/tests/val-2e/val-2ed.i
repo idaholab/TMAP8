@@ -3,7 +3,7 @@
 # No Soret effect, or trapping included.
 
 # Physical Constants
-# Note that we do NOT use the same number of digits as in TMAP4/TMAP7.
+# Note that we do NOT use the same number of digits as in TMAP7.
 # This is to be consistent with PhysicalConstant.h
 kb = '${units 1.380649e-23 J/K}' # Boltzmann constant
 R = '${units 8.31446261815324 J/mol/K}' # Gas constant
@@ -677,7 +677,6 @@ simulation_time = '${units 1000 s}'
   dtmax = 5
   end_time = ${simulation_time}
   nl_max_its = 15
-  nl_max_its = 15
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 0.01
@@ -685,7 +684,6 @@ simulation_time = '${units 1000 s}'
     iteration_window = 1
     growth_factor = 1.1
     cutback_factor = 0.9
-    cutback_factor_at_failure = 0.9
     cutback_factor_at_failure = 0.9
   []
 []
