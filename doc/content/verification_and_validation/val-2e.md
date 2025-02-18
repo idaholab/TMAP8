@@ -74,7 +74,7 @@ The flow of gas into enclosures 2 and 3 can be given by
 \end{equation}
 
 where $Q$ is the volumetric flow rate of always 0.1 m$^3$/s,
-$V_j$ is the volume of current enclosure $j$, $P_{I,j-1}$ and $P_{I,j}$ are the pressure of gas molecules $I$ in the previous enclosure and current enclosure, gas molecules $I$ represents H$_2$, or D$_2$, or HD.
+$V_j$ is the volume of current enclosure $j$, $P_{I,j-1}$ and $P_{I,j}$ are the pressure of gas molecules $I$ in the previous enclosure $j-1$ and current enclosure $j$, gas molecules $I$ represents H$_2$, or D$_2$, or HD.
 
 The hydrogen isotopes recombine into gas on both sides of the membrane, and there are several ways to model this process, two of which are used in this validation case: (1) Assuming steady state at the surface, also called lawdep boundary conditions in TMAP4 and TMAP7 [!citep](ambrosek2008verification), and (2) capturing the kinetics of dissolution and recombination, also called ratedep conditions in TMAP4 and TMAP7 [!citep](ambrosek2008verification).
 
@@ -102,7 +102,7 @@ The two co-permeation simulations, i.e., val-2ed and val-2ec, also include the c
 The reaction rates for H$_2$, D$_2$, and HD are described by
 
 \begin{equation} \label{eq:chemical_reaction_lawdep}
-\frac{- 2 d P_{H_2}}{dt} = \frac{- 2 d P_{D_2}}{dt} = \frac{d P_{HD}}{dt} = 2 P_{H_2}^{0.5} P_{D_2}^{0.5}
+\frac{- 2 d P_{H_2}}{dt} = \frac{- 2 d P_{D_2}}{dt} = \frac{d P_{HD}}{dt} = 2 P_{H_2}^{0.5} P_{D_2}^{0.5} - P_{HD}
 \end{equation}
 
 for lawdep boundary condition and
@@ -250,6 +250,6 @@ Note that the agreement could be improved by adjusting the model parameters. It 
 ## Input files
 
 !style halign=left
-For this case, the main input files are [/val-2ea.i], [/val-2ed.i], and [/val-2ee.i]. Sub-cases `ver-1eb` and `ver-1ec` are adapted from [/val-2ea.i], as it done in [/val-2e/tests]. The file are also used as tests in TMAP8 at [/val-2e/tests].
+For this case, the main input files are [/val-2ea.i], [/val-2ed.i], and [/val-2ee.i]. These files are also used as tests in TMAP8 at [/val-2e/tests]. Sub-cases `ver-1eb` and `ver-1ec` are adapted from [/val-2ea.i], as it done in [/val-2e/tests].
 
 !bibtex bibliography
