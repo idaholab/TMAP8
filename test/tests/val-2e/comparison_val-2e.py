@@ -157,9 +157,9 @@ ax = fig.add_subplot(gs[0])
 label_name = ["0.05mm, 825K", "0.025mm, 825K", "0.025mm, 865K"]
 label_name_postfix = ["val-2ea", "val-2eb", "val-2ec"]
 signal_list = ['o','s','^']
-for index in range(len(simulation_results_list)):
+for index in [2,1,0]:
     ax.plot(pressure_up_array[index], flux_calculated_array[index], label=f'{label_name[index]} in {label_name_postfix[index]} (TMAP8)', c=f'C{index}')
-for index in range(len(simulation_results_list)):
+for index in [2,1,0]:
     ax.plot(experiment_results_list[index][experiment_parameter_names.index('Pressure [Pa]')],
             experiment_results_list[index][experiment_parameter_names.index('Flux [mol/m^2/s]')],
             signal_list[index], label=f'{label_name[index]} (experiment)', c=f'C{index}')
@@ -329,26 +329,28 @@ ax = fig.add_subplot(gs[0])
 label_name = [r"H$_2$", r"D$_2$", r"HD", r"sum"]
 signal_list = ['o','s','^','+']
 
+
 ax.plot(pressure_array_D2[0] + pressure_array_HD[0] / 2,
-        flux_array_H2[0], label=f'{label_name[0]} in val-2ed (TMAP8)', c=f'C{0}')
+        flux_array_sum[0], label=f'{label_name[3]} in val-2ed (TMAP8)', c=f'C{3}')
 ax.plot(pressure_array_D2[0] + pressure_array_HD[0] / 2,
         flux_array_D2[0], label=f'{label_name[1]} in val-2ed (TMAP8)', c=f'C{1}')
 ax.plot(pressure_array_D2[0] + pressure_array_HD[0] / 2,
-        flux_array_HD[0], label=f'{label_name[2]} in val-2ed (TMAP8)', c=f'C{2}')
+        flux_array_H2[0], label=f'{label_name[0]} in val-2ed (TMAP8)', c=f'C{0}')
 ax.plot(pressure_array_D2[0] + pressure_array_HD[0] / 2,
-        flux_array_sum[0], label=f'{label_name[3]} in val-2ed (TMAP8)', c=f'C{3}')
-ax.plot(experiment_results_list[0][experiment_parameter_names.index('Pressure [Pa]')],
-        experiment_results_list[0][experiment_parameter_names.index('Flux [mol/m^2/s]')],
-        signal_list[0], label=f'{label_name[0]} (experiment)', c=f'C{0}')
-ax.plot(experiment_results_list[1][experiment_parameter_names.index('Pressure [Pa]')],
-        experiment_results_list[1][experiment_parameter_names.index('Flux [mol/m^2/s]')],
-        signal_list[1], label=f'{label_name[1]} (experiment)', c=f'C{1}')
-ax.plot(experiment_results_list[2][experiment_parameter_names.index('Pressure [Pa]')],
-        experiment_results_list[2][experiment_parameter_names.index('Flux [mol/m^2/s]')],
-        signal_list[2], label=f'{label_name[2]} (experiment)', c=f'C{2}')
+        flux_array_HD[0], label=f'{label_name[2]} in val-2ed (TMAP8)', c=f'C{2}')
+
 ax.plot(experiment_results_pressure_sum,
         experiment_results_flux_sum,
         signal_list[3], label=f'{label_name[3]} (experiment)', c=f'C{3}')
+ax.plot(experiment_results_list[1][experiment_parameter_names.index('Pressure [Pa]')],
+        experiment_results_list[1][experiment_parameter_names.index('Flux [mol/m^2/s]')],
+        signal_list[1], label=f'{label_name[1]} (experiment)', c=f'C{1}')
+ax.plot(experiment_results_list[0][experiment_parameter_names.index('Pressure [Pa]')],
+        experiment_results_list[0][experiment_parameter_names.index('Flux [mol/m^2/s]')],
+        signal_list[0], label=f'{label_name[0]} (experiment)', c=f'C{0}')
+ax.plot(experiment_results_list[2][experiment_parameter_names.index('Pressure [Pa]')],
+        experiment_results_list[2][experiment_parameter_names.index('Flux [mol/m^2/s]')],
+        signal_list[2], label=f'{label_name[2]} (experiment)', c=f'C{2}')
 
 ax.set_xlabel(u'Effective deuterium pressure (Pa)')
 ax.set_ylabel(r"Partial release rates (mol/m$^2$/s)")
@@ -476,25 +478,25 @@ signal_list = ['o','s','^','+']
 
 layer = 0
 ax.plot(pressure_array_D2[layer] + pressure_array_HD[layer] / 2,
-        flux_array_H2[layer], label=f'{label_name[0]} in val-2ee (TMAP8)', c=f'C{0}')
+        flux_array_sum[layer], label=f'{label_name[3]} in val-2ee (TMAP8)', c=f'C{3}')
 ax.plot(pressure_array_D2[layer] + pressure_array_HD[layer] / 2,
         flux_array_D2[layer], label=f'{label_name[1]} in val-2ee (TMAP8)', c=f'C{1}')
 ax.plot(pressure_array_D2[layer] + pressure_array_HD[layer] / 2,
         flux_array_HD[layer], label=f'{label_name[2]} in val-2ee (TMAP8)', c=f'C{2}')
 ax.plot(pressure_array_D2[layer] + pressure_array_HD[layer] / 2,
-        flux_array_sum[layer], label=f'{label_name[3]} in val-2ee (TMAP8)', c=f'C{3}')
-ax.plot(experiment_results_list[0][experiment_parameter_names.index('Pressure [Pa]')],
-        experiment_results_list[0][experiment_parameter_names.index('Flux [mol/m^2/s]')],
-        signal_list[0], label=f'{label_name[0]} (experiment)', c=f'C{0}')
+        flux_array_H2[layer], label=f'{label_name[0]} in val-2ee (TMAP8)', c=f'C{0}')
+ax.plot(experiment_results_pressure_sum,
+        experiment_results_flux_sum,
+        signal_list[3], label=f'{label_name[3]} (experiment)', c=f'C{3}')
 ax.plot(experiment_results_list[1][experiment_parameter_names.index('Pressure [Pa]')],
         experiment_results_list[1][experiment_parameter_names.index('Flux [mol/m^2/s]')],
         signal_list[1], label=f'{label_name[1]} (experiment)', c=f'C{1}')
 ax.plot(experiment_results_list[2][experiment_parameter_names.index('Pressure [Pa]')],
         experiment_results_list[2][experiment_parameter_names.index('Flux [mol/m^2/s]')],
         signal_list[2], label=f'{label_name[2]} (experiment)', c=f'C{2}')
-ax.plot(experiment_results_pressure_sum,
-        experiment_results_flux_sum,
-        signal_list[3], label=f'{label_name[3]} (experiment)', c=f'C{3}')
+ax.plot(experiment_results_list[0][experiment_parameter_names.index('Pressure [Pa]')],
+        experiment_results_list[0][experiment_parameter_names.index('Flux [mol/m^2/s]')],
+        signal_list[0], label=f'{label_name[0]} (experiment)', c=f'C{0}')
 
 
 ax.set_xlabel(u'Effective deuterium pressure (Pa)')
