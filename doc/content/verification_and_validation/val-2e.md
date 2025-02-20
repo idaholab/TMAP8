@@ -227,7 +227,7 @@ There are typos on the equations for hydrogen diffusivity, recombination and dis
 
 ## Results
 
-[val-2e_comparison_diffusion] shows the comparison of the TMAP8 calculation and the experimental data from [!cite](kizu2001co), including simulations val-2ea, val-2eb, and val-2ec. There are reasonable agreements between the TMAP predictions and the experimental data with root mean square percentage errors (RMSPE) of RMSPE = 23.51 %, 30.80 %, and 47.70 % for val-2ea, val-2eb, and val-2ec.
+[val-2e_comparison_diffusion] shows the comparison of the TMAP8 calculation and the experimental data from [!cite](kizu2001co), including simulations val-2ea, val-2eb, and val-2ec. There are reasonable agreements between the TMAP predictions and the experimental data with root mean square percentage errors (RMSPE) of RMSPE = 23.51 %, 30.80 %, and 47.70 % for val-2ea, val-2eb, and val-2ec, respectively.
 
 !media comparison_val-2e.py
        image_name=val-2e_comparison_diffusion.png
@@ -235,25 +235,25 @@ There are typos on the equations for hydrogen diffusivity, recombination and dis
        id=val-2e_comparison_diffusion
        caption= Comparison of the D$_2$ flux versus D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation and the experimental data.
 
-[val-2e_comparison_mixture_diffusion] shows the comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from val-2ed in TMAP8 calculation using lawdep condition and the experimental data. The effective D$_2$ pressure is calculated using $P_{D_2} + 0.5 P_{HD}$. There is not a good agreement except for H$_2$ at low pressure, and D$_2$ at high pressure. Which is similar to the results from TMAP7. In this scenario, RMSPE = 76.26 %, 100.83 %, 115.79 %, 10.77 % for H$_2$, D$_2$, HD, and the summation of all gases.
+[val-2e_comparison_mixture_diffusion] shows the comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from val-2ed using TMAP8 assuming steady state for surface reactions (i.e., lawdep condition) and the experimental data. The effective D$_2$ pressure is calculated using $P_{D_2} + 0.5 P_{HD}$. Although the total gas release is well captured, the release of individual gases are not well predicted, except for H$_2$ at low pressure, and D$_2$ at high pressure. In this scenario, RMSPE = 76.26 %, 100.83 %, 115.79 %, 10.77 % for H$_2$, D$_2$, HD, and the summation of all gases, respectively.
 
 !media comparison_val-2e.py
        image_name=val-2e_comparison_mixture_diffusion.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2e_comparison_mixture_diffusion
-       caption= Comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation using lawdep condition and the experimental data.
+       caption= Comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation using steady state surface condition (i.e., lawdep) for case val-2ed and the experimental data.
 
-[val-2e_comparison_mixture_diffusion_recombination] shows the comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from val-2ee in TMAP8 calculation using ratedep condition and the experimental data. There is a reasonable agreement between the TMAP predictions and the experimental data, except for the high pressure conditions greater than 0.1 Pa and for HD throughout the entire simulation. In this scenario, RMSPE = 11.34 %, 30.70 %, 79.72 %, 43.99 % for H$_2$, D$_2$, HD, and the summation of all gases.
+[val-2e_comparison_mixture_diffusion_recombination] shows the comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from val-2ee using TMAP8 accounting for dissolution and recombination at the membrane's surface (i.e.,  ratedep condition) and the experimental data. There is a reasonable agreement between the TMAP8 predictions and the experimental data, except for the high pressure conditions greater than 0.1 Pa and for HD, especially at higher pressures. In this scenario, RMSPE = 11.34 %, 30.70 %, 79.72 %, 43.99 % for H$_2$, D$_2$, HD, and the summation of all gases, respectively.
 Note that the agreement could be improved by adjusting the model parameters. It is also possible to perform this optimization with [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html).
 
 !alert warning title=Typo in experimental data from [!cite](ambrosek2008verification)
-The experimental data from [!cite](ambrosek2008verification) for all cases in val-2e is slightly lower than the experimental data from [!cite](kizu2001co). Therefore, we have extracted the experimental data from [!cite](kizu2001co) directly to increase the accuracy of the comparison.
+The experimental data from [!cite](ambrosek2008verification) for all cases in val-2e is slightly lower than the experimental data from [!cite](kizu2001co). We have therefore extracted and used the original experimental data from [!cite](kizu2001co).
 
 !media comparison_val-2e.py
        image_name=val-2e_comparison_mixture_diffusion_recombination.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2e_comparison_mixture_diffusion_recombination
-       caption= Comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation using ratedep condition and the experimental data.
+       caption= Comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation capturing dissolution and recombination at the surface (i.e., ratedep condition) for case val-2ee and the experimental data.
 
 !alert note title=Difference between the simulation results from TMAP7 and TMAP8
 Due to the corrected typos in [val-2e_parameters], the simulation results in val-2ed and val-2ee from TMAP8 differ from the results from TMAP7.

@@ -47,7 +47,6 @@ def read_csv_from_TMAP8(file_name, parameter_names):
     simulation_results = []
     for i in range(len(parameter_names)):
         simulation_results.append(simulation_data[parameter_names[i]])
-    # simulation_results = np.array(simulation_results)
     return simulation_results
 
 #===============================================================================
@@ -113,7 +112,7 @@ for index in range(len(simulation_results_list)):
 experiment_results_list = []
 experiment_file_names = ["experiment_thick_825K.csv", "experiment_thin_825K.csv", "experiment_thin_865K.csv"]
 
-experiment_parameter_names = ['Pressure [Pa]','Flux [mol/m^2/s]'] # s, atoms/microns^2/s, atoms/microns^2/s
+experiment_parameter_names = ['Pressure [Pa]','Flux [mol/m^2/s]']
 for i in range(len(experiment_file_names)):
     file_name = experiment_file_names[i]
     experiment_results = read_csv_from_TMAP8(file_name, experiment_parameter_names) # read csv file
@@ -188,12 +187,7 @@ plt.close(fig)
 ################################## Val-2e d/e ##################################
 ################################################################################
 # Modeling data for d/e
-length = 2.5e-5 # m
 T = 870 # K
-diffusivity_D = 2.636e-4 * np.exp(-1315.8 / T)
-diffusivity_H = 3.728e-4 * np.exp(-1315.8 / T)
-solubility = 9.355e22 * np.exp(-5918/T) # at/m^3/Pa^0.9297
-solubility_exponent = 0.9297 # -
 time_history = np.array([150,250,350,450,550,650,750,1000])
 pressure_history_D = np.array([1.8421e-4,1e-3,3e-3,0.009,0.027,0.081,0.243,0.729])
 pressure_history_H = 0.063
@@ -201,7 +195,7 @@ pressure_history_H = 0.063
 # Extract predictions in 1D model for val2e-de
 simulation_results_list = []
 simulation_file_names = ["val-2ed_out.csv"]
-parameter_names = ['time','pressure_downstream_H2','pressure_downstream_D2','pressure_downstream_HD','pressure_upstream_H2','pressure_upstream_D2','pressure_upstream_HD','flux_surface_right_D','flux_surface_right_H'] # s, atoms/microns^2/s, atoms/microns^2/s
+parameter_names = ['time','pressure_downstream_H2','pressure_downstream_D2','pressure_downstream_HD','pressure_upstream_H2','pressure_upstream_D2','pressure_upstream_HD','flux_surface_right_D','flux_surface_right_H']
 for i in range(len(simulation_file_names)):
     file_name = simulation_file_names[i]
     simulation_results = read_csv_from_TMAP8(file_name, parameter_names) # read csv file
@@ -283,7 +277,7 @@ flux_array_sum_refer = np.array(flux_array_sum_refer)
 experiment_results_list = []
 experiment_file_names = ["experiment_mixture_H2.csv", "experiment_mixture_D2.csv", "experiment_mixture_HD.csv"]
 
-experiment_parameter_names = ['Pressure [Pa]','Flux [mol/m^2/s]'] # s, atoms/microns^2/s, atoms/microns^2/s
+experiment_parameter_names = ['Pressure [Pa]','Flux [mol/m^2/s]']
 for i in range(len(experiment_file_names)):
     file_name = experiment_file_names[i]
     experiment_results = read_csv_from_TMAP8(file_name, experiment_parameter_names) # read csv file
@@ -386,7 +380,7 @@ plt.close(fig)
 # Extract predictions in 1D model for val2ee
 simulation_results_list = []
 simulation_file_names = ["val-2ee_out.csv"]
-parameter_names = ['time','pressure_downstream_H2','pressure_downstream_D2','pressure_downstream_HD','pressure_upstream_H2','pressure_upstream_D2','pressure_upstream_HD','flux_surface_right_D','flux_surface_right_H','flux_on_left_D2','flux_on_left_H2','flux_on_left_HD'] # s, atoms/microns^2/s, atoms/microns^2/s
+parameter_names = ['time','pressure_downstream_H2','pressure_downstream_D2','pressure_downstream_HD','pressure_upstream_H2','pressure_upstream_D2','pressure_upstream_HD','flux_surface_right_D','flux_surface_right_H','flux_on_left_D2','flux_on_left_H2','flux_on_left_HD']
 for i in range(len(simulation_file_names)):
     file_name = simulation_file_names[i]
     simulation_results = read_csv_from_TMAP8(file_name, parameter_names) # read csv file
