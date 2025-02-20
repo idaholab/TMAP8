@@ -2,33 +2,19 @@
 # Deuterium permeation through 0.05-mm Pd at 825 K.
 # No Soret effect, or trapping included.
 
-# Physical Constants
-# Note that we do NOT use the same number of digits as in TMAP7.
-# This is to be consistent with PhysicalConstant.h
-kb = '${units 1.380649e-23 J/K}' # Boltzmann constant
-R = '${units 8.31446261815324 J/mol/K}' # Gas constant
 
 # Enclosure data used in TMAP7 case
-surface_area = '${units 1.8e-4 m^2 -> mum^2}'
 temperature = '${units 825 K}'
 pressure_enclosure1 = '${units 1e-6 Pa}'
-pressure_enclosure4 = '${units 1e-10 Pa}'
 pressure_initial = '${units 1e-6 Pa}'
-volume_enclosure = '${units 0.005 m^3 -> mum^3}'
-flow_rate = '${units 0.1 m^3/s -> mum^3/s}'
-flow_rate_by_V = '${fparse flow_rate / volume_enclosure}'
 
 # Diffusion data used in TMAP7 case
-diffusivity_pre_D = '${units 2.636e-4 m^2/s -> mum^2/s}'
-diffusivity_energy_D = '${units ${fparse 1315.8 * R} J/mol}'
 solubility_exponent = 0.9297 # -
 solubility_pre = '${units ${fparse 1.511e23 / 1e18} at/mum^3/Pa^0.9297}'
 solubility_energy = '${units ${fparse 5918 * R} J/mol}'
 
 # Modeling data used in current case
 slab_thickness = '${units 5e-5 m -> mum}'
-num_node = 20 # -
-concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} Pa*m^3 -> Pa*mum^3}'
 file_name = 'val-2ea_out'
 simulation_time = '${units 1900 s}'
 

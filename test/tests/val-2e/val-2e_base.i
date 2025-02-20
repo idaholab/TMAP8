@@ -3,6 +3,29 @@
 # [Postprocessors] for D2 and D, [Debug], [Preconditioning],
 # [Executioner] and [Outputs] blocks
 
+# This input file is not meant to run on its own and is included in case-specific input files.
+
+# Physical Constants
+# Note that we do NOT use the same number of digits as in TMAP7.
+# This is to be consistent with PhysicalConstant.h
+kb = '${units 1.380649e-23 J/K}' # Boltzmann constant
+R = '${units 8.31446261815324 J/mol/K}' # Gas constant
+
+# Enclosure data used in TMAP7 case
+surface_area = '${units 1.8e-4 m^2 -> mum^2}'
+pressure_enclosure4 = '${units 1e-10 Pa}'
+volume_enclosure = '${units 0.005 m^3 -> mum^3}'
+flow_rate = '${units 0.1 m^3/s -> mum^3/s}'
+flow_rate_by_V = '${fparse flow_rate / volume_enclosure}'
+
+# Diffusion data used in TMAP7 case
+diffusivity_pre_D = '${units 2.636e-4 m^2/s -> mum^2/s}'
+diffusivity_energy_D = '${units ${fparse 1315.8 * R} J/mol}'
+
+# Modeling data used in current case
+num_node = 20 # -
+concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} Pa*m^3 -> Pa*mum^3}'
+
 [Mesh]
   [generated]
     type = GeneratedMeshGenerator

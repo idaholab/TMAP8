@@ -2,30 +2,7 @@
 # Deuterium permeation through 0.05-mm Pd at 825 K.
 # No Soret effect, or trapping included.
 
-# Physical Constants
-# Note that we do NOT use the same number of digits as in TMAP7.
-# This is to be consistent with PhysicalConstant.h
-kb = '${units 1.380649e-23 J/K}' # Boltzmann constant
-R = '${units 8.31446261815324 J/mol/K}' # Gas constant
-
-# Enclosure data used in TMAP7 case
-surface_area = '${units 1.8e-4 m^2 -> mum^2}'
-temperature = '${units 870 K}'
-pressure_enclosure1 = '${units 1e-7 Pa}'
-pressure_enclosure4 = '${units 1e-10 Pa}'
-pressure_initial_enclosure2 = '${units 1e-7 Pa}'
-pressure_initial_enclosure2_H2 = '${units 0.063 Pa}'
-pressure_initial_enclosure3 = '${units 1e-20 Pa}'
-volume_enclosure = '${units 0.005 m^3 -> mum^3}'
-flow_rate = '${units 0.1 m^3/s -> mum^3/s}'
-flow_rate_by_V = '${fparse flow_rate / volume_enclosure}'
-
-# Diffusion data used in TMAP7 case
-diffusivity_pre_D = '${units 2.636e-4 m^2/s -> mum^2/s}'
-diffusivity_energy_D = '${units ${fparse 1315.8 * R} J/mol}'
-diffusivity_pre_H = '${units 3.728e-4 m^2/s -> mum^2/s}'
-diffusivity_energy_H = '${units ${fparse 1315.8 * R} J/mol}'
-# Diffusion data used in TMAP7 case
+# Surface reaction data used in TMAP7 case
 K_r_pre_D2 = '${units ${fparse 2.502e-24 / sqrt(4 * temperature)} m^4/s -> mum^4/s}'
 K_r_pre_H2 = '${units ${fparse 2.502e-24 / sqrt(2 * temperature)} m^4/s -> mum^4/s}'
 K_r_pre_HD = '${units ${fparse 2.502e-24 / sqrt(3 * temperature)} m^4/s -> mum^4/s}'
@@ -35,10 +12,6 @@ K_d_H2 = '${units ${fparse 2.1897e22 / sqrt(2 * temperature)} at/m^2/Pa -> at/mu
 K_d_HD = '${units ${fparse 2.1897e22 / sqrt(3 * temperature)} at/m^2/Pa -> at/mum^2/Pa}'
 
 # Modeling data used in current case
-slab_thickness = '${units 2.5e-5 m -> mum}'
-num_node = 20 # -
-concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} Pa*m^3 -> Pa*mum^3}'
-simulation_time = '${units 1000 s}'
 file_name = 'val-2ee_out'
 
 !include val-2e_base_three_gases.i
