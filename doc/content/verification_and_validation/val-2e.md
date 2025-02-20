@@ -76,9 +76,9 @@ The flow of gas into enclosures 2 and 3 can be given by
 where $Q$ is the volumetric flow rate of always 0.1 m$^3$/s,
 $V_j$ is the volume of current enclosure $j$, $P_{I,j-1}$ and $P_{I,j}$ are the pressure of gas molecules $I$ in the previous enclosure $j-1$ and current enclosure $j$, gas molecules $I$ represents H$_2$, or D$_2$, or HD.
 
-The hydrogen isotopes recombine into gas on both sides of the membrane, and there are several ways to model this process, two of which are used in this validation case: (1) Assuming steady state at the surface, also called lawdep boundary conditions in TMAP4 and TMAP7 [!citep](ambrosek2008verification), and (2) capturing the kinetics of dissolution and recombination, also called ratedep conditions in TMAP4 and TMAP7 [!citep](ambrosek2008verification).
+The hydrogen isotopes recombine into gas on both sides of the membrane, and there are several ways to model this process, two of which are used in this validation case: (1) Assuming steady state at the surface, also called lawdep boundary conditions in TMAP4 and TMAP7 [!citep](ambrosek2008verification), and (2) capturing the kinetics of dissociation and recombination, also called ratedep conditions in TMAP4 and TMAP7 [!citep](ambrosek2008verification).
 
-By assuming that the kinetics of the dissolution and recombination processes are faster than diffusion, surface reactions can be assumed to be at steady state.
+By assuming that the kinetics of the dissociation and recombination processes are faster than diffusion, surface reactions can be assumed to be at steady state.
 The concentrations on both sides can then be described as
 
 \begin{equation} \label{eq:seivert_concentration}
@@ -223,7 +223,7 @@ Other case and model parameters used in TMAP8 are listed in [val-2e_parameters]:
 | $K_{d,HD}$ | HD dissociation coefficient | 2.1897$\times 10^{22} / \sqrt{3T}$     | molecular/m$^2$/Pa              | [!cite](ambrosek2008verification) |
 
 !alert warning title=Typo in [!cite](ambrosek2008verification)
-There are typos on the equations for hydrogen diffusivity, recombination and dissociative coefficients in the input files from TMAP7 in val-2ed and val-2ee. The correct values are provided in [val-2e_parameters] and used in TMAP8. The pre-factor for hydrogen diffusivity is 3.728 $\times 10^{-4}$ m$^2$/s instead of 2.636 $\times 10^{-4}$ m$^2$/s. The activation energy for recombination coefficient is 11836 K instead of -11836 K. The pre-factors for dissociative coefficient are 2.1897 $\times 10^{22} / \sqrt{4T}$, 2.1897 $\times 10^{22} / \sqrt{2T}$, and 2.1897 $\times 10^{22} / \sqrt{3T}$ molecular/m$^2$/Pa instead of 2.1897 $\times 10^{22} / \sqrt{8T}$, 2.1897 $\times 10^{22} / \sqrt{4T}$, and 2.1897 $\times 10^{22} / \sqrt{6T}$ molecular/m$^2$/Pa.
+There are typos on the equations for hydrogen diffusivity, recombination and dissociation coefficients in the input files from TMAP7 in val-2ed and val-2ee. The correct values are provided in [val-2e_parameters] and used in TMAP8. The pre-factor for hydrogen diffusivity is 3.728 $\times 10^{-4}$ m$^2$/s instead of 2.636 $\times 10^{-4}$ m$^2$/s. The activation energy for recombination coefficient is 11836 K instead of -11836 K. The pre-factors for dissociation coefficient are 2.1897 $\times 10^{22} / \sqrt{4T}$, 2.1897 $\times 10^{22} / \sqrt{2T}$, and 2.1897 $\times 10^{22} / \sqrt{3T}$ molecular/m$^2$/Pa instead of 2.1897 $\times 10^{22} / \sqrt{8T}$, 2.1897 $\times 10^{22} / \sqrt{4T}$, and 2.1897 $\times 10^{22} / \sqrt{6T}$ molecular/m$^2$/Pa.
 
 ## Results
 
@@ -243,7 +243,7 @@ There are typos on the equations for hydrogen diffusivity, recombination and dis
        id=val-2e_comparison_mixture_diffusion
        caption= Comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation using steady state surface condition (i.e., lawdep) for case val-2ed and the experimental data.
 
-[val-2e_comparison_mixture_diffusion_recombination] shows the comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from val-2ee using TMAP8 accounting for dissolution and recombination at the membrane's surface (i.e.,  ratedep condition) and the experimental data. There is a reasonable agreement between the TMAP8 predictions and the experimental data, except for the high pressure conditions greater than 0.1 Pa and for HD, especially at higher pressures. In this scenario, RMSPE = 11.34 %, 30.70 %, 79.72 %, 43.99 % for H$_2$, D$_2$, HD, and the summation of all gases, respectively.
+[val-2e_comparison_mixture_diffusion_recombination] shows the comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from val-2ee using TMAP8 accounting for dissociation and recombination at the membrane's surface (i.e.,  ratedep condition) and the experimental data. There is a reasonable agreement between the TMAP8 predictions and the experimental data, except for the high pressure conditions greater than 0.1 Pa and for HD, especially at higher pressures. In this scenario, RMSPE = 11.34 %, 30.70 %, 79.72 %, 43.99 % for H$_2$, D$_2$, HD, and the summation of all gases, respectively.
 Note that the agreement could be improved by adjusting the model parameters. It is also possible to perform this optimization with [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html).
 
 !alert warning title=Typo in experimental data from [!cite](ambrosek2008verification)
@@ -253,7 +253,7 @@ The experimental data from [!cite](ambrosek2008verification) for all cases in va
        image_name=val-2e_comparison_mixture_diffusion_recombination.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2e_comparison_mixture_diffusion_recombination
-       caption= Comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation capturing dissolution and recombination at the surface (i.e., ratedep condition) for case val-2ee and the experimental data.
+       caption= Comparison of the D$_2$, H$_2$, and HD flux versus effective D$_2$ pressure on the upstream side of the membrane from TMAP8 calculation capturing dissociation and recombination at the surface (i.e., ratedep condition) for case val-2ee and the experimental data.
 
 !alert note title=Difference between the simulation results from TMAP7 and TMAP8
 Due to the corrected typos in [val-2e_parameters], the simulation results in val-2ed and val-2ee from TMAP8 differ from the results from TMAP7.
@@ -261,6 +261,6 @@ Due to the corrected typos in [val-2e_parameters], the simulation results in val
 ## Input files
 
 !style halign=left
-For this case, the main input files are [/val-2ea.i], [/val-2ed.i], and [/val-2ee.i]. These files are also used as tests in TMAP8 at [/val-2e/tests]. Sub-cases `ver-1eb` and `ver-1ec` are adapted from [/val-2ea.i], as it done in [/val-2e/tests].
+For this case, the main input files are [/val-2ea.i], [/val-2ed.i], and [/val-2ee.i]. Note that [/val-2ed.i] and [/val-2ee.i] utilize a common base file [/val-2e_base_three_gases.i] with the line `!include val-2e_base_three_gases.i`, and [/val-2ea.i] and [/val-2e_base_three_gases.i] utilize a common base file [/val-2e_base.i] with the line `!include val-2e_base.i`. The base input files contain all the features and TMAP8 objects common to these cases, reducing duplication, and this allows the immediate injection and delayed injection inputs to focus on what is specific to each case. These files are also used as tests in TMAP8 at [/val-2e/tests]. Sub-cases `ver-1eb` and `ver-1ec` are adapted from [/val-2ea.i], as it done in [/val-2e/tests].
 
 !bibtex bibliography

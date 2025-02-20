@@ -59,20 +59,22 @@ Na = 6.02214076e23 # atom/mol Avogadro's number
 Q = 0.1 # m^3/s flow rate
 T = [825, 825, 865] # K
 Area = 1.8e-4 # m^2 area
+time_history = np.array([150,250,350,450,550,650,750,850,950,1050,1150,1250,1350,1900]) # s
+pressure_history = np.array([1.20e-4,2.41e-4,6.06e-4,1.30e-3,2.53e-3,7.08e-3,1.45e-2,2.63e-2,6.51e-2,0.116,0.297,0.760,1.550,3.370]) # Pa
+pressure_enclosure1 = 1e-6 # Pa
+dt_maximum = 5
 
 ################################################################################
 ################################# Val-2e a/b/c #################################
 ################################################################################
 # Extract predictions in 1D model for val2e-abc
-time_history = np.array([150,250,350,450,550,650,750,850,950,1050,1150,1250,1350,1900])
-pressure_history = np.array([1.20e-4,2.41e-4,6.06e-4,1.30e-3,2.53e-3,7.08e-3,1.45e-2,2.63e-2,6.51e-2,0.116,0.297,0.760,1.550,3.370])
 simulation_file_names = ["val-2ea_out.csv", "val-2eb_out.csv", "val-2ec_out.csv"]
-parameter_names = ['time','flux_surface_right','pressure_upstream','pressure_downstream'] # s, atoms/microns^2/s, atoms/microns^2/s
+parameter_names = ['time','flux_surface_right_D','pressure_upstream_D2','pressure_downstream_D2']
 simulation_results_list = []
 for i in range(len(simulation_file_names)):
     file_name = simulation_file_names[i]
     simulation_results = read_csv_from_TMAP8(file_name, parameter_names) # read csv file
-    simulation_results[parameter_names.index('flux_surface_right')] = -simulation_results[parameter_names.index('flux_surface_right')] * 1e12 / Na # D atoms/mum^2/s -> D2 mol/m^2/s
+    simulation_results[parameter_names.index('flux_surface_right_D')] = -simulation_results[parameter_names.index('flux_surface_right_D')] * 1e12 / Na # D atoms/mum^2/s -> D2 mol/m^2/s
     simulation_results_list.append(simulation_results)
 
 # find the pressure and flux
@@ -90,13 +92,13 @@ for index in range(len(simulation_results_list)):
     time_history_copy = np.copy(time_history)
     for i in range(len(simulation_results_list[index][parameter_names.index('time')])):
         if len(time_history_copy) == 0: break
-        if (time_history_copy[0] - simulation_results_list[index][parameter_names.index('time')][i]) < 5:
-            tmp_pressure_up_array.append(simulation_results_list[index][parameter_names.index('pressure_upstream')][i])
-            tmp_pressure_down_array.append(simulation_results_list[index][parameter_names.index('pressure_downstream')][i])
-            tmp_flux_array.append(simulation_results_list[index][parameter_names.index('flux_surface_right')][i])
+        if (time_history_copy[0] - simulation_results_list[index][parameter_names.index('time')][i]) < dt_maximum:
+            tmp_pressure_up_array.append(simulation_results_list[index][parameter_names.index('pressure_upstream_D2')][i])
+            tmp_pressure_down_array.append(simulation_results_list[index][parameter_names.index('pressure_downstream_D2')][i])
+            tmp_flux_array.append(simulation_results_list[index][parameter_names.index('flux_surface_right_D')][i])
             tmp_time_array.append(simulation_results_list[index][parameter_names.index('time')])
 
-            tmp_flux_calculated = (simulation_results_list[index][parameter_names.index('pressure_downstream')][i] - 1e-6) * Q / R / T[index] / Area
+            tmp_flux_calculated = (tmp_pressure_down_array[-1] - pressure_enclosure1) * Q / R / T[index] / Area
             tmp_flux_calculated_array.append(tmp_flux_calculated)
             time_history_copy = time_history_copy[1:]
     pressure_up_array.append(tmp_pressure_up_array)
@@ -126,17 +128,17 @@ ax = fig.add_subplot(gs[0])
 
 time_history_plot = np.array([0,150,150,250,250,350,350,450,450,550,550,
                             650,650,750,750,850,850,950,950,1050,1050,
-                            1150,1150,1250,1250,1350,1350,1900])
+                            1150,1150,1250,1250,1350,1350,1900]) # s
 pressure_history_plot = np.array([1.20e-4,1.20e-4,2.41e-4,2.41e-4,6.06e-4,6.06e-4,
                                 1.30e-3,1.30e-3,2.53e-3,2.53e-3,7.08e-3,7.08e-3,
                                 1.45e-2,1.45e-2,2.63e-2,2.63e-2,6.51e-2,6.51e-2,
                                 0.116,0.116,0.297,0.297,0.760,0.760,1.550,1.550,
-                                3.370,3.370])
+                                3.370,3.370]) # Pa
 time_history_plot_mixture = np.array([0,150,150,250,250,350,350,450,450,550,550,
-                            650,650,750,750,1900])
+                            650,650,750,750,1900]) # s
 pressure_history_plot_mixture_D2 = np.array([1.8421-4,1.8421-4,1e-3,1e-3,3e-3,3e-3,
                                 0.009,0.009,0.027,0.027,0.081,0.081,0.243,0.243,
-                                0.729,0.729])
+                                0.729,0.729]) # Pa
 plt.plot(time_history_plot, pressure_history_plot, label = r'D$_2$')
 ax.set_xlabel(u'Time (s)')
 ax.set_ylabel(r"Pressure (Pa)")
@@ -191,6 +193,7 @@ T = 870 # K
 time_history = np.array([150,250,350,450,550,650,750,1000])
 pressure_history_D = np.array([1.8421e-4,1e-3,3e-3,0.009,0.027,0.081,0.243,0.729])
 pressure_history_H = 0.063
+pressure_enclosure1 = 1e-7
 
 # Extract predictions in 1D model for val2e-de
 simulation_results_list = []
@@ -214,7 +217,6 @@ flux_array_H2 = []
 flux_array_D2 = []
 flux_array_HD = []
 flux_array_sum = []
-flux_array_sum_refer = []
 for index in range(len(simulation_results_list)):
     tmp_pressure_array_H2 = []
     tmp_pressure_array_D2 = []
@@ -226,11 +228,10 @@ for index in range(len(simulation_results_list)):
     tmp_flux_array_D2 = []
     tmp_flux_array_HD = []
     tmp_flux_array_sum = []
-    tmp_flux_array_sum_refer = []
     time_history_copy = np.copy(time_history)
     for i in range(len(simulation_results_list[index][parameter_names.index('time')])):
         if len(time_history_copy) == 0: break
-        if (time_history_copy[0] - simulation_results_list[index][parameter_names.index('time')][i]) < 5:
+        if (time_history_copy[0] - simulation_results_list[index][parameter_names.index('time')][i]) < dt_maximum:
             # Get pressure
             tmp_pressure_array_H2.append(simulation_results_list[index][parameter_names.index('pressure_upstream_H2')][i])
             tmp_pressure_array_D2.append(simulation_results_list[index][parameter_names.index('pressure_upstream_D2')][i])
@@ -239,15 +240,13 @@ for index in range(len(simulation_results_list)):
             tmp_pressure_down_array_D2.append(simulation_results_list[index][parameter_names.index('pressure_downstream_D2')][i])
             tmp_pressure_down_array_HD.append(simulation_results_list[index][parameter_names.index('pressure_downstream_HD')][i])
             # Get flux
-            tmp_flux_H2 = (simulation_results_list[index][parameter_names.index('pressure_downstream_H2')][i] - 1e-7) * Q / R / T / Area
-            tmp_flux_D2 = (simulation_results_list[index][parameter_names.index('pressure_downstream_D2')][i] - 1e-7) * Q / R / T / Area
-            tmp_flux_HD = (simulation_results_list[index][parameter_names.index('pressure_downstream_HD')][i] - 1e-7) * Q / R / T / Area
-            tmp_flux_sum_refer = 0.5 * (simulation_results_list[index][parameter_names.index('flux_surface_right_D')][i] + simulation_results_list[index][parameter_names.index('flux_surface_right_H')][i]) # test total
+            tmp_flux_H2 = (tmp_pressure_down_array_H2[-1] - pressure_enclosure1) * Q / R / T / Area
+            tmp_flux_D2 = (tmp_pressure_down_array_D2[-1] - pressure_enclosure1) * Q / R / T / Area
+            tmp_flux_HD = (tmp_pressure_down_array_HD[-1] - pressure_enclosure1) * Q / R / T / Area
             tmp_flux_array_H2.append(tmp_flux_H2)
             tmp_flux_array_D2.append(tmp_flux_D2)
             tmp_flux_array_HD.append(tmp_flux_HD)
             tmp_flux_array_sum.append(tmp_flux_H2+tmp_flux_D2+tmp_flux_HD)
-            tmp_flux_array_sum_refer.append(tmp_flux_sum_refer)
             time_history_copy = time_history_copy[1:]
     pressure_array_H2.append(tmp_pressure_array_H2)
     pressure_array_D2.append(tmp_pressure_array_D2)
@@ -259,7 +258,6 @@ for index in range(len(simulation_results_list)):
     flux_array_D2.append(tmp_flux_array_D2)
     flux_array_HD.append(tmp_flux_array_HD)
     flux_array_sum.append(tmp_flux_array_sum)
-    flux_array_sum_refer.append(tmp_flux_array_sum_refer)
 
     if len(tmp_pressure_array_D2) < len(time_history):
         print(f"Some data missing: \n{tmp_pressure_array_D2} \nand \n{pressure_history_D}")
@@ -270,7 +268,6 @@ flux_array_H2 = np.array(flux_array_H2)
 flux_array_D2 = np.array(flux_array_D2)
 flux_array_HD = np.array(flux_array_HD)
 flux_array_sum = np.array(flux_array_sum)
-flux_array_sum_refer = np.array(flux_array_sum_refer)
 
 # ============================================================================ #
 # Extract data from experiments
@@ -298,10 +295,10 @@ gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 
 time_history_plot_mixture = np.array([0,150,150,250,250,350,350,450,450,550,550,
-                            650,650,750,750,1000])
+                            650,650,750,750,1000]) # s
 pressure_history_plot_mixture_D2 = np.array([1.8421e-4,1.8421e-4,1e-3,1e-3,3e-3,3e-3,
                                 0.009,0.009,0.027,0.027,0.081,0.081,0.243,0.243,
-                                0.729,0.729])
+                                0.729,0.729]) # Pa
 pressure_history_plot_mixture_H2 = np.ones(len(pressure_history_plot_mixture_D2)) * pressure_history_H
 plt.plot(time_history_plot_mixture, pressure_history_plot_mixture_D2, label = r"D$_2$", color='C0')
 plt.plot(time_history_plot_mixture, pressure_history_plot_mixture_H2, label = r"H$_2$", color='C1')
@@ -402,7 +399,6 @@ flux_array_H2 = []
 flux_array_D2 = []
 flux_array_HD = []
 flux_array_sum = []
-flux_array_sum_refer = []
 for index in range(len(simulation_results_list)):
     tmp_pressure_array_H2 = []
     tmp_pressure_array_D2 = []
@@ -414,11 +410,10 @@ for index in range(len(simulation_results_list)):
     tmp_flux_array_D2 = []
     tmp_flux_array_HD = []
     tmp_flux_array_sum = []
-    tmp_flux_array_sum_refer = []
     time_history_copy = np.copy(time_history)
     for i in range(len(simulation_results_list[index][parameter_names.index('time')])):
         if len(time_history_copy) == 0: break
-        if (time_history_copy[0] - simulation_results_list[index][parameter_names.index('time')][i]) < 5:
+        if (time_history_copy[0] - simulation_results_list[index][parameter_names.index('time')][i]) < dt_maximum:
             # Get pressure
             tmp_pressure_array_H2.append(simulation_results_list[index][parameter_names.index('pressure_upstream_H2')][i])
             tmp_pressure_array_D2.append(simulation_results_list[index][parameter_names.index('pressure_upstream_D2')][i])
@@ -427,15 +422,13 @@ for index in range(len(simulation_results_list)):
             tmp_pressure_down_array_D2.append(simulation_results_list[index][parameter_names.index('pressure_downstream_D2')][i])
             tmp_pressure_down_array_HD.append(simulation_results_list[index][parameter_names.index('pressure_downstream_HD')][i])
             # Get flux
-            tmp_flux_H2 = (tmp_pressure_down_array_H2[-1] - 1e-7) * Q / R / T / Area
-            tmp_flux_D2 = (tmp_pressure_down_array_D2[-1] - 1e-7) * Q / R / T / Area
-            tmp_flux_HD = (tmp_pressure_down_array_HD[-1] - 1e-7) * Q / R / T / Area
-            tmp_flux_sum_refer = 0.5 * (simulation_results_list[index][parameter_names.index('flux_surface_right_D')][i] + simulation_results_list[index][parameter_names.index('flux_surface_right_H')][i]) # test total
+            tmp_flux_H2 = (tmp_pressure_down_array_H2[-1] - pressure_enclosure1) * Q / R / T / Area
+            tmp_flux_D2 = (tmp_pressure_down_array_D2[-1] - pressure_enclosure1) * Q / R / T / Area
+            tmp_flux_HD = (tmp_pressure_down_array_HD[-1] - pressure_enclosure1) * Q / R / T / Area
             tmp_flux_array_H2.append(tmp_flux_H2)
             tmp_flux_array_D2.append(tmp_flux_D2)
             tmp_flux_array_HD.append(tmp_flux_HD)
             tmp_flux_array_sum.append(tmp_flux_H2+tmp_flux_D2+tmp_flux_HD)
-            tmp_flux_array_sum_refer.append(tmp_flux_sum_refer)
             time_history_copy = time_history_copy[1:]
     pressure_array_H2.append(tmp_pressure_array_H2)
     pressure_array_D2.append(tmp_pressure_array_D2)
@@ -447,7 +440,6 @@ for index in range(len(simulation_results_list)):
     flux_array_D2.append(tmp_flux_array_D2)
     flux_array_HD.append(tmp_flux_array_HD)
     flux_array_sum.append(tmp_flux_array_sum)
-    flux_array_sum_refer.append(tmp_flux_array_sum_refer)
 
     if len(tmp_pressure_array_D2) < len(time_history):
         print(f"Some data missing: \n{tmp_pressure_array_D2} \nand \n{pressure_history_D}")
@@ -458,7 +450,6 @@ flux_array_H2 = np.array(flux_array_H2)
 flux_array_D2 = np.array(flux_array_D2)
 flux_array_HD = np.array(flux_array_HD)
 flux_array_sum = np.array(flux_array_sum)
-flux_array_sum_refer = np.array(flux_array_sum_refer)
 
 
 # ============================================================================ #

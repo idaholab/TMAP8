@@ -32,20 +32,7 @@ concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} 
 file_name = 'val-2ea_out'
 simulation_time = '${units 1900 s}'
 
-[Mesh]
-  [generated]
-    type = GeneratedMeshGenerator
-    dim = 1
-    nx = '${num_node}'
-    xmax = '${slab_thickness}'
-  []
-[]
-
-[Problem]
-  type = ReferenceResidualProblem
-  reference_vector = 'ref'
-  extra_tag_vectors = 'ref'
-[]
+!include val-2e_base.i
 
 [Variables]
   [D2_pressure_upstream]
@@ -101,97 +88,34 @@ simulation_time = '${units 1900 s}'
 [Kernels]
   # Gas flow kernels
   # Equation for enclosure upstream
-  [timeDerivative_upstream]
-    type = ADTimeDerivative
-    variable = D2_pressure_upstream
-    extra_vector_tags = 'ref'
-  []
-  [MatReaction_upstream_influx_5]
-    type = ADMatReaction
-    variable = D2_pressure_upstream
-    v = 'D2_pressure_enclosure5'
-    reaction_rate = ${flow_rate_by_V}
-    extra_vector_tags = 'ref'
-  []
-  [MatReaction_upstream_influx_1]
-    type = ADMatReaction
-    variable = D2_pressure_upstream
-    v = 'D2_pressure_enclosure1'
-    reaction_rate = ${flow_rate_by_V}
-    extra_vector_tags = 'ref'
-  []
-  [MatReaction_upstream_outflux_4]
-    type = ADMatReaction
-    variable = D2_pressure_upstream
-    v = 'D2_pressure_upstream'
-    reaction_rate = -${flow_rate_by_V}
-    extra_vector_tags = 'ref'
-  []
-  [MatReaction_upstream_outflux_membrane]
+  [MatReaction_upstream_D2_outflux_membrane]
     type = ADMatBodyForce
     variable = D2_pressure_upstream
     material_property = 'membrane_reaction_rate_right'
     extra_vector_tags = 'ref'
   []
   # Equation for enclosure downstream
-  [timeDerivative_downstream]
-    type = ADTimeDerivative
-    variable = D2_pressure_downstream
-    extra_vector_tags = 'ref'
-  []
-  [MatReaction_downstream_influx_1]
-    type = ADMatReaction
-    variable = D2_pressure_downstream
-    v = 'D2_pressure_enclosure1'
-    reaction_rate = ${flow_rate_by_V}
-    extra_vector_tags = 'ref'
-  []
-  [MatReaction_downstream_influx_membrane]
+  [MatReaction_downstream_D2_influx_membrane]
     type = ADMatBodyForce
     variable = D2_pressure_downstream
     material_property = 'membrane_reaction_rate_left'
     extra_vector_tags = 'ref'
   []
-  [MatReaction_downstream_outflux_4]
-    type = ADMatReaction
-    variable = D2_pressure_downstream
-    v = 'D2_pressure_downstream'
-    reaction_rate = -${flow_rate_by_V}
-    extra_vector_tags = 'ref'
-  []
-
-  # Diffusion kernels
-  [timeDerivative_diffusion]
-    type = ADTimeDerivative
-    variable = D_concentration
-    extra_vector_tags = 'ref'
-  []
-  [MatDiffusion_diffusion]
-    type = ADMatDiffusion
-    variable = D_concentration
-    diffusivity = diffusivity_D
-    extra_vector_tags = 'ref'
-  []
 []
 
 [Materials]
-  [diffusivity_D]
-    type = ADParsedMaterial
-    property_name = 'diffusivity_D'
-    expression = '${diffusivity_pre_D} * exp( - ${diffusivity_energy_D} / ${R} / ${temperature})'
-  []
   [membrane_reaction_rate_right]
     type = ADParsedMaterial
     property_name = 'membrane_reaction_rate_right'
-    postprocessor_names = flux_surface_right
-    expression = 'flux_surface_right * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor} / 2'
+    postprocessor_names = flux_surface_right_D
+    expression = 'flux_surface_right_D * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor} / 2'
     outputs = 'exodus'
   []
   [membrane_reaction_rate_left]
     type = ADParsedMaterial
     property_name = 'membrane_reaction_rate_left'
-    postprocessor_names = flux_surface_left
-    expression = 'flux_surface_left * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor} / 2'
+    postprocessor_names = flux_surface_left_D
+    expression = 'flux_surface_left_D * ${surface_area} / ${volume_enclosure} * ${concentration_to_pressure_conversion_factor} / 2'
     outputs = 'exodus'
   []
   [converter_to_regular]
@@ -223,94 +147,5 @@ simulation_time = '${units 1900 s}'
     activation_energy = '${solubility_energy}'
     p = '${solubility_exponent}'
     temperature = ${temperature}
-  []
-[]
-
-[Postprocessors]
-  # Pressure
-  [pressure_upstream]
-    type = ElementAverageValue
-    variable = D2_pressure_upstream
-  []
-  [pressure_downstream]
-    type = ElementAverageValue
-    variable = D2_pressure_downstream
-  []
-  # Flux
-  [flux_surface_right]
-    type = SideDiffusiveFluxIntegral
-    variable = D_concentration
-    diffusivity = diffusivity_D_nonAD
-    boundary = 'right'
-    execute_on = 'initial timestep_end'
-    outputs = 'console csv exodus'
-  []
-  [flux_surface_left]
-    type = SideDiffusiveFluxIntegral
-    variable = D_concentration
-    diffusivity = diffusivity_D_nonAD
-    boundary = 'left'
-    execute_on = 'initial timestep_end'
-    outputs = 'console csv exodus'
-  []
-  # scale the flux to get inward direction
-  [scaled_flux_surface_left]
-    type = ScalePostprocessor
-    scaling_factor = -1
-    value = flux_surface_left
-    execute_on = 'initial timestep_end'
-    outputs = 'console csv exodus'
-  []
-  [scaled_flux_surface_right]
-    type = ScalePostprocessor
-    scaling_factor = -1
-    value = flux_surface_right
-    execute_on = 'initial timestep_end'
-    outputs = 'console csv exodus'
-  []
-[]
-
-[Debug]
-  show_var_residual_norms = true
-[]
-
-[Preconditioning]
-  [smp]
-    type = SMP
-    full = true
-  []
-[]
-
-[Executioner]
-  type = Transient
-  scheme = bdf2
-  solve_type = 'NEWTON'
-  petsc_options_iname = '-pc_type'
-  petsc_options_value = 'lu'
-  automatic_scaling = true
-  compute_scaling_once = false
-  nl_rel_tol = 1e-12
-  nl_abs_tol = 1e-12
-  dtmax = 5
-  end_time = ${simulation_time}
-  nl_max_its = 15
-  [TimeStepper]
-    type = IterationAdaptiveDT
-    dt = 0.1
-    optimal_iterations = 12
-    iteration_window = 1
-    growth_factor = 1.1
-    cutback_factor = 0.9
-    cutback_factor_at_failure = 0.9
-  []
-[]
-
-[Outputs]
-  file_base = ${file_name}
-  exodus = true
-  perf_graph = true
-  [csv]
-    type = CSV
-    execute_on = 'initial timestep_end'
   []
 []

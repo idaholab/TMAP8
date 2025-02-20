@@ -71,7 +71,7 @@
     exodiff = val-2ee_out.e
     requirement = 'The system shall be able to model permeation of mixture gas with chemical reaction from a 0.025 mm thin membrane at 870 K using ratedep boundary conditions and generate an exodus file.'
   []
-  [ver-2ec_comparison]
+  [ver-2e_comparison]
     type = RunCommand
     command = 'python3 comparison_val-2e.py'
     requirement = 'The system shall be able to generate comparison plots between the analytical solution and experimental data of validation case 2e, modeling the permeation of Deuterium from a membrane.'
