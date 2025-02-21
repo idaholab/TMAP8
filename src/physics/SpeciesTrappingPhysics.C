@@ -48,6 +48,8 @@ SpeciesTrappingPhysics::validParams()
       "N", {}, "The atomic number density of the host material for each component and species.");
   params.addParam<std::vector<FunctionName>>(
       "Ct0", {}, "The fraction of host sites that can contribute to trapping");
+  params.addParam<std::vector<Real>>(
+      "trap_per_free", {}, "The number of trapped species per free species");
 
   params.addParam<std::vector<Real>>(
       "alpha_r",
@@ -62,7 +64,7 @@ SpeciesTrappingPhysics::validParams()
 
   // Parameter groups
   params.addParamNamesToGroup("alpha_t N Ct0 trap_per_free", "Trapping");
-  params.addParamNamesToGroup("alpha_r temperatures detrapping_energy", "Releasing");
+  params.addParamNamesToGroup("alpha_r temperature detrapping_energy", "Releasing");
 
   return params;
 }
@@ -111,6 +113,38 @@ SpeciesTrappingPhysics::addComponent(const ActionComponent & component)
   for (const auto & block : component.blocks())
     _blocks.push_back(block);
   _components.push_back(component.name());
+
+  // Process each of the component's parameters, adding defaults to avoid breaking the double-vector
+  // indexing when acceptable
+  // These parameters are known to be defined for a Structure1D, so we retrieve them from the
+  // component's parameters. If they are not defined on the Physics or the component, we error
+  processComponentParameters<std::vector<NonlinearVariableName>>(
+      "species", component.name(), _species, "species", false, {});
+  processComponentParameters<std::vector<Real>>("species_scaling_factors",
+                                                component.name(),
+                                                _scaling_factors,
+                                                "species_scaling_factors",
+                                                false,
+                                                {});
+  processComponentParameters<std::vector<Real>>("species_initial_concentrations",
+                                                component.name(),
+                                                _initial_conditions,
+                                                "species_initial_concentrations",
+                                                false,
+                                                {});
+  processComponentParameters<MooseFunctorName>(
+      "temperature", component.name(), _component_temperatures, "temperature", false, "");
+
+  // TODO: mobile
+
+  // These parameters should be defined as material properties by the user on the Component
+  // or on the Physics.
+  // We only support Real numbers for now as the consuming kernels only support Real
+  processComponentMatprop<std::vector<Real>>("alpha_t", component, _alpha_ts);
+  processComponentMatprop<Real>("N", component, _Ns);
+  processComponentMatprop<FunctionName>("Ct0", component, _Ct0s);
+  processComponentMatprop<std::vector<Real>>("alpha_r", component, _alpha_rs);
+  processComponentMatprop<std::vector<Real>>("detrapping_energy", component, _detrapping_energies);
 }
 
 VariableName
