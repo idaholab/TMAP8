@@ -1,0 +1,59 @@
+COORDINATES absolute 1.e-6
+
+TIME STEPS relative 1.e-6 floor 0.0
+
+GLOBAL VARIABLES relative 8e-4 floor 1.e-10
+		F_permeation
+		F_recombination
+		ScInt_C_mobile_Cu
+		ScInt_C_mobile_CuCrZr
+		ScInt_C_mobile_W
+		ScInt_C_total_Cu
+		ScInt_C_total_CuCrZr
+		ScInt_C_total_W
+		ScInt_C_trapped_Cu
+		ScInt_C_trapped_CuCrZr
+		ScInt_C_trapped_W
+		temperature_top
+		temperature_tube
+		timestep_max_pp
+
+NODAL VARIABLES relative 8e-4 floor 1e-10
+		C_mobile_Cu
+		C_mobile_CuCrZr
+		C_mobile_W
+		C_total_Cu
+		C_total_CuCrZr
+		C_total_W
+		C_trapped_Cu
+		C_trapped_CuCrZr
+		C_trapped_W
+		S_empty_Cu
+		S_empty_CuCrZr
+		S_empty_W
+		S_total_Cu
+		S_total_CuCrZr
+		S_total_W
+		S_trapped_Cu
+		S_trapped_CuCrZr
+		S_trapped_W
+		Sc_C_mobile_Cu
+		Sc_C_mobile_CuCrZr
+		Sc_C_mobile_W
+		Sc_C_total_Cu
+		Sc_C_total_CuCrZr
+		Sc_C_total_W
+		Sc_C_trapped_Cu
+		Sc_C_trapped_CuCrZr
+		Sc_C_trapped_W
+		Sc_S_empty_Cu
+		Sc_S_empty_CuCrZr
+		Sc_S_empty_W
+		Sc_S_total_Cu
+		Sc_S_total_CuCrZr
+		Sc_S_total_W
+		Sc_S_trapped_Cu
+		Sc_S_trapped_CuCrZr
+		Sc_S_trapped_W
+		flux_y
+		temperature
