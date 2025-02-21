@@ -11,6 +11,9 @@
 #include "PhysicsBase.h"
 #include "ComponentMaterialPropertyInterface.h"
 
+#include <vector>
+#include <type_traits>
+
 /**
  * Base class for physics implementing the trapping of one or more species in a medium
  */
@@ -78,11 +81,13 @@ protected:
    * @tparam T the type of the parameter to process
    * @param param_name name of the parameter
    * @param comp the component
+   * @param species the species on that component
    * @param physics_storage storage for those values on the Physics
    */
   template <typename T>
   void processComponentMatprop(const std::string & param_name,
                                const ActionComponent & comp,
+                               const std::vector<NonlinearVariableName> & species,
                                std::vector<T> & physics_storage);
 };
 
@@ -95,6 +100,19 @@ template <typename T, typename A>
 struct is_vector<std::vector<T, A>> : public std::true_type
 {
 };
+
+template <typename T>
+struct vector_value_type;
+
+template <typename T, typename Alloc>
+struct vector_value_type<std::vector<T, Alloc>>
+{
+  using type = T;
+};
+
+// Helper alias template
+template <typename T>
+using vector_value_type_t = typename vector_value_type<T>::type;
 
 template <typename T>
 void
@@ -154,8 +172,8 @@ SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
     if (component_value_valid && physics_storage[0] != getParam<T>(comp_param_name))
       paramError(param_name,
                  "'" + param_name + "' in component '" + comp_name + "' :\n" +
-                     Moose::stringify(getParam<T>(comp_param_name) + "\n differs from '" + param_name +
-                     "' in " + type() + ":\n" + Moose::stringify(physics_storage[0]));
+                     Moose::stringify(getParam<T>(comp_param_name)) + "\n differs from '" +
+                     param_name + "' in " + type() + ":\n" + Moose::stringify(physics_storage[0]));
     // Duplicate for simplicity
     physics_storage.push_back(physics_storage[0]);
   }
@@ -175,10 +193,12 @@ template <typename T>
 void
 SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
                                             const ActionComponent & comp,
+                                            const std::vector<NonlinearVariableName> & species,
                                             std::vector<T> & physics_storage)
 {
   // Check that the component could host material properties
   const auto * mat_comp = dynamic_cast<const ComponentMaterialPropertyInterface *>(&comp);
+  const auto comp_name = comp.name();
 
   // Parameter added by the Physics, just need to check consistency
   if (isParamValid(param_name))
@@ -193,36 +213,57 @@ SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
     }
     else
     {
-      // Has the material property, check that it's consistent with the Physics value
-      if (mat_comp->hasProperty(param_name))
-      {
-        const auto & comp_value = mat_comp.getProperty(param_name);
-        try
-        {
-          const auto & comp_value_conv = MooseUtils::convert<T>(comp_value, true);
-          if (physics_value != comp_value_conv)
-            paramError(param_name,
-                       "'" + param_name + "' in component '" + comp_name + "' :\n" +
-                           Moose::stringify(comp_value_conv) + "\n differs from '" + param_name +
-                           "' in " + type() + ":\n" + Moose::stringify(physics_storage[0]));
-        }
-        catch (...)
-        {
-          comp.paramError("property_values",
-                          "Property '" + param_name + "' should be of underlying type " +
-                              MooseUtils::prettyCppType<T>());
-        }
+      // For vectors, we have to get the properties one by one
+      // We use the size of the species vector
+      auto n_items = 1;
+      if constexpr (is_vector<T>::value)
+        n_items = _species.size();
+      T temp_storage;
 
-        // Duplicate the physics value for simplicity
-        physics_storage.push_back(physics_value);
-        return;
-      }
-      else
+      for (const auto i : make_range(n_items))
       {
-        // Duplicate the physics value for simplicity
-        physics_storage.push_back(physics_value);
-        return;
+        const auto property_name = (n_items == 1) ? param_name : param_name + species[i];
+        // Has the property, check the type
+        if (mat_comp->hasProperty(property_name))
+        {
+          const auto & comp_value = mat_comp->getPropertyValue(property_name, name());
+          try
+          {
+            if constexpr (is_vector<T>::value)
+            {
+              const auto & comp_value_conv =
+                  MooseUtils::convert<vector_value_type_t<T>>(comp_value, true);
+              if (physics_value[i] != comp_value_conv)
+                paramError(param_name,
+                           "'" + property_name + "' in component '" + comp_name + "' :\n" +
+                               Moose::stringify(comp_value_conv) + "\n differs from '" +
+                               param_name + "' in " + type() + ":\n" +
+                               Moose::stringify(physics_storage[0][i]));
+            }
+            else
+            {
+              const auto & comp_value_conv = MooseUtils::convert<T>(comp_value, true);
+              temp_storage = comp_value_conv;
+              if (physics_value != comp_value_conv)
+                paramError(param_name,
+                           "'" + property_name + "' in component '" + comp_name + "' :\n" +
+                               Moose::stringify(comp_value_conv) + "\n differs from '" +
+                               param_name + "' in " + type() + ":\n" +
+                               Moose::stringify(physics_storage[0]));
+            }
+          }
+          catch (...)
+          {
+            comp.paramError("property_values",
+                            "Property '" + property_name +
+                                "' should be of type: " + MooseUtils::prettyCppType<T>());
+          }
+        }
       }
+
+      // Duplicate the physics value for simplicity
+      physics_storage.push_back(physics_value);
+      return;
     }
   }
   // Parameter not defined in Physics, try to retrieve it from the component
@@ -234,28 +275,50 @@ SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
                  "' does not inherit from the ComponentMaterialPropertyInterface. It does not "
                  "define the '",
                  param_name,
-                 "' property. This property should be defined in the Physics instead.");
+                 "' property. This property should be defined in the '",
+                 name(),
+                 "' Physics instead.");
 
-    // Has the property, check the type
-    if (mat_comp->hasProperty(param_name))
+    auto n_items = 1;
+    if constexpr (is_vector<T>::value)
+      n_items = _species.size();
+    T temp_storage;
+
+    for (const auto i : make_range(n_items))
     {
-      const auto & comp_value = mat_comp.getProperty(param_name);
-      try
+      const auto property_name = (n_items == 1) ? param_name : param_name + species[i];
+      // Has the property, check the type
+      if (mat_comp->hasProperty(property_name))
       {
-        const auto & comp_value_conv = MooseUtils::convert<T>(comp_value, true);
-        physics_storage.push_back(comp_value_conv);
+        const auto & comp_value = mat_comp->getPropertyValue(property_name, name());
+        try
+        {
+          if constexpr (is_vector<T>::value)
+          {
+            const auto & comp_value_conv =
+                MooseUtils::convert<vector_value_type_t<T>>(comp_value, true);
+            temp_storage.push_back(comp_value_conv);
+          }
+          else
+          {
+            const auto & comp_value_conv = MooseUtils::convert<T>(comp_value, true);
+            temp_storage = comp_value_conv;
+          }
+        }
+        catch (...)
+        {
+          comp.paramError("property_values",
+                          "Property '" + property_name +
+                              "' should be of type: " + MooseUtils::prettyCppType<T>());
+        }
       }
-      catch (...)
-      {
-        comp.paramError("property_values",
-                        "Property '" + param_name + "' should be of type " +
-                            MooseUtils::prettyCppType<T>());
-      }
+      else
+        paramError(param_name,
+                   "This parameter should be specified, in the Physics '" + name() +
+                       "' (applying to all components) or in component '" + comp_name +
+                       "' using the property_name '" + property_name + "'");
     }
-    else
-      paramError(param_name,
-                 "This parameter should be specified, in the Physics '" + name() +
-                     "' (applying to all components) or in component '" + comp_name +
-                     "' using the property_names/values parameters.");
+
+    physics_storage.push_back(temp_storage);
   }
 }
