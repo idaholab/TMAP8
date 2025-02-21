@@ -2,8 +2,10 @@
 # Deuterium permeation through 0.05-mm Pd at 825 K.
 # No Soret effect, or trapping included.
 
+# Necessary physical and mdoel parameters (kb, R, temperature)
+!include parameters_deuterium_gas.params
+
 # Enclosure data used in TMAP7 case
-temperature = '${units 825 K}'
 pressure_enclosure1 = '${units 1e-6 Pa}'
 pressure_initial = '${units 1e-6 Pa}'
 

@@ -5,12 +5,6 @@
 
 # This input file is not meant to run on its own and is included in case-specific input files.
 
-# Physical Constants
-# Note that we do NOT use the same number of digits as in TMAP7.
-# This is to be consistent with PhysicalConstant.h
-kb = '${units 1.380649e-23 J/K}' # Boltzmann constant
-R = '${units 8.31446261815324 J/mol/K}' # Gas constant
-
 # Enclosure data used in TMAP7 case
 surface_area = '${units 1.8e-4 m^2 -> mum^2}'
 pressure_enclosure4 = '${units 1e-10 Pa}'
