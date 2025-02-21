@@ -36,6 +36,10 @@ SpeciesTrappingPhysics::validParams()
                         false,
                         "Whether to create new variables for each trapped species on every "
                         "component, or whether to only create variables.");
+  params.addParam<std::vector<Real>>(
+      "species_initial_concentrations",
+      {},
+      "Initial values for each species. If specified, will be used for every component.");
 
   params.addParam<std::vector<Real>>(
       "alpha_t",
@@ -83,6 +87,9 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
 {
   // We allow overlaps between mobile species names because two trapped species could release to the
   // same mobile species and adding the two time derivative kernels is correct
+
+  // TODO: move this to the base class
+  _initial_conditions = {getParam<std::vector<Real>>("species_initial_concentrations")};
 
   // All the other parameters can vary on each component
   if (_single_variable_set)
@@ -140,11 +147,12 @@ SpeciesTrappingPhysics::addComponent(const ActionComponent & component)
   // These parameters should be defined as material properties by the user on the Component
   // or on the Physics.
   // We only support Real numbers for now as the consuming kernels only support Real
-  processComponentMatprop<std::vector<Real>>("alpha_t", component, _alpha_ts);
-  processComponentMatprop<Real>("N", component, _Ns);
-  processComponentMatprop<FunctionName>("Ct0", component, _Ct0s);
-  processComponentMatprop<std::vector<Real>>("alpha_r", component, _alpha_rs);
-  processComponentMatprop<std::vector<Real>>("detrapping_energy", component, _detrapping_energies);
+  processComponentMatprop<std::vector<Real>>("alpha_t", component, _species.back(), _alpha_ts);
+  processComponentMatprop<Real>("N", component, _species.back(), _Ns);
+  processComponentMatprop<std::vector<FunctionName>>("Ct0", component, _species.back(), _Ct0s);
+  processComponentMatprop<std::vector<Real>>("alpha_r", component, _species.back(), _alpha_rs);
+  processComponentMatprop<std::vector<Real>>(
+      "detrapping_energy", component, _species.back(), _detrapping_energies);
 }
 
 VariableName
@@ -166,6 +174,36 @@ SpeciesTrappingPhysics::addSolverVariables()
   InputParameters params = getFactory().getValidParams(variable_type);
   params.set<MooseEnum>("family") = "LAGRANGE";
   params.set<MooseEnum>("order") = FIRST;
+
+  // Allow using blocks even with the loops on components
+  if (_components.empty())
+  {
+    if (_single_variable_set)
+    {
+      _components.push_back("");
+      if (_species[0].empty())
+        paramError("species", "Should not be empty if not using Components");
+      if (_scaling_factors[0].empty())
+        paramError("species_scaling_factors", "Should not be empty if not using Components");
+      if (_mobile_species_names[0].empty())
+        paramError("mobile", "Should not be empty if not using Components");
+      if (_alpha_ts[0].empty())
+        paramError("alpha_t", "Should not be empty if not using Components");
+      if (_Ns.empty())
+        paramError("N", "Should not be empty if not using Components");
+      if (_Ct0s[0].empty())
+        paramError("Ct0", "Should not be empty if not using Components");
+      if (_trap_per_frees.empty())
+        paramError("trap_per_free", "Should not be empty if not using Components");
+      if (_alpha_rs[0].empty())
+        paramError("alpha_r", "Should not be empty if not using Components");
+      if (_detrapping_energies[0].empty())
+        paramError("detrapping_energy", "Should not be empty if not using Components");
+    }
+    else
+      paramError("separate_variables_per_component",
+                 "Physics is not defined on any Component, this parameter should be set to false");
+  }
 
   for (const auto c_i : index_range(_components))
   {
@@ -259,7 +297,7 @@ SpeciesTrappingPhysics::addFEKernels()
             VariableName(_component_temperatures[c_i])};
         params.set<Real>("alpha_t") = _alpha_ts[c_i][s_j];
         params.set<Real>("N") = _Ns[c_i];
-        params.set<FunctionName>("Ct0") = _Ct0s[c_i];
+        params.set<FunctionName>("Ct0") = _Ct0s[c_i][s_j];
         params.set<Real>("trap_per_free") = _trap_per_frees[c_i];
 
         // Add the other species as occupying traps
