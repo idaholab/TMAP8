@@ -18,12 +18,12 @@ class ActionComponent;
  * Creates all the objects needed to solve for the concentration of one or more species in one or
  * more 0D enclosures in which the species can go into solution / release from
  */
-class SpeciesSolubilityPhysics : public SpeciesPhysicsBase
+class SorptionExchangePhysics : public SpeciesPhysicsBase
 {
 public:
   static InputParameters validParams();
 
-  SpeciesSolubilityPhysics(const InputParameters & parameters);
+  SorptionExchangePhysics(const InputParameters & parameters);
 
   void addComponent(const ActionComponent & component) override;
 

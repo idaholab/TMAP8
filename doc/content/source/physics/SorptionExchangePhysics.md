@@ -1,4 +1,4 @@
-# Species Solubility in 0D Structures / SpeciesSolubilityPhysics
+# Species Solubility in 0D Structures / SorptionExchangePhysics
 
 This [Physics](syntax/Physics/index.md) creates an ordinary differential equation to represent the local solubility / releasing of species
 in a 0D enclosure, and mass exchange of that species at its boundaries. The 0D enclosure component is exchanging species with
@@ -29,12 +29,12 @@ This boundary condition connects the outgoing species flux 0D component with the
 
 ## Interaction with ActionComponents
 
-The `SpeciesSolubilityPhysics` can be defined on an [ActionComponent](syntax/ActionComponent/index.md) by specifying the `physics` parameter of that component to include the name of the particular `SpeciesSolubilityPhysics`. The name of the `Physics` can be found nested under `[Physics/SpeciesSolubility/<name>]`.
+The `SorptionExchangePhysics` can be defined on an [ActionComponent](syntax/ActionComponent/index.md) by specifying the `physics` parameter of that component to include the name of the particular `SorptionExchangePhysics`. The name of the `Physics` can be found nested under `[Physics/SorptionExchange/<name>]`.
 
-Certain parameters of the `SpeciesSolubilityPhysics` can be specified on components that are specifically implemented to interact with the
-`SpeciesSolubilityPhysics`. For example, the [!param](/ActionComponents/Component0D/species) and
+Certain parameters of the `SorptionExchangePhysics` can be specified on components that are specifically implemented to interact with the
+`SorptionExchangePhysics`. For example, the [!param](/ActionComponents/Component0D/species) and
 [!param](/ActionComponents/Component0D/species_initial_concentrations) parameters can be specified on a [Component0D.md].
-The `SpeciesSolubilityPhysics` will then take care of defining the variable and its initial condition.
+The `SorptionExchangePhysics` will then take care of defining the variable and its initial condition.
 
 !syntax parameters /Physics/SpeciesTrapping/ContinuousGalerkin/FieldTrappingPhysics
 

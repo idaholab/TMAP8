@@ -6,7 +6,7 @@
 /*               ALL RIGHTS RESERVED                    */
 /********************************************************/
 
-#include "SpeciesSolubilityPhysics.h"
+#include "SorptionExchangePhysics.h"
 #include "MooseUtils.h"
 #include "ActionComponent.h"
 #include "Enclosure0D.h"
@@ -16,17 +16,17 @@
 #include "DiffusionPhysicsBase.h"
 
 // Register the actions for the objects actually used
-registerMooseAction("TMAP8App", SpeciesSolubilityPhysics, "init_physics");
-registerMooseAction("TMAP8App", SpeciesSolubilityPhysics, "add_variable");
-registerMooseAction("TMAP8App", SpeciesSolubilityPhysics, "add_ic");
-registerMooseAction("TMAP8App", SpeciesSolubilityPhysics, "add_scalar_kernel");
-registerMooseAction("TMAP8App", SpeciesSolubilityPhysics, "add_bc");
-registerMooseAction("TMAP8App", SpeciesSolubilityPhysics, "check_integrity_early_physics");
-registerMooseAction("TMAP8App", SpeciesSolubilityPhysics, "check_integrity");
-registerMooseAction("TMAP8App", SpeciesSolubilityPhysics, "copy_vars_physics");
+registerMooseAction("TMAP8App", SorptionExchangePhysics, "init_physics");
+registerMooseAction("TMAP8App", SorptionExchangePhysics, "add_variable");
+registerMooseAction("TMAP8App", SorptionExchangePhysics, "add_ic");
+registerMooseAction("TMAP8App", SorptionExchangePhysics, "add_scalar_kernel");
+registerMooseAction("TMAP8App", SorptionExchangePhysics, "add_bc");
+registerMooseAction("TMAP8App", SorptionExchangePhysics, "check_integrity_early_physics");
+registerMooseAction("TMAP8App", SorptionExchangePhysics, "check_integrity");
+registerMooseAction("TMAP8App", SorptionExchangePhysics, "copy_vars_physics");
 
 InputParameters
-SpeciesSolubilityPhysics::validParams()
+SorptionExchangePhysics::validParams()
 {
   InputParameters params = SpeciesPhysicsBase::validParams();
   params.addClassDescription(
@@ -57,7 +57,7 @@ SpeciesSolubilityPhysics::validParams()
   return params;
 }
 
-SpeciesSolubilityPhysics::SpeciesSolubilityPhysics(const InputParameters & parameters)
+SorptionExchangePhysics::SorptionExchangePhysics(const InputParameters & parameters)
   : SpeciesPhysicsBase(parameters),
     _initial_conditions({getParam<std::vector<Real>>("species_initial_pressures")}),
     _species_Ks({getParam<std::vector<MooseFunctorName>>("equilibrium_constants")}),
@@ -72,7 +72,7 @@ SpeciesSolubilityPhysics::SpeciesSolubilityPhysics(const InputParameters & param
 }
 
 void
-SpeciesSolubilityPhysics::addComponent(const ActionComponent & component)
+SorptionExchangePhysics::addComponent(const ActionComponent & component)
 {
   // TODO: handle other types of ActionComponents
   // We need some sort of "connectedStructure / connectedComponent ?" concept
@@ -113,7 +113,7 @@ SpeciesSolubilityPhysics::addComponent(const ActionComponent & component)
 }
 
 void
-SpeciesSolubilityPhysics::addSolverVariables()
+SorptionExchangePhysics::addSolverVariables()
 {
   const std::string variable_type = "MooseVariableScalar";
   InputParameters params = getFactory().getValidParams(variable_type);
@@ -137,7 +137,7 @@ SpeciesSolubilityPhysics::addSolverVariables()
 }
 
 void
-SpeciesSolubilityPhysics::addInitialConditions()
+SorptionExchangePhysics::addInitialConditions()
 {
   const std::string ic_type = "ScalarConstantIC";
   InputParameters params = getFactory().getValidParams(ic_type);
@@ -157,7 +157,7 @@ SpeciesSolubilityPhysics::addInitialConditions()
 }
 
 void
-SpeciesSolubilityPhysics::addScalarKernels()
+SorptionExchangePhysics::addScalarKernels()
 {
   for (const auto c_i : index_range(_components))
   {
@@ -209,13 +209,13 @@ SpeciesSolubilityPhysics::addScalarKernels()
 }
 
 void
-SpeciesSolubilityPhysics::addFEBCs()
+SorptionExchangePhysics::addFEBCs()
 {
   for (const auto c_i : index_range(_components))
   {
     const auto & comp_name = _components[c_i];
     // This could be done in the Diffusion/Migration Physics instead
-    // That Physics could add this term when coupled to a SpeciesSolubilityPhysics
+    // That Physics could add this term when coupled to a SorptionExchangePhysics
     const auto & structure_boundary = getConnectedStructureBoundary(comp_name);
 
     for (const auto s_j : index_range(_species[c_i]))
@@ -241,8 +241,8 @@ SpeciesSolubilityPhysics::addFEBCs()
 }
 
 void
-SpeciesSolubilityPhysics::checkSingleBoundary(const std::vector<BoundaryName> & boundaries,
-                                              const ComponentName & comp_name) const
+SorptionExchangePhysics::checkSingleBoundary(const std::vector<BoundaryName> & boundaries,
+                                             const ComponentName & comp_name) const
 {
   if (boundaries.size() != 1)
     paramError("components",
@@ -251,8 +251,7 @@ SpeciesSolubilityPhysics::checkSingleBoundary(const std::vector<BoundaryName> & 
 }
 
 const VariableName &
-SpeciesSolubilityPhysics::getConnectedStructureVariableName(unsigned int c_i,
-                                                            unsigned int s_j) const
+SorptionExchangePhysics::getConnectedStructureVariableName(unsigned int c_i, unsigned int s_j) const
 {
   const auto & comp_name = _components[c_i];
   const auto & component = getActionComponent(comp_name);
@@ -276,7 +275,7 @@ SpeciesSolubilityPhysics::getConnectedStructureVariableName(unsigned int c_i,
 }
 
 const BoundaryName &
-SpeciesSolubilityPhysics::getConnectedStructureBoundary(const ComponentName & comp_name) const
+SorptionExchangePhysics::getConnectedStructureBoundary(const ComponentName & comp_name) const
 {
   const auto & component = getActionComponent(comp_name);
   const auto & boundaries = component.outerSurfaceBoundaries();
@@ -285,7 +284,7 @@ SpeciesSolubilityPhysics::getConnectedStructureBoundary(const ComponentName & co
 }
 
 const std::vector<PhysicsBase *>
-SpeciesSolubilityPhysics::getConnectedStructurePhysics(const ComponentName & comp_name) const
+SorptionExchangePhysics::getConnectedStructurePhysics(const ComponentName & comp_name) const
 {
   const auto & component = dynamic_cast<const Enclosure0D &>(getActionComponent(comp_name));
   const auto & structure = getActionComponent(component.connectedStructure());
@@ -294,7 +293,7 @@ SpeciesSolubilityPhysics::getConnectedStructurePhysics(const ComponentName & com
 }
 
 void
-SpeciesSolubilityPhysics::checkIntegrity() const
+SorptionExchangePhysics::checkIntegrity() const
 {
   for (const auto & vec : _scaling_factors)
     for (const auto scale : vec)
