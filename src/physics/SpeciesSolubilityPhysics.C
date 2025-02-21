@@ -90,24 +90,24 @@ SpeciesSolubilityPhysics::addComponent(const ActionComponent & component)
 
   // Process each of the component's parameters, adding defaults to avoid breaking the double-vector
   // indexing when needed
-  processComponentParameters<std::vector<NonlinearVariableName>>(
+  processComponentValues<std::vector<NonlinearVariableName>>(
       "species", comp.name(), _species, comp.species(), false, {});
-  processComponentParameters<std::vector<Real>>("species_scaling_factors",
-                                                comp.name(),
-                                                _scaling_factors,
-                                                comp.scalingFactors(),
-                                                true,
-                                                std::vector<Real>(1, n_species_component));
-  processComponentParameters<std::vector<Real>>(
-      "species_initial_conditions", comp.name(), _initial_conditions, comp.ics(), false, {});
-  processComponentParameters<std::vector<MooseFunctorName>>(
+  processComponentValues<std::vector<Real>>("species_scaling_factors",
+                                            comp.name(),
+                                            _scaling_factors,
+                                            comp.scalingFactors(),
+                                            true,
+                                            std::vector<Real>(1, n_species_component));
+  processComponentValues<std::vector<Real>>(
+      "species_initial_pressures", comp.name(), _initial_conditions, comp.ics(), false, {});
+  processComponentValues<std::vector<MooseFunctorName>>(
       "equilibrium_constants", comp.name(), _species_Ks, comp.equilibriumConstants(), false, {});
-  processComponentParameters<MooseFunctorName>("temperatures",
-                                               comp.name(),
-                                               _component_temperatures,
-                                               std::to_string(comp.temperature()),
-                                               false,
-                                               "");
+  processComponentValues<MooseFunctorName>("temperatures",
+                                           comp.name(),
+                                           _component_temperatures,
+                                           std::to_string(comp.temperature()),
+                                           false,
+                                           "");
 
   addBlocks(component.blocks());
 }
