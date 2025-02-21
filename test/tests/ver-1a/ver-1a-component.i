@@ -21,7 +21,7 @@ slab_thickness = '${units 3.30e-5 m -> mum}'
 concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} Pa*m^3 -> Pa*mum^3}'
 
 [Physics]
-  [SpeciesSolubility]
+  [SorptionExchange]
     [0d_solub]
       species = 'v'
 

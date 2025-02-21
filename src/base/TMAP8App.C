@@ -40,7 +40,7 @@ TMAP8App::registerAll(Factory & f, ActionFactory & af, Syntax & syntax)
   /* register custom execute flags, action syntax, etc. here */
 
   // TMAP8 specific Physics
-  registerSyntax("SpeciesSolubilityPhysics", "Physics/SpeciesSolubility/*");
+  registerSyntax("SorptionExchangePhysics", "Physics/SorptionExchange/*");
   registerSyntax("SpeciesTrappingPhysics", "Physics/SpeciesTrapping/*");
   registerSyntax("SpeciesDiffusionReactionCG", "Physics/SpeciesDiffusionReaction/*");
 
