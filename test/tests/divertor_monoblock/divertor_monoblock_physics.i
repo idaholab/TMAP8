@@ -39,7 +39,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
     [HeatConduction]
         [all]
             temperature_name = 'temperature'
-            # initial_temperature = ${units 300 K}
+            initial_temperature = ${units 300 K}
             use_automatic_differentiation = false
 
             thermal_conductivity = 'thermal_conductivity'
@@ -56,7 +56,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
             variable_name = 'C_mobile_W'
             block = '4'
             diffusivity_matprop = diffusivity_W
-            # initial_condition = ${units 1.0e-20 m^-3}
+            initial_condition = ${units 1.0e-20 m^-3}
 
             neumann_boundaries = 'top'
             boundary_fluxes = 'mobile_flux_bc_func'
@@ -65,13 +65,13 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
             variable_name = 'C_mobile_Cu'
             block = '3'
             diffusivity_matprop = diffusivity_Cu
-            # initial_condition = ${units 5.0e-17 m^-3}
+            initial_condition = ${units 5.0e-17 m^-3}
         []
         [CuCrZr]
             variable_name = 'C_mobile_CuCrZr'
             block = '2'
             diffusivity_matprop = diffusivity_CuCrZr
-            # initial_condition = ${units 1.0e-15 m^-3}
+            initial_condition = ${units 1.0e-15 m^-3}
 
             dirichlet_boundaries ='2to1'
             boundary_values = '1.0e-18'
@@ -82,7 +82,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
             species = 'C_trapped_W'
             mobile = 'C_mobile_W'
             block = '4'
-            # species_initial_concentrations = ${units 1.0e-15 m^-3}
+            species_initial_concentrations = ${units 1.0e-15 m^-3}
             separate_variables_per_component = false
 
             temperature = temperature
@@ -98,7 +98,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
             species = 'C_trapped_Cu'
             mobile = 'C_mobile_Cu'
             block = '3'
-            # species_initial_concentrations = ${units 1.0e-15 m^-3}
+            species_initial_concentrations = ${units 1.0e-15 m^-3}
             separate_variables_per_component = false
             temperature = temperature
 
@@ -114,7 +114,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
             species = 'C_trapped_CuCrZr'
             mobile = 'C_mobile_CuCrZr'
             block = '2'
-            # species_initial_concentrations = ${units 1.0e-15 m^-3}
+            species_initial_concentrations = ${units 1.0e-15 m^-3}
             separate_variables_per_component = false
             temperature = temperature
 
@@ -221,7 +221,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
         outputs = all
     []
     [thermal_conductivity_W]
-        type = ADParsedMaterial
+        type = ParsedMaterial
         property_name = thermal_conductivity
         coupled_variables = 'temperature'
         block = 4
@@ -261,7 +261,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
         outputs = all
     []
     [thermal_conductivity_Cu]
-        type = ADParsedMaterial
+        type = ParsedMaterial
         property_name = thermal_conductivity
         coupled_variables = 'temperature'
         block = 3
@@ -299,7 +299,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
         block = 2
     []
     [thermal_conductivity_CuCrZr]
-        type = ADParsedMaterial
+        type = ParsedMaterial
         property_name = thermal_conductivity
         coupled_variables = 'temperature'
         block = 2
@@ -337,8 +337,8 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
     type = Transient
     scheme = bdf2
     solve_type = NEWTON
-    petsc_options_iname = '-pc_type -pc_factor_shift_type'
-    petsc_options_value = 'lu NONZERO'
+    petsc_options_iname = '-pc_type -pc_factor_shift_type -pc_factor_mat_solver_package'
+    petsc_options_value = 'lu NONZERO superlu_dist'
     nl_rel_tol  = 1e-6 # 1e-8 works for 1 cycle
     nl_abs_tol  = 1e-7 # 1e-11 works for 1 cycle
     end_time = 8.0e4   # 50 ITER shots (3.0e4 s plasma, 2.0e4 SSP)

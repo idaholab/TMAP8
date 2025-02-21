@@ -45,6 +45,6 @@ SpeciesPhysicsBase::SpeciesPhysicsBase(const InputParameters & parameters)
   checkVectorParamsNoOverlap<NonlinearVariableName>({"species"});
 
   // Check sizes
-  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species",
-                                                                "species_scaling_factor");
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>(
+      "species", "species_scaling_factors", /*ignore_empty_second*/ true);
 }
