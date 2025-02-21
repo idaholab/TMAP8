@@ -39,8 +39,8 @@ protected:
   std::vector<std::vector<Real>> _alpha_ts;
   /// Atomic number density of the host material
   std::vector<Real> _Ns;
-  /// Fraction of host sites that contribute to trapping
-  std::vector<FunctionName> _Ct0s;
+  /// Fraction of host sites that contribute to trapping for each component (outer indexing) and species (inner)
+  std::vector<std::vector<FunctionName>> _Ct0s;
   /// Estimate for the ratio of the concentration magnitude of trapped species to free species for each component
   std::vector<Real> _trap_per_frees;
   /// Releasing rate for each component (outer indexing) and species (inner)
