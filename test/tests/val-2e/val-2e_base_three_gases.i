@@ -6,8 +6,6 @@
 
 # This input file is not meant to run on its own and is included in case-specific input files.
 
-!include val-2e_base.i
-
 # Enclosure data used in TMAP7 case
 temperature = '${units 870 K}'
 pressure_enclosure1 = '${units 1e-7 Pa}'
@@ -15,13 +13,15 @@ pressure_initial_enclosure2 = '${units 1e-7 Pa}'
 pressure_initial_enclosure2_H2 = '${units 0.063 Pa}'
 pressure_initial_enclosure3 = '${units 1e-20 Pa}'
 
-# Diffusion data used in TMAP7 case
-diffusivity_pre_H = '${units 3.728e-4 m^2/s -> mum^2/s}'
-diffusivity_energy_H = '${units ${fparse 1315.8 * R} J/mol}'
-
 # Modeling data used in current case
 slab_thickness = '${units 2.5e-5 m -> mum}'
 simulation_time = '${units 1000 s}'
+
+# Diffusion data used in TMAP7 case
+diffusivity_pre_H = '${units 3.728e-4 m^2/s -> mum^2/s}'
+diffusivity_energy_H = '${units ${fparse 1315.8 * 8.31446261815324} J/mol}'
+
+!include val-2e_base.i
 
 [Variables]
   [D2_pressure_upstream]

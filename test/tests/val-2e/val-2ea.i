@@ -2,16 +2,10 @@
 # Deuterium permeation through 0.05-mm Pd at 825 K.
 # No Soret effect, or trapping included.
 
-
 # Enclosure data used in TMAP7 case
 temperature = '${units 825 K}'
 pressure_enclosure1 = '${units 1e-6 Pa}'
 pressure_initial = '${units 1e-6 Pa}'
-
-# Diffusion data used in TMAP7 case
-solubility_exponent = 0.9297 # -
-solubility_pre = '${units ${fparse 1.511e23 / 1e18} at/mum^3/Pa^0.9297}'
-solubility_energy = '${units ${fparse 5918 * R} J/mol}'
 
 # Modeling data used in current case
 slab_thickness = '${units 5e-5 m -> mum}'
@@ -19,6 +13,11 @@ file_name = 'val-2ea_out'
 simulation_time = '${units 1900 s}'
 
 !include val-2e_base.i
+
+# Diffusion data used in TMAP7 case
+solubility_exponent = 0.9297 # -
+solubility_pre = '${units ${fparse 1.511e23 / 1e18} at/mum^3/Pa^0.9297}'
+solubility_energy = '${units ${fparse 5918 * R} J/mol}'
 
 [Variables]
   [D2_pressure_upstream]

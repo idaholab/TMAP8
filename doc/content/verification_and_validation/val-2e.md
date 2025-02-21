@@ -225,6 +225,9 @@ Other case and model parameters used in TMAP8 are listed in [val-2e_parameters]:
 !alert warning title=Typo in [!cite](ambrosek2008verification)
 There are typos on the equations for hydrogen diffusivity, recombination and dissociation coefficients in the input files from TMAP7 in val-2ed and val-2ee. The correct values are provided in [val-2e_parameters] and used in TMAP8. The pre-factor for hydrogen diffusivity used in TMAP8 is 3.728 $\times 10^{-4}$ m$^2$/s instead of 2.636 $\times 10^{-4}$ m$^2$/s as used in the input file published in [!cite](ambrosek2008verification). The activation energy for recombination coefficient used in TMAP8 is 11836 K instead of the -11836 K value shown in Eq. (71) in [!cite](ambrosek2008verification) - note that the input files in [!cite](ambrosek2008verification) use the proper value. The values of the species molecular weight in amu are also updated from the input files shown in [!cite](ambrosek2008verification).
 
+!alert warning title=Solubility values for val-2ea, val-2eb, val-2ec differ from those for val-2ed, val-2ee
+To achieve a lower RMSPE in [val-2e_comparison_diffusion], the solubility values for val-2ea, val-2eb, and val-2ec were taken from the simulations in [!cite](ambrosek2008verification), rather than using the values provided in the documentation in [!cite](ambrosek2008verification).
+
 ## Results
 
 [val-2e_comparison_diffusion] shows the comparison of the TMAP8 calculation and the experimental data from [!cite](kizu2001co), including simulations val-2ea, val-2eb, and val-2ec. There are reasonable agreements between the TMAP predictions and the experimental data with root mean square percentage errors (RMSPE) of RMSPE = 23.51 %, 30.80 %, and 47.70 % for val-2ea, val-2eb, and val-2ec, respectively.

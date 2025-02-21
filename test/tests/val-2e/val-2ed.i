@@ -5,7 +5,7 @@
 # Solubility data used in TMAP7 case
 solubility_exponent = 0.9297 # -
 solubility_pre = '${units ${fparse 9.355e22 / 1e18} at/mum^3/Pa^0.9297}'
-solubility_energy = '${units ${fparse 5918 * R} J/mol}'
+solubility_energy = '${units ${fparse 5918 * 8.31446261815324} J/mol}'
 
 # Modeling data used in current case
 file_name = 'val-2ed_out'
