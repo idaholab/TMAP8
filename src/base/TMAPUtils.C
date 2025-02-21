@@ -36,6 +36,7 @@ structureCommonParams()
       "block", "The list of block ids (SubdomainID) that this object will be applied");
   params.addParam<std::vector<Real>>(
       "species_initial_concentrations", {}, "Initial concentrations for the structure species");
+  params.addRequiredParam<MooseFunctorName>("temperature", "Temperature [K]");
   return params;
 }
 
@@ -44,7 +45,6 @@ enclosureCommonParams()
 {
   auto params = internal::commonParams();
 
-  // params.addRequiredParam<std::string>("material", "Fluid material name");
   params.addRequiredParam<Real>("temperature", "Enclosure temperature [K]");
   params.addRequiredParam<Real>("volume", "Volume of enclosure [m^3]");
   params.addRequiredParam<Real>("surface_area", "Contact surface with the structure [m^3]");
@@ -54,9 +54,6 @@ enclosureCommonParams()
       "boundary",
       "Surface between the enclosure and the connected structure. This surface should exist on the "
       "mesh and likely be located on the 'connected_structure'");
-  // required if mass transfer correlation is to be used
-  // TODO: decide if it unstructured_mesh
-  // params.addParam<FunctionName>("D_h", "Hydraulic diameter [m]");
 
   params.addParam<std::vector<Real>>(
       "species_initial_pressures",
