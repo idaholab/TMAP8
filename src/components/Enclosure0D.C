@@ -8,7 +8,7 @@
 
 #include "Enclosure0D.h"
 #include "TMAPUtils.h"
-#include "SpeciesSolubilityPhysics.h"
+#include "SorptionExchangePhysics.h"
 
 registerMooseAction("TMAP8App", Enclosure0D, "init_component_physics");
 registerMooseAction("TMAP8App", Enclosure0D, "add_material");
@@ -54,7 +54,7 @@ Enclosure0D::Enclosure0D(const InputParameters & params)
     paramError("physics", "A physics must be specified in the enclosure");
   if (_physics.size() > 1)
     paramError("physics",
-               "Enclosure0D has only been implemented for a single 'SpeciesSolubilityPhysics'");
+               "Enclosure0D has only been implemented for a single 'SorptionExchangePhysics'");
 }
 
 void
@@ -85,17 +85,17 @@ void
 Enclosure0D::addPhysics()
 {
   // Check the type of the Physics. This component is not implemented for all types
-  if (!physicsExists<SpeciesSolubilityPhysics>(_physics_names[0]))
+  if (!physicsExists<SorptionExchangePhysics>(_physics_names[0]))
     paramError(
         "physics",
         "Physics '" + _physics_names[0] +
-            "' is not a 'SpeciesSolubilityPhysics'. This component has only been implemented for "
-            "'SpeciesSolubilityPhysics'.");
+            "' is not a 'SorptionExchangePhysics'. This component has only been implemented for "
+            "'SorptionExchangePhysics'.");
 
   if (_verbose)
     mooseInfoRepeated("Adding Physics '" + _physics[0]->name() + "'.");
 
   // Transfer the data specified in the Component to the Physics
-  const auto stp = dynamic_cast<SpeciesSolubilityPhysics *>(_physics[0]);
+  const auto stp = dynamic_cast<SorptionExchangePhysics *>(_physics[0]);
   stp->addComponent(*this);
 }
