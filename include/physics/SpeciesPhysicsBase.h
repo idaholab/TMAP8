@@ -9,6 +9,7 @@
 #pragma once
 
 #include "PhysicsBase.h"
+#include "ComponentMaterialPropertyInterface.h"
 
 /**
  * Base class for physics implementing the trapping of one or more species in a medium
@@ -33,11 +34,32 @@ protected:
   std::vector<MooseFunctorName> _component_temperatures;
 
   /**
-   * Routine to process an Enclosure component parameter into the Physics
+   * Routine to process a component's values for a given quantity into the Physics'
+   * component-indexed storage
    * @tparam T the type of the parameter to process
    * @param param_name name of the parameter
+   * @param comp_name name of the component
    * @param physics_storage storage for those values on the Physics
    * @param component_value values on the component
+   * @param use_default whether to rely on a default value if the physics and the component do not
+   * have a parameter set
+   * @param default_value a default
+   */
+  template <typename T>
+  void processComponentValues(const std::string & param_name,
+                              const std::string & comp_name,
+                              std::vector<T> & physics_storage,
+                              const T & component_value,
+                              bool use_default,
+                              const T & default_value);
+
+  /**
+   * Routine to process a component's parameter into the Physics component-indexed storage
+   * @tparam T the type of the parameter to process
+   * @param param_name name of the parameter
+   * @param comp_name name of the component
+   * @param physics_storage storage for those values on the Physics
+   * @param component_param_name parameter name on the component
    * @param use_default whether to rely on a default value if the physics and the component do not
    * have a parameter set
    * @param default_value a default
@@ -46,9 +68,22 @@ protected:
   void processComponentParameters(const std::string & param_name,
                                   const std::string & comp_name,
                                   std::vector<T> & physics_storage,
-                                  const T & component_value,
+                                  const std::string & comp_param_name,
                                   bool use_default,
                                   const T & default_value);
+
+  /**
+   * Routine to process a component's material properties (must be derived from
+   * ComponentMaterialPropertyInterface)
+   * @tparam T the type of the parameter to process
+   * @param param_name name of the parameter
+   * @param comp the component
+   * @param physics_storage storage for those values on the Physics
+   */
+  template <typename T>
+  void processComponentMatprop(const std::string & param_name,
+                               const ActionComponent & comp,
+                               std::vector<T> & physics_storage);
 };
 
 template <typename T>
@@ -63,12 +98,12 @@ struct is_vector<std::vector<T, A>> : public std::true_type
 
 template <typename T>
 void
-SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
-                                               const std::string & comp_name,
-                                               std::vector<T> & physics_storage,
-                                               const T & component_values,
-                                               bool use_default,
-                                               const T & default_values)
+SpeciesPhysicsBase::processComponentValues(const std::string & param_name,
+                                           const std::string & comp_name,
+                                           std::vector<T> & physics_storage,
+                                           const T & component_values,
+                                           bool use_default,
+                                           const T & default_values)
 {
   bool component_value_valid = false;
   // Create new cases as needed
@@ -100,4 +135,127 @@ SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
     paramError(param_name,
                "This parameter should be specified, in the Physics '" + name() +
                    "' (applying to all components) or in component '" + comp_name + "'");
+}
+
+template <typename T>
+void
+SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
+                                               const std::string & comp_name,
+                                               std::vector<T> & physics_storage,
+                                               const std::string & comp_param_name,
+                                               bool use_default,
+                                               const T & default_values)
+{
+  bool component_value_valid = isParamValid(comp_param_name);
+
+  // Parameter added by the Physics, just need to check consistency
+  if (isParamSetByUser(param_name))
+  {
+    if (component_value_valid && physics_storage[0] != getParam<T>(comp_param_name))
+      paramError(param_name,
+                 "'" + param_name + "' in component '" + comp_name + "' :\n" +
+                     Moose::stringify(getParam<T>(comp_param_name) + "\n differs from '" + param_name +
+                     "' in " + type() + ":\n" + Moose::stringify(physics_storage[0]));
+    // Duplicate for simplicity
+    physics_storage.push_back(physics_storage[0]);
+  }
+  // Always add if it's been specified on a component instead
+  else if (component_value_valid)
+    physics_storage.push_back(getParam<T>(comp_param_name));
+  // User did not specify the parameter, in the component or the Physics
+  else if (use_default)
+    physics_storage.push_back(default_values);
+  else
+    paramError(param_name,
+               "This parameter should be specified, in the Physics '" + name() +
+                   "' (applying to all components) or in component '" + comp_name + "'");
+}
+
+template <typename T>
+void
+SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
+                                            const ActionComponent & comp,
+                                            std::vector<T> & physics_storage)
+{
+  // Check that the component could host material properties
+  const auto * mat_comp = dynamic_cast<const ComponentMaterialPropertyInterface *>(&comp);
+
+  // Parameter added by the Physics, just need to check consistency
+  if (isParamValid(param_name))
+  {
+    const auto & physics_value = getParam<T>(param_name);
+
+    // Does not have the quantity as a material property anyway
+    if (!mat_comp)
+    {
+      physics_storage.push_back(physics_value);
+      return;
+    }
+    else
+    {
+      // Has the material property, check that it's consistent with the Physics value
+      if (mat_comp->hasProperty(param_name))
+      {
+        const auto & comp_value = mat_comp.getProperty(param_name);
+        try
+        {
+          const auto & comp_value_conv = MooseUtils::convert<T>(comp_value, true);
+          if (physics_value != comp_value_conv)
+            paramError(param_name,
+                       "'" + param_name + "' in component '" + comp_name + "' :\n" +
+                           Moose::stringify(comp_value_conv) + "\n differs from '" + param_name +
+                           "' in " + type() + ":\n" + Moose::stringify(physics_storage[0]));
+        }
+        catch (...)
+        {
+          comp.paramError("property_values",
+                          "Property '" + param_name + "' should be of underlying type " +
+                              MooseUtils::prettyCppType<T>());
+        }
+
+        // Duplicate the physics value for simplicity
+        physics_storage.push_back(physics_value);
+        return;
+      }
+      else
+      {
+        // Duplicate the physics value for simplicity
+        physics_storage.push_back(physics_value);
+        return;
+      }
+    }
+  }
+  // Parameter not defined in Physics, try to retrieve it from the component
+  else
+  {
+    if (!mat_comp)
+      mooseError("Component '",
+                 comp.name(),
+                 "' does not inherit from the ComponentMaterialPropertyInterface. It does not "
+                 "define the '",
+                 param_name,
+                 "' property. This property should be defined in the Physics instead.");
+
+    // Has the property, check the type
+    if (mat_comp->hasProperty(param_name))
+    {
+      const auto & comp_value = mat_comp.getProperty(param_name);
+      try
+      {
+        const auto & comp_value_conv = MooseUtils::convert<T>(comp_value, true);
+        physics_storage.push_back(comp_value_conv);
+      }
+      catch (...)
+      {
+        comp.paramError("property_values",
+                        "Property '" + param_name + "' should be of type " +
+                            MooseUtils::prettyCppType<T>());
+      }
+    }
+    else
+      paramError(param_name,
+                 "This parameter should be specified, in the Physics '" + name() +
+                     "' (applying to all components) or in component '" + comp_name +
+                     "' using the property_names/values parameters.");
+  }
 }
