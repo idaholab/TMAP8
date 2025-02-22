@@ -2,7 +2,7 @@
 # Deuterium permeation through 0.05-mm Pd at 825 K.
 # No Soret effect, or trapping included.
 
-# Necessary physical and mdoel parameters (kb, R, temperature)
+# Necessary physical and model parameters (kb, R, temperature)
 !include parameters_three_gases.params
 
 # Surface reaction data used in TMAP7 case
