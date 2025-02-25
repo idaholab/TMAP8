@@ -74,7 +74,7 @@ The times listed in [!cite](longhurst1992verification) for TMAP8 for the start a
 | $K_{r,r}$ | downstream recombination coefficient | 2$\times 10^{-31}$                                          | m$^4$/at/s            | [!cite](anderl1985tritium) |
 | $P_{l}$   | upstream pressure                    | 0                                                           | Pa                    | [!cite](anderl1985tritium) |
 | $P_{r}$   | downstream pressure                  | 0                                                           | Pa                    | [!cite](anderl1985tritium) |
-| $D$       | deuterium diffusivity in PCA         | 3$\times 10^{-10}$                                          | m$^2$/2               | [!cite](anderl1985tritium) |
+| $D$       | deuterium diffusivity in PCA         | 3$\times 10^{-10}$                                          | m$^2$/s               | [!cite](anderl1985tritium) |
 | $d$       | diameter of PCA                      | 0.025                                                       | m                     | [!cite](anderl1985tritium) |
 | $l$       | thickness of PCA                     | 5$\times 10^{-4}$                                           | m                     | [!cite](anderl1985tritium) |
 | $T$       | temperature                          | 703                                                         | K                     | [!cite](anderl1985tritium) |
