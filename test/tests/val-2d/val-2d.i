@@ -165,6 +165,7 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
     type = FunctionAux
     variable = temperature
     function = Temperature_function
+    execute_on = 'initial timestep_end linear'
   []
 []
 
