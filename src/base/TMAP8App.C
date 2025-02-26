@@ -16,10 +16,9 @@ InputParameters
 TMAP8App::validParams()
 {
   InputParameters params = MooseApp::validParams();
-
   // Set material property output to occur on TIMESTEP_END and INITIAL by default
   params.set<bool>("use_legacy_material_output") = false;
-
+  params.set<bool>("use_legacy_initial_residual_evaluation_behavior") = false;
   return params;
 }
 
