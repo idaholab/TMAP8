@@ -55,6 +55,7 @@ Extensions:
               Examples: /examples/index.md
               Publications using TMAP8: publications.md
             Software Quality: /sqa/index.md
+            Citing: citing_tmap8.md
             Help:
               TMAP8 Issues Page: https://github.com/idaholab/TMAP8/issues
               TMAP8 Discussion Forum: https://github.com/idaholab/TMAP8/discussions
