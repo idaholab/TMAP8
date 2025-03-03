@@ -142,7 +142,9 @@ SpeciesTrappingPhysics::addComponent(const ActionComponent & component)
   processComponentParameters<MooseFunctorName>(
       "temperature", component.name(), _component_temperatures, "temperature", false, "");
 
-  // TODO: mobile
+  /// Special case: mobile
+  // processComponentParameters<std::vector<NonlinearVariableName>>(
+  //     "mobile", component.name(), _mobile_species_names, "mobile", false, {});
 
   // These parameters should be defined as material properties by the user on the Component
   // or on the Physics.
@@ -216,10 +218,11 @@ SpeciesTrappingPhysics::addSolverVariables()
     for (const auto s_j : index_range(_species[c_i]))
     {
       const auto species_name = getSpeciesVariableName(c_i, s_j);
-      params.set<std::vector<Real>>("scaling") = {
-          (_scaling_factors.size() > 1)
-              ? _scaling_factors[c_i][s_j]
-              : ((_scaling_factors.size() == 1) ? _scaling_factors[0][s_j] : 1)};
+      if (isParamSetByUser("species_scaling_factor") || !_single_variable_set)
+        params.set<std::vector<Real>>("scaling") = {
+            (_scaling_factors.size() > 1)
+                ? _scaling_factors[c_i][s_j]
+                : ((_scaling_factors.size() == 1) ? _scaling_factors[0][s_j] : 1)};
       params.set<SolverSystemName>("solver_sys") = getSolverSystem(species_name);
       getProblem().addVariable(variable_type, species_name, params);
 
@@ -241,7 +244,10 @@ SpeciesTrappingPhysics::addInitialConditions()
   {
     // Use the whole phyiscs block restriction if using the same species variable everywhere
     if (_single_variable_set)
-      assignBlocks(params, _blocks);
+      if (isParamSetByUser("species_initial_concentrations"))
+        assignBlocks(params, _blocks);
+      else
+        break;
     else
       assignBlocks(params, getActionComponent(_components[c_i]).blocks());
 
@@ -253,7 +259,8 @@ SpeciesTrappingPhysics::addInitialConditions()
           ((_initial_conditions.size() > 1)
                ? _initial_conditions[c_i][s_j]
                : ((_initial_conditions.size() == 1) ? _initial_conditions[0][s_j] : 0));
-      getProblem().addInitialCondition(ic_type, "IC_" + species_name, params);
+      getProblem().addInitialCondition(
+          ic_type, "IC_" + species_name + "_" + Moose::stringify(_blocks), params);
     }
     if (_single_variable_set)
       break;
@@ -305,10 +312,11 @@ SpeciesTrappingPhysics::addFEKernels()
         for (const auto & sp_name : _species[c_i])
           if (sp_name != species_name)
             copy_species.push_back(sp_name);
-        params.set<std::vector<VariableName>>("other_trapped_concentration_variables") =
-            copy_species;
+        if (copy_species.size())
+          params.set<std::vector<VariableName>>("other_trapped_concentration_variables") =
+              copy_species;
 
-        getProblem().addNodalKernel(kernel_type, species_name + "_enc_trapping", params);
+        getProblem().addNodalKernel(kernel_type, prefix() + species_name + "_enc_trapping", params);
       }
 
       // Release term
@@ -332,7 +340,7 @@ SpeciesTrappingPhysics::addFEKernels()
         else
           params.set<std::vector<VariableName>>("temperature") = {_component_temperatures[c_i]};
 
-        getProblem().addNodalKernel(kernel_type, species_name + "_enc_release", params);
+        getProblem().addNodalKernel(kernel_type, prefix() + species_name + "_enc_release", params);
       }
 
       // Release term in the mobile species conservation equation
@@ -343,7 +351,8 @@ SpeciesTrappingPhysics::addFEKernels()
         params.set<NonlinearVariableName>("variable") = mobile_species_name;
         params.set<std::vector<VariableName>>("v") = {species_name};
 
-        getProblem().addKernel(kernel_type, mobile_species_name + "_from_" + species_name, params);
+        getProblem().addKernel(
+            kernel_type, prefix() + mobile_species_name + "_from_" + species_name, params);
       }
     }
     if (_single_variable_set)
