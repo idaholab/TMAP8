@@ -2,7 +2,7 @@
 
 This [Physics](syntax/Physics/index.md) creates ordinary differential equations at every
 node to represent the local trapping / releasing of species. It can be coupled with a
-[SpeciesDiffusionReaction.md] `Physics` to model the influx/outflux of the species into a diffusing/migrating mobile species.
+[SpeciesDiffusionReactionCG.md] `Physics` to model the influx/outflux of the species into a diffusing/migrating mobile species.
 
 The ordinary differential equation solved at every node is:
 
@@ -32,7 +32,7 @@ are created in the nodes inside the volume.
 
 ## Interaction with ActionComponents
 
-The `SpeciesTrappingPhysics` can be defined on a regular mesh or it can be defined by specifying the `physics` parameter of an [ActionComponent](syntax/ActionComponent/index.md) to include the name of the particular `SpeciesTrappingPhysics`. The name of the `Physics` can be found nested under `[Physics/SpeciesTrapping/<name>]`.
+The `SpeciesTrappingPhysics` can be defined on a regular mesh or it can be defined by specifying the `physics` parameter of an [ActionComponent](syntax/ActionComponents/index.md) to include the name of the particular `SpeciesTrappingPhysics`. The name of the `Physics` can be found nested under `[Physics/SpeciesTrapping/<name>]`.
 
 When specified on an `ActionComponent`, the block restriction of the component is added to the domain of definition of the `SpeciesTrappingPhysics`.
 Certain parameters of the `SpeciesTrappingPhysics` can be specified on components that are specifically implemented to interact with the
@@ -40,8 +40,8 @@ Certain parameters of the `SpeciesTrappingPhysics` can be specified on component
 [!param](/ActionComponents/Structure1D/species_initial_concentrations) parameters can be specified on a [Structure1D.md].
 The `SpeciesTrappingPhysics` will then take care of defining the variable and its initial condition, on the subdomains of the `Structure1D`.
 
-!syntax parameters /Physics/SpeciesTrapping/ContinuousGalerkin/SpeciesTrappingPhysics
+!syntax parameters /Physics/SpeciesTrapping/SpeciesTrappingPhysics
 
-!syntax inputs /Physics/SpeciesTrapping/ContinuousGalerkin/SpeciesTrappingPhysics
+!syntax inputs /Physics/SpeciesTrapping/SpeciesTrappingPhysics
 
-!syntax children /Physics/SpeciesTrapping/ContinuousGalerkin/SpeciesTrappingPhysics
+!syntax children /Physics/SpeciesTrapping/SpeciesTrappingPhysics
