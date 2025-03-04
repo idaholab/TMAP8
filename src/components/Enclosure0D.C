@@ -14,6 +14,7 @@ registerMooseAction("TMAP8App", Enclosure0D, "init_component_physics");
 registerMooseAction("TMAP8App", Enclosure0D, "add_material");
 registerMooseAction("TMAP8App", Enclosure0D, "check_integrity");
 registerMooseAction("TMAP8App", Enclosure0D, "add_mesh_generator");
+registerActionComponent("TMAP8App", Enclosure0D);
 
 InputParameters
 Enclosure0D::validParams()
