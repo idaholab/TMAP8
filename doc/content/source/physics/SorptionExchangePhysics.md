@@ -29,15 +29,15 @@ This boundary condition connects the outgoing species flux 0D component with the
 
 ## Interaction with ActionComponents
 
-The `SorptionExchangePhysics` can be defined on an [ActionComponent](syntax/ActionComponent/index.md) by specifying the `physics` parameter of that component to include the name of the particular `SorptionExchangePhysics`. The name of the `Physics` can be found nested under `[Physics/SorptionExchange/<name>]`.
+The `SorptionExchangePhysics` can be defined on an [ActionComponent](syntax/ActionComponents/index.md) by specifying the `physics` parameter of that component to include the name of the particular `SorptionExchangePhysics`. The name of the `Physics` can be found nested under `[Physics/SorptionExchange/<name>]`.
 
 Certain parameters of the `SorptionExchangePhysics` can be specified on components that are specifically implemented to interact with the
-`SorptionExchangePhysics`. For example, the [!param](/ActionComponents/Component0D/species) and
-[!param](/ActionComponents/Component0D/species_initial_concentrations) parameters can be specified on a [Component0D.md].
+`SorptionExchangePhysics`. For example, the [!param](/ActionComponents/Enclosure0D/species) and
+[!param](/ActionComponents/Enclosure0D/species_initial_pressures) parameters can be specified on a [Enclosure0D.md].
 The `SorptionExchangePhysics` will then take care of defining the variable and its initial condition.
 
-!syntax parameters /Physics/SpeciesTrapping/ContinuousGalerkin/FieldTrappingPhysics
+!syntax parameters /Physics/SorptionExchange/SorptionExchangePhysics
 
-!syntax inputs /Physics/SpeciesTrapping/ContinuousGalerkin/FieldTrappingPhysics
+!syntax inputs /Physics/SorptionExchange/SorptionExchangePhysics
 
-!syntax children /Physics/SpeciesTrapping/ContinuousGalerkin/FieldTrappingPhysics
+!syntax children /Physics/SorptionExchange/SorptionExchangePhysics

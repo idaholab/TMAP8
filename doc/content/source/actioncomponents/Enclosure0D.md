@@ -16,10 +16,10 @@ See more details on the [ComponentPhysicsInterface.md] page.
 To vary the material properties used in each `Physics`, one can set the [!param](/ActionComponents/Structure1D/property_names) and [!param](/ActionComponents/Structure1D/property_values) parameters in the `Enclosure0D`.
 See more details on the [ComponentMaterialPropertyInterface.md] page.
 
-For a [PointDissolution.md] `Physics` to be used you can define on
+For a [SorptionExchangePhysics.md] to be used you can define on
 the `Enclosure0D`:
 
-- the equilibrium constant material property, to be used in the [!param](/Physics/PointDissolution/equilibrium_constants) parameter
+- the equilibrium constant material property, to be used in the [!param](/Physics/SorptionExchange/equilibrium_constants) parameter
 
 !syntax parameters /ActionComponents/Enclosure0D
 
