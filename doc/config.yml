@@ -9,6 +9,7 @@ Content:
     - ${MOOSE_DIR}/modules/heat_transfer/doc/content
     - ${MOOSE_DIR}/modules/rdg/doc/content
     - ${MOOSE_DIR}/modules/ray_tracing/doc/content
+    - ${MOOSE_DIR}/modules/stochastic_tools/doc/content
     - ${MOOSE_DIR}/modules/solid_properties/doc/content
     - ${MOOSE_DIR}/modules/misc/doc/content
     - ${MOOSE_DIR}/modules/phase_field/doc/content
