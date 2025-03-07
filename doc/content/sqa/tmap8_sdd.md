@@ -44,15 +44,13 @@ using the finite element method. It also relies on the MOOSE modules for much of
 A summary listing of the current modules required for complete {{app}} operation are shown below:
 
 - [Heat Transfer](heat_transfer/index.md)
-- [Miscellaneous Module](misc/index.md)
-- [Navier Stokes](navier_stokes/index.md)
 - [Phase Field](phase_field/index.md)
 - [Solid Mechanics](solid_mechanics/index.md)
 - [Solid Properties](solid_properties/index.md)
-- [Fluid Properties](fluid_properties/index.md)
 - [Scalar Transport](scalar_transport/index.md)
 - [Chemical Reactions](chemical_reactions/index.md)
 - [Thermal Hydraulics](thermal_hydraulics/index.md)
+- [Stochastic Tools](stochastic_tools/index.md)
 
 The structure of {{app}} is based on defining C++ classes that derive from classes in the MOOSE framework
 or modules that provide functionality that is specifically tailored to tritium migration
