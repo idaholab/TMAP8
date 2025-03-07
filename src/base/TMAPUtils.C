@@ -36,7 +36,9 @@ structureCommonParams()
       "block", "The list of block ids (SubdomainID) that this object will be applied");
   params.addParam<std::vector<Real>>(
       "species_initial_concentrations", {}, "Initial concentrations for the structure species");
-  params.addRequiredParam<MooseFunctorName>("temperature", "Temperature [K]");
+  // This is used by the SpeciesTrapping Physics notably. But not by Diffusion and
+  // Diffusion-Reaction. We could consider making it required
+  params.addParam<MooseFunctorName>("temperature", "Temperature [K]");
   return params;
 }
 
