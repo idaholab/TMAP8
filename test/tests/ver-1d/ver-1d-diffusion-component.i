@@ -6,14 +6,11 @@ N = ${fparse 3.1622e22/cl}
     type = Structure1D
     species = 'trapped'
 
-    physics = 'mobile_diff'
-    # cannot be added to SpeciesTrapping there because it requires
-    # additional data that is specified there
-
+    physics = 'mobile_diff trapped'
 
     # Material properties
-    property_names = 'alpha_t N    Ct_0 alpha_r trapping_E diff'
-    property_values = '1e15   ${N} 0.1  1e13    100        1'
+    property_names = 'alpha_t   N  Ct0 trap_per_free alpha_r detrapping_energy diff'
+    property_values = '1e15   ${N} 0.1 1             1e13    100                1'
 
     # Boundary conditions
     fixed_value_bc_variables = 'mobile'
@@ -43,15 +40,9 @@ N = ${fparse 3.1622e22/cl}
       mobile = 'mobile'
       verbose = true
 
-      # Trapping parameters
-      alpha_t = 'alpha_t'
-      N = 'N'
-      Ct0 = 'Ct0'
-
-      # Releasing parameters
-      alpha_r = 'alpha_r'
-      temperatures = 'temp'  # ok distribute
-      trapping_energy = 'trapping_E'
+      # Trapping parameters are specified using functors on the structure component
+      # Releasing parameters are specified using functors on the structure component
+      temperature = 'temp'  # we can use component ICs to set the temperature on the component
     []
   []
 []
