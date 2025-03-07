@@ -51,6 +51,7 @@ protected:
   template <typename T>
   void processComponentValues(const std::string & param_name,
                               const std::string & comp_name,
+                              unsigned int comp_index,
                               std::vector<T> & physics_storage,
                               const T & component_value,
                               bool use_default,
@@ -70,6 +71,7 @@ protected:
   template <typename T>
   void processComponentParameters(const std::string & param_name,
                                   const std::string & comp_name,
+                                  unsigned int comp_index,
                                   std::vector<T> & physics_storage,
                                   const std::string & comp_param_name,
                                   bool use_default,
@@ -87,6 +89,7 @@ protected:
   template <typename T>
   void processComponentMatprop(const std::string & param_name,
                                const ActionComponent & comp,
+                               unsigned int comp_index,
                                const std::vector<NonlinearVariableName> & species,
                                std::vector<T> & physics_storage);
 };
@@ -118,6 +121,7 @@ template <typename T>
 void
 SpeciesPhysicsBase::processComponentValues(const std::string & param_name,
                                            const std::string & comp_name,
+                                           const unsigned int comp_index,
                                            std::vector<T> & physics_storage,
                                            const T & component_values,
                                            bool use_default,
@@ -141,7 +145,8 @@ SpeciesPhysicsBase::processComponentValues(const std::string & param_name,
                      Moose::stringify(component_values) + "\n differs from '" + param_name +
                      "' in " + type() + ":\n" + Moose::stringify(physics_storage[0]));
     // Duplicate for simplicity
-    physics_storage.push_back(physics_storage[0]);
+    if (comp_index > 0)
+      physics_storage.push_back(physics_storage[0]);
   }
   // Always add if it's been specified on a component instead
   else if (component_value_valid)
@@ -159,6 +164,7 @@ template <typename T>
 void
 SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
                                                const std::string & comp_name,
+                                               const unsigned int comp_index,
                                                std::vector<T> & physics_storage,
                                                const std::string & comp_param_name,
                                                bool use_default,
@@ -175,7 +181,8 @@ SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
                      Moose::stringify(getParam<T>(comp_param_name)) + "\n differs from '" +
                      param_name + "' in " + type() + ":\n" + Moose::stringify(physics_storage[0]));
     // Duplicate for simplicity
-    physics_storage.push_back(physics_storage[0]);
+    if (comp_index > 0)
+      physics_storage.push_back(physics_storage[0]);
   }
   // Always add if it's been specified on a component instead
   else if (component_value_valid)
@@ -193,6 +200,7 @@ template <typename T>
 void
 SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
                                             const ActionComponent & comp,
+                                            const unsigned int comp_index,
                                             const std::vector<NonlinearVariableName> & species,
                                             std::vector<T> & physics_storage)
 {
@@ -201,7 +209,7 @@ SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
   const auto comp_name = comp.name();
 
   // Parameter added by the Physics, just need to check consistency
-  if (isParamValid(param_name))
+  if (isParamSetByUser(param_name))
   {
     const auto & physics_value = getParam<T>(param_name);
 
@@ -218,11 +226,10 @@ SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
       auto n_items = 1;
       if constexpr (is_vector<T>::value)
         n_items = _species.size();
-      T temp_storage;
 
       for (const auto i : make_range(n_items))
       {
-        const auto property_name = (n_items == 1) ? param_name : param_name + species[i];
+        const auto property_name = (n_items == 1) ? param_name : param_name + "_" + species[i];
         // Has the property, check the type
         if (mat_comp->hasProperty(property_name))
         {
@@ -243,7 +250,6 @@ SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
             else
             {
               const auto & comp_value_conv = MooseUtils::convert<T>(comp_value, true);
-              temp_storage = comp_value_conv;
               if (physics_value != comp_value_conv)
                 paramError(param_name,
                            "'" + property_name + "' in component '" + comp_name + "' :\n" +
@@ -262,7 +268,8 @@ SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
       }
 
       // Duplicate the physics value for simplicity
-      physics_storage.push_back(physics_value);
+      if (comp_index > 0)
+        physics_storage.push_back(physics_value);
       return;
     }
   }
@@ -286,7 +293,7 @@ SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
 
     for (const auto i : make_range(n_items))
     {
-      const auto property_name = (n_items == 1) ? param_name : param_name + species[i];
+      const auto property_name = (n_items == 1) ? param_name : param_name + "_" + species[i];
       // Has the property, check the type
       if (mat_comp->hasProperty(property_name))
       {
@@ -319,6 +326,13 @@ SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
                        "' using the property_name '" + property_name + "'");
     }
 
-    physics_storage.push_back(temp_storage);
+    // Replace the empty default
+    if (comp_index == 0)
+    {
+      physics_storage.resize(1);
+      physics_storage[0] = temp_storage;
+    }
+    else
+      physics_storage.push_back(temp_storage);
   }
 }
