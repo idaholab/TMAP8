@@ -5,6 +5,7 @@ N = ${fparse 3.1622e22/cl}
   [structure]
     type = Structure1D
     species = 'trapped'
+    species_initial_concentrations = '0'
 
     physics = 'mobile_diff trapped'
 

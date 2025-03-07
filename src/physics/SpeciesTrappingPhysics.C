@@ -136,8 +136,8 @@ SpeciesTrappingPhysics::addComponent(const ActionComponent & component)
                                                 comp_index,
                                                 _scaling_factors,
                                                 "species_scaling_factors",
-                                                false,
-                                                {});
+                                                true,
+                                                std::vector<Real>(_species[comp_index].size(), 1));
   processComponentParameters<std::vector<Real>>("species_initial_concentrations",
                                                 component.name(),
                                                 comp_index,
@@ -225,6 +225,9 @@ SpeciesTrappingPhysics::addSolverVariables()
                  "Physics is not defined on any Component, this parameter should be set to false");
   }
 
+  // Check component-indexed parameters
+  checkSizeComponentSpeciesIndexedVectorOfVector(_scaling_factors, "species_scaling_factors", true);
+
   for (const auto c_i : index_range(_components))
   {
     // Use the whole phyiscs block restriction if using the same species variable everywhere
@@ -258,6 +261,10 @@ SpeciesTrappingPhysics::addInitialConditions()
   const std::string ic_type = "ConstantIC";
   InputParameters params = getFactory().getValidParams(ic_type);
 
+  // Check component-indexed parameters
+  checkSizeComponentSpeciesIndexedVectorOfVector(
+      _initial_conditions, "species_initial_concentrations", true);
+
   for (const auto c_i : index_range(_components))
   {
     // Use the whole phyiscs block restriction if using the same species variable everywhere
@@ -288,6 +295,16 @@ SpeciesTrappingPhysics::addInitialConditions()
 void
 SpeciesTrappingPhysics::addFEKernels()
 {
+  // Check component-indexed parameters
+  checkSizeComponentSpeciesIndexedVectorOfVector(_alpha_ts, "alpha_t", false);
+  checkSizeComponentSpeciesIndexedVectorOfVector(_Ct0s, "alpha_t", false);
+  checkSizeComponentIndexedVector(_Ns, "N", false);
+  checkSizeComponentIndexedVector(_Ns, "trap_per_free", false);
+  checkSizeComponentSpeciesIndexedVectorOfVector(_alpha_rs, "alpha_r", false);
+  checkSizeComponentSpeciesIndexedVectorOfVector(_detrapping_energies, "detrapping_energy", false);
+  checkSizeComponentIndexedVector(_component_temperatures, "temperature", false);
+  // TODO: mobile
+
   for (const auto c_i : index_range(_components))
   {
     // Use the whole phyiscs block restriction if using the same species variable everywhere
