@@ -97,7 +97,6 @@ SorptionExchangePhysics::addComponent(const ActionComponent & component)
   processComponentValues<std::vector<Real>>("species_scaling_factors",
                                             comp.name(),
                                             comp_index,
-
                                             _scaling_factors,
                                             comp.scalingFactors(),
                                             true,
@@ -135,14 +134,20 @@ SorptionExchangePhysics::addSolverVariables()
   params.set<MooseEnum>("family") = "SCALAR";
   params.set<MooseEnum>("order") = FIRST;
 
+  // Check component-indexed parameters
+  checkSizeComponentSpeciesIndexedVectorOfVector(_scaling_factors, "species_scaling_factors", true);
+
   for (const auto c_i : index_range(_components))
     for (const auto s_j : index_range(_species[c_i]))
     {
       const auto species_name = _species[c_i][s_j] + "_" + _components[c_i];
+      // Set a default of 1, if the scaling factors are incomplete
       params.set<std::vector<Real>>("scaling") = {
           (_scaling_factors.size() > 1)
               ? _scaling_factors[c_i][s_j]
-              : ((_scaling_factors.size() == 1) ? _scaling_factors[0][s_j] : 1)};
+              : ((_scaling_factors.size() == 1 && s_j < _scaling_factors[0].size())
+                     ? _scaling_factors[0][s_j]
+                     : 1)};
       params.set<SolverSystemName>("solver_sys") = getSolverSystem(species_name);
       getProblem().addVariable(variable_type, species_name, params);
 
@@ -156,6 +161,10 @@ SorptionExchangePhysics::addInitialConditions()
 {
   const std::string ic_type = "ScalarConstantIC";
   InputParameters params = getFactory().getValidParams(ic_type);
+
+  // Check component-indexed parameters
+  checkSizeComponentSpeciesIndexedVectorOfVector(
+      _initial_conditions, "species_initial_pressures", true);
 
   for (const auto c_i : index_range(_components))
     for (const auto s_j : index_range(_species[c_i]))
@@ -174,6 +183,9 @@ SorptionExchangePhysics::addInitialConditions()
 void
 SorptionExchangePhysics::addScalarKernels()
 {
+  // Check component-indexed parameters
+  checkSizeComponentIndexedVector(_component_temperatures, "temperature", false);
+
   for (const auto c_i : index_range(_components))
   {
     // Get the boundary from the component
@@ -226,6 +238,10 @@ SorptionExchangePhysics::addScalarKernels()
 void
 SorptionExchangePhysics::addFEBCs()
 {
+  // Check component-indexed parameters
+  checkSizeComponentIndexedVector(_component_temperatures, "temperature", false);
+  checkSizeComponentSpeciesIndexedVectorOfVector(_species_Ks, "equilibrium_constants", false);
+
   for (const auto c_i : index_range(_components))
   {
     const auto & comp_name = _components[c_i];
