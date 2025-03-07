@@ -64,11 +64,11 @@ SorptionExchangePhysics::SorptionExchangePhysics(const InputParameters & paramet
     _length_unit(getParam<Real>("length_unit_scaling")),
     _pressure_unit(getParam<Real>("pressure_unit_scaling"))
 {
-  // Check sizes
-  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species",
-                                                                "species_initial_pressures");
+  // Check sizes, though some parameters may be set on components
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>(
+      "species", "species_initial_pressures", true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, MooseFunctorName>(
-      "species", "equilibrium_constants");
+      "species", "equilibrium_constants", true);
 }
 
 void
@@ -87,23 +87,38 @@ SorptionExchangePhysics::addComponent(const ActionComponent & component)
                "active on certain components, but not both");
 
   const auto n_species_component = comp.species().size();
+  // Index of the component in all the component-indexed vectors
+  const auto comp_index = _components.size() - 1;
 
   // Process each of the component's parameters, adding defaults to avoid breaking the double-vector
   // indexing when needed
   processComponentValues<std::vector<NonlinearVariableName>>(
-      "species", comp.name(), _species, comp.species(), false, {});
+      "species", comp.name(), comp_index, _species, comp.species(), false, {});
   processComponentValues<std::vector<Real>>("species_scaling_factors",
                                             comp.name(),
+                                            comp_index,
+
                                             _scaling_factors,
                                             comp.scalingFactors(),
                                             true,
                                             std::vector<Real>(1, n_species_component));
-  processComponentValues<std::vector<Real>>(
-      "species_initial_pressures", comp.name(), _initial_conditions, comp.ics(), false, {});
-  processComponentValues<std::vector<MooseFunctorName>>(
-      "equilibrium_constants", comp.name(), _species_Ks, comp.equilibriumConstants(), false, {});
+  processComponentValues<std::vector<Real>>("species_initial_pressures",
+                                            comp.name(),
+                                            comp_index,
+                                            _initial_conditions,
+                                            comp.ics(),
+                                            false,
+                                            {});
+  processComponentValues<std::vector<MooseFunctorName>>("equilibrium_constants",
+                                                        comp.name(),
+                                                        comp_index,
+                                                        _species_Ks,
+                                                        comp.equilibriumConstants(),
+                                                        false,
+                                                        {});
   processComponentValues<MooseFunctorName>("temperatures",
                                            comp.name(),
+                                           comp_index,
                                            _component_temperatures,
                                            std::to_string(comp.temperature()),
                                            false,
