@@ -92,6 +92,33 @@ protected:
                                unsigned int comp_index,
                                const std::vector<NonlinearVariableName> & species,
                                std::vector<T> & physics_storage);
+
+  /** Defense in depth routine to prevent OOB access **/
+  /**
+   * Routine to check the size of the vectors storing component-indexed quantities.
+   * @param vector a vector indexed by components
+   * @param param_name the name of the parameter related to this quantity
+   * @param allow_component_shared_value whether to allow a single vector, for the first component,
+   * which will be used by all components
+   */
+  template <typename T>
+  void checkSizeComponentIndexedVector(const std::vector<T> & vector,
+                                       const std::string & param_name,
+                                       bool allow_component_shared_value) const;
+
+  /**
+   * Routine to check the size of the vectors storing component-indexed and species-indexed
+   * quantities.
+   * @param double_indexed a vector indexed by components and species
+   * @param param_name the name of the parameter related to this quantity
+   * @param allow_component_shared_value whether to allow a single vector, for the first component,
+   * which will be used by all components
+   */
+  template <typename T>
+  void
+  checkSizeComponentSpeciesIndexedVectorOfVector(const std::vector<std::vector<T>> & double_indexed,
+                                                 const std::string & param_name,
+                                                 bool allow_component_shared_value) const;
 };
 
 template <typename T>
@@ -150,10 +177,30 @@ SpeciesPhysicsBase::processComponentValues(const std::string & param_name,
   }
   // Always add if it's been specified on a component instead
   else if (component_value_valid)
-    physics_storage.push_back(component_values);
+  {
+    // Replace the empty default
+    if (comp_index == 0)
+    {
+      if (physics_storage.empty())
+        physics_storage.resize(1);
+      physics_storage[0] = component_values;
+    }
+    else
+      physics_storage.push_back(component_values);
+  }
   // User did not specify the parameter, in the component or the Physics
   else if (use_default)
-    physics_storage.push_back(default_values);
+  {
+    // Replace the empty default
+    if (comp_index == 0)
+    {
+      if (physics_storage.empty())
+        physics_storage.resize(1);
+      physics_storage[0] = default_values;
+    }
+    else
+      physics_storage.push_back(default_values);
+  }
   else
     paramError(param_name,
                "This parameter should be specified, in the Physics '" + name() +
@@ -170,12 +217,13 @@ SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
                                                bool use_default,
                                                const T & default_values)
 {
-  bool component_value_valid = isParamValid(comp_param_name);
+  const auto & comp = getActionComponent(comp_name);
+  bool component_value_valid = comp.isParamValid(comp_param_name);
 
   // Parameter added by the Physics, just need to check consistency
   if (isParamSetByUser(param_name))
   {
-    if (component_value_valid && physics_storage[0] != getParam<T>(comp_param_name))
+    if (component_value_valid && physics_storage[0] != comp.getParam<T>(comp_param_name))
       paramError(param_name,
                  "'" + param_name + "' in component '" + comp_name + "' :\n" +
                      Moose::stringify(getParam<T>(comp_param_name)) + "\n differs from '" +
@@ -186,10 +234,30 @@ SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
   }
   // Always add if it's been specified on a component instead
   else if (component_value_valid)
-    physics_storage.push_back(getParam<T>(comp_param_name));
+  {
+    // Replace the empty default
+    if (comp_index == 0)
+    {
+      if (physics_storage.empty())
+        physics_storage.resize(1);
+      physics_storage[0] = comp.getParam<T>(comp_param_name);
+    }
+    else
+      physics_storage.push_back(comp.getParam<T>(comp_param_name));
+  }
   // User did not specify the parameter, in the component or the Physics
   else if (use_default)
-    physics_storage.push_back(default_values);
+  {
+    // Replace the empty default
+    if (comp_index == 0)
+    {
+      if (physics_storage.empty())
+        physics_storage.resize(1);
+      physics_storage[0] = default_values;
+    }
+    else
+      physics_storage.push_back(default_values);
+  }
   else
     paramError(param_name,
                "This parameter should be specified, in the Physics '" + name() +
@@ -329,10 +397,77 @@ SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
     // Replace the empty default
     if (comp_index == 0)
     {
-      physics_storage.resize(1);
+      if (physics_storage.empty())
+        physics_storage.resize(1);
       physics_storage[0] = temp_storage;
     }
     else
       physics_storage.push_back(temp_storage);
   }
+}
+
+template <typename T>
+void
+SpeciesPhysicsBase::checkSizeComponentIndexedVector(const std::vector<T> & vector,
+                                                    const std::string & param_name,
+                                                    bool allow_component_shared_value) const
+{
+  if (vector.size() == 0)
+    paramError(param_name,
+               "The Physics does not have any values set for this parameter. It should be provided "
+               "on each component, or specified once on the Physics and shared by all components");
+
+  if (vector.size() != _components.size())
+  {
+    if (!allow_component_shared_value || vector.size() != 1)
+      paramError(param_name,
+                 "We have '" + std::to_string(_components.size()) + "' Components but we found '" +
+                     std::to_string(vector.size()) +
+                     "' values. This quantity should be provided by each component for specified "
+                     "once in the Physics for all components.");
+  }
+}
+
+template <typename T>
+void
+SpeciesPhysicsBase::checkSizeComponentSpeciesIndexedVectorOfVector(
+    const std::vector<std::vector<T>> & double_indexed,
+    const std::string & param_name,
+    bool allow_component_shared_value) const
+{
+  if (double_indexed.size() == 0)
+    paramError(param_name,
+               "The Physics does not have any values set for this parameter. It should be provided "
+               "on each component, or specified once on the Physics and shared by all components");
+
+  if (double_indexed.size() != _components.size())
+  {
+    if (allow_component_shared_value && double_indexed.size() == 1)
+    {
+      if (double_indexed[0].size() != _species.size())
+        paramError(param_name,
+                   "A value should be specified for each species. Only '" +
+                       std::to_string(double_indexed.size()) + "' values were found");
+    }
+    else
+      paramError(param_name,
+                 "We have '" + std::to_string(_components.size()) + "' Components but we found '" +
+                     std::to_string(double_indexed.size()) +
+                     "' values. This quantity should be provided by each component");
+  }
+  else
+    for (const auto c_index : index_range(double_indexed))
+    {
+      if (c_index > _species.size())
+        paramError("species",
+                   "The species have not been specified for component '" + _components[c_index] +
+                       "'");
+      if (double_indexed[c_index].size() != _species[c_index].size())
+        paramError(param_name,
+                   "We have '" + std::to_string(_species[c_index].size()) +
+                       "' species for component '" + _components[c_index] +
+                       "' but we only found '" + std::to_string(double_indexed[c_index].size()) +
+                       "' values for that quantity. This quantity should be provided by each "
+                       "component and for each species");
+    }
 }
