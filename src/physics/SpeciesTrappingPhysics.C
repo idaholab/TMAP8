@@ -48,12 +48,12 @@ SpeciesTrappingPhysics::validParams()
       "(e.g. no number densities are involved)"
       "If a single vector is specified, the same trapping rate coefficient will be used on every "
       "component");
-  params.addParam<std::vector<Real>>(
-      "N", {}, "The atomic number density of the host material for each component and species.");
+  params.addParam<Real>(
+      "N",
+      "The atomic number density of the host material for each component, shared for all species.");
   params.addParam<std::vector<FunctionName>>(
       "Ct0", {}, "The fraction of host sites that can contribute to trapping");
-  params.addParam<std::vector<Real>>(
-      "trap_per_free", {}, "The number of trapped species per free species");
+  params.addParam<Real>("trap_per_free", "The number of trapped species per free species");
 
   params.addParam<std::vector<Real>>(
       "alpha_r",
@@ -78,9 +78,11 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
     // If specified in the Physics block, all parameters are retrieved here
     _mobile_species_names({getParam<std::vector<VariableName>>("mobile")}),
     _alpha_ts({getParam<std::vector<Real>>("alpha_t")}),
-    _Ns({getParam<std::vector<Real>>("N")}),
+    _Ns(isParamValid("N") ? std::vector<Real>(1, getParam<Real>("N")) : std::vector<Real>()),
     _Ct0s({getParam<std::vector<FunctionName>>("Ct0")}),
-    _trap_per_frees({getParam<std::vector<Real>>("trap_per_free")}),
+    _trap_per_frees(isParamValid("trap_per_free")
+                        ? std::vector<Real>(1, getParam<Real>("trap_per_free"))
+                        : std::vector<Real>()),
     _alpha_rs({getParam<std::vector<Real>>("alpha_r")}),
     _detrapping_energies({getParam<std::vector<Real>>("detrapping_energy")}),
     _single_variable_set(!getParam<bool>("separate_variables_per_component"))
@@ -105,13 +107,12 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
   checkSecondParamSetOnlyIfFirstOneSet("species", "detrapping_energy");
 
   // Check sizes
-  checkVectorParamsSameLengthIfSet<NonlinearVariableName, VariableName>("species", "mobile");
-  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "alpha_t");
-  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "N");
-  checkVectorParamsSameLengthIfSet<NonlinearVariableName, FunctionName>("species", "Ct0");
-  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "trap_per_free");
-  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "alpha_r");
-  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "detrapping_energy");
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, VariableName>("species", "mobile", true);
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "alpha_t", true);
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, FunctionName>("species", "Ct0", true);
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "alpha_r", true);
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>(
+      "species", "detrapping_energy", true);
 }
 
 void
@@ -121,26 +122,36 @@ SpeciesTrappingPhysics::addComponent(const ActionComponent & component)
     _blocks.push_back(block);
   _components.push_back(component.name());
 
+  // Index of the component in all the component-indexed vectors
+  const auto comp_index = _components.size() - 1;
+
   // Process each of the component's parameters, adding defaults to avoid breaking the double-vector
   // indexing when acceptable
   // These parameters are known to be defined for a Structure1D, so we retrieve them from the
   // component's parameters. If they are not defined on the Physics or the component, we error
   processComponentParameters<std::vector<NonlinearVariableName>>(
-      "species", component.name(), _species, "species", false, {});
+      "species", component.name(), comp_index, _species, "species", false, {});
   processComponentParameters<std::vector<Real>>("species_scaling_factors",
                                                 component.name(),
+                                                comp_index,
                                                 _scaling_factors,
                                                 "species_scaling_factors",
                                                 false,
                                                 {});
   processComponentParameters<std::vector<Real>>("species_initial_concentrations",
                                                 component.name(),
+                                                comp_index,
                                                 _initial_conditions,
                                                 "species_initial_concentrations",
                                                 false,
                                                 {});
-  processComponentParameters<MooseFunctorName>(
-      "temperature", component.name(), _component_temperatures, "temperature", false, "");
+  processComponentParameters<MooseFunctorName>("temperature",
+                                               component.name(),
+                                               comp_index,
+                                               _component_temperatures,
+                                               "temperature",
+                                               false,
+                                               "");
 
   /// Special case: mobile
   // processComponentParameters<std::vector<NonlinearVariableName>>(
@@ -149,12 +160,17 @@ SpeciesTrappingPhysics::addComponent(const ActionComponent & component)
   // These parameters should be defined as material properties by the user on the Component
   // or on the Physics.
   // We only support Real numbers for now as the consuming kernels only support Real
-  processComponentMatprop<std::vector<Real>>("alpha_t", component, _species.back(), _alpha_ts);
-  processComponentMatprop<Real>("N", component, _species.back(), _Ns);
-  processComponentMatprop<std::vector<FunctionName>>("Ct0", component, _species.back(), _Ct0s);
-  processComponentMatprop<std::vector<Real>>("alpha_r", component, _species.back(), _alpha_rs);
   processComponentMatprop<std::vector<Real>>(
-      "detrapping_energy", component, _species.back(), _detrapping_energies);
+      "alpha_t", component, comp_index, _species.back(), _alpha_ts);
+  processComponentMatprop<Real>("N", component, comp_index, _species.back(), _Ns);
+  processComponentMatprop<std::vector<FunctionName>>(
+      "Ct0", component, comp_index, _species.back(), _Ct0s);
+  processComponentMatprop<Real>(
+      "trap_per_free", component, comp_index, _species.back(), _trap_per_frees);
+  processComponentMatprop<std::vector<Real>>(
+      "alpha_r", component, comp_index, _species.back(), _alpha_rs);
+  processComponentMatprop<std::vector<Real>>(
+      "detrapping_energy", component, comp_index, _species.back(), _detrapping_energies);
 }
 
 VariableName
@@ -186,7 +202,7 @@ SpeciesTrappingPhysics::addSolverVariables()
       if (_species[0].empty())
         paramError("species", "Should not be empty if not using Components");
       if (_scaling_factors[0].empty())
-        paramError("species_scaling_factors", "Should not be empty if not using Components");
+        _scaling_factors[0] = std::vector<Real>(_species.size(), 1);
       if (_mobile_species_names[0].empty())
         paramError("mobile", "Should not be empty if not using Components");
       if (_alpha_ts[0].empty())
@@ -199,6 +215,8 @@ SpeciesTrappingPhysics::addSolverVariables()
         paramError("trap_per_free", "Should not be empty if not using Components");
       if (_alpha_rs[0].empty())
         paramError("alpha_r", "Should not be empty if not using Components");
+      if (_component_temperatures[0].empty())
+        paramError("temperature", "Should not be empty if not using Components");
       if (_detrapping_energies[0].empty())
         paramError("detrapping_energy", "Should not be empty if not using Components");
     }
@@ -300,8 +318,18 @@ SpeciesTrappingPhysics::addFEKernels()
         params.set<NonlinearVariableName>("variable") = species_name;
         params.set<std::vector<VariableName>>("mobile_concentration") = {mobile_species_name};
         mooseAssert(c_i < _component_temperatures.size(), "Should not happen");
-        params.set<std::vector<VariableName>>("temperature") = {
-            VariableName(_component_temperatures[c_i])};
+        // The default coupled value will not have been created by the Builder since we created
+        // the parameter as a MooseFunctorName in the Physics
+        if (MooseUtils::parsesToReal(_component_temperatures[c_i]))
+        {
+          std::istringstream ss(_component_temperatures[c_i]);
+          Real value;
+          ss >> value;
+          params.defaultCoupledValue("temperature", value, 0);
+          params.set<std::vector<VariableName>>("temperature") = {};
+        }
+        else
+          params.set<std::vector<VariableName>>("temperature") = {_component_temperatures[c_i]};
         params.set<Real>("alpha_t") = _alpha_ts[c_i][s_j];
         params.set<Real>("N") = _Ns[c_i];
         params.set<FunctionName>("Ct0") = _Ct0s[c_i][s_j];
