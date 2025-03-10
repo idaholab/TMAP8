@@ -9,6 +9,7 @@ Content:
     - ${MOOSE_DIR}/modules/heat_transfer/doc/content
     - ${MOOSE_DIR}/modules/rdg/doc/content
     - ${MOOSE_DIR}/modules/ray_tracing/doc/content
+    - ${MOOSE_DIR}/modules/stochastic_tools/doc/content
     - ${MOOSE_DIR}/modules/solid_properties/doc/content
     - ${MOOSE_DIR}/modules/misc/doc/content
     - ${MOOSE_DIR}/modules/phase_field/doc/content
@@ -82,6 +83,7 @@ Extensions:
             fluid_properties: !include ${MOOSE_DIR}/modules/fluid_properties/doc/sqa_fluid_properties.yml
             rdg: !include ${MOOSE_DIR}/modules/rdg/doc/sqa_rdg.yml
             scalar_transport: !include ${MOOSE_DIR}/modules/scalar_transport/doc/sqa_scalar_transport.yml
+            stochastic_tools: !include ${MOOSE_DIR}/modules/stochastic_tools/doc/sqa_stochastic_tools.yml
             solid_properties: !include ${MOOSE_DIR}/modules/solid_properties/doc/sqa_solid_properties.yml
             misc: !include ${MOOSE_DIR}/modules/misc/doc/sqa_misc.yml
             phase_field: !include ${MOOSE_DIR}/modules/phase_field/doc/sqa_phase_field.yml
