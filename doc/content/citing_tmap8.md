@@ -1,7 +1,7 @@
 # Citing TMAP8
 
 This page lists the references to use if you are using TMAP8 in your publication. For a
-list of publications that have cited TMAP8, please refer to the [publications.md].
+list of publications that have used and expanded TMAP8, please refer to the [publications.md].
 
 ## TMAP8
 
