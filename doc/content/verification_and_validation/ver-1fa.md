@@ -4,7 +4,7 @@
 
 ## General Case Description
 
-This heat transfer verification problem is taken from [!cite](longhurst1992verification) and [!cite](ambrosek2008verification).
+This heat transfer verification problem is taken from [!cite](longhurst1992verification) and [!cite](ambrosek2008verification), and it has been updated and extended in [!cite](Simon2025).
 
 This case models a heat conduction problem through a slab with a heat source. The heat conduction in the one-dimensional model is described as:
 
