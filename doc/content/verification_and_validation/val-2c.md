@@ -4,7 +4,7 @@
 
 ## Case Description
 
-This validation problem is taken from [!cite](Holland1986) and was part of the validation suite of TMAP4 [!cite](longhurst1992verification) and TMAP7 [!cite](ambrosek2008verification).
+This validation problem is taken from [!cite](Holland1986) and was part of the validation suite of TMAP4 [!cite](longhurst1992verification) and TMAP7 [!cite](ambrosek2008verification). It has been updated and extended in [!cite](Simon2025).
 Whenever tritium is released into a fusion reactor test cell, it is crucial to clean it up to prevent exposure.
 This case models an experiment conducted at Los Alamos National Laboratory at the tritium systems test assembly (TSTA) to study the behavior of tritium once released in a test cell and the efficacy of the emergency tritium cleanup system (ETCS).
 

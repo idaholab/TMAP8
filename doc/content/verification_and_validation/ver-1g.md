@@ -2,7 +2,7 @@
 
 # A Simple Forward Chemical Reaction
 
-This verification problem is taken from [!cite](longhurst1992verification,ambrosek2008verification). A simple time-dependent chemical reaction given by
+This verification problem is taken from [!cite](longhurst1992verification,ambrosek2008verification), and it has been updated and extended in [!cite](Simon2025). A simple time-dependent chemical reaction given by
 
 \begin{equation}
 A + B \Rightarrow AB

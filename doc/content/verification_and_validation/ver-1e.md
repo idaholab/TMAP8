@@ -4,7 +4,7 @@
 
 ## General Case Description
 
-This verification problem is taken from [!cite](longhurst1992verification, ambrosek2008verification). In this problem, a composite structure of PyC and SiC is modeled with a constant concentration boundary condition of the free surface of PyC and zero concentration boundary condition on the free surface of the SiC.
+This verification problem is taken from [!cite](longhurst1992verification, ambrosek2008verification), and it has been updated and extended in [!cite](Simon2025). In this problem, a composite structure of PyC and SiC is modeled with a constant concentration boundary condition of the free surface of PyC and zero concentration boundary condition on the free surface of the SiC.
 
 ## Analytical solution at steady state
 

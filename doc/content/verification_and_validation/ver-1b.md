@@ -2,7 +2,7 @@
 
 # Diffusion Problem with Constant Source Boundary Condition
 
-This verification problem is taken from [!cite](longhurst1992verification). Diffusion of tritium through a semi-infinite SiC layer is modeled with a constant
+This verification problem is taken from [!cite](longhurst1992verification), and it has been updated and extended in [!cite](Simon2025). Diffusion of tritium through a semi-infinite SiC layer is modeled with a constant
 source located on one boundary. No solubility or trapping is included. The
 concentration as a function of time and position is given by
 \begin{equation}

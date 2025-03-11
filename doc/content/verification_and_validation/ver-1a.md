@@ -7,7 +7,7 @@
 This verification case consists of an enclosure containing a finite concentration of atoms which
 are allowed to thermally diffuse through a SiC layer over time. No Soret effects, solubility, or trapping effects are included.
 
-This is one of the original problems introduced in [!cite](longhurst1992verification) for TMAP4 and adapted in [!cite](ambrosek2008verification) for TMAP7. Note, however, that the verification cases for TMAP4 and TMAP7, although using the exact same setup, use different quantities to verify their implementation (see [ver-1a_comparison_analytical_TMAP4_release_fraction], [ver-1a_comparison_analytical_TMAP7_release_fraction], and [ver-1a_comparison_analytical_TMAP7_flux]). In TMAP8, for completeness, we perform verification on all these quantities and show agreement with analytical solutions from both TMAP4 and TMAP7.
+This is one of the original problems introduced in [!cite](longhurst1992verification) for TMAP4 and adapted in [!cite](ambrosek2008verification) for TMAP7. This case has been updated and extended in the context of TMAP8 in [!cite](Simon2025). Note, however, that the verification cases for TMAP4 and TMAP7, although using the exact same setup, use different quantities to verify their implementation (see [ver-1a_comparison_analytical_TMAP4_release_fraction], [ver-1a_comparison_analytical_TMAP7_release_fraction], and [ver-1a_comparison_analytical_TMAP7_flux]). In TMAP8, for completeness, we perform verification on all these quantities and show agreement with analytical solutions from both TMAP4 and TMAP7.
 
 ## Case Set up
 

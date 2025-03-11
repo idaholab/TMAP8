@@ -4,7 +4,7 @@
 
 ## Problem set up
 
-This verification problem models a species '$T_2$' (gaseous tritium) flowing through a system of three enclosures. It recreates the ver-1h case in [!cite](longhurst1992verification) and ver-1ha in [!cite](ambrosek2008verification). Gas flows from enclosure 1 into enclosure 2, and then from enclosure 2 into 3. Enclosure 1 is defined as a boundary enclosure, so it is held at a constant pressure $P_1$, and the flow of gas into enclosures 2 and 3 can be given by
+This verification problem models a species '$T_2$' (gaseous tritium) flowing through a system of three enclosures. It recreates the ver-1h case in [!cite](longhurst1992verification) and ver-1ha in [!cite](ambrosek2008verification), and it has been updated and extended in [!cite](Simon2025). Gas flows from enclosure 1 into enclosure 2, and then from enclosure 2 into 3. Enclosure 1 is defined as a boundary enclosure, so it is held at a constant pressure $P_1$, and the flow of gas into enclosures 2 and 3 can be given by
 \begin{equation} \label{eq:flow_rate}
 \bar{j_i} = QC_{i-1},
 \end{equation}
