@@ -4,7 +4,7 @@
 
 ## Test Description
 
-This validation problem is taken from [!cite](macaulay1991deuterium) and is part of the validation suite of TMAP4 and TMAP7 [!citep](longhurst1992verification,ambrosek2008verification), which we reproduce here, with some updates.
+This validation problem is taken from [!cite](macaulay1991deuterium) and is part of the validation suite of TMAP4 and TMAP7 [!citep](longhurst1992verification,ambrosek2008verification), which we reproduce here, with some updates. This case has also been updated and extended in [!cite](Simon2025).
 
 R.G. Macaulay-Newcombe et al. conducted thermal absorption and desorption experiments, as well as implantation experiments, on wafers of polished beryllium [!citep](macaulay1991deuterium).
 Of the several data sets presented, the one modeled here is titled "run 2a1" and is represented in Figure 2(a) in their publication [!citep](macaulay1991deuterium). The beryllium sample was 0.4 mm thick and had an area of 104 mm$^2$, as illustrated in [val-2b_schematic].

@@ -1,6 +1,6 @@
 # Fuel Cycle
 
-This demonstration re-creates the tritium fuel cycle model described by [!cite](Abdou2021).
+This demonstration re-creates the tritium fuel cycle model described by [!cite](Abdou2021). It is also described in [!cite](Simon2025).
 
 ### Generating the Input File
 

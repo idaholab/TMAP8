@@ -4,7 +4,7 @@
 
 ## Test Description
 
-This verification problem is taken from [!cite](longhurst1992verification). It models permeation through a membrane with a constant source in which traps are operative. We solve the following equations
+This verification problem is taken from [!cite](longhurst1992verification), and it has been updated and extended in [!cite](Simon2025). It models permeation through a membrane with a constant source in which traps are operative. We solve the following equations
 
 \begin{equation}
     \label{eqn:diffusion_mobile}
