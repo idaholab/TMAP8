@@ -14,6 +14,7 @@
 // For connecting to multi-D diffusion on other components
 #include "Structure1D.h"
 #include "DiffusionPhysicsBase.h"
+#include "ComponentPhysicsInterface.h"
 
 // Register the actions for the objects actually used
 registerMooseAction("TMAP8App", SorptionExchangePhysics, "init_physics");
@@ -186,16 +187,14 @@ SorptionExchangePhysics::addScalarKernels()
   // Check component-indexed parameters
   checkSizeComponentIndexedVector(_component_temperatures, "temperature", false);
 
+  // Loop over enclosures (for now only component supported)
   for (const auto c_i : index_range(_components))
   {
     // Get the boundary from the component
-    const auto & comp_name = _components[c_i];
-    const auto & component = getActionComponent(comp_name);
-    const auto & structure_boundary = getConnectedStructureBoundary(comp_name);
-    const auto scaled_volume = component.volume() * Utility::pow<3>(_length_unit);
-    const auto scaled_area = component.outerSurfaceArea() * Utility::pow<2>(_length_unit);
+    const auto & enc_name = _components[c_i];
+    const auto & component = getActionComponent(enc_name);
 
-    // Create the kernel for each species
+    // Create the kernels for each species' equation
     for (const auto s_j : index_range(_species[c_i]))
     {
       const auto species_name = _species[c_i][s_j] + "_" + _components[c_i];
@@ -209,27 +208,38 @@ SorptionExchangePhysics::addScalarKernels()
         getProblem().addScalarKernel(kernel_type, prefix() + species_name + "_time", params);
       }
 
-      const auto flux_name = getConnectedStructurePhysics(comp_name)[0]->name() +
-                             "_diffusive_flux_" + structure_boundary;
-      static constexpr Real kb = 1.380649e-23;
-      // m3 to mum3
-      static constexpr Real conv_factor = 1e18;
-
-      // Sink term
+      for (const auto & connected_name : getConnectedStructures(enc_name))
       {
-        const std::string kernel_type = "EnclosureSinkScalarKernel";
-        auto params = _factory.getValidParams(kernel_type);
-        params.set<NonlinearVariableName>("variable") = species_name;
-        // Note the additional minus sign added because the flux is measured outwards
-        if (!MooseUtils::parsesToReal(_component_temperatures[c_i]))
-          paramError("temperatures", "Only real values are supported");
-        params.set<Real>("concentration_to_pressure_conversion_factor") =
-            -kb * libMesh::Utility::pow<3>(_length_unit) * std::stod(_component_temperatures[c_i]) *
-            _pressure_unit * conv_factor;
-        params.set<PostprocessorName>("flux") = flux_name;
-        params.set<Real>("surface_area") = scaled_area;
-        params.set<Real>("volume") = scaled_volume;
-        getProblem().addScalarKernel(kernel_type, species_name + "_enc_sink_sk", params);
+        const auto & structure_boundary = getConnectedStructureBoundary(enc_name, connected_name);
+        const auto scaled_volume = component.volume() * Utility::pow<3>(_length_unit);
+        const auto scaled_area = getConnectedStructureConnectionArea(enc_name, connected_name) *
+                                 Utility::pow<2>(_length_unit);
+
+        // This is hard-coding a convention for the name of the flux PP. The Physics creating this
+        // flux PP must match this same convention.
+        const auto flux_name =
+            getConnectedStructurePhysics(connected_name, _species[c_i][s_j])->name() +
+            "_diffusive_flux_" + structure_boundary;
+        static constexpr Real kb = 1.380649e-23;
+        // m3 to mum3
+        static constexpr Real conv_factor = 1e18;
+
+        // Sink term
+        {
+          const std::string kernel_type = "EnclosureSinkScalarKernel";
+          auto params = _factory.getValidParams(kernel_type);
+          params.set<NonlinearVariableName>("variable") = species_name;
+          // Note the additional minus sign added because the flux is measured outwards
+          if (!MooseUtils::parsesToReal(_component_temperatures[c_i]))
+            paramError("temperatures", "Only real values are supported");
+          params.set<Real>("concentration_to_pressure_conversion_factor") =
+              -kb * libMesh::Utility::pow<3>(_length_unit) *
+              std::stod(_component_temperatures[c_i]) * _pressure_unit * conv_factor;
+          params.set<PostprocessorName>("flux") = flux_name;
+          params.set<Real>("surface_area") = scaled_area;
+          params.set<Real>("volume") = scaled_volume;
+          getProblem().addScalarKernel(kernel_type, species_name + "_enc_sink_sk", params);
+        }
       }
     }
   }
@@ -245,27 +255,34 @@ SorptionExchangePhysics::addFEBCs()
   for (const auto c_i : index_range(_components))
   {
     const auto & comp_name = _components[c_i];
-    // This could be done in the Diffusion/Migration Physics instead
-    // That Physics could add this term when coupled to a SorptionExchangePhysics
-    const auto & structure_boundary = getConnectedStructureBoundary(comp_name);
 
     for (const auto s_j : index_range(_species[c_i]))
     {
       const auto species_name = _species[c_i][s_j] + "_" + comp_name;
-      const auto multi_D_species_name = getConnectedStructureVariableName(c_i, s_j);
+
+      for (const auto & connected_name : getConnectedStructures(comp_name))
       {
-        const std::string bc_type = "EquilibriumBC";
-        auto params = _factory.getValidParams(bc_type);
-        params.set<NonlinearVariableName>("variable") = multi_D_species_name;
-        params.set<std::vector<VariableName>>("enclosure_var") = {species_name};
-        if (getActionComponent(comp_name).blocks().empty())
-          mooseError("Should have a block in the component");
-        params.set<SubdomainName>("enclosure_block") = getActionComponent(comp_name).blocks()[0];
-        params.set<MooseFunctorName>("Ko") = _species_Ks[c_i][s_j];
-        params.set<Real>("Ko_scaling_factor") = 1 / Utility::pow<3>(_length_unit) / _pressure_unit;
-        params.set<FunctionName>("temperature_function") = _component_temperatures[c_i];
-        params.set<std::vector<BoundaryName>>("boundary") = {structure_boundary};
-        getProblem().addBoundaryCondition(bc_type, species_name + "_equi_bc", params);
+        // This could be done in the Diffusion/Migration Physics instead
+        // That Physics could add this term when coupled to a SorptionExchangePhysics
+        const auto & structure_boundary = getConnectedStructureBoundary(comp_name, connected_name);
+        const auto multi_D_species_name =
+            getConnectedStructureVariableName(c_i, connected_name, s_j);
+
+        {
+          const std::string bc_type = "EquilibriumBC";
+          auto params = _factory.getValidParams(bc_type);
+          params.set<NonlinearVariableName>("variable") = multi_D_species_name;
+          params.set<std::vector<VariableName>>("enclosure_var") = {species_name};
+          if (getActionComponent(comp_name).blocks().empty())
+            mooseError("Should have a block in the component");
+          params.set<SubdomainName>("enclosure_block") = getActionComponent(comp_name).blocks()[0];
+          params.set<MooseFunctorName>("Ko") = _species_Ks[c_i][s_j];
+          params.set<Real>("Ko_scaling_factor") =
+              1 / Utility::pow<3>(_length_unit) / _pressure_unit;
+          params.set<FunctionName>("temperature_function") = _component_temperatures[c_i];
+          params.set<std::vector<BoundaryName>>("boundary") = {structure_boundary};
+          getProblem().addBoundaryCondition(bc_type, species_name + "_equi_bc", params);
+        }
       }
     }
   }
@@ -281,46 +298,104 @@ SorptionExchangePhysics::checkSingleBoundary(const std::vector<BoundaryName> & b
                    std::to_string(boundaries.size()) + " boundaries.");
 }
 
+const std::vector<ComponentName> &
+SorptionExchangePhysics::getConnectedStructures(const MooseFunctorName & enc_name) const
+{
+  // Only 0D enclosure supported at this time
+  checkComponentType<Enclosure0D>(getActionComponent(enc_name));
+  const auto & component = dynamic_cast<const Enclosure0D *>(&getActionComponent(enc_name));
+  return component->connectedStructures();
+}
+
 const VariableName &
-SorptionExchangePhysics::getConnectedStructureVariableName(unsigned int c_i, unsigned int s_j) const
+SorptionExchangePhysics::getConnectedStructureVariableName(unsigned int c_i,
+                                                           const ComponentName & connected_struct,
+                                                           unsigned int s_j) const
 {
   const auto & comp_name = _components[c_i];
   const auto & component = getActionComponent(comp_name);
-  const auto multi_D_physics = getConnectedStructurePhysics(comp_name);
-  if (multi_D_physics.empty())
-    component.paramError("connected_structure",
-                         "Connected structure does not have any Physics defined");
-  // TODO: handle multiple multi_D_physics being defined
-  if (!dynamic_cast<DiffusionPhysicsBase *>(multi_D_physics[0]))
+  const auto multi_D_physics = getConnectedStructurePhysics(connected_struct, _species[c_i][s_j]);
+
+  // TODO: handle multiple multi_D_physics being defined with the same variable.
+  if (!dynamic_cast<DiffusionPhysicsBase *>(multi_D_physics))
     component.paramError(
         "connected_structure",
         "Connected structure does not have a diffusion Physics defined as its first 'physics'");
   // Note that DiffusionPhysicsBase only support one variable currently
-  if (multi_D_physics[0]->solverVariableNames().size() != _species[c_i].size())
+  if (multi_D_physics->solverVariableNames().size() != _species[c_i].size())
     component.paramError(
         "connected_structure",
         "The connected structure does not have the same number of nonlinear variables (" +
-            std::to_string(multi_D_physics[0]->solverVariableNames().size()) +
+            std::to_string(multi_D_physics->solverVariableNames().size()) +
             ") as the number of species (" + std::to_string(_species[c_i].size()) + ")");
-  return multi_D_physics[0]->solverVariableNames()[s_j];
+  return multi_D_physics->solverVariableNames()[s_j];
 }
 
 const BoundaryName &
-SorptionExchangePhysics::getConnectedStructureBoundary(const ComponentName & comp_name) const
+SorptionExchangePhysics::getConnectedStructureBoundary(
+    const ComponentName & comp_name, const ComponentName & connected_structure_name) const
 {
-  const auto & component = getActionComponent(comp_name);
-  const auto & boundaries = component.outerSurfaceBoundaries();
-  checkSingleBoundary(boundaries, comp_name);
-  return boundaries[0];
+  // Only 0D enclisure supported at this time
+  checkComponentType<Enclosure0D>(getActionComponent(comp_name));
+  const auto & component = dynamic_cast<const Enclosure0D *>(&getActionComponent(comp_name));
+  const auto & boundary = component->connectedStructureBoundary(connected_structure_name);
+  return boundary;
+}
+
+Real
+SorptionExchangePhysics::getConnectedStructureConnectionArea(
+    const ComponentName & comp_name, const ComponentName & connected_structure_name) const
+{
+  // Only 0D enclisure supported at this time
+  checkComponentType<Enclosure0D>(getActionComponent(comp_name));
+  const auto & component = dynamic_cast<const Enclosure0D *>(&getActionComponent(comp_name));
+  const auto boundary_area = component->connectedStructureBoundaryArea(connected_structure_name);
+  return boundary_area;
 }
 
 const std::vector<PhysicsBase *>
-SorptionExchangePhysics::getConnectedStructurePhysics(const ComponentName & comp_name) const
+SorptionExchangePhysics::getConnectedStructurePhysics(
+    const ComponentName & connected_structure_name) const
 {
-  const auto & component = dynamic_cast<const Enclosure0D &>(getActionComponent(comp_name));
-  const auto & structure = getActionComponent(component.connectedStructure());
+  const auto & structure = getActionComponent(connected_structure_name);
+  // Only 1D structure supported at this time
   checkComponentType<Structure1D>(structure);
   return dynamic_cast<const Structure1D &>(structure).getPhysics();
+}
+
+PhysicsBase *
+SorptionExchangePhysics::getConnectedStructurePhysics(
+    const ComponentName & connected_structure_name, const VariableName & species_name) const
+{
+  const auto & structure = getActionComponent(connected_structure_name);
+  checkComponentType<ComponentPhysicsInterface>(structure);
+  const auto & structure_physics =
+      dynamic_cast<const ComponentPhysicsInterface &>(structure).getPhysics();
+
+  // Check the physics defined for a variable with the same name as the species
+  for (const auto & physics : structure_physics)
+  {
+    const auto & solver_vars = physics->solverVariableNames();
+    if (std::find(solver_vars.begin(), solver_vars.end(), species_name) != solver_vars.end())
+      return physics;
+
+    const auto & aux_vars = physics->auxVariableNames();
+    if (std::find(aux_vars.begin(), aux_vars.end(), species_name) != aux_vars.end())
+      return physics;
+  }
+
+  // If a single physics with a single variable, no ambiguity either
+  if (structure_physics.size() == 1 && structure_physics[0]->solverVariableNames().size() == 1)
+    return structure_physics[0];
+
+  // No obvious connection, just error
+  // TODO: add a parameter to indicate which species to connect to
+  mooseError("On connected structure '",
+             connected_structure_name,
+             "', it was not clear in what equation the release term for species '",
+             species_name,
+             "' should be added. Use the species name as the variable name on the relevant "
+             "Physics.");
 }
 
 void
