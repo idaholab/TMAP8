@@ -37,18 +37,18 @@ public:
   /// Returns the scaled volume of the enclosure
   virtual Real volume() const override { return _volume; }
   /// Returns the scaled outer boundary surface area
-  virtual Real outerSurfaceArea() const override { return _surface_area; }
-  /// Returns the boundary of the enclosure, connecting with the structure
+  virtual Real outerSurfaceArea() const override;
+  /// Returns the boundary of the enclosure, connecting with the structure(s)
   virtual const std::vector<BoundaryName> & outerSurfaceBoundaries() const override
   {
-    _console << Moose::stringify(_outer_boundaries);
-    return _outer_boundaries;
+    return _connection_boundaries;
   }
   /// Get the connected structure name
-  ComponentName connectedStructure() const
-  {
-    return getParam<ComponentName>("connected_structure");
-  }
+  const std::vector<ComponentName> & connectedStructures() const { return _connected_structures; }
+  /// Get the boundary for the connection to the structure
+  const BoundaryName & connectedStructureBoundary(const ComponentName & conn_structure) const;
+  /// Get the boundary area for the connection surface to the structure
+  Real connectedStructureBoundaryArea(const ComponentName & conn_structure) const;
 
 protected:
   virtual void addPhysics() override;
@@ -64,10 +64,12 @@ protected:
   std::vector<MooseFunctorName> _species_Ks;
   /// Temperature of the enclosure
   const Real _temperature;
-  /// Outer surface area of the enclosure
-  const Real _surface_area;
   /// Volume of the enclosure
   const Real _volume;
-  /// Surface connecting the enclosure with the structure
-  const std::vector<BoundaryName> _outer_boundaries;
+  /// Connected structures
+  const std::vector<ComponentName> _connected_structures;
+  /// Surfaces connecting the enclosure with the structures
+  const std::vector<BoundaryName> _connection_boundaries;
+  /// Surface area of each connection
+  const std::vector<Real> _connection_boundaries_area;
 };
