@@ -49,15 +49,34 @@ private:
   void checkSingleBoundary(const std::vector<BoundaryName> & boundaries,
                            const ComponentName & comp) const;
 
+  /// Return the structures connected to the component
+  const std::vector<ComponentName> &
+  getConnectedStructures(const MooseFunctorName & enc_name) const;
+
   /// Get the variable name for the structure connected to the component
   /// @param c_i index of the component
+  /// @param conn_structure name of the connected structure
   /// @param s_j index of the species
-  const VariableName & getConnectedStructureVariableName(unsigned int c_i, unsigned int s_j) const;
+  const VariableName & getConnectedStructureVariableName(unsigned int c_i,
+                                                         const ComponentName & conn_structure,
+                                                         unsigned int s_j) const;
   /// Get the boundary name for the surface connecting the structure to the component
   /// @param comp_name name of the component
-  const BoundaryName & getConnectedStructureBoundary(const ComponentName & comp_name) const;
-  /// Get the Physics active on the structure connected to the component
+  /// @param conn_structure name of the connected structure
+  const BoundaryName & getConnectedStructureBoundary(const ComponentName & comp_name,
+                                                     const ComponentName & conn_structure) const;
+  /// Get the boundary area for the surface connecting the structure to the component
   /// @param comp_name name of the component
+  /// @param conn_structure name of the connected structure
+  Real getConnectedStructureConnectionArea(const ComponentName & comp_name,
+                                           const ComponentName & connected_structure_name) const;
+  /// Get the Physics active on the structure connected to the component
+  /// @param conn_structure name of the connected structure
   const std::vector<PhysicsBase *>
-  getConnectedStructurePhysics(const ComponentName & comp_name) const;
+  getConnectedStructurePhysics(const ComponentName & conn_structure) const;
+  /// Get the Physics active on the structure connected to the component
+  /// @param conn_structure name of the connected structure
+  /// @param species_name name of the species
+  PhysicsBase * getConnectedStructurePhysics(const ComponentName & conn_structure,
+                                             const VariableName & species_name) const;
 };
