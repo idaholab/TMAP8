@@ -49,14 +49,19 @@ enclosureCommonParams()
 
   params.addRequiredParam<Real>("temperature", "Enclosure temperature [K]");
   params.addRequiredParam<Real>("volume", "Volume of enclosure [m^3]");
-  params.addRequiredParam<Real>("surface_area", "Contact surface with the structure [m^3]");
-  params.addRequiredParam<ComponentName>("connected_structure",
-                                         "Structure exchanging species with the enclosure");
-  params.addRequiredParam<BoundaryName>(
-      "boundary",
-      "Surface between the enclosure and the connected structure. This surface should exist on the "
-      "mesh and likely be located on the 'connected_structure'");
 
+  // Connection with structures
+  params.addRequiredParam<std::vector<ComponentName>>(
+      "connected_structures", "Structure exchanging species with the enclosure");
+  params.addRequiredParam<std::vector<BoundaryName>>(
+      "connection_boundaries",
+      "Surface between the enclosure and the connected "
+      "structures. This surface should exist on the "
+      "mesh and likely be located on the 'connected_structures'");
+  params.addRequiredParam<std::vector<Real>>("connection_boundaries_area",
+                                             "Contact surface with each structure [m^3]");
+
+  // Species quantities
   params.addParam<std::vector<Real>>(
       "species_initial_pressures",
       {},
@@ -66,7 +71,10 @@ enclosureCommonParams()
 
   params.addParamNamesToGroup("species_initial_pressures equilibrium_constants", "Species");
   params.addParamNamesToGroup("temperature", "Enclosure conditions");
-  params.addParamNamesToGroup("volume surface_area connected_structure boundary", "Geometry");
+  params.addParamNamesToGroup(
+      "connected_structures connection_boundaries connection_boundaries_area",
+      "Enclosure connections to structures");
+  params.addParamNamesToGroup("volume", "Geometry");
   return params;
 }
 }

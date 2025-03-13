@@ -38,9 +38,10 @@ Enclosure0D::Enclosure0D(const InputParameters & params)
     _ics(getParam<std::vector<Real>>("species_initial_pressures")),
     _species_Ks(getParam<std::vector<MooseFunctorName>>("equilibrium_constants")),
     _temperature(getParam<Real>("temperature")),
-    _surface_area(getParam<Real>("surface_area")),
     _volume(getParam<Real>("volume")),
-    _outer_boundaries({getParam<BoundaryName>("boundary")})
+    _connected_structures(getParam<std::vector<ComponentName>>("connected_structures")),
+    _connection_boundaries(getParam<std::vector<BoundaryName>>("connection_boundaries")),
+    _connection_boundaries_area(getParam<std::vector<Real>>("connection_boundaries_area"))
 {
   // Species parameter checks
   if (_species.size() != _scaling_factors.size())
@@ -99,4 +100,36 @@ Enclosure0D::addPhysics()
   // Transfer the data specified in the Component to the Physics
   const auto stp = dynamic_cast<SorptionExchangePhysics *>(_physics[0]);
   stp->addComponent(*this);
+}
+
+const BoundaryName &
+Enclosure0D::connectedStructureBoundary(const ComponentName & conn_structure) const
+{
+  for (const auto i : index_range(_connected_structures))
+    if (conn_structure == _connected_structures[i])
+      return _connection_boundaries[i];
+  mooseError("Connection boundary for connected structure '",
+             conn_structure,
+             "' was requested, but this structure does not appear to be connected. Connected "
+             "structures include:\n",
+             Moose::stringify(_connected_structures));
+}
+
+Real
+Enclosure0D::connectedStructureBoundaryArea(const ComponentName & conn_structure) const
+{
+  for (const auto i : index_range(_connected_structures))
+    if (conn_structure == _connected_structures[i])
+      return _connection_boundaries_area[i];
+  mooseError("Connection boundary area for connected structure '",
+             conn_structure,
+             "' was requested, but this structure does not appear to be connected. Connected "
+             "structures include:\n",
+             Moose::stringify(_connected_structures));
+}
+
+Real
+Enclosure0D::outerSurfaceArea() const
+{
+  return std::accumulate(_connection_boundaries_area.begin(), _connection_boundaries_area.end(), 0);
 }
