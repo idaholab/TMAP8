@@ -78,12 +78,12 @@ concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} 
     property_values = '${solubility_constant}'
 
     # Geometry
-    surface_area = '${surface_area}'
     volume = '${volume_enclosure}'
 
     # Connection to structures
-    connected_structure = 'structure'
-    boundary = 'structure_left'
+    connected_structures = 'structure'
+    connection_boundaries = 'structure_left'
+    connection_boundaries_area = '${surface_area}'
   []
 []
 
