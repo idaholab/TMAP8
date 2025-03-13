@@ -8,7 +8,7 @@
     cli_args = 'Outputs/file_base=val-2f_heavy_out'
     csvdiff = val-2f_heavy_out.csv
     heavy = true
-    requirement = 'The system shall be able to model diffusion of deuterium in a beryllium sample and generate CSV data output.'
+    requirement = 'The system shall be able to model neutron damage effects on tritium transport in tungsten and generate CSV data output.'
   []
   [val-2f_heavy_exodus]
     type = Exodiff
@@ -18,8 +18,7 @@
     prereq = val-2f_heavy_csv
     should_execute = false # this test relies on the output files from val-2f_heavy_csv, so it shouldn't be run twice
     heavy = true
-    abs_zero = 1e-8
-    requirement = 'The system shall be able to model diffusion of deuterium in a beryllium sample and generate field and material property data output in the Exodus format.'
+    requirement = 'The system shall be able to model neutron damage effects on tritium transport in tungsten and generate field and material property data output in the Exodus format.'
   []
   [val-2f_exodus]
     type = Exodiff
@@ -34,13 +33,12 @@
                 dt_start_cooldown='${units 100 s}'
                 dt_start_desorption='${units 10 s}'"
     exodiff = val-2f_out.e
-    abs_zero = 1e-8
-    requirement = 'The system shall be able to model diffusion of deuterium in beryllium sample with a short runtime suitable for regular regression testing as in val-2b.'
+    requirement = 'The system shall be able to model neutron damage effects on tritium transport in tungsten with a short runtime suitable for regular regression testing.'
   []
   [val-2f_comparison]
     type = RunCommand
     command = 'python3 comparison_val-2f.py'
-    requirement = 'The system shall be able to generate comparison plots between simulated solutions and experimental data of validation case val-2f, modeling diffusion and release of deuterium in a beryllium sample.'
+    requirement = 'The system shall be able to generate comparison plots between simulated solutions and experimental data of validation case val-2f, modeling neutron damage effects on tritium transport in tungsten.'
     required_python_packages = 'matplotlib numpy pandas scipy os'
   []
 []
