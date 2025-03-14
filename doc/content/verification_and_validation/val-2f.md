@@ -4,37 +4,80 @@
 
 ## Test Description
 
-The case under study involves the use of polished beryllium wafers, each 0.4 mm thick and with a surface area of 104 mm$^2$.
-The primary focus of the experiment is to analyze how deuterium interacts with beryllium under controlled thermal conditions.
+The case under study involves the use of recrystallized polycrystalline tungsten (PCW) samples, which are subjected to ion irradiation and subsequent analysis using thermal desorption spectroscopy (TDS). The primary objective is to determine how damage influences deuterium trapping and release.
 
-During the deuterium charging phase, the sample is exposed to 13.3 kPa of deuterium gas (D$_2$) at a temperature of 773 K for 50 hours. Following this, it is cooled under an ultra-high vacuum of 1 $\mu$Pa, with a cooling time constant of 5 hours to let the temperature go down closer to 300 K. This cooling step was crucial for ensuring a controlled transition before the desorption phase.
-In the subsequent thermal desorption phase, the sample was transferred to a furnace under vacuum conditions and gradually heated from 300 K to 1073 K at a rate of 3 K/min.
-The emission rate of deuterium from the sample was recorded as a function of temperature to assess how deuterium diffused and was released from the material. In that way, the emission rate from the sample could be measured as a function of temperature. The sample pressure and temperature histories are shown in [val-2f_temperature_pressure_history].
+The TDS process is simulated using TMAP8 in a 1D tungsten sample with a thickness of 0.8 mm. The TDS simulation consisted of three phases: implantation, resting, and desorption.
 
-The experiment is simulated using a bulk beryllium one-segment model in TMAP8. The beryllium bulk is modeled with 40 elements, each 50 µm thick, using a reflective boundary condition at the mid-plane. In this case, the primary focus is on modeling deuterium behavior in beryllium (Be), meaning that the bulk material considered in the calculations is pure Be without explicitly modeling a BeO layer. However, to observe simulation results, we apply BeO solubility conditions at the left boundary. Diffusivities and solubilities used in the simulation are listed in [val-2f_parameters].
+During the charging phase, deuterium is continuously implanted into the tungsten sample over a period of 72 hours. The temperature is maintained at 370 K throughout this phase. The surface is exposed to a constant flux of $\phi=5.79\times 10^{19}$ atoms/m $^2$/s, corresponding to a total fluence of $1.5\times 10^{25}$ atoms/m $^2$. The implantation profile follows a Gaussian distribution centered at the mean implantation depth of $R_p=0.7$ nm, with a standard deviation of $\sigma = 0.5$ nm :
+
+\begin{equation}
+    S(x) = \frac{1}{\sigma \sqrt{2\pi}} \exp\left( -\frac{(x - R_p)^2}{2\sigma^2} \right) \cdot \phi_{\text{surface}}(t)
+\end{equation}
+
+where the surface flux function is given by:
+
+\begin{equation}
+    \phi_{\text{surface}}(t) =
+    \begin{cases}
+        \phi, & t < 72 h \\
+        0, & \text{otherwise}
+    \end{cases}
+\end{equation}
+
+After the implantation phase, the system enters the cooldown phase, lasting 12 hours. During this period, the sample temperature is rapidly reduced from 370 K to 295 K. No additional deuterium is introduced during this phase, meaning the source term is set to zero.
+
+The final stage of the simulation is the desorption phase, during which the sample is gradually heated from 300 K to 1000 K at a constant rate of $\beta = 0.05$ K/s.
+
+The general form of the governing diffusion equation for the deuterium concentration $C(x,t)$ in tungsten is given by:
+
+\begin{equation}
+    \frac{\partial C}{\partial t} = \nabla \cdot \left( D \nabla C \right) + S(x, t)
+\end{equation}
+
+The diffusion coefficient $D(T)$ follows an Arrhenius-type dependency on temperature:
+
+\begin{equation}
+    D(T) = D_0 \exp\left(-\frac{E_D}{k_B T}\right)
+\end{equation}
+
+The emission rate of deuterium from the sample was recorded as a function of temperature to assess how deuterium diffused and was released from the material. In that way, the emission rate from the sample could be measured as a function of temperature. The sample temperature histories are shown in [val-2f_temperature_pressure_history].
 
 !media comparison_val-2f.py
-    image_name=val-2f_temperature_pressure_history.png
+    image_name=val-2f_temperature_history.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2f_temperature_pressure_history
     caption=Pressure and temperature histories.
 
-!table id=val-2f_parameters caption=Model parameter values for the charging and the desorption phases [!citep](longhurst1992verification,ambrosek2008verification). $T$ is the temperature in Kelvin.
-| Property of deuterium | Value for charging phase              | Value for desorption phase            | Units               |
-| --------------------- | ------------------------------------- | ------------------------------------- | ------------------- |
-| Diffusivity in Be     | $8.0 \times 10^{-9} \exp(-4220/T)$    | $8.0 \times 10^{-9} \exp(-4220/T)$    | m$^2$/s             |
-| Solubility in Be      | $7.156 \times 10^{27} \exp(-11606/T)$ | $7.156 \times 10^{27} \exp(-11606/T)$ | at/m$^3$/Pa$^{1/2}$ |
-| Solubility in BeO     | $5.00 \times 10^{20} \exp(9377.7/T)$  | $5.00 \times 10^{20} \exp(9377.7/T)$  | at/m$^3$/Pa$^{1/2}$ |
+All the model parameters are listed in [val-2f_set_up_values]:
+
+!table id=val-2f_set_up_values caption=Values of material properties.
+| Parameter | Description                          | Value                                                       | Units                 | Reference                 |
+| --------- | ------------------------------------ | ----------------------------------------------------------- | --------------------- | --------------------- |
+| $k_b$     | Boltzmann constant                   | 1.380649 $\times 10^{-23}$                                  | J/K                   | [PhysicalConstants.h](https://physics.nist.gov/cgi-bin/cuu/Value?r) |
+| $T_{\text{initial}}$ | Initial temperature       | 370                                                         | K                     | [!cite](dark2024modelling) |
+| $T_{\text{cooldown}}$ | Cooldown temperature     | 295                                                         | K                     | [!cite](dark2024modelling) |
+| $T_{\text{desorption,min}}$ | Desorption start temperature | 300                                               | K                     | [!cite](dark2024modelling) |
+| $T_{\text{desorption,max}}$ | Desorption end temperature | 1000                                                | K                     | [!cite](dark2024modelling) |
+| $\beta$   | Desorption heating rate              | 0.05                                                        | K/s                   | [!cite](dark2024modelling) |
+| $t_{\text{charge}}$ | Charging time              | 72                                                          | h                     | [!cite](dark2024modelling) |
+| $t_{\text{cooldown}}$ | Cooldown duration        | 12                                                          | h                     | [!cite](dark2024modelling) |
+| $D_0$     | Diffusion coefficient pre-exponential factor | 1.6 $\times 10^{-7}$                                | m$^2$/s               | [!cite](dark2024modelling) |
+| $E_D$     | Activation energy for deuterium diffusion      | 0.28                                              | eV                    | [!cite](dark2024modelling) |
+| $R_p$     | Mean implantation depth              | 0.7                                                         | nm                    | [!cite](dark2024modelling) |
+| $\sigma$  | Standard deviation of implantation profile | 0.5                                                   | nm                    | [!cite](dark2024modelling) |
+| $\Phi$    | Incident fluence                     | 1.5 $\times 10^{25}$                                        | atoms/m$^2$           | [!cite](dark2024modelling) |
+| $\phi$    | Incident flux                        | 5.79 $\times 10^{19}$                                       | atoms/m$^2$/s         | [!cite](dark2024modelling) |
+| $l_W$     | Length of the tungsten sample        | 0.8                                                         | mm                    | [!cite](dark2024modelling) |
+
+
 
 ## Results
-
-[val-2f_comparison] shows deuterium flux (atoms/m$^2$/s) as a function of temperature (K), obtained using the TMAP8 model. The curve shows a sharp peak around 350 K, where the deuterium flux reaches its maximum, slightly above 3.0 × 10$^23$ atoms/m$^2$/s. After this peak, the flux rapidly decreases as the temperature increases, following an exponential-like decay. Around 500 K, the flux becomes relatively low, with a small secondary feature near 600 K, before continuing its decline towards near-zero values beyond 700 K. This behavior suggests that deuterium desorption from the material is temperature-dependent, with a strong release occurring at lower temperatures (near 350 K), followed by a much weaker release at higher temperatures.
 
 !media comparison_val-2f.py
        image_name=val-2f_comparison.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2f_comparison
-       caption=TMAP8 calculation of the deuterium flux (atoms/m$^2$/s) as a function of temperature (K).
+       caption=Comparison of TMAP8 calculation with the experimental data on the deuterium flux (atoms/m$^2$/s).
 
 ## Input files
 
