@@ -1,37 +1,28 @@
 # Physical constants
-R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
-
-# Pressure conditions
-pressure_enclosure_init = '${units 13300 Pa}'
-pressure_enclosure_cooldown = '${units 1e-6 Pa}' # vaccum
-pressure_enclosure_desorption = '${units 1e-3 Pa}' # vaccum, assumed
+kb = '${units 1.380649e-23 J/K}' # Boltzmann constant eV/K - from PhysicalConstants.h
 
 # Temperature conditions
-temperature_initial = '${units 773 K}'
+temperature_initial = '${units 370 K}'
+temperature_cooldown = '${units 295 K}'
 temperature_desorption_min = '${units 300 K}'
-temperature_desorption_max = '${units 1073 K}'
-temperature_cooldown_min = ${temperature_desorption_min}
+temperature_desorption_max = '${units 1000 K}'
 desorption_heating_rate = '${units ${fparse 3/60} K/s}'
 
 # Important times
-charge_time = '${units 50 h -> s}'
-cooldown_time_constant = '${units ${fparse 45*60} s}'
-# TMAP4 and TMAP7 used 40 minutes for the cooldown duration,
-# We use a 5 hour cooldown period to let the temperature decrease to around 300 K for the start of the desorption.
-# R.G. Macaulay-Newcombe et al. (1991) is not very clear on how long samples cooled down.
-cooldown_duration = '${units 5 h -> s}'
+charge_time = '${units 72 h -> s}'
+cooldown_duration = '${units 12 h -> s}'
 desorption_duration = '${fparse (temperature_desorption_max-temperature_desorption_min)/desorption_heating_rate}'
 endtime = '${fparse charge_time + cooldown_duration + desorption_duration}'
 
 # Materials properties
-concentration_scaling = 1e10 # (-)
-diffusion_Be_preexponential = '${units 8.0e-9 m^2/s -> mum^2/s}'
-diffusion_Be_energy = '${units 4220 K}'
-solubility_order = .5 # order of the solubility law (Here, we use Sievert's law)
-solubility_constant_Be = '${fparse 7.156e27 / 1e18 / concentration_scaling}' # at/m^3/Pa^0.5 -> at/mum^3/Pa^0.5}
-solubility_energy_Be = '${units 11606 K}'
-solubility_constant_BeO = '${fparse 5.00e20 / 1e18 / concentration_scaling}' # at/m^3/Pa^0.5 -> at/mum^3/Pa^0.5}
-solubility_energy_BeO = '${units -9377.7 K}'
+diffusion_W_preexponential = '${units 1.6e-7 m^2/s}'
+diffusion_W_energy = '${units 0.28 eV -> J}'
+
+# Source term parameters
+sigma = '${units 0.5e-9 m}'
+R_p = '${units 0.7e-9 m}'
+fluence = '${units 1.5e25 atoms/m^2}'
+flux = '${units ${fparse fluence / charge_time} atoms/m^2/s}'
 
 # Numerical parameters
 dt_max_large = '${units 100 s}'
@@ -41,38 +32,24 @@ dt_start_cooldown = '${units 10 s}'
 dt_start_desorption = '${units 1 s}'
 
 # Geometry and mesh
-length_Be = '${units 0.4 mm -> mum}'
-length_Be_modeled = '${fparse length_Be/2}'
-num_nodes_Be = 40
-node_length_Be = '${fparse length_Be_modeled / num_nodes_Be}'
+length_W = '${units 0.8 mm}'
+num_nodes_W = 40
 
 [Mesh]
-  [cmg]
-    type = CartesianMeshGenerator
+  [generated]
+    type = GeneratedMeshGenerator
     dim = 1
-
-    # Define cell lengths for only the Be subdomain
-    dx = '${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be}
-          ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be}
-          ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be}
-          ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be} ${node_length_Be}'
-
-    # Set all cells to subdomain 1 (now renumbered starting from 0)
-    subdomain_id = '1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1'
+    nx = ${num_nodes_W}
+    xmax = ${length_W}
   []
 []
 
 [Variables]
-  [deuterium_concentration_Be] # (atoms/microns^3) / concentration_scaling
-    block = 1
+  [deuterium_concentration_W]
   []
 []
 
 [AuxVariables]
-  [enclosure_pressure]
-    family = SCALAR
-    initial_condition = ${pressure_enclosure_init}
-  []
   [temperature]
     initial_condition = ${temperature_initial}
   []
@@ -83,24 +60,19 @@ node_length_Be = '${fparse length_Be_modeled / num_nodes_Be}'
 []
 
 [Kernels]
-  [time_Be]
+  [time_W]
     type = TimeDerivative
-    variable = deuterium_concentration_Be
-    block = 1
+    variable = deuterium_concentration_W
   []
-  [diffusion_Be]
+  [diffusion_W]
     type = ADMatDiffusion
-    variable = deuterium_concentration_Be
-    diffusivity = diffusivity_Be
-    block = 1
+    variable = deuterium_concentration_W
+    diffusivity = diffusivity_W
   []
-[]
-
-[AuxScalarKernels]
-  [enclosure_pressure_aux]
-    type = FunctionScalarAux
-    variable = enclosure_pressure
-    function = enclosure_pressure_func
+  [source_deuterium]
+    type = BodyForce
+    variable = deuterium_concentration_W
+    function = source_deuterium
   []
 []
 
@@ -111,31 +83,26 @@ node_length_Be = '${fparse length_Be_modeled / num_nodes_Be}'
     function = temperature_bc_func
     execute_on = 'INITIAL LINEAR'
   []
-  [flux_x_Be]
+  [flux_x_W]
     type = DiffusionFluxAux
-    diffusivity = diffusivity_Be
+    diffusivity = diffusivity_W
     variable = flux_x
-    diffusion_variable = deuterium_concentration_Be
+    diffusion_variable = deuterium_concentration_W
     component = x
-    block = 1
   []
 []
 
 [BCs]
   [left_flux]
-    type = EquilibriumBC
-    Ko = ${solubility_constant_BeO}
-    activation_energy = '${fparse solubility_energy_BeO * R}'
-    boundary = left
-    enclosure_var = enclosure_pressure
-    temperature = temperature
-    variable = deuterium_concentration_Be
-    p = ${solubility_order}
+    type = ADDirichletBC
+    boundary = right
+    variable = deuterium_concentration_W
+    value = 0
   []
   [right_flux]
-    type = ADNeumannBC
+    type = ADDirichletBC
     boundary = right
-    variable = deuterium_concentration_Be
+    variable = deuterium_concentration_W
     value = 0
   []
 []
@@ -143,23 +110,23 @@ node_length_Be = '${fparse length_Be_modeled / num_nodes_Be}'
 [Functions]
   [temperature_bc_func]
     type = ParsedFunction
-    expression = 'if(t<${charge_time}, ${temperature_initial}, if(t<${fparse charge_time + cooldown_duration}, ${temperature_initial}-((1-exp(-(t-${charge_time})/${cooldown_time_constant}))*${fparse temperature_initial - temperature_cooldown_min}), ${temperature_desorption_min}+${desorption_heating_rate}*(t-${fparse charge_time + cooldown_duration})))'
+    expression = 'if(t<${charge_time}, ${temperature_initial},
+                  if(t<${fparse charge_time + cooldown_duration}, ${temperature_cooldown},
+                  ${temperature_desorption_min}+${desorption_heating_rate}*(t-${fparse charge_time + cooldown_duration})))'
   []
-  [diffusivity_Be_func]
+  [source_distribution]
     type = ParsedFunction
-    symbol_names = 'T'
-    symbol_values = 'temperature_bc_func'
-    expression = '${diffusion_Be_preexponential}*exp(-${diffusion_Be_energy}/T)'
+    expression = '1 / (${sigma} * sqrt(2 * pi)) * exp(-0.5 * ((x - ${R_p}) / ${sigma}) ^ 2)'
   []
-  [enclosure_pressure_func]
+  [surface_flux_func]
     type = ParsedFunction
-    expression = 'if(t<${charge_time}, ${pressure_enclosure_init}, if(t<${fparse charge_time + cooldown_duration}, ${pressure_enclosure_cooldown}, ${pressure_enclosure_desorption}))'
+    expression = 'if(t<${charge_time}, ${flux}, 0)'
   []
-  [solubility_Be_func]
+  [source_deuterium]
     type = ParsedFunction
-    symbol_names = 'T'
-    symbol_values = 'temperature_bc_func'
-    expression = '${solubility_constant_Be} * exp(-${solubility_energy_Be}/T)'
+    symbol_names = 'source_distribution surface_flux_func'
+    symbol_values = 'source_distribution surface_flux_func'
+    expression = 'source_distribution * surface_flux_func'
   []
   [max_time_step_size_func]
     type = ParsedFunction
@@ -168,50 +135,47 @@ node_length_Be = '${fparse length_Be_modeled / num_nodes_Be}'
 []
 
 [Materials]
-  [diffusion_solubility]
-    type = ADGenericFunctionMaterial
-    prop_names = 'diffusivity_Be solubility_Be'
-    prop_values = 'diffusivity_Be_func solubility_Be_func'
-    outputs = all
+  [diffusivity_W_func]
+    type = ADDerivativeParsedMaterial
+    property_name = 'diffusivity_W'
+    functor_names = 'temperature_bc_func'
+    functor_symbols = 'T'
+    expression = '${diffusion_W_preexponential} * exp(- ${diffusion_W_energy} / ${kb} / T)'
+    output_properties = 'diffusivity_W'
   []
   [converter_to_nonAD]
     type = MaterialADConverter
-    ad_props_in = 'diffusivity_Be'
-    reg_props_out = 'diffusivity_Be_nonAD'
+    ad_props_in = 'diffusivity_W'
+    reg_props_out = 'diffusivity_W_nonAD'
   []
 []
 
 [Postprocessors]
-  [avg_flux_left]
-    type = SideDiffusiveFluxAverage
-    variable = deuterium_concentration_Be
-    boundary = left
-    diffusivity = diffusivity_Be_nonAD
+  [average]
+    type = ElementAverageValue
+    variable = deuterium_concentration_W
+    execute_on = 'initial timestep_end'
   []
-  [avg_flux_total] # total flux coming out of the sample in atoms/microns^2/s
-    type = ScalePostprocessor
-    value = avg_flux_left
-    scaling_factor = '${fparse 2 * concentration_scaling}'
-    # Factor of 2 because symmetry is assumed and only one-half of the specimen is modeled.
-    # Thus, the total flux coming out of the specimen (per unit area)
-    # is twice the flux calculated at the left side of the domain.
-    # The 'concentration_scaling' parameter is used to get a consistent concentration unit
+  [avg_flux_left]
+    type = SideDiffusiveFluxIntegral
+    variable = deuterium_concentration_W
+    diffusivity = 'diffusivity_W_nonAD'
+    boundary = 'left'
+  []
+  [avg_flux_right]
+    type = SideDiffusiveFluxIntegral
+    variable = deuterium_concentration_W
+    diffusivity = 'diffusivity_W_nonAD'
+    boundary = 'right'
   []
   [temperature]
     type = ElementAverageValue
-    block = 1
     variable = temperature
     execute_on = 'initial timestep_end'
   []
-  [diffusion_Be]
+  [diffusion_W]
     type = ElementAverageValue
-    block = 1
-    variable = diffusivity_Be
-  []
-  [solubility_Be]
-    type = ElementAverageValue
-    block = 1
-    variable = solubility_Be
+    variable = diffusivity_W
   []
   [dt]
     type = TimestepSize
@@ -238,7 +202,7 @@ node_length_Be = '${fparse length_Be_modeled / num_nodes_Be}'
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
   nl_rel_tol = 1e-6
-  nl_abs_tol = 5e-12
+  nl_abs_tol = 1e-12
   end_time = ${endtime}
   automatic_scaling = true
   compute_scaling_once = false

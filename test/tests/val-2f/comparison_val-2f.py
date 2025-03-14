@@ -13,13 +13,13 @@ os.chdir(script_folder)
 # Constants and history (see input file val-2f.i)
 
 temperature_desorption_min = 300 # K
-temperature_desorption_max = 1073 # K
+temperature_desorption_max = 1000 # K
 desorption_heating_rate = 3/60 # K/minutes -> K/s
-charge_time = 50*60*60 # h -> s
+charge_time = 72*60*60 # h -> s
 # TMAP4 and TMAP7 used 40 minutes for the cooldown duration,
 # We use a 5 hour cooldown period to let the temperature decrease to around 300 K for the start of the desorption.
 # R.G. Macaulay-Newcombe et al. (1991) is not very clear on how long samples cooled down.
-cooldown_duration = 5*60*60 # h -> s
+cooldown_duration = 12*60*60 # h -> s
 start_time_desorption = charge_time + cooldown_duration
 desorption_duration = (temperature_desorption_max-temperature_desorption_min)/desorption_heating_rate
 endtime = charge_time + cooldown_duration + desorption_duration
@@ -56,8 +56,7 @@ else:                                  # if in test folder
 tmap_solution = pd.read_csv(csv_folder)
 tmap_time = tmap_solution['time'] # s
 tmap_temperature = tmap_solution['temperature'] # K
-tmap_pressure = tmap_solution['enclosure_pressure'] # Pa
-tmap_flux = tmap_solution['avg_flux_total']*1e12 # atoms/microns^2/s -> atoms/m^2/s
+tmap_flux = (tmap_solution['avg_flux_left']+tmap_solution['avg_flux_right']) # atoms/m^2/s
 
 # select only the simulation data for desorption
 tmap_time_desorption = []
@@ -76,12 +75,14 @@ tmap_flux_desorption = np.array(tmap_flux_desorption)
 # Extract experimental data
 
 if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
-    csv_folder = "../../../../test/tests/val-2f/gold/experimental_data.csv"
+    csv_folder = "../../../../test/tests/val-2f/gold/0.1_dpa.csv"
 else:                                  # if in test folder
-    csv_folder = "./gold/experimental_data.csv"
+    csv_folder = "./gold/0.1_dpa.csv"
 experiment_data = pd.read_csv(csv_folder)
-experiment_temperature = experiment_data['temperature (C)'] + 273.15 # conversion from C to Kelvin
-experiment_flux = experiment_data['flux (atoms/mm^2/s x 10^10)'] * 1e10 * 1e6 # conversion from (atoms/mm^2/s x 10^10) to (atom/m$^2$/s)
+tds_data = np.genfromtxt(csv_folder, delimiter=",")
+experiment_temperature = tds_data[:, 0]
+area = 12e-03 * 15e-03
+experiment_flux = tds_data[:, 1] / area
 
 #===============================================================================
 # Plot temperature and pressure history
@@ -89,9 +90,7 @@ experiment_flux = experiment_data['flux (atoms/mm^2/s x 10^10)'] * 1e10 * 1e6 # 
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
-ax2 = ax.twinx()
 
-ax2.plot(tmap_time/60/60, tmap_pressure, label=r"Pressure", c='r')
 ax.plot(tmap_time/60/60, tmap_temperature, label=r"Temperature", c='b',ls='--')
 
 ax.set_xlabel(u'Time (h)')
@@ -102,13 +101,7 @@ ax.set_xlim(left=0, right=endtime/60/60)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
 
-ax2.set_ylabel(u"Pressure (Pa)", c='r')
-ax2.legend(loc="lower center")
-ax2.set_xlim(left=0)
-ax2.set_yscale('log')
-ax2.minorticks_on()
-
-plt.savefig('val-2f_temperature_pressure_history.png', bbox_inches='tight', dpi=300)
+plt.savefig('val-2f_temperature_history.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 
 #===============================================================================
@@ -118,18 +111,17 @@ fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-# ax.scatter(experiment_temperature, experiment_flux,label=r"Experiment", c='k', marker='^')
 ax.plot(tmap_temperature_desorption, tmap_flux_desorption, label=r"TMAP8", c='tab:gray')
-
+ax.scatter(experiment_temperature, experiment_flux, label="Experiment", color="black")
 ax.set_xlabel(u'Temperature (K)')
 ax.set_ylabel(u"Deuterium flux (atom/m$^2$/s)")
 ax.legend(loc="best")
 ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 tmap_flux_for_rmspe = numerical_solution_on_experiment_input(experiment_temperature, tmap_temperature_desorption, tmap_flux_desorption)
-# RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe-experiment_flux)**2) )
-# RMSPE = RMSE*100/np.mean(experiment_flux)
-# ax.text(870,3e16, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
+RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe-experiment_flux)**2) )
+RMSPE = RMSE*100/np.mean(experiment_flux)
+ax.text(870,3e16, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
 ax.minorticks_on()
 plt.savefig('val-2f_comparison.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
