@@ -16,9 +16,6 @@ temperature_desorption_min = 300 # K
 temperature_desorption_max = 1000 # K
 desorption_heating_rate = 3/60 # K/minutes -> K/s
 charge_time = 72*60*60 # h -> s
-# TMAP4 and TMAP7 used 40 minutes for the cooldown duration,
-# We use a 5 hour cooldown period to let the temperature decrease to around 300 K for the start of the desorption.
-# R.G. Macaulay-Newcombe et al. (1991) is not very clear on how long samples cooled down.
 cooldown_duration = 12*60*60 # h -> s
 start_time_desorption = charge_time + cooldown_duration
 desorption_duration = (temperature_desorption_max-temperature_desorption_min)/desorption_heating_rate
