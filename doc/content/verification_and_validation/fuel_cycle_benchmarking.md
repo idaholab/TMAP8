@@ -8,24 +8,34 @@ This benchmarking case is taken from [!cite](meschini2023modeling) to simulate a
 
 The fuel cycle model consists of 11 interconnected systems that handle tritium recycling in a fusion power plant as shown in [fuel_cycle_schematic]. Each system processes tritium differently:
 
-<!-- The description for each systems from original paper -->
+- Breeding Blanket (BB): Generates tritium through breeding reactions with lithium using neutrons from fusion reactions in vacuum chamber. This is the main tritium source for sustaining the fusion reaction.
 
-- Breeding Blanket (BB): Main tritium source through breeding reactions
-- Tritium Extraction System (TES): Extracts bred tritium with efficiency η₂
-- First Wall (FW): Collects tritium from plasma interactions
-- Divertor (DIV): Handles unburned plasma exhaust
-- Heat Exchanger (HX): Manages coolant-carried tritium
-- Detritiation System (DS): Processes tritium from building atmosphere
-- Vacuum Pump (VP): Pumps unburned fuel from plasma chamber
-- Fuel Clean-up (FCU): Purifies recycled tritium
-- Isotope Separation System (ISS): Separates hydrogen isotopes
-- Storage and Management (SM): Maintains fuel inventory
-- Tritium Separation Membrane (TS): Additional tritium recovery
+- Tritium Extraction System (TES): Processes and extracts tritium from the breeding blanket with an extraction efficiency $\eta_2$. The extracted tritium is directed to the tritium permeation membrane while unextracted tritium flows to the heat exchanger.
+
+- First Wall (FW): Interface between plasma and breeding blanket that collects implanted tritium from plasma interactions.
+
+- Divertor (DIV): Collects unburned plasma exhaust and tritium through direct plasma implantation. Similar to the first wall, it experiences tritium permeation to the breeding blanket and receives tritium from heat exchanger leaks.
+
+- Heat Exchanger (HX): Manages coolant-carried tritium from TES and redistributes it to BB, FW, DIV, and detritiation systems. This component plays a crucial role in tritium redistribution throughout the system.
+
+- Detritiation System (DS): Processes tritium from building atmosphere and receives input from both heat exchanger leaks and ISS. It acts as an environmental safety system by capturing and processing tritium that escapes into the facility atmosphere.
+
+- Vacuum Pump (VP): Extracts unburned fuel and fusion productions from the plasma chamber. A portion of the pumped tritium goes to direct internal recycling while the rest is sent for processing through the fuel cleanup system.
+
+- Fuel Clean-up (FCU): Seperates hydrogen isotopes from exhaust gas. The hydrogen isotopes is then sent to the isotope separation system for further processing.
+
+- Isotope Separation System (ISS): Separates and purifies hydrogen isotopes from various input streams. It receives tritium from both FCU and DS, processing it for either storage or recycling through DS.
+
+- Storage and Management (SM): Maintains and manages the fuel inventory, receiving purified tritium from ISS and supplying fuel for plasma operation. It serves as the main tritium repository for the fuel cycle.
+
+- Fueling System (FS): Injects fresh fuel into the vacuum chamber for plasma operation. While not directly modeled in the tritium inventory calculations, its function is represented through an outflux term in the storage and management system equations equal to the tritium fueling rate.
+
+- Tritium Permeation Membrane (TPM): Provides additional tritium recovery from the TES output stream with high efficiency, helping to minimize losses and maximize tritium recovery for fuel cycle sustainability.
 
 !media figures/fuel_cycle_2023_schematic.jpg
        style=width:70%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=fuel_cycle_schematic
-       caption=Schematic of the tritium fuel cycle model showing the main systems and tritium flow paths.
+       caption=Schematic of the tritium fuel cycle model showing the main systems and tritium flow paths. The figure is taken from [!cite](meschini2023modeling).
 
 The label and corresponding equation for each systems are shown in [tritium_systems].
 
@@ -43,7 +53,7 @@ The label and corresponding equation for each systems are shown in [tritium_syst
 | Isotope Separation System              | 9  | `T_09_ISS`      | [eqn:t9] |
 | Storage and Management                 | 10 | `T_10_storage`  | [eqn:t10] |
 | Fueling System                         | 11 | -               | -         |
-| Tritium Separation Membrane            | 12 | `T_11_membrane` | [eqn:t11] |
+| Tritium Permeation Membrane            | 12 | `T_11_membrane` | [eqn:t11] |
 
 !alert note title=The fuel cycle of Tritium in Fueling System is ignored
 Fueling system only injects fresh fuel in the vacuum chamber and is not modeled in the fuel cycle to simplify the model. Instead, an outflux equal to the tritium fueling rate is added to the equation describing the storage and management system.
@@ -115,7 +125,7 @@ TBE = \eta_f f_b
 
 We use the ScalarKernels in MOOSE to calculate the ODEs from 11 systems. All the model parameters are listed in [fuel_cycle_benchmark_table2]:
 
-!table id=fuel_cycle_benchmark_table2=Values of material properties.
+!table id=fuel_cycle_benchmark_table2 caption=Values of material properties.
 | Parameter | Description                          | Value                                                       | Units                 |
 | --------- | ------------------------------------ | ----------------------------------------------------------- | --------------------- |
 | TBR       | Tritium breeding ratio               | 1.067                                                       | -                     |
@@ -136,13 +146,13 @@ We use the ScalarKernels in MOOSE to calculate the ODEs from 11 systems. All the
 
 ## Results
 
-The model is validated by comparing TMAP8 simulation results with MatLab calculations from [!cite](meschini2023modeling) at first 10 days. [fuel_cycle_comparison] shows excellent agreement in the temporal evolution of tritium inventory across key systems, including breeding blanket, tritium extraction, vacuum pump, and storage systems. The close match validates our implementation using MOOSE's ScalarKernel system to solve the coupled ODEs that describe tritium transfer between systems.
+The model is validated by comparing TMAP8 simulation results with MatLab calculations from [!cite](meschini2023modeling) at first 20 days. [fuel_cycle_comparison] shows excellent agreement in the temporal evolution of tritium inventory across key systems, including breeding blanket, tritium extraction, vacuum pump, and storage systems. The close match validates our implementation using MOOSE's ScalarKernel system to solve the coupled ODEs that describe tritium transfer between systems.
 
 !media comparison_fuel_cycle_benchmark.py
        image_name=fuel_cycle_comparison.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=fuel_cycle_comparison
-       caption=Comparison of TMAP8 calculation with the MatLab data on the fuel cycle model.
+       caption=Comparison of TMAP8 calculation with the data of fuel cycle model from [!cite](meschini2023modeling).
 
 ## Input files
 

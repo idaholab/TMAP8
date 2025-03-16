@@ -29,7 +29,7 @@ def interpolation_on_expected_input(date_x, data_y, expected_input):
 def read_csv_from_TMAP8(file_name, parameter_names):
     # Read simulation data
     if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-        csv_folder = f"../../../../test/tests/fuel_cycle/gold/{file_name}"
+        csv_folder = f"../../../../test/tests/fuel_cycle_benchmark/gold/{file_name}"
     else:                                  # if in test folder
         csv_folder = f"./gold/{file_name}"
     simulation_data = pd.read_csv(csv_folder)
