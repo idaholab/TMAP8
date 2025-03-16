@@ -70,7 +70,7 @@ tritium_burn_rate_value = 8.99e-7 # -
   [T_05_HX]
     family = SCALAR
   []
-  [T_06_DS] # Detritiation system
+  [T_06_DS]
     family = SCALAR
   []
   [T_07_vacuum]
@@ -86,7 +86,7 @@ tritium_burn_rate_value = 8.99e-7 # -
     family = SCALAR
     initial_condition = ${initial_inventory}
   []
-  [T_11_membrane] #  Tritium separation membrane
+  [T_11_membrane]
     family = SCALAR
   []
 []

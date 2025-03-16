@@ -1,12 +1,35 @@
 # Fuel Cycle Benchmarking
 
-## Case and Model Description
+## General Case Description
 
-This benchmarking case is taken from [!cite](meschini2023modeling) to simulate a fuel cycle model using resident time method. The model only assign a resident time to simulate the tritium flow for each system in fuel energy plant. The model avoid the complex techinical detail and the un finished technical. The model help us to understand the challenges and potential solutions to lowering the requirement for the tritium inventory and accelerate the development of fusion energy.
+This benchmarking case is taken from [!cite](meschini2023modeling) to simulate a tritium fuel cycle model using resident time method. The model uses a simplified approach by assigning residence times to simulate tritium flow through each system in a fusion power plant, avoiding complex and unfinished technical details. This approach helps understand the challenges and potential solutions for optimizing tritium inventory management and accelerating fusion energy development.
 
-In the model, we have 11 systems to finish the tritium recycling in fuel cycle. The detail and corresponding ODE for each system are listed in below:
+## Model Description
 
-!table id=tritsystems caption=Systems and labels used in this example.
+The fuel cycle model consists of 11 interconnected systems that handle tritium recycling in a fusion power plant as shown in [fuel_cycle_schematic]. Each system processes tritium differently:
+
+<!-- The description for each systems from original paper -->
+
+- Breeding Blanket (BB): Main tritium source through breeding reactions
+- Tritium Extraction System (TES): Extracts bred tritium with efficiency η₂
+- First Wall (FW): Collects tritium from plasma interactions
+- Divertor (DIV): Handles unburned plasma exhaust
+- Heat Exchanger (HX): Manages coolant-carried tritium
+- Detritiation System (DS): Processes tritium from building atmosphere
+- Vacuum Pump (VP): Pumps unburned fuel from plasma chamber
+- Fuel Clean-up (FCU): Purifies recycled tritium
+- Isotope Separation System (ISS): Separates hydrogen isotopes
+- Storage and Management (SM): Maintains fuel inventory
+- Tritium Separation Membrane (TS): Additional tritium recovery
+
+!media figures/fuel_cycle_2023_schematic.jpg
+       style=width:70%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=fuel_cycle_schematic
+       caption=Schematic of the tritium fuel cycle model showing the main systems and tritium flow paths.
+
+The label and corresponding equation for each systems are shown in [tritium_systems].
+
+!table id=tritium_systems caption=Systems and labels used in this example.
 | System Name | System number | Tritium inventory variable| system equation |
 | --- | --- | --- | --- |
 | Breeding Blanket                       | 1  | `T_01_BB`       | [eqn:t1] |
@@ -113,7 +136,7 @@ We use the ScalarKernels in MOOSE to calculate the ODEs from 11 systems. All the
 
 ## Results
 
-We compare results from TMAP8 with MatLab results from [!cite](meschini2023modeling) in [comparison_fuel_cycle_benchmarking] at first 10 days. The agreements between the four chosen systems are quite good.
+The model is validated by comparing TMAP8 simulation results with MatLab calculations from [!cite](meschini2023modeling) at first 10 days. [fuel_cycle_comparison] shows excellent agreement in the temporal evolution of tritium inventory across key systems, including breeding blanket, tritium extraction, vacuum pump, and storage systems. The close match validates our implementation using MOOSE's ScalarKernel system to solve the coupled ODEs that describe tritium transfer between systems.
 
 !media comparison_fuel_cycle_benchmark.py
        image_name=fuel_cycle_comparison.png
@@ -124,7 +147,6 @@ We compare results from TMAP8 with MatLab results from [!cite](meschini2023model
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/fuel_cycle_benchmark/fuel_cycle.i]. The input file is different from the input file used as test in TMAP8. To limit the computational costs of the test case, the test runs a version of the file with fewer time steps. More information about the changes can be found in the test specification file for this case, namely [/fuel_cycle_benchmark/tests].
-
+The input file for this case can be found at [/fuel_cycle_benchmark/fuel_cycle.i]. The input file used for testing has fewer time steps to limit computational costs. More information about the changes can be found in the test specification file at [/fuel_cycle_benchmark/tests].
 
 !bibtex bibliography

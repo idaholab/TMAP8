@@ -11,7 +11,7 @@ equations using [ScalarKernels](syntax/ScalarKernels/index.md). These can be qui
 model parts of the system at high levels of abstraction while working with detailed
 models of specific components. As an example, we re-create a fuel cycle model using the
 equations in [!cite](Abdou2021) to provide a high-level abstraction of a fuel cycle in a potential
-fusion power plant.
+fusion power plant. We also create a [fuel cycle model](verification_and_validation/fuel_cycle_benchmarking.md), considering new technologies from [!cite](meschini2023modeling), as benchmark.
 
 !content location=fuel_cycle
 
