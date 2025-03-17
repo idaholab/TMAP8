@@ -1,10 +1,10 @@
 # val-2f
 
-# Modelling neutron damage effects on tritium transport in tungsten
+# Modelling self-damaged tungsten effects on deuterium transport
 
 ## Test Description
 
-The case under study involves the use of recrystallized polycrystalline tungsten (PCW) samples, which are subjected to ion irradiation and subsequent analysis using thermal desorption spectroscopy (TDS). The primary objective is to determine how damage influences deuterium trapping and release.
+The case under study involves the use of recrystallized polycrystalline tungsten (PCW) samples, which are subjected to ion irradiation and subsequent analysis using thermal desorption spectroscopy (TDS). The primary objective is to determine how damage influences deuterium trapping and release. This case is drawn from [!cite](dark2024modelling).
 
 The TDS process is simulated using TMAP8 in a 1D tungsten sample with a thickness of 0.8 mm. The TDS simulation consisted of three phases: implantation, resting, and desorption.
 
@@ -77,7 +77,7 @@ All the model parameters are listed in [val-2f_set_up_values]:
        image_name=val-2f_comparison.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2f_comparison
-       caption=Comparison of TMAP8 calculation with the experimental data on the deuterium flux (atoms/m$^2$/s).
+       caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s). The experimental data are provided by T. Schwarz-Selinger and are available at https://zenodo.org/records/11085134.
 
 ## Input files
 
