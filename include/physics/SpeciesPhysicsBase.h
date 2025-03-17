@@ -226,7 +226,7 @@ SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
     if (component_value_valid && physics_storage[0] != comp.getParam<T>(comp_param_name))
       paramError(param_name,
                  "'" + param_name + "' in component '" + comp_name + "' :\n" +
-                     Moose::stringify(getParam<T>(comp_param_name)) + "\n differs from '" +
+                     Moose::stringify(comp.getParam<T>(comp_param_name)) + "\n differs from '" +
                      param_name + "' in " + type() + ":\n" + Moose::stringify(physics_storage[0]));
     // Duplicate for simplicity
     if (comp_index > 0)
@@ -439,6 +439,8 @@ SpeciesPhysicsBase::checkSizeComponentSpeciesIndexedVectorOfVector(
     paramError(param_name,
                "The Physics does not have any values set for this parameter. It should be provided "
                "on each component, or specified once on the Physics and shared by all components");
+  mooseAssert(_components.size() != 0,
+              "This routine is being used without components defined for the Physics");
 
   if (double_indexed.size() != _components.size())
   {
