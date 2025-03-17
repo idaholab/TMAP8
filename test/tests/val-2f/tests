@@ -28,10 +28,7 @@
                 charge_time='${units 10 h -> s}'
                 cooldown_duration='${units 1 h -> s}'
                 dt_max_large='${units 500 s}'
-                dt_max_small='${units 200 s}'
-                dt_start_charging='${units 300 s}'
-                dt_start_cooldown='${units 100 s}'
-                dt_start_desorption='${units 10 s}'"
+                dt_max_small='${units 200 s}'"
     exodiff = val-2f_out.e
     requirement = 'The system shall be able to model neutron damage effects on tritium transport in tungsten with a short runtime suitable for regular regression testing.'
   []

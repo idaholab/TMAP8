@@ -27,9 +27,9 @@ flux = '${units ${fparse fluence / charge_time} at/m^2/s -> at/mum^2/s}'
 # Numerical parameters
 dt_max_large = '${units 100 s}'
 dt_max_small = '${units 10 s}'
-dt_start_charging = '${units 1 s}'
-dt_start_cooldown = '${units 10 s}'
-dt_start_desorption = '${units 1 s}'
+# dt_start_charging = '${units 1 s}'
+# dt_start_cooldown = '${units 10 s}'
+# dt_start_desorption = '${units 1 s}'
 
 [Mesh]
   [cartesian_mesh]
@@ -160,12 +160,14 @@ dt_start_desorption = '${units 1 s}'
     type = ElementAverageValue
     variable = deuterium_concentration_W
     execute_on = 'initial timestep_end'
+    outputs = none
   []
   [flux_surface_left]
     type = SideDiffusiveFluxIntegral
     variable = deuterium_concentration_W
     diffusivity = 'diffusivity_W_nonAD'
     boundary = 'left'
+    outputs = none
   []
   [scaled_flux_surface_left]
     type = ScalePostprocessor
@@ -182,9 +184,11 @@ dt_start_desorption = '${units 1 s}'
   [diffusion_W]
     type = ElementAverageValue
     variable = diffusivity_W
+    outputs = none
   []
   [dt]
     type = TimestepSize
+    outputs = none
   []
   [max_time_step_size_pp]
     type = FunctionValuePostprocessor
@@ -205,23 +209,23 @@ dt_start_desorption = '${units 1 s}'
   type = Transient
   scheme = bdf2
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type'
-  petsc_options_value = 'lu'
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-12
+  petsc_options_iname = '-pc_type -snes_type'
+  petsc_options_value = 'lu vinewtonrsls'
   end_time = ${endtime}
+  line_search = 'none'
   automatic_scaling = true
-  compute_scaling_once = false
-  nl_max_its = 7
+  nl_rel_tol = 1e-10
+  nl_abs_tol = 1e-12
+  nl_max_its = 34
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = ${dt_start_charging}
-    optimal_iterations = 5
+    dt = 1.0
+    iteration_window = 5
+    optimal_iterations = 26
     growth_factor = 1.1
-    cutback_factor_at_failure = .9
+    cutback_factor = 0.9
+    cutback_factor_at_failure = 0.9
     timestep_limiting_postprocessor = max_time_step_size_pp
-    time_t = ' 0                    ${charge_time}        ${fparse charge_time + cooldown_duration}'
-    time_dt = '${dt_start_charging} ${dt_start_cooldown}  ${dt_start_desorption}'
   []
 []
 
