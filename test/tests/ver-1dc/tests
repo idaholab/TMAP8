@@ -43,4 +43,12 @@
     # skip test if test is being run out-of-tree. Issue Ref: idaholab/moose#25279
     installation_type = in_tree
   []
+
+  [ver-1dc_limited-components]
+    type = Exodiff
+    input = ver-1dc-components.i
+    exodiff = ver-1dc-components_limited_test_exodus.e
+    cli_args = "nx_num=20 Executioner/num_steps=300 Outputs/file_base=ver-1dc-components_limited_test_exodus"
+    requirement = 'The system shall be able to model a breakthrough problem of multiple traps using the Physics and Components shorthand syntax.'
+  []
 []
