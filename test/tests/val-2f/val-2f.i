@@ -15,14 +15,14 @@ desorption_duration = '${fparse (temperature_desorption_max-temperature_desorpti
 endtime = '${fparse charge_time + cooldown_duration + desorption_duration}'
 
 # Materials properties
-diffusion_W_preexponential = '${units 1.6e-7 m^2/s}'
+diffusion_W_preexponential = '${units 1.6e-7 m^2/s -> mum^2/s}'
 diffusion_W_energy = '${units 0.28 eV -> J}'
 
 # Source term parameters
-sigma = '${units 0.5e-9 m}'
-R_p = '${units 0.7e-9 m}'
-fluence = '${units 1.5e25 atoms/m^2}'
-flux = '${units ${fparse fluence / charge_time} atoms/m^2/s}'
+sigma = '${units 0.5e-9 m -> mum}'
+R_p = '${units 0.7e-9 m -> mum}'
+fluence = '${units 1.5e25 at/m^2 -> at/mum^2}'
+flux = '${units ${fparse fluence / charge_time} at/m^2/s -> at/mum^2/s}'
 
 # Numerical parameters
 dt_max_large = '${units 100 s}'
@@ -31,16 +31,21 @@ dt_start_charging = '${units 1 s}'
 dt_start_cooldown = '${units 10 s}'
 dt_start_desorption = '${units 1 s}'
 
-# Geometry and mesh
-length_W = '${units 0.8 mm}'
-num_nodes_W = 40
-
 [Mesh]
-  [generated]
-    type = GeneratedMeshGenerator
+  [cartesian_mesh]
+    type = CartesianMeshGenerator
     dim = 1
-    nx = ${num_nodes_W}
-    xmax = ${length_W}
+    dx = '${units 1e-6 m -> mum}
+          ${units 5e-6 m -> mum}
+          ${units 25e-6 m -> mum}
+          ${units 5e-6 m -> mum}
+          ${units 1e-6 m -> mum}'
+    ix = '${fparse 100}
+          ${fparse 40}
+          ${fparse 8}
+          ${fparse 40}
+          ${fparse 100}'
+    subdomain_id = '0 0 0 0 0'
   []
 []
 
@@ -156,17 +161,18 @@ num_nodes_W = 40
     variable = deuterium_concentration_W
     execute_on = 'initial timestep_end'
   []
-  [avg_flux_left]
+  [flux_surface_left]
     type = SideDiffusiveFluxIntegral
     variable = deuterium_concentration_W
     diffusivity = 'diffusivity_W_nonAD'
     boundary = 'left'
   []
-  [avg_flux_right]
-    type = SideDiffusiveFluxIntegral
-    variable = deuterium_concentration_W
-    diffusivity = 'diffusivity_W_nonAD'
-    boundary = 'right'
+  [scaled_flux_surface_left]
+    type = ScalePostprocessor
+    scaling_factor = '${units 1 m^2 -> mum^2}'
+    value = flux_surface_left
+    execute_on = 'initial nonlinear linear timestep_end'
+    outputs = 'console csv exodus'
   []
   [temperature]
     type = ElementAverageValue
