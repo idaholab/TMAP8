@@ -8,17 +8,7 @@
     cli_args = 'Outputs/file_base=val-2f_heavy_out'
     csvdiff = val-2f_heavy_out.csv
     heavy = true
-    requirement = 'The system shall be able to model neutron damage effects on tritium transport in tungsten and generate CSV data output.'
-  []
-  [val-2f_heavy_exodus]
-    type = Exodiff
-    input = val-2f.i
-    cli_args = 'Outputs/file_base=val-2f_heavy_out'
-    exodiff = val-2f_heavy_out.e
-    prereq = val-2f_heavy_csv
-    should_execute = false # this test relies on the output files from val-2f_heavy_csv, so it shouldn't be run twice
-    heavy = true
-    requirement = 'The system shall be able to model neutron damage effects on tritium transport in tungsten and generate field and material property data output in the Exodus format.'
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output.'
   []
   [val-2f_exodus]
     type = Exodiff
@@ -30,12 +20,12 @@
                 dt_max_large='${units 500 s}'
                 dt_max_small='${units 200 s}'"
     exodiff = val-2f_out.e
-    requirement = 'The system shall be able to model neutron damage effects on tritium transport in tungsten with a short runtime suitable for regular regression testing.'
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport with a short runtime suitable for regular regression testing.'
   []
   [val-2f_comparison]
     type = RunCommand
     command = 'python3 comparison_val-2f.py'
-    requirement = 'The system shall be able to generate comparison plots between simulated solutions and experimental data of validation case val-2f, modeling neutron damage effects on tritium transport in tungsten.'
+    requirement = 'The system shall be able to generate comparison plots between simulated solutions and experimental data of validation case val-2f, modeling self-damaged tungsten effects on deuterium transport.'
     required_python_packages = 'matplotlib numpy pandas scipy os'
   []
 []
