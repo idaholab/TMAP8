@@ -262,8 +262,9 @@ SpeciesTrappingPhysics::addInitialConditions()
   InputParameters params = getFactory().getValidParams(ic_type);
 
   // Check component-indexed parameters
-  checkSizeComponentSpeciesIndexedVectorOfVector(
-      _initial_conditions, "species_initial_concentrations", true);
+  if (_components.size())
+    checkSizeComponentSpeciesIndexedVectorOfVector(
+        _initial_conditions, "species_initial_concentrations", true);
 
   for (const auto c_i : index_range(_components))
   {
