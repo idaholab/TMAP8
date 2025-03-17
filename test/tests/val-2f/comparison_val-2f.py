@@ -53,7 +53,7 @@ else:                                  # if in test folder
 tmap_solution = pd.read_csv(csv_folder)
 tmap_time = tmap_solution['time'] # s
 tmap_temperature = tmap_solution['temperature'] # K
-tmap_flux = (tmap_solution['avg_flux_left']+tmap_solution['avg_flux_right']) # atoms/m^2/s
+tmap_flux = -(2*tmap_solution['scaled_flux_surface_left']) # atoms/m^2/s
 
 # select only the simulation data for desorption
 tmap_time_desorption = []
@@ -80,6 +80,12 @@ tds_data = np.genfromtxt(csv_folder, delimiter=",")
 experiment_temperature = tds_data[:, 0]
 area = 12e-03 * 15e-03
 experiment_flux = tds_data[:, 1] / area
+
+assert np.all(np.isfinite(tmap_temperature_desorption)), "tmap_temperature_desorption contains NaN or Inf"
+assert np.all(np.isfinite(tmap_flux_desorption)), "tmap_flux_desorption contains NaN or Inf"
+assert np.all(np.isfinite(experiment_temperature)), "experiment_temperature contains NaN or Inf"
+assert np.all(np.isfinite(experiment_flux)), "experiment_flux contains NaN or Inf"
+
 
 #===============================================================================
 # Plot temperature and pressure history
