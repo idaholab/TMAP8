@@ -77,7 +77,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
             species = 'C_trapped'
             mobile = 'C_mobile'
             block = '4'
-            # species_initial_concentrations = ${units 1.0e-15 m^-3}
+            species_initial_concentrations = ${units 1.0e-15 m^-3}
             separate_variables_per_component = false
 
             temperature = temperature
@@ -93,7 +93,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
             species = 'C_trapped'
             mobile = 'C_mobile'
             block = '3'
-            # species_initial_concentrations = ${units 1.0e-15 m^-3}
+            species_initial_concentrations = ${units 1.0e-15 m^-3}
             separate_variables_per_component = false
             temperature = temperature
 
@@ -109,7 +109,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
             species = 'C_trapped'
             mobile = 'C_mobile'
             block = '2'
-            # species_initial_concentrations = ${units 1.0e-15 m^-3}
+            species_initial_concentrations = ${units 1.0e-15 m^-3}
             separate_variables_per_component = false
             temperature = temperature
 
