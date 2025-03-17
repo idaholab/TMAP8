@@ -5,7 +5,7 @@
 #   & C Day & A Loarte & L R Baylor & P Humrickhouse & T F Fuerst & S Cho
 #   Nucl. Fusion 61 (2021) https://doi.org/10.1088/1741-4326/abbf35
 
-# The mesh is completely ignored, but TMAP/MOOSE will complain without it. If high-fidelity
+# Since this is a 0D simulation, the mesh is only a single point. If high-fidelity
 # models of specific components are required, the scalar variables can be coupled to
 # "Field" variables which can vary spatially across the mesh, or could be co-ordinated
 # with sub-apps.

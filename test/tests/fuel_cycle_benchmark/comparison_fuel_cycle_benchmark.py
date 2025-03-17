@@ -41,16 +41,16 @@ def read_csv_from_TMAP8(file_name, parameter_names):
 
 # ================================ parameters ================================ #
 # reserve inventory
-time_unit = 3600 * 24 # time unit - days
-two_year = 3600 * 24 * 365 * 2 # double time
-twenty_days = 3600 * 24 * 20 # double time
-tritium_burn_rate = 8.99e-7 # kg/s
-TBE = 0.02
-q = 0.25
-t_res = 24 * 3600 # s
+time_unit = 3600 * 24 # time unit in one days (s)
+two_year = 3600 * 24 * 365 * 2 # double time (s)
+twenty_days = 3600 * 24 * 20 # double time (s)
+tritium_burn_rate = 8.99e-7 # Tritium burning rate in the plasma (kg/s)
+TBE = 0.02 # tritium burn efficiency (-)
+q = 0.25 # fraction of the fuel cycle failing (-)
+t_res = 24 * 3600 # reserve time (s)
 initial_inventory = 1.14 # kg
-AF = 0.7
-reserve_inventory = tritium_burn_rate / TBE * q * t_res * AF
+AF = 0.7 # availability factor (-)
+reserve_inventory = tritium_burn_rate / TBE * q * t_res * AF # necessary inventory reserved for off time
 print(f"Required reserve inventory = {reserve_inventory} kg")
 
 # =========================== TMAP8 data extraction ========================== #
