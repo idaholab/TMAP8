@@ -1,8 +1,12 @@
-# Fuel Cycle Benchmarking
+# Fuel Cycle Benchmarking from [!cite](meschini2023modeling)
 
 ## General Case Description
 
-This benchmarking case is taken from [!cite](meschini2023modeling) to simulate a tritium fuel cycle model using resident time method. The model uses a simplified approach by assigning residence times to simulate tritium flow through each system in a fusion power plant, avoiding complex and unfinished technical details. This approach helps understand the challenges and potential solutions for optimizing tritium inventory management and accelerating fusion energy development.
+In this case, TMAP8 reproduces the fuel cycle model from [!cite](meschini2023modeling), which consitutes a benchmark
+The model uses a simplified approach by assigning residence times to simulate tritium flow through each system in a fusion power plant, avoiding the complex, high-fidelity description of the fuel cycle. This approach helps minimize computational cost and understand the challenges and potential solutions for optimizing tritium inventory management and accelerating fusion energy development.
+To increase the fidelity of the simulation, TMAP8 enables performing component level simulation in parallel to provide model parameters in the fuel cycle using the multi-app system. 
+
+This case represents an update from the [previous fuel cycle model](add_link_to_other_fuel_cycle_documentation), which reproduced the model from [!cite](Abdou2021). 
 
 ## Model Description
 
@@ -146,7 +150,7 @@ We use the ScalarKernels in MOOSE to calculate the ODEs from 11 systems. All the
 
 ## Results
 
-The model is validated by comparing TMAP8 simulation results with MatLab calculations from [!cite](meschini2023modeling) at first 20 days. [fuel_cycle_comparison] shows excellent agreement in the temporal evolution of tritium inventory across key systems, including breeding blanket, tritium extraction, vacuum pump, and storage systems. The close match validates our implementation using MOOSE's ScalarKernel system to solve the coupled ODEs that describe tritium transfer between systems.
+The model is benchmarked by comparing TMAP8 simulation results with MatLab calculations from [!cite](meschini2023modeling) during the first 20 days. [fuel_cycle_comparison] shows excellent agreement in the temporal evolution of tritium inventory across key systems, including breeding blanket, tritium extraction, vacuum pump, and storage systems. The close match properly benchmarks our implementation in TMAP8 using MOOSE's ScalarKernel system to solve the coupled ODEs describing tritium transfer between systems.
 
 !media comparison_fuel_cycle_benchmark.py
        image_name=fuel_cycle_comparison.png

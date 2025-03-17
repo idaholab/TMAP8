@@ -9,9 +9,10 @@ leverage prior work.
 Because TMAP8 is built on MOOSE, it brings MOOSE's capacity to solve ordinary differential
 equations using [ScalarKernels](syntax/ScalarKernels/index.md). These can be quite useful to
 model parts of the system at high levels of abstraction while working with detailed
-models of specific components. As an example, we re-create a fuel cycle model using the
-equations in [!cite](Abdou2021) to provide a high-level abstraction of a fuel cycle in a potential
-fusion power plant. We also create a [fuel cycle model](verification_and_validation/fuel_cycle_benchmarking.md), considering new technologies from [!cite](meschini2023modeling), as benchmark.
+models of specific components. 
+As examples, we propose two fuel cycle models. 
+[The first model](examples/fuel_cycle_Abdou/index.md) re-creates the fuel cycle model described in [!cite](Abdou2021) as a high-level abstraction of a fuel cycle in a potential fusion power plant. 
+[The second model](examples/fuel_cycle_Meschini/index.md) re-creates the fuel cycle model described in [!cite](meschini2023modeling), which models the tritium fuel cycle for ARC-and STEP-class DT fusion power plants.
 
 !content location=fuel_cycle
 

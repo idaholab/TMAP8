@@ -63,27 +63,17 @@ simulation_results[parameter_names.index('time')] = simulation_results[parameter
 inflection_y = np.min(simulation_results[parameter_names.index('T_10_storage')])
 inflection_x = simulation_results[parameter_names.index('time')][np.argmin(simulation_results[parameter_names.index('T_10_storage')])]
 print(f"TMAP8_base: Inflection time = {round(inflection_x,5)} days, and inventory = {round(inflection_y,5)} kg")
-# end inventory
-# end_inventory = interpolation_on_expected_input(simulation_results[parameter_names.index('time')],
-#                                                 simulation_results[parameter_names.index('T_10_storage')],
-#                                                 ten_days / time_unit)
-# print(f"TMAP8_base: End inventory = {round(end_inventory,5)} ({round(end_inventory / initial_inventory, 3)} I_startup)")
 
-# ======================== Experiment data extraction ======================== #
+# ======================== Benchmark data extraction ======================== #
 file_name = "inventory_paper_20days.csv"
-parameter_names_experiment = ['time [s]','blanket inventory [kg]','TES inventory [kg]','ISS inventory [kg]','storage inventory [kg]']
-experiment_results = read_csv_from_TMAP8(file_name, parameter_names_experiment) # read csv file
-experiment_results[parameter_names_experiment.index('time [s]')] = experiment_results[parameter_names_experiment.index('time [s]')] / time_unit # update time unit
+parameter_names_benchmark = ['time [s]','blanket inventory [kg]','TES inventory [kg]','ISS inventory [kg]','storage inventory [kg]']
+benchmark_results = read_csv_from_TMAP8(file_name, parameter_names_benchmark) # read csv file
+benchmark_results[parameter_names_benchmark.index('time [s]')] = benchmark_results[parameter_names_benchmark.index('time [s]')] / time_unit # update time unit
 
 # inflection point
-inflection_y = np.min(experiment_results[parameter_names_experiment.index('storage inventory [kg]')])
-inflection_x = experiment_results[parameter_names_experiment.index('time [s]')][np.argmin(experiment_results[parameter_names_experiment.index('storage inventory [kg]')])]
-print(f"experiment: Inflection time = {round(inflection_x,5)} days, and inventory = {round(inflection_y,5)} kg")
-# end inventory
-# end_inventory = interpolation_on_expected_input(experiment_results[parameter_names_experiment.index('time [s]')],
-#                                                 experiment_results[parameter_names_experiment.index('storage inventory [kg]')],
-#                                                 ten_days / time_unit)
-# print(f"experiment: End inventory = {round(end_inventory,5)} ({round(end_inventory / initial_inventory, 3)} I_startup)")
+inflection_y = np.min(benchmark_results[parameter_names_benchmark.index('storage inventory [kg]')])
+inflection_x = benchmark_results[parameter_names_benchmark.index('time [s]')][np.argmin(benchmark_results[parameter_names_benchmark.index('storage inventory [kg]')])]
+print(f"benchmark: Inflection time = {round(inflection_x,5)} days, and inventory = {round(inflection_y,5)} kg")
 
 figure_base = 'fuel_cycle_comparison'
 # =================================== Plot =================================== #
@@ -94,10 +84,10 @@ ax = fig.add_subplot(gs[0])
 for i in range(len(parameter_names)-1):
     if i==0:
         ax.plot(simulation_results[parameter_names.index('time')], simulation_results[i+1], linestyle='-', label=r"TMAP8", c='tab:grey')
-        ax.plot(experiment_results[parameter_names_experiment.index('time [s]')], experiment_results[i+1], '--', label=r"MatLab", c='tab:blue')
+        ax.plot(benchmark_results[parameter_names_benchmark.index('time [s]')], benchmark_results[i+1], '--', label=r"MatLab", c='tab:blue')
     else:
         ax.plot(simulation_results[parameter_names.index('time')], simulation_results[i+1], linestyle='-', c='tab:grey')
-        ax.plot(experiment_results[parameter_names_experiment.index('time [s]')], experiment_results[i+1], '--', c='tab:blue')
+        ax.plot(benchmark_results[parameter_names_benchmark.index('time [s]')], benchmark_results[i+1], '--', c='tab:blue')
 ax.text(10, 5.5e-3, 'BZ',fontweight='bold')
 ax.text(10, 1e-1, 'TES',fontweight='bold')
 ax.text(10, 2.05e-1, 'ISS',fontweight='bold')

@@ -4,7 +4,7 @@
 #   fusion power plants." S Meschini & S E Ferry & R Delaporte-Mathurin
 #   & D G Whyte Nucl. Fusion 63 (2023) https://doi.org/10.1088/1741-4326/acf3fc
 
-# The mesh is completely ignored, but TMAP/MOOSE will complain without it. If high-fidelity
+# Since this is a 0D simulation, the mesh is only a single point. If high-fidelity
 # models of specific components are required, the scalar variables can be coupled to
 # "Field" variables which can vary spatially across the mesh, or could be co-ordinated
 # with sub-apps.
@@ -503,11 +503,6 @@ tritium_burn_rate_value = 8.99e-7 # -
     type = FunctionDT
     function = dt_function
   []
-  # [TimeStepper]
-  #   type = CSVTimeSequenceStepper
-  #   file_name = 'gold/inventory_paper_20days.csv'
-  #   column_name = 'time [s]'
-  # []
   solve_type = 'PJFNK'
   nl_rel_tol = 1e-10
   nl_abs_tol = 1e-14
