@@ -2,7 +2,7 @@
 
 ## General Case Description
 
-In this case, TMAP8 reproduces the fuel cycle model from [!cite](meschini2023modeling), which consitutes a benchmark
+In this case, TMAP8 reproduces the fuel cycle model from [!cite](meschini2023modeling), which constitutes a benchmark.
 The model uses a simplified approach by assigning residence times to simulate tritium flow through each system in a fusion power plant, avoiding the complex, high-fidelity description of the fuel cycle. This approach helps minimize computational cost and understand the challenges and potential solutions for optimizing tritium inventory management and accelerating fusion energy development.
 To increase the fidelity of the simulation, TMAP8 enables performing component level simulation in parallel to provide model parameters in the fuel cycle using the multi-app system.
 
@@ -54,7 +54,7 @@ The label and corresponding equation for each systems are shown in [tritium_syst
 | Tritium Permeation Membrane            | 11 | `T_11_membrane` | [eqn:t11] |
 
 !alert note title=The fuel cycle of Tritium in Fueling System is ignored
-Fueling system only injects fresh fuel in the vacuum chamber and is not modeled in the fuel cycle to simplify the model. Instead, an outflux equal to the tritium fueling rate is added to the equation describing the storage and management system.
+The fueling system only injects fresh fuel in the vacuum chamber and is not modeled in the fuel cycle to simplify the model. Instead, an outflux equal to the tritium fueling rate is added to the equation describing the storage and management system.
 
 \begin{equation}
 \label{eqn:t1}
@@ -140,7 +140,7 @@ We use the ScalarKernels in MOOSE to calculate the ODEs from 11 systems. All the
 | $\dot{N}_{T,burn}$ | Tritium burn rate           | 8.99$\times 10^{-7}$                                        | -                     |
 | $\lambda$ | Tritium decay rate                   | 1.73$\times 10^{-9}$                                        | s$^{-1}$              |
 | $t$       | time                                 | -                                                           | s                     |
-| $\tau_i$  | Tritium residence time in the $i$th component | 4500 in $\tau_1$, 86400 in $\tau_2$, 1000 in $\tau_3$, $\tau_4$, $\tau_5$, 3600 in $\tau_6$, 600 in $\tau_7$, 585 in $\tau_8$, 22815 in $\tau_9$, 100 in $\tau_11$ | s                     |
+| $\tau_i$  | Tritium residence time in the $i$th component |  $\tau_1=4500$, $\tau_2=86400$, $\tau_3=\tau_4=\tau_5=1000$, $\tau_6=3600$, $\tau_7=600$, $\tau_8=585$, $\tau_9=22815$, $\tau_11=100$ | s                     |
 
 ## Results
 
@@ -152,8 +152,8 @@ The model is benchmarked by comparing TMAP8 simulation results with MatLab calcu
        id=fuel_cycle_comparison
        caption=Comparison of TMAP8 calculation with the data of fuel cycle model from [!cite](meschini2023modeling).
 
-!alert note title=The comparison only considers first 20 days.
-The data file from [!cite](meschini2023modeling) for a three-year simulation has a large storage size due to the short time intervals used. In addition, the trend of tritium curves in these critical systems do not show significant variance after 20 days. To reduce storage costs, we only compare the TMAP8 simulation results with MatLab calculations from [!cite](meschini2023modeling) for the first 20 days.
+!alert note title=This comparison only considers the first 20 days.
+The data file from [!cite](meschini2023modeling) for a three-year simulation has a large storage size due to the short time intervals used. In addition, the trend of tritium curves in these critical systems do not show significant variance after 20 days. To reduce storage costs, we only compare the TMAP8 simulation results with MatLab calculations from [!cite](meschini2023modeling) for the first 20 days, even if the TMAP8 simulation is run for a longer period of time.
 
 ## Input files
 
@@ -162,19 +162,19 @@ The input file for this case can be found at [/fuel_cycle_benchmark/fuel_cycle.i
 
 !listing test/tests/fuel_cycle_benchmark/fuel_cycle.i link=false block=Variables
 
-In [`ScalarKernels`](/syntax/ScalarKernels) block, all the ODEs from 11 systems in [tritium_systems] are built using [`ODETimeDerivative`](/syntax/ScalarKernels/ODETimeDerivative) and [`ParsedODEKernel`](/syntax/ScalarKernels/ParsedODEKernel) objects.
+In the [`ScalarKernels`](/syntax/ScalarKernels) block, the ODEs for the 11 systems in [tritium_systems] are built using [`ODETimeDerivative`](/syntax/ScalarKernels/ODETimeDerivative) and [`ParsedODEKernel`](/syntax/ScalarKernels/ParsedODEKernel) objects.
 
 !listing test/tests/fuel_cycle_benchmark/fuel_cycle.i link=false block=ScalarKernels
 
-In [`Functions`](/syntax/Functions) block, we create functions to simulate the period influenced by the availability factor and ensures the time interval is shorter than this period. However, the input file used for testing considers an averaged tritium breeding ratio instead of a period to increase the time interval and reduce computational costs. During testing, the simulation uses the period to represent the availability factor before `accuracy_time` and switches to using the averaged value after `accuracy_time`. More information about the changes can be found in the test specification file at [/fuel_cycle_benchmark/tests].
+In the [`Functions`](/syntax/Functions) block, we create functions to simulate the period influenced by the availability factor and ensures the time interval is shorter than this period. However, the input file used for testing considers an averaged tritium breeding ratio instead of a period to increase the time interval and reduce computational costs. During testing, the simulation uses the period to represent the availability factor before `accuracy_time` and switches to using the averaged value after `accuracy_time`. More information about the changes can be found in the test specification file at [/fuel_cycle_benchmark/tests].
 
 !listing test/tests/fuel_cycle_benchmark/fuel_cycle.i link=false block=Functions
 
-In [`Postprocessors`](/syntax/Postprocessors) block, we initialize all necessary parameters related to the input flow, output flow, radiation, and source term for each system.
+In the [`Postprocessors`](/syntax/Postprocessors) block, we initialize all necessary parameters related to the input flow, output flow, radiation, and source term for each system.
 
 !listing test/tests/fuel_cycle_benchmark/fuel_cycle.i link=false block=Postprocessors
 
-In [`UserObjects`](/syntax/UserObjects) block, we define `Terminator` to stop the simulation once tritium in the storage system or the total tritium is depleted. Then, in [`Executioner`](/syntax/Executioner) block, we use a [`Transient`](/source/executioners/Transient.html) executioner to solve the fuel cycle model.
+In the [`UserObjects`](/syntax/UserObjects) block, we define `Terminator` to stop the simulation once tritium in the storage system or the total tritium is depleted. Then, in the [`Executioner`](/syntax/Executioner) block, we use a [`Transient`](/source/executioners/Transient.html) executioner to solve the fuel cycle model.
 
 !listing test/tests/fuel_cycle_benchmark/fuel_cycle.i link=false block=UserObjects
 
