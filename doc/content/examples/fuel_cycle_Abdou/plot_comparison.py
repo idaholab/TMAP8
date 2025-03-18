@@ -4,10 +4,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 # Read the output of the test, or the gold file if the test has not been run
-if os.path.exists('../../../../test/tests/fuel-cycle/fuel_cycle_out.csv'):
-    model_file = '../../../../test/tests/fuel-cycle/fuel_cycle_out.csv'
-elif os.path.exists('../../../../test/tests/fuel-cycle/gold/fuel_cycle_out.csv'):
-    model_file = '../../../../test/tests/fuel-cycle/fuel_cycle_out.csv'
+if os.path.exists('../../../../test/tests/fuel_cycle_Abdou/fuel_cycle_out.csv'):
+    model_file = '../../../../test/tests/fuel_cycle_Abdou/fuel_cycle_out.csv'
+elif os.path.exists('../../../../test/tests/fuel_cycle_Abdou/gold/fuel_cycle_out.csv'):
+    model_file = '../../../../test/tests/fuel_cycle_Abdou/fuel_cycle_out.csv'
 else:
     raise OSError('No model output in the expected locations. Try running the test first')
 df = pd.read_csv(model_file)

@@ -6,7 +6,7 @@ This demonstration re-creates the tritium fuel cycle model described by [!cite](
 
 First, we instantiate a mesh
 
-!listing test/tests/fuel-cycle/fuel_cycle.i link=false block=Mesh
+!listing test/tests/fuel_cycle_Abdou/fuel_cycle.i link=false block=Mesh
 
 For our purposes this does nothing, but MOOSE requires a defined mesh as a placeholder to run the rest of the simulation.
 
@@ -86,7 +86,7 @@ For an interpretation of these equations and explanations about the notations, r
 We instantiate the variables in the typical [`Variables`](/syntax/Variables) block, making sure to set the [!param](/Variables/family) attribute to `SCALAR` for each variable.
 The default initial condition is zero.
 
-!listing test/tests/fuel-cycle/fuel_cycle.i link=false block=Variables
+!listing test/tests/fuel_cycle_Abdou/fuel_cycle.i link=false block=Variables
 
 Next we initiate the [`ScalarKernels`](/syntax/ScalarKernels) block. We can model the time-dependent terms with [`ODETimeDerivative`](/syntax/ScalarKernels/ODETimeDerivative) objects
 and the other terms can be lumped in [`ParsedODEKernel`](/syntax/ScalarKernels/ParsedODEKernel) objects. We should have one [`ODETimeDerivative`](/syntax/ScalarKernels/ODETimeDerivative)
@@ -94,19 +94,19 @@ and the other terms can be lumped in [`ParsedODEKernel`](/syntax/ScalarKernels/P
 negate the [`ParsedODEKernel`](/syntax/ScalarKernels/ParsedODEKernel) equation from its representation above (move it to the left hand side). We use [`Postprocessors`](/syntax/Postprocessors)
 to re-use the recurring variables.
 
-!listing test/tests/fuel-cycle/fuel_cycle.i link=false block=ScalarKernels
+!listing test/tests/fuel_cycle_Abdou/fuel_cycle.i link=false block=ScalarKernels
 
 Finally, we define the [`Postprocessors`](/syntax/Postprocessors) and set their values to those referenced in [!cite](Abdou2021). Because the [`Postprocessors`](/syntax/Postprocessors) are
 inputs, not outputs, we must be careful to properly set the [!param](/Postprocessors/ConstantPostprocessor/execute_on) parameter. We also gather the values of the different variables in
  separate [`Postprocessors`](/syntax/Postprocessors) and take their sum to obtain the total tritium inventory.
 
-!listing test/tests/fuel-cycle/fuel_cycle.i link=false block=Postprocessors
+!listing test/tests/fuel_cycle_Abdou/fuel_cycle.i link=false block=Postprocessors
 
 
 Finally, we can set the [`Executioner`](/syntax/Executioner) block. In this case, we ask for a simple [`Transient`](/source/executioners/Transient.html) executioner with an exponentially growing
 [`TimeStepper`](/syntax/Executioner/TimeStepper), [`IterationAdaptiveDT`](/source/timesteppers/IterationAdaptiveDT.html).
 
-!listing test/tests/fuel-cycle/fuel_cycle.i link=false block=Executioner
+!listing test/tests/fuel_cycle_Abdou/fuel_cycle.i link=false block=Executioner
 
 With these blocks set, we can now run the simulation and track tritium inventory.
 
@@ -140,11 +140,11 @@ and the darker lines are the results from the model. The agreement is quite good
 !media examples/figures/fuel_cycle_abdou_03.png id=comparison caption=Tritium inventories of specific systems as a function of time. Shaded regions are best estimate of Figure 3 in [!cite](Abdou2021).
 lines are model results.
 
-!listing test/tests/fuel-cycle/fuel_cycle.i
+!listing test/tests/fuel_cycle_Abdou/fuel_cycle.i
 
 ### Python-based Interactive Script
 
-A python-based graphical interactive script is available at [/test/tests/fuel_cycle/fuel_cycle_gui.py](/scripts/fuel_cycle_gui.py) as a demonstration of the various effects of
+A python-based graphical interactive script is available at [/test/tests/fuel_cycle_Abdou/fuel_cycle_gui.py] as a demonstration of the various effects of
 individual parameters. To use it, navigate to the scripts directory and run the script. All of the input parameters for the model can be changed by editing the associated entry,
 then clicking the "Run" button. Once the simulation has run, checkboxes will appear for each system-level tritium inventory. Time units can also be adjusted by selecting the appropriate
 timescale.

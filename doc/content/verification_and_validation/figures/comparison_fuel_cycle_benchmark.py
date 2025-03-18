@@ -1,1 +1,0 @@
-../../../../test/tests/fuel_cycle_benchmark/comparison_fuel_cycle_benchmark.py

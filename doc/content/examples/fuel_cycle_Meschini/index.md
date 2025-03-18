@@ -6,7 +6,7 @@ In this case, TMAP8 reproduces the fuel cycle model from [!cite](meschini2023mod
 The model uses a simplified approach by assigning residence times to simulate tritium flow through each system in a fusion power plant, avoiding the complex, high-fidelity description of the fuel cycle. This approach helps minimize computational cost and understand the challenges and potential solutions for optimizing tritium inventory management and accelerating fusion energy development.
 To increase the fidelity of the simulation, TMAP8 enables performing component level simulation in parallel to provide model parameters in the fuel cycle using the multi-app system.
 
-This case represents an update from the [previous fuel cycle model](examples/fuel_cycle/index.md), which reproduced the model from [!cite](Abdou2021).
+This case represents an update from the [previous fuel cycle model](examples/fuel_cycle_Abdou/index.md), which reproduced the model from [!cite](Abdou2021).
 
 ## Model Description
 
@@ -118,7 +118,7 @@ where $TBE$, the tritium burn efficiency, is defined as:
 TBE = \eta_f f_b
 \end{equation}
 
-Compared to the [previous fuel cycle model](examples/fuel_cycle/index.md), this model from [!cite](meschini2023modeling) includes both direct internal recycling in the Vacuum Pump and Fuel Clean-up systems. This direct internal recycling introduces an additional shortcut between the storage system and exhaust gas, reducing the tritium inventory in the fuel cycle. In addition, Tritium Permeation System can separate tritium from gas mixture extracted from Breeding Blanket, enhancing the tritium recycling process. Except for these component updates, this model uses $TBE$ to represent the production of fueling efficiency and burn fraction as described in [!cite](Abdou2021). The definition of $TBE$ is more suitable for explaining the fueling process in a fusion reaction under equilibrium conditions.
+Compared to the [previous fuel cycle model](examples/fuel_cycle_Abdou/index.md), this model from [!cite](meschini2023modeling) includes both direct internal recycling in the Vacuum Pump and Fuel Clean-up systems. This direct internal recycling introduces an additional shortcut between the storage system and exhaust gas, reducing the tritium inventory in the fuel cycle. In addition, Tritium Permeation System can separate tritium from gas mixture extracted from Breeding Blanket, enhancing the tritium recycling process. Except for these component updates, this model uses $TBE$ to represent the production of fueling efficiency and burn fraction as described in [!cite](Abdou2021). The definition of $TBE$ is more suitable for explaining the fueling process in a fusion reaction under equilibrium conditions.
 
 
 ## Case and Model Parameters
@@ -131,7 +131,7 @@ We use the ScalarKernels in MOOSE to calculate the ODEs from 11 systems. All the
 | TBR       | Tritium breeding ratio               | 1.067                                                       | -                     |
 | TBE       | Tritium burn efficiency in plasma    | 0.025                                                       | -                     |
 | AF        | Availability factor                  | 0.75                                                        | -                     |
-| $\varepsilon_i$ | Fraction of tritium lost from non-radioactive phenomena in the $i$th component | 1$\times 10^{-4}$ except for FW and DIV system            | -               |
+| $\varepsilon_i$ | Fraction of tritium lost from non-radioactive phenomena in the $i$th component | 1$\times 10^{-4}$ except for FW and DIV system, which have a value of 0 | -               |
 | $\eta_f$  | Fueling efficiency                   | 0.25                                                        | -                     |
 | $f_b$     | Tritium burn fraction in the plasma  | 0.10                                                        | -                     |
 | $\eta_2$  | Tritium extraction efficiency        | 0.7                                                         | -                     |
@@ -144,7 +144,13 @@ We use the ScalarKernels in MOOSE to calculate the ODEs from 11 systems. All the
 
 ## Results
 
-The model is benchmarked by comparing TMAP8 simulation results with MatLab calculations from [!cite](meschini2023modeling) during the first 20 days. [fuel_cycle_comparison] shows excellent agreement in the temporal evolution of tritium inventory across key systems, including breeding blanket, tritium extraction, vacuum pump, and storage systems. The close match properly benchmarks our implementation in TMAP8 using MOOSE's [`ScalarKernel`](/syntax/ScalarKernels) system to solve the coupled ODEs describing tritium transfer between systems.
+[fuel_cycle_three_years] shows the temporal evolution during three years of tritium inventory across key systems, including breeding blanket, tritium extraction, vacuum pump, and storage systems. During the simulation, an `accuracy_time` of 100 days is used to reduce computational costs. Before `accuracy_time`, the simulation uses a period to represent availability factor with time interval shorter than the period. After `accuracy_time`, the simulation uses an averaged value instead of a period to increase time interval. In addition, the model is benchmarked by comparing TMAP8 simulation results with MatLab calculations from [!cite](meschini2023modeling) during the first 20 days. [fuel_cycle_comparison] shows excellent agreement in the temporal evolution of tritium inventory across the four key systems. The close match properly benchmarks our implementation in TMAP8 using MOOSE's [`ScalarKernel`](/syntax/ScalarKernels) system to solve the coupled ODEs describing tritium transfer between systems.
+
+!media comparison_fuel_cycle_benchmark.py
+       image_name=fuel_cycle_three_years.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=fuel_cycle_three_years
+       caption=Temporal evolution of fuel cycle model from [!cite](meschini2023modeling) in TMAP8 calculation during three years.
 
 !media comparison_fuel_cycle_benchmark.py
        image_name=fuel_cycle_comparison.png
@@ -158,26 +164,26 @@ The data file from [!cite](meschini2023modeling) for a three-year simulation has
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/fuel_cycle_benchmark/fuel_cycle.i]. Similar to the [previous fuel cycle model](examples/fuel_cycle/index.md), we initialize the tritium mass for all systems at 0 kg, except for the storage system, which is initialized with an `initial_inventory` of 1.14 kg.
+The input file for this case can be found at [/fuel_cycle_Meschini/fuel_cycle.i]. Similar to the [previous fuel cycle model](examples/fuel_cycle_Abdou/index.md), we initialize the tritium mass for all systems at 0 kg, except for the storage system, which is initialized with an `initial_inventory` of 1.14 kg.
 
-!listing test/tests/fuel_cycle_benchmark/fuel_cycle.i link=false block=Variables
+!listing test/tests/fuel_cycle_Meschini/fuel_cycle.i link=false block=Variables
 
 In the [`ScalarKernels`](/syntax/ScalarKernels) block, the ODEs for the 11 systems in [tritium_systems] are built using [`ODETimeDerivative`](/syntax/ScalarKernels/ODETimeDerivative) and [`ParsedODEKernel`](/syntax/ScalarKernels/ParsedODEKernel) objects.
 
-!listing test/tests/fuel_cycle_benchmark/fuel_cycle.i link=false block=ScalarKernels
+!listing test/tests/fuel_cycle_Meschini/fuel_cycle.i link=false block=ScalarKernels
 
-In the [`Functions`](/syntax/Functions) block, we create functions to simulate the period influenced by the availability factor and ensures the time interval is shorter than this period. However, the input file used for testing considers an averaged tritium breeding ratio instead of a period to increase the time interval and reduce computational costs. During testing, the simulation uses the period to represent the availability factor before `accuracy_time` and switches to using the averaged value after `accuracy_time`. More information about the changes can be found in the test specification file at [/fuel_cycle_benchmark/tests].
+In the [`Functions`](/syntax/Functions) block, we create functions to simulate the period influenced by the availability factor and ensures the time interval is shorter than this period. However, the input file used for testing considers an averaged tritium breeding ratio instead of a period to increase the time interval and reduce computational costs. During testing, the simulation uses the period to represent the availability factor before `accuracy_time` and switches to using the averaged value after `accuracy_time`. More information about the changes can be found in the test specification file at [/fuel_cycle_Meschini/tests].
 
-!listing test/tests/fuel_cycle_benchmark/fuel_cycle.i link=false block=Functions
+!listing test/tests/fuel_cycle_Meschini/fuel_cycle.i link=false block=Functions
 
 In the [`Postprocessors`](/syntax/Postprocessors) block, we initialize all necessary parameters related to the input flow, output flow, radiation, and source term for each system.
 
-!listing test/tests/fuel_cycle_benchmark/fuel_cycle.i link=false block=Postprocessors
+!listing test/tests/fuel_cycle_Meschini/fuel_cycle.i link=false block=Postprocessors
 
 In the [`UserObjects`](/syntax/UserObjects) block, we define `Terminator` to stop the simulation once tritium in the storage system or the total tritium is depleted. Then, in the [`Executioner`](/syntax/Executioner) block, we use a [`Transient`](/source/executioners/Transient.html) executioner to solve the fuel cycle model.
 
-!listing test/tests/fuel_cycle_benchmark/fuel_cycle.i link=false block=UserObjects
+!listing test/tests/fuel_cycle_Meschini/fuel_cycle.i link=false block=UserObjects
 
-!listing test/tests/fuel_cycle_benchmark/fuel_cycle.i link=false block=Executioner
+!listing test/tests/fuel_cycle_Meschini/fuel_cycle.i link=false block=Executioner
 
 !bibtex bibliography

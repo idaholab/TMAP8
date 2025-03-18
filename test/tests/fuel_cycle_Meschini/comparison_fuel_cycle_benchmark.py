@@ -29,7 +29,7 @@ def interpolation_on_expected_input(date_x, data_y, expected_input):
 def read_csv_from_TMAP8(file_name, parameter_names):
     # Read simulation data
     if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-        csv_folder = f"../../../../test/tests/fuel_cycle_benchmark/gold/{file_name}"
+        csv_folder = f"../../../../test/tests/fuel_cycle_Meschini/gold/{file_name}"
     else:                                  # if in test folder
         csv_folder = f"./gold/{file_name}"
     simulation_data = pd.read_csv(csv_folder)
@@ -75,6 +75,34 @@ inflection_y = np.min(benchmark_results[parameter_names_benchmark.index('storage
 inflection_x = benchmark_results[parameter_names_benchmark.index('time [s]')][np.argmin(benchmark_results[parameter_names_benchmark.index('storage inventory [kg]')])]
 print(f"benchmark: Inflection time = {round(inflection_x,5)} days, and inventory = {round(inflection_y,5)} kg")
 
+figure_base = 'fuel_cycle_three_years'
+# =================================== Plot =================================== #
+fig = plt.figure(figsize=[6.5, 5.5])
+gs = gridspec.GridSpec(1, 1)
+ax = fig.add_subplot(gs[0])
+
+for i in range(len(parameter_names)-1):
+    if i==0:
+        ax.plot(simulation_results[parameter_names.index('time')], simulation_results[i+1], linestyle='-', label=r"TMAP8", c='tab:grey')
+    else:
+        ax.plot(simulation_results[parameter_names.index('time')], simulation_results[i+1], linestyle='-', c='tab:grey')
+ax.text(10, 5.5e-3, 'BZ',fontweight='bold')
+ax.text(10, 1e-1, 'TES',fontweight='bold')
+ax.text(10, 2.05e-1, 'ISS',fontweight='bold')
+ax.text(10, 9.5e-1, 'storage',fontweight='bold')
+
+ax.set_xlabel(u'time (days)')
+ax.set_ylabel(u"Tritium Inventory (kg)")
+ax.legend(loc="best",ncols=3)
+ax.set_ylim(bottom=0.001,top=1e2)
+ax.set_xlim(left=0.1)
+plt.xscale('log')
+plt.yscale('log')
+plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
+ax.minorticks_on()
+plt.savefig(f'{figure_base}.png', bbox_inches='tight', dpi=300)
+plt.close(fig)
+
 figure_base = 'fuel_cycle_comparison'
 # =================================== Plot =================================== #
 fig = plt.figure(figsize=[6.5, 5.5])
@@ -97,7 +125,7 @@ ax.set_xlabel(u'time (days)')
 ax.set_ylabel(u"Tritium Inventory (kg)")
 ax.legend(loc="best",ncols=3)
 ax.set_ylim(bottom=0.001,top=1e2)
-ax.set_xlim(left=0.1)
+ax.set_xlim(left=0.1,right=20)
 plt.xscale('log')
 plt.yscale('log')
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
