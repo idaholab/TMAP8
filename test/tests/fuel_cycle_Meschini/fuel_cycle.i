@@ -13,7 +13,7 @@ pulse_time = '${units 1800 s}'
 initial_inventory = '${units 1.14 kg}'
 accuracy_time = '${units ${fparse 3600 * 24 * 100} s}' # 100 days
 time_interval_middle = '${units 1e6 s}'
-simulation_time = '${units ${fparse 3600 * 24 * 365 * 3} s}' # 3 years
+simulation_time = '${units ${fparse 3600 * 24 * 365.25 * 3} s}' # 3 years
 
 # Modeling parameters
 resident_time_BB = '${units 4500 s}'

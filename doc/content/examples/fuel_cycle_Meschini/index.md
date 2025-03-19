@@ -118,7 +118,7 @@ where $TBE$, the tritium burn efficiency, is defined as:
 TBE = \eta_f f_b
 \end{equation}
 
-Compared to the [previous fuel cycle model](examples/fuel_cycle_Abdou/index.md), this model from [!cite](meschini2023modeling) includes both direct internal recycling in the Vacuum Pump and Fuel Clean-up systems. This direct internal recycling introduces an additional shortcut between the storage system and exhaust gas, reducing the tritium inventory in the fuel cycle. In addition, Tritium Permeation System can separate tritium from gas mixture extracted from Breeding Blanket, enhancing the tritium recycling process. Except for these component updates, this model uses $TBE$ to represent the production of fueling efficiency and burn fraction as described in [!cite](Abdou2021). The definition of $TBE$ is more suitable for explaining the fueling process in a fusion reaction under equilibrium conditions.
+Compared to the [previous fuel cycle model](examples/fuel_cycle_Abdou/index.md), this model from [!cite](meschini2023modeling) includes both direct internal recycling in the Vacuum Pump and Fuel Clean-up systems. This direct internal recycling introduces an additional shortcut between the storage system and exhaust gas, reducing the tritium inventory in the fuel cycle. In addition, the Tritium Permeation System can separate tritium from gas mixture extracted from the Breeding Blanket, enhancing the tritium recycling process. Apart for these component updates, this model uses $TBE$ to represent the production of fueling efficiency and burn fraction as described in [!cite](Abdou2021). The definition of $TBE$ is more suitable for explaining the fueling process in a fusion reaction under equilibrium conditions.
 
 
 ## Case and Model Parameters
@@ -144,13 +144,13 @@ We use the ScalarKernels in MOOSE to calculate the ODEs from 11 systems. All the
 
 ## Results
 
-[fuel_cycle_three_years] shows the temporal evolution during three years of tritium inventory across key systems, including breeding blanket, tritium extraction, vacuum pump, and storage systems. During the simulation, an `accuracy_time` of 100 days is used to reduce computational costs. Before `accuracy_time`, the simulation uses a period to represent availability factor with time interval shorter than the period. After `accuracy_time`, the simulation uses an averaged value instead of a period to increase time interval. In addition, the model is benchmarked by comparing TMAP8 simulation results with MatLab calculations from [!cite](meschini2023modeling) during the first 20 days. [fuel_cycle_comparison] shows excellent agreement in the temporal evolution of tritium inventory across the four key systems. The close match properly benchmarks our implementation in TMAP8 using MOOSE's [`ScalarKernel`](/syntax/ScalarKernels) system to solve the coupled ODEs describing tritium transfer between systems.
+[fuel_cycle_three_years] shows the temporal evolution during three years of tritium inventory across key systems, including breeding blanket, tritium extraction, vacuum pump, and storage systems. During the simulation, an `accuracy_time` of 100 days is used to reduce computational costs. At times before `accuracy_time`, the simulation uses a period to represent availability factor with time interval shorter than the period. At times after `accuracy_time`, the simulation uses an averaged value instead of a period to increase time interval. In addition, the model is benchmarked by comparing the TMAP8 simulation results with MatLab calculations from [!cite](meschini2023modeling) during the first 20 days. [fuel_cycle_comparison] shows excellent agreement in the temporal evolution of tritium inventory across the four key systems. The close match properly benchmarks our implementation in TMAP8 using MOOSE's [`ScalarKernel`](/syntax/ScalarKernels) system to solve the coupled ODEs describing tritium transfer between systems.
 
 !media comparison_fuel_cycle_benchmark.py
        image_name=fuel_cycle_three_years.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=fuel_cycle_three_years
-       caption=Temporal evolution of fuel cycle model from [!cite](meschini2023modeling) in TMAP8 calculation during three years.
+       caption=Temporal evolution of the fuel cycle model from [!cite](meschini2023modeling) during three years as calculated by TMAP8.
 
 !media comparison_fuel_cycle_benchmark.py
        image_name=fuel_cycle_comparison.png
