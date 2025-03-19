@@ -134,11 +134,14 @@ doubling time of 5 years to three decimal places if `T_11_storage` is given an i
 
 
 
-We compare our results with those from the black lines in Figure 3 from [!cite](Abdou2021) in [!ref](comparison). The lighter lines are estimates of the values shown in the paper,
+We compare our results with those from the black lines in Figure 3 from [!cite](Abdou2021) in [comparison]. The lighter lines are estimates of the values shown in the paper,
 and the darker lines are the results from the model. The agreement is quite good, with only a slight deviation for the tritium extraction system inventory as it transitions to a steady-state value.
 
-!media examples/figures/fuel_cycle_abdou_03.png id=comparison caption=Tritium inventories of specific systems as a function of time. Shaded regions are best estimate of Figure 3 in [!cite](Abdou2021).
-lines are model results.
+!media plot_comparison.py
+       image_name=fuel_cycle_abdou_03.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=comparison
+       caption=Tritium inventories of specific systems as a function of time. Shaded regions are best estimate of Figure 3 in [!cite](Abdou2021).
 
 !listing test/tests/fuel_cycle_Abdou/fuel_cycle.i
 

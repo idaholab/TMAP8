@@ -7,6 +7,12 @@
     csvdiff = 'fuel_cycle_out.csv'
     requirement = 'The system shall reproduce a consistent solution to an ODE system of equations modeling the tritium fuel cycle.'
   []
+  [fuel_cycle_Abdou_comparison]
+    type = RunCommand
+    command = 'python3 plot_comparison.py'
+    requirement = 'The system shall be able to generate comparison plots between the simulated solution from TMAP8 and Abdou et al. (2020), modeling tritium fuel cycle.'
+    required_python_packages = 'matplotlib numpy pandas scipy os'
+  []
   [gui]
     type = RunCommand
     command = 'python3 fuel_cycle_gui.py --test'
