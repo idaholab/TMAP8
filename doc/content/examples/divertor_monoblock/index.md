@@ -288,7 +288,7 @@ their significance, the reader is referred to [!cite](Shimada2024114438).
   style=display:block;margin-left:auto;margin-right:auto;width:40%
 
 !alert warning title=The exodus file in `gold` is a smaller version of the output
-The input file [/divertor_monoblock.i] returns the outputs that were used in [!cite](Shimada2024114438). However, a slightly modified version of this input is run in [/divertor_monoblock/tests] as part of TMAP8's [Software Quality Assurance](sqa/index.md) process: It simulates only one pulse cycle, has a coarser mesh, and outputs the results less regularly to limit the file size. As a result, the exodus file in the test `gold` directory is a smaller version of the output generated when running the full input file.
+The input file [/divertor_monoblock.i] returns the outputs that were used in [!cite](Shimada2024114438). However, a slightly modified version of this input is run in [/divertor_monoblock/tests] as part of TMAP8's [Software Quality Assurance](sqa/index.md exact=True) process: It simulates only one pulse cycle, has a coarser mesh, and outputs the results less regularly to limit the file size. As a result, the exodus file in the test `gold` directory is a smaller version of the output generated when running the full input file.
 
 
 ## Complete input file
