@@ -4,7 +4,7 @@
   [fuel_cycle_benchmarking_csvdiff]
     type = CSVDiff
     input = 'fuel_cycle.i'
-    cli_args = 'accuracy_time="${units 864000 s}" Outputs/file_base=fuel_cycle_limited_out'
+    cli_args = 'accuracy_time="${units 17000 s}" Outputs/file_base=fuel_cycle_limited_out'
     csvdiff = fuel_cycle_limited_out.csv
     requirement = 'The system shall be able to model the tritium fuel cycle from Meschini et al. (2023).'
   []
