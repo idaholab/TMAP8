@@ -44,20 +44,25 @@ scheme = BDF2
     [multi-D]
       variable_name = 'mobile'
       diffusivity_matprop = '1'
+
+      # Does not work for the species trapping
+      preconditioning = 'none'
     []
   []
   [SpeciesTrapping]
     [trapping]
         species = 'trapped_1 trapped_2 trapped_3'
         mobile = 'mobile mobile mobile'
-        species_initial_concentrations = ${units 1.0e-15 m^-3}
+        species_initial_concentrations = '0 0 0' #'${units 1.0e-15 m^-3} ${units 1.0e-15 m^-3} ${units 1.0e-15 m^-3}'
         separate_variables_per_component = false
 
         temperature = '${temperature}'
+
         alpha_t = '${trapping_rate_coefficient} ${trapping_rate_coefficient} ${trapping_rate_coefficient}'
         N = '${fparse N / cl}'
         Ct0 = '${trapping_site_fraction_1} ${trapping_site_fraction_2} ${trapping_site_fraction_3}'
         trap_per_free = 1.0e0
+        different_traps_for_each_species = true
 
         alpha_r = '${release_rate_coefficient} ${release_rate_coefficient} ${release_rate_coefficient}'
         detrapping_energy = '${epsilon_1} ${epsilon_2} ${epsilon_3}'
@@ -81,12 +86,15 @@ scheme = BDF2
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
   line_search = 'none'
+
+  automatic_scaling = true
+  nl_abs_tol = 5e-8
 []
 
 [Postprocessors]
   [outflux]
     type = SideDiffusiveFluxAverage
-    boundary = 'right'
+    boundary = 'structure_right'
     diffusivity = '${diffusivity}'
     variable = mobile
   []

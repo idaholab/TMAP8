@@ -10,6 +10,8 @@ interval_time = 0.01 # s
     [multi-D]
       variable_name = 'mobile'
       diffusivity_matprop = '1'
+
+      preconditioning = 'none'
     []
   []
 []
@@ -57,17 +59,17 @@ interval_time = 0.01 # s
 
 [Executioner]
   type = Transient
+
   end_time = ${simulation_time}
   dt = ${interval_time}
   dtmin = ${interval_time_min}
+
   solve_type = NEWTON
   scheme = BDF2
   nl_abs_tol = 1e-13
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
   automatic_scaling = true
-  verbose = true
-  compute_scaling_once = false
 []
 
 [Outputs]
