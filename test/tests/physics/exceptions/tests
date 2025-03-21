@@ -18,4 +18,63 @@
       expect_err = "Vector at index 0 of 2D vector parameter 'reacting_species' is not the same size as its counterpart from 2D vector parameter 'product_species'"
     []
   []
+  [sorption_wrong_sizes]
+    design = 'SorptionExchangePhysics.md'
+    issues = '#8'
+    requirement = "The system shall return an error if"
+    [species_initial_p]
+      type = RunException
+      input = sorption_exchange.i
+      cli_args = "Physics/SorptionExchange/0d_solub/species_initial_pressures='1 2'"
+      detail = "the number of species does not match the number of species initial pressures,"
+      expect_err = "Parameter 'species' \(size 1\) and 'species_initial_pressures' \(size 2\) must be the same size if set."
+    []
+    [species_equilibrium]
+      type = RunException
+      input = sorption_exchange.i
+      cli_args = "Physics/SorptionExchange/0d_solub/equilibrium_constants='1 2'"
+      detail = "the number of species does not match the number of sorption equilibrium constants."
+      expect_err = "Parameter 'species' \(size 1\) and 'equilibrium_constants' \(size 2\) must be the same size if set"
+    []
+  []
+  [sorption_bad_data]
+    design = 'SorptionExchangePhysics.md'
+    issues = '#8'
+    requirement = "The system shall return an error if"
+    [temperature]
+      type = RunException
+      input = sorption_exchange.i
+      cli_args = "ActionComponents/enc/temperature=-1"
+      detail = "the temperature specified is negative,"
+      expect_err = "Temperature '-1' inferior or equal to 0"
+    []
+    [temperature_var]
+      type = RunException
+      input = sorption_exchange.i
+      cli_args = "ActionComponents/enc/temperature=temp AuxVariables/temp/family=LAGRANGE"
+      detail = "the temperature is specified as a variable which is not currently specified,"
+      expect_err = "temperature: Only real values are supported"
+    []
+    [scaling_factor]
+      type = RunException
+      input = sorption_exchange.i
+      cli_args = "ActionComponents/enc/species_scaling_factors=0"
+      detail = "the species equation scaling factor is negative or null,"
+      expect_err = "Range check failed for parameter ActionComponents/enc/species_scaling_factors"
+    []
+    [initial_pressure]
+      type = RunException
+      input = sorption_exchange.i
+      cli_args = "ActionComponents/enc/species_initial_pressures='-1'"
+      detail = "the species initial pressure is negative,"
+      expect_err = "Initial pressure '-1' inferior to 0"
+    []
+    [eq_constant]
+      type = RunException
+      input = sorption_exchange.i
+      cli_args = "Physics/SorptionExchange/0d_solub/equilibrium_constants='0'"
+      detail = "the sorption equilibrium constant is negative or null,"
+      expect_err = "Equilibrium constant '0' inferior or equal to 0"
+    []
+  []
 []
