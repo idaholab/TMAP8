@@ -37,7 +37,7 @@ Enclosure0D::Enclosure0D(const InputParameters & params)
                          : std::vector<Real>(_species.size(), 1)),
     _ics(getParam<std::vector<Real>>("species_initial_pressures")),
     _species_Ks(getParam<std::vector<MooseFunctorName>>("equilibrium_constants")),
-    _temperature(getParam<Real>("temperature")),
+    _temperature(getParam<MooseFunctorName>("temperature")),
     _volume(getParam<Real>("volume")),
     _connected_structures(getParam<std::vector<ComponentName>>("connected_structures")),
     _connection_boundaries(getParam<std::vector<BoundaryName>>("connection_boundaries")),
