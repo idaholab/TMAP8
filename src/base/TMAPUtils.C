@@ -47,7 +47,7 @@ enclosureCommonParams()
 {
   auto params = internal::commonParams();
 
-  params.addRequiredParam<Real>("temperature", "Enclosure temperature [K]");
+  params.addRequiredParam<MooseFunctorName>("temperature", "Enclosure temperature [K]");
   params.addRequiredParam<Real>("volume", "Volume of enclosure [m^3]");
 
   // Connection with structures

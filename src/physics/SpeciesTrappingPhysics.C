@@ -9,6 +9,7 @@
 #include "SpeciesTrappingPhysics.h"
 #include "ActionComponent.h"
 #include "MooseUtils.h"
+#include "FEProblemBase.h"
 
 // Register the actions for the objects actually used
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "init_physics");
@@ -304,7 +305,7 @@ SpeciesTrappingPhysics::addFEKernels()
   checkSizeComponentSpeciesIndexedVectorOfVector(_alpha_rs, "alpha_r", false);
   checkSizeComponentSpeciesIndexedVectorOfVector(_detrapping_energies, "detrapping_energy", false);
   checkSizeComponentIndexedVector(_component_temperatures, "temperature", false);
-  // TODO: mobile
+  checkSizeComponentSpeciesIndexedVectorOfVector(_mobile_species_names, "mobile", false);
 
   for (const auto c_i : index_range(_components))
   {
@@ -380,11 +381,13 @@ SpeciesTrappingPhysics::addFEKernels()
           std::istringstream ss(_component_temperatures[c_i]);
           Real value;
           ss >> value;
-          params.defaultCoupledValue("temp", value, 0);
+          params.defaultCoupledValue("temperature", value, 0);
           params.set<std::vector<VariableName>>("temperature") = {};
         }
-        else
+        else if (_problem->hasVariable(_component_temperatures[c_i]))
           params.set<std::vector<VariableName>>("temperature") = {_component_temperatures[c_i]};
+        else
+          paramError("temperature", "Should be a constant or the name of a variable");
 
         getProblem().addNodalKernel(kernel_type, prefix() + species_name + "_enc_release", params);
       }

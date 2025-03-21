@@ -120,7 +120,7 @@ SorptionExchangePhysics::addComponent(const ActionComponent & component)
                                            comp.name(),
                                            comp_index,
                                            _component_temperatures,
-                                           std::to_string(comp.temperature()),
+                                           comp.temperature(),
                                            false,
                                            "");
 
