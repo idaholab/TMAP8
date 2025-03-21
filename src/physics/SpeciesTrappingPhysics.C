@@ -55,6 +55,9 @@ SpeciesTrappingPhysics::validParams()
   params.addParam<std::vector<FunctionName>>(
       "Ct0", {}, "The fraction of host sites that can contribute to trapping");
   params.addParam<Real>("trap_per_free", "The number of trapped species per free species");
+  params.addParam<bool>("different_traps_for_each_species",
+                        false,
+                        "Wheter the traps are shared by each species or not");
 
   params.addParam<std::vector<Real>>(
       "alpha_r",
@@ -68,7 +71,8 @@ SpeciesTrappingPhysics::validParams()
       "the same trapping energy will be used on every component");
 
   // Parameter groups
-  params.addParamNamesToGroup("alpha_t N Ct0 trap_per_free", "Trapping");
+  params.addParamNamesToGroup("alpha_t N Ct0 trap_per_free different_traps_for_each_species",
+                              "Trapping");
   params.addParamNamesToGroup("alpha_r temperature detrapping_energy", "Releasing");
 
   return params;
@@ -359,7 +363,7 @@ SpeciesTrappingPhysics::addFEKernels()
         for (const auto & sp_name : _species[c_i])
           if (sp_name != species_name)
             copy_species.push_back(sp_name);
-        if (copy_species.size())
+        if (copy_species.size() && !getParam<bool>("different_traps_for_each_species"))
           params.set<std::vector<VariableName>>("other_trapped_concentration_variables") =
               copy_species;
 
