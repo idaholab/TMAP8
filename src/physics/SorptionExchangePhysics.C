@@ -10,6 +10,7 @@
 #include "MooseUtils.h"
 #include "ActionComponent.h"
 #include "Enclosure0D.h"
+#include "FEProblemBase.h"
 
 // For connecting to multi-D diffusion on other components
 #include "Structure1D.h"
@@ -49,10 +50,12 @@ SorptionExchangePhysics::validParams()
       "parameters specified. If specified, will be used for every component.");
 
   // Units
-  params.addParam<Real>("pressure_unit_scaling", 1, "");
-  params.addParam<Real>(
+  params.addRangeCheckedParam<Real>(
+      "pressure_unit_scaling", 1, "pressure_unit_scaling>0", "The number of pressure unit in a Pa");
+  params.addRangeCheckedParam<Real>(
       "length_unit_scaling",
       1,
+      "length_unit_scaling>0",
       "The number of length units in a meter. This allows the user to select length units "
       "other than meters that may lead to better overall scaling of the system.");
   return params;
@@ -116,7 +119,7 @@ SorptionExchangePhysics::addComponent(const ActionComponent & component)
                                                         comp.equilibriumConstants(),
                                                         false,
                                                         {});
-  processComponentValues<MooseFunctorName>("temperatures",
+  processComponentValues<MooseFunctorName>("temperature",
                                            comp.name(),
                                            comp_index,
                                            _component_temperatures,
@@ -231,7 +234,7 @@ SorptionExchangePhysics::addScalarKernels()
           params.set<NonlinearVariableName>("variable") = species_name;
           // Note the additional minus sign added because the flux is measured outwards
           if (!MooseUtils::parsesToReal(_component_temperatures[c_i]))
-            paramError("temperatures", "Only real values are supported");
+            paramError("temperature", "Only real values are supported");
           params.set<Real>("concentration_to_pressure_conversion_factor") =
               -kb * libMesh::Utility::pow<3>(_length_unit) *
               std::stod(_component_temperatures[c_i]) * _pressure_unit * conv_factor;
@@ -279,7 +282,17 @@ SorptionExchangePhysics::addFEBCs()
           params.set<MooseFunctorName>("Ko") = _species_Ks[c_i][s_j];
           params.set<Real>("Ko_scaling_factor") =
               1 / Utility::pow<3>(_length_unit) / _pressure_unit;
-          params.set<FunctionName>("temperature_function") = _component_temperatures[c_i];
+
+          // use the type that matches what exists on the problem
+          if (_problem->hasFunction(_component_temperatures[c_i]) ||
+              MooseUtils::parsesToReal(_component_temperatures[c_i]))
+            params.set<FunctionName>("temperature_function") = _component_temperatures[c_i];
+          else if (_problem->hasVariable(_component_temperatures[c_i]))
+            params.set<std::vector<VariableName>>("temperature") = {
+                VariableName(_component_temperatures[c_i])};
+          else
+            paramError("temperature", "Temperature should be a function, a constant or a variable");
+
           params.set<std::vector<BoundaryName>>("boundary") = {structure_boundary};
           getProblem().addBoundaryCondition(bc_type, species_name + "_equi_bc", params);
         }
@@ -293,9 +306,10 @@ SorptionExchangePhysics::checkSingleBoundary(const std::vector<BoundaryName> & b
                                              const ComponentName & comp_name) const
 {
   if (boundaries.size() != 1)
-    paramError("components",
-               "Only implemented for a single boundary and component '" + comp_name + "' has " +
-                   std::to_string(boundaries.size()) + " boundaries.");
+    getActionComponent(comp_name).paramError(
+        "connection_boundaries",
+        "Only implemented for a single boundary and component '" + comp_name + "' has " +
+            std::to_string(boundaries.size()) + " connection boundaries.");
 }
 
 const std::vector<ComponentName> &
@@ -409,7 +423,7 @@ SorptionExchangePhysics::checkIntegrity() const
   for (const auto & vec : _initial_conditions)
     for (const auto ic : vec)
       if (ic < 0)
-        mooseError("Initial condition '", ic, "' inferior to 0");
+        mooseError("Initial pressure '", ic, "' inferior to 0");
 
   for (const auto & vec : _species_Ks)
     for (const auto & K : vec)
