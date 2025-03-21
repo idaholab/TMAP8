@@ -161,19 +161,90 @@ SpeciesPhysicsBase::processComponentValues(const std::string & param_name,
   else if constexpr (std::is_same_v<T, MooseFunctorName>)
     component_value_valid = !component_values.empty();
   else
-    mooseError("Not implemented");
+    mooseError("Not implemented for this data type");
 
   // Parameter added by the Physics, just need to check consistency
   if (isParamSetByUser(param_name))
   {
+    T temp_storage;
     if (component_value_valid && physics_storage[0] != component_values)
-      paramError(param_name,
-                 "'" + param_name + "' in component '" + comp_name + "' :\n" +
-                     Moose::stringify(component_values) + "\n differs from '" + param_name +
-                     "' in " + type() + ":\n" + Moose::stringify(physics_storage[0]));
-    // Duplicate for simplicity
+    {
+      // It could be that they are different because they pertain to a subset of the species defined
+      // on the Physics. We should allow that
+      const auto & comp = getActionComponent(comp_name);
+      bool consistent = false;
+      // We can only do this for species-indexed vectors
+      if constexpr (is_vector<T>::value)
+      {
+        if (comp.isParamValid("species") && comp_index > 0)
+        {
+          consistent = true;
+
+          // All the TMAP8 components have a species parameter, so this works for them. For a
+          // general component, it likely won't have this parameter. In that case, we will just
+          // error and users will have to ensure Physics and Component specified values are
+          // consistent.
+          const auto & species_component =
+              comp.getParam<std::vector<NonlinearVariableName>>("species");
+          for (const auto i_comp_sp : index_range(species_component))
+          {
+            const auto & specie = species_component[i_comp_sp];
+            // Find index in Physics species vector
+            bool found_specie = false;
+            for (const auto i_phy : index_range(_species))
+            {
+              // The Physics parameters are at index 0
+              if (specie == _species[0][i_phy])
+              {
+                found_specie = true;
+
+                // Check sizes. We can never check sizes enough
+                if (i_phy >= physics_storage[0].size())
+                  paramError(param_name,
+                             "Index '" + std::to_string(i_phy) + "' for species '" + specie +
+                                 " is beyond parameter size " +
+                                 std::to_string(physics_storage[0].size()));
+                if (i_comp_sp >= component_values.size())
+                  comp.mooseError("For quantity " + param_name + ": Index '" +
+                                  std::to_string(i_comp_sp) + "' for species '" + specie +
+                                  " is beyond parameter size " +
+                                  std::to_string(component_values.size()));
+
+                if (physics_storage[0][i_phy] != component_values[i_comp_sp])
+                  consistent = false;
+
+                // Convert and store the component value
+                const auto & comp_value_conv =
+                    MooseUtils::convert<vector_value_type_t<T>>(component_values[i_comp_sp], true);
+                temp_storage.push_back(comp_value_conv);
+              }
+            }
+            // A component species was not defined in the Physics parameters. We wont support that
+            // for now but we could in the future.
+            if (!found_specie)
+              consistent = false;
+          }
+        }
+      }
+
+      // We cannot allow any difference because the values / parameters are indexed the same way as
+      // the Physics
+      if (temp_storage != physics_storage[0])
+        consistent = false;
+
+      if (!consistent)
+        paramError(param_name,
+                   "'" + param_name + "' in component '" + comp_name + "' :\n" +
+                       Moose::stringify(component_values) + "\n differs from '" + param_name +
+                       "' in " + type() + ":\n" + Moose::stringify(physics_storage[0]));
+    }
+    // Use the Physics parameter
+    else
+      temp_storage = physics_storage[0];
+
+    // Add the component values anyway in case the component values are a subset of the Physics'
     if (comp_index > 0)
-      physics_storage.push_back(physics_storage[0]);
+      physics_storage.push_back(temp_storage);
   }
   // Always add if it's been specified on a component instead
   else if (component_value_valid)
@@ -223,14 +294,96 @@ SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
   // Parameter added by the Physics, just need to check consistency
   if (isParamSetByUser(param_name))
   {
+    T temp_storage;
+
+    // Check that the value is actually valid
+    if (component_value_valid)
+    {
+      const auto & component_values = comp.getParam<T>(comp_param_name);
+      // Create new cases as needed. The parameter is valid but the default does not work here
+      if constexpr (is_vector<T>::value)
+        component_value_valid = component_values.size();
+      else if constexpr (std::is_same_v<T, MooseFunctorName>)
+        component_value_valid = !component_values.empty();
+    }
+
     if (component_value_valid && physics_storage[0] != comp.getParam<T>(comp_param_name))
-      paramError(param_name,
-                 "'" + param_name + "' in component '" + comp_name + "' :\n" +
-                     Moose::stringify(comp.getParam<T>(comp_param_name)) + "\n differs from '" +
-                     param_name + "' in " + type() + ":\n" + Moose::stringify(physics_storage[0]));
-    // Duplicate for simplicity
+    {
+      const auto & component_values = comp.getParam<T>(comp_param_name);
+      // It could be that they are different because they pertain to a subset of the species defined
+      // on the Physics. We should allow that
+      bool consistent = false;
+      // We can only do this for species-indexed vectors
+      if constexpr (is_vector<T>::value)
+      {
+        if (comp.isParamValid("species"))
+        {
+          consistent = true;
+          // All the TMAP8 components have a species parameter, so this works for them. For a
+          // general component, it likely won't have this parameter. In that case, we will just
+          // error and users will have to ensure Physics and Component specified values are
+          // consistent.
+          const auto & species_component =
+              comp.getParam<std::vector<NonlinearVariableName>>("species");
+          for (const auto i_comp_sp : index_range(species_component))
+          {
+            const auto & specie = species_component[i_comp_sp];
+            // Find index in Physics species vector
+            // Note that some species in the component species are not governed by this Physics
+            for (const auto i_phy : index_range(_species[0]))
+            {
+              // The Physics parameters are at index 0
+              if (specie == _species[0][i_phy])
+              {
+                // Check sizes. We can never check sizes enough
+                if (i_phy >= physics_storage[0].size())
+                  paramError(param_name,
+                             "Index '" + std::to_string(i_phy) + "' for species '" + specie +
+                                 " is beyond parameter size " +
+                                 std::to_string(physics_storage[0].size()));
+                if (i_comp_sp >= component_values.size())
+                  comp.paramError(comp_param_name,
+                                  "Index '" + std::to_string(i_comp_sp) + "' for species '" +
+                                      specie + " is beyond parameter size " +
+                                      std::to_string(component_values.size()));
+
+                if (physics_storage[0][i_phy] != component_values[i_comp_sp])
+                  consistent = false;
+
+                // Convert and store the component value
+                const auto & comp_value_conv =
+                    MooseUtils::convert<vector_value_type_t<T>>(component_values[i_comp_sp], true);
+                temp_storage.push_back(comp_value_conv);
+              }
+            }
+          }
+        }
+      }
+
+      // The parameters are indexed the same way as the species. But we can handle:
+      // - less species on the Physics than in the component, but ordered the same way
+      // - different ordering of the species in the Physics and Components, as the parameters are
+      // resorted above We can't handle:
+      // - more species in the Physics, because the Physics would add more equations than needed on
+      // the component And we disallow specifying different parameters in the Physics and the
+      // Components for a given species
+      if (temp_storage != physics_storage[0])
+        consistent = false;
+
+      if (!consistent)
+        paramError(param_name,
+                   "'" + param_name + "' in component '" + comp_name + "' :\n" +
+                       Moose::stringify(comp.getParam<T>(comp_param_name)) + "\n differs from '" +
+                       param_name + "' in " + type() + ":\n" +
+                       Moose::stringify(physics_storage[0]));
+    }
+    // Use the Physics parameter
+    else
+      temp_storage = physics_storage[0];
+
+    // Add the component values
     if (comp_index > 0)
-      physics_storage.push_back(physics_storage[0]);
+      physics_storage.push_back(temp_storage);
   }
   // Always add if it's been specified on a component instead
   else if (component_value_valid)
