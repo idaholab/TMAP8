@@ -33,7 +33,7 @@ public:
   /// Return the equilibrium constants to use for these species
   const std::vector<MooseFunctorName> & equilibriumConstants() const { return _species_Ks; }
   /// Return the temperature of this enclosure
-  Real temperature() const { return _temperature; }
+  const MooseFunctorName & temperature() const { return _temperature; }
   /// Returns the scaled volume of the enclosure
   virtual Real volume() const override { return _volume; }
   /// Returns the scaled outer boundary surface area
@@ -63,7 +63,7 @@ protected:
   /// Equilibrium constants for each species
   std::vector<MooseFunctorName> _species_Ks;
   /// Temperature of the enclosure
-  const Real _temperature;
+  const MooseFunctorName _temperature;
   /// Volume of the enclosure
   const Real _volume;
   /// Connected structures
