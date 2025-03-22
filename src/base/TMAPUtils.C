@@ -21,8 +21,9 @@ commonParams()
   params.addRequiredParam<std::vector<NonlinearVariableName>>(
       "species",
       "The species that are reacting, advecting, and diffusing throughout the simulation domain");
-  params.addParam<std::vector<Real>>(
+  params.addRangeCheckedParam<std::vector<Real>>(
       "species_scaling_factors",
+      "species_scaling_factors>0",
       "Scaling factors to make the (non)linear system better conditioned");
   return params;
 }
@@ -48,7 +49,7 @@ enclosureCommonParams()
   auto params = internal::commonParams();
 
   params.addRequiredParam<MooseFunctorName>("temperature", "Enclosure temperature [K]");
-  params.addRequiredParam<Real>("volume", "Volume of enclosure [m^3]");
+  params.addRequiredRangeCheckedParam<Real>("volume", "volume>0", "Volume of enclosure [m^3]");
 
   // Connection with structures
   params.addRequiredParam<std::vector<ComponentName>>(
@@ -58,8 +59,10 @@ enclosureCommonParams()
       "Surface between the enclosure and the connected "
       "structures. This surface should exist on the "
       "mesh and likely be located on the 'connected_structures'");
-  params.addRequiredParam<std::vector<Real>>("connection_boundaries_area",
-                                             "Contact surface with each structure [m^3]");
+  params.addRequiredRangeCheckedParam<std::vector<Real>>(
+      "connection_boundaries_area",
+      "connection_boundaries_area>=0",
+      "Contact surface with each structure [m^3]");
 
   // Species quantities
   params.addParam<std::vector<Real>>(
