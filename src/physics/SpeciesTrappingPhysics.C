@@ -38,10 +38,6 @@ SpeciesTrappingPhysics::validParams()
                         false,
                         "Whether to create new variables for each trapped species on every "
                         "component, or whether to only create variables.");
-  params.addParam<std::vector<Real>>(
-      "species_initial_concentrations",
-      {},
-      "Initial values for each species. If specified, will be used for every component.");
 
   params.addParam<std::vector<Real>>(
       "alpha_t",
