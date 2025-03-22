@@ -77,4 +77,65 @@
       expect_err = "Equilibrium constant '0' inferior or equal to 0"
     []
   []
+  [trapping_wrong_sizes]
+    design = 'SpeciesTrappingPhysics.md'
+    issues = '#8'
+    requirement = "The system shall return an error if"
+    [repeated_species]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/species='x x'"
+      detail = "a species is repeated twice in the list of species,"
+      expect_err = "Item 'x' specified in vector parameter 'species' is repeated, which is not allowed."
+    []
+    [species_initial_concentration]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/species_initial_concentrations='1 2'"
+      detail = "the number of species does not match the number of species initial concentrations,"
+      expect_err = "Parameter 'species' \(size 1\) and 'species_initial_concentrations' \(size 2\) must be the same size if set."
+    []
+    [scaling_factors]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/species_scaling_factors='1 2'"
+      detail = "the number of species does not match the number of species balance equation scaling factors."
+      expect_err = "Parameter 'species' \(size 1\) and 'species_scaling_factors' \(size 2\) must be the same size if set"
+    []
+    [mobile]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/mobile='a b'"
+      detail = "the number of trapped species does not match the number of mobile species,"
+      expect_err = "Parameter 'species' \(size 1\) and 'mobile' \(size 2\) must be the same size if set"
+    []
+    [alpha_t]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/alpha_t='1 2'"
+      detail = "the number of species does not match the number of trapping coefficients,"
+      expect_err = "Parameter 'species' \(size 1\) and 'alpha_t' \(size 2\) must be the same size if set"
+    []
+    [Ct0]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/Ct0=''"
+      detail = "the number of species does not match the number of trapping Ct0 coefficients,"
+      expect_err = "Parameter 'species' \(size 1\) and 'Ct0' \(size 0\) must be the same size if set"
+    []
+    [alpha_r]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/alpha_r='1 2'"
+      detail = "the number of species does not match the number of release coefficients,"
+      expect_err = "Parameter 'species' \(size 1\) and 'alpha_r' \(size 2\) must be the same size if set"
+    []
+    [detrapping]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/detrapping_energy='1 2'"
+      detail = "the number of species does not match the number of detrapping energies."
+      expect_err = "Parameter 'species' \(size 1\) and 'detrapping_energy' \(size 2\) must be the same size if set"
+    []
+  []
 []
