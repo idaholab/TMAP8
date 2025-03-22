@@ -15,6 +15,7 @@
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "init_physics");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "init_component_physics");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "copy_vars_physics");
+registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "check_integrity");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "check_integrity_early_physics");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_variable");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_ic");
@@ -353,8 +354,11 @@ SpeciesTrappingPhysics::addFEKernels()
           params.defaultCoupledValue("temperature", value, 0);
           params.set<std::vector<VariableName>>("temperature") = {};
         }
-        else
+        else if (_problem->hasVariable(_component_temperatures[c_i]))
           params.set<std::vector<VariableName>>("temperature") = {_component_temperatures[c_i]};
+        else
+          paramError("temperature", "Should be a constant or the name of a variable");
+
         params.set<Real>("alpha_t") = _alpha_ts[c_i][s_j];
         params.set<Real>("N") = _Ns[c_i];
         params.set<FunctionName>("Ct0") = _Ct0s[c_i][s_j];
