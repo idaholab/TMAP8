@@ -50,6 +50,9 @@ Enclosure0D::Enclosure0D(const InputParameters & params)
   if (_ics.size() && (_ics.size() != _species.size()))
     paramError("species_initial_pressures",
                "The number of species partial pressures must match the number of species.");
+  if (_species_Ks.size() && (_species_Ks.size() != _species.size()))
+    paramError("equilibrium_constants",
+               "The number of equilibrium constants must match the number of species.");
 
   // Physics checks
   if (_physics.empty())
@@ -108,6 +111,8 @@ Enclosure0D::connectedStructureBoundary(const ComponentName & conn_structure) co
   for (const auto i : index_range(_connected_structures))
     if (conn_structure == _connected_structures[i])
       return _connection_boundaries[i];
+  // Should be unreachable: Physics should use the list of connected structures when requesting
+  // these boundaries
   mooseError("Connection boundary for connected structure '",
              conn_structure,
              "' was requested, but this structure does not appear to be connected. Connected "
@@ -121,6 +126,8 @@ Enclosure0D::connectedStructureBoundaryArea(const ComponentName & conn_structure
   for (const auto i : index_range(_connected_structures))
     if (conn_structure == _connected_structures[i])
       return _connection_boundaries_area[i];
+  // Should be unreachable: Physics should use the list of connected structures when requesting
+  // these boundary areas
   mooseError("Connection boundary area for connected structure '",
              conn_structure,
              "' was requested, but this structure does not appear to be connected. Connected "
