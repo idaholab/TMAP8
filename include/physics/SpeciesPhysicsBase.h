@@ -25,6 +25,8 @@ public:
   SpeciesPhysicsBase(const InputParameters & parameters);
 
 protected:
+  virtual void checkIntegrity() const override;
+
   /// Which components this Physics is defined on
   std::vector<ComponentName> _components;
   /// The species of interest
