@@ -51,4 +51,22 @@
       expect_err = "Physics 'multi-D' is not a 'SorptionExchangePhysics'. This component has only been implemented for 'SorptionExchangePhysics'."
     []
   []
+  [enclosure_0D_parameter_consistency]
+    requirement = "The system shall return an error if the parameters of the enclosure component and of the sorption exchange Physics are"
+    design = 'Enclosure0D.md SorptionExchangePhysics.md'
+    issues = '#8'
+    [not_matching]
+      type = RunException
+      input = enclosure0D.i
+      cli_args = "ActionComponents/enc/equilibrium_constants=1 Physics/SorptionExchange/0d_solub/equilibrium_constants=2"
+      detail = "both specified and not matching,"
+      expect_err = " differs from 'equilibrium_constants' in SorptionExchangePhysics:"
+    []
+    [missing_in_both]
+      type = RunException
+      input = enclosure0D.i
+      detail = "both not specified but necessary to define the equations."
+      expect_err = "This parameter should be specified, in the Physics '0d_solub' \(applying to all components\) or in component 'enc'"
+    []
+  []
 []
