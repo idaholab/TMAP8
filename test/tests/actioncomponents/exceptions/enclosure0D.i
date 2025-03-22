@@ -1,5 +1,4 @@
 # This input is used to test the error messages of the Enclosure0D
-kb = '${units 1.380649e-23 J/K}' # Boltzmann constant
 R = '${units 8.31446261815324 J/mol/K}' # Gas constant
 
 # Data used in TMAP4/TMAP7 case
@@ -15,8 +14,6 @@ slab_thickness = '${units 3.30e-5 m -> mum}'
   [SorptionExchange]
     [0d_solub]
       species = 'v'
-
-      equilibrium_constants = 'K_sol'
       verbose = true
     []
   []
