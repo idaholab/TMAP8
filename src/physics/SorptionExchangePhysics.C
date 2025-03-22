@@ -45,6 +45,7 @@ SorptionExchangePhysics::validParams()
       "Initial values for each species. If specified, will be used for every component.");
   params.addParam<std::vector<MooseFunctorName>>(
       "equilibrium_constants",
+      {},
       "The equilibrium constants between gas partial pressure and adsorbed solute concentration "
       "for each species. Note that they will be scaled using the scaling "
       "parameters specified. If specified, will be used for every component.");
