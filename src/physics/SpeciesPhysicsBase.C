@@ -23,6 +23,10 @@ SpeciesPhysicsBase::validParams()
       "Species that can be trapped on each component. If a single vector is specified, the same "
       "species will be used on every component");
   params.addParam<std::vector<Real>>(
+      "species_initial_concentrations",
+      {},
+      "Initial values for each species. If specified, will be used for every component.");
+  params.addParam<std::vector<Real>>(
       "species_scaling_factors",
       {},
       "Scaling factors for each species equation on each component. If specified, the same scaling "
@@ -39,6 +43,7 @@ SpeciesPhysicsBase::SpeciesPhysicsBase(const InputParameters & parameters)
   : PhysicsBase(parameters),
     _species({getParam<std::vector<NonlinearVariableName>>("species")}),
     _scaling_factors({getParam<std::vector<Real>>("species_scaling_factors")}),
+    _initial_conditions({getParam<std::vector<Real>>("species_initial_concentrations")}),
     _component_temperatures({getParam<MooseFunctorName>("temperature")})
 {
   addRequiredPhysicsTask("check_integrity");
@@ -56,17 +61,42 @@ SpeciesPhysicsBase::SpeciesPhysicsBase(const InputParameters & parameters)
 void
 SpeciesPhysicsBase::checkIntegrity() const
 {
-  for (const auto & vec : _scaling_factors)
-    for (const auto scale : vec)
-      if (scale <= 0)
-        mooseError("Scaling factor '", scale, "' inferior or equal to 0");
+  for (const auto i : index_range(_scaling_factors))
+    for (const auto j : index_range(_scaling_factors[i]))
+      if (_scaling_factors[i][j] <= 0)
+        mooseError("Scaling factor '",
+                   _scaling_factors[i][j],
+                   "' for species '",
+                   _species[i][j],
+                   "'",
+                   getOnComponentString(i),
+                   " inferior or equal to 0");
 
-  for (const auto & vec : _initial_conditions)
-    for (const auto ic : vec)
-      if (ic < 0)
-        mooseError("Initial condition '", ic, "' inferior to 0");
+  for (const auto i : index_range(_initial_conditions))
+    for (const auto j : index_range(_initial_conditions[i]))
+      if (_initial_conditions[i][j] < 0)
+        mooseError("Initial condition '",
+                   _initial_conditions[i][j],
+                   "' for species '",
+                   _species[i][j],
+                   "'",
+                   getOnComponentString(i),
+                   " inferior to 0");
 
-  for (const auto & temp : _component_temperatures)
+  for (const auto i : index_range(_component_temperatures))
+  {
+    const auto temp = _component_temperatures[i];
     if (MooseUtils::parsesToReal(temp) && MooseUtils::convert<Real>(temp) <= 0)
-      mooseError("Temperature '", temp, "' inferior or equal to 0");
+      mooseError("Temperature '", temp, "'", getOnComponentString(i), " inferior or equal to 0");
+  }
+}
+
+std::string
+SpeciesPhysicsBase::getOnComponentString(unsigned int comp_index) const
+{
+  // Get the name of the component for an error
+  if (_components.empty())
+    return "";
+  else
+    return " on component '" + _components[comp_index] + "'";
 }
