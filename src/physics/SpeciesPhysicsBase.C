@@ -41,10 +41,32 @@ SpeciesPhysicsBase::SpeciesPhysicsBase(const InputParameters & parameters)
     _scaling_factors({getParam<std::vector<Real>>("species_scaling_factors")}),
     _component_temperatures({getParam<MooseFunctorName>("temperature")})
 {
+  addRequiredPhysicsTask("check_integrity");
+  addRequiredPhysicsTask("add_variable");
+  addRequiredPhysicsTask("add_ic");
+
   // Cant add kernels twice to the same species
   checkVectorParamsNoOverlap<NonlinearVariableName>({"species"});
 
   // Check sizes
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>(
       "species", "species_scaling_factors", /*ignore_empty_second*/ true);
+}
+
+void
+SpeciesPhysicsBase::checkIntegrity() const
+{
+  for (const auto & vec : _scaling_factors)
+    for (const auto scale : vec)
+      if (scale <= 0)
+        mooseError("Scaling factor '", scale, "' inferior or equal to 0");
+
+  for (const auto & vec : _initial_conditions)
+    for (const auto ic : vec)
+      if (ic < 0)
+        mooseError("Initial condition '", ic, "' inferior to 0");
+
+  for (const auto & temp : _component_temperatures)
+    if (MooseUtils::parsesToReal(temp) && MooseUtils::convert<Real>(temp) <= 0)
+      mooseError("Temperature '", temp, "' inferior or equal to 0");
 }

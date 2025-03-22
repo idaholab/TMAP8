@@ -67,7 +67,7 @@
       input = sorption_exchange.i
       cli_args = "ActionComponents/enc/species_initial_pressures='-1'"
       detail = "the species initial pressure is negative,"
-      expect_err = "Initial pressure '-1' inferior to 0"
+      expect_err = "Initial condition '-1' inferior to 0"
     []
     [eq_constant]
       type = RunException
@@ -136,6 +136,18 @@
       cli_args = "Physics/SpeciesTrapping/trapped/detrapping_energy='1 2'"
       detail = "the number of species does not match the number of detrapping energies."
       expect_err = "Parameter 'species' \(size 1\) and 'detrapping_energy' \(size 2\) must be the same size if set"
+    []
+  []
+  [trapping_bad_data]
+    design = 'SpeciesTrappingPhysics.md'
+    issues = '#8'
+    requirement = "The system shall return an error if"
+    [temperature_fun]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/temperature=temp_fun Functions/temp_fun/type=ConstantFunction Functions/temp_fun/value=1"
+      detail = "the temperature is specified as a function when only constants and variables are supported at this time."
+      expect_err = "Should be a constant or the name of a variable"
     []
   []
 []
