@@ -28,8 +28,6 @@ public:
   void addComponent(const ActionComponent & component) override;
 
 protected:
-  /// Initial conditions for each species (inner) on each component (outer)
-  std::vector<std::vector<Real>> _initial_conditions;
   /// Equilibrium constants for each species (inner) on each component (outer)
   std::vector<std::vector<MooseFunctorName>> _species_Ks;
 
