@@ -39,9 +39,9 @@ SorptionExchangePhysics::validParams()
   params.suppressParameter<std::vector<SubdomainName>>("block");
 
   // These parameters can be specified if all components have the same values
-  params.addParam<std::vector<Real>>(
+  params.renameParam(
+      "species_initial_concentrations",
       "species_initial_pressures",
-      {},
       "Initial values for each species. If specified, will be used for every component.");
   params.addParam<std::vector<MooseFunctorName>>(
       "equilibrium_constants",
@@ -63,7 +63,6 @@ SorptionExchangePhysics::validParams()
 
 SorptionExchangePhysics::SorptionExchangePhysics(const InputParameters & parameters)
   : SpeciesPhysicsBase(parameters),
-    _initial_conditions({getParam<std::vector<Real>>("species_initial_pressures")}),
     _species_Ks({getParam<std::vector<MooseFunctorName>>("equilibrium_constants")}),
     _length_unit(getParam<Real>("length_unit_scaling")),
     _pressure_unit(getParam<Real>("pressure_unit_scaling"))
@@ -417,8 +416,17 @@ SorptionExchangePhysics::checkIntegrity() const
 {
   SpeciesPhysicsBase::checkIntegrity();
 
-  for (const auto & vec : _species_Ks)
-    for (const auto & K : vec)
+  for (const auto i : index_range(_species_Ks))
+    for (const auto j : index_range(_species_Ks[i]))
+    {
+      const auto & K = _species_Ks[i][j];
       if (MooseUtils::parsesToReal(K) && MooseUtils::convert<Real>(K) <= 0)
-        mooseError("Equilibrium constant '", K, "' inferior or equal to 0");
+        mooseError("Equilibrium constant '",
+                   K,
+                   "' for species '",
+                   _species[i][j],
+                   "'",
+                   getOnComponentString(i),
+                   " inferior or equal to 0");
+    }
 }
