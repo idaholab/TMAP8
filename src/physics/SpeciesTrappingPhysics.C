@@ -112,6 +112,8 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
   checkSecondParamSetOnlyIfFirstOneSet("species", "detrapping_energy");
 
   // Check sizes
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>(
+      "species", "species_initial_concentrations", /*ignore_empty_second*/ true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, VariableName>("species", "mobile", true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "alpha_t", true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, FunctionName>("species", "Ct0", true);
