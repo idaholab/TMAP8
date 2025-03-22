@@ -1,8 +1,8 @@
 [Tests]
+  issues = '#8'
   [enclosure_0D_wrong_sizes]
     requirement = "The system shall return an error if"
     design = 'Enclosure0D.md'
-    issues = '#8'
     [species_initial_p]
       type = RunException
       input = enclosure0D.i
@@ -28,7 +28,6 @@
   [enclosure_0D_physics_support]
     requirement = "The system shall return an error if"
     design = 'Enclosure0D.md'
-    issues = '#8'
     [no_physics]
       type = RunException
       input = enclosure0D.i
@@ -52,9 +51,8 @@
     []
   []
   [enclosure_0D_parameter_consistency]
-    requirement = "The system shall return an error if the parameters of the enclosure component and of the sorption exchange Physics are"
+    requirement = "The system shall return an error if the parameters of the enclosure component and on the sorption exchange Physics are"
     design = 'Enclosure0D.md SorptionExchangePhysics.md'
-    issues = '#8'
     [not_matching]
       type = RunException
       input = enclosure0D.i
@@ -67,6 +65,54 @@
       input = enclosure0D.i
       detail = "both not specified but necessary to define the equations."
       expect_err = "This parameter should be specified, in the Physics '0d_solub' \(applying to all components\) or in component 'enc'"
+    []
+  []
+
+  [structure_1D_wrong_sizes]
+    requirement = "The system shall return an error if"
+    design = 'Structure1D.md'
+    issues = '#8'
+    [species_initial_condition]
+      type = RunException
+      input = structure1D.i
+      cli_args = "ActionComponents/structure/species_initial_concentrations='1 2'"
+      detail = "the number of species does not match the number of species initial pressures,"
+      expect_err = "The number of species concentrations must match the number of species."
+    []
+  []
+  [structure_1D_parameter_consistency]
+    requirement = "The system shall return an error if the parameters of the structure component and on the species trapping Physics active on it are"
+    design = 'Structure1D.md SpeciesTrappingPhysics.md'
+    [not_matching]
+      type = RunException
+      input = structure1D.i
+      cli_args = "ActionComponents/structure/temperature=100 Physics/SpeciesTrapping/trapped/temperature=200"
+      detail = "both specified and not matching,"
+      expect_err = " differs from 'temperature' in SpeciesTrappingPhysics:"
+    []
+    [missing_in_both]
+      type = RunException
+      input = structure1D.i
+      detail = "both not specified but necessary to define the equations."
+      expect_err = "This parameter should be specified, in the Physics 'trapped' \(applying to all components\) or in component 'structure'"
+    []
+  []
+  [structure_1D_matprop_consistency]
+    requirement = "The system shall return an error if the material properties specified on the component and on the species trapping Physics active on it are"
+    design = 'Structure1D.md SpeciesTrappingPhysics.md'
+    [not_matching_material_prop]
+      type = RunException
+      input = structure1D.i
+      cli_args = "Physics/SpeciesTrapping/trapped/alpha_t=1e12 ActionComponents/structure/temperature=100"
+      detail = "both specified and not matching,"
+      expect_err = " differs from 'alpha_t' in SpeciesTrappingPhysics:"
+    []
+    [missing_material_prop]
+      type = RunException
+      input = structure1D.i
+      cli_args = "ActionComponents/structure/property_names='a b c d e f diff' ActionComponents/structure/temperature=100"
+      detail = "both not specified but necessary to define the equations."
+      expect_err = "alpha_t: This parameter should be specified, in the Physics 'trapped' \(applying to all components\) or in component 'structure' using the property_name 'alpha_t'"
     []
   []
 []
