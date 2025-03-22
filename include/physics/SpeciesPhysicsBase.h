@@ -121,6 +121,10 @@ protected:
   checkSizeComponentSpeciesIndexedVectorOfVector(const std::vector<std::vector<T>> & double_indexed,
                                                  const std::string & param_name,
                                                  bool allow_component_shared_value) const;
+
+  /// Helper routine to output 'on component xyz' in error messages
+  /// @param comp_index index of the component
+  std::string getOnComponentString(unsigned int comp_index) const;
 };
 
 template <typename T>
