@@ -42,6 +42,8 @@ TMAP8 also contains [example cases](examples/tmap_index.md), which showcase how 
 | Case    | Title                                                                              |
 | ------- | ---------------------------------------------------------------------------------- |
 | ver-1fc | [Conduction in Composite Structure with Constant Surface Temperatures](ver-1fc.md) |
+| fuel cycle 1 | [Tritium fuel cycle in fusion energy plant](examples/fuel_cycle_Abdou/index.md) from [!cite](Abdou2021) |
+| fuel cycle 2 | [Tritium fuel cycle in fusion energy plant](examples/fuel_cycle_Meschini/index.md) from [!cite](meschini2023modeling) |
 
 
 # List of validation cases
