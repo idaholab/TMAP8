@@ -1,0 +1,54 @@
+[Tests]
+  [enclosure_0D_wrong_sizes]
+    requirement = "The system shall return an error if"
+    design = 'Enclosure0D.md'
+    issues = '#8'
+    [species_initial_p]
+      type = RunException
+      input = enclosure0D.i
+      cli_args = "ActionComponents/enc/species_initial_pressures='1 2'"
+      detail = "the number of species does not match the number of species initial pressures,"
+      expect_err = "The number of species partial pressures must match the number of species."
+    []
+    [species_scaling_factors]
+      type = RunException
+      input = enclosure0D.i
+      cli_args = "ActionComponents/enc/species_scaling_factors='1 2'"
+      detail = "the number of species does not match the number of scaling factors for the species equations,"
+      expect_err = "The number of species scaling factors must match the number of species."
+    []
+    [species_equilibrium]
+      type = RunException
+      input = enclosure0D.i
+      cli_args = "ActionComponents/enc/equilibrium_constants='1 2'"
+      detail = "the number of species does not match the number of equilibrium constants."
+      expect_err = "The number of equilibrium constants must match the number of species"
+    []
+  []
+  [enclosure_0D_physics_support]
+    requirement = "The system shall return an error if"
+    design = 'Enclosure0D.md'
+    issues = '#8'
+    [no_physics]
+      type = RunException
+      input = enclosure0D.i
+      cli_args = "ActionComponents/enc/physics=''"
+      detail = "no Physics have been defined on an enclosure,"
+      expect_err = "A physics must be specified in the enclosure"
+    []
+    [two_physics]
+      type = RunException
+      input = enclosure0D.i
+      cli_args = "ActionComponents/enc/physics='0d_solub multi-D'"
+      detail = "more than one Physics have been defined on an enclosure, which is currently not supported,"
+      expect_err = "Enclosure0D has only been implemented for a single 'SorptionExchangePhysics'"
+    []
+    [unsupported_physics]
+      type = RunException
+      input = enclosure0D.i
+      cli_args = "ActionComponents/enc/physics='multi-D'"
+      detail = "an unsupported Physics has been defined on an enclosure,"
+      expect_err = "Physics 'multi-D' is not a 'SorptionExchangePhysics'. This component has only been implemented for 'SorptionExchangePhysics'."
+    []
+  []
+[]
