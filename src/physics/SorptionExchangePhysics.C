@@ -415,22 +415,10 @@ SorptionExchangePhysics::getConnectedStructurePhysics(
 void
 SorptionExchangePhysics::checkIntegrity() const
 {
-  for (const auto & vec : _scaling_factors)
-    for (const auto scale : vec)
-      if (scale <= 0)
-        mooseError("Scaling factor '", scale, "' inferior or equal to 0");
-
-  for (const auto & vec : _initial_conditions)
-    for (const auto ic : vec)
-      if (ic < 0)
-        mooseError("Initial pressure '", ic, "' inferior to 0");
+  SpeciesPhysicsBase::checkIntegrity();
 
   for (const auto & vec : _species_Ks)
     for (const auto & K : vec)
       if (MooseUtils::parsesToReal(K) && MooseUtils::convert<Real>(K) <= 0)
         mooseError("Equilibrium constant '", K, "' inferior or equal to 0");
-
-  for (const auto & temp : _component_temperatures)
-    if (MooseUtils::parsesToReal(temp) && MooseUtils::convert<Real>(temp) <= 0)
-      mooseError("Temperature '", temp, "' inferior or equal to 0");
 }
