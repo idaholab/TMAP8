@@ -34,7 +34,7 @@ protected:
   /// Scaling factor for each species balance equation, to achieve better system conditioning
   std::vector<std::vector<Real>> _scaling_factors;
   /// Initial conditions for each species
-  std::vector<std::vector<Real>> _initial_conditions;
+  std::vector<std::vector<MooseFunctorName>> _initial_conditions;
   /// Temperature of each component
   std::vector<MooseFunctorName> _component_temperatures;
 
