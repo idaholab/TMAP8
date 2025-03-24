@@ -92,9 +92,6 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
   // We allow overlaps between mobile species names because two trapped species could release to the
   // same mobile species and adding the two time derivative kernels is correct
 
-  // TODO: move this to the base class
-  _initial_conditions = {getParam<std::vector<Real>>("species_initial_concentrations")};
-
   // All the other parameters can vary on each component
   if (_single_variable_set)
     checkVectorParamNotEmpty<NonlinearVariableName>("species");
@@ -109,7 +106,7 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
   checkSecondParamSetOnlyIfFirstOneSet("species", "detrapping_energy");
 
   // Check sizes
-  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>(
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, MooseFunctorName>(
       "species", "species_initial_concentrations", /*ignore_empty_second*/ true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, VariableName>("species", "mobile", true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "alpha_t", true);
@@ -142,13 +139,13 @@ SpeciesTrappingPhysics::addComponent(const ActionComponent & component)
                                                 "species_scaling_factors",
                                                 true,
                                                 std::vector<Real>(_species[comp_index].size(), 1));
-  processComponentParameters<std::vector<Real>>("species_initial_concentrations",
-                                                component.name(),
-                                                comp_index,
-                                                _initial_conditions,
-                                                "species_initial_concentrations",
-                                                false,
-                                                {});
+  processComponentParameters<std::vector<MooseFunctorName>>("species_initial_concentrations",
+                                                            component.name(),
+                                                            comp_index,
+                                                            _initial_conditions,
+                                                            "species_initial_concentrations",
+                                                            false,
+                                                            {});
   processComponentParameters<MooseFunctorName>("temperature",
                                                component.name(),
                                                comp_index,
@@ -262,7 +259,7 @@ SpeciesTrappingPhysics::addSolverVariables()
 void
 SpeciesTrappingPhysics::addInitialConditions()
 {
-  const std::string ic_type = "ConstantIC";
+  const std::string ic_type = "FunctorIC";
   InputParameters params = getFactory().getValidParams(ic_type);
 
   // Check component-indexed parameters
@@ -285,10 +282,10 @@ SpeciesTrappingPhysics::addInitialConditions()
     {
       const auto species_name = getSpeciesVariableName(c_i, s_j);
       params.set<VariableName>("variable") = species_name;
-      params.set<Real>("value") =
+      params.set<MooseFunctorName>("functor") =
           ((_initial_conditions.size() > 1)
                ? _initial_conditions[c_i][s_j]
-               : ((_initial_conditions.size() == 1) ? _initial_conditions[0][s_j] : 0));
+               : ((_initial_conditions.size() == 1) ? _initial_conditions[0][s_j] : "0"));
       getProblem().addInitialCondition(
           ic_type, "IC_" + species_name + "_" + Moose::stringify(_blocks), params);
     }

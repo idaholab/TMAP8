@@ -41,7 +41,7 @@ Structure1D::Structure1D(const InputParameters & params)
     ComponentMaterialPropertyInterface(params),
     ComponentBoundaryConditionInterface(params),
     _species(getParam<std::vector<NonlinearVariableName>>("species")),
-    _ics(getParam<std::vector<Real>>("species_initial_concentrations")),
+    _ics(getParam<std::vector<MooseFunctorName>>("species_initial_concentrations")),
     _length_unit(getParam<Real>("length_unit_scaling"))
 {
   _dimension = 1;
