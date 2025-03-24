@@ -37,6 +37,8 @@ protected:
   // Properties on each component
   /// Trapping rate coefficient for each component (outer indexing) and species (inner)
   std::vector<std::vector<Real>> _alpha_ts;
+  /// Trapping energies for each component (outer indexing) and species (inner)
+  std::vector<std::vector<Real>> _trapping_energies;
   /// Atomic number density of the host material
   std::vector<Real> _Ns;
   /// Fraction of host sites that contribute to trapping for each component (outer indexing) and species (inner)
@@ -45,7 +47,7 @@ protected:
   std::vector<Real> _trap_per_frees;
   /// Releasing rate for each component (outer indexing) and species (inner)
   std::vector<std::vector<Real>> _alpha_rs;
-  /// Trapping energies for each component (outer indexing) and species (inner)
+  /// Detrapping energies for each component (outer indexing) and species (inner)
   std::vector<std::vector<Real>> _detrapping_energies;
 
   /// Whether to define a single variable for each species for all components, or a different one for each component

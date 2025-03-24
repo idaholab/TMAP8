@@ -12,8 +12,8 @@ N = ${fparse 3.1622e22/cl}
     physics = 'mobile_diff trapped'
 
     # Material properties
-    property_names = 'alpha_t   N  Ct0 trap_per_free alpha_r detrapping_energy diff'
-    property_values = '1e15   ${N} 0.1 1             1e13    100                1'
+    property_names = 'alpha_t trapping_energy   N  Ct0 trap_per_free alpha_r detrapping_energy diff'
+    property_values = '1e15   0               ${N} 0.1 1             1e13    100                1'
 
     # Boundary conditions
     fixed_value_bc_variables = 'mobile'
