@@ -26,8 +26,9 @@ SpeciesDiffusionReactionCG::validParams()
   // Until we support a Component-based input, these are required in the Physics parameters
   params.addRequiredParam<std::vector<std::vector<VariableName>>>(
       "reacting_species", "For each species (outer indexing), the list of species they react with");
-  params.addRequiredParam<std::vector<std::vector<VariableName>>>(
+  params.addParam<std::vector<std::vector<VariableName>>>(
       "product_species",
+      {},
       "For each species (outer indexing), for each reactant, the species being created");
   params.addRequiredParam<std::vector<std::vector<MaterialPropertyName>>>(
       "reaction_coefficients",
@@ -43,8 +44,9 @@ SpeciesDiffusionReactionCG::SpeciesDiffusionReactionCG(const InputParameters & p
 {
   checkTwoDVectorParamsSameLength<VariableName, MaterialPropertyName>("reacting_species",
                                                                       "reaction_coefficients");
-  checkTwoDVectorParamsSameLength<VariableName, VariableName>("reacting_species",
-                                                              "product_species");
+  if (isParamSetByUser("product_species"))
+    checkTwoDVectorParamsSameLength<VariableName, VariableName>("reacting_species",
+                                                                "product_species");
 }
 
 void
@@ -81,7 +83,7 @@ SpeciesDiffusionReactionCG::addFEKernels()
 
       for (const auto c : index_range(reacting_species[s]))
       {
-        params.set<std::vector<VariableName>>("vs") = {var_name, reacting_species[s][c]};
+        params.set<std::vector<VariableName>>("vs") = {reacting_species[s][c]};
         params.set<MaterialPropertyName>("reaction_rate_name") = reaction_coeffs[s][c];
         params.set<Real>("coeff") = -1;
 
@@ -91,23 +93,23 @@ SpeciesDiffusionReactionCG::addFEKernels()
                                params);
 
         // only if the other reacting species is a nonlinear variable
-        if (variableExists(reacting_species[s][c], false))
+        if (variableExists(reacting_species[s][c], false) && reacting_species[s][c] != var_name)
         {
           params.set<NonlinearVariableName>("variable") = reacting_species[s][c];
-          params.set<std::vector<VariableName>>("vs") = {var_name, reacting_species[s][c]};
+          params.set<std::vector<VariableName>>("vs") = {reacting_species[s][c]};
 
           params.set<Real>("coeff") = -1;
           getProblem().addKernel(kernel_type,
-                                 prefix() + var_name + "_reaction_" + reacting_species[s][c] + "_" +
-                                     var_name,
+                                 prefix() + var_name + "_coupled_reaction_" +
+                                     reacting_species[s][c] + "_" + var_name,
                                  params);
         }
 
         // only if the target species is a nonlinear variable
-        if (variableExists(product_species[s][c], false))
+        if (product_species.size() && variableExists(product_species[s][c], false))
         {
           params.set<NonlinearVariableName>("variable") = product_species[s][c];
-          params.set<std::vector<VariableName>>("vs") = {var_name, reacting_species[s][c]};
+          params.set<std::vector<VariableName>>("vs") = {reacting_species[s][c]};
 
           params.set<Real>("coeff") = 1;
           getProblem().addKernel(kernel_type,
