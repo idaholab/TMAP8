@@ -16,9 +16,6 @@ end_time = 1500 # s
       diffusivity_matprops = '0 0 0'
 
       # Be careful to only enter the reaction once
-      # reacting_species      = 'c_A;c_A c_B;c_C'
-      # reaction_coefficients = 'mK1;K1  mK2;K2'
-      # # Note that we could be writing this using a product species instead
       reacting_species      = 'c_A;c_B'
       product_species       = 'c_B;c_C'
       reaction_coefficients = 'K1 ; K2'
