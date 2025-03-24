@@ -59,6 +59,7 @@ scheme = BDF2
         temperature = '${temperature}'
 
         alpha_t = '${trapping_rate_coefficient} ${trapping_rate_coefficient} ${trapping_rate_coefficient}'
+        trapping_energy = '0 0 0'
         N = '${fparse N / cl}'
         Ct0 = '${trapping_site_fraction_1} ${trapping_site_fraction_2} ${trapping_site_fraction_3}'
         trap_per_free = 1.0e0
