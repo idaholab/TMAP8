@@ -8,14 +8,14 @@
       input = diffusion_reaction.i
       cli_args = "Physics/SpeciesDiffusionReaction/all/reacting_species='a' Physics/SpeciesDiffusionReaction/all/reaction_coefficients='1 2'"
       detail = "the number of reaction coefficients species does not match the number of groups of reacting species,"
-      expect_err = "Vector at index 0 of 2D vector parameter 'reacting_species' is not the same size as its counterpart from 2D vector parameter 'reaction_coefficients'"
+      expect_err = "Vector parameters 'reacting_species' \(size 1\) and 'reaction_coefficients' \(size 2\) must be the same size"
     []
     [reaction_species_product]
       type = RunException
       input = diffusion_reaction.i
-      cli_args = "Physics/SpeciesDiffusionReaction/all/reacting_species='a' Physics/SpeciesDiffusionReaction/all/product_species='b c'"
+      cli_args = "Physics/SpeciesDiffusionReaction/all/reacting_species='a' Physics/SpeciesDiffusionReaction/all/product_species='b; c'"
       detail = "the number of groups of product species does not match the number of groups of reacting species."
-      expect_err = "Vector at index 0 of 2D vector parameter 'reacting_species' is not the same size as its counterpart from 2D vector parameter 'product_species'"
+      expect_err = "Vector parameters 'reacting_species' \(size 1\) and 'product_species' \(size 2\) must be the same siz"
     []
   []
   [sorption_wrong_sizes]
