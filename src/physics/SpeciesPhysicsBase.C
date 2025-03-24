@@ -22,7 +22,7 @@ SpeciesPhysicsBase::validParams()
       {},
       "Species that can be trapped on each component. If a single vector is specified, the same "
       "species will be used on every component");
-  params.addParam<std::vector<Real>>(
+  params.addParam<std::vector<MooseFunctorName>>(
       "species_initial_concentrations",
       {},
       "Initial values for each species. If specified, will be used for every component.");
@@ -43,7 +43,8 @@ SpeciesPhysicsBase::SpeciesPhysicsBase(const InputParameters & parameters)
   : PhysicsBase(parameters),
     _species({getParam<std::vector<NonlinearVariableName>>("species")}),
     _scaling_factors({getParam<std::vector<Real>>("species_scaling_factors")}),
-    _initial_conditions({getParam<std::vector<Real>>("species_initial_concentrations")}),
+    _initial_conditions(
+        {getParam<std::vector<MooseFunctorName>>("species_initial_concentrations")}),
     _component_temperatures({getParam<MooseFunctorName>("temperature")})
 {
   addRequiredPhysicsTask("check_integrity");
@@ -74,7 +75,8 @@ SpeciesPhysicsBase::checkIntegrity() const
 
   for (const auto i : index_range(_initial_conditions))
     for (const auto j : index_range(_initial_conditions[i]))
-      if (_initial_conditions[i][j] < 0)
+      if (MooseUtils::parsesToReal(_initial_conditions[i][j]) &&
+          MooseUtils::convert<Real>(_initial_conditions[i][j]) < 0)
         mooseError("Initial condition '",
                    _initial_conditions[i][j],
                    "' for species '",
