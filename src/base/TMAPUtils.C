@@ -35,7 +35,7 @@ structureCommonParams()
   auto params = internal::commonParams();
   params.addParam<std::vector<SubdomainName>>(
       "block", "The list of block ids (SubdomainID) that this object will be applied");
-  params.addParam<std::vector<Real>>(
+  params.addParam<std::vector<MooseFunctorName>>(
       "species_initial_concentrations", {}, "Initial concentrations for the structure species");
   // This is used by the SpeciesTrapping Physics notably. But not by Diffusion and
   // Diffusion-Reaction. We could consider making it required
@@ -65,7 +65,7 @@ enclosureCommonParams()
       "Contact surface with each structure [m^3]");
 
   // Species quantities
-  params.addParam<std::vector<Real>>(
+  params.addParam<std::vector<MooseFunctorName>>(
       "species_initial_pressures",
       {},
       "Initial partial pressures for the enclosure species in Pascals");

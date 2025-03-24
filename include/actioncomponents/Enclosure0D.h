@@ -29,7 +29,7 @@ public:
   /// Return the scaling factors to use for these species
   const std::vector<Real> & scalingFactors() const { return _scaling_factors; }
   /// Return the initial conditions to use for these species
-  const std::vector<Real> & ics() const { return _ics; }
+  const std::vector<MooseFunctorName> & ics() const { return _ics; }
   /// Return the equilibrium constants to use for these species
   const std::vector<MooseFunctorName> & equilibriumConstants() const { return _species_Ks; }
   /// Return the temperature of this enclosure
@@ -59,7 +59,7 @@ protected:
   /// Scaling factors for the nonlinear species equations
   std::vector<Real> _scaling_factors;
   /// Initial conditions for each species
-  std::vector<Real> _ics;
+  std::vector<MooseFunctorName> _ics;
   /// Equilibrium constants for each species
   std::vector<MooseFunctorName> _species_Ks;
   /// Temperature of the enclosure

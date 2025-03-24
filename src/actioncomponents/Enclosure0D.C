@@ -35,7 +35,7 @@ Enclosure0D::Enclosure0D(const InputParameters & params)
     _scaling_factors(isParamValid("species_scaling_factors")
                          ? getParam<std::vector<Real>>("species_scaling_factors")
                          : std::vector<Real>(_species.size(), 1)),
-    _ics(getParam<std::vector<Real>>("species_initial_pressures")),
+    _ics(getParam<std::vector<MooseFunctorName>>("species_initial_pressures")),
     _species_Ks(getParam<std::vector<MooseFunctorName>>("equilibrium_constants")),
     _temperature(getParam<MooseFunctorName>("temperature")),
     _volume(getParam<Real>("volume")),
