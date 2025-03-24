@@ -46,6 +46,11 @@ SpeciesTrappingPhysics::validParams()
       "(e.g. no number densities are involved)"
       "If a single vector is specified, the same trapping rate coefficient will be used on every "
       "component");
+  params.addParam<std::vector<Real>>(
+      "trapping_energy",
+      {},
+      "The trapping energy in units of Kelvin. If a single vector is specified, "
+      "the same trapping energy will be used on every component");
   params.addParam<Real>(
       "N",
       "The atomic number density of the host material for each component, shared for all species.");
@@ -64,12 +69,12 @@ SpeciesTrappingPhysics::validParams()
   params.addParam<std::vector<Real>>(
       "detrapping_energy",
       {},
-      "The trapping energy in units of Kelvin. If a single vector is specified, "
-      "the same trapping energy will be used on every component");
+      "The detrapping energy in units of Kelvin. If a single vector is specified, "
+      "the same detrapping energy will be used on every component");
 
   // Parameter groups
-  params.addParamNamesToGroup("alpha_t N Ct0 trap_per_free different_traps_for_each_species",
-                              "Trapping");
+  params.addParamNamesToGroup(
+      "alpha_t trapping_energy N Ct0 trap_per_free different_traps_for_each_species", "Trapping");
   params.addParamNamesToGroup("alpha_r temperature detrapping_energy", "Releasing");
 
   return params;
@@ -80,6 +85,7 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
     // If specified in the Physics block, all parameters are retrieved here
     _mobile_species_names({getParam<std::vector<VariableName>>("mobile")}),
     _alpha_ts({getParam<std::vector<Real>>("alpha_t")}),
+    _trapping_energies({getParam<std::vector<Real>>("trapping_energy")}),
     _Ns(isParamValid("N") ? std::vector<Real>(1, getParam<Real>("N")) : std::vector<Real>()),
     _Ct0s({getParam<std::vector<FunctionName>>("Ct0")}),
     _trap_per_frees(isParamValid("trap_per_free")
@@ -99,6 +105,7 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
   // Only set the other parameters if setting the species
   checkSecondParamSetOnlyIfFirstOneSet("species", "mobile");
   checkSecondParamSetOnlyIfFirstOneSet("species", "alpha_t");
+  checkSecondParamSetOnlyIfFirstOneSet("species", "trapping_energy");
   checkSecondParamSetOnlyIfFirstOneSet("species", "N");
   checkSecondParamSetOnlyIfFirstOneSet("species", "Ct0");
   checkSecondParamSetOnlyIfFirstOneSet("species", "trap_per_free");
@@ -110,6 +117,7 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
       "species", "species_initial_concentrations", /*ignore_empty_second*/ true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, VariableName>("species", "mobile", true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "alpha_t", true);
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "trapping_energy", true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, FunctionName>("species", "Ct0", true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "alpha_r", true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>(
@@ -163,6 +171,8 @@ SpeciesTrappingPhysics::addComponent(const ActionComponent & component)
   // We only support Real numbers for now as the consuming kernels only support Real
   processComponentMatprop<std::vector<Real>>(
       "alpha_t", component, comp_index, _species.back(), _alpha_ts);
+  processComponentMatprop<std::vector<Real>>(
+      "trapping_energy", component, comp_index, _species.back(), _trapping_energies);
   processComponentMatprop<Real>("N", component, comp_index, _species.back(), _Ns);
   processComponentMatprop<std::vector<FunctionName>>(
       "Ct0", component, comp_index, _species.back(), _Ct0s);
@@ -208,6 +218,8 @@ SpeciesTrappingPhysics::addSolverVariables()
         paramError("mobile", "Should not be empty if not using Components");
       if (_alpha_ts[0].empty())
         paramError("alpha_t", "Should not be empty if not using Components");
+      if (_trapping_energies[0].empty())
+        paramError("trapping_energy", "Should not be empty if not using Components");
       if (_Ns.empty())
         paramError("N", "Should not be empty if not using Components");
       if (_Ct0s[0].empty())
@@ -299,6 +311,7 @@ SpeciesTrappingPhysics::addFEKernels()
 {
   // Check component-indexed parameters
   checkSizeComponentSpeciesIndexedVectorOfVector(_alpha_ts, "alpha_t", false);
+  checkSizeComponentSpeciesIndexedVectorOfVector(_trapping_energies, "trapping_energy", false);
   checkSizeComponentSpeciesIndexedVectorOfVector(_Ct0s, "alpha_t", false);
   checkSizeComponentIndexedVector(_Ns, "N", false);
   checkSizeComponentIndexedVector(_Ns, "trap_per_free", false);
@@ -353,6 +366,7 @@ SpeciesTrappingPhysics::addFEKernels()
           paramError("temperature", "Should be a constant or the name of a variable");
 
         params.set<Real>("alpha_t") = _alpha_ts[c_i][s_j];
+        params.set<Real>("trapping_energy") = _trapping_energies[c_i][s_j];
         params.set<Real>("N") = _Ns[c_i];
         params.set<FunctionName>("Ct0") = _Ct0s[c_i][s_j];
         params.set<Real>("trap_per_free") = _trap_per_frees[c_i];
