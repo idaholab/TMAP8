@@ -69,7 +69,7 @@ SorptionExchangePhysics::SorptionExchangePhysics(const InputParameters & paramet
     _pressure_unit(getParam<Real>("pressure_unit_scaling"))
 {
   // Check sizes, though some parameters may be set on components
-  checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>(
+  checkVectorParamsSameLengthIfSet<NonlinearVariableName, MooseFunctorName>(
       "species", "species_initial_pressures", true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, MooseFunctorName>(
       "species", "equilibrium_constants", true);
@@ -105,13 +105,13 @@ SorptionExchangePhysics::addComponent(const ActionComponent & component)
                                             comp.scalingFactors(),
                                             true,
                                             std::vector<Real>(1, n_species_component));
-  processComponentValues<std::vector<Real>>("species_initial_pressures",
-                                            comp.name(),
-                                            comp_index,
-                                            _initial_conditions,
-                                            comp.ics(),
-                                            false,
-                                            {});
+  processComponentValues<std::vector<MooseFunctorName>>("species_initial_pressures",
+                                                        comp.name(),
+                                                        comp_index,
+                                                        _initial_conditions,
+                                                        comp.ics(),
+                                                        false,
+                                                        {});
   processComponentValues<std::vector<MooseFunctorName>>("equilibrium_constants",
                                                         comp.name(),
                                                         comp_index,
@@ -175,11 +175,13 @@ SorptionExchangePhysics::addInitialConditions()
     {
       const auto species_name = _species[c_i][s_j] + "_" + _components[c_i];
       params.set<VariableName>("variable") = species_name;
-      params.set<Real>("value") =
+      const auto & ic =
           ((_initial_conditions.size() > 1)
                ? _initial_conditions[c_i][s_j]
-               : ((_initial_conditions.size() == 1) ? _initial_conditions[0][s_j] : 0)) *
-          _pressure_unit;
+               : ((_initial_conditions.size() == 1) ? _initial_conditions[0][s_j] : "0"));
+      if (MooseUtils::parsesToReal(ic))
+        params.set<Real>("value") = MooseUtils::convert<Real>(ic) * _pressure_unit;
+
       getProblem().addInitialCondition(ic_type, "IC_" + species_name, params);
     }
 }

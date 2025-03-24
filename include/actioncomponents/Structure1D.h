@@ -31,13 +31,13 @@ public:
   /// Return the species diffused on this structures
   const std::vector<NonlinearVariableName> & species() const { return _species; }
   /// Return the initial conditions fhe species concentrations on this structure
-  const std::vector<Real> & ics() { return _ics; };
+  const std::vector<MooseFunctorName> & ics() { return _ics; };
 
 protected:
   /// Names of the variables for the species
   const std::vector<NonlinearVariableName> _species;
   /// Initial values for the variables
-  const std::vector<Real> _ics;
+  const std::vector<MooseFunctorName> _ics;
   /// Unit for the mesh
   const Real _length_unit;
 };
