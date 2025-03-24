@@ -16,7 +16,6 @@ end_time = 1500 # s
       diffusivity_matprops = '0 0 0'
 
       # Be careful to only enter the reaction once
-      # Note the "|" for the outer index, on species
       reacting_species      = 'c_A; c_B'
       product_species       = 'c_B; c_C'
       reaction_coefficients = 'K1 K2'
