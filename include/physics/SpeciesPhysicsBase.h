@@ -219,10 +219,8 @@ SpeciesPhysicsBase::processComponentValues(const std::string & param_name,
                 if (physics_storage[0][i_phy] != component_values[i_comp_sp])
                   consistent = false;
 
-                // Convert and store the component value
-                const auto & comp_value_conv =
-                    MooseUtils::convert<vector_value_type_t<T>>(component_values[i_comp_sp], true);
-                temp_storage.push_back(comp_value_conv);
+                // Store the component value
+                temp_storage.push_back(component_values[i_comp_sp]);
               }
             }
             // A component species was not defined in the Physics parameters. We wont support that
@@ -356,10 +354,8 @@ SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
                 if (physics_storage[0][i_phy] != component_values[i_comp_sp])
                   consistent = false;
 
-                // Convert and store the component value
-                const auto & comp_value_conv =
-                    MooseUtils::convert<vector_value_type_t<T>>(component_values[i_comp_sp], true);
-                temp_storage.push_back(comp_value_conv);
+                // Store the component value
+                temp_storage.push_back(component_values[i_comp_sp]);
               }
             }
           }
