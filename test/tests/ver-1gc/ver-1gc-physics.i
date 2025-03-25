@@ -9,16 +9,19 @@ end_time = 1500 # s
 []
 
 [Physics]
-  [SpeciesDiffusionReaction]
+  [SpeciesRadioactiveDecay]
     [all]
       species = 'c_A c_B c_C'
-      initial_conditions_species = '${concentration_A_0} 0 0'
-      diffusivity_matprops = '0 0 0'
+      species_initial_concentrations = '${concentration_A_0} 0 0'
+      add_decaying_species_initial_conditions = true
 
-      # Be careful to only enter the reaction once
-      reacting_species      = 'c_A; c_B'
-      product_species       = 'c_B; c_C'
-      reaction_coefficients = 'K1 K2'
+      # TODO: figure out why this is necessary
+      species_scaling_factors = '1 1 1'
+
+      # | between species, ; between decay reactions
+      decay_products       = 'c_B | c_C |'
+      # ; between species, ' ' between decay reactions
+      decay_constants      = '${k_1}; ${k_2};'
     []
   []
 []
