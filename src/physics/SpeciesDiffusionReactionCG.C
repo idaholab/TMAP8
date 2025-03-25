@@ -33,8 +33,14 @@ SpeciesDiffusionReactionCG::validParams()
       "product_species",
       {},
       "For each (group of) reactant, the species (innermost indexing) being created");
+  params.addParam<std::vector<std::vector<Real>>>(
+      "reacting_species_coefficients",
+      "Coefficients multiplying the reacting species. Defaults to 1");
+  params.addParam<std::vector<std::vector<Real>>>(
+      "product_species_coefficients",
+      "Coefficients multiplying the product species. Defaults to 1");
   params.addRequiredParam<std::vector<MaterialPropertyName>>(
-      "reaction_coefficients", "The reaction coefficient for each reaction");
+      "reaction_coefficients", "The reaction rate coefficient for each reaction");
   params.addParamNamesToGroup("reacting_species product_species reaction_coefficients",
                               "Reaction Network");
 
@@ -51,6 +57,13 @@ SpeciesDiffusionReactionCG::SpeciesDiffusionReactionCG(const InputParameters & p
   if (isParamSetByUser("product_species"))
     checkVectorParamsSameLength<std::vector<VariableName>, std::vector<VariableName>>(
         "reacting_species", "product_species");
+  // Coeffs must match each species
+  if (isParamValid("reacting_species_coefficients"))
+    checkTwoDVectorParamsSameLength<VariableName, Real>("reacting_species",
+                                                        "reacting_species_coefficients");
+  if (isParamValid("product_species_coefficients"))
+    checkTwoDVectorParamsSameLength<VariableName, Real>("product_species",
+                                                        "product_species_coefficients");
 }
 
 void
@@ -66,6 +79,26 @@ SpeciesDiffusionReactionCG::addFEKernels()
       getParam<std::vector<std::vector<VariableName>>>("product_species");
   const auto & reaction_coeffs =
       getParam<std::vector<MaterialPropertyName>>("reaction_coefficients");
+
+  std::vector<std::vector<Real>> reacting_species_coef;
+  if (isParamValid("reacting_species_coefficients"))
+    reacting_species_coef =
+        getParam<std::vector<std::vector<Real>>>("reacting_species_coefficients");
+  else
+  {
+    reacting_species_coef.resize(reacting_species.size());
+    for (const auto i : index_range(reacting_species_coef))
+      reacting_species_coef[i].resize(reacting_species[i].size(), 1.);
+  }
+  std::vector<std::vector<Real>> product_species_coef;
+  if (isParamValid("product_species_coefficients"))
+    product_species_coef = getParam<std::vector<std::vector<Real>>>("product_species_coefficients");
+  else
+  {
+    product_species_coef.resize(product_species.size());
+    for (const auto i : index_range(product_species_coef))
+      product_species_coef[i].resize(product_species[i].size(), 1.);
+  }
 
   // Reaction term
   if (isParamValid("reacting_species"))
@@ -86,14 +119,16 @@ SpeciesDiffusionReactionCG::addFEKernels()
 
       // only if the other reacting species is a nonlinear variable
       // We skip the 'var_name' species because it's done right above
-      for (const auto & reactant : reacting_species[c])
+      for (const auto s : index_range(reacting_species[c]))
+      {
+        const auto & reactant = reacting_species[c][s];
         if (solverVariableExists(reactant))
         {
           params.set<NonlinearVariableName>("variable") = reactant;
           params.set<std::vector<VariableName>>("vs") = reacting_species[c];
           params.set<MaterialPropertyName>("reaction_rate_name") = reaction_coeffs[c];
+          params.set<Real>("coeff") = -1 * reacting_species_coef[c][s];
 
-          params.set<Real>("coeff") = -1;
           // Keep the index in the name to keep uniqueness
           getProblem().addKernel(kernel_type,
                                  prefix() + reactant + ":coupled_reaction_of_" +
@@ -107,18 +142,21 @@ SpeciesDiffusionReactionCG::addFEKernels()
                            "' is auxiliary, so its consumption cannot be tracked using kernels!");
         else
           paramError("reacting_species", "Reactant species '" + reactant + "' is not a variable");
+      }
 
       // only if the target species is a nonlinear variable
       if (product_species.size() > c)
       {
-        for (const auto & product : product_species[c])
+        for (const auto s : index_range(product_species[c]))
+        {
+          const auto & product = product_species[c][s];
           if (solverVariableExists(product))
           {
             params.set<NonlinearVariableName>("variable") = product;
             params.set<std::vector<VariableName>>("vs") = reacting_species[c];
             params.set<MaterialPropertyName>("reaction_rate_name") = reaction_coeffs[c];
+            params.set<Real>("coeff") = 1 * product_species_coef[c][s];
 
-            params.set<Real>("coeff") = 1;
             // Keep the index in the name to keep uniqueness
             getProblem().addKernel(kernel_type,
                                    prefix() + product + ":production_of_" + product + "_from_" +
@@ -132,6 +170,7 @@ SpeciesDiffusionReactionCG::addFEKernels()
                              "' is auxiliary, so its production cannot be tracked using kernels!");
           else
             paramError("product_species", "Product species '" + product + "' is not a variable");
+        }
       }
     }
   }
