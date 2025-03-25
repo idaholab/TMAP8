@@ -3,7 +3,7 @@
     requirement = "The system shall return an error if"
     design = 'SpeciesDiffusionReaction.md'
     issues = '#8'
-    [reaction_species_coeff]
+    [reaction_species_coeff_reaction]
       type = RunException
       input = diffusion_reaction.i
       cli_args = "Physics/SpeciesDiffusionReaction/all/reacting_species='a' Physics/SpeciesDiffusionReaction/all/reaction_coefficients='1 2'"
@@ -16,6 +16,53 @@
       cli_args = "Physics/SpeciesDiffusionReaction/all/reacting_species='a' Physics/SpeciesDiffusionReaction/all/product_species='b; c'"
       detail = "the number of groups of product species does not match the number of groups of reacting species."
       expect_err = "Vector parameters 'reacting_species' \(size 1\) and 'product_species' \(size 2\) must be the same siz"
+    []
+    [reaction_species_reactant_coeff]
+      type = RunException
+      input = diffusion_reaction.i
+      cli_args = "Physics/SpeciesDiffusionReaction/all/reacting_species='a' Physics/SpeciesDiffusionReaction/all/reacting_species_coefficients='1 2'"
+      detail = "the number of coefficients for reacting species does not match the vectors of reacting species,"
+      expect_err = "Vector at index 0 of 2D vector parameter 'reacting_species' is not the same size as its counterpart from 2D vector parameter 'reacting_species_coefficients'"
+    []
+    [reaction_species_product_coeff]
+      type = RunException
+      input = diffusion_reaction.i
+      cli_args = "Physics/SpeciesDiffusionReaction/all/product_species='a' Physics/SpeciesDiffusionReaction/all/product_species_coefficients='1 2'"
+      detail = "the number of coefficients for product species does not match the vectors of product species,"
+      expect_err = "Vector at index 0 of 2D vector parameter 'product_species' is not the same size as its counterpart from 2D vector parameter 'product_species_coefficients'"
+    []
+  []
+  [diffusion_reaction_bad_input]
+    requirement = "The system shall return"
+    design = 'SpeciesDiffusionReaction.md'
+    issues = '#8'
+    [reactant_missing_variable]
+      type = RunException
+      input = diffusion_reaction.i
+      cli_args = "Physics/SpeciesDiffusionReaction/all/reacting_species='a'"
+      detail = "an error if one of the reactants does not exist in the simulation,"
+      expect_err = "Reactant species 'a' is not a variable"
+    []
+    [reactant_aux_variable]
+      type = RunException
+      input = diffusion_reaction.i
+      cli_args = "Physics/SpeciesDiffusionReaction/all/reacting_species='a' AuxVariables/a/family=LAGRANGE"
+      detail = "a warning if one of the reactants is auxiliary and will not be computed by setting kernels the Physics,"
+      expect_err = "Variable 'a' is auxiliary, so its consumption cannot be tracked using kernels!"
+    []
+    [product_missing_variable]
+      type = RunException
+      input = diffusion_reaction.i
+      cli_args = "Physics/SpeciesDiffusionReaction/all/product_species='a'"
+      detail = "an error if one of the products does not exist in the simulation,"
+      expect_err = "Product species 'a' is not a variable"
+    []
+    [product_aux_variable]
+      type = RunException
+      input = diffusion_reaction.i
+      cli_args = "Physics/SpeciesDiffusionReaction/all/product_species='a' AuxVariables/a/family=LAGRANGE"
+      detail = "a warning if one of the products is auxiliary and will not be computed by setting kernels the Physics,"
+      expect_err = "Variable 'a' is auxiliary, so its production cannot be tracked using kernels!"
     []
   []
   [sorption_wrong_sizes]
