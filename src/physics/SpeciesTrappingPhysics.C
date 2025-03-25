@@ -407,18 +407,19 @@ SpeciesTrappingPhysics::addFEKernels()
           paramError("temperature", "Should be a constant or the name of a variable");
 
         getProblem().addNodalKernel(kernel_type, prefix() + species_name + "_enc_release", params);
-      }
 
-      // Release term in the mobile species conservation equation
-      {
-        const std::string kernel_type = "CoupledTimeDerivative";
-        auto params = _factory.getValidParams(kernel_type);
-        assignBlocks(params, blocks);
-        params.set<NonlinearVariableName>("variable") = mobile_species_name;
-        params.set<std::vector<VariableName>>("v") = {species_name};
+        // Release term in the mobile species conservation equation
+        // We avoid just using the time derivative of the trapped species because another term (such
+        // as decay) may be acting on the trapped species concentration
+        {
+          assignBlocks(params, blocks);
+          params.set<NonlinearVariableName>("variable") = mobile_species_name;
+          params.set<std::vector<VariableName>>("v") = {species_name};
+          params.set<Real>("alpha_r") = -_alpha_rs[c_i][s_j];
 
-        getProblem().addKernel(
-            kernel_type, prefix() + mobile_species_name + "_from_" + species_name, params);
+          getProblem().addNodalKernel(
+              kernel_type, prefix() + mobile_species_name + "_from_" + species_name, params);
+        }
       }
     }
     if (_single_variable_set)
