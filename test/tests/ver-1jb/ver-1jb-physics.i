@@ -38,19 +38,6 @@ dt_max = ${fparse end_time/100} # s
   xmax = ${slab_length}
 []
 
-[Variables]
-  # tritium mobile concentration in atoms/m^3 / density_scalar = (-)
-  [tritium_mobile_concentration_scaled]
-    initial_condition = ${fparse tritium_mobile_concentration_initial / density_scalar}
-  []
-  # tritium trapped concentration in (atoms/m^3) / density_scalar = (-)
-  [tritium_trapped_concentration_scaled]
-  []
-  # helium concentration in (atoms/m^3) / density_scalar = (-)
-  [helium_concentration_scaled]
-  []
-[]
-
 [Functions]
   [trapping_sites_fraction_function] # (atomic fraction)
     type = ParsedFunction
@@ -79,14 +66,6 @@ dt_max = ${fparse end_time/100} # s
   [tritium_trapped_concentration_initial_function_scaled] # (-)
     type = CompositeFunction
     functions = 'density_scalar_inverse_function tritium_trapped_concentration_initial_function'
-  []
-[]
-
-[ICs]
-  [tritium_trapped_concentration_IC]
-    type = FunctionIC
-    variable = tritium_trapped_concentration_scaled
-    function = 'tritium_trapped_concentration_initial_function_scaled'
   []
 []
 
@@ -146,7 +125,8 @@ dt_max = ${fparse end_time/100} # s
   [tritium_trapped_concentration]
     type = NormalizationAux
     variable = tritium_trapped_concentration
-    normal_factor = ${density_scalar}
+    # Scaling here
+    normal_factor = ${fparse density_scalar * trap_per_free}
     source_variable = tritium_trapped_concentration_scaled
   []
   [helium_concentration]
@@ -157,74 +137,53 @@ dt_max = ${fparse end_time/100} # s
   []
 []
 
-[Kernels]
-  # kernels for the tritium concentration equation
-  [time_tritium]
-    type = TimeDerivative
-    variable = tritium_mobile_concentration_scaled
+[Physics]
+  [SpeciesDiffusionReaction]
+    [decays]
+      species                    = 'tritium_mobile_concentration_scaled                             helium_concentration_scaled'
+      initial_conditions_species = '${fparse tritium_mobile_concentration_initial / density_scalar} 0'
+      diffusivity_matprops       = 'diffusivity                                                     0'
+
+      # we dont set the decay for the trapped helium concentration because it's using nodal
+      # kernels in the original input which we are trying to reproduce
+      reacting_species      = 'tritium_mobile_concentration_scaled'
+      product_species       = 'helium_concentration_scaled'
+      reaction_coefficients = '${decay_rate_constant}'
+    []
   []
-  [diffusion]
-    type = MatDiffusion
-    variable = tritium_mobile_concentration_scaled
-    diffusivity = diffusivity
-  []
-  [decay_tritium]
-    type = MatReaction
-    variable = tritium_mobile_concentration_scaled
-    v = tritium_mobile_concentration_scaled
-    reaction_rate = '${fparse -decay_rate_constant}'
-  []
-  # kernels for the helium concentration equation
-  [time_helium]
-    type = TimeDerivative
-    variable = helium_concentration_scaled
-  []
-  [decay_helium_mobile]
-    type = MatReaction
-    variable = helium_concentration_scaled
-    v = tritium_mobile_concentration_scaled
-    reaction_rate = '${fparse decay_rate_constant}'
-  []
-  [decay_helium_trapped]
-    type = MatReaction
-    variable = helium_concentration_scaled
-    v = tritium_trapped_concentration_scaled
-    reaction_rate = '${fparse decay_rate_constant}'
+  [SpeciesTrapping]
+    [trapped]
+      species = 'tritium_trapped_concentration_scaled'
+      mobile = 'tritium_mobile_concentration_scaled'
+      species_initial_concentrations = 'tritium_trapped_concentration_initial_function_scaled'
+
+      # Since we are not using components, we specify all the species trapping parameters here
+      temperature = 'temperature'
+      trap_per_free = ${trap_per_free}
+      alpha_t = ${tritium_trapping_prefactor} # (1/s)
+      trapping_energy = ${fparse tritium_trapping_energy/ideal_gas_constant} # (K)
+      N = ${fparse density_material / density_scalar} # (-)
+      Ct0 = 'trapping_sites_fraction_function' # (atomic fraction)
+      alpha_r = ${fparse tritium_release_prefactor} # (1/s)
+      detrapping_energy = ${fparse tritium_release_energy / boltzmann_constant} # (K)
+    []
   []
 []
 
+
+# Alternatively, we could create a nodal decay Physics OR add decay reactions to SpeciesTrapping
+# Note that this approach, used by the reference input, is not conservative because of the differences
+# in integration of the flux from one species to the other between the nodal and volumetric kernels.
+[Kernels]
+  [decay_trapped_to_helium]
+    type = ADMatReactionFlexible
+    reaction_rate_name = ${fparse decay_rate_constant}
+    variable = helium_concentration_scaled
+    vs = tritium_trapped_concentration_scaled
+  []
+[]
 [NodalKernels]
-  [time]
-    type = TimeDerivativeNodalKernel
-    variable = tritium_trapped_concentration_scaled # (atoms/m^3) / density_scalar = (-)
-  []
-  [trapping]
-    type = TrappingNodalKernel
-    variable = tritium_trapped_concentration_scaled # (-)
-    alpha_t = ${tritium_trapping_prefactor} # (1/s)
-    trapping_energy = ${fparse tritium_trapping_energy/ideal_gas_constant} # (K)
-    N = ${fparse density_material / density_scalar} # (-)
-    Ct0 = 'trapping_sites_fraction_function' # (atomic fraction)
-    mobile_concentration = 'tritium_mobile_concentration_scaled' # (-)
-    temperature = temperature # (K)
-    trap_per_free = ${trap_per_free}
-  []
-  [release_from_trapped]
-    type = ReleasingNodalKernel
-    variable = tritium_trapped_concentration_scaled # (atoms/m^3) / density_scalar = (-)
-    alpha_r = ${fparse tritium_release_prefactor} # (1/s)
-    detrapping_energy = ${fparse tritium_release_energy / boltzmann_constant} # (K)
-    temperature = temperature # (K)
-  []
-  [release_into_mobile]
-    type = ReleasingNodalKernel
-    variable = tritium_mobile_concentration_scaled # (atoms/m^3) / density_scalar = (-)
-    v = tritium_trapped_concentration_scaled
-    alpha_r = -${fparse tritium_release_prefactor} # (1/s)
-    detrapping_energy = ${fparse tritium_release_energy / boltzmann_constant} # (K)
-    temperature = temperature # (K)
-  []
-  [decay]
+  [decay_trapped_to_helium]
     type = ReleasingNodalKernel
     variable = tritium_trapped_concentration_scaled # (atoms/m^3) / density_scalar = (-)
     alpha_r = ${decay_rate_constant} # (1/s) - decay rate
@@ -235,24 +194,68 @@ dt_max = ${fparse end_time/100} # s
 
 [Materials]
   [diffusivity] # (m2/s) tritium diffusivity
-    type = DerivativeParsedMaterial
+    type = ADDerivativeParsedMaterial
     property_name = 'diffusivity'
     coupled_variables = 'temperature'
     expression = '${tritium_diffusivity_prefactor}*exp(-${tritium_diffusivity_energy}/${ideal_gas_constant}/temperature)'
   []
   [alpha_t_tot] # (1/s) - trapping rate
-    type = ParsedMaterial
+    type = ADParsedMaterial
     property_name = 'alpha_t_tot'
     coupled_variables = 'temperature'
     expression = '${tritium_trapping_prefactor} * exp(- ${tritium_trapping_energy}/${ideal_gas_constant}/temperature)'
     outputs = 'all'
   []
   [alpha_r_tot] # (1/s) - detrapping rate
-    type = ParsedMaterial
+    type = ADParsedMaterial
     property_name = 'alpha_r_tot'
     coupled_variables = 'temperature'
     expression = '${tritium_release_prefactor} * exp(- ${tritium_release_energy} / ${boltzmann_constant}/temperature)'
     outputs = 'all'
+  []
+[]
+
+[Preconditioning]
+  [smp]
+    type = SMP
+    full = true
+  []
+[]
+
+[Executioner]
+  type = Transient
+  end_time = ${end_time}
+  solve_type = NEWTON
+  scheme = 'bdf2'
+  dtmin = 1
+  dtmax = ${dt_max}
+  petsc_options = '-snes_converged_reason'
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = 'lu'
+
+  [TimeStepper]
+    type = IterationAdaptiveDT
+    dt = ${dt_start}
+    optimal_iterations = 9
+    growth_factor = 1.2
+    cutback_factor = 0.9
+  []
+[]
+
+[Outputs]
+  perf_graph = true
+  file_base = ver-1jb-physics_out
+  [time_dependent_out]
+    type = CSV
+    execute_vector_postprocessors_on = NONE
+    file_base = ver-1jb-physics_time_dependent_out
+  []
+  [profile_out]
+    type = CSV
+    sync_only = true
+    sync_times = '${units 45 year -> s}'
+    execute_postprocessors_on = NONE
+    file_base=ver-1jb-physics_profile_out
   []
 []
 
@@ -310,48 +313,5 @@ dt_max = ${fparse end_time/100} # s
       sort_by = 'x'
       variable = 'tritium_mobile_concentration tritium_trapped_concentration helium_concentration'
       execute_on = 'timestep_end'
-  []
-[]
-
-[Preconditioning]
-  [smp]
-    type = SMP
-    full = true
-  []
-[]
-
-[Executioner]
-  type = Transient
-  end_time = ${end_time}
-  solve_type = NEWTON
-  scheme = 'bdf2'
-  dtmin = 1
-  dtmax = ${dt_max}
-  petsc_options = '-snes_converged_reason'
-  petsc_options_iname = '-pc_type'
-  petsc_options_value = 'lu'
-  [TimeStepper]
-    type = IterationAdaptiveDT
-    dt = ${dt_start}
-    optimal_iterations = 9
-    growth_factor = 1.2
-    cutback_factor = 0.9
-  []
-[]
-
-[Outputs]
-  perf_graph = true
-  file_base = ver-1jb_out
-  [time_dependent_out]
-    type = CSV
-    execute_vector_postprocessors_on = NONE
-    file_base = ver-1jb_time_dependent_out
-  []
-  [profile_out]
-    type = CSV
-    sync_only = true
-    sync_times = '${units 45 year -> s}'
-    execute_postprocessors_on = NONE
-    file_base=ver-1jb_profile_out
   []
 []
