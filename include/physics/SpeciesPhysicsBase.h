@@ -620,11 +620,12 @@ SpeciesPhysicsBase::checkSizeComponentSpeciesIndexedVectorOfVector(
                    "The species have not been specified for component '" + _components[c_index] +
                        "'");
       if (double_indexed[c_index].size() != _species[c_index].size())
-        paramError(param_name,
-                   "We have '" + std::to_string(_species[c_index].size()) +
-                       "' species for component '" + _components[c_index] +
-                       "' but we only found '" + std::to_string(double_indexed[c_index].size()) +
-                       "' values for that quantity. This quantity should be provided by each "
-                       "component and for each species");
+        paramError(
+            param_name,
+            "We have '" + std::to_string(_species[c_index].size()) + "' species " +
+                (_components[c_index].empty() ? "" : "for component '" + _components[c_index]) +
+                "' but we only found '" + std::to_string(double_indexed[c_index].size()) +
+                "' values for that quantity. This quantity should be provided by each "
+                "component and for each species");
     }
 }
