@@ -31,7 +31,7 @@ A set of appropriate MOOSE dependency modules will be loaded for use. Note that 
 
 ## Step Three: Clone TMAP8
 
-<!-- Re-use the clone instructions from the main getting started instructions here -->
+!! Re-use the clone instructions from the main getting started instructions here
 
 !style halign=left
 !include getting_started/installation.md start=TMAP8 is hosted on end=!alert-end! include-end=True
@@ -45,7 +45,7 @@ To compile TMAP8, first make sure that the [!ac](HPC) environment is activated f
 module load use.moose moose-dev
 ```
 
-<!-- Re-use the bulk of the build and test section from the main getting started instructions here -->
+!! Re-use the bulk of the build and test section from the main getting started instructions here
 
 Then navigate to the TMAP8 clone directory and download the MOOSE submodule:
 
@@ -69,7 +69,7 @@ git submodule update --init --checkout modules/chemical_reactions/contrib/thermo
 The copy of MOOSE provided with TMAP8 has been fully tested against the current
 TMAP8 version, and is guaranteed to work with all current TMAP8 tests.
 
-<!-- End getting started re-use -->
+!! End getting started re-use
 
 Once MOOSE is downloaded, several MOOSE dependencies need to be built: PETSc, libMesh, and WASP.
 These can be built easily using update-and-rebuild scripts within MOOSE. To speed up these build
@@ -78,7 +78,7 @@ compilation time by using more than one core to build the dependency. One can se
 signal that the scripts use of 8 computer cores by doing the following:
 
 ```bash
-export MOOSE_JOBS=4 METHODS=opt 
+export MOOSE_JOBS=4 METHODS=opt
 ```
 
 Then, the dependencies can be built by running the installation scripts for MOOSE dependencies in
@@ -117,7 +117,7 @@ fellow users!
 
 ## Step Five: Keep TMAP8 Updated
 
-<!-- Re-use the bulk of the update section from the main getting started instructions here -->
+!! Re-use the bulk of the update section from the main getting started instructions here
 
 !style halign=left
 !include getting_started/installation.md start=TMAP8 (and the underlying MOOSE Framework) end=updated up to several times a week. include-end=True
@@ -136,7 +136,7 @@ only necessary to re-run those scripts for dependencies that were actually updat
 helpful to check the most recent [MOOSE Newsletter](https://mooseframework.inl.gov/newsletter/index.html) or [Discussion Forum](https://github.com/idaholab/moose/discussions) for any update announcements from the MOOSE development team for the preceding month.
 
 ```bash
-export MOOSE_JOBS=4 METHODS=opt 
+export MOOSE_JOBS=4 METHODS=opt
 cd ~/projects/TMAP8/moose
 scripts/update_and_rebuild_petsc.sh
 scripts/update_and_rebuild_libmesh.sh
@@ -175,7 +175,7 @@ paraview
 ParaView should open. From here, you can select `File`, `Open`, and navigate to the directory
 containing your Exodus results file, and open it.
 
-<!-- Include troubleshooting section from main getting started  -->
+!! Include troubleshooting section from main getting started
 
 !include getting_started/installation.md start=Troubleshooting end=non-TMAP8 issues and questions. include-end=True
 
