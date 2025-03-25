@@ -314,7 +314,7 @@ SpeciesTrappingPhysics::addFEKernels()
   checkSizeComponentSpeciesIndexedVectorOfVector(_trapping_energies, "trapping_energy", false);
   checkSizeComponentSpeciesIndexedVectorOfVector(_Ct0s, "alpha_t", false);
   checkSizeComponentIndexedVector(_Ns, "N", false);
-  checkSizeComponentIndexedVector(_Ns, "trap_per_free", false);
+  checkSizeComponentIndexedVector(_trap_per_frees, "trap_per_free", false);
   checkSizeComponentSpeciesIndexedVectorOfVector(_alpha_rs, "alpha_r", false);
   checkSizeComponentSpeciesIndexedVectorOfVector(_detrapping_energies, "detrapping_energy", false);
   checkSizeComponentIndexedVector(_component_temperatures, "temperature", false);
@@ -360,7 +360,7 @@ SpeciesTrappingPhysics::addFEKernels()
           params.defaultCoupledValue("temperature", value, 0);
           params.set<std::vector<VariableName>>("temperature") = {};
         }
-        else if (_problem->hasVariable(_component_temperatures[c_i]))
+        else if (getProblem().hasVariable(_component_temperatures[c_i]))
           params.set<std::vector<VariableName>>("temperature") = {_component_temperatures[c_i]};
         else
           paramError("temperature", "Should be a constant or the name of a variable");
@@ -401,7 +401,7 @@ SpeciesTrappingPhysics::addFEKernels()
           params.defaultCoupledValue("temperature", value, 0);
           params.set<std::vector<VariableName>>("temperature") = {};
         }
-        else if (_problem->hasVariable(_component_temperatures[c_i]))
+        else if (getProblem().hasVariable(_component_temperatures[c_i]))
           params.set<std::vector<VariableName>>("temperature") = {_component_temperatures[c_i]};
         else
           paramError("temperature", "Should be a constant or the name of a variable");
