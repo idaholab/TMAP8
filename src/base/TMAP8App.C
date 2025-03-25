@@ -42,6 +42,11 @@ TMAP8App::registerAll(Factory & f, ActionFactory & af, Syntax & syntax)
   // TMAP8 specific Physics
   registerSyntax("SorptionExchangePhysics", "Physics/SorptionExchange/*");
   registerSyntax("SpeciesTrappingPhysics", "Physics/SpeciesTrapping/*");
+<<<<<<< HEAD
+=======
+  registerSyntax("SpeciesDiffusionReactionCG", "Physics/SpeciesDiffusionReaction/*");
+  registerSyntax("SpeciesRadioactiveDecay", "Physics/SpeciesRadioactiveDecay/*");
+>>>>>>> 4e98da4d (Add a Physics for species radioactive decay for 1g cases)
 
   // Shorter syntax for MOOSE Physics used by TMAP8
   registerSyntax("DiffusionCG", "Physics/Diffusion/*");
