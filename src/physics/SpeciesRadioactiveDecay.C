@@ -49,11 +49,11 @@ SpeciesRadioactiveDecay::validParams()
       {},
       "The decay constants for each decay reaction. Use ';' to separate input for each decaying "
       "species. If specified in the Physics, applies to every component.");
-  params.addParam<std::vector<std::vector<std::vector<Real>>>>(
+  params.addParam<std::vector<std::vector<Real>>>(
       "branching_ratios",
       {},
-      "Branching ratios. Use '|' to separate inputs for each decaying species. Use ';' to separate "
-      "each decay reaction for a given species. Defaults to 1 if not specified for a given species "
+      "Branching ratios. Use ';' to separate inputs for each decay reaction within each decaying "
+      "species. Defaults to 1 if not specified for a given species "
       "or group. If specified in the Physics, applies to every component.");
 
   params.addRequiredParam<bool>(
@@ -70,7 +70,7 @@ SpeciesRadioactiveDecay::SpeciesRadioactiveDecay(const InputParameters & paramet
     _decay_products(
         {getParam<std::vector<std::vector<std::vector<VariableName>>>>("decay_products")}),
     _decay_constants({getParam<std::vector<std::vector<Real>>>("decay_constants")}),
-    _branching_ratios({getParam<std::vector<std::vector<std::vector<Real>>>>("branching_ratios")}),
+    _branching_ratios({getParam<std::vector<std::vector<Real>>>("branching_ratios")}),
     _single_variable_set(!getParam<bool>("separate_variables_per_component")),
     _add_initial_conditions(getParam<bool>("add_decaying_species_initial_conditions"))
 {
@@ -92,8 +92,8 @@ SpeciesRadioactiveDecay::SpeciesRadioactiveDecay(const InputParameters & paramet
       "species", "decay_constants", true);
   // TODO: add a 3D vector check to the input parameter check util
   if (isParamSetByUser("branching_ratios"))
-    checkTwoDVectorParamsSameLength<std::vector<VariableName>, std::vector<Real>>(
-        "decay_products", "branching_ratios");
+    checkTwoDVectorParamsSameLength<std::vector<VariableName>, Real>("decay_products",
+                                                                     "branching_ratios");
   checkTwoDVectorParamsSameLength<std::vector<VariableName>, Real>("decay_products",
                                                                    "decay_constants");
 }
@@ -279,9 +279,7 @@ SpeciesRadioactiveDecay::addFEKernels()
         _branching_ratios[i_c].resize(_decay_products[i_c].size());
         for (const auto i_s : index_range(_decay_products[i_c]))
         {
-          _branching_ratios[i_c][i_s].resize(_decay_products[i_c][i_s].size());
-          for (const auto i_r : index_range(_decay_products[i_c][i_s]))
-            _branching_ratios[i_c][i_s][i_r].resize(_decay_products[i_c][i_s][i_r].size(), 1);
+          _branching_ratios[i_c][i_s].resize(_decay_products[i_c][i_s].size(), 1.);
         }
       }
     }
@@ -344,7 +342,7 @@ SpeciesRadioactiveDecay::addFEKernels()
           params.set<NonlinearVariableName>("variable") = _decay_products[c_i][s_j][r_k][p_l];
           params.set<std::vector<VariableName>>("v") = {species_name};
           params.set<Real>("coef") =
-              _branching_ratios[c_i][s_j][r_k][p_l] * _decay_constants[c_i][s_j][r_k];
+              _branching_ratios[c_i][s_j][r_k] * _decay_constants[c_i][s_j][r_k];
 
           // Add indices to be sure the name is unique
           getProblem().addNodalKernel(kernel_type,
