@@ -35,7 +35,7 @@ protected:
   /// Decay constants on each component, for each species, for each decay reaction
   std::vector<std::vector<std::vector<Real>>> _decay_constants;
   /// Branching rations on each component, for each species, for each decay reaction, for each product species
-  std::vector<std::vector<std::vector<std::vector<Real>>>> _branching_ratios;
+  std::vector<std::vector<std::vector<Real>>> _branching_ratios;
 
   /// Whether to define a single variable for each species for all components, or a different one for each component
   const bool _single_variable_set;
