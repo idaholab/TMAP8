@@ -32,11 +32,25 @@ temperature = 1000
     variable = mobile
     extra_vector_tags = ref
   []
-  [coupled_time]
-    type = CoupledTimeDerivative
+
+  [trapping]
+    type = TrappingKernel
     variable = mobile
-    v = trapped
+    mobile_concentration = 'mobile'
+    trapped_concentration = 'trapped'
+    alpha_t = -1e15
+    N = '${fparse 3.1622e22 / cl}'
+    Ct0 = 0.1
+    temperature = ${temperature}
     extra_vector_tags = ref
+  []
+  [release]
+    type = ReleasingKernel
+    variable = mobile
+    trapped_concentration = 'trapped'
+    alpha_r = -1e13
+    temperature = ${temperature}
+    detrapping_energy = 100
   []
 []
 
@@ -111,6 +125,9 @@ temperature = 1000
   automatic_scaling = true
   verbose = true
   compute_scaling_once = false
+
+
+  line_search = none
 []
 
 [Outputs]
