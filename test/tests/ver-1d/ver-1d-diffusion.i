@@ -33,6 +33,12 @@ temperature = 1000
     extra_vector_tags = ref
   []
 
+  # [gain]
+  #   type = CoupledTimeDerivative
+  #   v = trapped
+  #   variable = mobile
+  # []
+
   [trapping]
     type = TrappingKernel
     variable = mobile
@@ -53,6 +59,34 @@ temperature = 1000
     detrapping_energy = 100
   []
 []
+
+# Using volumetric terms for trapping works
+# and is just not
+
+
+# [Kernels]
+#   [time2]
+#     type = TimeDerivative
+#     variable = trapped
+#   []
+#   [trapping2]
+#     type = TrappingKernel
+#     variable = trapped
+#     alpha_t = 1e15
+#     N = '${fparse 3.1622e22 / cl}'
+#     Ct0 = 0.1
+#     mobile_concentration = 'mobile'
+#     temperature = ${temperature}
+#     extra_vector_tags = ref
+#   []
+#   [release2]
+#     type = ReleasingKernel
+#     alpha_r = 1e13
+#     temperature = ${temperature}
+#     detrapping_energy = 100
+#     variable = trapped
+#   []
+# []
 
 [NodalKernels]
   [time]
@@ -124,9 +158,8 @@ temperature = 1000
   petsc_options_value = 'lu'
   automatic_scaling = true
   verbose = true
-  compute_scaling_once = false
 
-
+  # Very low tolerances are met on some steps
   line_search = none
 []
 
