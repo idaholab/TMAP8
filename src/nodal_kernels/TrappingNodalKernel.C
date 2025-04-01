@@ -59,7 +59,7 @@ TrappingNodalKernel::TrappingNodalKernel(const InputParameters & parameters)
 
   for (MooseIndex(_n_other_concs) i = 0; i < _n_other_concs; ++i)
   {
-    _trapped_concentrations[i] = &coupledValue("other_trapped_concentration_variables", i);
+    _trapped_concentrations[i] = &coupledValue("other_trapped_concentration_variables", /*comp=*/0);
     _var_numbers[i] = coupled("other_trapped_concentration_variables", i);
   }
   _trapped_concentrations[_n_other_concs] = &_u;

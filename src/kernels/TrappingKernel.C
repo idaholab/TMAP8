@@ -56,10 +56,10 @@ TrappingKernel::TrappingKernel(const InputParameters & parameters)
   // Resize to n_other_concs plus the concentration corresponding to this Kernel's variable
   _trapped_concentrations.resize(1 + _n_other_concs);
 
+  // Keep pointers to references of the trapped species concentrations
   for (MooseIndex(_n_other_concs) i = 0; i < _n_other_concs; ++i)
-  {
-    _trapped_concentrations[i] = &adCoupledValue("other_trapped_concentration_variables", i);
-  }
+    _trapped_concentrations[i] =
+        &adCoupledValue("other_trapped_concentration_variables", /*comp*/ 0);
   _trapped_concentrations[_n_other_concs] =
       isParamValid("trapped_concentration") ? &adCoupledValue("trapped_concentration") : &_u;
 }
