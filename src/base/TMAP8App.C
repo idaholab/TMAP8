@@ -48,10 +48,6 @@ TMAP8App::registerAll(Factory & f, ActionFactory & af, Syntax & syntax)
   registerSyntax("DiffusionCG", "Physics/Diffusion/*");
   registerSyntax("MultiSpeciesDiffusionCG", "Physics/SpeciesDiffusion/*");
   registerSyntax("HeatConductionCG", "Physics/HeatConduction/*");
-
-  // Delete the longer syntaxes to avoid the two syntaxes being detected together
-  syntax.removeAllActionsForSyntax("Physics/Diffusion/ContinuousGalerkin/*");
-  syntax.removeAllActionsForSyntax("Physics/HeatConduction/FiniteElement/*");
 }
 
 void
