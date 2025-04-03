@@ -27,6 +27,11 @@ SpeciesTrappingPhysics::validParams()
   InputParameters params = SpeciesPhysicsBase::validParams();
   params.addClassDescription(
       "Add Physics for the trapping of species on multi-dimensional components.");
+  MooseEnum discr("nodal CG", "CG");
+  params.addParam<MooseEnum>("discretization",
+                             discr,
+                             "The discretization to use for the equations. We recommend 'CG' when "
+                             "coupling to other volumetric equations");
   params.addParam<std::vector<VariableName>>(
       "mobile",
       {},
@@ -82,6 +87,7 @@ SpeciesTrappingPhysics::validParams()
 
 SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameters)
   : SpeciesPhysicsBase(parameters),
+    _discretization(getParam<MooseEnum>("discretization")),
     // If specified in the Physics block, all parameters are retrieved here
     _mobile_species_names({getParam<std::vector<VariableName>>("mobile")}),
     _alpha_ts({getParam<std::vector<Real>>("alpha_t")}),
@@ -342,16 +348,20 @@ SpeciesTrappingPhysics::addFEKernels()
       // Time derivative
       if (isTransient())
       {
-        const std::string kernel_type = "TimeDerivativeNodalKernel";
+        const std::string kernel_type = isNodal() ? "TimeDerivativeNodalKernel" : "TimeDerivative";
         InputParameters params = getFactory().getValidParams(kernel_type);
         params.set<NonlinearVariableName>("variable") = species_name;
         assignBlocks(params, blocks);
-        getProblem().addNodalKernel(kernel_type, prefix() + species_name + "_time", params);
+        const auto kernel_name = prefix() + species_name + "_time";
+        if (isNodal())
+          getProblem().addNodalKernel(kernel_type, kernel_name, params);
+        else
+          getProblem().addKernel(kernel_type, kernel_name, params);
       }
 
       // Trapping term
       {
-        const std::string kernel_type = "TrappingNodalKernel";
+        const std::string kernel_type = isNodal() ? "TrappingNodalKernel" : "TrappingKernel";
         auto params = _factory.getValidParams(kernel_type);
         assignBlocks(params, blocks);
         params.set<NonlinearVariableName>("variable") = species_name;
@@ -387,12 +397,34 @@ SpeciesTrappingPhysics::addFEKernels()
           params.set<std::vector<VariableName>>("other_trapped_concentration_variables") =
               copy_species;
 
-        getProblem().addNodalKernel(kernel_type, prefix() + species_name + "_enc_trapping", params);
+        const auto kernel_name =
+            prefix() + "trapping_of_" + mobile_species_name + "_to_" + species_name;
+        if (isNodal())
+          getProblem().addNodalKernel(kernel_type, kernel_name, params);
+        else
+          getProblem().addKernel(kernel_type, kernel_name, params);
+
+        // Release term in the mobile species conservation equation
+        // We avoid just using the time derivative of the trapped species because another term (such
+        // as decay) may be acting on the trapped species concentration
+        {
+          assignBlocks(params, blocks);
+          params.set<NonlinearVariableName>("variable") = mobile_species_name;
+          params.set<std::vector<VariableName>>("trapped_concentration") = {species_name};
+          params.set<Real>("alpha_t") = -_alpha_ts[c_i][s_j];
+
+          const auto kernel_name =
+              prefix() + "trapping_loss_of_" + mobile_species_name + "_to_" + species_name;
+          if (isNodal())
+            getProblem().addNodalKernel(kernel_type, kernel_name, params);
+          else
+            getProblem().addKernel(kernel_type, kernel_name, params);
+        }
       }
 
       // Release term
       {
-        const std::string kernel_type = "ReleasingNodalKernel";
+        const std::string kernel_type = isNodal() ? "ReleasingNodalKernel" : "ReleasingKernel";
         auto params = _factory.getValidParams(kernel_type);
         assignBlocks(params, blocks);
         params.set<NonlinearVariableName>("variable") = species_name;
@@ -414,7 +446,12 @@ SpeciesTrappingPhysics::addFEKernels()
           // there is an error right above in the trapping term
           mooseAssert(false, "Should be a constant or the name of a variable");
 
-        getProblem().addNodalKernel(kernel_type, prefix() + species_name + "_enc_release", params);
+        const auto kernel_name =
+            prefix() + "release_loss_of_" + species_name + "_to_" + mobile_species_name;
+        if (isNodal())
+          getProblem().addNodalKernel(kernel_type, kernel_name, params);
+        else
+          getProblem().addKernel(kernel_type, kernel_name, params);
 
         // Release term in the mobile species conservation equation
         // We avoid just using the time derivative of the trapped species because another term (such
@@ -422,11 +459,15 @@ SpeciesTrappingPhysics::addFEKernels()
         {
           assignBlocks(params, blocks);
           params.set<NonlinearVariableName>("variable") = mobile_species_name;
-          params.set<std::vector<VariableName>>("v") = {species_name};
+          params.set<std::vector<VariableName>>("trapped_concentration") = {species_name};
           params.set<Real>("alpha_r") = -_alpha_rs[c_i][s_j];
 
-          getProblem().addNodalKernel(
-              kernel_type, prefix() + mobile_species_name + "_from_" + species_name, params);
+          const auto kernel_name =
+              prefix() + "release_of_" + mobile_species_name + "_from_" + species_name;
+          if (isNodal())
+            getProblem().addNodalKernel(kernel_type, kernel_name, params);
+          else
+            getProblem().addKernel(kernel_type, kernel_name, params);
         }
       }
     }

@@ -31,6 +31,8 @@ protected:
   /// @param s_j index of  the species
   VariableName getSpeciesVariableName(unsigned int c_i, unsigned int s_j) const;
 
+  /// The discretization method for the trapping equations
+  const MooseEnum _discretization;
   /// The mobile species of interest
   std::vector<std::vector<VariableName>> _mobile_species_names;
 
@@ -54,6 +56,7 @@ protected:
   const bool _single_variable_set;
 
 private:
+  bool isNodal() const { return _discretization == "nodal"; }
   virtual void addSolverVariables() override;
   virtual void addInitialConditions() override;
   virtual void addFEKernels() override;
