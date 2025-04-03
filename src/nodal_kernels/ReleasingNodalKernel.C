@@ -20,6 +20,7 @@ ReleasingNodalKernel::validParams()
   params.addCoupledVar("v",
                        "If specified, variable to compute the release rate with. "
                        "Else, uses the 'variable' argument");
+  params.deprecateCoupledVar("v", "trapped_concentration");
   params.addParam<Real>("detrapping_energy", 0, "The detrapping energy (K)");
   params.addRequiredCoupledVar("temperature", "The temperature (K)");
   return params;
@@ -30,9 +31,10 @@ ReleasingNodalKernel::ReleasingNodalKernel(const InputParameters & parameters)
     _alpha_r(getParam<Real>("alpha_r")),
     _detrapping_energy(getParam<Real>("detrapping_energy")),
     _temperature(coupledValue("temperature")),
-    _v(isParamValid("v") ? coupledValue("v") : _u),
-    _v_index(coupled("v")),
-    _v_is_u(!isCoupled("v") || (coupled("v") == variable().number()))
+    _v(isParamValid("trapped_concentration") ? coupledValue("trapped_concentration") : _u),
+    _v_index(coupled("trapped_concentration")),
+    _v_is_u(!isCoupled("trapped_concentration") ||
+            (coupled("trapped_concentration") == variable().number()))
 {
 }
 
