@@ -86,6 +86,8 @@ N = ${fparse 3.1622e22/cl}
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
   automatic_scaling = true
+
+  line_search = 'none'
 []
 
 [Outputs]
