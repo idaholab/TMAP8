@@ -32,66 +32,19 @@ temperature = 1000
     variable = mobile
     extra_vector_tags = ref
   []
-
-  # [gain]
-  #   type = CoupledTimeDerivative
-  #   v = trapped
-  #   variable = mobile
-  # []
-
-  [trapping]
-    type = TrappingKernel
+  [trapping_minus_release]
+    type = CoupledTimeDerivative
     variable = mobile
-    mobile_concentration = 'mobile'
-    trapped_concentration = 'trapped'
-    alpha_t = -1e15
-    N = '${fparse 3.1622e22 / cl}'
-    Ct0 = 0.1
-    temperature = ${temperature}
+    v = trapped
     extra_vector_tags = ref
   []
-  [release]
-    type = ReleasingKernel
-    variable = mobile
-    trapped_concentration = 'trapped'
-    alpha_r = -1e13
-    temperature = ${temperature}
-    detrapping_energy = 100
-  []
 []
-
-# Using volumetric terms for trapping works
-# and is just not
-
-
-# [Kernels]
-#   [time2]
-#     type = TimeDerivative
-#     variable = trapped
-#   []
-#   [trapping2]
-#     type = TrappingKernel
-#     variable = trapped
-#     alpha_t = 1e15
-#     N = '${fparse 3.1622e22 / cl}'
-#     Ct0 = 0.1
-#     mobile_concentration = 'mobile'
-#     temperature = ${temperature}
-#     extra_vector_tags = ref
-#   []
-#   [release2]
-#     type = ReleasingKernel
-#     alpha_r = 1e13
-#     temperature = ${temperature}
-#     detrapping_energy = 100
-#     variable = trapped
-#   []
-# []
 
 [NodalKernels]
   [time]
     type = TimeDerivativeNodalKernel
     variable = trapped
+    nodal_mass = nodal_vol
   []
   [trapping]
     type = TrappingNodalKernel
@@ -102,6 +55,8 @@ temperature = 1000
     mobile_concentration = 'mobile'
     temperature = ${temperature}
     extra_vector_tags = ref
+    use_mass_lumping = true
+    nodal_mass = nodal_vol
   []
   [release]
     type = ReleasingNodalKernel
@@ -109,8 +64,24 @@ temperature = 1000
     temperature = ${temperature}
     detrapping_energy = 100
     variable = trapped
+    use_mass_lumping = true
+    nodal_mass = nodal_vol
   []
 []
+
+[AuxVariables]
+  [nodal_vol]
+  []
+[]
+
+[AuxKernels]
+  [nodal_vol]
+    type = VolumeAux
+    variable = 'nodal_vol'
+    execute_on = initial
+  []
+[]
+
 
 [BCs]
   [left]
@@ -154,18 +125,16 @@ temperature = 1000
   dt = .01
   dtmin = .01
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type'
-  petsc_options_value = 'lu'
+  petsc_options_iname = '-pc_type -pc_factor_shift_type'
+  petsc_options_value = 'lu       NONZERO'
   automatic_scaling = true
   verbose = true
-
-  # Very low tolerances are met on some steps
-  line_search = none
 []
 
 [Outputs]
   csv = true
   exodus = true
+  hide = 'nodal_vol'
   [dof]
     type = DOFMap
     execute_on = initial
