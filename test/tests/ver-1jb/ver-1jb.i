@@ -219,7 +219,7 @@ dt_max = ${fparse end_time/100} # s
   [release_into_mobile]
     type = ReleasingNodalKernel
     variable = tritium_mobile_concentration_scaled # (atoms/m^3) / density_scalar = (-)
-    v = tritium_trapped_concentration_scaled
+    trapped_concentration = tritium_trapped_concentration_scaled
     alpha_r = -${fparse tritium_release_prefactor} # (1/s)
     detrapping_energy = ${fparse tritium_release_energy / boltzmann_constant} # (K)
     temperature = temperature # (K)

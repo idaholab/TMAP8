@@ -32,6 +32,9 @@ TrappingNodalKernel::validParams()
   params.addRequiredCoupledVar(
       "mobile_concentration",
       "The variable representing the mobile concentration of solute particles (1/m^3)");
+  params.addCoupledVar("trapped_concentration",
+                       "The variable representing the trapped concentration of solute particles "
+                       "(1/m^3). If unspecified, defaults to the 'variable' parameter");
   params.addCoupledVar("other_trapped_concentration_variables",
                        "Other variables representing trapped particle concentrations.");
   params.addRequiredCoupledVar("temperature", "The temperature (K)");
@@ -62,8 +65,10 @@ TrappingNodalKernel::TrappingNodalKernel(const InputParameters & parameters)
     _trapped_concentrations[i] = &coupledValue("other_trapped_concentration_variables", /*comp=*/i);
     _var_numbers[i] = coupled("other_trapped_concentration_variables", i);
   }
-  _trapped_concentrations[_n_other_concs] = &_u;
-  _var_numbers[_n_other_concs] = _var.number();
+  _trapped_concentrations[_n_other_concs] =
+      isParamValid("trapped_concentration") ? &coupledValue("trapped_concentration") : &_u;
+  _var_numbers[_n_other_concs] =
+      isParamValid("trapped_concentration") ? coupled("trapped_concentration") : _var.number();
   _var_numbers[_n_other_concs + 1] = coupled("mobile_concentration");
 }
 
