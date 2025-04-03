@@ -1,7 +1,7 @@
 [Tests]
   [diffusion_reaction_wrong_sizes]
     requirement = "The system shall return an error if"
-    design = 'SpeciesDiffusionReaction.md'
+    design = 'SpeciesDiffusionReactionCG.md'
     issues = '#8'
     [reaction_species_coeff_reaction]
       type = RunException
@@ -34,7 +34,7 @@
   []
   [diffusion_reaction_bad_input]
     requirement = "The system shall return"
-    design = 'SpeciesDiffusionReaction.md'
+    design = 'SpeciesDiffusionReactionCG.md'
     issues = '#8'
     [reactant_missing_variable]
       type = RunException

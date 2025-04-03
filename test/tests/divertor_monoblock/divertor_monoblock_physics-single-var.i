@@ -85,6 +85,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
             N = 1.0e0                   # = (1e0) x (${tungsten_atomic_density} #/m^3)
             Ct0 = 1.0e-4                # E.A. Hodille et al 2021 Nucl. Fusion 61 1260033, trap 2
             trap_per_free = 1.0e0       # 1.0e1
+            trapping_energy = 0
 
             alpha_r = 8.4e12            # 1.0e13
             detrapping_energy = 11604.6 # = 1.00 eV    E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 2
@@ -101,6 +102,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
             N = 1.0e0                   # = ${tungsten_atomic_density} #/m^3 (W lattice density)
             Ct0 = 5.0e-5                # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
             trap_per_free = 1.0e0       # 1.0e1
+            trapping_energy = 0
 
             alpha_r = 8.4e12            # 1.0e13
             detrapping_energy = 5802.3  # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
@@ -117,6 +119,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
             N = 1.0e0                   # = ${tungsten_atomic_density} #/m^3 (W lattice density)
             Ct0 = 5.0e-5                # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
             trap_per_free = 1.0e0       # 1.0e1
+            trapping_energy = 0
 
             alpha_r = 8.4e12            # 1.0e13
             detrapping_energy = 5802.3  # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4

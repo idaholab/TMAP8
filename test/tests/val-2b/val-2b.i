@@ -244,13 +244,13 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
     type = ADGenericFunctionMaterial
     prop_names = 'diffusivity_BeO diffusivity_Be solubility_Be solubility_BeO'
     prop_values = 'diffusivity_BeO_func diffusivity_Be_func solubility_Be_func solubility_BeO_func'
-    outputs = all
+    outputs = 'exodus'
   []
   [converter_to_nonAD]
     type = MaterialADConverter
     ad_props_in = 'diffusivity_Be diffusivity_BeO'
     reg_props_out = 'diffusivity_Be_nonAD diffusivity_BeO_nonAD'
-    outputs = all
+    outputs = 'exodus'
   []
   [interface_jump]
     type = SolubilityRatioMaterial
@@ -259,7 +259,7 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
     boundary = interface
     concentration_primary = deuterium_concentration_BeO
     concentration_secondary = deuterium_concentration_Be
-    outputs = all
+    outputs = 'exodus'
   []
 []
 
@@ -289,21 +289,25 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
     type = ElementAverageValue
     block = 1
     variable = diffusivity_Be
+    outputs = 'exodus csv'
   []
   [diffusion_BeO]
     type = ElementAverageValue
     block = 0
     variable = diffusivity_BeO
+    outputs = 'exodus csv'
   []
   [solubility_Be]
     type = ElementAverageValue
     block = 1
     variable = solubility_Be
+    outputs = 'exodus csv'
   []
   [solubility_BeO]
     type = ElementAverageValue
     block = 0
     variable = solubility_BeO
+    outputs = 'exodus csv'
   []
   [gold_solubility_ratio]
     type = ParsedPostprocessor

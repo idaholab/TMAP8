@@ -40,6 +40,8 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
         [all]
             temperature_name = 'temperature'
             initial_temperature = ${units 300 K}
+            # if using AD, increase the size of the factorization space in petsc options
+            # using -mat_mumps_icntl_14 300 or use superlu_dist over mumps
             use_automatic_differentiation = false
 
             thermal_conductivity = 'thermal_conductivity'
@@ -90,6 +92,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
             N = 1.0e0                   # = (1e0) x (${tungsten_atomic_density} #/m^3)
             Ct0 = 1.0e-4                # E.A. Hodille et al 2021 Nucl. Fusion 61 1260033, trap 2
             trap_per_free = 1.0e0       # 1.0e1
+            trapping_energy = 0
 
             alpha_r = 8.4e12            # 1.0e13
             detrapping_energy = 11604.6 # = 1.00 eV    E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 2
@@ -106,6 +109,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
             N = 1.0e0                   # = ${tungsten_atomic_density} #/m^3 (W lattice density)
             Ct0 = 5.0e-5                # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
             trap_per_free = 1.0e0       # 1.0e1
+            trapping_energy = 0
 
             alpha_r = 8.4e12            # 1.0e13
             detrapping_energy = 5802.3  # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
@@ -122,6 +126,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
             N = 1.0e0                   # = ${tungsten_atomic_density} #/m^3 (W lattice density)
             Ct0 = 5.0e-5                # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
             trap_per_free = 1.0e0       # 1.0e1
+            trapping_energy = 0
 
             alpha_r = 8.4e12            # 1.0e13
             detrapping_energy = 5802.3  # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
@@ -337,8 +342,8 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
     type = Transient
     scheme = bdf2
     solve_type = NEWTON
-    petsc_options_iname = '-pc_type -pc_factor_shift_type -pc_factor_mat_solver_package'
-    petsc_options_value = 'lu NONZERO superlu_dist'
+    petsc_options_iname = '-pc_type -pc_factor_shift_type'
+    petsc_options_value = 'lu NONZERO'
     nl_rel_tol  = 1e-6 # 1e-8 works for 1 cycle
     nl_abs_tol  = 1e-7 # 1e-11 works for 1 cycle
     end_time = 8.0e4   # 50 ITER shots (3.0e4 s plasma, 2.0e4 SSP)
