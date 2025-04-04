@@ -390,15 +390,57 @@ SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
   // Always add if it's been specified on a component instead
   else if (component_value_valid)
   {
+    auto comp_value = comp.getParam<T>(comp_param_name);
+
+    // If species are different between the Physics and the Components, downselect
+    // We can only do this for species-indexed vectors
+    if constexpr (is_vector<T>::value)
+    {
+      T temp_storage;
+
+      if (comp.isParamValid("species") &&
+          comp.getParam<std::vector<NonlinearVariableName>>("species") != _species[0])
+      {
+        // All the TMAP8 components have a species parameter, so this works for them. For a
+        // general component, it likely won't have this parameter. In that case, we will just
+        // error and users will have to ensure Physics and Component specified values are
+        // consistent.
+        const auto & species_component =
+            comp.getParam<std::vector<NonlinearVariableName>>("species");
+        for (const auto i_comp_sp : index_range(species_component))
+        {
+          const auto & specie = species_component[i_comp_sp];
+          // Find index in Physics species vector
+          // Note that some species in the component species are not governed by this Physics
+          for (const auto i_phy : index_range(_species[0]))
+          {
+            // The Physics parameters are at index 0
+            if (specie == _species[0][i_phy])
+            {
+              // Check sizes. We can never check sizes enough
+              mooseAssert(i_comp_sp < comp_value.size(),
+                          comp_param_name + ": Index '" + std::to_string(i_comp_sp) +
+                              "' for species '" + specie + " is beyond parameter size " +
+                              std::to_string(comp_value.size()));
+
+              // Store the component value
+              temp_storage.push_back(comp_value[i_comp_sp]);
+            }
+          }
+        }
+        comp_value = temp_storage;
+      }
+    }
+
     // Replace the empty default
     if (comp_index == 0)
     {
       if (physics_storage.empty())
         physics_storage.resize(1);
-      physics_storage[0] = comp.getParam<T>(comp_param_name);
+      physics_storage[0] = comp_value;
     }
     else
-      physics_storage.push_back(comp.getParam<T>(comp_param_name));
+      physics_storage.push_back(comp_value);
   }
   // User did not specify the parameter, in the component or the Physics
   else if (use_default)
