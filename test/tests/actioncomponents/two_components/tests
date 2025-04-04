@@ -1,0 +1,18 @@
+[Tests]
+  issues = '#9'
+  [two_enclosures]
+    type = CSVDiff
+    input = 'enclosure0D.i'
+    csvdiff = 'enclosure0D_out.csv'
+    design = 'Enclosure0D.md SorptionExchangePhysics.md'
+    requirement = 'The system shall be able to model two enclosures connected to the same structure.'
+  []
+  [two_enclosures_diff_species]
+    type = CSVDiff
+    input = 'enclosure0D_two_species.i'
+    # same results as 'two_enclosures'
+    csvdiff = 'enclosure0D_two_species_out.csv'
+    design = 'Enclosure0D.md SorptionExchangePhysics.md'
+    requirement = 'The system shall be able to model two enclosures connected to the same structure but holding different species.'
+  []
+[]
