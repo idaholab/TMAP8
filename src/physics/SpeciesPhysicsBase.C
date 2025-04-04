@@ -62,16 +62,7 @@ SpeciesPhysicsBase::SpeciesPhysicsBase(const InputParameters & parameters)
 void
 SpeciesPhysicsBase::checkIntegrity() const
 {
-  for (const auto i : index_range(_scaling_factors))
-    for (const auto j : index_range(_scaling_factors[i]))
-      if (_scaling_factors[i][j] <= 0)
-        mooseError("Scaling factor '",
-                   _scaling_factors[i][j],
-                   "' for species '",
-                   _species[i][j],
-                   "'",
-                   getOnComponentString(i),
-                   " inferior or equal to 0");
+  // No need to check scaling factors, range checked in parameters in both components and Physics
 
   for (const auto i : index_range(_initial_conditions))
     for (const auto j : index_range(_initial_conditions[i]))

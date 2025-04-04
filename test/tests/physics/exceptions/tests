@@ -196,5 +196,80 @@
       detail = "the temperature is specified as a function when only constants and variables are supported at this time."
       expect_err = "Should be a constant or the name of a variable"
     []
+    [no_component_yet_asking_for_vars_per_comp]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/separate_variables_per_component=true"
+      detail = "no components are specified yet the Physics is set to create variables for each component,"
+      expect_err = "Physics is not defined on any Component, this parameter should be set to false"
+    []
+  []
+  [trapping_missing_data]
+    design = 'SpeciesTrappingPhysics.md'
+    issues = '#8'
+    requirement = "The system shall return an error if the species trapping Physics is not used on a component and "
+    [species]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/species=''"
+      detail = "the species is not specified,"
+      expect_err = "Parameter 'species' should not be set to an empty vector"
+    []
+    [alpha_t]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff"
+      detail = "the trapping coefficient is not specified,"
+      expect_err = "alpha_t: Should not be empty if not using Components"
+    []
+    [trapping_energy]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/alpha_t=1"
+      detail = "the trapping energy is not specified,"
+      expect_err = "trapping_energy: Should not be empty if not using Components"
+    []
+    [N]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/alpha_t=1 Physics/SpeciesTrapping/trapped/trapping_energy=0"
+      detail = "the number density of the traps is not specified,"
+      expect_err = "N: Should not be empty if not using Components"
+    []
+    [Ct0]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/alpha_t=1
+                  Physics/SpeciesTrapping/trapped/trapping_energy=0 Physics/SpeciesTrapping/trapped/N=1"
+      detail = "the trapping Ct0 coefficient is not specified,"
+      expect_err = "Ct0: Should not be empty if not using Components"
+    []
+    [trap_per_free]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/alpha_t=1
+                  Physics/SpeciesTrapping/trapped/trapping_energy=0 Physics/SpeciesTrapping/trapped/N=1 Physics/SpeciesTrapping/trapped/Ct0=1"
+      detail = "the number of traps filled per free particle trapped is not specified,"
+      expect_err = "trap_per_free: Should not be empty if not using Components"
+    []
+    [alpha_r]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/alpha_t=1
+                  Physics/SpeciesTrapping/trapped/trapping_energy=0 Physics/SpeciesTrapping/trapped/N=1
+                  Physics/SpeciesTrapping/trapped/Ct0=1 Physics/SpeciesTrapping/trapped/trap_per_free=1"
+      detail = "the release coefficient is not specified,"
+      expect_err = "alpha_r: Should not be empty if not using Components"
+    []
+    [detrapping_energy]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/alpha_t=1
+                  Physics/SpeciesTrapping/trapped/trapping_energy=0 Physics/SpeciesTrapping/trapped/N=1
+                  Physics/SpeciesTrapping/trapped/Ct0=1 Physics/SpeciesTrapping/trapped/trap_per_free=1
+                  Physics/SpeciesTrapping/trapped/alpha_r=100"
+      detail = "the detrapping energy is not specified."
+      expect_err = "detrapping_energy: Should not be empty if not using Components"
+    []
   []
 []

@@ -56,6 +56,7 @@ slab_thickness = '${units 3.30e-5 m -> mum}'
     type = Enclosure0D
     species = 'v'
     physics = '0d_solub'
+    verbose = true
 
     # Conditions
     temperature = '${temperature}'
