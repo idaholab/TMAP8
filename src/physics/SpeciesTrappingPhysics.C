@@ -162,9 +162,16 @@ SpeciesTrappingPhysics::addComponent(const ActionComponent & component)
                                                false,
                                                "");
 
-  /// Special case: mobile
-  // processComponentParameters<std::vector<NonlinearVariableName>>(
-  //     "mobile", component.name(), _mobile_species_names, "mobile", false, {});
+  // Special case: mobile. There are no 'mobile' parameters on components at this time. So mobile is
+  // shared between components and species. This call will simply use the parameter set on the
+  // SpeciesTrappingPhysics to fill '_mobile_species_name'
+  processComponentParameters<std::vector<VariableName>>("mobile",
+                                                        component.name(),
+                                                        comp_index,
+                                                        _mobile_species_names,
+                                                        "mobile (not defined at this time)",
+                                                        true,
+                                                        _mobile_species_names[0]);
 
   // These parameters should be defined as material properties by the user on the Component
   // or on the Physics.

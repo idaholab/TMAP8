@@ -490,7 +490,10 @@ SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
       // We use the size of the species vector
       auto n_items = 1;
       if constexpr (is_vector<T>::value)
-        n_items = _species.size();
+      {
+        mooseAssert(_species.size() > comp_index, "Missing species for component " + comp_name);
+        n_items = _species[comp_index].size();
+      }
 
       for (const auto i : make_range(n_items))
       {
@@ -553,12 +556,15 @@ SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
 
     auto n_items = 1;
     if constexpr (is_vector<T>::value)
-      n_items = _species.size();
+    {
+      mooseAssert(_species.size() > comp_index, "Missing species for component " + comp_name);
+      n_items = _species[comp_index].size();
+    }
     T temp_storage;
 
     for (const auto i : make_range(n_items))
     {
-      const auto property_name = (n_items == 1) ? param_name : param_name + "_" + species[i];
+      const auto property_name = (n_items == 1) ? param_name : (param_name + "_" + species[i]);
       // Has the property, check the type
       if (mat_comp->hasProperty(property_name))
       {
