@@ -18,7 +18,9 @@ Na = 6.02214076E23 # Avogadro's constant (from PhysicalConstants.h - https://phy
 
       # Be careful to only enter the reaction once
       reacting_species = 'c_b'
+      reacting_species_coefficients = '1'
       product_species = 'c_ab'
+      product_species_coefficients = '1'
       reaction_coefficients = 'K' #'-1; -1; 1 1'
     []
   []
