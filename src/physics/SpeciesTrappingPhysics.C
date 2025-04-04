@@ -18,8 +18,10 @@ registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "copy_vars_physics");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "check_integrity");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "check_integrity_early_physics");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_variable");
+registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_aux_variable");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_ic");
 registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_kernel");
+registerMooseAction("TMAP8App", SpeciesTrappingPhysics, "add_aux_kernel");
 
 InputParameters
 SpeciesTrappingPhysics::validParams()
@@ -275,6 +277,18 @@ SpeciesTrappingPhysics::addSolverVariables()
 }
 
 void
+SpeciesTrappingPhysics::addAuxiliaryVariables()
+{
+  const std::string variable_type = "MooseVariable";
+  InputParameters params = getFactory().getValidParams(variable_type);
+  params.set<MooseEnum>("family") = "LAGRANGE";
+  params.set<MooseEnum>("order") = FIRST;
+  assignBlocks(params, _blocks);
+  if (!variableExists("nodal_mass", false))
+    getProblem().addAuxVariable(variable_type, "nodal_mass", params);
+}
+
+void
 SpeciesTrappingPhysics::addInitialConditions()
 {
   const std::string ic_type = "FunctorIC";
@@ -345,6 +359,9 @@ SpeciesTrappingPhysics::addFEKernels()
         InputParameters params = getFactory().getValidParams(kernel_type);
         params.set<NonlinearVariableName>("variable") = species_name;
         assignBlocks(params, blocks);
+        if (isNodal())
+          params.set<std::vector<VariableName>>("nodal_mass") = {"nodal_mass"};
+
         const auto kernel_name = prefix() + species_name + "_time";
         if (isNodal())
           getProblem().addNodalKernel(kernel_type, kernel_name, params);
@@ -380,6 +397,12 @@ SpeciesTrappingPhysics::addFEKernels()
         params.set<Real>("N") = _Ns[c_i];
         params.set<FunctionName>("Ct0") = _Ct0s[c_i][s_j];
         params.set<Real>("trap_per_free") = _trap_per_frees[c_i];
+
+        if (isNodal())
+        {
+          params.set<bool>("use_mass_lumping") = true;
+          params.set<std::vector<VariableName>>("nodal_mass") = {"nodal_mass"};
+        }
 
         // Add the other species as occupying traps
         std::vector<VariableName> copy_species;
@@ -438,6 +461,12 @@ SpeciesTrappingPhysics::addFEKernels()
         else
           paramError("temperature", "Should be a constant or the name of a variable");
 
+        if (isNodal())
+        {
+          params.set<bool>("use_mass_lumping") = true;
+          params.set<std::vector<VariableName>>("nodal_mass") = {"nodal_mass"};
+        }
+
         const auto kernel_name =
             prefix() + "release_loss_of_" + species_name + "_to_" + mobile_species_name;
         if (isNodal())
@@ -466,4 +495,15 @@ SpeciesTrappingPhysics::addFEKernels()
     if (_single_variable_set)
       break;
   }
+}
+
+void
+SpeciesTrappingPhysics::addAuxiliaryKernels()
+{
+  const std::string kernel_type = "VolumeAux";
+  auto params = _factory.getValidParams(kernel_type);
+  assignBlocks(params, _blocks);
+  params.set<AuxVariableName>("variable") = "nodal_mass";
+  params.set<ExecFlagEnum>("execute_on") = {EXEC_INITIAL};
+  getProblem().addAuxKernel(kernel_type, prefix() + "nodal_mass", params);
 }

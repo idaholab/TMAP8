@@ -44,6 +44,12 @@ protected:
   const Real _trap_per_free;
   const VariableValue & _temperature;
   LocalDN _jacobian;
+  /// Whether the kernels are mass lumped to make it compatible
+  const bool _mass_lumped;
+  /// Local node mass
+  const VariableValue & _nodal_mass;
+  /// An array with ones for convenience
+  const VariableValue _one;
 
 private:
   void ADHelper();

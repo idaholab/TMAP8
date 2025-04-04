@@ -23,6 +23,14 @@ ReleasingNodalKernel::validParams()
   params.deprecateCoupledVar("v", "trapped_concentration");
   params.addParam<Real>("detrapping_energy", 0, "The detrapping energy (K)");
   params.addRequiredCoupledVar("temperature", "The temperature (K)");
+
+  // Optional mass lumping
+  params.addParam<bool>(
+      "use_mass_lumping",
+      false,
+      "Whether to use mass lumping to make this kernel compatible with volumetric kernels");
+  params.addCoupledVar("nodal_mass", "The local nodal mass");
+  params.addParamNamesToGroup("use_mass_lumping nodal_mass", "Mass lumping");
   return params;
 }
 
@@ -33,22 +41,26 @@ ReleasingNodalKernel::ReleasingNodalKernel(const InputParameters & parameters)
     _temperature(coupledValue("temperature")),
     _v(isParamValid("trapped_concentration") ? coupledValue("trapped_concentration") : _u),
     _v_index(coupled("trapped_concentration")),
-    _v_is_u(!isCoupled("trapped_concentration") ||
-            (coupled("trapped_concentration") == variable().number()))
+    _v_is_u(!isCoupled("trapped_concentration") || (_v_index == variable().number())),
+    _mass_lumped(getParam<bool>("use_mass_lumping")),
+    _nodal_mass(_mass_lumped ? coupledValue("nodal_mass") : _one),
+    _one(1)
 {
 }
 
 Real
 ReleasingNodalKernel::computeQpResidual()
 {
-  return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]) * _v[_qp];
+  const auto mass = _mass_lumped ? _nodal_mass[_qp] : 1.;
+  return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]) * _v[_qp] * mass;
 }
 
 Real
 ReleasingNodalKernel::computeQpJacobian()
 {
+  const auto mass = _mass_lumped ? _nodal_mass[_qp] : 1.;
   if (_v_is_u)
-    return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]);
+    return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]) * mass;
   else
     return 0;
 }
@@ -56,8 +68,9 @@ ReleasingNodalKernel::computeQpJacobian()
 Real
 ReleasingNodalKernel::computeQpOffDiagJacobian(unsigned int jvar)
 {
-  if (jvar == _v_index)
-    return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]);
+  const auto mass = _mass_lumped ? _nodal_mass[_qp] : 1.;
+  if (!_v_is_u && jvar == _v_index)
+    return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]) * mass;
   else
     return 0;
   // TODO: add temperature off-diagonal term

@@ -27,7 +27,6 @@
     input = ver-1dd-components.i
     # To make it run at the end
     prereq = 'ver-1d_comparison'
-    should_execute = false # this test relies on the output files from ver-1dd, so it shouldn't be run twice
     csvdiff = ver-1dd-components_out.csv
     requirement = 'The system shall be able to model a breakthrough problem without traps using the Physics and Components shorthand syntax.'
   []
