@@ -34,4 +34,10 @@ protected:
   const unsigned int _v_index;
   /// Whether the v variable is the kernel's variable parameter variable
   const bool _v_is_u;
+  /// Whether the kernels are mass lumped to make it compatible
+  const bool _mass_lumped;
+  /// Local node mass
+  const VariableValue & _nodal_mass;
+  /// An array with ones for convenience
+  const VariableValue _one;
 };
