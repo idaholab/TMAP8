@@ -418,11 +418,12 @@ SpeciesTrappingPhysics::addFEKernels()
 
       // Release term in the mobile species conservation equation
       {
-        const std::string kernel_type = "CoupledTimeDerivative";
+        const std::string kernel_type = "ScaledCoupledTimeDerivative";
         auto params = _factory.getValidParams(kernel_type);
         assignBlocks(params, blocks);
         params.set<NonlinearVariableName>("variable") = mobile_species_name;
         params.set<std::vector<VariableName>>("v") = {species_name};
+        params.set<Real>("factor") = _trap_per_frees[c_i];
 
         getProblem().addKernel(
             kernel_type, prefix() + mobile_species_name + "_from_" + species_name, params);
