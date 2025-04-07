@@ -24,6 +24,14 @@ where the surface flux function is given by:
     \end{cases}
 \end{equation}
 
+The implantation distribution is illustrated in [val-2f_implantation_distribution]. It highlights the need for mesh refinement on the order of $\sigma$ in the implantation region to accurately resolve the profile and capture the sharp gradient of the source term.
+
+!media comparison_val-2f.py
+    image_name=val-2f_implantation_distribution.png
+    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+    id=val-2f_implantation_distribution
+    caption=Deuterium implantation.
+
 After the implantation phase, the system enters the cooldown phase, lasting 12 hours. During this period, the sample temperature is rapidly reduced from 370 K to 295 K. No additional deuterium is introduced during this phase, meaning the source term is set to zero.
 
 The final stage of the simulation is the desorption phase, during which the sample is gradually heated from 300 K to 1000 K at a constant rate of $\beta = 0.05$ K/s.
