@@ -250,6 +250,7 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
     type = MaterialADConverter
     ad_props_in = 'diffusivity_Be diffusivity_BeO'
     reg_props_out = 'diffusivity_Be_nonAD diffusivity_BeO_nonAD'
+    outputs = all
   []
   [interface_jump]
     type = SolubilityRatioMaterial
@@ -258,6 +259,7 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
     boundary = interface
     concentration_primary = deuterium_concentration_BeO
     concentration_secondary = deuterium_concentration_Be
+    outputs = all
   []
 []
 
