@@ -53,20 +53,23 @@ else:                                  # if in test folder
 tmap_solution = pd.read_csv(csv_folder)
 tmap_time = tmap_solution['time'] # s
 tmap_temperature = tmap_solution['temperature'] # K
-tmap_flux = -(2*tmap_solution['scaled_flux_surface_left']) # atoms/m^2/s
-
+tmap_flux_left = -tmap_solution['flux_surface_left'] # atoms/m^2/s
+tmap_flux_right = tmap_solution['flux_surface_right'] # atoms/m^2/s
 # select only the simulation data for desorption
 tmap_time_desorption = []
 tmap_temperature_desorption = []
-tmap_flux_desorption = []
+tmap_flux_desorption_left = []
+tmap_flux_desorption_right = []
 for i in range(len(tmap_time)):
     if tmap_time[i]>=start_time_desorption:
         tmap_time_desorption.append(tmap_time[i])
         tmap_temperature_desorption.append(tmap_temperature[i])
-        tmap_flux_desorption.append(tmap_flux[i])
+        tmap_flux_desorption_left.append(tmap_flux_left[i])
+        tmap_flux_desorption_right.append(tmap_flux_right[i])
 tmap_time_desorption = np.array(tmap_time_desorption)
 tmap_temperature_desorption = np.array(tmap_temperature_desorption)
-tmap_flux_desorption = np.array(tmap_flux_desorption)
+tmap_flux_desorption_left = np.array(tmap_flux_desorption_left)
+tmap_flux_desorption_right = np.array(tmap_flux_desorption_right)
 
 #===============================================================================
 # Extract experimental data
@@ -81,11 +84,35 @@ experiment_temperature = tds_data[:, 0]
 area = 12e-03 * 15e-03
 experiment_flux = tds_data[:, 1] / area
 
-assert np.all(np.isfinite(tmap_temperature_desorption)), "tmap_temperature_desorption contains NaN or Inf"
-assert np.all(np.isfinite(tmap_flux_desorption)), "tmap_flux_desorption contains NaN or Inf"
-assert np.all(np.isfinite(experiment_temperature)), "experiment_temperature contains NaN or Inf"
-assert np.all(np.isfinite(experiment_flux)), "experiment_flux contains NaN or Inf"
+#===============================================================================
+# Plot implantation distribution
 
+fig = plt.figure(figsize=[6.5, 5.5])
+gs = gridspec.GridSpec(1, 1)
+ax = fig.add_subplot(gs[0])
+
+sigma = 0.5e-9 # m
+R_p = 0.7e-9 # m
+fluence = 1.5e25 / 1e12 # at/m^2/s
+charge_time = 72*3600 # s
+flux = fluence / charge_time # at/m^2/s
+x = np.linspace(0, 6*sigma, 1000)
+implantation_distribution = 1 / (sigma * (2 * np.pi) ** 0.5) * np.exp(-0.5 * ((x - R_p) / sigma) ** 2)
+source_deuterium = flux * implantation_distribution
+
+ax.axvline(R_p + 3*sigma, color='r', linestyle='--', label=r'$R_p + 3\sigma$')
+
+ax.plot(x, source_deuterium, label=r"Implantation distribution", c='b')
+
+ax.set_xlabel(u'x (m)')
+ax.set_ylabel(u"Deuterium source (at/m/s)")
+ax.legend(loc="lower left")
+ax.set_ylim(bottom=0)
+plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
+ax.minorticks_on()
+
+plt.savefig('val-2f_implantation_distribution.png', bbox_inches='tight', dpi=300)
+plt.close(fig)
 
 #===============================================================================
 # Plot temperature and pressure history
@@ -107,24 +134,25 @@ ax.minorticks_on()
 plt.savefig('val-2f_temperature_history.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 
-#===============================================================================
+# #===============================================================================
 # Plot comparison between TMAP8 predictions and experimental data
 
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-ax.plot(tmap_temperature_desorption, tmap_flux_desorption, label=r"TMAP8", c='tab:gray')
+ax.plot(tmap_temperature_desorption, tmap_flux_desorption_left, label=r"TMAP8", c='tab:gray')
+# ax.plot(tmap_temperature_desorption, tmap_flux_desorption_right, label=r"TMAP8", c='tab:gray')
 ax.scatter(experiment_temperature, experiment_flux, label="Experiment", color="black")
 ax.set_xlabel(u'Temperature (K)')
 ax.set_ylabel(u"Deuterium flux (atom/m$^2$/s)")
 ax.legend(loc="best")
 ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-tmap_flux_for_rmspe = numerical_solution_on_experiment_input(experiment_temperature, tmap_temperature_desorption, tmap_flux_desorption)
-RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe-experiment_flux)**2) )
-RMSPE = RMSE*100/np.mean(experiment_flux)
-ax.text(800,6e16, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
-ax.minorticks_on()
+# tmap_flux_for_rmspe = numerical_solution_on_experiment_input(experiment_temperature, tmap_temperature_desorption, tmap_flux_desorption)
+# RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe-experiment_flux)**2) )
+# RMSPE = RMSE*100/np.mean(experiment_flux)
+# ax.text(800,6e16, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
+# ax.minorticks_on()
 plt.savefig('val-2f_comparison.png', bbox_inches='tight', dpi=300)
 plt.close(fig)

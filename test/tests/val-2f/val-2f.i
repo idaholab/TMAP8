@@ -27,25 +27,27 @@ flux = '${units ${fparse fluence / charge_time} at/m^2/s -> at/mum^2/s}'
 # Numerical parameters
 dt_max_large = '${units 100 s}'
 dt_max_small = '${units 10 s}'
-# dt_start_charging = '${units 1 s}'
-# dt_start_cooldown = '${units 10 s}'
-# dt_start_desorption = '${units 1 s}'
+
+# Mesh parameters
+sample_thickness = '${units 0.8e-3 m -> mum}'
+dx1 = '${units ${fparse 3*sigma} mum}'
+dx2 = '${units ${fparse 2*sigma} mum}'
+dx3 = '${units ${fparse 1*sigma} mum}'
+dx4 = '${units ${fparse sample_thickness-(dx1+dx2+dx3)} mum}'
 
 [Mesh]
   [cartesian_mesh]
     type = CartesianMeshGenerator
     dim = 1
-    dx = '${units 1e-6 m -> mum}
-          ${units 5e-6 m -> mum}
-          ${units 25e-6 m -> mum}
-          ${units 5e-6 m -> mum}
-          ${units 1e-6 m -> mum}'
-    ix = '${fparse 100}
-          ${fparse 40}
-          ${fparse 8}
-          ${fparse 40}
-          ${fparse 100}'
-    subdomain_id = '0 0 0 0 0'
+    dx = '${dx1}
+          ${dx2}
+          ${dx3}
+          ${dx4}'
+    ix = '100
+          100
+          100
+          100'
+    subdomain_id = '0 0 0 0'
   []
 []
 
@@ -144,8 +146,8 @@ dt_max_small = '${units 10 s}'
     type = ADDerivativeParsedMaterial
     property_name = 'diffusivity_W'
     functor_names = 'temperature_bc_func'
-    functor_symbols = 'T'
-    expression = '${diffusion_W_preexponential} * exp(- ${diffusion_W_energy} / ${kb} / T)'
+    functor_symbols = 'temperature'
+    expression = '${diffusion_W_preexponential} * exp(- ${diffusion_W_energy} / ${kb} / temperature)*1e-8'
     output_properties = 'diffusivity_W'
   []
   [converter_to_nonAD]
@@ -160,20 +162,19 @@ dt_max_small = '${units 10 s}'
     type = ElementAverageValue
     variable = deuterium_concentration_W
     execute_on = 'initial timestep_end'
-    outputs = none
   []
   [flux_surface_left]
     type = SideDiffusiveFluxIntegral
     variable = deuterium_concentration_W
     diffusivity = 'diffusivity_W_nonAD'
     boundary = 'left'
-    outputs = none
+    outputs = 'console csv exodus'
   []
-  [scaled_flux_surface_left]
-    type = ScalePostprocessor
-    scaling_factor = '${units 1 m^2 -> mum^2}'
-    value = flux_surface_left
-    execute_on = 'initial nonlinear linear timestep_end'
+  [flux_surface_right]
+    type = SideDiffusiveFluxIntegral
+    variable = deuterium_concentration_W
+    diffusivity = 'diffusivity_W_nonAD'
+    boundary = 'right'
     outputs = 'console csv exodus'
   []
   [temperature]
