@@ -174,19 +174,6 @@ dt_max = ${fparse end_time/100} # s
     v = tritium_mobile_concentration_scaled
     reaction_rate = '${fparse -decay_rate_constant}'
   []
-  [coupled_time_tritium]
-    type = ScaledCoupledTimeDerivative
-    variable = tritium_mobile_concentration_scaled
-    v = tritium_trapped_concentration_scaled
-    factor = ${trap_per_free}
-  []
-  # re-adding it to the equation of mobile tritium because it is accounted for in coupled_time_tritium, and needs to be removed
-  [decay_tritium_trapped]
-    type = MatReaction
-    variable = tritium_mobile_concentration_scaled
-    v = tritium_trapped_concentration_scaled
-    reaction_rate = '${fparse - decay_rate_constant * trap_per_free}'
-  []
   # kernels for the helium concentration equation
   [time_helium]
     type = TimeDerivative
@@ -222,10 +209,18 @@ dt_max = ${fparse end_time/100} # s
     temperature = temperature # (K)
     trap_per_free = ${trap_per_free}
   []
-  [release]
+  [release_from_trapped]
     type = ReleasingNodalKernel
     variable = tritium_trapped_concentration_scaled # (atoms/m^3) / density_scalar = (-)
     alpha_r = ${fparse tritium_release_prefactor} # (1/s)
+    detrapping_energy = ${fparse tritium_release_energy / boltzmann_constant} # (K)
+    temperature = temperature # (K)
+  []
+  [release_into_mobile]
+    type = ReleasingNodalKernel
+    variable = tritium_mobile_concentration_scaled # (atoms/m^3) / density_scalar = (-)
+    trapped_concentration = tritium_trapped_concentration_scaled
+    alpha_r = -${fparse tritium_release_prefactor} # (1/s)
     detrapping_energy = ${fparse tritium_release_energy / boltzmann_constant} # (K)
     temperature = temperature # (K)
   []

@@ -14,4 +14,13 @@
     requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a equilibration on a reactive surface with equal starting pressures in ratedep condition'
     required_python_packages = 'matplotlib numpy pandas scipy os'
   []
+  [ver-1ia-physics_csv]
+    type = CSVDiff
+    input = 'ver-1ia-physics.i'
+    csvdiff = ver-1ia-physics_out.csv
+    prereq = 'ver-1ia_comparison'
+    requirement = 'The system shall be able to model a equilibration problem on a reactive surface with equal starting pressures in ratedep condition using a Physics shorthand syntax.'
+    # A reactant is an auxiliary variable
+    allow_warnings = true
+  []
 []
