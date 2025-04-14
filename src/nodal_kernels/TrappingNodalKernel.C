@@ -32,9 +32,21 @@ TrappingNodalKernel::validParams()
   params.addRequiredCoupledVar(
       "mobile_concentration",
       "The variable representing the mobile concentration of solute particles (1/m^3)");
+  params.addCoupledVar("trapped_concentration",
+                       "The variable representing the trapped concentration of solute particles "
+                       "(1/m^3). If unspecified, defaults to the 'variable' parameter");
   params.addCoupledVar("other_trapped_concentration_variables",
                        "Other variables representing trapped particle concentrations.");
   params.addRequiredCoupledVar("temperature", "The temperature (K)");
+
+  // Mass lumping
+  params.addParam<bool>(
+      "use_mass_lumping",
+      false,
+      "Whether to use mass lumping to make this kernel compatible with volumetric kernels");
+  params.addCoupledVar("nodal_mass", "The local nodal mass");
+  params.addParamNamesToGroup("use_mass_lumping nodal_mass", "Mass lumping");
+
   return params;
 }
 
@@ -47,7 +59,10 @@ TrappingNodalKernel::TrappingNodalKernel(const InputParameters & parameters)
     _mobile_concentration(coupledValue("mobile_concentration")),
     _last_node(nullptr),
     _trap_per_free(getParam<Real>("trap_per_free")),
-    _temperature(coupledValue("temperature"))
+    _temperature(coupledValue("temperature")),
+    _mass_lumped(getParam<bool>("use_mass_lumping")),
+    _nodal_mass(_mass_lumped ? coupledValue("nodal_mass") : _one),
+    _one(1)
 {
   _n_other_concs = coupledComponents("other_trapped_concentration_variables");
 
@@ -59,11 +74,13 @@ TrappingNodalKernel::TrappingNodalKernel(const InputParameters & parameters)
 
   for (MooseIndex(_n_other_concs) i = 0; i < _n_other_concs; ++i)
   {
-    _trapped_concentrations[i] = &coupledValue("other_trapped_concentration_variables", i);
+    _trapped_concentrations[i] = &coupledValue("other_trapped_concentration_variables", /*comp=*/i);
     _var_numbers[i] = coupled("other_trapped_concentration_variables", i);
   }
-  _trapped_concentrations[_n_other_concs] = &_u;
-  _var_numbers[_n_other_concs] = _var.number();
+  _trapped_concentrations[_n_other_concs] =
+      isCoupled("trapped_concentration") ? &coupledValue("trapped_concentration") : &_u;
+  _var_numbers[_n_other_concs] =
+      isParamValid("trapped_concentration") ? coupled("trapped_concentration") : _var.number();
   _var_numbers[_n_other_concs + 1] = coupled("mobile_concentration");
 }
 
@@ -73,9 +90,10 @@ TrappingNodalKernel::computeQpResidual()
   auto empty_trapping_sites = _Ct0.value(_t, (*_current_node)) * _N;
   for (const auto & trap_conc : _trapped_concentrations)
     empty_trapping_sites -= (*trap_conc)[_qp] * _trap_per_free;
+  const auto mass = _mass_lumped ? _nodal_mass[_qp] : 1;
 
   return -_alpha_t * std::exp(-_trapping_energy / _temperature[_qp]) * empty_trapping_sites *
-         _mobile_concentration[_qp] / (_N * _trap_per_free);
+         _mobile_concentration[_qp] / (_N * _trap_per_free) * mass;
 }
 
 void
@@ -98,9 +116,10 @@ TrappingNodalKernel::ADHelper()
   LocalDN mobile_concentration = _mobile_concentration[_qp];
 
   mobile_concentration.derivatives().insert(_var_numbers.back()) = 1.;
+  const auto mass = _mass_lumped ? _nodal_mass[_qp] : 1;
 
   _jacobian = -_alpha_t * std::exp(-_trapping_energy / _temperature[_qp]) * empty_trapping_sites *
-              mobile_concentration / (_N * _trap_per_free);
+              mobile_concentration / (_N * _trap_per_free) * mass;
 }
 
 Real
