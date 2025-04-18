@@ -2,13 +2,13 @@
 Tritium Migration Analysis Program (TMAP8)
 
 TMAP8 is an open-source, MOOSE-based application developed to provide state-of-the-art tritium transport and fuel cycle modeling capabilities.
-TMAP8 aims to expand the capabilities of previous versions (i.e., TMAP4 and TMAP7) by leveraging modern computational techniques, ensuring high software quality assurance standards (key to building trust), and enabling multispecies, multiscale, and multiphysics simulations for integrated tritium transport modeling in complex geometries.
+TMAP8 aims to expand the capabilities of previous versions (i.e., TMAP4 and TMAP7) by leveraging modern computational techniques; ensuring high software quality assurance standards (key to building trust); and enabling multispecies, multiscale, and multiphysics simulations for integrated tritium transport modeling in complex geometries.
 
-The [TMAP8 documentation](https://mooseframework.inl.gov/tmap8) includes the code reference, a getting started guide, and details about software quality assurance (SQA) proceses, verification, validation, and examples case, etc.
+The [TMAP8 documentation](https://mooseframework.inl.gov/tmap8) includes the code reference, a getting started guide, and details about software quality assurance (SQA) processes, verification, validation, and examples case, etc.
 
 When using TMAP8, please cite the following.
 
-```tex
+```latex
 @article{Simon2025,
     author = {Pierre-Clément A. Simon and Casey T. Icenhour and Gyanender Singh and Alexander D Lindsay and Chaitanya Vivek Bhave and Lin Yang and Adriaan Anthony Riet and Yifeng Che and Paul Humrickhouse and Masashi Shimada and Pattrick Calderoni},
     title = {{MOOSE}-based Tritium Migration Analysis Program, Version 8 ({TMAP8}) for Advanced Open-Source Tritium Transport and Fuel Cycle Modeling},
