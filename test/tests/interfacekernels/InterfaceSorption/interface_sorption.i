@@ -30,24 +30,31 @@ unit_scale_neighbor = 1
   []
   [block1]
     type = SubdomainBoundingBoxGenerator
+    input = gen
     block_id = 1
     bottom_left = '0 0 0'
     top_right = '0.5 1 0'
-    input = gen
   []
   [block2]
     type = SubdomainBoundingBoxGenerator
+    input = block1
     block_id = 2
     bottom_left = '0.5 0 0'
     top_right = '1 1 0'
-    input = block1
   []
-  [breakmesh]
+  [interface]
+    type = SideSetsBetweenSubdomainsGenerator
     input = block2
-    type = BreakMeshByBlockGenerator
-    block_pairs = '1 2'
-    split_interface = true
-    add_interface_on_two_sides = true
+    primary_block = 1
+    paired_block = 2
+    new_boundary = interface
+  []
+  [interface2]
+    type = SideSetsBetweenSubdomainsGenerator
+    input = interface
+    primary_block = 2
+    paired_block = 1
+    new_boundary = interface2
   []
 []
 
@@ -110,13 +117,13 @@ unit_scale_neighbor = 1
     type = DirichletBC
     value = 1000
     variable = temperature
-    boundary = Block1_Block2
+    boundary = interface
   []
   [block2_1_temperature]
     type = DirichletBC
     value = 900
     variable = temperature
-    boundary = Block2_Block1
+    boundary = interface2
   []
 []
 
@@ -133,7 +140,7 @@ unit_scale_neighbor = 1
     variable = u2
     neighbor_var = u1
     sorption_penalty = 1e1
-    boundary = Block2_Block1
+    boundary = interface2
   []
 []
 
@@ -232,14 +239,14 @@ unit_scale_neighbor = 1
   [flux_inner] # verify flux preservation
     type = SideDiffusiveFluxIntegral
     variable = u1
-    boundary = Block1_Block2
+    boundary = interface
     diffusivity = diffusivity
     outputs = 'csv console'
   []
   [flux_outer]
     type = SideDiffusiveFluxIntegral
     variable = u2
-    boundary = Block2_Block1
+    boundary = interface2
     diffusivity = diffusivity
     outputs = 'csv console'
   []
