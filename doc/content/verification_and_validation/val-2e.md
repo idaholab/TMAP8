@@ -215,9 +215,9 @@ Other case and model parameters used in TMAP8 are listed in [val-2e_parameters]:
 | $K_{s,1}$ | solubility of hydrogen isotope in val-2ea, val-2eb, val-2ec  | 1.511$\times 10^{23} \exp(-5918/T)$        | atom/m$^3$/Pa$^{0.9297}$  | [!cite](ambrosek2008verification) |
 | $K_{s,2}$ | solubility of hydrogen isotope in val-2ed, val-2ee  | 9.355$\times 10^{22} \exp(-5918/T)$        | atom/m$^3$/Pa$^{0.9297}$  | [!cite](ambrosek2008verification) |
 | $n$ | exponent for the relation of pressure and concentration | 0.9297         | -                     | [!cite](kizu2001co) |
-| $K_{r,D_2}$ | D$_2$ recombination coefficient | 2.502$\times 10^{-24} / \sqrt{4T} \exp(11836/T)$        | m$^4$/s              | [!cite](ambrosek2008verification) |
-| $K_{r,H_2}$ | H$_2$ recombination coefficient | 2.502$\times 10^{-24} / \sqrt{2T} \exp(11836/T)$        | m$^4$/s              | [!cite](ambrosek2008verification) |
-| $K_{r,HD}$ | HD recombination coefficient | 2.502$\times 10^{-24} / \sqrt{3T} \exp(11836/T)$        | m$^4$/s              | [!cite](ambrosek2008verification) |
+| $K_{r,D_2}$ | D$_2$ recombination coefficient | 2.502$\times 10^{-24} / \sqrt{4T} \exp(-11836/T)$        | m$^4$/s              | [!cite](ambrosek2008verification) |
+| $K_{r,H_2}$ | H$_2$ recombination coefficient | 2.502$\times 10^{-24} / \sqrt{2T} \exp(-11836/T)$        | m$^4$/s              | [!cite](ambrosek2008verification) |
+| $K_{r,HD}$ | HD recombination coefficient | 2.502$\times 10^{-24} / \sqrt{3T} \exp(-11836/T)$        | m$^4$/s              | [!cite](ambrosek2008verification) |
 | $K_{d,D_2}$ | D$_2$ dissociation coefficient | 2.1897$\times 10^{22} / \sqrt{4T}$     | molecular/m$^2$/Pa              | [!cite](ambrosek2008verification) |
 | $K_{d,H_2}$ | H$_2$ dissociation coefficient | 2.1897$\times 10^{22} / \sqrt{2T}$     | molecular/m$^2$/Pa              | [!cite](ambrosek2008verification) |
 | $K_{d,HD}$ | HD dissociation coefficient | 2.1897$\times 10^{22} / \sqrt{3T}$     | molecular/m$^2$/Pa              | [!cite](ambrosek2008verification) |
