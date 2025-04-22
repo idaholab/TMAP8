@@ -15,10 +15,8 @@
     input = val-2f.i
     cli_args = "Outputs/file_base=val-2f_out
                 Executioner/nl_abs_tol=1e-11
-                charge_time='${units 10 h -> s}'
-                cooldown_duration='${units 1 h -> s}'
-                dt_max_large='${units 500 s}'
-                dt_max_small='${units 200 s}'"
+                charge_time='${units 1 h -> s}'
+                cooldown_duration='${units 1 h -> s}'"
     exodiff = val-2f_out.e
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport with a short runtime suitable for regular regression testing.'
   []
