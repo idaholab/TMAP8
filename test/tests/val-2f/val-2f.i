@@ -270,8 +270,6 @@ ix4 = 100
   [exodus]
     type = Exodus
     output_material_properties = true
+    time_step_interval = 60
   []
 []
-
-
-
