@@ -5,13 +5,13 @@
     input = 'sorption_exchange.i'
     csvdiff = 'sorption_exchange_out.csv'
     design = 'SorptionExchangePhysics.md'
-    requirement = 'The system shall be able to accept parameters for species sorption exchange on a component with only one species concerned by the sorption exchange physics definition.'
+    requirement = 'The system shall be able to accept parameters for species sorption exchange on a component with the sorption exchange physics parameters defined for a single species.'
   []
   [trapping]
     type = CSVDiff
     input = 'species_trapping.i'
     csvdiff = 'species_trapping_out.csv'
     design = 'SpeciesTrappingPhysics.md'
-    requirement = 'The system shall be able to accept parameters for species trapping on a component with only one species concerned by the species trapping physics definition.'
+    requirement = 'The system shall be able to accept parameters for species trapping on a component with the trapping physics parameters defined for a single species.'
   []
 []

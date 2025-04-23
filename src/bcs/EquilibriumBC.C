@@ -68,9 +68,7 @@ EquilibriumBC::EquilibriumBC(const InputParameters & parameters)
 
   // Use the enclosure subdomain if specified
   if (isParamValid("enclosure_block"))
-  {
     _subdomain = _fe_problem.mesh().getSubdomainID(getParam<SubdomainName>("enclosure_block"));
-  }
   else if (MooseUtils::parsesToReal(getParam<MooseFunctorName>("Ko")) &&
            MooseUtils::parsesToReal(getParam<MooseFunctorName>("activation_energy")))
   {

@@ -17,12 +17,12 @@ See the respective kernels for for information.
 
 ## Objects created
 
-The species equation(s) on the 0D component are created using:
+The species equation(s) on the 0D component (such as a [Enclosure0D.md]) are created using:
 
 - A [ODETimeDerivative.md] for the time derivative of the concentration of each species being trapped, if simulating a transient. This term is not added if the [Executioner](syntax/Executioner/index.md) is not transient
 - A [EnclosureSinkScalarKernel.md] for the trapping and releasing term
 
-On the structures connected to the 0D component, an [EquilibriumBC.md] is created on their outer surface boundary.
+On the structures (such as a [Structure1D.md]) connected to the 0D component, an [EquilibriumBC.md] is created on their outer surface boundary.
 This boundary condition applies to a variable being diffused/migrated on that structure if a [DiffusionPhysicsBase.md]-derived
 `Physics` is defined on this structure.
 This boundary condition connects the outgoing species flux 0D component with the incoming species flux on the boundary of the structure.

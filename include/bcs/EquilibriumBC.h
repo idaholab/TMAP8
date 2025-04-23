@@ -37,7 +37,7 @@ protected:
   const bool _enclosure_var_bool_scalar;
   const ADVariableValue & _enclosure_var;
   /// The subdomain of the enclosure
-  subdomain_id_type _subdomain;
+  SubdomainID _subdomain;
 
   /// The temperature as a variable (K)
   const ADVariableValue * const _T;
