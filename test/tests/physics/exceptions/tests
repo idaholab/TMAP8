@@ -93,7 +93,7 @@
       input = sorption_exchange.i
       cli_args = "Physics/SorptionExchange/0d_solub/temperature=-1 ActionComponents/enc/temperature=-1"
       detail = "the temperature specified is negative,"
-      expect_err = "Temperature '-1' on component 'enc' inferior or equal to 0"
+      expect_err = "Temperature '-1' on component 'enc' less than or equal to 0 which is not physical"
     []
     [temperature_var]
       type = RunException
@@ -114,7 +114,7 @@
       input = sorption_exchange.i
       cli_args = "initial_pressure=-1 Physics/SorptionExchange/0d_solub/species_initial_pressures='-1'"
       detail = "the species initial pressure is negative,"
-      expect_err = "Initial condition '-1' for species 'v' on component 'enc' inferior to 0"
+      expect_err = "Initial condition '-1' for species 'v' on component 'enc' less than 0 which is not physical"
     []
     [eq_constant]
       type = RunException

@@ -16,23 +16,23 @@ See more details on the [ComponentPhysicsInterface.md] page.
 To vary the material properties used in each `Physics`, one can set the [!param](/ActionComponents/Structure1D/property_names) and [!param](/ActionComponents/Structure1D/property_values) parameters in the `Structure1D`.
 See more details on the [ComponentMaterialPropertyInterface.md] page.
 
-For a [SpeciesDiffusionReactionCG.md] `Physics` to be used you can define on
-the `Structure1D`:
+For a [SpeciesDiffusionReactionCG.md] `Physics` to be used you can define directly on
+the `Structure1D` the:
 
-- the diffusivity material property, to be used in the [!param](/Physics/SpeciesDiffusionReaction/SpeciesDiffusionReactionCG/diffusivity_matprops) parameter
+- diffusivity material property, to be used in the [!param](/Physics/SpeciesDiffusionReaction/SpeciesDiffusionReactionCG/diffusivity_matprops) parameter
 - reaction coefficients material properties for all reactions, to be used in the [!param](/Physics/SpeciesDiffusionReaction/SpeciesDiffusionReactionCG/reaction_coefficients) parameter
 
 For a [MultiSpeciesDiffusionCG.md] `Physics` to be used you can define the:
 
-- the diffusivity material property, to be used in the [!param](/Physics/SpeciesDiffusion/MultiSpeciesDiffusionCG/diffusivity_matprops) parameter
+- diffusivity material property, to be used in the [!param](/Physics/SpeciesDiffusion/MultiSpeciesDiffusionCG/diffusivity_matprops) parameter
 
 For a [SpeciesTrappingPhysics.md] to be used, you can define the:
 
-- the trapping rate coefficient for each species, to be used in the [!param](/Physics/SpeciesTrapping/SpeciesTrappingPhysics/alpha_t) parameter
-- the atomic number density of the host material, to be used in the [!param](/Physics/SpeciesTrapping/SpeciesTrappingPhysics/N) parameter
+- trapping rate coefficient for each species, to be used in the [!param](/Physics/SpeciesTrapping/SpeciesTrappingPhysics/alpha_t) parameter
+- atomic number density of the host material, to be used in the [!param](/Physics/SpeciesTrapping/SpeciesTrappingPhysics/N) parameter
 - fraction of host sites that can contribute to trapping, to be used in the [!param](/Physics/SpeciesTrapping/SpeciesTrappingPhysics/Ct0) parameter
-- the release rate coefficient, to be used in the [!param](/Physics/SpeciesTrapping/SpeciesTrappingPhysics/alpha_r) parameter
-- the trapping energy in units of Kelvin, to be used in the [!param](/Physics/SpeciesTrapping/SpeciesTrappingPhysics/detrapping_energy) parameter
+- release rate coefficient, to be used in the [!param](/Physics/SpeciesTrapping/SpeciesTrappingPhysics/alpha_r) parameter
+- trapping energy in units of Kelvin, to be used in the [!param](/Physics/SpeciesTrapping/SpeciesTrappingPhysics/detrapping_energy) parameter
 
 ### Boundary conditions
 
