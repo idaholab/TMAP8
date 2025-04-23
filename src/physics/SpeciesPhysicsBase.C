@@ -74,13 +74,17 @@ SpeciesPhysicsBase::checkIntegrity() const
                    _species[i][j],
                    "'",
                    getOnComponentString(i),
-                   " inferior to 0");
+                   " less than 0 which is not physical");
 
   for (const auto i : index_range(_component_temperatures))
   {
     const auto temp = _component_temperatures[i];
     if (MooseUtils::parsesToReal(temp) && MooseUtils::convert<Real>(temp) <= 0)
-      mooseError("Temperature '", temp, "'", getOnComponentString(i), " inferior or equal to 0");
+      mooseError("Temperature '",
+                 temp,
+                 "'",
+                 getOnComponentString(i),
+                 " less than or equal to 0 which is not physical");
   }
 }
 
