@@ -172,7 +172,7 @@ ix4 = 100
     type = ADDerivativeParsedMaterial
     coupled_variables = 'deuterium_concentration_W'
     property_name = 'flux_on_left'
-    material_property_names =  'Kr_left'
+    material_property_names = 'Kr_left'
     expression = '- 2 * Kr_left * deuterium_concentration_W ^ 2'
   []
 []
@@ -266,7 +266,10 @@ ix4 = 100
 []
 
 [Outputs]
-  csv = true
+  file_base = 'val-2f_out'
+  [csv]
+    type = CSV
+  []
   [exodus]
     type = Exodus
     output_material_properties = true
