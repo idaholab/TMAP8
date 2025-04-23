@@ -13,9 +13,7 @@
   [val-2f_exodus]
     type = Exodiff
     input = val-2f.i
-    cli_args = "Executioner/nl_abs_tol=1e-6
-                charge_time='${units 0.01 h -> s}'
-                cooldown_duration='${units 0.01 h -> s}'"
+    cli_args = "Mesh/active=cartesian_mesh_coarse Executioner/nl_abs_tol=1e-6 charge_time='${units 0.01 h -> s}' cooldown_duration='${units 0.01 h -> s}'"
     exodiff = val-2f_out.e
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport with a short runtime suitable for regular regression testing.'
   []

@@ -44,6 +44,7 @@ ix3 = '${fparse dx3/dx2 * ix2}'
 ix4 = 100
 
 [Mesh]
+  active = 'cartesian_mesh'
   [cartesian_mesh]
     type = CartesianMeshGenerator
     dim = 1
@@ -55,6 +56,19 @@ ix4 = 100
           ${ix2}
           ${ix3}
           ${ix4}'
+    subdomain_id = '0 0 0 0'
+  []
+  [cartesian_mesh_coarse]
+    type = CartesianMeshGenerator
+    dim = 1
+    dx = '${dx1}
+          ${dx2}
+          ${dx3}
+          ${dx4}'
+    ix = '10
+          10
+          10
+          100'
     subdomain_id = '0 0 0 0'
   []
 []
