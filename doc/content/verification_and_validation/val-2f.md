@@ -97,5 +97,4 @@ All the model parameters are listed in [val-2f_set_up_values]:
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/val-2f.i].
-To achieve short regression tests (under 2 seconds walltime), the tests in [/val-2f/tests] run a version of the files with a shorter history, looser tolerance, and larger time step. More information about the changes can be found in the test specification file for this case, namely [/ver-1d/tests].
+The input file for this case can be found at [/val-2f.i]. To limit the computational costs of the test case, the test runs a version of the file with a coarser mesh and fewer time steps. More information about the changes can be found in the test specification file for this case, namely [/val-2f/tests].
