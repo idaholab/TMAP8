@@ -19,8 +19,8 @@ endtime = '${fparse charge_time + cooldown_duration + desorption_duration}'
 # Materials properties
 diffusion_W_preexponential = '${units 1.6e-7 m^2/s -> mum^2/s}'
 diffusion_W_energy = '${units 0.28 eV -> J}'
-recombination_coefficient = '${units ${fparse 2e-49} m^4/at/s -> mum^4/at/s}'
-recombination_energy = '${units 2.06 eV}'
+recombination_coefficient = '${units ${fparse 3.8e-26} m^4/at/s -> mum^4/at/s}' # recombination_coefficient = '${units ${fparse 2e-49} m^4/at/s -> mum^4/at/s}'
+recombination_energy = '${units 0.34 eV}' # recombination_energy = '${units 2.06 eV}'
 
 # Source term parameters
 sigma = '${units 0.5e-9 m -> mum}'
@@ -42,10 +42,10 @@ ix1 = 50
 ix2 = '${fparse dx2/dx1 * ix1}'
 ix3 = '${fparse dx3/dx2 * ix2}'
 ix4 = 100
-ix1_coarse = 25
+ix1_coarse = 10
 ix2_coarse = '${fparse dx2/dx1 * ix1_coarse}'
 ix3_coarse = '${fparse dx3/dx2 * ix2_coarse}'
-ix4_coarse = 50
+ix4_coarse = 20
 
 [Mesh]
   active = 'cartesian_mesh'
@@ -183,7 +183,7 @@ ix4_coarse = 50
     property_name = 'Kr_left'
     functor_names = 'temperature_bc_func'
     functor_symbols = 'temperature'
-    expression = '${recombination_coefficient} / (temperature ^ 0.5) * exp(${recombination_energy} / ${kb_eV} / temperature)'
+    expression = '${recombination_coefficient}* exp(${recombination_energy} / ${kb_eV} / temperature)'
     output_properties = 'Kr_left'
   []
   [flux_on_left]
