@@ -102,7 +102,7 @@ x = np.linspace(0, 6*sigma, 1000)
 implantation_distribution = 1 / (sigma * (2 * np.pi) ** 0.5) * np.exp(-0.5 * ((x - R_p) / sigma) ** 2)
 source_deuterium = flux * implantation_distribution
 
-ax.axvline(R_p + 3*sigma, color='r', linestyle='--', label=r'$R_p + 3\sigma$')
+ax.axvline(R_p + 5*sigma, color='r', linestyle='--', label=r'$R_p + 5\sigma$')
 
 ax.plot(x, source_deuterium, label=r"Implantation distribution", c='b')
 
