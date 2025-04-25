@@ -42,6 +42,10 @@ ix1 = 50
 ix2 = '${fparse dx2/dx1 * ix1}'
 ix3 = '${fparse dx3/dx2 * ix2}'
 ix4 = 100
+ix1_coarse = 25
+ix2_coarse = '${fparse dx2/dx1 * ix1_coarse}'
+ix3_coarse = '${fparse dx3/dx2 * ix2_coarse}'
+ix4_coarse = 50
 
 [Mesh]
   active = 'cartesian_mesh'
@@ -65,10 +69,10 @@ ix4 = 100
           ${dx2}
           ${dx3}
           ${dx4}'
-    ix = '10
-          10
-          10
-          100'
+    ix = '${ix1_coarse}
+          ${ix2_coarse}
+          ${ix3_coarse}
+          ${ix4_coarse}'
     subdomain_id = '0 0 0 0'
   []
 []
