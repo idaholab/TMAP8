@@ -8,7 +8,7 @@ The case under study involves the use of recrystallized polycrystalline tungsten
 
 The TDS process is simulated using TMAP8 in a 1D tungsten sample with a thickness of 0.8 mm. The TDS simulation consisted of three phases: implantation, resting, and desorption.
 
-During the charging phase, deuterium is continuously implanted into the tungsten sample over a period of 72 hours. The temperature is maintained at 370 K throughout this phase. The surface is exposed to a constant flux of $\phi=5.79\times 10^{19}$ atoms/m $^2$/s, corresponding to a total fluence of $1.5\times 10^{25}$ atoms/m $^2$. The implantation profile follows a Gaussian distribution centered at the mean implantation depth of $R_p=0.7$ nm, with a standard deviation of $\sigma = 0.5$ nm :
+During the charging phase, deuterium is continuously implanted into the tungsten sample over a period of 72 hours. The temperature is maintained at 370 K throughout this phase. The surface is exposed to a constant flux of $\phi=5.79\times 10^{19}$ atoms/m$^2$/s, corresponding to a total fluence of $1.5\times 10^{25}$ atoms/m$^2$. The implantation profile follows a Gaussian distribution centered at the mean implantation depth of $R_p=0.7$ nm, with a standard deviation of $\sigma = 0.5$ nm :
 
 \begin{equation}
     S(x) = \frac{1}{\sigma \sqrt{2\pi}} \exp\left( -\frac{(x - R_p)^2}{2\sigma^2} \right) \cdot \phi_{\text{surface}}(t)
@@ -48,6 +48,14 @@ The diffusion coefficient $D(T)$ follows an Arrhenius-type dependency on tempera
     D(T) = D_0 \exp\left(-\frac{E_D}{k_B T}\right)
 \end{equation}
 
+On the left boundary, deuterium recombines into gas. Assuming the recombination process is at steady state, it can be described by the following surface flux:
+
+\begin{equation}
+    J = 2 A K_r C^2
+\end{equation}
+
+where $J$ represents the recombination flux out of the left sample side, $A$ is the area that side, and $K_r$ is the deuterium recombination coefficient. The coefficient of 2 accounts for the fact that 2 deuterium atoms combine to form one D$_2$ molecule. The flux out of the right sample side is assumed to be zero.
+
 The emission rate of deuterium from the sample was recorded as a function of temperature to assess how deuterium diffused and was released from the material. In that way, the emission rate from the sample could be measured as a function of temperature. The sample temperature histories are shown in [val-2f_temperature_pressure_history].
 
 !media comparison_val-2f.py
@@ -76,8 +84,7 @@ All the model parameters are listed in [val-2f_set_up_values]:
 | $\Phi$    | Incident fluence                     | 1.5 $\times 10^{25}$                                        | atoms/m$^2$           | [!cite](dark2024modelling) |
 | $\phi$    | Incident flux                        | 5.79 $\times 10^{19}$                                       | atoms/m$^2$/s         | [!cite](dark2024modelling) |
 | $l_W$     | Length of the tungsten sample        | 0.8                                                         | mm                    | [!cite](dark2024modelling) |
-
-
+| $K_r$     | Deuterium recombination coefficient  | $3.8\times 10^{-26} \exp\left(\frac{0.34 (\text{eV})}{k_b \cdot T}\right)$ | m$^4$/at/s | [!cite](zhao2020deuterium) |
 
 ## Results
 
