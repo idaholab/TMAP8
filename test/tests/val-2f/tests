@@ -2,6 +2,22 @@
   design = 'EquilibriumBC.md'
   issues = '#12'
   validation = 'val-2f.md'
+  [val-2f_csv]
+    type = CSVDiff
+    input = val-2f.i
+    cli_args = "Mesh/active=cartesian_mesh_coarse dt_start_charging='${units 500 s}' dt_start_cooldown='${units 500 s}' dt_start_desorption='${units 20 s}' Executioner/nl_rel_tol=5e-7 Executioner/nl_abs_tol=5e-7 Executioner/dtmax=1e4 Outputs/exodus/time_step_interval=1"
+    csvdiff = val-2f_out.csv
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output with a short runtime testing.'
+  []
+  [val-2f_exodus]
+    type = Exodiff
+    input = val-2f.i
+    cli_args = "Mesh/active=cartesian_mesh_coarse dt_start_charging='${units 500 s}' dt_start_cooldown='${units 500 s}' dt_start_desorption='${units 20 s}' Executioner/nl_rel_tol=5e-7 Executioner/nl_abs_tol=5e-7 Executioner/dtmax=1e4 Outputs/exodus/time_step_interval=1"
+    exodiff = val-2f_out.e
+    prereq = val-2f_csv
+    should_execute = false # this test relies on the output files from val-2f_csv, so it shouldn't be run twice
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport with a short runtime testing.'
+  []
   [val-2f_heavy_csv]
     type = CSVDiff
     input = val-2f.i
@@ -10,12 +26,15 @@
     heavy = true
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output.'
   []
-  [val-2f_exodus]
+  [val-2f_heavy_exodus]
     type = Exodiff
     input = val-2f.i
-    cli_args = "Mesh/active=cartesian_mesh_coarse dt_start_charging='${units 500 s}' dt_start_cooldown='${units 500 s}' dt_start_desorption='${units 20 s}' Executioner/nl_rel_tol=5e-7 Executioner/nl_abs_tol=5e-7 Executioner/dtmax=1e4 Outputs/exodus/time_step_interval=1"
-    exodiff = val-2f_out.e
-    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport with a short runtime suitable for regular regression testing.'
+    cli_args = 'Outputs/file_base=val-2f_heavy_out'
+    exodiff = val-2f_heavy_out.e
+    heavy = true
+    prereq = val-2f_heavy_csv
+    should_execute = false # this test relies on the output files from val-2f_heavy_csv, so it shouldn't be run twice
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport.'
   []
   [val-2f_comparison]
     type = RunCommand
