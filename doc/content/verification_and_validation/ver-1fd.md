@@ -4,7 +4,7 @@
 
 ## General Case Description
 
-The fourth heat transfer problem taken from [!cite](ambrosek2008verification) builds on the capabilities verified in [ver-1fa](ver-1fa.md), [ver-1fb](ver-1fb.md), and [ver-1fc](ver-1fc.md). The configuration is the same as in [ver-1fb](ver-1fb.md), except that, the current case has a convection boundary. This case is simulated in [/ver-1fd.i]
+The fourth heat transfer problem taken from [!cite](ambrosek2008verification) builds on the capabilities verified in [ver-1fa](ver-1fa.md), [ver-1fb](ver-1fb.md), and [ver-1fc](ver-1fc.md). The configuration is the same as in [ver-1fb](ver-1fb.md), except that, the current case has a convection boundary. This case is simulated in [/ver-1fd.i].
 
 The case focuses on the heating of a semi-infinite slab by convection at the boundary. The slab is initially configured with a constant temperature of 100 K throughout the slab. A convection boundary is activated at the surface from time $t = 0$ s. The convection temperature is in the enclosure is $T_{\infty} = 500$ K. In the slab, the conduction coefficient is $h = 200$ W, the thermal conductivity is $k = 801$ W/m/K, and the thermal diffusivity is $\alpha = 1.17 \times 10^{-4}$ m$^2$/s.
 
@@ -28,8 +28,8 @@ In [!cite](ambrosek2008verification), the value of $k = 801$ W/m/K is provided, 
 
 ## Results
 
-The comparison between TMAP8 predictions and the analytical solution is performed at depth $x = 5$ cm. 
-These results are shown in [ver-1fd_comparison_convective_heating]. 
+The comparison between TMAP8 predictions and the analytical solution is performed at depth $x = 5$ cm.
+These results are shown in [ver-1fd_comparison_convective_heating].
 They show great agreement between TMAP8 and the analytical solution with a root mean square percentage error of RMSPE = 0.29 %.
 
 !media comparison_ver-1fd.py
