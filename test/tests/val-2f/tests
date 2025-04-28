@@ -1,5 +1,5 @@
 [Tests]
-  design = 'EquilibriumBC.md'
+  design = 'ADMatNeumannBC.md'
   issues = '#12'
   validation = 'val-2f.md'
   [val-2f_light_csv]

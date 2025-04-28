@@ -116,7 +116,7 @@ ix4 = 100
     value = 1
     boundary_material = flux_recombination_surface
   []
-  [left_concentration]
+  [right_concentration]
     type = ADMatNeumannBC
     variable = deuterium_concentration_W
     boundary = right
@@ -165,6 +165,8 @@ ix4 = 100
   [recombination_rate_surface]
     type = ADDerivativeParsedMaterial
     property_name = 'Kr'
+    functor_names = 'temperature_bc_func'
+    functor_symbols = 'temperature'
     expression = '${recombination_coefficient}* exp(${recombination_energy} / ${kb_eV} / temperature)'
     output_properties = 'Kr'
   []
