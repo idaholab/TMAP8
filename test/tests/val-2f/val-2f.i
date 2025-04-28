@@ -42,10 +42,6 @@ ix1 = 50
 ix2 = '${fparse dx2/dx1 * ix1}'
 ix3 = '${fparse dx3/dx2 * ix2}'
 ix4 = 100
-ix1_coarse = 4
-ix2_coarse = '${fparse dx2/dx1 * ix1_coarse}'
-ix3_coarse = '${fparse dx3/dx2 * ix2_coarse}'
-ix4_coarse = 20
 
 [Mesh]
   active = 'cartesian_mesh'
@@ -60,19 +56,6 @@ ix4_coarse = 20
           ${ix2}
           ${ix3}
           ${ix4}'
-    subdomain_id = '0 0 0 0'
-  []
-  [cartesian_mesh_coarse]
-    type = CartesianMeshGenerator
-    dim = 1
-    dx = '${dx1}
-          ${dx2}
-          ${dx3}
-          ${dx4}'
-    ix = '${ix1_coarse}
-          ${ix2_coarse}
-          ${ix3_coarse}
-          ${ix4_coarse}'
     subdomain_id = '0 0 0 0'
   []
 []
@@ -131,13 +114,14 @@ ix4_coarse = 20
     variable = deuterium_concentration_W
     boundary = left
     value = 1
-    boundary_material = flux_on_left
+    boundary_material = flux_recombination_surface
   []
-  [right_concentration]
-    type = DirichletBC
-    boundary = right
+  [left_concentration]
+    type = ADMatNeumannBC
     variable = deuterium_concentration_W
-    value = 0
+    boundary = right
+    value = 1
+    boundary_material = flux_recombination_surface
   []
 []
 
@@ -178,20 +162,18 @@ ix4_coarse = 20
     ad_props_in = 'diffusivity_W'
     reg_props_out = 'diffusivity_W_nonAD'
   []
-  [Kr_left_func]
+  [recombination_rate_surface]
     type = ADDerivativeParsedMaterial
-    property_name = 'Kr_left'
-    functor_names = 'temperature_bc_func'
-    functor_symbols = 'temperature'
+    property_name = 'Kr'
     expression = '${recombination_coefficient}* exp(${recombination_energy} / ${kb_eV} / temperature)'
-    output_properties = 'Kr_left'
+    output_properties = 'Kr'
   []
-  [flux_on_left]
+  [flux_recombination_surface]
     type = ADDerivativeParsedMaterial
     coupled_variables = 'deuterium_concentration_W'
-    property_name = 'flux_on_left'
-    material_property_names = 'Kr_left'
-    expression = '- 2 * Kr_left * deuterium_concentration_W ^ 2'
+    property_name = 'flux_recombination_surface'
+    material_property_names = 'Kr'
+    expression = '- 2 * Kr * deuterium_concentration_W ^ 2'
   []
 []
 
