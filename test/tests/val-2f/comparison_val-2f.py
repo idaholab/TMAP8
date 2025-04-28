@@ -82,7 +82,7 @@ if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/val-2f/gold/0.1_dpa.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/0.1_dpa.csv"
-experiment_data = pd.read_csv(csv_folder)
+experiment_data = pd.read_csv(csv_folder, header=1)
 tds_data = np.genfromtxt(csv_folder, delimiter=",")
 experiment_temperature = tds_data[:, 0]
 area = 12e-03 * 15e-03
@@ -109,6 +109,7 @@ ax.plot(x, source_deuterium, label=r"Implantation distribution", c='b')
 ax.set_xlabel(u'x (m)')
 ax.set_ylabel(u"Deuterium source (at/m/s)")
 ax.legend(loc="lower left")
+ax.set_xlim(left=0)
 ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 ax.minorticks_on()
@@ -117,7 +118,7 @@ plt.savefig('val-2f_implantation_distribution.png', bbox_inches='tight', dpi=300
 plt.close(fig)
 
 #===============================================================================
-# Plot temperature and pressure history
+# Plot temperature history
 
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
