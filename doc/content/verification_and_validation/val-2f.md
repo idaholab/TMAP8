@@ -4,7 +4,7 @@
 
 ## Test Description
 
-The case under study involves the use of recrystallized polycrystalline tungsten (PCW) samples, which are subjected to ion irradiation and subsequent analysis using thermal desorption spectroscopy (TDS). The primary objective is to determine how damage influences deuterium trapping and release. This case is drawn from [!cite](dark2024modelling).
+The case being used for validation here involves the use of recrystallized polycrystalline tungsten (PCW) samples, which are subjected to ion irradiation and subsequent analysis using thermal desorption spectroscopy (TDS). The primary objective is to determine how damage influences deuterium trapping and release. This case is drawn from [!cite](dark2024modelling).
 
 The TDS process is simulated using TMAP8 in a 1D tungsten sample with a thickness of 0.8 mm. The TDS simulation consisted of three phases: implantation, resting, and desorption.
 
@@ -48,21 +48,21 @@ The diffusion coefficient $D(T)$ follows an Arrhenius-type dependency on tempera
     D(T) = D_0 \exp\left(-\frac{E_D}{k_B T}\right)
 \end{equation}
 
-On the left boundary, deuterium recombines into gas. Assuming the recombination process is at steady state, it can be described by the following surface flux:
+At the surfaces, deuterium recombines into gas. It can be described by the following surface flux:
 
 \begin{equation}
     J = 2 A K_r C^2
 \end{equation}
 
-where $J$ represents the recombination flux out of the left sample side, $A$ is the area that side, and $K_r$ is the deuterium recombination coefficient. The coefficient of 2 accounts for the fact that 2 deuterium atoms combine to form one D$_2$ molecule. The flux out of the right sample side is assumed to be zero.
+where $J$ represents the recombination flux out of the left sample side, $A$ is the area that side, and $K_r$ is the deuterium recombination coefficient. The coefficient of 2 accounts for the fact that 2 deuterium atoms combine to form one D$_2$ molecule.
 
-The emission rate of deuterium from the sample was recorded as a function of temperature to assess how deuterium diffused and was released from the material. In that way, the emission rate from the sample could be measured as a function of temperature. The sample temperature histories are shown in [val-2f_temperature_pressure_history].
+The emission rate of deuterium from the sample is recorded as a function of temperature to assess how deuterium diffuses and is releases from the material. In that way, the emission rate from the sample is measured as a function of temperature. The sample temperature histories are shown in [val-2f_temperature_pressure_history].
 
 !media comparison_val-2f.py
     image_name=val-2f_temperature_history.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2f_temperature_pressure_history
-    caption=Pressure and temperature histories.
+    caption=Temperature history.
 
 All the model parameters are listed in [val-2f_set_up_values]:
 
@@ -92,7 +92,7 @@ All the model parameters are listed in [val-2f_set_up_values]:
        image_name=val-2f_comparison.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2f_comparison
-       caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s). The experimental data are provided by T. Schwarz-Selinger and are available at https://zenodo.org/records/11085134.
+       caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s). The experimental data are provided by T. Schwarz-Selinger and are available [here](https://zenodo.org/records/11085134).
 
 ## Input files
 
