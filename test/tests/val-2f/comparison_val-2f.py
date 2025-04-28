@@ -46,9 +46,9 @@ def numerical_solution_on_experiment_input(experiment_input, tmap_input, tmap_ou
 # Extract TMAP8 predictions
 
 if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
-    csv_folder = "../../../../test/tests/val-2f/gold/val-2f_heavy_out.csv"
+    csv_folder = "../../../../test/tests/val-2f/gold/val-2f_out.csv"
 else:                                  # if in test folder
-    csv_folder = "./gold/val-2f_heavy_out.csv"
+    csv_folder = "./gold/val-2f_out.csv"
 
 tmap_solution = pd.read_csv(csv_folder)
 tmap_time = tmap_solution['time'] # s
@@ -82,11 +82,10 @@ if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/val-2f/gold/0.1_dpa.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/0.1_dpa.csv"
-experiment_data = pd.read_csv(csv_folder, header=1)
-tds_data = np.genfromtxt(csv_folder, delimiter=",")
-experiment_temperature = tds_data[:, 0]
+experiment_data = pd.read_csv(csv_folder)
+experiment_temperature = experiment_data['Temperature (K)']
 area = 12e-03 * 15e-03
-experiment_flux = tds_data[:, 1] / area
+experiment_flux = experiment_data['Deuterium Loss Rate (at/s)'] / area
 
 #===============================================================================
 # Plot implantation distribution
@@ -107,7 +106,7 @@ ax.axvline(R_p + 5*sigma, color='r', linestyle='--', label=r'$R_p + 5\sigma$')
 ax.plot(x, source_deuterium, label=r"Implantation distribution", c='b')
 
 ax.set_xlabel(u'x (m)')
-ax.set_ylabel(u"Deuterium source (at/m/s)")
+ax.set_ylabel(u"Deuterium source (at/m$^3$/s)")
 ax.legend(loc="lower left")
 ax.set_xlim(left=0)
 ax.set_ylim(bottom=0)
@@ -147,7 +146,7 @@ ax = fig.add_subplot(gs[0])
 ax.plot (tmap_temperature_desorption, tmap_flux_desorption_total, label=r"TMAP8", c='tab:gray')
 ax.scatter(experiment_temperature, experiment_flux, label="Experiment", color="black")
 ax.set_xlabel(u'Temperature (K)')
-ax.set_ylabel(u"Deuterium flux (atom/m$^2$/s)")
+ax.set_ylabel(u"Deuterium flux (at/m$^2$/s)")
 ax.legend(loc="best")
 ax.set_ylim(bottom=0)
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)

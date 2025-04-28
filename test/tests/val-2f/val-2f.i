@@ -19,8 +19,8 @@ endtime = '${fparse charge_time + cooldown_duration + desorption_duration}'
 # Materials properties
 diffusion_W_preexponential = '${units 1.6e-7 m^2/s -> mum^2/s}'
 diffusion_W_energy = '${units 0.28 eV -> J}'
-recombination_coefficient = '${units ${fparse 3.8e-26} m^4/at/s -> mum^4/at/s}' # recombination_coefficient = '${units ${fparse 2e-49} m^4/at/s -> mum^4/at/s}'
-recombination_energy = '${units 0.34 eV}' # recombination_energy = '${units 2.06 eV}'
+recombination_coefficient = '${units ${fparse 3.8e-26} m^4/at/s -> mum^4/at/s}'
+recombination_energy = '${units 0.34 eV}'
 
 # Source term parameters
 sigma = '${units 0.5e-9 m -> mum}'
@@ -186,11 +186,10 @@ ix4 = 100
     execute_on = 'initial timestep_end'
   []
   [flux_surface_left]
-    type = SideDiffusiveFluxIntegral
-    variable = deuterium_concentration_W
-    diffusivity = 'diffusivity_W_nonAD'
+    type = ADSideAverageMaterialProperty
     boundary = 'left'
-    outputs = 'console csv exodus'
+    property = flux_recombination_surface
+    outputs = none
   []
   [scaled_flux_surface_left]
     type = ScalePostprocessor
@@ -200,15 +199,14 @@ ix4 = 100
     outputs = 'console csv exodus'
   []
   [flux_surface_right]
-    type = SideDiffusiveFluxIntegral
-    variable = deuterium_concentration_W
-    diffusivity = 'diffusivity_W_nonAD'
+    type = ADSideAverageMaterialProperty
     boundary = 'right'
-    outputs = 'console csv exodus'
+    property = flux_recombination_surface
+    outputs = none
   []
   [scaled_flux_surface_right]
     type = ScalePostprocessor
-    scaling_factor = '${fparse 1 * ${units 1 m^2 -> mum^2}}'
+    scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
     value = flux_surface_right
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = 'console csv exodus'

@@ -2,11 +2,23 @@
 
 # Modelling self-damaged tungsten effects on deuterium transport
 
-## Test Description
+## Case Description
 
 The case being used for validation here involves the use of recrystallized polycrystalline tungsten (PCW) samples, which are subjected to ion irradiation and subsequent analysis using thermal desorption spectroscopy (TDS). The primary objective is to determine how damage influences deuterium trapping and release. This case is drawn from [!cite](dark2024modelling).
 
 The TDS process is simulated using TMAP8 in a 1D tungsten sample with a thickness of 0.8 mm. The TDS simulation consisted of three phases: implantation, resting, and desorption.
+
+The sample temperature histories are shown in [val-2f_temperature_history].
+
+!media comparison_val-2f.py
+    image_name=val-2f_temperature_history.png
+    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+    id=val-2f_temperature_history
+    caption=Temperature history.
+
+## Model Description
+
+### 1. Implantation phase:
 
 During the charging phase, deuterium is continuously implanted into the tungsten sample over a period of 72 hours. The temperature is maintained at 370 K throughout this phase. The surface is exposed to a constant flux of $\phi=5.79\times 10^{19}$ atoms/m$^2$/s, corresponding to a total fluence of $1.5\times 10^{25}$ atoms/m$^2$. The implantation profile follows a Gaussian distribution centered at the mean implantation depth of $R_p=0.7$ nm, with a standard deviation of $\sigma = 0.5$ nm :
 
@@ -24,7 +36,7 @@ where the surface flux function is given by:
     \end{cases}
 \end{equation}
 
-The implantation distribution is illustrated in [val-2f_implantation_distribution]. It highlights the need for mesh refinement on the order of $\sigma$ in the implantation region to accurately resolve the profile and capture the sharp gradient of the source term.
+The implantation distribution is illustrated in [val-2f_implantation_distribution]: most of the implanted atoms are found within a few standard deviations ($\sigma$) of the mean implantation depth ($R_p$). In this context, it means that the mesh in the region where deuterium implantation occurs should be refined to a size comparable to $\sigma$. In this TMAP8 simulation, the first mesh region is set to length of $5\sigma$, divided into 50 elements. This allows to capture the majority of the implantation profile and ensure that the mesh is sufficiently refined in this region.
 
 !media comparison_val-2f.py
     image_name=val-2f_implantation_distribution.png
@@ -32,9 +44,15 @@ The implantation distribution is illustrated in [val-2f_implantation_distributio
     id=val-2f_implantation_distribution
     caption=Deuterium implantation.
 
+### 2. Desorption phase:
+
 After the implantation phase, the system enters the cooldown phase, lasting 12 hours. During this period, the sample temperature is rapidly reduced from 370 K to 295 K. No additional deuterium is introduced during this phase, meaning the source term is set to zero.
 
+### 3. Cooldown phase:
+
 The final stage of the simulation is the desorption phase, during which the sample is gradually heated from 300 K to 1000 K at a constant rate of $\beta = 0.05$ K/s.
+
+## Governing equations
 
 The general form of the governing diffusion equation for the deuterium concentration $C(x,t)$ in tungsten is given by:
 
@@ -56,13 +74,9 @@ At the surfaces, deuterium recombines into gas. It can be described by the follo
 
 where $J$ represents the recombination flux out of the left sample side, $A$ is the area that side, and $K_r$ is the deuterium recombination coefficient. The coefficient of 2 accounts for the fact that 2 deuterium atoms combine to form one D$_2$ molecule.
 
-The emission rate of deuterium from the sample is recorded as a function of temperature to assess how deuterium diffuses and is releases from the material. In that way, the emission rate from the sample is measured as a function of temperature. The sample temperature histories are shown in [val-2f_temperature_pressure_history].
+The emission rate of deuterium from the sample is recorded as a function of temperature to assess how deuterium diffuses and is releases from the material. In that way, the emission rate from the sample is measured as a function of temperature.
 
-!media comparison_val-2f.py
-    image_name=val-2f_temperature_history.png
-    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=val-2f_temperature_pressure_history
-    caption=Temperature history.
+## Case and Model Parameters
 
 All the model parameters are listed in [val-2f_set_up_values]:
 
@@ -88,11 +102,13 @@ All the model parameters are listed in [val-2f_set_up_values]:
 
 ## Results
 
+[val-2f_comparison] shows the comparison of the TMAP8 calculation and the experimental data during desorption. The experimental data are provided by T. Schwarz-Selinger and are available [here](https://zenodo.org/records/11085134). The single peak in the TDS suggests that the deuterium atoms are desorbing from the surface at a specific temperature range, corresponding to a particular activation energy for desorption. The temperature at which the peak reflects the interplay between the activation energy for deuterium diffusion and the recombination at the surface.
+
 !media comparison_val-2f.py
        image_name=val-2f_comparison.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2f_comparison
-       caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s). The experimental data are provided by T. Schwarz-Selinger and are available [here](https://zenodo.org/records/11085134).
+       caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s) for a damage of 0.1 dpa.
 
 ## Input files
 
