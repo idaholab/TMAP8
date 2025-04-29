@@ -72,7 +72,7 @@ At the surfaces, deuterium recombines into gas. It can be described by the follo
     J = 2 A K_r C^2
 \end{equation}
 
-where $J$ represents the recombination flux out of the left sample side, $A$ is the area that side, and $K_r$ is the deuterium recombination coefficient. The coefficient of 2 accounts for the fact that 2 deuterium atoms combine to form one D$_2$ molecule.
+where $J$ represents the recombination flux exiting the sample on both the left and right sides, $A$ is the area that side, and $K_r$ is the deuterium recombination coefficient. The coefficient of 2 accounts for the fact that 2 deuterium atoms combine to form one D$_2$ molecule.
 
 The emission rate of deuterium from the sample is recorded as a function of temperature to assess how deuterium diffuses and is releases from the material. In that way, the emission rate from the sample is measured as a function of temperature.
 
