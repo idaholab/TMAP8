@@ -110,6 +110,14 @@ All the model parameters are listed in [val-2f_set_up_values]:
        id=val-2f_comparison
        caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s) for a damage of 0.1 dpa.
 
+[val-2f_deuterium_desorption] displays the quantities of mobile and escaping deuterium atoms during the desorption process. As desorption occurs, no further implantation takes place, resulting in a decrease in the number of mobile deuterium atoms and an increase in the number of escaping deuterium atoms. Mass conservation is well maintained during desorption, with only a 0.05% error between the initial number of mobile deuterium atoms and the combined total of mobile and escaping deuterium atoms.
+
+!media comparison_val-2f.py
+       image_name=val-2f_deuterium_desorption.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2f_deuterium_desorption
+       caption=Quantity of mobile and escaping deuterium atoms during the desorption process.
+
 ## Input files
 
 !style halign=left
