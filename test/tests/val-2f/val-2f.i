@@ -31,6 +31,7 @@ flux = '${units ${fparse 5.79e19} at/m^2/s -> at/mum^2/s}'
 dt_start_charging = '${units 1 s}'
 dt_start_cooldown = '${units 10 s}'
 dt_start_desorption = '${units 1 s}'
+dt_init = ${dt_start_charging}
 
 # Mesh parameters
 sample_thickness = '${units 0.8e-3 m -> mum}'
@@ -180,10 +181,25 @@ ix4 = 100
 []
 
 [Postprocessors]
-  [average]
-    type = ElementAverageValue
+  [integral_source_deuterium]
+    type = FunctionElementIntegral
+    function = source_deuterium
+    outputs = none
+  []
+  [scaled_implanted_deuterium]
+    type = ScalePostprocessor
+    scaling_factor = '${fparse ${units 1 m^2 -> mum^2}}'
+    value = integral_source_deuterium
+  []
+  [integral_deuterium_concentration]
+    type = ElementIntegralVariablePostprocessor
     variable = deuterium_concentration_W
-    execute_on = 'initial timestep_end'
+    outputs = none
+  []
+  [scaled_mobile_deuterium]
+    type = ScalePostprocessor
+    scaling_factor = '${fparse ${units 1 m^2 -> mum^2}}'
+    value = integral_deuterium_concentration
   []
   [flux_surface_left]
     type = ADSideAverageMaterialProperty
@@ -196,7 +212,6 @@ ix4 = 100
     scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
     value = flux_surface_left
     execute_on = 'initial nonlinear linear timestep_end'
-    outputs = 'console csv exodus'
   []
   [flux_surface_right]
     type = ADSideAverageMaterialProperty
@@ -209,7 +224,6 @@ ix4 = 100
     scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
     value = flux_surface_right
     execute_on = 'initial nonlinear linear timestep_end'
-    outputs = 'console csv exodus'
   []
   [temperature]
     type = ElementAverageValue
@@ -250,7 +264,7 @@ ix4 = 100
   dtmax = 100
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 1
+    dt = ${dt_init}
     optimal_iterations = 25
     growth_factor = 1.1
     cutback_factor = 0.9
