@@ -55,4 +55,15 @@
                    when modeling decay of tritium and associated growth of He in a diffusion segment with distributed traps.'
     required_python_packages = 'csv matplotlib numpy pandas os'
   []
+
+  [ver-1jb-physics_csvdiff]
+    type = CSVDiff
+    input = ver-1jb-physics.i
+    csvdiff = ver-1jb-physics_time_dependent_out.csv
+    requirement = 'The system shall be able to model decay of tritium and associated growth of He in a diffusion segment with
+                   distributed traps using the shorthand Physics syntax.'
+    # scaled mobile is around 1e-25 so we cant trust it
+    # you can tighten the tolerances on ver-1jb.i to see this quantity diff as well
+    ignore_columns = 'tritium_mobile_inventory'
+  []
 []
