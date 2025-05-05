@@ -49,7 +49,8 @@ template <bool is_ad>
 void
 YHxPCTTempl<is_ad>::computeQpProperties()
 {
-  auto limit_pressure = std::exp(-26.1 + 3.88e-2 * _temperature[_qp] - 9.7e-6 * Utility::pow<2>(_temperature[_qp]));
+  auto limit_pressure =
+      std::exp(-26.1 + 3.88e-2 * _temperature[_qp] - 9.7e-6 * Utility::pow<2>(_temperature[_qp]));
 
   if (!_silence_warnings && ((_pressure[_qp] < limit_pressure) || (_pressure[_qp] > 1.e6)))
     mooseDoOnce(mooseWarning("In YHxPCT: pressure ",
@@ -59,10 +60,11 @@ YHxPCTTempl<is_ad>::computeQpProperties()
                              "K are outside the bounds of the atomic fraction correlation. See "
                              "documentation for YHxPCT material."));
 
-  _atomic_fraction[_qp] = 2. - std::pow(1. + std::exp(21.6 - 0.0225 * _temperature[_qp] +
-                                                 (-0.0445 + 7.18e-4 * _temperature[_qp]) *
-                                                     (std::log(_pressure[_qp] - limit_pressure))),
-                                   -1);
+  _atomic_fraction[_qp] =
+      2. - std::pow(1. + std::exp(21.6 - 0.0225 * _temperature[_qp] +
+                                  (-0.0445 + 7.18e-4 * _temperature[_qp]) *
+                                      (std::log(_pressure[_qp] - limit_pressure))),
+                    -1);
   if (!is_ad)
   {
     (*_atomic_fraction_dT)[_qp] = 0.0;
