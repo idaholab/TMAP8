@@ -20,7 +20,7 @@
  * LA-UR-21-27538, 2021.
  */
 template <bool is_ad>
-class YHxPCTTempl : public  Material
+class YHxPCTTempl : public Material
 {
 public:
   static InputParameters validParams();
