@@ -24,7 +24,7 @@ if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     folderPath = "../../../../test/tests/yttrium_hydrogen_system/"
 else:                                  # if in test folder
     folderPath = ""
-folderNameExpData = 'PTC_curves_Data'
+folderNameExpData = 'PCT_data'
 list_expData = []
 for temperature in temperature_list:
     # Read the CSV file into a DataFrame
