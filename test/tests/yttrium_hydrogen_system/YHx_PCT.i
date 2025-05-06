@@ -11,7 +11,7 @@ initial_concentration_H_enclosure_1 = '${units ${fparse 2*initial_pressure_H2_en
 initial_atomic_fraction = 1.8 # (-)
 initial_concentration_H_enclosure_2 = '${units ${fparse initial_atomic_fraction*density_Y} mol/m^3}'
 
-# diffusivity from Majeret al., Journal of Alloys and Compounds 330-332 (2002) 438–442.
+# diffusivity from Majer et al., Journal of Alloys and Compounds 330-332 (2002) 438–442.
 diffusivity_Do = '${units 1.e-8 m^2/s}'
 diffusivity_Ea = '${units 0.38 eV -> J}'
 diffusivity_ratio_air_YHx = ${fparse initial_concentration_H_enclosure_2 / initial_concentration_H_enclosure_1 * 10} # this ratio is large and helps InterfaceDiffusion due to the ratio of concentrations
