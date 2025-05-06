@@ -21,7 +21,7 @@ temperature_list = [x + 273.15 for x in temperature_list] # K
 # ============================================================================ #
 # Extract data from experiments
 if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
-    folderPath = "../../../../test/tests/yttrium_hydrogen_system/"
+    folderPath = "../../../../../test/tests/yttrium_hydrogen_system/"
 else:                                  # if in test folder
     folderPath = ""
 folderNameExpData = 'PCT_data'
@@ -105,12 +105,11 @@ filtered_pressures = [pressure for pressure in plateau_pressures if pressure is 
 
 # ============================================================================ #
 # Plot the fit and the plateau pressures
-fig = plt.figure(figsize=(10, 6))
+fig = plt.figure(figsize=(5, 5))
 plt.plot(temperature_list, p0_lim, label='Fit', linestyle='--')
 plt.scatter(filtered_temperatures, filtered_pressures, color='red', label='Plateau Pressures')
 plt.xlabel('Temperature (K)')
 plt.ylabel('Pressure (Pa)')
-plt.title('Fit transition region as a Pressures as a Function of Temperature')
 plt.yscale('log')
 plt.legend()
 plt.grid(True)
@@ -122,7 +121,6 @@ plt.close(fig)
 # Fit the high pressures as a function of temperature
 def atom_ratio_eq_upper_func(temperature,pressure):
     return 2-(1+np.exp(21.6 -0.0225*temperature + (-0.0445 + 7.18*10**(-4)*temperature)*(np.log(pressure - p0_lim_func(temperature)))))**(-1)
-    # return 2-(1.3-3.5*10**(-2)*np.log(pressure)+np.exp(22.2 -0.0227*temperature + (-0.0445 + 7.18*10**(-4)*temperature)*(np.log(pressure - p0_lim_func(temperature)))))**(-1)
 
 # Create a meshgrid for the fit surface
 pressure_range = np.linspace((min(list_expData[0].iloc[:, 1])), (max(list_expData[0].iloc[:, 1])), 100)
@@ -135,7 +133,7 @@ atom_ratio_eq_upper = atom_ratio_eq_upper_func(temperature_range,pressure_range)
 # Compare simulation data against model
 # Read simulation data
 if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
-    csv_folder = "../../../../test/tests/yttrium_hydrogen_system/gold/"
+    csv_folder = "../../../../../test/tests/yttrium_hydrogen_system/gold/"
 else:                                  # if in test folder
     csv_folder = "./gold/"
 
@@ -202,7 +200,7 @@ plt.close(fig)
 RMSE_values = {}
 
 # Plot the data points and the fit function for each temperature
-fig = plt.figure(figsize=(15, 6))
+fig = plt.figure(figsize=(12, 6))
 
 print('temperature_list',temperature_list)
 
@@ -249,7 +247,6 @@ plt.scatter(TMAP8_prediction_T1173_P5e4_pressure, TMAP8_prediction_T1173_P5e4_at
 
 plt.xlabel('Partial Pressure (Pa)')
 plt.ylabel('Atom Ratio (-)')
-plt.title('Atom Ratio vs Partial Pressure with Fit Curves')
 plt.xscale('log')
 plt.legend(bbox_to_anchor=(1.1, 1.05))
 plt.grid(True)
