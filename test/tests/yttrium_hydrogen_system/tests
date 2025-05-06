@@ -1,5 +1,5 @@
 [Tests]
-  design = 'InterfaceKernel.md MatDiffusion.md TimeDerivative.md ADMatReactionFlexible.md YHxPCT.md'
+  design = 'InterfaceDiffusion.md ADMatInterfaceReaction.md MatDiffusion.md TimeDerivative.md YHxPCT.md'
   issues = '#261'
   [YHx_PCT_csv]
     type = CSVDiff
