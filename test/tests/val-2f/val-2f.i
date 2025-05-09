@@ -1,68 +1,44 @@
-# Physical constants
-kb = '${units 1.380649e-23 J/K}' # Boltzmann constant J/K - from PhysicalConstants.h
-eV_to_J = '${units 1.602176634e-19 J/eV}' # Conversion coefficient from eV to Joules - from PhysicalConstants.h
-kb_eV = '${units ${fparse kb / eV_to_J} eV/K}' # Boltzmann constant eV/K
-
-# Temperature conditions
-temperature_initial = '${units 370 K}'
-temperature_cooldown = '${units 295 K}'
-temperature_desorption_min = '${units 300 K}'
-temperature_desorption_max = '${units 1000 K}'
-desorption_heating_rate = '${units ${fparse 3/60} K/s}'
-
-# Important times
-charge_time = '${units 72 h -> s}'
-cooldown_duration = '${units 12 h -> s}'
-desorption_duration = '${fparse (temperature_desorption_max-temperature_desorption_min)/desorption_heating_rate}'
-endtime = '${fparse charge_time + cooldown_duration + desorption_duration}'
-
-# Materials properties
-diffusion_W_preexponential = '${units 1.6e-7 m^2/s -> mum^2/s}'
-diffusion_W_energy = '${units 0.28 eV -> J}'
-recombination_coefficient = '${units ${fparse 3.8e-26} m^4/at/s -> mum^4/at/s}'
-recombination_energy = '${units 0.34 eV}'
-
-# Source term parameters
-sigma = '${units 0.5e-9 m -> mum}'
-R_p = '${units 0.7e-9 m -> mum}'
-flux = '${units ${fparse 5.79e19} at/m^2/s -> at/mum^2/s}'
-
-# Numerical parameters
-dt_start_charging = '${units 1 s}'
-dt_start_cooldown = '${units 10 s}'
-dt_start_desorption = '${units 1 s}'
-dt_init = ${dt_start_charging}
-
-# Mesh parameters
-sample_thickness = '${units 0.8e-3 m -> mum}'
-dx1 = '${fparse 5*sigma}'
-dx2 = '${fparse 10*sigma}'
-dx3 = '${fparse 50*sigma}'
-dx4 = '${fparse sample_thickness-(dx1+dx2+dx3)}'
-ix1 = 50
-ix2 = '${fparse dx2/dx1 * ix1}'
-ix3 = '${fparse dx3/dx2 * ix2}'
-ix4 = 100
+!include parameters_val-2f.params
+!include val-2f_trapping_2.i
+!include val-2f_trapping_1.i
 
 [Mesh]
   active = 'cartesian_mesh'
   [cartesian_mesh]
     type = CartesianMeshGenerator
     dim = 1
-    dx = '${dx1}
-          ${dx2}
-          ${dx3}
-          ${dx4}'
-    ix = '${ix1}
-          ${ix2}
-          ${ix3}
-          ${ix4}'
+    dx = '${dx1} ${dx2} ${dx3} ${dx4}'
+    ix = '${ix1} ${ix2} ${ix3} ${ix4}'
     subdomain_id = '0 0 0 0'
   []
+  # [cartesian_mesh_coarse]
+  #   type = CartesianMeshGenerator
+  #   dim = 1
+  #   dx = '${units 3e-9 m -> mum} ${units 7.997e-6 m -> mum} ${units 7.2e-5 m -> mum} '
+  #   ix = '${fparse 10 * ${nx_scale}} ${fparse 10 * ${nx_scale}} ${fparse 10 * ${nx_scale}}'
+  #   subdomain_id = '0 0 0 0 0'
+  # []
 []
 
 [Variables]
   [deuterium_concentration_W]
+  []
+[]
+
+[AuxVariables]
+  [bounds_dummy]
+    order = FIRST
+    family = LAGRANGE
+  []
+[]
+
+[Bounds]
+  [deuterium_concentration_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = deuterium_concentration_W
+    bound_type = lower
+    bound_value = '${fparse -1e-20}'
   []
 []
 
@@ -147,6 +123,26 @@ ix4 = 100
     symbol_values = 'source_distribution surface_flux_func'
     expression = 'source_distribution * surface_flux_func'
   []
+  [max_dt_size_function]
+    type = ParsedFunction
+    expression = 'if(t<${fparse 3700}, ${fparse 1e1},
+                  if(t<${fparse 3900}, ${fparse 1e0},
+                  if(t<${fparse 6400}, ${fparse 1e1},
+                  if(t<${fparse 7400}, ${fparse 1e0},
+                  if(t<${fparse 10000}, ${fparse 1e1},
+                  if(t<${fparse 1e5-1e4}, ${fparse 1e2},
+                  if(t<${fparse 1e5+1e4}, ${fparse 5},
+                  if(t<${fparse charge_time + cooldown_duration + 4500}, ${fparse 1e2},
+                  if(t<${fparse 308500}, ${fparse 1e0},
+                  if(t<${endtime}, ${fparse 2e2}, ${fparse 1e2}))))))))))'
+  []
+  [max_dt_size_function_coarse]
+    type = ParsedFunction
+    expression = 'if(t<${fparse 150}, ${fparse 1e1},
+                  if(t<${fparse 195}, ${fparse 1e1},
+                  if(t<${fparse 205}, ${fparse 1e-1},
+                  if(t<${fparse 220}, ${fparse 1e0},${fparse 1e1}))))'
+  []
 []
 
 [Materials]
@@ -155,7 +151,7 @@ ix4 = 100
     property_name = 'diffusivity_W'
     functor_names = 'temperature_bc_func'
     functor_symbols = 'temperature'
-    expression = '${diffusion_W_preexponential} * exp(- ${diffusion_W_energy} / ${kb} / temperature)'
+    expression = '${diffusion_W_preexponential} * exp(- ${diffusion_W_energy} / ${kb_eV} / temperature)'
     output_properties = 'diffusivity_W'
   []
   [diffusivity_nonAD]
@@ -235,8 +231,16 @@ ix4 = 100
     variable = diffusivity_W
     outputs = none
   []
-  [dt]
-    type = TimestepSize
+  [max_time_step_size]
+    type = FunctionValuePostprocessor
+    function = max_dt_size_function
+    execute_on = 'initial nonlinear linear timestep_end'
+    outputs = none
+  []
+  [max_time_step_size_coarse]
+    type = FunctionValuePostprocessor
+    function = max_dt_size_function_coarse
+    execute_on = 'initial nonlinear linear timestep_end'
     outputs = none
   []
 []
@@ -251,9 +255,9 @@ ix4 = 100
 [Executioner]
   type = Transient
   scheme = bdf2
-  solve_type = NEWTON
-  petsc_options_iname = '-pc_type -sub_pc_type'
-  petsc_options_value = 'asm lu'
+  solve_type = 'Newton'
+  petsc_options_iname = '-pc_type -sub_pc_type -snes_type'
+  petsc_options_value = 'asm      lu           vinewtonrsls' # This petsc option helps prevent negative concentrations with bounds'
   end_time = ${endtime}
   automatic_scaling = true
   compute_scaling_once = false
@@ -261,7 +265,6 @@ ix4 = 100
   nl_rel_tol = 5e-7
   nl_abs_tol = 6e-11
   nl_max_its = 34
-  dtmax = 100
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = ${dt_init}
@@ -269,8 +272,7 @@ ix4 = 100
     growth_factor = 1.1
     cutback_factor = 0.9
     cutback_factor_at_failure = 0.9
-    time_t = '0 ${charge_time} ${fparse charge_time + cooldown_duration}'
-    time_dt = '${dt_start_charging} ${dt_start_cooldown} ${dt_start_desorption}'
+    timestep_limiting_postprocessor = max_time_step_size
   []
 []
 
