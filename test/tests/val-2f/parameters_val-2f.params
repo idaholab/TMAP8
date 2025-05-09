@@ -1,0 +1,66 @@
+# Physical constants
+kb = '${units 1.380649e-23 J/K}' # Boltzmann constant J/K - from PhysicalConstants.h
+eV_to_J = '${units 1.602176634e-19 J/eV}' # Conversion coefficient from eV to Joules - from PhysicalConstants.h
+kb_eV = '${units ${fparse kb / eV_to_J} eV/K}' # Boltzmann constant eV/K
+
+tungsten_density = '${units 6.3222e28 at/m^3 -> at/mum^3}'
+
+# Temperature conditions
+temperature_initial = '${units 370 K}'
+temperature_cooldown = '${units 295 K}'
+temperature_desorption_min = '${units 300 K}'
+temperature_desorption_max = '${units 1000 K}'
+desorption_heating_rate = '${units ${fparse 3/60} K/s}'
+
+# Important times
+charge_time = '${units 72 h -> s}'
+cooldown_duration = '${units 12 h -> s}'
+desorption_duration = '${fparse (temperature_desorption_max-temperature_desorption_min)/desorption_heating_rate}'
+endtime = '${fparse charge_time + cooldown_duration + desorption_duration}'
+dt_init = 0.01
+
+# Materials properties
+diffusion_W_preexponential = '${units 1.6e-7 m^2/s -> mum^2/s}'
+diffusion_W_energy = '${units 0.28 eV}'
+recombination_coefficient = '${units ${fparse 3.8e-26} m^4/at/s -> mum^4/at/s}'
+recombination_energy = '${units 0.34 eV}'
+
+# Source term parameters
+sigma = '${units 0.5e-9 m -> mum}'
+R_p = '${units 0.7e-9 m -> mum}'
+flux = '${units ${fparse 5.79e19} at/m^2/s -> at/mum^2/s}'
+
+# Fermi–Dirac trap density distribution
+depth_center = '${units 2.5e-6 m -> mum}'
+depth_width = '${units 5e-7 m -> mum}'
+
+# Mesh parameters
+sample_thickness = '${units 0.8e-3 m -> mum}'
+dx1 = '${units 3e-9 m -> mum}'
+dx2 = '${units 7.997e-6 m -> mum}'
+dx3 = '${units 7.2e-5 m -> mum}'
+dx4 = '${fparse sample_thickness - dx1 - dx2 - dx3}'
+ix1 = 100
+ix2 = 100
+ix3 = 100
+ix4 = 100
+
+# Trap 1 parameters
+trapping_energy_1 = '${fparse ${units ${diffusion_W_energy} eV -> J} / ${kb}}'
+diffusion_W_preexponential_meters_1 = '${units ${diffusion_W_preexponential} mum^2/s -> m^2/s}'
+trapping_prefactor_1 = '${units ${fparse ${diffusion_W_preexponential_meters_1} / (1.1e-10^2 * 6)} 1/s}'
+detrapping_energy_1 = '${fparse ${units 1.15 eV -> J} / ${kb}}'
+detrapping_prefactor_1 = '${units 1e13 1/s}'
+trap_density_01dpa_1 = '${units 4.8e25 at/m^3 -> at/mum^3}'
+trapping_site_fraction_1 = '${fparse trap_density_01dpa_1 / tungsten_density}'
+trap_per_free_1 = 1e7 # (-)
+
+# Trap 2 parameters
+trapping_energy_2 = '${fparse ${units ${diffusion_W_energy} eV -> J} / ${kb}}'
+diffusion_W_preexponential_meters_2 = '${units ${diffusion_W_preexponential} mum^2/s -> m^2/s}'
+trapping_prefactor_2 = '${units ${fparse ${diffusion_W_preexponential_meters_2} / (1.1e-10^2 * 6)} 1/s}'
+detrapping_energy_2 = '${fparse ${units 1.35 eV -> J} / ${kb}}'
+detrapping_prefactor_2 = '${units 1e13 1/s}'
+trap_density_01dpa_2 = '${units 3.8e25 at/m^3 -> at/mum^3}'
+trapping_site_fraction_2 = '${fparse trap_density_01dpa_2 / tungsten_density}'
+trap_per_free_2 = 1e7 # (-)
