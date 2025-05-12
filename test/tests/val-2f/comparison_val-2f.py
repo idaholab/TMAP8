@@ -241,14 +241,15 @@ ax1 = fig.add_subplot(gs[0])
 
 # Fill the areas under the blue and green curves accurately
 ax1.fill_between(tmap_time_in_hours_desorption, 0, tmap_trapped_deuterium_1_desorption, color='tab:cyan', alpha=0.3)
-ax1.fill_between(tmap_time_in_hours_desorption, tmap_trapped_deuterium_1_desorption, tmap_trapped_deuterium_1_desorption + tmap_trapped_deuterium_2_desorption, color='tab:purple', alpha=0.3)
+ax1.fill_between(tmap_time_in_hours_desorption, tmap_trapped_deuterium_1_desorption, tmap_trapped_deuterium_desorption, color='tab:blue', alpha=0.3)
+ax1.fill_between(tmap_time_in_hours_desorption, tmap_trapped_deuterium_desorption, tmap_trapped_deuterium_desorption + tmap_mobile_deuterium_desorption  , color='tab:purple', alpha=0.3)
 
 # Plot the lines
 line1, = ax1.plot(tmap_time_in_hours_desorption, tmap_combined_deuterium_desorption, c='tab:green', linestyle='-', label='Total')
 line2 = ax1.axhline(initial_deuterium, color='tab:red', linestyle=':', label='Initial mobile and trapped  deuterium')
-line3, = ax1.plot(tmap_time_in_hours_desorption, tmap_mobile_deuterium_desorption + tmap_trapped_deuterium_desorption, label='Mobile + Trapped', c='tab:blue')
-line4, = ax1.plot(tmap_time_in_hours_desorption, tmap_mobile_deuterium_desorption + tmap_trapped_deuterium_1_desorption, label='Trap 1', c='tab:cyan')
-line5, = ax1.plot(tmap_time_in_hours_desorption, tmap_trapped_deuterium_1_desorption + tmap_trapped_deuterium_2_desorption, label='Trap 1 + Trap 2', c='tab:purple')
+line3, = ax1.plot(tmap_time_in_hours_desorption, tmap_mobile_deuterium_desorption + tmap_trapped_deuterium_1_desorption, label='Trap 1', c='tab:cyan', alpha=0.6)
+line4, = ax1.plot(tmap_time_in_hours_desorption, tmap_mobile_deuterium_desorption, label='Trap 2', c='tab:blue', alpha=0.6)
+line5, = ax1.plot(tmap_time_in_hours_desorption, tmap_mobile_deuterium_desorption + tmap_trapped_deuterium_desorption, label='Mobile', c='tab:purple', alpha=0.6)
 
 # Set plot labels and limits
 ax1.set_xlabel(u'Time (hours)')
@@ -264,15 +265,15 @@ ax2.set_ylabel(u'Temperature (K)')
 ax2.set_ylim(bottom=min(tmap_temperature_desorption), top=max(tmap_temperature_desorption))
 
 # Create custom legend with colored boxes instead of lines
+mobile_patch = Patch(color='tab:purple', alpha=0.3, label='Mobile deuterium (very small)')
 trap1_patch = Patch(color='tab:cyan', alpha=0.3, label='Trap 1')
-trap1_2_patch = Patch(color='tab:purple', alpha=0.3, label='Trap 1 + Trap 2')
+trap2_patch = Patch(color='tab:blue', alpha=0.3, label='Trap 2')
 total_deuterium_line = plt.Line2D([0], [0], color='tab:green', linestyle=':', label='Total')
 initial_deuterium_line = plt.Line2D([0], [0], color='tab:red', linestyle=':', label='Initial mobile and trapped deuterium')
-mobile_trapped_deuterium = plt.Line2D([0], [0], color='tab:blue', label='Mobile + Trapped deuterium')
 temperature_line = plt.Line2D([0], [0], color='tab:orange', label='Temperature')
 
 # Add legend to the plot
-lines = [temperature_line, total_deuterium_line, initial_deuterium_line, mobile_trapped_deuterium, trap1_2_patch, trap1_patch]
+lines = [temperature_line, total_deuterium_line, initial_deuterium_line, mobile_patch, trap2_patch, trap1_patch]
 labels = [line.get_label() for line in lines]
 fig.legend(lines, labels, bbox_to_anchor=(0.9, 0.35), fontsize=8, frameon=True, framealpha=0.9)
 
