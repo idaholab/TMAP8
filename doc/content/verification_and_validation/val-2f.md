@@ -103,9 +103,9 @@ At the surfaces, deuterium recombines into gas. It can be described by the follo
     J = 2 A K_r C^2
 \end{equation}
 
-where $J$ represents the recombination flux exiting the sample on both the left and right sides, $A$ is the area that side, and $K_r$ is the deuterium recombination coefficient. The coefficient of 2 accounts for the fact that 2 deuterium atoms combine to form one D$_2$ molecule.
+where $J$ represents the recombination flux exiting the sample on both the left and right sides, $A$ is the surface area, and $K_r$ is the deuterium recombination coefficient. The coefficient of 2 accounts for the fact that 2 deuterium atoms combine to form one D$_2$ molecule.
 
-The emission rate of deuterium from the sample is recorded as a function of temperature to assess how deuterium diffuses and is releases from the material. In that way, the emission rate from the sample is measured as a function of temperature.
+The emission rate of deuterium from the sample is recorded as a function of temperature to assess how deuterium is released from the material.
 
 ## Case and Model Parameters
 
@@ -155,9 +155,8 @@ All the traps parameters are listed in [val-2f_traps_values].
        id=val-2f_comparison
        caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s) for a damage of 0.1 dpa.
 
-[val-2f_deuterium_desorption] displays the quantities of mobile, trapped, and escaping deuterium atoms during the desorption process. During desorption, the temperature increases from 300K to 1000K. The amount of deuterium trapped will decrease as the temperature rises and the various trapping energies are reached. Trap 1 will release deuterium before trap 2, as its trapping energy is smaller.
-
-During desorption, no further implantation occurs, resulting in a decrease in the number of mobile and trapped deuterium atoms and an increase in the number of escaping deuterium atoms. Mass conservation is well maintained during desorption, with only a 0.02% error between the initial number of mobile and trapped deuterium atoms and the total number of deuterium atoms (mobile, trapped and escaping).
+[val-2f_deuterium_desorption] displays the quantities of mobile, trapped (in trap 1 and trap 2), and desorbing deuterium atoms during the desorption process. During desorption, the temperature increases from 300 K to 1000 K. The amount of deuterium trapped will decrease as the temperature rises and the various trapping energies are reached, meaning that deuterium will leave the traps, become mobile, and diffuse out. Trap 1 will release deuterium before trap 2, as its trapping energy is lower.
+During desorption, no further implantation occurs, resulting in a decrease in the number of mobile and trapped deuterium atoms and an increase in the number of desorbed deuterium atoms. Mass conservation is well maintained during desorption, with only a 0.02% root mean squared percentage error (RMSPE) between the initial number of mobile and trapped deuterium atoms and the total number of deuterium atoms (mobile, trapped, and desorbed).
 
 !media comparison_val-2f.py
        image_name=val-2f_deuterium_desorption.png

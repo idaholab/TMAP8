@@ -11,13 +11,6 @@
     ix = '${ix1} ${ix2} ${ix3} ${ix4}'
     subdomain_id = '0 0 0 0'
   []
-  # [cartesian_mesh_coarse]
-  #   type = CartesianMeshGenerator
-  #   dim = 1
-  #   dx = '${units 3e-9 m -> mum} ${units 7.997e-6 m -> mum} ${units 7.2e-5 m -> mum} '
-  #   ix = '${fparse 10 * ${nx_scale}} ${fparse 10 * ${nx_scale}} ${fparse 10 * ${nx_scale}}'
-  #   subdomain_id = '0 0 0 0 0'
-  # []
 []
 
 [Variables]

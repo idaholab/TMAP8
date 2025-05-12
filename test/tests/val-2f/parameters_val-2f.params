@@ -36,7 +36,7 @@ depth_width = '${units 5e-7 m -> mum}'
 
 # Mesh parameters
 sample_thickness = '${units 0.8e-3 m -> mum}'
-dx1 = '${units 3e-9 m -> mum}'
+dx1 = '${fparse 6*sigma}'
 dx2 = '${units 7.997e-6 m -> mum}'
 dx3 = '${units 7.2e-5 m -> mum}'
 dx4 = '${fparse sample_thickness - dx1 - dx2 - dx3}'

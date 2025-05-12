@@ -56,17 +56,6 @@
     type = ParsedFunction
     expression = '${trapping_site_fraction_2} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
   []
-  # [max_dt_size_function_coarse]
-  #   type = ParsedFunction
-  #   expression = 'if(t<${fparse 2900}, ${fparse 1e1},
-  #                 if(t<${fparse 3500}, ${fparse 1e0},
-  #                 if(t<${fparse 10000}, ${fparse 1e1},
-  #                 if(t<${fparse 1e5-1e4}, ${fparse 1e2},
-  #                 if(t<${fparse 1e5+1e4}, ${fparse 5},
-  #                 if(t<${fparse charge_time + cooldown_duration + 4500}, ${fparse 1e2},
-  #                 if(t<${fparse 308500}, ${fparse 1e0},
-  #                 if(t<${endtime}, ${fparse 2e2}, ${fparse 1e2}))))))))'
-  # []
 []
 
 [Materials]
