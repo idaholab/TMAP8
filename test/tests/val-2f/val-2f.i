@@ -131,10 +131,7 @@
   []
   [max_dt_size_function_coarse]
     type = ParsedFunction
-    expression = 'if(t<${fparse 150}, ${fparse 1e1},
-                  if(t<${fparse 195}, ${fparse 1e1},
-                  if(t<${fparse 205}, ${fparse 1e-1},
-                  if(t<${fparse 220}, ${fparse 1e0},${fparse 1e1}))))'
+    expression = 'if(t<${fparse 100}, ${fparse 1e2}, ${fparse 1e3})'
   []
 []
 
@@ -157,7 +154,7 @@
     property_name = 'Kr'
     functor_names = 'temperature_bc_func'
     functor_symbols = 'temperature'
-    expression = '${recombination_coefficient}* exp(${recombination_energy} / ${kb_eV} / temperature)'
+    expression = '${recombination_coefficient} * exp(-${recombination_energy} / ${kb_eV} / temperature)'
     output_properties = 'Kr'
   []
   [flux_recombination_surface]
