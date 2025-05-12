@@ -47,8 +47,7 @@ ix4 = 100
 
 # Trap 1 parameters
 trapping_energy_1 = '${fparse ${units ${diffusion_W_energy} eV -> J} / ${kb}}'
-diffusion_W_preexponential_meters_1 = '${units ${diffusion_W_preexponential} mum^2/s -> m^2/s}'
-trapping_prefactor_1 = '${units ${fparse ${diffusion_W_preexponential_meters_1} / (1.1e-10^2 * 6)} 1/s}'
+trapping_prefactor_1 = '${units ${fparse ${units ${diffusion_W_preexponential} mum^2/s -> m^2/s} / (1.1e-10^2 * 6) } 1/s}'
 detrapping_energy_1 = '${fparse ${units 1.15 eV -> J} / ${kb}}'
 detrapping_prefactor_1 = '${units 1e13 1/s}'
 trap_density_01dpa_1 = '${units 4.8e25 at/m^3 -> at/mum^3}'
@@ -57,8 +56,7 @@ trap_per_free_1 = 1e7 # (-)
 
 # Trap 2 parameters
 trapping_energy_2 = '${fparse ${units ${diffusion_W_energy} eV -> J} / ${kb}}'
-diffusion_W_preexponential_meters_2 = '${units ${diffusion_W_preexponential} mum^2/s -> m^2/s}'
-trapping_prefactor_2 = '${units ${fparse ${diffusion_W_preexponential_meters_2} / (1.1e-10^2 * 6)} 1/s}'
+trapping_prefactor_2 = '${units ${fparse ${units ${diffusion_W_preexponential} mum^2/s -> m^2/s} / (1.1e-10^2 * 6) } 1/s}'
 detrapping_energy_2 = '${fparse ${units 1.35 eV -> J} / ${kb}}'
 detrapping_prefactor_2 = '${units 1e13 1/s}'
 trap_density_01dpa_2 = '${units 3.8e25 at/m^3 -> at/mum^3}'
