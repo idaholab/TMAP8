@@ -23,6 +23,7 @@ The sample temperature histories are shown in [val-2f_temperature_history].
 During the charging phase, deuterium is continuously implanted into the tungsten sample over a period of 72 hours. The temperature is maintained at 370 K throughout this phase. The surface is exposed to a constant flux of $\phi=5.79\times 10^{19}$ atoms/m$^2$/s, corresponding to a total fluence of $1.5\times 10^{25}$ atoms/m$^2$. The implantation profile follows a Gaussian distribution centered at the mean implantation depth of $R_p=0.7$ nm, with a standard deviation of $\sigma = 0.5$ nm :
 
 \begin{equation}
+    \label{eq:source_term}
     S(x) = \frac{1}{\sigma \sqrt{2\pi}} \exp\left( -\frac{(x - R_p)^2}{2\sigma^2} \right) \cdot \phi_{\text{surface}}(t)
 \end{equation}
 
@@ -54,17 +55,47 @@ The final stage of the simulation is the desorption phase, during which the samp
 
 ## Governing equations
 
-The general form of the governing diffusion equation for the deuterium concentration $C(x,t)$ in tungsten is given by:
+The general form of the transport equations for the deuterium in tungsten is given by:
 
 \begin{equation}
-    \frac{\partial C}{\partial t} = \nabla \cdot \left( D \nabla C \right) + S(x, t)
+    \label{eq:diffusion}
+    \frac{\partial C_M}{\partial t} = \nabla D \nabla C_M + S + \text{trap\_per\_free} \cdot \sum_{i=1}^{2} \frac{\partial C_{T_i}}{\partial t}
 \end{equation}
 
-The diffusion coefficient $D(T)$ follows an Arrhenius-type dependency on temperature:
+and, for $i=1$ and $i=2$:
 
 \begin{equation}
-    D(T) = D_0 \exp\left(-\frac{E_D}{k_B T}\right)
+    \label{eq:trapped_rate}
+    \frac{\partial C_{T_i}}{\partial t} = \alpha_t^i  \frac {C_{T_i}^{empty} C_M } {(N \cdot \text{trap\_per\_free})} - \alpha_r^i C_{T_i}
 \end{equation}
+
+and
+
+\begin{equation}
+    C_{T_i}^{empty} = (C_{{T_i}0} \cdot N - \text{trap\_per\_free} \cdot C_{T_i})
+\end{equation}
+
+where $C_M$ is the concentration of mobile tritium, $t$ is the time, $S$ is the source term in sample due to the deuterium implantation ([eq:source_term]), $C_{T_i}$ is the trapped species in trap $i$, $\alpha_t^i$ and $\alpha_r^i$ are the trapping and release rate coefficients for trap $i$, $\text{trap\_per\_free}$ is a factor scaling $C_{T_i}$ to be closer to $C$ for better numerical convergence, $C_{{T_i}0}$ is the fraction of host sites $i$ that can contribute to trapping, $C_{T_i}^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density, and $D$ is the tritium diffusivity in tungsten, which is defined as:
+
+\begin{equation} \label{eq:diffusivity}
+D = D_{0} \exp \left( - \frac{E_{D}}{k_b T} \right)
+\end{equation}
+
+where $E_{D}$ is the diffusion activation energy, $k_b$ is the Boltzmann’s constant, $T$ is the temperature, and $D_{0}$ is the maximum diffusivity coefficient.
+
+$\alpha_t^i$ and $\alpha_r^i$ are defined as:
+
+\begin{equation} \label{eq:trapping}
+\alpha_t^i = \alpha_{t0}^i \exp(-\epsilon_t^i / T)
+\end{equation}
+
+and
+
+\begin{equation} \label{eq:release}
+\alpha_r^i = \alpha_{r0}^i \exp(-\epsilon_r^i / T)
+\end{equation}
+
+where $\alpha_{t0}^i$ and $\alpha_{r0}^i$ are the pre-exponential factors of trapping and release. The trapping energy $E_{\mathrm{t},i}$ is equal to the diffusion activation energy $E_D$.
 
 At the surfaces, deuterium recombines into gas. It can be described by the following surface flux:
 
@@ -99,18 +130,20 @@ All the model parameters are listed in [val-2f_set_up_values]:
 | $\phi$    | Incident flux                        | 5.79 $\times 10^{19}$                                       | atoms/m$^2$/s         | [!cite](dark2024modelling) |
 | $l_W$     | Length of the tungsten sample        | 0.8                                                         | mm                    | [!cite](dark2024modelling) |
 | $K_r$     | Deuterium recombination coefficient  | 3.8$\times 10^{-26} \exp\left(\frac{0.34 (\text{eV})}{k_b \cdot T}\right)$ | m$^4$/at/s | [!cite](zhao2020deuterium) |
-| $n_t$     | Tungten density                      | 6.3222 $\times 10^{28 }$                                    | at/m$^3$              | [!cite](dark2024modelling) |
+| $N$     | Tungten density                      | 6.3222 $\times 10^{28 }$                                    | at/m$^3$              | [!cite](dark2024modelling) |
 
-All the traps parameters are listed in [val-2f_traps_values]. The trapping and de-trapping rates (atoms/s) are $\nu_{\mathrm{t},i} = \nu_\mathrm{\mathrm{t},0}\cdot\exp(-E_{\mathrm{t},i}/(k_{\textrm B}\cdot T))$ and $\nu_{\mathrm{dt},i} = \nu_{\mathrm{dt},0}\cdot\exp(-E_{\mathrm{dt},i}/(k_{\textrm B}\cdot T))$ respectively. The trapping energy $E_{\mathrm{t},i}$ is equal to the diffusion activation energy $E_D$, and the trapping pre-factor $\nu_{\mathrm{t},i}$ is equal to the diffusion pre-factor $D_0$.
+All the traps parameters are listed in [val-2f_traps_values].
 
 !table id=val-2f_traps_values caption=Values of traps parameters for 0.1 dpa.
 | Parameter | Description                            | Value                                                       | Units                 | Reference                 |
 | --------- | ------------------------------------   | ----------------------------------------------------------- | --------------------- | --------------------- |
-| $\nu_{\mathrm{dt},0}$ | Traps de-trapping prefactor | $10^{13}$                                           | atoms/s               | [!cite](dark2024modelling) |
-| $E_{\mathrm{dt},1}$ | Trap 1 de-trapping energy     | 1.15                                                        | eV                    | [!cite](dark2024modelling) |
-| $n_1$ | Trap 1 density                             | 4.8$\times 10^{25}$                                         | atoms/m$^3$           | [!cite](dark2024modelling) |
-| $E_{\mathrm{dt},2}$ | Trap 2 de-trapping energy     | 1.35                                                        | eV                    | [!cite](dark2024modelling) |
-| $n_2$ | Trap 2 density                             | 3.8$\times 10^{25}$                                         | atoms/m$^3$           | [!cite](dark2024modelling) |
+| $\alpha_{t0}^i$ | Pre-factor of trapping rate coefficient | $\frac{D_0}{6 \cdot (1.1\times 10^{-10})^2}$                                           | atoms/s               | [!cite](dark2024modelling) |
+| $\alpha_{r0}^i$ | Pre-factor of release rate coefficient | $10^{13}$                                           | atoms/s               | [!cite](dark2024modelling) |
+| $\epsilon_t^i$ | Trapping energy for two traps     | 0.28                                                        | eV                    | [!cite](dark2024modelling) |
+| $\epsilon_r^1$ | Release energy for trap 1     | 1.15                                                        | eV                    | [!cite](dark2024modelling) |
+| $\epsilon_r^2$ | Release energy for trap 2     | 1.35                                                        | eV                    | [!cite](dark2024modelling) |
+| $N_1$ | Density for trap 1                          | 4.8$\times 10^{25}$                                         | atoms/m$^3$           | [!cite](dark2024modelling) |
+| $N_2$ | Density for trap 2                             | 3.8$\times 10^{25}$                                         | atoms/m$^3$           | [!cite](dark2024modelling) |
 
 ## Results
 
