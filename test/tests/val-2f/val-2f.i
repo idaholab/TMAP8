@@ -131,7 +131,7 @@
   []
   [max_dt_size_function_coarse]
     type = ParsedFunction
-    expression = 'if(t<${fparse 100}, ${fparse 1e2}, ${fparse 1e3})'
+    expression = 'if(t<${fparse 60}, ${fparse 1e2}, ${fparse 1e3})'
   []
 []
 
@@ -154,7 +154,7 @@
     property_name = 'Kr'
     functor_names = 'temperature_bc_func'
     functor_symbols = 'temperature'
-    expression = '${recombination_coefficient} * exp(-${recombination_energy} / ${kb_eV} / temperature)'
+    expression = '${recombination_coefficient} * exp(- ${recombination_energy} / ${kb_eV} / temperature)'
     output_properties = 'Kr'
   []
   [flux_recombination_surface]
@@ -247,7 +247,7 @@
   scheme = bdf2
   solve_type = 'Newton'
   petsc_options_iname = '-pc_type -sub_pc_type -snes_type'
-  petsc_options_value = 'asm      lu           vinewtonrsls' # This petsc option helps prevent negative concentrations with bounds'
+  petsc_options_value = 'asm lu vinewtonrsls' # This petsc option helps prevent negative concentrations with bounds'
   end_time = ${endtime}
   automatic_scaling = true
   compute_scaling_once = false
