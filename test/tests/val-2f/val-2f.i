@@ -131,7 +131,7 @@
   []
   [max_dt_size_function_coarse]
     type = ParsedFunction
-    expression = 'if(t<${fparse 60}, ${fparse 1e2}, ${fparse 1e3})'
+    expression = 'if(t<${fparse 1}, ${fparse 1e2}, ${fparse 1e3})'
   []
 []
 
