@@ -5,7 +5,7 @@
   [val-2f_light_csv]
     type = CSVDiff
     input = val-2f.i
-    cli_args = "sample_thickness='${units 0.9e-4 m -> mum}' ix1=2 ix2=2 ix3=2 ix4=2 charge_time='${units 60 s}' cooldown_duration='${units 10 s}' Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse Outputs/file_base=val-2f_light_out"
+    cli_args = "sample_thickness='${units 0.9e-4 m -> mum}' ix1=2 ix2=2 ix3=2 ix4=2 charge_time='${units 1 s}' cooldown_duration='${units 1 s}' Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse Outputs/file_base=val-2f_light_out"
     csvdiff = val-2f_light_out.csv
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output with a short runtime and coarse mesh testing.'
   []
