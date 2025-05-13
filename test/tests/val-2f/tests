@@ -5,14 +5,14 @@
   [val-2f_light_csv]
     type = CSVDiff
     input = val-2f.i
-    cli_args = "sample_thickness=0.9e2 ix1=50 ix2=50 ix3=50 ix4=2 charge_time=3600 cooldown_duration=60 Outputs/file_base=val-2f_light_out"
+    cli_args = "sample_thickness='${units 0.9e-4 m -> mum}' ix1=2 ix2=2 ix3=2 ix4=2 charge_time='${units 60 s}' cooldown_duration='${units 10 s}' Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse Outputs/file_base=val-2f_light_out"
     csvdiff = val-2f_light_out.csv
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output with a short runtime and coarse mesh testing.'
   []
   [val-2f_light_exodus]
     type = Exodiff
     input = val-2f.i
-    cli_args = "sample_thickness=0.9e2 ix1=50 ix2=50 ix3=50 ix4=2 charge_time=3600 cooldown_duration=60 Outputs/file_base=val-2f_light_out"
+    cli_args = "sample_thickness='${units 0.9e-4 m -> mum}' ix1=2 ix2=2 ix3=2 ix4=2 charge_time='${units 60 s}' cooldown_duration='${units 10 s}' Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse Outputs/file_base=val-2f_light_out"
     exodiff = val-2f_light_out.e
     prereq = val-2f_light_csv
     should_execute = false # this test relies on the output files from val-2f_csv, so it shouldn't be run twice
