@@ -129,7 +129,7 @@ All the model parameters are listed in [val-2f_set_up_values]:
 | $\Phi$    | Incident fluence                     | 1.5 $\times 10^{25}$                                        | atoms/m$^2$           | [!cite](dark2024modelling) |
 | $\phi$    | Incident flux                        | 5.79 $\times 10^{19}$                                       | atoms/m$^2$/s         | [!cite](dark2024modelling) |
 | $l_W$     | Length of the tungsten sample        | 0.8                                                         | mm                    | [!cite](dark2024modelling) |
-| $K_r$     | Deuterium recombination coefficient  | 3.8$\times 10^{-26} \exp\left(\frac{0.34 (\text{eV})}{k_b \cdot T}\right)$ | m$^4$/at/s | [!cite](zhao2020deuterium) |
+| $K_r$     | Deuterium recombination coefficient  | 3.8$\times 10^{-26} \exp\left(-\frac{0.34 (\text{eV})}{k_b \cdot T}\right)$ | m$^4$/at/s | [!cite](zhao2020deuterium) |
 | $N$     | Tungten density                      | 6.3222 $\times 10^{28 }$                                    | at/m$^3$              | [!cite](dark2024modelling) |
 
 All the traps parameters are listed in [val-2f_traps_values]:
