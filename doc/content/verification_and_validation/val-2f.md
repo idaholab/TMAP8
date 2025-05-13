@@ -132,6 +132,9 @@ All the model parameters are listed in [val-2f_set_up_values]:
 | $K_r$     | Deuterium recombination coefficient  | 3.8$\times 10^{-26} \exp\left(-\frac{0.34 (\text{eV})}{k_b \cdot T}\right)$ | m$^4$/at/s | [!cite](zhao2020deuterium) |
 | $N$     | Tungten density                      | 6.3222 $\times 10^{28 }$                                    | at/m$^3$              | [!cite](dark2024modelling) |
 
+!alert warning title=Typo in formula from [!cite](zhao2020deuterium)
+There is a typo in the expression for the deuterium recombination coefficient from [!cite](zhao2020deuterium). Consequently, we have used the corrected value in our simulation.
+
 All the traps parameters are listed in [val-2f_traps_values]:
 
 !table id=val-2f_traps_values caption=Values of traps parameters for 0.1 dpa.
