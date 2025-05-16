@@ -11,11 +11,11 @@ initial_concentration_H_enclosure_1 = '${units ${fparse 2*initial_pressure_H2_en
 initial_atomic_fraction = 1.8 # (-)
 initial_concentration_H_enclosure_2 = '${units ${fparse initial_atomic_fraction*density_Y} mol/m^3}'
 
-# diffusivity from Majer et al., Journal of Alloys and Compounds 330-332 (2002) 438–442.
+# diffusivity from Majer et al., Journal of Alloys and Compounds 330-332 (2002) 438-442.
 diffusivity_Do = '${units 1.e-8 m^2/s}'
 diffusivity_Ea = '${units 0.38 eV -> J}'
 diffusivity_ratio_air_YHx = ${fparse initial_concentration_H_enclosure_2 / initial_concentration_H_enclosure_1 * 10} # this ratio is large and helps InterfaceDiffusion due to the ratio of concentrations
-# Surface reaction rate from P. W. Fisher, M. Tanase, Journal of Nuclear Materials 122-123 (1984) 1536–1540.
+# Surface reaction rate from P. W. Fisher, M. Tanase, Journal of Nuclear Materials 122-123 (1984) 1536-1540.
 reaction_rate_0 = '${units 4.95e5 1/s}'
 reaction_rate_Ea = '${units 1.52 eV -> J}'
 
@@ -156,7 +156,7 @@ output_file_base = 'YHx_PCT_out'
     order = CONSTANT
     family = MONOMIAL
     block = 1
-    initial_condition = '${fparse density_Y*1.8}'
+    initial_condition = '${fparse density_Y*initial_atomic_fraction}'
   []
   [bounds_dummy_concentration_H_enclosure_1]
     order = FIRST

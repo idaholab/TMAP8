@@ -28,7 +28,7 @@ This fit is shown in [YHx_PCT_plateau_pressure_fit].
        image_name=YHx_PCT_plateau_pressure_fit.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=YHx_PCT_plateau_pressure_fit
-       caption=Fit phase transition region as pressure as a function of temperature .
+       caption=Fit phase transition region as pressure as a function of temperature.
 
 The model currently only captures the high pressure region of the data, i.e., for pressure and temperatures above the plateau, the atomic fraction $f_{at}$ is determined as [!citep](Matthews2021SWIFT):
 \begin{equation} \label{eq:atomic_fraction}
