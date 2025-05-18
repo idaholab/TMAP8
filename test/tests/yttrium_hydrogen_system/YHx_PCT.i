@@ -14,20 +14,20 @@ initial_concentration_H_enclosure_2 = '${units ${fparse initial_atomic_fraction*
 # diffusivity from Majer et al., Journal of Alloys and Compounds 330-332 (2002) 438-442.
 diffusivity_Do = '${units 1.e-8 m^2/s}'
 diffusivity_Ea = '${units 0.38 eV -> J}'
-diffusivity_ratio_air_YHx = ${fparse initial_concentration_H_enclosure_2 / initial_concentration_H_enclosure_1 * 10} # this ratio is large and helps InterfaceDiffusion due to the ratio of concentrations
+diffusivity_ratio_gas_YHx = '${fparse initial_concentration_H_enclosure_2 / initial_concentration_H_enclosure_1 * 10}' # this ratio is large and helps InterfaceDiffusion due to the ratio of concentrations
 # Surface reaction rate from P. W. Fisher, M. Tanase, Journal of Nuclear Materials 122-123 (1984) 1536-1540.
 reaction_rate_0 = '${units 4.95e5 1/s}'
 reaction_rate_Ea = '${units 1.52 eV -> J}'
 
 # Domain size and mesh parameters
 domain_length = '${units 1 m}'
-num_nodes = 30
+num_nodes = 6
 
 # time
 simulation_time = '${units 1e9 s}'
-dt_max = ${fparse simulation_time/100}
-dt_init = ${units 1e3 s}
-tau_constant_BC = ${fparse dt_init*2e-2} # the smaller, the faster the up-ramp for the pressure BC
+dt_max = '${fparse simulation_time/100}'
+dt_init = '${units 1e-3 s}'
+tau_constant_BC = '${fparse dt_init*2e-2}' # the smaller, the faster the up-ramp for the pressure BC
 
 # convergence parameters
 lower_value_threshold = -1e-20
@@ -128,7 +128,7 @@ output_file_base = 'YHx_PCT_out'
   [H_diffusion_enclosure_1]
     type = MatDiffusion
     variable = concentration_H_enclosure_1
-    diffusivity = diffusivity_air
+    diffusivity = diffusivity_gas
     block = '1'
   []
   # Diffusion equation for H in enclosure 2
@@ -152,12 +152,6 @@ output_file_base = 'YHx_PCT_out'
   [pressure_H2_enclosure_1]
     initial_condition = '${initial_pressure_H2_enclosure_1}'
   []
-  [concentration_H_equilibrium_var]
-    order = CONSTANT
-    family = MONOMIAL
-    block = 1
-    initial_condition = '${fparse density_Y*initial_atomic_fraction}'
-  []
   [bounds_dummy_concentration_H_enclosure_1]
     order = FIRST
     family = LAGRANGE
@@ -177,12 +171,6 @@ output_file_base = 'YHx_PCT_out'
     block = 1
     execute_on = 'initial timestep_end'
   []
-  [concentration_H_equilibrium_axk]
-    type = MaterialRealAux
-    variable = concentration_H_equilibrium_var
-    property = concentration_H_equilibrium
-    block = 1
-  []
 []
 
 [Materials]
@@ -193,11 +181,11 @@ output_file_base = 'YHx_PCT_out'
     expression = '${diffusivity_Do} * exp(-${fparse diffusivity_Ea*N_a/R}/temperature)'
     outputs = exodus
   []
-  [diffusivity_air]
+  [diffusivity_gas]
     type = DerivativeParsedMaterial
-    property_name = diffusivity_air
+    property_name = diffusivity_gas
     material_property_names = diffusivity_YHx
-    expression = '${diffusivity_ratio_air_YHx}*diffusivity_YHx'
+    expression = '${diffusivity_ratio_gas_YHx}*diffusivity_YHx'
     outputs = exodus
   []
   [reaction_rate_surface_YHx_1]
@@ -214,19 +202,6 @@ output_file_base = 'YHx_PCT_out'
     expression = '${reaction_rate_0} * exp(-${fparse reaction_rate_Ea/boltzmann_constant}/temperature)' # 1/s
     block = '2'
   []
-  [YHx_PCT]
-    type = YHxPCT
-    temperature = temperature
-    pressure = pressure_H2_enclosure_1
-    output_properties = 'atomic_fraction'
-    outputs = exodus
-  []
-  [concentration_H_equilibrium]
-    type = DerivativeParsedMaterial
-    property_name = concentration_H_equilibrium
-    material_property_names = atomic_fraction
-    expression = 'atomic_fraction * ${density_Y}'
-  []
 []
 
 [InterfaceKernels]
@@ -236,12 +211,14 @@ output_file_base = 'YHx_PCT_out'
     neighbor_var = concentration_H_enclosure_1
     boundary = interface2
     D = diffusivity_YHx
-    D_neighbor = diffusivity_air
+    D_neighbor = diffusivity_gas
   []
-  [interface_reaction]
-    type = ADMatInterfaceReaction
+  [interface_reaction_YHx_PCT]
+    type = ADMatInterfaceReactionYHxPCT
     variable = concentration_H_enclosure_2
-    neighbor_var = concentration_H_equilibrium_var
+    neighbor_var = concentration_H_enclosure_1
+    neighbor_temperature = temperature
+    density = ${density_Y}
     boundary = interface2
     forward_rate = 'reaction_rate_surface_YHx'
     backward_rate = 'reaction_rate_surface_YHx'
@@ -329,8 +306,10 @@ output_file_base = 'YHx_PCT_out'
   type = Transient
   end_time = ${simulation_time}
   dtmax = ${dt_max}
-  nl_max_its = 11
+  nl_max_its = 16
   l_max_its = 30
+  nl_rel_tol = 1e-7
+  nl_abs_tol = 4e-12
   scheme = 'bdf2'
   solve_type = 'Newton'
   petsc_options_iname = '-pc_type -sub_pc_type -snes_type'
@@ -339,7 +318,7 @@ output_file_base = 'YHx_PCT_out'
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = ${dt_init}
-    optimal_iterations = 9
+    optimal_iterations = 13
     iteration_window = 1
     growth_factor = 1.2
     cutback_factor = 0.9
