@@ -64,9 +64,9 @@ The results of the test for ($T$, $P$) = (1173.15 K, $1 \times 10^{3}$ Pa), (117
 
 !listing test/tests/yttrium_hydrogen_system/YHx_PCT.i block=InterfaceKernels/interface_reaction_YHx_PCT
 
-!syntax parameters /InterfaceKernels/interface_reaction_YHx_PCT
+!syntax parameters /InterfaceKernels/ADMatInterfaceReactionYHxPCT
 
-!syntax inputs /InterfaceKernels/interface_reaction_YHx_PCT
+!syntax inputs /InterfaceKernels/ADMatInterfaceReactionYHxPCT
 
-!syntax children InterfaceKernels/interface_reaction_YHx_PCT
+!syntax children InterfaceKernels/ADMatInterfaceReactionYHxPCT
 
