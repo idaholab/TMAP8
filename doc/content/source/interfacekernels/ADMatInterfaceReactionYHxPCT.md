@@ -68,5 +68,5 @@ The results of the test for ($T$, $P$) = (1173.15 K, $1 \times 10^{3}$ Pa), (117
 
 !syntax inputs /InterfaceKernels/ADMatInterfaceReactionYHxPCT
 
-!syntax children InterfaceKernels/ADMatInterfaceReactionYHxPCT
+!syntax children /InterfaceKernels/ADMatInterfaceReactionYHxPCT
 
