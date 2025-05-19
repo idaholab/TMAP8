@@ -42,14 +42,14 @@ The analytical transient solution from Table 3, row 1 in [!cite](li2010analytica
 
 \begin{equation}
 \label{eqn:transient_PyC}
-C = C_0 \left\{ \frac{(a-x) D_{SiC} + l D_{PyC}}{l D_{PyC} + a D_{SiC}} - 2 \sum_{n=1}^{\infty} B_m \sin\left(\lambda_n \frac{x}{a}\right) \exp\left(-D_{PyC} \frac{\lambda^2_n}{a^2} t \right) \right\}
+C = C_0 \left\{ \frac{(a-x) D_{SiC} + l D_{PyC}}{l D_{PyC} + a D_{SiC}} + 2 \sum_{n=1}^{\infty} B_m \sin\left(\lambda_n \frac{x}{a}\right) \exp\left(-D_{PyC} \frac{\lambda^2_n}{a^2} t \right) \right\}
 \end{equation}
 
 and
 
 \begin{equation}
 \label{eqn:transient_SiC}
-C = C_0 \left\{ \frac{(l+a-x) D_{PyC}}{l D_{PyC} + a D_{SiC}} - 2 \sum_{n=1}^{\infty} B_m \frac{\sin(\lambda_n)}{\sin(k \lambda_n l/a)} \sin\left(k \lambda_n \frac{l+a-x}{a}\right) \exp\left(-D_{PyC} \frac{\lambda^2_n}{a^2} t \right) \right\}
+C = C_0 \left\{ \frac{(l+a-x) D_{PyC}}{l D_{PyC} + a D_{SiC}} + 2 \sum_{n=1}^{\infty} B_m \frac{\sin(\lambda_n)}{\sin(k \lambda_n l/a)} \sin\left(k \lambda_n \frac{l+a-x}{a}\right) \exp\left(-D_{PyC} \frac{\lambda^2_n}{a^2} t \right) \right\}
 \end{equation}
 
 where
