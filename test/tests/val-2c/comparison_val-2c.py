@@ -107,7 +107,7 @@ if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
 else:                                  # if in test folder
     csv_folder = "./gold/Experimental_data_HTO_concentration.csv"
 experimental_data_hto = pd.read_csv(csv_folder)
-experimental_time_hto = experimental_data_hto['time (hr)']
+experimental_time_hto = experimental_data_hto['time (s)'] / time_scale
 experimental_hto_enclosure_concentration = experimental_data_hto['Concentration (Ci/m3)']
 
 if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
@@ -115,7 +115,7 @@ if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
 else:                                  # if in test folder
     csv_folder = "./gold/Experimental_data_T2_concentration.csv"
 experimental_data_t2 = pd.read_csv(csv_folder)
-experimental_time_t2 = experimental_data_t2['time (hr)']
+experimental_time_t2 = experimental_data_t2['time (s)'] / time_scale
 experimental_t2_enclosure_concentration = experimental_data_t2['Concentration (Ci/m3)']
 
 #===============================================================================
