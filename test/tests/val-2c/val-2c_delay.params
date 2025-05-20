@@ -1,4 +1,3 @@
-# This input file utilizes val_2c_base and adds specific parameter values and capabilities to inject T2 immediately
 
 # Physical Constants (from PhysicalConstant.h)
 kb = ${units 1.380649e-23 J/K} # Boltzmann constant based on number used in include/utils/PhysicalConstants.h
@@ -21,12 +20,12 @@ conversion_Ci_atom = ${units ${fparse decay_rate_tritium / Curie} 1/at} # 1 trit
 concentration_to_pressure_conversion_factor = '${units ${fparse kb * temperature} Pa*m^3 -> Pa*mum^3}' # J = Pa*m^3
 
 ## Material properties
-diffusivity_elemental_tritium = ${units 4.0e-12 m^2/s -> mum^2/s}
+diffusivity_elemental_tritium = ${units ${fparse 1 * 4.0e-12} m^2/s -> mum^2/s}
 diffusivity_tritiated_water = ${units 1.0e-14 m^2/s -> mum^2/s}
 diffusivity_artificial_enclosure = ${fparse diffusivity_elemental_tritium*1e3}
-reaction_rate = '${units ${fparse 1.5 * 2.0e-10*conversion_Ci_atom} m^3/at/s -> mum^3/at/s}' # ~ 1.5* 9.62e-30 m^3/at/s, close to the 1.0e-29 m3/atoms/s in TMAP4
-solubility_elemental_tritium = '${units ${fparse 5e-2 * 4.0e19} 1/m^3/Pa -> 1/mum^3/Pa}' # molecules/microns^3/Pa = molecules*s^2/m^2/kg
-solubility_tritiated_water = '${units ${fparse 3.5e-4 * 6.0e24} 1/m^3/Pa -> 1/mum^3/Pa}' # molecules/microns^3/Pa = molecules*s^2/m^2/kg
+reaction_rate = '${units ${fparse 2.8 * 2.0e-10*conversion_Ci_atom} m^3/at/s -> mum^3/at/s}' # ~ 1.5* 9.62e-30 m^3/at/s, close to the 1.0e-29 m3/atoms/s in TMAP4
+solubility_elemental_tritium = '${units ${fparse 1e-3 * 4.0e19} 1/m^3/Pa -> 1/mum^3/Pa}' # molecules/microns^3/Pa = molecules*s^2/m^2/kg
+solubility_tritiated_water = '${units ${fparse 3e-4 * 6.0e24} 1/m^3/Pa -> 1/mum^3/Pa}' # molecules/microns^3/Pa = molecules*s^2/m^2/kg
 
 ## Initial conditions
 # The units below are actually in molecules, not atoms
@@ -38,8 +37,11 @@ initial_H2O_concentration = ${units ${fparse initial_H2O_pressure / concentratio
 ## Numerical parameters
 time_step = ${units 60 s}
 time_end = ${units 180000 s}
+time_injection_T2_start = ${units 0 h -> s}
+time_injection_T2_end = ${units 3 h -> s}
 dtmax = ${units 1e3 s}
 lower_value_threshold = ${units -1e-20 at/mum^3}  # lower limit for concentration
+injection_rate_T2 = ${units ${fparse initial_T2_concentration / (time_injection_T2_end-time_injection_T2_start)} at/mum^3/s}
 
 ## Inflow and outflow
 inflow = ${units 0.54 m^3/h -> mum^3/s} # inflow of normally moist (20% relative humidity) air at the same temperature as the enclosure
@@ -48,12 +50,3 @@ outflow = ${units 0.54 m^3/h -> mum^3/s} # outflow of enclosure air # even if on
 
 ## Outputs
 exodus_output = false
-
-!include val-2c_base.i
-
-[Variables]
-  # T2 concentration in the enclosure in molecules/microns^3
-  [t2_enclosure_concentration]
-    initial_condition = ${initial_T2_concentration}
-  []
-[]
