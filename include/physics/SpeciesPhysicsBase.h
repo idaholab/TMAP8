@@ -15,7 +15,7 @@
 #include <type_traits>
 
 /**
- * Base class for physics implementing the trapping of one or more species in a medium
+ * Base class for physics dealing with the evolution of the concentration of multiple species
  */
 class SpeciesPhysicsBase : public PhysicsBase
 {
@@ -127,6 +127,9 @@ protected:
   std::string getOnComponentString(unsigned int comp_index) const;
 };
 
+// STUtils for Species Template Utilities
+namespace STUtils
+{
 template <typename T>
 struct is_vector : public std::false_type
 {
@@ -149,6 +152,7 @@ struct vector_value_type<std::vector<T, Alloc>>
 // Helper alias template
 template <typename T>
 using vector_value_type_t = typename vector_value_type<T>::type;
+};
 
 template <typename T>
 void
@@ -162,7 +166,7 @@ SpeciesPhysicsBase::processComponentValues(const std::string & param_name,
 {
   bool component_value_valid = false;
   // Create new cases as needed
-  if constexpr (is_vector<T>::value)
+  if constexpr (STUtils::is_vector<T>::value)
     component_value_valid = component_values.size();
   else if constexpr (std::is_same_v<T, MooseFunctorName>)
     component_value_valid = !component_values.empty();
@@ -180,7 +184,7 @@ SpeciesPhysicsBase::processComponentValues(const std::string & param_name,
       const auto & comp = getActionComponent(comp_name);
       bool consistent = false;
       // We can only do this for species-indexed vectors
-      if constexpr (is_vector<T>::value)
+      if constexpr (STUtils::is_vector<T>::value)
       {
         if (comp.isParamValid("species") && comp_index > 0)
         {
@@ -305,7 +309,7 @@ SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
     {
       const auto & component_values = comp.getParam<T>(comp_param_name);
       // Create new cases as needed. The parameter is valid but the default does not work here
-      if constexpr (is_vector<T>::value)
+      if constexpr (STUtils::is_vector<T>::value)
         component_value_valid = component_values.size();
       else if constexpr (std::is_same_v<T, MooseFunctorName>)
         component_value_valid = !component_values.empty();
@@ -318,7 +322,7 @@ SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
       // on the Physics. We should allow that
       bool consistent = false;
       // We can only do this for species-indexed vectors
-      if constexpr (is_vector<T>::value)
+      if constexpr (STUtils::is_vector<T>::value)
       {
         if (comp.isParamValid("species"))
         {
@@ -394,7 +398,7 @@ SpeciesPhysicsBase::processComponentParameters(const std::string & param_name,
 
     // If species are different between the Physics and the Components, downselect
     // We can only do this for species-indexed vectors
-    if constexpr (is_vector<T>::value)
+    if constexpr (STUtils::is_vector<T>::value)
     {
       T temp_storage;
 
@@ -489,7 +493,7 @@ SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
       // For vectors, we have to get the properties one by one
       // We use the size of the species vector
       auto n_items = 1;
-      if constexpr (is_vector<T>::value)
+      if constexpr (STUtils::is_vector<T>::value)
       {
         mooseAssert(_species.size() > comp_index, "Missing species for component " + comp_name);
         n_items = _species[comp_index].size();
@@ -504,10 +508,10 @@ SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
           const auto & comp_value = mat_comp->getPropertyValue(property_name, name());
           try
           {
-            if constexpr (is_vector<T>::value)
+            if constexpr (STUtils::is_vector<T>::value)
             {
               const auto & comp_value_conv =
-                  MooseUtils::convert<vector_value_type_t<T>>(comp_value, true);
+                  MooseUtils::convert<STUtils::vector_value_type_t<T>>(comp_value, true);
               if (physics_value[i] != comp_value_conv)
                 paramError(param_name,
                            "'" + property_name + "' in component '" + comp_name + "' :\n" +
@@ -555,7 +559,7 @@ SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
                  "' Physics instead.");
 
     auto n_items = 1;
-    if constexpr (is_vector<T>::value)
+    if constexpr (STUtils::is_vector<T>::value)
     {
       mooseAssert(_species.size() > comp_index, "Missing species for component " + comp_name);
       n_items = _species[comp_index].size();
@@ -571,10 +575,10 @@ SpeciesPhysicsBase::processComponentMatprop(const std::string & param_name,
         const auto & comp_value = mat_comp->getPropertyValue(property_name, name());
         try
         {
-          if constexpr (is_vector<T>::value)
+          if constexpr (STUtils::is_vector<T>::value)
           {
             const auto & comp_value_conv =
-                MooseUtils::convert<vector_value_type_t<T>>(comp_value, true);
+                MooseUtils::convert<STUtils::vector_value_type_t<T>>(comp_value, true);
             temp_storage.push_back(comp_value_conv);
           }
           else
