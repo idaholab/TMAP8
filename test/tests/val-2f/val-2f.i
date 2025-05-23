@@ -1,15 +1,18 @@
 !include parameters_val-2f.params
+!include val-2f_trapping_intrinsic.i
+!include val-2f_trapping_5.i
+!include val-2f_trapping_4.i
+!include val-2f_trapping_3.i
 !include val-2f_trapping_2.i
 !include val-2f_trapping_1.i
 
 [Mesh]
-  active = 'cartesian_mesh'
   [cartesian_mesh]
     type = CartesianMeshGenerator
     dim = 1
-    dx = '${dx1} ${dx2} ${dx3} ${dx4}'
-    ix = '${ix1} ${ix2} ${ix3} ${ix4}'
-    subdomain_id = '0 0 0 0'
+    dx = '${dx1} ${dx2} ${dx3} ${dx4} ${dx5}'
+    ix = '${ix1} ${ix2} ${ix3} ${ix4} ${ix5}'
+    subdomain_id = '0 0 0 0 0'
   []
 []
 
@@ -19,9 +22,18 @@
 []
 
 [AuxVariables]
+  active = 'bounds_dummy temperature'
   [bounds_dummy]
     order = FIRST
     family = LAGRANGE
+  []
+  [temperature]
+    initial_condition = ${temperature_initial}
+  []
+  [pressure]
+    family = SCALAR
+    order = FIRST
+    initial_condition = '${fparse 1e-6}'
   []
 []
 
@@ -32,16 +44,6 @@
     bounded_variable = deuterium_concentration_W
     bound_type = lower
     bound_value = '${fparse -1e-20}'
-  []
-[]
-
-[AuxVariables]
-  [temperature]
-    initial_condition = ${temperature_initial}
-  []
-  [flux_x]
-    order = FIRST
-    family = MONOMIAL
   []
 []
 
@@ -69,16 +71,10 @@
     function = temperature_bc_func
     execute_on = 'INITIAL LINEAR'
   []
-  [flux_x_W]
-    type = DiffusionFluxAux
-    diffusivity = diffusivity_W
-    variable = flux_x
-    diffusion_variable = deuterium_concentration_W
-    component = x
-  []
 []
 
 [BCs]
+  active = 'left_concentration right_concentration'
   [left_concentration]
     type = ADMatNeumannBC
     variable = deuterium_concentration_W
@@ -92,6 +88,22 @@
     boundary = right
     value = 1
     boundary_material = flux_recombination_surface
+  []
+  [left_concentration_sieverts]
+    type = EquilibriumBC
+    Ko = '${fparse 1e0}'
+    boundary = left
+    enclosure_var = pressure
+    temperature = temperature
+    variable = deuterium_concentration_W
+  []
+  [right_concentration_sieverts]
+    type = EquilibriumBC
+    Ko = '${fparse 1e0}'
+    boundary = right
+    enclosure_var = pressure
+    temperature = temperature
+    variable = deuterium_concentration_W
   []
 []
 
@@ -118,24 +130,27 @@
   []
   [max_dt_size_function]
     type = ParsedFunction
-    expression = 'if(t<${fparse 3700}, ${fparse 1e1},
-                  if(t<${fparse 3900}, ${fparse 1e0},
-                  if(t<${fparse 6400}, ${fparse 1e1},
-                  if(t<${fparse 7400}, ${fparse 1e0},
-                  if(t<${fparse 10000}, ${fparse 1e1},
-                  if(t<${fparse 1e5-1e4}, ${fparse 1e2},
-                  if(t<${fparse 1e5+1e4}, ${fparse 5},
+    expression = 'if(t<${fparse 5}, ${fparse 1e-2},
+                  if(t<${fparse 8}, ${fparse 1e2},
+                  if(t<${fparse 12}, ${fparse 1e-2},
+                  if(t<${fparse 20}, ${fparse 1e2},
+                  if(t<${fparse 35}, ${fparse 1e-2},
+                  if(t<${fparse 450}, ${fparse 1e2},
+                  if(t<${fparse 5000}, ${fparse 1e1},
+                  if(t<${fparse 11000}, ${fparse 1e2},
+                  if(t<${fparse 13000}, ${fparse 1e1},
                   if(t<${fparse charge_time + cooldown_duration + 4500}, ${fparse 1e2},
-                  if(t<${fparse 308500}, ${fparse 1e0},
-                  if(t<${endtime}, ${fparse 2e2}, ${fparse 1e2}))))))))))'
+                  if(t<${fparse 313000}, ${fparse 1e2},
+                  if(t<${fparse 315000}, ${fparse 1e1}, ${fparse 1e3}))))))))))))'
   []
   [max_dt_size_function_coarse]
     type = ParsedFunction
-    expression = 'if(t<${fparse 1}, ${fparse 1e2}, ${fparse 1e3})'
+    expression = 'if(t<${fparse 1e-1}, ${fparse 1e4}, ${fparse 1e5})'
   []
 []
 
 [Materials]
+  active = 'diffusivity_W_func diffusivity_nonAD recombination_rate_surface flux_recombination_surface'
   [diffusivity_W_func]
     type = ADDerivativeParsedMaterial
     property_name = 'diffusivity_W'
@@ -167,6 +182,13 @@
 []
 
 [Postprocessors]
+  active = 'integral_source_deuterium scaled_implanted_deuterium integral_deuterium_concentration
+  scaled_mobile_deuterium flux_surface_left scaled_flux_surface_left
+  flux_surface_right scaled_flux_surface_right temperature diffusion_W
+  max_time_step_size max_time_step_size_coarse integral_trapped_concentration_1 scaled_trapped_deuterium_1
+  integral_trapped_concentration_2 scaled_trapped_deuterium_2 integral_trapped_concentration_3 scaled_trapped_deuterium_3
+  integral_trapped_concentration_4 scaled_trapped_deuterium_4 integral_trapped_concentration_5 scaled_trapped_deuterium_5
+  integral_trapped_concentration_intrinsic scaled_trapped_deuterium_intrinsic'
   [integral_source_deuterium]
     type = FunctionElementIntegral
     function = source_deuterium
@@ -193,9 +215,21 @@
     property = flux_recombination_surface
     outputs = none
   []
+  [flux_surface_left_sieverts]
+    type = SideDiffusiveFluxAverage
+    variable = deuterium_concentration_W
+    boundary = 'left'
+    diffusivity = 'diffusivity_W_nonAD'
+  []
   [scaled_flux_surface_left]
     type = ScalePostprocessor
     scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
+    value = flux_surface_left
+    execute_on = 'initial nonlinear linear timestep_end'
+  []
+  [scaled_flux_surface_left_sieverts]
+    type = ScalePostprocessor
+    scaling_factor = '${fparse ${units 1 m^2 -> mum^2}}'
     value = flux_surface_left
     execute_on = 'initial nonlinear linear timestep_end'
   []
@@ -205,9 +239,21 @@
     property = flux_recombination_surface
     outputs = none
   []
+  [flux_surface_right_sieverts]
+    type = SideDiffusiveFluxAverage
+    variable = deuterium_concentration_W
+    boundary = 'right'
+    diffusivity = 'diffusivity_W_nonAD'
+  []
   [scaled_flux_surface_right]
     type = ScalePostprocessor
     scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
+    value = flux_surface_right
+    execute_on = 'initial nonlinear linear timestep_end'
+  []
+  [scaled_flux_surface_right_sieverts]
+    type = ScalePostprocessor
+    scaling_factor = '${fparse ${units 1 m^2 -> mum^2}}'
     value = flux_surface_right
     execute_on = 'initial nonlinear linear timestep_end'
   []
@@ -253,7 +299,7 @@
   compute_scaling_once = false
   line_search = 'none'
   nl_rel_tol = 5e-7
-  nl_abs_tol = 6e-11
+  nl_abs_tol = 1e-10
   nl_max_its = 34
   [TimeStepper]
     type = IterationAdaptiveDT
@@ -272,7 +318,7 @@
 []
 
 [Outputs]
-  file_base = 'val-2f_out'
+  file_base = 'val-2f_out_test'
   [csv]
     type = CSV
   []

@@ -129,7 +129,8 @@ All the model parameters are listed in [val-2f_set_up_values]:
 | $\Phi$    | Incident fluence                     | 1.5 $\times 10^{25}$                                        | atoms/m$^2$           | [!cite](dark2024modelling) |
 | $\phi$    | Incident flux                        | 5.79 $\times 10^{19}$                                       | atoms/m$^2$/s         | [!cite](dark2024modelling) |
 | $l_W$     | Length of the tungsten sample        | 0.8                                                         | mm                    | [!cite](dark2024modelling) |
-| $K_r$     | Deuterium recombination coefficient  | 3.8$\times 10^{-26} \exp\left(-\frac{0.34 (\text{eV})}{k_b \cdot T}\right)$ | m$^4$/at/s | [!cite](zhao2020deuterium) |
+| $K_r$     | Small deuterium recombination coefficient  | 3.8$\times 10^{-26} \exp\left(-\frac{0.34 (\text{eV})}{k_b \cdot T}\right)$ | m$^4$/at/s | [!cite](zhao2020deuterium) |
+| $K$     | Normal deuterium recombination coefficient  | 3.8$\times 10^{-16} \exp\left(-\frac{0.34 (\text{eV})}{k_b \cdot T}\right)$ | m$^4$/at/s |  |
 | $N$     | Tungten density                      | 6.3222 $\times 10^{28 }$                                    | at/m$^3$              | [!cite](dark2024modelling) |
 
 !alert warning title=Typo in formula from [!cite](zhao2020deuterium)
@@ -145,27 +146,62 @@ All the traps parameters are listed in [val-2f_traps_values]:
 | $\epsilon_t^i$ | Trapping energy for two traps     | 0.28                                                        | eV                    | [!cite](dark2024modelling) |
 | $\epsilon_r^1$ | Release energy for trap 1     | 1.15                                                        | eV                    | [!cite](dark2024modelling) |
 | $\epsilon_r^2$ | Release energy for trap 2     | 1.35                                                        | eV                    | [!cite](dark2024modelling) |
+| $\epsilon_r^3$ | Release energy for trap 3     | 1.65                                                        | eV                    | [!cite](dark2024modelling) |
+| $\epsilon_r^4$ | Release energy for trap 4     | 1.85                                                        | eV                    | [!cite](dark2024modelling) |
+| $\epsilon_r^5$ | Release energy for trap 5     | 2.05                                                        | eV                    | [!cite](dark2024modelling) |
+| $\epsilon_r^6$ | Release energy for intrinsic trap     | 1.04                                                        | eV                    | [!cite](dark2024modelling) |
 | $N_1$ | Density for trap 1                          | 4.8$\times 10^{25}$                                         | atoms/m$^3$           | [!cite](dark2024modelling) |
 | $N_2$ | Density for trap 2                             | 3.8$\times 10^{25}$                                         | atoms/m$^3$           | [!cite](dark2024modelling) |
+| $N_3$ | Density for trap 3                             | 2.6$\times 10^{25}$                                         | atoms/m$^3$           | [!cite](dark2024modelling) |
+| $N_4$ | Density for trap 4                             | 3.6$\times 10^{25}$                                         | atoms/m$^3$           | [!cite](dark2024modelling) |
+| $N_5$ | Density for trap 5                             | 1.1$\times 10^{25}$                                         | atoms/m$^3$           | [!cite](dark2024modelling) |
+| $N_6$ | Density for intrinsic trap                             | 2.4$\times 10^{22}$                                         | atoms/m$^3$           | [!cite](dark2024modelling) |
 
 ## Results
 
-[val-2f_comparison] shows the comparison of the TMAP8 calculation and the experimental data during desorption. The experimental data are provided by T. Schwarz-Selinger and are available [here](https://zenodo.org/records/11085134). The distinctive shape of the TMAP8 curve arises from the detrapping energies of trap 1 and trap 2. By including additional traps in the simulations, the TMAP8 results are expected to better align with the experimental data.
+[val-2f_comparison] shows the comparison of the TMAP8 calculation and the experimental data during desorption. The experimental data are provided by T. Schwarz-Selinger and are available [here](https://zenodo.org/records/11085134).
 
 !media comparison_val-2f.py
        image_name=val-2f_comparison.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2f_comparison
-       caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s) for a damage of 0.1 dpa.
+       caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s) for a damage of 0.1 dpa and a normal recombination rate.
 
-[val-2f_deuterium_desorption] displays the quantities of mobile, trapped (in trap 1 and trap 2), and desorbing deuterium atoms during the desorption process. During desorption, the temperature increases from 300 K to 1000 K. The amount of deuterium trapped will decrease as the temperature rises and the various trapping energies are reached, meaning that deuterium will leave the traps, become mobile, and diffuse out. Trap 1 will release deuterium before trap 2, as its trapping energy is lower.
-During desorption, no further implantation occurs, resulting in a decrease in the number of mobile and trapped deuterium atoms and an increase in the number of desorbed deuterium atoms. Mass conservation is well maintained during desorption, with only a 0.02% root mean squared percentage error (RMSPE) between the initial number of mobile and trapped deuterium atoms and the total number of deuterium atoms (mobile, trapped, and desorbed).
+[val-2f_deuterium_desorption] displays the quantities of mobile, trapped, and desorbing deuterium atoms during the desorption process. During desorption, the temperature increases from 300 K to 1000 K. The amount of deuterium trapped will decrease as the temperature rises and the various trapping energies are reached, meaning that deuterium will leave the traps, become mobile, and diffuse out. During desorption, no further implantation occurs, resulting in a decrease in the number of mobile and trapped deuterium atoms and an increase in the number of desorbed deuterium atoms. Mass conservation is well maintained during desorption, with only a 0.02% root mean squared percentage error (RMSPE) between the initial number of mobile and trapped deuterium atoms and the total number of deuterium atoms (mobile, trapped, and desorbed).
 
 !media comparison_val-2f.py
        image_name=val-2f_deuterium_desorption.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2f_deuterium_desorption
-       caption=Quantity of deuterium atoms during the desorption process.
+       caption=Quantity of deuterium atoms during the desorption process for a normal recombination rate.
+
+It is crucial to select an appropriate recombination rate to align with the experimental data. [val-2f_comparison_low_recombination] illustrates a significant discrepancy when the recombination rate is too low. This discrepancy can be attributed to the findings in [val-2f_deuterium_desorption_low_recombination], which indicate that at the onset of the desorption phase, a substantial amount of mobile deuterium accumulates due to the low recombination rate at the surface. Consequently, the initial peak observed in [val-2f_comparison_low_recombination] is attributed to mobile deuterium rather than trapped deuterium.
+
+!media comparison_val-2f.py
+       image_name=val-2f_comparison_low_recombination.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2f_comparison_low_recombination
+       caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s) for a damage of 0.1 dpa and a low recombination rate.
+
+!media comparison_val-2f.py
+       image_name=val-2f_deuterium_desorption_low_recombination.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2f_deuterium_desorption_low_recombination
+       caption=Quantity of deuterium atoms during the desorption process for a low recombination rate.
+
+[val-2f_comparison_inf_recombination] demonstrates a slightly better alignment with the experimental data. With an infinite recombination rate, the amount of mobile deuterium is minimal compared to the trapped deuterium, as illustrated in [val-2f_deuterium_desorption_inf_recombination].
+
+!media comparison_val-2f.py
+       image_name=val-2f_comparison_inf_recombination.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2f_comparison_inf_recombination
+       caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s) for a damage of 0.1 dpa and an infinite recombination rate.
+
+!media comparison_val-2f.py
+       image_name=val-2f_deuterium_desorption_inf_recombination.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2f_deuterium_desorption_inf_recombination
+       caption=Quantity of deuterium atoms during the desorption process for an infinite recombination rate.
 
 ## Input files
 

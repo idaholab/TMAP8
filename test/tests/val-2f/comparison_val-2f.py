@@ -47,11 +47,17 @@ def numerical_solution_on_experiment_input(experiment_input, tmap_input, tmap_ou
 
 if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/val-2f/gold/val-2f_out.csv"
+    csv_folder_inf_recombination = "../../../../test/tests/val-2f/gold/val-2f_out_sieverts.csv"
+    csv_folder_low_recombination = "../../../../test/tests/val-2f/gold/val-2f_out_low_recombination.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/val-2f_out.csv"
+    csv_folder_inf_recombination = "./gold/val-2f_out_sieverts.csv"
+    csv_folder_low_recombination = "./gold/val-2f_out_low_recombination.csv"
 
 # Read TMAP8 solution from CSV files
 tmap_solution = pd.read_csv(csv_folder)
+tmap_solution_inf_recombination = pd.read_csv(csv_folder_inf_recombination)
+tmap_solution_low_recombination = pd.read_csv(csv_folder_low_recombination)
 
 def extract_tmap_data_desorption(tmap_solution):
     tmap_time = tmap_solution['time'] # s
@@ -63,7 +69,11 @@ def extract_tmap_data_desorption(tmap_solution):
     tmap_mobile_deuterium = tmap_solution['scaled_mobile_deuterium'] # atoms
     tmap_trapped_deuterium_1 = tmap_solution['scaled_trapped_deuterium_1'] # atoms
     tmap_trapped_deuterium_2 = tmap_solution['scaled_trapped_deuterium_2'] # atoms
-    tmap_trapped_deuterium = tmap_trapped_deuterium_1 + tmap_trapped_deuterium_2 # atoms
+    tmap_trapped_deuterium_3 = tmap_solution['scaled_trapped_deuterium_3'] # atoms
+    tmap_trapped_deuterium_4 = tmap_solution['scaled_trapped_deuterium_4'] # atoms
+    tmap_trapped_deuterium_5 = tmap_solution['scaled_trapped_deuterium_5'] # atoms
+    tmap_trapped_deuterium_intrinsic = tmap_solution['scaled_trapped_deuterium_intrinsic'] # atoms
+    tmap_trapped_deuterium = tmap_trapped_deuterium_1+tmap_trapped_deuterium_2+tmap_trapped_deuterium_3+tmap_trapped_deuterium_4+tmap_trapped_deuterium_5+tmap_trapped_deuterium_intrinsic # atoms
 
     # Select only the simulation data for desorption period
     tmap_time_desorption = []
@@ -76,6 +86,10 @@ def extract_tmap_data_desorption(tmap_solution):
     tmap_mobile_deuterium_desorption = []
     tmap_trapped_deuterium_1_desorption = []
     tmap_trapped_deuterium_2_desorption = []
+    tmap_trapped_deuterium_3_desorption = []
+    tmap_trapped_deuterium_4_desorption = []
+    tmap_trapped_deuterium_5_desorption = []
+    tmap_trapped_deuterium_intrinsic_desorption = []
     tmap_trapped_deuterium_desorption = []
 
     for i in range(len(tmap_time)):
@@ -90,6 +104,10 @@ def extract_tmap_data_desorption(tmap_solution):
             tmap_mobile_deuterium_desorption.append(tmap_mobile_deuterium[i])
             tmap_trapped_deuterium_1_desorption.append(tmap_trapped_deuterium_1[i])
             tmap_trapped_deuterium_2_desorption.append(tmap_trapped_deuterium_2[i])
+            tmap_trapped_deuterium_3_desorption.append(tmap_trapped_deuterium_3[i])
+            tmap_trapped_deuterium_4_desorption.append(tmap_trapped_deuterium_4[i])
+            tmap_trapped_deuterium_5_desorption.append(tmap_trapped_deuterium_5[i])
+            tmap_trapped_deuterium_intrinsic_desorption.append(tmap_trapped_deuterium_intrinsic[i])
 
     tmap_time_desorption = np.array(tmap_time_desorption)
     tmap_temperature_desorption = np.array(tmap_temperature_desorption)
@@ -101,15 +119,21 @@ def extract_tmap_data_desorption(tmap_solution):
     tmap_mobile_deuterium_desorption = np.array(tmap_mobile_deuterium_desorption)
     tmap_trapped_deuterium_1_desorption = np.array(tmap_trapped_deuterium_1_desorption)
     tmap_trapped_deuterium_2_desorption = np.array(tmap_trapped_deuterium_2_desorption)
+    tmap_trapped_deuterium_3_desorption = np.array(tmap_trapped_deuterium_3_desorption)
+    tmap_trapped_deuterium_4_desorption = np.array(tmap_trapped_deuterium_4_desorption)
+    tmap_trapped_deuterium_5_desorption = np.array(tmap_trapped_deuterium_5_desorption)
+    tmap_trapped_deuterium_intrinsic_desorption = np.array(tmap_trapped_deuterium_intrinsic_desorption)
 
     return (tmap_time_desorption, tmap_temperature_desorption,
             tmap_flux_desorption_left, tmap_flux_desorption_right,
             tmap_flux_desorption_total, tmap_implanted_deuterium_desorption,
             tmap_trapped_deuterium_desorption, tmap_mobile_deuterium_desorption,
-            tmap_trapped_deuterium_1_desorption, tmap_trapped_deuterium_2_desorption)
+            tmap_trapped_deuterium_1_desorption, tmap_trapped_deuterium_2_desorption,
+            tmap_trapped_deuterium_3_desorption, tmap_trapped_deuterium_4_desorption,
+            tmap_trapped_deuterium_5_desorption, tmap_trapped_deuterium_intrinsic_desorption)
 
 # Extract data for traps
-tmap_time_desorption, tmap_temperature_desorption, tmap_flux_desorption_left, tmap_flux_desorption_right, tmap_flux_desorption_total, tmap_implanted_deuterium_desorption, tmap_trapped_deuterium_desorption, tmap_mobile_deuterium_desorption, tmap_trapped_deuterium_1_desorption, tmap_trapped_deuterium_2_desorption = extract_tmap_data_desorption(tmap_solution)
+tmap_time_desorption, tmap_temperature_desorption, tmap_flux_desorption_left, tmap_flux_desorption_right, tmap_flux_desorption_total, tmap_implanted_deuterium_desorption, tmap_trapped_deuterium_desorption, tmap_mobile_deuterium_desorption, tmap_trapped_deuterium_1_desorption, tmap_trapped_deuterium_2_desorption, tmap_trapped_deuterium_3_desorption, tmap_trapped_deuterium_4_desorption, tmap_trapped_deuterium_5_desorption, tmap_trapped_deuterium_intrinsic_desorption = extract_tmap_data_desorption(tmap_solution)
 
 #===============================================================================
 # Extract experimental data
@@ -182,105 +206,133 @@ plt.close(fig)
 #===============================================================================
 # Plot comparison between TMAP8 predictions and experimental data
 
-fig = plt.figure(figsize=[6.5, 5.5])
-gs = gridspec.GridSpec(1, 1)
-ax = fig.add_subplot(gs[0])
+comparison_cases = [
+    (tmap_solution, "val-2f_comparison"),
+    (tmap_solution_low_recombination, "val-2f_comparison_low_recombination"),
+    (tmap_solution_inf_recombination, "val-2f_comparison_inf_recombination")
+]
 
-# Plot TMAP8 predictions and experimental data
-ax.plot(tmap_temperature_desorption, tmap_flux_desorption_total, label=r"TMAP8 (Two traps)", c='tab:blue')
-ax.scatter(experiment_temperature, experiment_flux, label="Experiment", color="black")
+for solution, filename in comparison_cases:
+    # Extract relevant TMAP data
+    (_, temperature, _, _, flux_total, *_) = extract_tmap_data_desorption(solution)
 
-# Set plot labels and limits
-ax.set_xlabel(u'Temperature (K)')
-ax.set_ylabel(u"Deuterium flux (at/m$^2$/s)")
-ax.legend(loc="best")
-ax.set_xlim(left=min(tmap_temperature_desorption), right=max(tmap_temperature_desorption))
-ax.set_ylim(bottom=0)
-plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
+    # Create figure
+    fig = plt.figure(figsize=[6.5, 5.5])
+    gs = gridspec.GridSpec(1, 1)
+    ax = fig.add_subplot(gs[0])
 
-# Calculate and display the Root Mean Square Percentage Error (RMSPE) for both traps
-tmap_flux_for_rmspe = numerical_solution_on_experiment_input(experiment_temperature, tmap_temperature_desorption, tmap_flux_desorption_total)
+    # Plot TMAP and experimental data
+    ax.plot(temperature, flux_total, label=r"TMAP8 (5 traps)", c='tab:blue')
+    ax.scatter(experiment_temperature, experiment_flux, label="Experiment", color="black")
 
-RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe - experiment_flux) ** 2))
-RMSPE = RMSE * 100 / np.mean(experiment_flux)
-ax.text(750, 6e16, 'RMSPE = %.2f ' % RMSPE + '%', fontweight='bold')
+    # Labels and grid
+    ax.set_xlabel("Temperature (K)")
+    ax.set_ylabel("Deuterium flux (at/m$^2$/s)")
+    ax.set_xlim(left=min(temperature), right=max(temperature))
+    ax.set_ylim(bottom=0)
+    ax.legend(loc="best")
+    ax.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
+    ax.minorticks_on()
 
-# Add damage annotation
-ax.text(750, 5.5e16, 'Damage = 0.1 dpa')
+    # Interpolate TMAP to experimental temperature for RMSPE
+    interp_flux = numerical_solution_on_experiment_input(experiment_temperature, temperature, flux_total)
+    RMSE = np.sqrt(np.mean((interp_flux - experiment_flux) ** 2))
+    RMSPE = RMSE * 100 / np.mean(experiment_flux)
+    ax.text(750, 6e16, f'RMSPE = {RMSPE:.2f} %', fontweight='bold')
+    ax.text(750, 5.5e16, 'Damage = 0.1 dpa')
 
-ax.minorticks_on()
+    # Save the plot
+    plt.savefig(f"{filename}.png", bbox_inches='tight', dpi=300)
+    plt.close(fig)
 
-plt.savefig('val-2f_comparison.png', bbox_inches='tight', dpi=300)
-plt.close(fig)
 
 # ===============================================================================
 # Plot trapped deuterium over time from desorption start
 
-# Extract and adjust time array for desorption period
-tmap_time_desorption = tmap_time_desorption - start_time_desorption
-tmap_time_in_hours_desorption = tmap_time_desorption / 3600
-time_intervals = np.diff(tmap_time_desorption) # Calculate time intervals between measurements
+solutions = [
+    (tmap_solution, "val-2f_deuterium_desorption"),
+    (tmap_solution_low_recombination, "val-2f_deuterium_desorption_low_recombination"),
+    (tmap_solution_inf_recombination, "val-2f_deuterium_desorption_inf_recombination")
+]
 
-tmap_escaping_deuterium_desorption = np.zeros_like(tmap_flux_desorption_total)
+colors = ['#00ffff','#40e0d0','#72c6f2','#a28bd9','#a167c9','#800080']
 
-# Using trapezoidal method for integration
-for i in range(1, len(tmap_flux_desorption_total)):
-    average_flux = (tmap_flux_desorption_total[i-1] + tmap_flux_desorption_total[i]) / 2
-    tmap_escaping_deuterium_desorption[i] = tmap_escaping_deuterium_desorption[i-1] + average_flux * time_intervals[i-1]
+for solution, filename in solutions:
+# Extract data from TMAP solution
+    (time, temp, flux_left, flux_right, flux_total,
+     implanted, trapped, mobile,
+     trap1, trap2, trap3, trap4, trap5, trap_intrinsic) = extract_tmap_data_desorption(solution)
 
-# Calculate the combined deuterium desorption (mobile + escaping + trapped)
-tmap_combined_deuterium_desorption = tmap_mobile_deuterium_desorption + tmap_escaping_deuterium_desorption + tmap_trapped_deuterium_desorption
+    # Time adjustment and conversion to hours
+    time = time - time[0]
+    time_hours = time / 3600
+    time_intervals = np.diff(time)
 
-# Store the initial mobile deuterium value
-initial_deuterium = tmap_mobile_deuterium_desorption[0] + tmap_trapped_deuterium_desorption[0]
+    # Compute the escaping deuterium using trapezoidal integration
+    escaping = np.zeros_like(flux_total)
+    for i in range(1, len(flux_total)):
+        avg_flux = (flux_total[i-1] + flux_total[i]) / 2
+        escaping[i] = escaping[i-1] + avg_flux * time_intervals[i-1]
 
-# Plotting the results
-fig = plt.figure(figsize=[6.5, 5.5])
-gs = gridspec.GridSpec(1, 1)
-ax1 = fig.add_subplot(gs[0])
+    # Total deuterium = mobile + escaping + trapped
+    combined = mobile + escaping + trapped
+    initial = mobile[0] + trapped[0]
 
-# Fill the areas under the blue and green curves accurately
-ax1.fill_between(tmap_time_in_hours_desorption, 0, tmap_trapped_deuterium_1_desorption, color='tab:cyan', alpha=0.3)
-ax1.fill_between(tmap_time_in_hours_desorption, tmap_trapped_deuterium_1_desorption, tmap_trapped_deuterium_desorption, color='tab:blue', alpha=0.3)
-ax1.fill_between(tmap_time_in_hours_desorption, tmap_trapped_deuterium_desorption, tmap_trapped_deuterium_desorption + tmap_mobile_deuterium_desorption  , color='tab:purple', alpha=0.3)
+    # Create figure
+    fig = plt.figure(figsize=[6.5, 5.5])
+    gs = gridspec.GridSpec(1, 1)
+    ax1 = fig.add_subplot(gs[0])
 
-# Plot the lines
-line1, = ax1.plot(tmap_time_in_hours_desorption, tmap_combined_deuterium_desorption, c='tab:green', linestyle='-', label='Total')
-line2 = ax1.axhline(initial_deuterium, color='tab:red', linestyle=':', label='Initial mobile and trapped  deuterium')
-line3, = ax1.plot(tmap_time_in_hours_desorption, tmap_mobile_deuterium_desorption + tmap_trapped_deuterium_1_desorption, label='Trap 1', c='tab:cyan', alpha=0.6)
-line4, = ax1.plot(tmap_time_in_hours_desorption, tmap_mobile_deuterium_desorption, label='Trap 2', c='tab:blue', alpha=0.6)
-line5, = ax1.plot(tmap_time_in_hours_desorption, tmap_mobile_deuterium_desorption + tmap_trapped_deuterium_desorption, label='Mobile', c='tab:purple', alpha=0.6)
+    # Fill under the curves for trap and mobile deuterium
+    ax1.fill_between(time_hours, 0, trap5, color=colors[0], alpha=0.3)
+    ax1.fill_between(time_hours, trap5, trap5 + trap4, color=colors[1], alpha=0.3)
+    ax1.fill_between(time_hours, trap5 + trap4, trap5 + trap4 + trap3, color=colors[2], alpha=0.3)
+    ax1.fill_between(time_hours, trap5 + trap4 + trap3, trap5 + trap4 + trap3 + trap2, color=colors[3], alpha=0.3)
+    ax1.fill_between(time_hours, trap5 + trap4 + trap3 + trap2, trapped, color=colors[4], alpha=0.3)
+    ax1.fill_between(time_hours, trapped, trapped + mobile, color=colors[5], alpha=0.3)
 
-# Set plot labels and limits
-ax1.set_xlabel(u'Time (hours)')
-ax1.set_ylabel(u'Deuterium amount (atoms)')
-ax1.set_ylim(bottom=0)
-ax1.set_xlim(left=0, right=max(tmap_time_in_hours_desorption))
-ax1.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
+    # Plot lines
+    ax1.plot(time_hours, combined, c='tab:green', linestyle='-', label='Total')
+    ax1.axhline(initial, color='tab:red', linestyle=':', label='Initial mobile and trapped deuterium')
+    ax1.plot(time_hours, trap5, label='Trap 5', c=colors[0])
+    ax1.plot(time_hours, trap5 + trap4, label='Trap 4', c=colors[1])
+    ax1.plot(time_hours, trap5 + trap4 + trap3, label='Trap 3', c=colors[2])
+    ax1.plot(time_hours, trap5 + trap4 + trap3 + trap2, label='Trap 2', c=colors[3])
+    ax1.plot(time_hours, trapped, label='Trap 1', c=colors[4])
+    ax1.plot(time_hours, trapped + mobile, label='Mobile', c=colors[5])
 
-# Create a second y-axis for temperature
-ax2 = ax1.twinx()
-line6, = ax2.plot(tmap_time_in_hours_desorption, tmap_temperature_desorption, label='Temperature', c='tab:orange', linestyle='-')
-ax2.set_ylabel(u'Temperature (K)')
-ax2.set_ylim(bottom=min(tmap_temperature_desorption), top=max(tmap_temperature_desorption))
+    ax1.set_xlabel('Time (hours)')
+    ax1.set_ylabel('Deuterium amount (atoms)')
+    ax1.set_ylim(bottom=0)
+    ax1.set_xlim(left=0, right=max(time_hours))
+    ax1.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 
-# Create custom legend with colored boxes instead of lines
-mobile_patch = Patch(color='tab:purple', alpha=0.3, label='Mobile deuterium (very small)')
-trap1_patch = Patch(color='tab:cyan', alpha=0.3, label='Trap 1')
-trap2_patch = Patch(color='tab:blue', alpha=0.3, label='Trap 2')
-total_deuterium_line = plt.Line2D([0], [0], color='tab:green', linestyle=':', label='Total')
-initial_deuterium_line = plt.Line2D([0], [0], color='tab:red', linestyle=':', label='Initial mobile and trapped deuterium')
-temperature_line = plt.Line2D([0], [0], color='tab:orange', label='Temperature')
+    # Plot temperature on a second y-axis
+    ax2 = ax1.twinx()
+    ax2.plot(time_hours, temp, label='Temperature', c='tab:orange', linestyle='-')
+    ax2.set_ylabel('Temperature (K)')
+    ax2.set_ylim(bottom=min(temp), top=max(temp))
 
-# Add legend to the plot
-lines = [temperature_line, total_deuterium_line, initial_deuterium_line, mobile_patch, trap2_patch, trap1_patch]
-labels = [line.get_label() for line in lines]
-fig.legend(lines, labels, bbox_to_anchor=(0.9, 0.35), fontsize=8, frameon=True, framealpha=0.9)
+    # Custom legend with colored patches and lines
+    legend_patches = [
+        Patch(color=colors[0], alpha=0.5, label='Trap 5'),
+        Patch(color=colors[1], alpha=0.5, label='Trap 4'),
+        Patch(color=colors[2], alpha=0.5, label='Trap 3'),
+        Patch(color=colors[3], alpha=0.5, label='Trap 2'),
+        Patch(color=colors[4], alpha=0.5, label='Trap 1'),
+        Patch(color=colors[5], alpha=0.5, label='Mobile deuterium'),
+        plt.Line2D([0], [0], color='tab:green', linestyle='-', label='Total'),
+        plt.Line2D([0], [0], color='tab:red', linestyle=':', label='Initial mobile and trapped deuterium'),
+        plt.Line2D([0], [0], color='tab:orange', label='Temperature')
+    ]
+    labels = [item.get_label() for item in legend_patches]
+    fig.legend(legend_patches, labels, bbox_to_anchor=(0.9, 0.55), fontsize=6, frameon=True, framealpha=0.9)
 
-# Calculate and display the Root Mean Square Percentage Error (RMSPE)
-RMSE = np.sqrt(np.mean((tmap_combined_deuterium_desorption - initial_deuterium) ** 2))
-RMSPE = RMSE * 100 / initial_deuterium
-ax1.text(0.40, 0.90, f'RMSPE = {RMSPE:.2f} %', transform=ax1.transAxes, fontsize=12, fontweight='bold', verticalalignment='top')
+    # RMSPE calculation and annotation
+    RMSE = np.sqrt(np.mean((combined - initial) ** 2))
+    RMSPE = RMSE * 100 / initial
+    ax1.text(0.40, 0.90, f'RMSPE = {RMSPE:.2f} %', transform=ax1.transAxes, fontsize=12, fontweight='bold', verticalalignment='top')
 
-plt.savefig('val-2f_deuterium_desorption.png', bbox_inches='tight', dpi=300)
-plt.close(fig)
+    # Save the figure
+    plt.savefig(f"{filename}.png", bbox_inches='tight', dpi=300)
+    plt.close(fig)

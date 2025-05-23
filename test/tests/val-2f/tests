@@ -5,14 +5,14 @@
   [val-2f_light_csv]
     type = CSVDiff
     input = val-2f.i
-    cli_args = "sample_thickness='${units 0.9e-4 m -> mum}' ix1=2 ix2=2 ix3=2 ix4=2 charge_time='${units 1 s}' cooldown_duration='${units 1 s}' Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse Outputs/file_base=val-2f_light_out"
+    cli_args = "sample_thickness='${units 0.9e-4 m -> mum}' ix1=1 ix2=1 ix3=1 ix4=1 ix5=1 charge_time='${units 1e-1 s}' cooldown_duration='${units 1e-1 s}' Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse Outputs/file_base=val-2f_light_out"
     csvdiff = val-2f_light_out.csv
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output with a short runtime and coarse mesh testing.'
   []
   [val-2f_light_exodus]
     type = Exodiff
     input = val-2f.i
-    cli_args = "sample_thickness='${units 0.9e-4 m -> mum}' ix1=2 ix2=2 ix3=2 ix4=2 charge_time='${units 60 s}' cooldown_duration='${units 10 s}' Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse Outputs/file_base=val-2f_light_out"
+    cli_args = "sample_thickness='${units 0.9e-4 m -> mum}' ix1=1 ix2=1 ix3=1 ix4=1 ix5=1 charge_time='${units 1e-1 s}' cooldown_duration='${units 1e-1 s}' Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse Outputs/file_base=val-2f_light_out"
     exodiff = val-2f_light_out.e
     prereq = val-2f_light_csv
     should_execute = false # this test relies on the output files from val-2f_csv, so it shouldn't be run twice
@@ -34,6 +34,52 @@
     prereq = val-2f_heavy_csv
     should_execute = false # this test relies on the output files from val-2f_heavy_csv, so it shouldn't be run twice
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport.'
+  []
+  [val-2f_heavy_csv_low_recombination]
+    type = CSVDiff
+    input = val-2f.i
+    cli_args = "recombination_coefficient='${units ${fparse 3.8e-24} m^4/at/s -> mum^4/at/s}' Executioner/nl_abs_tol=5e-9 Outputs/file_base='val-2f_out_low_recombination'"
+    csvdiff = val-2f_out_low_recombination.csv
+    heavy = true
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output, for the low recombination case.'
+    max_time = 2000
+  []
+  [val-2f_heavy_exodus_low_recombination]
+    type = Exodiff
+    input = val-2f.i
+    cli_args = "recombination_coefficient='${units ${fparse 3.8e-24} m^4/at/s -> mum^4/at/s}' Executioner/nl_abs_tol=5e-9 Outputs/file_base='val-2f_out_low_recombination'"
+    exodiff = val-2f_out_low_recombination.e
+    heavy = true
+    prereq = val-2f_heavy_csv_low_recombination
+    should_execute = false # this test relies on the output files from val-2f_heavy_csv_low_recombination, so it shouldn't be run twice
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport, for the low recombination case.'
+  []
+  [val-2f_heavy_csv_inf_recombination]
+    type = CSVDiff
+    input = val-2f.i
+    cli_args = "AuxVariables/active='bounds_dummy temperature pressure'
+                BCs/active='left_concentration_sieverts right_concentration_sieverts'
+                Materials/active='diffusivity_W_func diffusivity_nonAD'
+                Postprocessors/active='integral_source_deuterium scaled_implanted_deuterium integral_deuterium_concentration scaled_mobile_deuterium flux_surface_left_sieverts scaled_flux_surface_left_sieverts flux_surface_right_sieverts scaled_flux_surface_right_sieverts temperature diffusion_W max_time_step_size max_time_step_size_coarse integral_trapped_concentration_1 scaled_trapped_deuterium_1 integral_trapped_concentration_2 scaled_trapped_deuterium_2 integral_trapped_concentration_3 scaled_trapped_deuterium_3 integral_trapped_concentration_4 scaled_trapped_deuterium_4 integral_trapped_concentration_5 scaled_trapped_deuterium_5 integral_trapped_concentration_intrinsic scaled_trapped_deuterium_intrinsic'
+                Outputs/file_base='val-2f_out_inf_recombination'"
+    csvdiff = val-2f_out_inf_recombination.csv
+    heavy = true
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output, for the infinite recombination case.'
+    max_time = 2000
+  []
+  [val-2f_heavy_exodus_inf_recombination]
+    type = Exodiff
+    input = val-2f.i
+    cli_args = "AuxVariables/active='bounds_dummy temperature pressure'
+                BCs/active='left_concentration_sieverts right_concentration_sieverts'
+                Materials/active='diffusivity_W_func diffusivity_nonAD'
+                Postprocessors/active='integral_source_deuterium scaled_implanted_deuterium integral_deuterium_concentration scaled_mobile_deuterium flux_surface_left_sieverts scaled_flux_surface_left_sieverts flux_surface_right_sieverts scaled_flux_surface_right_sieverts temperature diffusion_W max_time_step_size max_time_step_size_coarse integral_trapped_concentration_1 scaled_trapped_deuterium_1 integral_trapped_concentration_2 scaled_trapped_deuterium_2 integral_trapped_concentration_3 scaled_trapped_deuterium_3 integral_trapped_concentration_4 scaled_trapped_deuterium_4 integral_trapped_concentration_5 scaled_trapped_deuterium_5 integral_trapped_concentration_intrinsic scaled_trapped_deuterium_intrinsic'
+                Outputs/file_base='val-2f_out_inf_recombination'"
+    exodiff = val-2f_out_inf_recombination.e
+    heavy = true
+    prereq = val-2f_heavy_csv_inf_recombination
+    should_execute = false # this test relies on the output files from val-2f_heavy_csv_inf_recombination, so it shouldn't be run twice
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport, for the infinite recombination case.'
   []
   [val-2f_comparison]
     type = RunCommand
