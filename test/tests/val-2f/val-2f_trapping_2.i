@@ -70,6 +70,7 @@
   [integral_trapped_concentration_2]
     type = ElementIntegralVariablePostprocessor
     variable = trapped_2
+    outputs = none
   []
   [scaled_trapped_deuterium_2]
     type = ScalePostprocessor
