@@ -91,7 +91,7 @@ ax.plot(tmap_time, analytical_permeation,
         label=r"Analytical", c='k', linestyle='--')
 ax.plot(tmap_time, tmap_prediction, label=r"TMAP8", c='tab:gray') # numerical solution
 ax.plot([tau_be, tau_be], [0, 3.15e18], label=r"Analytical breakthrough time", c='tab:brown', linestyle='--')
-ax.plot([tmap_intercept, 17.5], [0, (17.5 - tmap_intercept) * np.max(tmap_slope)],
+ax.plot([tmap_intercept, tmap_intercept], [0, 3.15e18],
         label=r"Numerical breakthrough time", c='tab:brown')
 ax.set_xlabel(u'Time (s)')
 ax.set_ylabel(u"Flux (atom/m$^2$s)")

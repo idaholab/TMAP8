@@ -46,6 +46,7 @@ scheme = BDF2
 
       # Does not work for the species trapping
       preconditioning = 'none'
+      # extra_tag_vectors = 'ref'
     []
   []
   [SpeciesTrapping]
@@ -62,13 +63,22 @@ scheme = BDF2
       N = '${fparse N / cl}'
       Ct0 = '${trapping_site_fraction_1} ${trapping_site_fraction_2} ${trapping_site_fraction_3}'
       trap_per_free = 1.0e0
+      # in the original ver-1dc specification
       different_traps_for_each_species = true
 
       alpha_r = '${release_rate_coefficient} ${release_rate_coefficient} ${release_rate_coefficient}'
       detrapping_energy = '${epsilon_1} ${epsilon_2} ${epsilon_3}'
+
+      # extra_tag_vectors = 'ref'
     []
   []
 []
+
+# [Problem]
+#   type = ReferenceResidualProblem
+#   extra_tag_vectors = 'ref'
+#   reference_vector = 'ref'
+# []
 
 [Preconditioning]
   [smp]
@@ -87,8 +97,10 @@ scheme = BDF2
   petsc_options_value = 'lu'
   line_search = 'none'
 
-  # automatic_scaling = true
-  # nl_abs_tol = 5e-8
+  automatic_scaling = true
+  nl_abs_tol = 1e-8
+  # If not using reference residual
+  nl_forced_its = 1
 []
 
 [Postprocessors]
