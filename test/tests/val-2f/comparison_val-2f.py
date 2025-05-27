@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import gridspec
 from matplotlib.patches import Patch
+from matplotlib import cm
 import pandas as pd
 import os
 
@@ -255,7 +256,9 @@ solutions = [
     (tmap_solution_inf_recombination, "val-2f_deuterium_desorption_inf_recombination")
 ]
 
-colors = ['#00ffff','#40e0d0','#72c6f2','#a28bd9','#a167c9','#800080']
+# colors = ['#00ffff','#40e0d0','#72c6f2','#a28bd9','#a167c9','#800080']
+cmap = plt.get_cmap('viridis')
+colors = cmap(np.linspace(0,1,6))
 
 for solution, filename in solutions:
 # Extract data from TMAP solution
@@ -315,15 +318,15 @@ for solution, filename in solutions:
 
     # Custom legend with colored patches and lines
     legend_patches = [
-        Patch(color=colors[0], alpha=0.5, label='Trap 5'),
-        Patch(color=colors[1], alpha=0.5, label='Trap 4'),
-        Patch(color=colors[2], alpha=0.5, label='Trap 3'),
-        Patch(color=colors[3], alpha=0.5, label='Trap 2'),
-        Patch(color=colors[4], alpha=0.5, label='Trap 1'),
-        Patch(color=colors[5], alpha=0.5, label='Mobile deuterium'),
-        plt.Line2D([0], [0], color='tab:green', linestyle='-', label='Total'),
         plt.Line2D([0], [0], color='tab:red', linestyle=':', label='Initial mobile and trapped deuterium'),
-        plt.Line2D([0], [0], color='tab:orange', label='Temperature')
+        plt.Line2D([0], [0], color='tab:green', linestyle='-', label='Total'),
+        plt.Line2D([0], [0], color='tab:orange', label='Temperature'),
+        Patch(color=colors[5], alpha=0.5, label='Mobile deuterium'),
+        Patch(color=colors[4], alpha=0.5, label='Trap 1'),
+        Patch(color=colors[3], alpha=0.5, label='Trap 2'),
+        Patch(color=colors[2], alpha=0.5, label='Trap 3'),
+        Patch(color=colors[1], alpha=0.5, label='Trap 4'),
+        Patch(color=colors[0], alpha=0.5, label='Trap 5')
     ]
     labels = [item.get_label() for item in legend_patches]
     fig.legend(legend_patches, labels, bbox_to_anchor=(0.9, 0.55), fontsize=6, frameon=True, framealpha=0.9)

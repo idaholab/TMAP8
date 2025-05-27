@@ -18,7 +18,7 @@ The sample temperature histories are shown in [val-2f_temperature_history].
 
 ## Model Description
 
-### 1. Implantation phase:
+### 1- Implantation phase:
 
 During the charging phase, deuterium is continuously implanted into the tungsten sample over a period of 72 hours. The temperature is maintained at 370 K throughout this phase. The surface is exposed to a constant flux of $\phi=5.79\times 10^{19}$ atoms/m$^2$/s, corresponding to a total fluence of $1.5\times 10^{25}$ atoms/m$^2$. The implantation profile follows a Gaussian distribution centered at the mean implantation depth of $R_p=0.7$ nm, with a standard deviation of $\sigma = 0.5$ nm :
 
@@ -45,15 +45,28 @@ The implantation distribution is illustrated in [val-2f_implantation_distributio
     id=val-2f_implantation_distribution
     caption=Deuterium implantation.
 
-### 2. Cooldown phase:
+### 2- Cooldown phase:
 
 After the implantation phase, the system enters the cooldown phase, lasting 12 hours. During this period, the sample temperature is rapidly reduced from 370 K to 295 K. No additional deuterium is introduced during this phase, meaning the source term is set to zero.
 
-### 3. Desorption phase:
+### 3- Desorption phase:
 
 The final stage of the simulation is the desorption phase, during which the sample is gradually heated from 300 K to 1000 K at a constant rate of $\beta = 0.05$ K/s.
 
 ## Governing equations
+
+### • Damaged induced traps
+
+The evolution of the trapping site density, $N_i$, over time is described by:
+
+\begin{equation}
+    \label{eq:trapping_sites_density}
+    \frac{\partial N_i}{\partial t} = \Phi \cdot K_c \left[ 1 - \frac{N_i}{N_{\text{max,}\Phi}} \right] - A \cdot N_i
+\end{equation}
+
+This equation consists of two terms. The first term, $\Phi \cdot K_c \left[ 1 - \frac{N_i}{n_{\text{max}, \Phi}} \right]$, represents the creation of trapping sites. It increases the trap density up to a saturation density, $N_{\text{max,}\Phi}$, due to the damage imposed on the sample. Here, $\Phi$ is the damage rate in (dpa/s) and $K_c$ is the trap creation factor in (traps/m$^3$/dpa). The second term, $A \cdot N_i$, accounts for the annealing effect which decreases the density of trapping sites. $A$ is the trap annealing factor in (1/s) and follows an Arrhenius law given by $A = A_0 \cdot \exp\left(\frac{-E_A}{k_B \cdot T}\right)$, where $A_0$ is a pre-exponential factor, $E_A$ is the activation energy, $k_B$ is the Boltzmann constant, and $T$ is the temperature. The trap-induced parameters are listed in [val-2f_damaged_induced_traps]. The trap densities at equilibrium are provided in [val-2f_traps_values].
+
+### • Tritium transport equations
 
 The general form of the transport equations for the deuterium in tungsten is given by:
 
@@ -97,91 +110,89 @@ and
 
 where $\alpha_{t0}^i$ and $\alpha_{r0}^i$ are the pre-exponential factors of trapping and release. The trapping energy $\epsilon_t^i$ is equal to the diffusion activation energy $E_D$.
 
+### • Boundary conditions
+
 At the surfaces, deuterium recombines into gas. It can be described by the following surface flux:
 
 \begin{equation}
     J = 2 A K_r C^2
 \end{equation}
 
-where $J$ represents the recombination flux exiting the sample on both the left and right sides, $A$ is the surface area, and $K_r$ is the deuterium recombination coefficient. The coefficient of 2 accounts for the fact that 2 deuterium atoms combine to form one D$_2$ molecule.
+where $J$ represents the recombination flux exiting the sample on both the left and right sides, $A$ is the surface area, and $K_r$ is the deuterium recombination coefficient. The coefficient of 2 accounts for the fact that 2 deuterium atoms combine to form one D$_2$ molecule. This boundary condition is used in [val-2f_comparison] and [val-2f_comparison_low_recombination].
 
-The emission rate of deuterium from the sample is recorded as a function of temperature to assess how deuterium is released from the material.
+Additionally, to account for an infinite recombination rate at the boundaries, a Dirichlet boundary condition can be enforced, setting $C_M = 0$ atoms/m$^3$.
+This boundary condition is used in [val-2f_comparison_inf_recombination].
 
 ## Case and Model Parameters
+
+!table id=val-2f_damaged_induced_traps caption=Damaged-induced traps parameters from [!cite](dark2024modelling).
+| Trap   | $\Phi$ (dpa/s)       | $K_c$ (traps/m$^3$/dpa) | $N_{\text{max,}\Phi}$ (atoms/m$^3$) | $A_0$ (1/s)              | $E_A$ (eV) | $T$ (K)|
+| ------ | -------------------- | ----------------------- | ----------------------------------- | ------------------------ | ---------- | ------ |
+| Trap 1 | 8.9 $\times 10^{-5}$ | 9.0 $\times 10^{26}$    | 6.9 $\times 10^{25}$                | 6.18 $\times 10^{-3}$    | 0.24       | 800    |
+| Trap 2 | 8.9 $\times 10^{-5}$ | 4.2 $\times 10^{26}$    | 7.0 $\times 10^{25}$                | 6.18 $\times 10^{-3}$    | 0.24       | 800    |
+| Trap 3 | 8.9 $\times 10^{-5}$ | 2.5 $\times 10^{26}$    | 6.0 $\times 10^{25}$                | 6.18 $\times 10^{-3}$    | 0.30       | 800    |
+| Trap 4 | 8.9 $\times 10^{-5}$ | 5.0 $\times 10^{26}$    | 4.7 $\times 10^{25}$                | 6.18 $\times 10^{-3}$    | 0.30       | 800    |
+| Trap 5 | 8.9 $\times 10^{-5}$ | 1.0 $\times 10^{26}$    | 2.0 $\times 10^{25}$                | 0                        | -          | 800    |
 
 All the model parameters are listed in [val-2f_set_up_values]:
 
 !table id=val-2f_set_up_values caption=Values of material properties.
-| Parameter | Description                          | Value                                                       | Units                 | Reference                 |
-| --------- | ------------------------------------ | ----------------------------------------------------------- | --------------------- | --------------------- |
-| $k_b$     | Boltzmann constant                   | 1.380649 $\times 10^{-23}$                                  | J/K                   | [PhysicalConstants.h](https://physics.nist.gov/cgi-bin/cuu/Value?r) |
-| $T_{\text{initial}}$ | Initial temperature       | 370                                                         | K                     | [!cite](dark2024modelling) |
-| $T_{\text{cooldown}}$ | Cooldown temperature     | 295                                                         | K                     | [!cite](dark2024modelling) |
-| $T_{\text{desorption,min}}$ | Desorption start temperature | 300                                               | K                     | [!cite](dark2024modelling) |
-| $T_{\text{desorption,max}}$ | Desorption end temperature | 1000                                                | K                     | [!cite](dark2024modelling) |
-| $\beta$   | Desorption heating rate              | 0.05                                                        | K/s                   | [!cite](dark2024modelling) |
-| $t_{\text{charge}}$ | Charging time              | 72                                                          | h                     | [!cite](dark2024modelling) |
-| $t_{\text{cooldown}}$ | Cooldown duration        | 12                                                          | h                     | [!cite](dark2024modelling) |
-| $D_0$     | Diffusion pre-factor                 | 1.6 $\times 10^{-7}$                                | m$^2$/s               | [!cite](dark2024modelling) |
-| $E_D$     | Activation energy for deuterium diffusion      | 0.28                                              | eV                    | [!cite](dark2024modelling) |
-| $R_p$     | Mean implantation depth              | 0.7                                                         | nm                    | [!cite](dark2024modelling) |
-| $\sigma$  | Standard deviation of implantation profile | 0.5                                                   | nm                    | [!cite](dark2024modelling) |
-| $\Phi$    | Incident fluence                     | 1.5 $\times 10^{25}$                                        | atoms/m$^2$           | [!cite](dark2024modelling) |
-| $\phi$    | Incident flux                        | 5.79 $\times 10^{19}$                                       | atoms/m$^2$/s         | [!cite](dark2024modelling) |
-| $l_W$     | Length of the tungsten sample        | 0.8                                                         | mm                    | [!cite](dark2024modelling) |
-| $K_r$     | Small deuterium recombination coefficient  | 3.8$\times 10^{-26} \exp\left(-\frac{0.34 (\text{eV})}{k_b \cdot T}\right)$ | m$^4$/at/s | [!cite](zhao2020deuterium) |
-| $K$     | Normal deuterium recombination coefficient  | 3.8$\times 10^{-16} \exp\left(-\frac{0.34 (\text{eV})}{k_b \cdot T}\right)$ | m$^4$/at/s |  |
-| $N$     | Tungten density                      | 6.3222 $\times 10^{28 }$                                    | at/m$^3$              | [!cite](dark2024modelling) |
+| Parameter | Description                                    | Value                       | Units         | Reference                  |
+| --------- | ---------------------------------------------- | --------------------------- | ------------- | -------------------------- |
+| $k_b$     | Boltzmann constant                             | 1.380649 $\times 10^{-23}$  | J/K           | [PhysicalConstants.h](https://physics.nist.gov/cgi-bin/cuu/Value?r) |
+| $T_{\text{initial}}$ | Initial temperature                 | 370                         | K             | [!cite](dark2024modelling) |
+| $T_{\text{cooldown}}$ | Cooldown temperature               | 295                         | K             | [!cite](dark2024modelling) |
+| $T_{\text{desorption,min}}$ | Desorption start temperature | 300                         | K             | [!cite](dark2024modelling) |
+| $T_{\text{desorption,max}}$ | Desorption end temperature   | 1000                        | K             | [!cite](dark2024modelling) |
+| $\beta$   | Desorption heating rate                        | 0.05                        | K/s           | [!cite](dark2024modelling) |
+| $t_{\text{charge}}$ | Charging time                        | 72                          | h             | [!cite](dark2024modelling) |
+| $t_{\text{cooldown}}$ | Cooldown duration                  | 12                          | h             | [!cite](dark2024modelling) |
+| $D_0$     | Diffusion pre-factor                           | 1.6 $\times 10^{-7}$        | m$^2$/s       | [!cite](dark2024modelling) |
+| $E_D$     | Activation energy for deuterium diffusion      | 0.28                        | eV            | [!cite](dark2024modelling) |
+| $R_p$     | Mean implantation depth                        | 0.7                         | nm            | [!cite](dark2024modelling) |
+| $\sigma$  | Standard deviation of implantation profile     | 0.5                         | nm            | [!cite](dark2024modelling) |
+| $\Phi_D$  | Incident fluence                               | 1.5 $\times 10^{25}$        | atoms/m$^2$   | [!cite](dark2024modelling) |
+| $\phi_D$  | Incident flux                                  | 5.79 $\times 10^{19}$       | atoms/m$^2$/s | [!cite](dark2024modelling) |
+| $l_W$     | Length of the tungsten sample                  | 0.8                         | mm            | [!cite](dark2024modelling) |
+| $N$       | Tungten density                                | 6.3222 $\times 10^{28 }$    | at/m$^3$      | [J-Dark-PhD](https://zenodo.org/records/11085134) |
 
 !alert warning title=Typo in formula from [!cite](zhao2020deuterium)
 There is a typo in the expression for the deuterium recombination coefficient for clean tungsten surfaces from [!cite](zhao2020deuterium) where the minus sign in the exponential is missing, even though the data shows it should be present. Consequently, we used the corrected value in our simulations, which includes the minus sign.
 
-All the traps parameters are listed in [val-2f_traps_values]:
-
 !table id=val-2f_traps_values caption=Values of traps parameters for 0.1 dpa.
-| Parameter | Description                            | Value                                                       | Units                 | Reference                 |
-| --------- | ------------------------------------   | ----------------------------------------------------------- | --------------------- | --------------------- |
-| $\alpha_{t0}^i$ | Pre-factor of trapping rate coefficient | $\frac{D_0}{6 \cdot (1.1\times 10^{-10})^2}$                                           | atoms/s               | [!cite](dark2024modelling) |
-| $\alpha_{r0}^i$ | Pre-factor of release rate coefficient | $10^{13}$                                           | atoms/s               | [!cite](dark2024modelling) |
-| $\epsilon_t^i$ | Trapping energy for all traps     | 0.28                                                        | eV                    | [!cite](dark2024modelling) |
-| $\epsilon_r^1$ | Release energy for trap 1     | 1.15                                                        | eV                    | [!cite](dark2024modelling) |
-| $\epsilon_r^2$ | Release energy for trap 2     | 1.35                                                        | eV                    | [!cite](dark2024modelling) |
-| $\epsilon_r^3$ | Release energy for trap 3     | 1.65                                                        | eV                    | [!cite](dark2024modelling) |
-| $\epsilon_r^4$ | Release energy for trap 4     | 1.85                                                        | eV                    | [!cite](dark2024modelling) |
-| $\epsilon_r^5$ | Release energy for trap 5     | 2.05                                                        | eV                    | [!cite](dark2024modelling) |
-| $\epsilon_r^6$ | Release energy for intrinsic trap     | 1.04                                                        | eV                    | [!cite](dark2024modelling) |
-| $N_1$ | Density for trap 1                          | 4.8$\times 10^{25}$                                         | atoms/m$^3$           | [!cite](dark2024modelling) |
-| $N_2$ | Density for trap 2                             | 3.8$\times 10^{25}$                                         | atoms/m$^3$           | [!cite](dark2024modelling) |
-| $N_3$ | Density for trap 3                             | 2.6$\times 10^{25}$                                         | atoms/m$^3$           | [!cite](dark2024modelling) |
-| $N_4$ | Density for trap 4                             | 3.6$\times 10^{25}$                                         | atoms/m$^3$           | [!cite](dark2024modelling) |
-| $N_5$ | Density for trap 5                             | 1.1$\times 10^{25}$                                         | atoms/m$^3$           | [!cite](dark2024modelling) |
-| $N_6$ | Density for intrinsic trap                             | 2.4$\times 10^{22}$                                         | atoms/m$^3$           | [!cite](dark2024modelling) |
+| Parameter       | Description                             | Value                | Units       | Reference                                         |
+| --------------- | --------------------------------------- | -------------------- | ----------- | ------------------------------------------------- |
+| $\alpha_{t0}^i$ | Pre-factor of trapping rate coefficient | $\frac{D_0}{6 \cdot (1.1\times 10^{-10})^2}$ | atoms/s | [J-Dark-PhD](https://zenodo.org/records/11085134) |
+| $\alpha_{r0}^i$ | Pre-factor of release rate coefficient  | $10^{13}$            | atoms/s     | [J-Dark-PhD](https://zenodo.org/records/11085134) |
+| $\epsilon_t^i$  | Trapping energy for all traps           | 0.28                 | eV          | [!cite](dark2024modelling)                        |
+| $\epsilon_r^1$  | Release energy for trap 1               | 1.15                 | eV          | [!cite](dark2024modelling)                        |
+| $\epsilon_r^2$  | Release energy for trap 2               | 1.35                 | eV          | [!cite](dark2024modelling)                        |
+| $\epsilon_r^3$  | Release energy for trap 3               | 1.65                 | eV          | [!cite](dark2024modelling)                        |
+| $\epsilon_r^4$  | Release energy for trap 4               | 1.85                 | eV          | [!cite](dark2024modelling)                        |
+| $\epsilon_r^5$  | Release energy for trap 5               | 2.05                 | eV          | [!cite](dark2024modelling)                        |
+| $\epsilon_r^6$  | Release energy for intrinsic trap       | 1.04                 | eV          | [!cite](dark2024modelling)                        |
+| $N_1$           | Density for trap 1                      | 4.8$\times 10^{25}$  | atoms/m$^3$ | [J-Dark-PhD](https://zenodo.org/records/11085134) |
+| $N_2$           | Density for trap 2                      | 3.8$\times 10^{25}$  | atoms/m$^3$ | [J-Dark-PhD](https://zenodo.org/records/11085134) |
+| $N_3$           | Density for trap 3                      | 2.6$\times 10^{25}$  | atoms/m$^3$ | [J-Dark-PhD](https://zenodo.org/records/11085134) |
+| $N_4$           | Density for trap 4                      | 3.6$\times 10^{25}$  | atoms/m$^3$ | [J-Dark-PhD](https://zenodo.org/records/11085134) |
+| $N_5$           | Density for trap 5                      | 1.1$\times 10^{25}$  | atoms/m$^3$ | [J-Dark-PhD](https://zenodo.org/records/11085134) |
+| $N_6$           | Density for intrinsic trap              | 2.4$\times 10^{22}$  | atoms/m$^3$ | [J-Dark-PhD](https://zenodo.org/records/11085134) |
+
+As described in the boundary conditions section, the recombination rate can be set to a finite value. Initially, the recombination rate from [!cite](zhao2020deuterium) can be used. Subsequently, as detailed in the results section below, the recombination rate is increased. In [!cite](dark2024modelling), the recombination rate is infinite. The values used are listed in [val-2f_recombination_rates]:
+
+!table id=val-2f_recombination_rates caption=Values of recombination rates.
+| Parameter | Description                                    | Value                       | Units         | Reference                  |
+| --------- | ---------------------------------------------- | --------------------------- | ------------- | -------------------------- |
+| $K_r$     | Small deuterium recombination coefficient      | 3.8$\times 10^{-26} \exp\left(-\frac{0.34 (\text{eV})}{k_b \cdot T}\right)$ | m$^4$/at/s | [!cite](zhao2020deuterium) |
+| $K$       | Normal deuterium recombination coefficient     | 3.8$\times 10^{-16} \exp\left(-\frac{0.34 (\text{eV})}{k_b \cdot T}\right)$ | m$^4$/at/s | - |
 
 ## Results
 
-[val-2f_comparison] shows the comparison of the TMAP8 calculation and the experimental data during desorption. The experimental data are provided by T. Schwarz-Selinger and are available [here](https://zenodo.org/records/11085134).
+The figures below show the comparison of the TMAP8 calculation and the experimental data during desorption. The experimental data are provided by T. Schwarz-Selinger and are available [here](https://zenodo.org/records/11085134).
 
-!media comparison_val-2f.py
-       image_name=val-2f_comparison.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=val-2f_comparison
-       caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s) for a damage of 0.1 dpa and a normal recombination rate.
+In [val-2f_comparison_low_recombination] and [val-2f_deuterium_desorption_low_recombination], the recombination rate follows the values from [!cite](zhao2020deuterium) as mentioned in [val-2f_set_up_values]. [val-2f_deuterium_desorption_low_recombination] displays the quantities of mobile, trapped, and desorbing deuterium atoms during the desorption process. During desorption, the temperature increases from 300 K to 1000 K. The amount of deuterium trapped will decrease as the temperature rises and the various trapping energies are reached, meaning that deuterium will leave the traps, become mobile, and diffuse out. During desorption, no further implantation occurs, resulting in a decrease in the number of mobile and trapped deuterium atoms and an increase in the number of desorbed deuterium atoms. Mass conservation is well maintained during desorption, with only a 0.00% root mean squared percentage error (RMSPE) between the initial number of mobile and trapped deuterium atoms and the total number of deuterium atoms (mobile, trapped, and desorbed).
 
-[val-2f_deuterium_desorption] displays the quantities of mobile, trapped, and desorbing deuterium atoms during the desorption process. During desorption, the temperature increases from 300 K to 1000 K. The amount of deuterium trapped will decrease as the temperature rises and the various trapping energies are reached, meaning that deuterium will leave the traps, become mobile, and diffuse out. During desorption, no further implantation occurs, resulting in a decrease in the number of mobile and trapped deuterium atoms and an increase in the number of desorbed deuterium atoms. Mass conservation is well maintained during desorption, with only a 0.01% root mean squared percentage error (RMSPE) between the initial number of mobile and trapped deuterium atoms and the total number of deuterium atoms (mobile, trapped, and desorbed).
-
-!media comparison_val-2f.py
-       image_name=val-2f_deuterium_desorption.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=val-2f_deuterium_desorption
-       caption=Quantity of deuterium atoms during the desorption process for a normal recombination rate.
-
-It is crucial to select an appropriate recombination rate to align with the experimental data. [val-2f_comparison_low_recombination] illustrates a significant discrepancy when the recombination rate is too low. This discrepancy can be attributed to the findings in [val-2f_deuterium_desorption_low_recombination], which indicate that at the onset of the desorption phase, a substantial amount of mobile deuterium accumulates due to the low recombination rate at the surface. Consequently, the initial peak observed in [val-2f_comparison_low_recombination] is attributed to mobile deuterium rather than trapped deuterium.
-
-!media comparison_val-2f.py
-       image_name=val-2f_comparison_low_recombination.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=val-2f_comparison_low_recombination
-       caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s) for a damage of 0.1 dpa and a low recombination rate.
+[val-2f_comparison_low_recombination] illustrates a significant discrepancy when the recombination rate is too low. This discrepancy can be attributed to the findings in [val-2f_deuterium_desorption_low_recombination], which indicate that at the onset of the desorption phase, a substantial amount of mobile deuterium accumulates due to the low recombination rate at the surface. Consequently, the initial peak observed in [val-2f_comparison_low_recombination] is attributed to mobile deuterium rather than trapped deuterium.
 
 !media comparison_val-2f.py
        image_name=val-2f_deuterium_desorption_low_recombination.png
@@ -189,7 +200,19 @@ It is crucial to select an appropriate recombination rate to align with the expe
        id=val-2f_deuterium_desorption_low_recombination
        caption=Quantity of deuterium atoms during the desorption process for a low recombination rate.
 
-[val-2f_comparison_inf_recombination] demonstrates a slightly better alignment with the experimental data. With an infinite recombination rate, the amount of mobile deuterium is minimal compared to the trapped deuterium, as illustrated in [val-2f_deuterium_desorption_inf_recombination].
+!media comparison_val-2f.py
+       image_name=val-2f_comparison_low_recombination.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2f_comparison_low_recombination
+       caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s) for a damage of 0.1 dpa and a low recombination rate.
+
+[!cite](dark2024modelling) assumed that the recombination rate is infinite. This rate can be modeled in TMAP8 using the boundary conditions described above. [val-2f_comparison_inf_recombination] shows a way better alignment with the experimental data. With an infinite recombination rate, the amount of mobile deuterium is minimal compared to the trapped deuterium, as demonstrated in [val-2f_deuterium_desorption_inf_recombination]. Consequently, the desorbed deuterium flux is solely due to the deuterium desorbing from the traps.
+
+!media comparison_val-2f.py
+       image_name=val-2f_deuterium_desorption_inf_recombination.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2f_deuterium_desorption_inf_recombination
+       caption=Quantity of deuterium atoms during the desorption process for an infinite recombination rate.
 
 !media comparison_val-2f.py
        image_name=val-2f_comparison_inf_recombination.png
@@ -197,11 +220,19 @@ It is crucial to select an appropriate recombination rate to align with the expe
        id=val-2f_comparison_inf_recombination
        caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s) for a damage of 0.1 dpa and an infinite recombination rate.
 
+However, the recombination rate must be a finite value. In [val-2f_comparison], the recombination rate is 10 orders of magnitude higher than the one used in [val-2f_comparison_low_recombination] from [!cite](zhao2020deuterium). As shown in [val-2f_deuterium_desorption], the quantity of mobile deuterium is nearly equal to zero, similar to the case with an infinite recombination rate. The TMAP8 results in [val-2f_comparison] match well with the experimental data. There still exists an offset between the TMAP8 results and the experimental data, which can be reduced by better fitting the trap parameters described in [val-2f_traps_values].
+
 !media comparison_val-2f.py
-       image_name=val-2f_deuterium_desorption_inf_recombination.png
+       image_name=val-2f_deuterium_desorption.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=val-2f_deuterium_desorption_inf_recombination
-       caption=Quantity of deuterium atoms during the desorption process for an infinite recombination rate.
+       id=val-2f_deuterium_desorption
+       caption=Quantity of deuterium atoms during the desorption process for a normal recombination rate.
+
+!media comparison_val-2f.py
+       image_name=val-2f_comparison.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2f_comparison
+       caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s) for a damage of 0.1 dpa and a normal recombination rate.
 
 ## Input files
 
@@ -212,6 +243,6 @@ The input file for this case can be found at [/val-2f.i]. To minimize the length
 - [/val-2f_trapping_intrinsic.i] provides the blocks necessary to introduce the intrinsic traps in the simulation
 - [/val-2f_trapping_1.i], [/val-2f_trapping_2.i], [/val-2f_trapping_3.i], [/val-2f_trapping_4.i], [/val-2f_trapping_5.i] provide the blocks necessary to introduce the trapping sites 1, 2, 3, 4, and 5, respectively, in the simulation.
 
-To combine them into one input file when running the simulation, [/val-2f.i] uses the `!include` feature. 
+To combine them into one input file when running the simulation, [/val-2f.i] uses the `!include` feature.
 
 To limit the computational costs of the test case, the test runs a version of the file with a smaller and coarser mesh, and fewer time steps. More information about the changes can be found in the test specification file for this case, namely [/val-2f/tests].
