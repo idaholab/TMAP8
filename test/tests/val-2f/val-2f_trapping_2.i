@@ -1,3 +1,6 @@
+# This input file adds the trapping sites 2 for validation case val-2f. 
+# It is included in val-2f.i
+
 [Variables]
   [trapped_2]
     order = FIRST

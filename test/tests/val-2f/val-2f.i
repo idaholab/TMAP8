@@ -1,3 +1,5 @@
+# This is the main input file for the val-2f validation case. 
+# It calls different sub-input files to provide parameter values, and track the trapping sites and trapped concentrations. 
 !include parameters_val-2f.params
 !include val-2f_trapping_intrinsic.i
 !include val-2f_trapping_5.i

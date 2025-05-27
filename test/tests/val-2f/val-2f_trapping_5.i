@@ -1,3 +1,6 @@
+# This input file adds the trapping sites 5 for validation case val-2f. 
+# It is included in val-2f.i
+
 [Variables]
   [trapped_5]
     order = FIRST
@@ -5,15 +8,6 @@
   []
 []
 
-# [Bounds]
-#   [trapped_5_lower_bound]
-#     type = ConstantBounds
-#     variable = bounds_dummy
-#     bounded_variable = trapped_5
-#     bound_type = lower
-#     bound_value = '${fparse -1e-20}'
-#   []
-# []
 
 [Kernels]
   # trapping 5 kernel
@@ -26,7 +20,6 @@
 []
 
 [NodalKernels]
-  # Second traps
   [time_5]
     type = TimeDerivativeNodalKernel
     variable = trapped_5

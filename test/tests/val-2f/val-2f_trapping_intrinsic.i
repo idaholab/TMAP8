@@ -1,3 +1,6 @@
+# This input file adds the intrinsic trapping sites for validation case val-2f. 
+# It is included in val-2f.i
+
 [Variables]
   [trapped_intrinsic]
     order = FIRST
@@ -26,7 +29,6 @@
 []
 
 [NodalKernels]
-  # First traps
   [time_intrinsic]
     type = TimeDerivativeNodalKernel
     variable = trapped_intrinsic

@@ -1,3 +1,6 @@
+# This input file adds the trapping sites 3 for validation case val-2f. 
+# It is included in val-2f.i
+
 [Variables]
   [trapped_3]
     order = FIRST
@@ -26,7 +29,6 @@
 []
 
 [NodalKernels]
-  # Second traps
   [time_3]
     type = TimeDerivativeNodalKernel
     variable = trapped_3
