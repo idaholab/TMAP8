@@ -6,7 +6,7 @@
 
 The case being used for validation here involves the use of recrystallized polycrystalline tungsten (PCW) samples, which are subjected to ion irradiation and subsequent analysis using thermal desorption spectroscopy (TDS). The primary objective is to determine how damage influences deuterium trapping and release. This case is drawn from [!cite](dark2024modelling).
 
-The TDS process is simulated using TMAP8 in a 1D tungsten sample with a thickness of 0.8 mm. The TDS simulation consisted of three phases: implantation, resting, and desorption.
+The TDS process is simulated using TMAP8 in a 1D tungsten sample with a thickness of 0.8 mm. The TDS simulation consisted of three phases: implantation, cooldown, and desorption.
 
 The sample temperature histories are shown in [val-2f_temperature_history].
 
@@ -45,11 +45,11 @@ The implantation distribution is illustrated in [val-2f_implantation_distributio
     id=val-2f_implantation_distribution
     caption=Deuterium implantation.
 
-### 2. Desorption phase:
+### 2. Cooldown phase:
 
 After the implantation phase, the system enters the cooldown phase, lasting 12 hours. During this period, the sample temperature is rapidly reduced from 370 K to 295 K. No additional deuterium is introduced during this phase, meaning the source term is set to zero.
 
-### 3. Cooldown phase:
+### 3. Desorption phase:
 
 The final stage of the simulation is the desorption phase, during which the sample is gradually heated from 300 K to 1000 K at a constant rate of $\beta = 0.05$ K/s.
 
@@ -95,7 +95,7 @@ and
 \alpha_r^i = \alpha_{r0}^i \exp(-\epsilon_r^i / T)
 \end{equation}
 
-where $\alpha_{t0}^i$ and $\alpha_{r0}^i$ are the pre-exponential factors of trapping and release. The trapping energy $E_{\mathrm{t},i}$ is equal to the diffusion activation energy $E_D$.
+where $\alpha_{t0}^i$ and $\alpha_{r0}^i$ are the pre-exponential factors of trapping and release. The trapping energy $\epsilon_t^i$ is equal to the diffusion activation energy $E_D$.
 
 At the surfaces, deuterium recombines into gas. It can be described by the following surface flux:
 
@@ -134,7 +134,7 @@ All the model parameters are listed in [val-2f_set_up_values]:
 | $N$     | Tungten density                      | 6.3222 $\times 10^{28 }$                                    | at/m$^3$              | [!cite](dark2024modelling) |
 
 !alert warning title=Typo in formula from [!cite](zhao2020deuterium)
-There is a typo in the expression for the deuterium recombination coefficient from [!cite](zhao2020deuterium). Consequently, we have used the corrected value in our simulation.
+There is a typo in the expression for the deuterium recombination coefficient for clean tungsten surfaces from [!cite](zhao2020deuterium) where the minus sign in the exponential is missing, even though the data shows it should be present. Consequently, we used the corrected value in our simulations, which includes the minus sign.
 
 All the traps parameters are listed in [val-2f_traps_values]:
 
@@ -143,7 +143,7 @@ All the traps parameters are listed in [val-2f_traps_values]:
 | --------- | ------------------------------------   | ----------------------------------------------------------- | --------------------- | --------------------- |
 | $\alpha_{t0}^i$ | Pre-factor of trapping rate coefficient | $\frac{D_0}{6 \cdot (1.1\times 10^{-10})^2}$                                           | atoms/s               | [!cite](dark2024modelling) |
 | $\alpha_{r0}^i$ | Pre-factor of release rate coefficient | $10^{13}$                                           | atoms/s               | [!cite](dark2024modelling) |
-| $\epsilon_t^i$ | Trapping energy for two traps     | 0.28                                                        | eV                    | [!cite](dark2024modelling) |
+| $\epsilon_t^i$ | Trapping energy for all traps     | 0.28                                                        | eV                    | [!cite](dark2024modelling) |
 | $\epsilon_r^1$ | Release energy for trap 1     | 1.15                                                        | eV                    | [!cite](dark2024modelling) |
 | $\epsilon_r^2$ | Release energy for trap 2     | 1.35                                                        | eV                    | [!cite](dark2024modelling) |
 | $\epsilon_r^3$ | Release energy for trap 3     | 1.65                                                        | eV                    | [!cite](dark2024modelling) |
@@ -167,7 +167,7 @@ All the traps parameters are listed in [val-2f_traps_values]:
        id=val-2f_comparison
        caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s) for a damage of 0.1 dpa and a normal recombination rate.
 
-[val-2f_deuterium_desorption] displays the quantities of mobile, trapped, and desorbing deuterium atoms during the desorption process. During desorption, the temperature increases from 300 K to 1000 K. The amount of deuterium trapped will decrease as the temperature rises and the various trapping energies are reached, meaning that deuterium will leave the traps, become mobile, and diffuse out. During desorption, no further implantation occurs, resulting in a decrease in the number of mobile and trapped deuterium atoms and an increase in the number of desorbed deuterium atoms. Mass conservation is well maintained during desorption, with only a 0.02% root mean squared percentage error (RMSPE) between the initial number of mobile and trapped deuterium atoms and the total number of deuterium atoms (mobile, trapped, and desorbed).
+[val-2f_deuterium_desorption] displays the quantities of mobile, trapped, and desorbing deuterium atoms during the desorption process. During desorption, the temperature increases from 300 K to 1000 K. The amount of deuterium trapped will decrease as the temperature rises and the various trapping energies are reached, meaning that deuterium will leave the traps, become mobile, and diffuse out. During desorption, no further implantation occurs, resulting in a decrease in the number of mobile and trapped deuterium atoms and an increase in the number of desorbed deuterium atoms. Mass conservation is well maintained during desorption, with only a 0.01% root mean squared percentage error (RMSPE) between the initial number of mobile and trapped deuterium atoms and the total number of deuterium atoms (mobile, trapped, and desorbed).
 
 !media comparison_val-2f.py
        image_name=val-2f_deuterium_desorption.png
@@ -206,4 +206,12 @@ It is crucial to select an appropriate recombination rate to align with the expe
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/val-2f.i]. To limit the computational costs of the test case, the test runs a version of the file with a smaller and coarser mesh, and fewer time steps. More information about the changes can be found in the test specification file for this case, namely [/val-2f/tests].
+The input file for this case can be found at [/val-2f.i]. To minimize the length of the input file and organize it, it is divided into several parts:
+
+- [/parameter_val-2f.params] lists the key values and model parameters used in this simulation
+- [/val-2f_trapping_intrinsic.i] provides the blocks necessary to introduce the intrinsic traps in the simulation
+- [/val-2f_trapping_1.i], [/val-2f_trapping_2.i], [/val-2f_trapping_3.i], [/val-2f_trapping_4.i], [/val-2f_trapping_5.i] provide the blocks necessary to introduce the trapping sites 1, 2, 3, 4, and 5, respectively, in the simulation.
+
+To combine them into one input file when running the simulation, [/val-2f.i] uses the `!include` feature. 
+
+To limit the computational costs of the test case, the test runs a version of the file with a smaller and coarser mesh, and fewer time steps. More information about the changes can be found in the test specification file for this case, namely [/val-2f/tests].
