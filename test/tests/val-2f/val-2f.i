@@ -1,5 +1,3 @@
-# This is the main input file for the val-2f validation case. 
-# It calls different sub-input files to provide parameter values, and track the trapping sites and trapped concentrations. 
 !include parameters_val-2f.params
 !include val-2f_trapping_intrinsic.i
 !include val-2f_trapping_5.i
@@ -217,22 +215,23 @@
     property = flux_recombination_surface
     outputs = none
   []
-  [flux_surface_left_sieverts]
-    type = SideDiffusiveFluxAverage
-    variable = deuterium_concentration_W
-    boundary = 'left'
-    diffusivity = 'diffusivity_W_nonAD'
-  []
   [scaled_flux_surface_left]
     type = ScalePostprocessor
     scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
     value = flux_surface_left
     execute_on = 'initial nonlinear linear timestep_end'
   []
+  [flux_surface_left_sieverts]
+    type = SideDiffusiveFluxAverage
+    variable = deuterium_concentration_W
+    boundary = 'left'
+    diffusivity = 'diffusivity_W_nonAD'
+    outputs = none
+  []
   [scaled_flux_surface_left_sieverts]
     type = ScalePostprocessor
     scaling_factor = '${fparse ${units 1 m^2 -> mum^2}}'
-    value = flux_surface_left
+    value = flux_surface_left_sieverts
     execute_on = 'initial nonlinear linear timestep_end'
   []
   [flux_surface_right]
@@ -241,22 +240,23 @@
     property = flux_recombination_surface
     outputs = none
   []
-  [flux_surface_right_sieverts]
-    type = SideDiffusiveFluxAverage
-    variable = deuterium_concentration_W
-    boundary = 'right'
-    diffusivity = 'diffusivity_W_nonAD'
-  []
   [scaled_flux_surface_right]
     type = ScalePostprocessor
     scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
     value = flux_surface_right
     execute_on = 'initial nonlinear linear timestep_end'
   []
+  [flux_surface_right_sieverts]
+    type = SideDiffusiveFluxAverage
+    variable = deuterium_concentration_W
+    boundary = 'right'
+    diffusivity = 'diffusivity_W_nonAD'
+    outputs = none
+  []
   [scaled_flux_surface_right_sieverts]
     type = ScalePostprocessor
-    scaling_factor = '${fparse ${units 1 m^2 -> mum^2}}'
-    value = flux_surface_right
+    scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
+    value = flux_surface_right_sieverts
     execute_on = 'initial nonlinear linear timestep_end'
   []
   [temperature]
@@ -320,13 +320,13 @@
 []
 
 [Outputs]
-  file_base = 'val-2f_out_test'
+  file_base = 'val-2f_out'
   [csv]
     type = CSV
   []
   [exodus]
     type = Exodus
     output_material_properties = true
-    time_step_interval = 60
+    time_step_interval = 200
   []
 []

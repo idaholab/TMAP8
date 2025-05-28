@@ -1,4 +1,4 @@
-# This input files provides the model parameter values for validation case val-2f. 
+# This input files provides the model parameter values for validation case val-2f.
 # It is included in val-2f.i
 
 # Physical constants
@@ -36,7 +36,7 @@ sigma = '${units 0.5e-9 m -> mum}'
 R_p = '${units 0.7e-9 m -> mum}'
 flux = '${units ${fparse 5.79e19} at/m^2/s -> at/mum^2/s}'
 
-# Fermi–Dirac trap density distribution
+# Fermi-Dirac trap density distribution
 depth_center = '${units 2.5e-6 m -> mum}'
 depth_width = '${units 5e-7 m -> mum}'
 
@@ -52,12 +52,25 @@ ix3 = 100
 ix4 = 100
 ix5 = 100
 
+# Damaged-induced traps parameters
+A0 = '${units 6.18e-3 1/s}'
+phi = '${units 8.9e-5 dpa/s}'
+temperature_damage = '${units 800 K}'
+damage = '${units 0.1 dpa}'
+damage_duration = '${units ${fparse damage/phi} s}'
+
 # Trap 1 parameters
 trapping_energy_1 = '${fparse trapping_energy}'
 trapping_prefactor_1 = '${fparse trapping_prefactor}'
 detrapping_energy_1 = '${fparse ${units 1.15 eV -> J} / ${kb}}'
 detrapping_prefactor_1 = '${fparse detrapping_prefactor}'
-trap_density_01dpa_1 = '${units 4.8e25 at/m^3 -> at/mum^3}'
+K_1 = '${units 9.0e26 traps/m^3/dpa}'
+nmax_1 = '${units 6.9e25 1/m^3}'
+Ea_1 = '${units 0.24 eV}'
+A_1 = '${fparse A0 * exp(-Ea_1/(kb_eV*temperature_damage))}'
+S_1 = '${fparse phi*K_1}'
+r_1 = '${fparse phi*K_1/nmax_1 + A_1}'
+trap_density_01dpa_1 = '${units ${fparse -S_1/r_1 * exp(-r_1*damage_duration) + S_1/r_1} at/m^3 -> at/mum^3}' # '${units 4.8e25 at/m^3 -> at/mum^3}'
 trapping_site_fraction_1 = '${fparse trap_density_01dpa_1 / tungsten_density}'
 trap_per_free_1 = 1e7 # (-)
 
@@ -66,7 +79,13 @@ trapping_energy_2 = '${fparse trapping_energy}'
 trapping_prefactor_2 = '${fparse trapping_prefactor}'
 detrapping_energy_2 = '${fparse ${units 1.35 eV -> J} / kb}'
 detrapping_prefactor_2 = '${fparse detrapping_prefactor}'
-trap_density_01dpa_2 = '${units 3.8e25 at/m^3 -> at/mum^3}'
+K_2 = '${units 4.2e26 traps/m^3/dpa}'
+nmax_2 = '${units 7.0e25 1/m^3}'
+Ea_2 = '${units 0.24 eV}'
+A_2 = '${fparse A0 * exp(-Ea_2/(kb_eV*temperature_damage))}'
+S_2 = '${fparse phi*K_2}'
+r_2 = '${fparse phi*K_2/nmax_2 + A_2}'
+trap_density_01dpa_2 = '${units ${fparse -S_2/r_2 * exp(-r_2*damage_duration) + S_2/r_2} at/m^3 -> at/mum^3}' # '${units 3.8e25 at/m^3 -> at/mum^3}'
 trapping_site_fraction_2 = '${fparse trap_density_01dpa_2 / tungsten_density}'
 trap_per_free_2 = 1e7 # (-)
 
@@ -75,7 +94,13 @@ trapping_energy_3 = '${fparse trapping_energy}'
 trapping_prefactor_3 = '${fparse trapping_prefactor}'
 detrapping_energy_3 = '${fparse ${units 1.65 eV -> J} / kb}'
 detrapping_prefactor_3 = '${fparse detrapping_prefactor}'
-trap_density_01dpa_3 = '${units 2.6e25 at/m^3 -> at/mum^3}'
+K_3 = '${units 2.5e26 traps/m^3/dpa}'
+nmax_3 = '${units 6.0e25 1/m^3}'
+Ea_3 = '${units 0.30 eV}'
+A_3 = '${fparse A0 * exp(-Ea_3/(kb_eV*temperature_damage))}'
+S_3 = '${fparse phi*K_3}'
+r_3 = '${fparse phi*K_3/nmax_3 + A_3}'
+trap_density_01dpa_3 = '${units ${fparse -S_3/r_3 * exp(-r_3*damage_duration) + S_3/r_3} at/m^3 -> at/mum^3}' # '${units 2.6e25 at/m^3 -> at/mum^3}'
 trapping_site_fraction_3 = '${fparse trap_density_01dpa_3 / tungsten_density}'
 trap_per_free_3 = 1e7 # (-)
 
@@ -84,7 +109,13 @@ trapping_energy_4 = '${fparse trapping_energy}'
 trapping_prefactor_4 = '${fparse trapping_prefactor}'
 detrapping_energy_4 = '${fparse ${units 1.85 eV -> J} / kb}'
 detrapping_prefactor_4 = '${fparse detrapping_prefactor}'
-trap_density_01dpa_4 = '${units 3.6e25 at/m^3 -> at/mum^3}'
+K_4 = '${units 5.0e26 traps/m^3/dpa}'
+nmax_4 = '${units 4.7e25 1/m^3}'
+Ea_4 = '${units 0.30 eV}'
+A_4 = '${fparse A0 * exp(-Ea_4/(kb_eV*temperature_damage))}'
+S_4 = '${fparse phi*K_4}'
+r_4 = '${fparse phi*K_4/nmax_4 + A_4}'
+trap_density_01dpa_4 = '${units ${fparse -S_4/r_4 * exp(-r_4*damage_duration) + S_4/r_4} at/m^3 -> at/mum^3}' # '${units 3.6e25 at/m^3 -> at/mum^3}'
 trapping_site_fraction_4 = '${fparse trap_density_01dpa_4 / tungsten_density}'
 trap_per_free_4 = 1e7 # (-)
 
@@ -93,7 +124,11 @@ trapping_energy_5 = '${fparse trapping_energy}'
 trapping_prefactor_5 = '${fparse trapping_prefactor}'
 detrapping_energy_5 = '${fparse ${units 2.05 eV -> J} / kb}'
 detrapping_prefactor_5 = '${fparse detrapping_prefactor}'
-trap_density_01dpa_5 = '${units 1.1e25 at/m^3 -> at/mum^3}'
+K_5 = '${units 1.0e26 traps/m^3/dpa}'
+nmax_5 = '${units 2.0e25 1/m^3}'
+S_5 = '${fparse phi*K_5}'
+r_5 = '${fparse phi*K_5/nmax_5}'
+trap_density_01dpa_5 = '${units ${fparse -S_5/r_5 * exp(-r_5*damage_duration) + S_5/r_5} at/m^3 -> at/mum^3}' # '${units 1.1e25 at/m^3 -> at/mum^3}'
 trapping_site_fraction_5 = '${fparse trap_density_01dpa_5 / tungsten_density}'
 trap_per_free_5 = 1e7 # (-)
 

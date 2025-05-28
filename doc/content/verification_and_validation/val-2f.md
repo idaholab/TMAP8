@@ -64,7 +64,16 @@ The evolution of the trapping site density, $N_i$, over time is described by:
     \frac{\partial N_i}{\partial t} = \Phi \cdot K_c \left[ 1 - \frac{N_i}{N_{\text{max,}\Phi}} \right] - A \cdot N_i
 \end{equation}
 
-This equation consists of two terms. The first term, $\Phi \cdot K_c \left[ 1 - \frac{N_i}{n_{\text{max}, \Phi}} \right]$, represents the creation of trapping sites. It increases the trap density up to a saturation density, $N_{\text{max,}\Phi}$, due to the damage imposed on the sample. Here, $\Phi$ is the damage rate in (dpa/s) and $K_c$ is the trap creation factor in (traps/m$^3$/dpa). The second term, $A \cdot N_i$, accounts for the annealing effect which decreases the density of trapping sites. $A$ is the trap annealing factor in (1/s) and follows an Arrhenius law given by $A = A_0 \cdot \exp\left(\frac{-E_A}{k_B \cdot T}\right)$, where $A_0$ is a pre-exponential factor, $E_A$ is the activation energy, $k_B$ is the Boltzmann constant, and $T$ is the temperature. The trap-induced parameters are listed in [val-2f_damaged_induced_traps]. The trap densities at equilibrium are provided in [val-2f_traps_values].
+This equation consists of two terms. The first term, $\Phi \cdot K_c \left[ 1 - \frac{N_i}{n_{\text{max}, \Phi}} \right]$, represents the creation of trapping sites. It increases the trap density up to a saturation density, $N_{\text{max,}\Phi}$, due to the damage imposed on the sample. Here, $\Phi$ is the damage rate in (dpa/s) and $K_c$ is the trap creation factor in (traps/m$^3$/dpa). The second term, $A \cdot N_i$, accounts for the annealing effect which decreases the density of trapping sites. $A$ is the trap annealing factor in (1/s) and follows an Arrhenius law given by $A = A_0 \cdot \exp\left(\frac{-E_A}{k_B \cdot T}\right)$, where $A_0$ is a pre-exponential factor, $E_A$ is the activation energy, $k_B$ is the Boltzmann constant, and $T$ is the temperature. The trap-induced parameters are listed in [val-2f_damaged_induced_traps].
+
+The analytical solution for the ODE is given by:
+
+\begin{equation}
+    \label{eq:trapping_sites_density_sol}
+    N_i(t) = \frac{\Phi K_c}{\frac{\Phi K_c}{N_{\text{max}, \Phi}} + A} \left[ 1 - \exp\left(-\left(\frac{\Phi K_c}{N_{\text{max}, \Phi}} + A\right)t\right) \right]
+\end{equation}
+
+The computed trap densities are provided in [val-2f_traps_values].
 
 ### • Tritium transport equations
 
@@ -171,12 +180,12 @@ There is a typo in the expression for the deuterium recombination coefficient fo
 | $\epsilon_r^4$  | Release energy for trap 4               | 1.85                 | eV          | [!cite](dark2024modelling)                        |
 | $\epsilon_r^5$  | Release energy for trap 5               | 2.05                 | eV          | [!cite](dark2024modelling)                        |
 | $\epsilon_r^6$  | Release energy for intrinsic trap       | 1.04                 | eV          | [!cite](dark2024modelling)                        |
-| $N_1$           | Density for trap 1                      | 4.8$\times 10^{25}$  | atoms/m$^3$ | [J-Dark-PhD](https://zenodo.org/records/11085134) |
-| $N_2$           | Density for trap 2                      | 3.8$\times 10^{25}$  | atoms/m$^3$ | [J-Dark-PhD](https://zenodo.org/records/11085134) |
-| $N_3$           | Density for trap 3                      | 2.6$\times 10^{25}$  | atoms/m$^3$ | [J-Dark-PhD](https://zenodo.org/records/11085134) |
-| $N_4$           | Density for trap 4                      | 3.6$\times 10^{25}$  | atoms/m$^3$ | [J-Dark-PhD](https://zenodo.org/records/11085134) |
-| $N_5$           | Density for trap 5                      | 1.1$\times 10^{25}$  | atoms/m$^3$ | [J-Dark-PhD](https://zenodo.org/records/11085134) |
-| $N_6$           | Density for intrinsic trap              | 2.4$\times 10^{22}$  | atoms/m$^3$ | [J-Dark-PhD](https://zenodo.org/records/11085134) |
+| $N_1$           | Density for trap 1                      | 4.63$\times 10^{25}$ | atoms/m$^3$ | [eq:trapping_sites_density_sol]                   |
+| $N_2$           | Density for trap 2                      | 2.87$\times 10^{25}$ | atoms/m$^3$ | [eq:trapping_sites_density_sol]                   |
+| $N_3$           | Density for trap 3                      | 1.96$\times 10^{25}$ | atoms/m$^3$ | [eq:trapping_sites_density_sol]                   |
+| $N_4$           | Density for trap 4                      | 2.97$\times 10^{25}$ | atoms/m$^3$ | [eq:trapping_sites_density_sol]                   |
+| $N_5$           | Density for trap 5                      | 7.87$\times 10^{24}$ | atoms/m$^3$ | [eq:trapping_sites_density_sol]                   |
+| $N_6$           | Density for intrinsic trap              | 2.4$\times 10^{22}$  | atoms/m$^3$ | [!cite](dark2024modelling)                        |
 
 As described in the boundary conditions section, the recombination rate can be set to a finite value. Initially, the recombination rate from [!cite](zhao2020deuterium) can be used. Subsequently, as detailed in the results section below, the recombination rate is increased. In [!cite](dark2024modelling), the recombination rate is infinite. The values used are listed in [val-2f_recombination_rates]:
 

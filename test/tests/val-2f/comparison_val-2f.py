@@ -48,11 +48,11 @@ def numerical_solution_on_experiment_input(experiment_input, tmap_input, tmap_ou
 
 if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/val-2f/gold/val-2f_out.csv"
-    csv_folder_inf_recombination = "../../../../test/tests/val-2f/gold/val-2f_out_sieverts.csv"
+    csv_folder_inf_recombination = "../../../../test/tests/val-2f/gold/val-2f_out_inf_recombination.csv"
     csv_folder_low_recombination = "../../../../test/tests/val-2f/gold/val-2f_out_low_recombination.csv"
 else:                                  # if in test folder
     csv_folder = "./gold/val-2f_out.csv"
-    csv_folder_inf_recombination = "./gold/val-2f_out_sieverts.csv"
+    csv_folder_inf_recombination = "./gold/val-2f_out_inf_recombination.csv"
     csv_folder_low_recombination = "./gold/val-2f_out_low_recombination.csv"
 
 # Read TMAP8 solution from CSV files
@@ -63,8 +63,12 @@ tmap_solution_low_recombination = pd.read_csv(csv_folder_low_recombination)
 def extract_tmap_data_desorption(tmap_solution):
     tmap_time = tmap_solution['time'] # s
     tmap_temperature = tmap_solution['temperature'] # K
-    tmap_flux_left = tmap_solution['scaled_flux_surface_left'] # atoms/s
-    tmap_flux_right = tmap_solution['scaled_flux_surface_right'] # atoms/s
+    if 'scaled_flux_surface_left' in tmap_solution.columns and 'scaled_flux_surface_right' in tmap_solution.columns:
+        tmap_flux_left = tmap_solution['scaled_flux_surface_left'] # atoms/s
+        tmap_flux_right = tmap_solution['scaled_flux_surface_right'] # atoms/s
+    if 'scaled_flux_surface_left_sieverts' in tmap_solution.columns and 'scaled_flux_surface_right_sieverts' in tmap_solution.columns:
+        tmap_flux_left = tmap_solution['scaled_flux_surface_left_sieverts'] # atoms/s
+        tmap_flux_right = tmap_solution['scaled_flux_surface_right_sieverts'] # atoms/s
     tmap_escaping_deuterium = tmap_flux_left + tmap_flux_right # atoms/s
     tmap_implanted_deuterium = tmap_solution['scaled_implanted_deuterium'] # atoms/s
     tmap_mobile_deuterium = tmap_solution['scaled_mobile_deuterium'] # atoms

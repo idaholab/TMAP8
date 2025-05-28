@@ -1,4 +1,4 @@
-# This input file adds the trapping sites 4 for validation case val-2f. 
+# This input file adds the trapping sites 4 for validation case val-2f.
 # It is included in val-2f.i
 
 [Variables]
@@ -7,7 +7,6 @@
     family = LAGRANGE
   []
 []
-
 
 [Kernels]
   # trapping 4 kernel
@@ -71,4 +70,3 @@
     value = integral_trapped_concentration_4
   []
 []
-
