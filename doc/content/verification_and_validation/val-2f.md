@@ -248,7 +248,7 @@ However, the recombination rate must be a finite value. In [val-2f_comparison], 
 !style halign=left
 The input file for this case can be found at [/val-2f.i]. To minimize the length of the input file and organize it, it is divided into several parts:
 
-- [/parameter_val-2f.params] lists the key values and model parameters used in this simulation
+- [/parameters_val-2f.params] lists the key values and model parameters used in this simulation
 - [/val-2f_trapping_intrinsic.i] provides the blocks necessary to introduce the intrinsic traps in the simulation
 - [/val-2f_trapping_1.i], [/val-2f_trapping_2.i], [/val-2f_trapping_3.i], [/val-2f_trapping_4.i], [/val-2f_trapping_5.i] provide the blocks necessary to introduce the trapping sites 1, 2, 3, 4, and 5, respectively, in the simulation.
 
