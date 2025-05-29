@@ -127,7 +127,7 @@ At the surfaces, deuterium recombines into gas. It can be described by the follo
     J = 2 A K_r C^2
 \end{equation}
 
-where $J$ represents the recombination flux exiting the sample on both the left and right sides, $A$ is the surface area, and $K_r$ is the deuterium recombination coefficient. The coefficient of 2 accounts for the fact that 2 deuterium atoms combine to form one D$_2$ molecule. This boundary condition is used in [val-2f_comparison] and [val-2f_comparison_low_recombination].
+where $J$ represents the recombination flux exiting the sample on both the left and right sides, $A$ is the surface area, and $K_r$ is the deuterium recombination coefficient. The coefficient of 2 accounts for the fact that 2 deuterium atoms combine to form one D$_2$ molecule. This boundary condition is used in [val-2f_comparison].
 
 Additionally, to account for an infinite recombination rate at the boundaries, a Dirichlet boundary condition can be enforced, setting $C_M = 0$ atoms/m$^3$ on the left and right sides.
 This boundary condition is used in [val-2f_comparison_inf_recombination].
