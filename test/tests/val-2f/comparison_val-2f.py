@@ -343,3 +343,63 @@ for solution, filename in solutions:
     # Save the figure
     plt.savefig(f"{filename}.png", bbox_inches='tight', dpi=300)
     plt.close(fig)
+
+# ===============================================================================
+# Plot trap-induced densities
+
+# Constants
+kb = 1.380649e-23
+eV_to_J = 1.602176634e-19
+kb_eV = kb / eV_to_J
+phi = 8.9e-5
+temperature = 800
+
+# Parameter sets
+K_values = [9.0e26, 4.2e26, 2.5e26, 5.0e26, 1.0e26]
+nmax_values = [6.9e25, 7.0e25, 6.0e25, 4.7e25, 2.0e25]
+A0_values = [6.18e-3, 6.18e-3, 6.18e-3, 6.18e-3, 0]
+Ea_values = [0.24, 0.24, 0.30, 0.30, 0]
+trap_density_0_1_dpa = [4.8e25, 3.8e25, 2.6e25, 3.6e25, 1.1e25]
+
+def n(damage, phi, K, nmax, A):
+    S = phi * K
+    r = phi * K / nmax + A
+    t = damage / phi
+    return -S / r * np.exp(-r * t) + S / r
+
+# Damage array for plotting
+damage_array = np.linspace(0, 3, 1000)  # from 0 to 3 dpa
+
+# Create figure
+fig = plt.figure(figsize=[6.5, 5.5])
+gs = gridspec.GridSpec(1, 1)
+ax1 = fig.add_subplot(gs[0])
+
+all_density_trap = []
+
+for i in range(5):
+    K = K_values[i]
+    nmax = nmax_values[i]
+    A0 = A0_values[i]
+    Ea = Ea_values[i]
+
+    A = A0 * np.exp(-Ea / (kb_eV * temperature))
+    density_trap = n(damage_array, phi, K, nmax, A)
+    all_density_trap.extend(density_trap)
+
+    ax1.plot(damage_array, density_trap, label=f'Trap {i+1}', )
+    ax1.scatter(0.1, trap_density_0_1_dpa[i], marker='o')
+
+# Add grey vertical line at 0.1 dpa
+ax1.axvline(x=0.1, color='grey', linestyle='--')
+ax1.text(0.14, max(all_density_trap) * 0.05, '0.1 dpa', color='grey')
+
+ax1.set_xlim([damage_array.min(), damage_array.max()])
+ax1.set_ylim(bottom=0)
+ax1.set_xlabel('Damage (dpa)')
+ax1.set_ylabel(r'Trap density (m$^{-3}$)')
+ax1.legend()
+plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
+ax.minorticks_on()
+plt.savefig('val-2f_trap_induced_density.png', dpi=300)
+plt.close(fig)

@@ -75,7 +75,7 @@ The analytical solution for the ODE is given by:
 
 The computed trap densities are provided in [val-2f_traps_values].
 
-### • Tritium transport equations
+### • Deuterium transport equations
 
 The general form of the transport equations for the deuterium in tungsten is given by:
 
@@ -97,13 +97,13 @@ and
     C_{T_i}^{empty} = (C_{{T_i}0} \cdot N - \text{trap\_per\_free} \cdot C_{T_i})
 \end{equation}
 
-where $C_M$ is the concentration of mobile tritium, $t$ is the time, $S$ is the source term in sample due to the deuterium implantation ([eq:source_term]), $C_{T_i}$ is the trapped species in trap $i$, $\alpha_t^i$ and $\alpha_r^i$ are the trapping and release rate coefficients for trap $i$, $\text{trap\_per\_free}$ is a factor scaling $C_{T_i}$ to be closer to $C$ for better numerical convergence, $C_{{T_i}0}$ is the fraction of host sites $i$ that can contribute to trapping, $C_{T_i}^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density, and $D$ is the tritium diffusivity in tungsten, which is defined as:
+where $C_M$ is the concentration of mobile tritium, $t$ is the time, $S$ is the source term in sample due to the deuterium implantation ([eq:source_term]), $C_{T_i}$ is the trapped species in trap $i$, $\alpha_t^i$ and $\alpha_r^i$ are the trapping and release rate coefficients for trap $i$, $\text{trap\_per\_free}$ is a factor scaling $C_{T_i}$ to be closer to $C_M$ for better numerical convergence, $C_{{T_i}0}$ is the fraction of host sites $i$ that can contribute to trapping, $C_{T_i}^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density, and $D$ is the deuterium diffusivity in tungsten, which is defined as:
 
 \begin{equation} \label{eq:diffusivity}
 D = D_{0} \exp \left( - \frac{E_{D}}{k_b T} \right)
 \end{equation}
 
-where $E_{D}$ is the diffusion activation energy, $k_b$ is the Boltzmann’s constant, $T$ is the temperature, and $D_{0}$ is the maximum diffusivity coefficient.
+where $E_{D}$ is the diffusion activation energy, $T$ is the temperature, and $D_{0}$ is the maximum diffusivity coefficient.
 
 $\alpha_t^i$ and $\alpha_r^i$ are defined as:
 
@@ -129,7 +129,7 @@ At the surfaces, deuterium recombines into gas. It can be described by the follo
 
 where $J$ represents the recombination flux exiting the sample on both the left and right sides, $A$ is the surface area, and $K_r$ is the deuterium recombination coefficient. The coefficient of 2 accounts for the fact that 2 deuterium atoms combine to form one D$_2$ molecule. This boundary condition is used in [val-2f_comparison] and [val-2f_comparison_low_recombination].
 
-Additionally, to account for an infinite recombination rate at the boundaries, a Dirichlet boundary condition can be enforced, setting $C_M = 0$ atoms/m$^3$.
+Additionally, to account for an infinite recombination rate at the boundaries, a Dirichlet boundary condition can be enforced, setting $C_M = 0$ atoms/m$^3$ on the left and right sides.
 This boundary condition is used in [val-2f_comparison_inf_recombination].
 
 ## Case and Model Parameters
@@ -148,7 +148,7 @@ All the model parameters are listed in [val-2f_set_up_values]:
 !table id=val-2f_set_up_values caption=Values of material properties.
 | Parameter | Description                                    | Value                       | Units         | Reference                  |
 | --------- | ---------------------------------------------- | --------------------------- | ------------- | -------------------------- |
-| $k_b$     | Boltzmann constant                             | 1.380649 $\times 10^{-23}$  | J/K           | [PhysicalConstants.h](https://physics.nist.gov/cgi-bin/cuu/Value?r) |
+| $k_B$     | Boltzmann constant                             | 1.380649 $\times 10^{-23}$  | J/K           | [PhysicalConstants.h](https://physics.nist.gov/cgi-bin/cuu/Value?r) |
 | $T_{\text{initial}}$ | Initial temperature                 | 370                         | K             | [!cite](dark2024modelling) |
 | $T_{\text{cooldown}}$ | Cooldown temperature               | 295                         | K             | [!cite](dark2024modelling) |
 | $T_{\text{desorption,min}}$ | Desorption start temperature | 300                         | K             | [!cite](dark2024modelling) |
@@ -164,9 +164,6 @@ All the model parameters are listed in [val-2f_set_up_values]:
 | $\phi_D$  | Incident flux                                  | 5.79 $\times 10^{19}$       | atoms/m$^2$/s | [!cite](dark2024modelling) |
 | $l_W$     | Length of the tungsten sample                  | 0.8                         | mm            | [!cite](dark2024modelling) |
 | $N$       | Tungten density                                | 6.3222 $\times 10^{28 }$    | at/m$^3$      | [J-Dark-PhD](https://zenodo.org/records/11085134) |
-
-!alert warning title=Typo in formula from [!cite](zhao2020deuterium)
-There is a typo in the expression for the deuterium recombination coefficient for clean tungsten surfaces from [!cite](zhao2020deuterium) where the minus sign in the exponential is missing, even though the data shows it should be present. Consequently, we used the corrected value in our simulations, which includes the minus sign.
 
 !table id=val-2f_traps_values caption=Values of traps parameters for 0.1 dpa.
 | Parameter       | Description                             | Value                | Units       | Reference                                         |
@@ -195,27 +192,26 @@ As described in the boundary conditions section, the recombination rate can be s
 | $K_r$     | Small deuterium recombination coefficient      | 3.8$\times 10^{-26} \exp\left(-\frac{0.34 (\text{eV})}{k_b \cdot T}\right)$ | m$^4$/at/s | [!cite](zhao2020deuterium) |
 | $K$       | Normal deuterium recombination coefficient     | 3.8$\times 10^{-16} \exp\left(-\frac{0.34 (\text{eV})}{k_b \cdot T}\right)$ | m$^4$/at/s | - |
 
+!alert warning title=Typo in formula from [!cite](zhao2020deuterium)
+There is a typo in the expression for the deuterium recombination coefficient for clean tungsten surfaces from [!cite](zhao2020deuterium) where the minus sign in the exponential is missing, even though the data shows it should be present. Consequently, we used the corrected value in our simulations, which includes the minus sign.
+
 ## Results
 
 The figures below show the comparison of the TMAP8 calculation and the experimental data during desorption. The experimental data are provided by T. Schwarz-Selinger and are available [here](https://zenodo.org/records/11085134).
 
-In [val-2f_comparison_low_recombination] and [val-2f_deuterium_desorption_low_recombination], the recombination rate follows the values from [!cite](zhao2020deuterium) as mentioned in [val-2f_set_up_values]. [val-2f_deuterium_desorption_low_recombination] displays the quantities of mobile, trapped, and desorbing deuterium atoms during the desorption process. During desorption, the temperature increases from 300 K to 1000 K. The amount of deuterium trapped will decrease as the temperature rises and the various trapping energies are reached, meaning that deuterium will leave the traps, become mobile, and diffuse out. During desorption, no further implantation occurs, resulting in a decrease in the number of mobile and trapped deuterium atoms and an increase in the number of desorbed deuterium atoms. Mass conservation is well maintained during desorption, with only a 0.00% root mean squared percentage error (RMSPE) between the initial number of mobile and trapped deuterium atoms and the total number of deuterium atoms (mobile, trapped, and desorbed).
-
-[val-2f_comparison_low_recombination] illustrates a significant discrepancy when the recombination rate is too low. This discrepancy can be attributed to the findings in [val-2f_deuterium_desorption_low_recombination], which indicate that at the onset of the desorption phase, a substantial amount of mobile deuterium accumulates due to the low recombination rate at the surface. Consequently, the initial peak observed in [val-2f_comparison_low_recombination] is attributed to mobile deuterium rather than trapped deuterium.
+[!cite](dark2024modelling) assumed an infinite recombination rate. This rate can be modeled in TMAP8 using the boundary conditions described above. The trap densities used in this paper have been fitted and differ from the analytical solution in [eq:trapping_sites_density_sol]. The values used at 0.1 dpa are shown in [val-2f_trap_induced_density] and are compared to the analytical solution.
 
 !media comparison_val-2f.py
-       image_name=val-2f_deuterium_desorption_low_recombination.png
+       image_name=val-2f_trap_induced_density.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=val-2f_deuterium_desorption_low_recombination
-       caption=Quantity of deuterium atoms during the desorption process for a low recombination rate.
+       id=val-2f_trap_induced_density
+       caption=Trap densities as a function of damage. The analytical solutions are represented by the solid curve, while the points indicate the fitted values used in [!cite](dark2024modelling) at 0.1 dpa.
 
-!media comparison_val-2f.py
-       image_name=val-2f_comparison_low_recombination.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=val-2f_comparison_low_recombination
-       caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s) for a damage of 0.1 dpa and a low recombination rate.
+[val-2f_deuterium_desorption_inf_recombination] displays the quantities of mobile, trapped, and desorbing deuterium atoms during the desorption process. During desorption, the temperature increases from 300 K to 1000 K. The amount of deuterium trapped will decrease as the temperature rises and the various trapping energies are reached, meaning that deuterium will leave the traps, become mobile, and diffuse out. During desorption, no further implantation occurs, resulting in a decrease in the number of mobile and trapped deuterium atoms and an increase in the number of desorbed deuterium atoms.
 
-[!cite](dark2024modelling) assumed that the recombination rate is infinite. This rate can be modeled in TMAP8 using the boundary conditions described above. [val-2f_comparison_inf_recombination] shows a way better alignment with the experimental data. With an infinite recombination rate, the amount of mobile deuterium is minimal compared to the trapped deuterium, as demonstrated in [val-2f_deuterium_desorption_inf_recombination]. Consequently, the desorbed deuterium flux is solely due to the deuterium desorbing from the traps.
+In this case, mass conservation in [val-2f_deuterium_desorption_inf_recombination] is not maintained during desorption, with a 4.41% root mean squared percentage error (RMSPE) between the initial number of mobile and trapped deuterium atoms and the total number of deuterium atoms (mobile, trapped, and desorbed). The infinite recombination rate boundary condition could lead to poor solutions and non-physical results.
+
+[val-2f_comparison_inf_recombination] shows a good alignment with the experimental data. With an infinite recombination rate, the amount of mobile deuterium is minimal compared to the trapped deuterium, as demonstrated in [val-2f_deuterium_desorption_inf_recombination]. Consequently, the desorbed deuterium flux is solely due to the deuterium desorbing from the traps.
 
 !media comparison_val-2f.py
        image_name=val-2f_deuterium_desorption_inf_recombination.png
@@ -229,7 +225,8 @@ In [val-2f_comparison_low_recombination] and [val-2f_deuterium_desorption_low_re
        id=val-2f_comparison_inf_recombination
        caption=Comparison of TMAP8 calculations with experimental data on deuterium flux (atoms/m$^2$/s) for a damage of 0.1 dpa and an infinite recombination rate.
 
-However, the recombination rate must be a finite value. In [val-2f_comparison], the recombination rate is 10 orders of magnitude higher than the one used in [val-2f_comparison_low_recombination] from [!cite](zhao2020deuterium). As shown in [val-2f_deuterium_desorption], the quantity of mobile deuterium is nearly equal to zero, similar to the case with an infinite recombination rate. The TMAP8 results in [val-2f_comparison] match well with the experimental data. There still exists an offset between the TMAP8 results and the experimental data, which can be reduced by better fitting the trap parameters described in [val-2f_traps_values].
+In this validation case, the recombination rate has been set to a finite value to better reflect real conditions. Specifically, the recombination rate is set to a value 10 orders of magnitude higher than that reported by [!cite](zhao2020deuterium). A recombination rate that is too low leads to the accumulation of a significant amount of mobile deuterium at the onset of the desorption phase. Consequently, this would result in desorption being attributed to mobile deuterium rather than trapped deuterium.
+As shown in [val-2f_deuterium_desorption], the quantity of mobile deuterium is nearly equal to zero, similar to the case with an infinite recombination rate, and mass conservation is maintained. The TMAP8 results in [val-2f_comparison] match well with the experimental data. There still exists an offset between the TMAP8 results and the experimental data, which can be reduced by better fitting the trap parameters described in [val-2f_traps_values].
 
 !media comparison_val-2f.py
        image_name=val-2f_deuterium_desorption.png

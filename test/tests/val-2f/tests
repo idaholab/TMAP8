@@ -59,6 +59,11 @@
     input = val-2f.i
     cli_args = "AuxVariables/active='bounds_dummy temperature pressure'
                 BCs/active='left_concentration_sieverts right_concentration_sieverts'
+                NodalKernels/trapping_1/Ct0='trap_distribution_function_1_inf'
+                NodalKernels/trapping_2/Ct0='trap_distribution_function_2_inf'
+                NodalKernels/trapping_3/Ct0='trap_distribution_function_3_inf'
+                NodalKernels/trapping_4/Ct0='trap_distribution_function_4_inf'
+                NodalKernels/trapping_5/Ct0='trap_distribution_function_5_inf'
                 Materials/active='diffusivity_W_func diffusivity_nonAD'
                 Postprocessors/active='integral_source_deuterium scaled_implanted_deuterium integral_deuterium_concentration scaled_mobile_deuterium flux_surface_left_sieverts scaled_flux_surface_left_sieverts flux_surface_right_sieverts scaled_flux_surface_right_sieverts temperature diffusion_W max_time_step_size max_time_step_size_coarse integral_trapped_concentration_1 scaled_trapped_deuterium_1 integral_trapped_concentration_2 scaled_trapped_deuterium_2 integral_trapped_concentration_3 scaled_trapped_deuterium_3 integral_trapped_concentration_4 scaled_trapped_deuterium_4 integral_trapped_concentration_5 scaled_trapped_deuterium_5 integral_trapped_concentration_intrinsic scaled_trapped_deuterium_intrinsic'
                 Outputs/file_base='val-2f_out_inf_recombination'"
@@ -72,6 +77,11 @@
     input = val-2f.i
     cli_args = "AuxVariables/active='bounds_dummy temperature pressure'
                 BCs/active='left_concentration_sieverts right_concentration_sieverts'
+                NodalKernels/trapping_1/Ct0='trap_distribution_function_1_inf'
+                NodalKernels/trapping_2/Ct0='trap_distribution_function_2_inf'
+                NodalKernels/trapping_3/Ct0='trap_distribution_function_3_inf'
+                NodalKernels/trapping_4/Ct0='trap_distribution_function_4_inf'
+                NodalKernels/trapping_5/Ct0='trap_distribution_function_5_inf'
                 Materials/active='diffusivity_W_func diffusivity_nonAD'
                 Postprocessors/active='integral_source_deuterium scaled_implanted_deuterium integral_deuterium_concentration scaled_mobile_deuterium flux_surface_left_sieverts scaled_flux_surface_left_sieverts flux_surface_right_sieverts scaled_flux_surface_right_sieverts temperature diffusion_W max_time_step_size max_time_step_size_coarse integral_trapped_concentration_1 scaled_trapped_deuterium_1 integral_trapped_concentration_2 scaled_trapped_deuterium_2 integral_trapped_concentration_3 scaled_trapped_deuterium_3 integral_trapped_concentration_4 scaled_trapped_deuterium_4 integral_trapped_concentration_5 scaled_trapped_deuterium_5 integral_trapped_concentration_intrinsic scaled_trapped_deuterium_intrinsic'
                 Outputs/file_base='val-2f_out_inf_recombination'"
