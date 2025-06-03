@@ -30,11 +30,6 @@
   [temperature]
     initial_condition = ${temperature_initial}
   []
-  [pressure]
-    family = SCALAR
-    order = FIRST
-    initial_condition = '${fparse 1e-6}'
-  []
 []
 
 [Bounds]
@@ -90,19 +85,15 @@
     boundary_material = flux_recombination_surface
   []
   [left_concentration_sieverts]
-    type = EquilibriumBC
-    Ko = '${fparse 1e0}'
+    type = ADDirichletBC
+    value = '${fparse 1e-10}'
     boundary = left
-    enclosure_var = pressure
-    temperature = temperature
     variable = deuterium_concentration_W
   []
   [right_concentration_sieverts]
-    type = EquilibriumBC
-    Ko = '${fparse 1e0}'
+    type = ADDirichletBC
+    value = '${fparse 1e-10}'
     boundary = right
-    enclosure_var = pressure
-    temperature = temperature
     variable = deuterium_concentration_W
   []
 []
@@ -142,6 +133,20 @@
                   if(t<${fparse charge_time + cooldown_duration + 4500}, ${fparse 1e2},
                   if(t<${fparse 313000}, ${fparse 1e2},
                   if(t<${fparse 315000}, ${fparse 1e1}, ${fparse 1e3}))))))))))))'
+  []
+  [max_dt_size_function_inf]
+    type = ParsedFunction
+    expression = 'if(t<${fparse 5}, ${fparse 1e-2},
+                  if(t<${fparse 8}, ${fparse 1e2},
+                  if(t<${fparse 12}, ${fparse 1e-2},
+                  if(t<${fparse 20}, ${fparse 1e2},
+                  if(t<${fparse 35}, ${fparse 1e-2},
+                  if(t<${fparse 450}, ${fparse 1e2},
+                  if(t<${fparse 5000}, ${fparse 1e1},
+                  if(t<${fparse 11000}, ${fparse 1e2},
+                  if(t<${fparse 13000}, ${fparse 1e1},
+                  if(t<${fparse charge_time + cooldown_duration + 4500}, ${fparse 1e2},
+                  if(t<${fparse 315000}, ${fparse 1e1}, ${fparse 1e3})))))))))))'
   []
   [max_dt_size_function_coarse]
     type = ParsedFunction

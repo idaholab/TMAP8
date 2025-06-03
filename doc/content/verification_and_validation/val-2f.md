@@ -134,7 +134,7 @@ This boundary condition is used in [val-2f_comparison_inf_recombination].
 
 ## Case and Model Parameters
 
-!table id=val-2f_damaged_induced_traps caption=Damaged-induced traps parameters from [!cite](dark2024modelling).
+!table id=val-2f_damaged_induced_traps caption=Damaged-induced traps parameters from [!cite](dark2024modelling) used in [eq:trapping_sites_density].
 | Trap   | $\Phi$ (dpa/s)       | $K_c$ (traps/m$^3$/dpa) | $N_{\text{max,}\Phi}$ (atoms/m$^3$) | $A_0$ (1/s)              | $E_A$ (eV) | $T$ (K)|
 | ------ | -------------------- | ----------------------- | ----------------------------------- | ------------------------ | ---------- | ------ |
 | Trap 1 | 8.9 $\times 10^{-5}$ | 9.0 $\times 10^{26}$    | 6.9 $\times 10^{25}$                | 6.18 $\times 10^{-3}$    | 0.24       | 800    |
@@ -209,7 +209,7 @@ The figures below show the comparison of the TMAP8 calculation and the experimen
 
 [val-2f_deuterium_desorption_inf_recombination] displays the quantities of mobile, trapped, and desorbing deuterium atoms during the desorption process. During desorption, the temperature increases from 300 K to 1000 K. The amount of deuterium trapped will decrease as the temperature rises and the various trapping energies are reached, meaning that deuterium will leave the traps, become mobile, and diffuse out. During desorption, no further implantation occurs, resulting in a decrease in the number of mobile and trapped deuterium atoms and an increase in the number of desorbed deuterium atoms.
 
-In this case, mass conservation in [val-2f_deuterium_desorption_inf_recombination] is not maintained during desorption, with a 4.41% root mean squared percentage error (RMSPE) between the initial number of mobile and trapped deuterium atoms and the total number of deuterium atoms (mobile, trapped, and desorbed). The infinite recombination rate boundary condition could lead to poor solutions and non-physical results.
+Mass conservation in [val-2f_deuterium_desorption_inf_recombination] is maintained during desorption, with a 0.01% root mean squared percentage error (RMSPE) between the initial number of mobile and trapped deuterium atoms and the total number of deuterium atoms (mobile, trapped, and desorbed).
 
 [val-2f_comparison_inf_recombination] shows a good alignment with the experimental data. With an infinite recombination rate, the amount of mobile deuterium is minimal compared to the trapped deuterium, as demonstrated in [val-2f_deuterium_desorption_inf_recombination]. Consequently, the desorbed deuterium flux is solely due to the deuterium desorbing from the traps.
 
@@ -227,6 +227,7 @@ In this case, mass conservation in [val-2f_deuterium_desorption_inf_recombinatio
 
 In this validation case, the recombination rate has been set to a finite value to better reflect real conditions. Specifically, the recombination rate is set to a value 10 orders of magnitude higher than that reported by [!cite](zhao2020deuterium). A recombination rate that is too low leads to the accumulation of a significant amount of mobile deuterium at the onset of the desorption phase. Consequently, this would result in desorption being attributed to mobile deuterium rather than trapped deuterium.
 As shown in [val-2f_deuterium_desorption], the quantity of mobile deuterium is nearly equal to zero, similar to the case with an infinite recombination rate, and mass conservation is maintained. The TMAP8 results in [val-2f_comparison] match well with the experimental data. There still exists an offset between the TMAP8 results and the experimental data, which can be reduced by better fitting the trap parameters described in [val-2f_traps_values].
+It is important to mention here that the mesh for the infinite recombination rate requires a finer mesh as well as smaller time steps compared to the finite recombination rate case.
 
 !media comparison_val-2f.py
        image_name=val-2f_deuterium_desorption.png

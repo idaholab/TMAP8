@@ -17,12 +17,10 @@ os.chdir(script_folder)
 if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
     csv_folder = "../../../../test/tests/val-2f/gold/val-2f_out.csv"
     csv_folder_inf_recombination = "../../../../test/tests/val-2f/gold/val-2f_out_inf_recombination.csv"
-    csv_folder_low_recombination = "../../../../test/tests/val-2f/gold/val-2f_out_low_recombination.csv"
     csv_folder_exp = "../../../../test/tests/val-2f/gold/0.1_dpa.csv"
 else:  # if in test folder
     csv_folder = "./gold/val-2f_out.csv"
     csv_folder_inf_recombination = "./gold/val-2f_out_inf_recombination.csv"
-    csv_folder_low_recombination = "./gold/val-2f_out_low_recombination.csv"
     csv_folder_exp = "./gold/0.1_dpa.csv"
 
 def save_plot(fig, name):
@@ -47,8 +45,8 @@ def extract_tmap_data_desorption(df):
     temp = df['temperature']
 
     if 'scaled_flux_surface_left_sieverts' in df.columns and 'scaled_flux_surface_right_sieverts' in df.columns:
-        flux_left = df['scaled_flux_surface_left_sieverts']
-        flux_right = df['scaled_flux_surface_right_sieverts']
+        flux_left = abs(df['scaled_flux_surface_left_sieverts'])
+        flux_right = abs(df['scaled_flux_surface_right_sieverts'])
     elif 'scaled_flux_surface_left' in df.columns and 'scaled_flux_surface_right' in df.columns:
         flux_left = df['scaled_flux_surface_left']
         flux_right = df['scaled_flux_surface_right']
@@ -73,7 +71,6 @@ def extract_tmap_data_desorption(df):
 
 tmap_data = {
     "default": pd.read_csv(csv_folder),
-    "low": pd.read_csv(csv_folder_low_recombination),
     "inf": pd.read_csv(csv_folder_inf_recombination),
     "exp": pd.read_csv(csv_folder_exp),
 }
@@ -115,7 +112,6 @@ save_plot(fig, 'val-2f_temperature_history.png')
 # Figure 3: TMAP8 vs Experimental
 
 for key, fname in [("default", "val-2f_comparison"),
-                   ("low", "val-2f_comparison_low_recombination"),
                    ("inf", "val-2f_comparison_inf_recombination")]:
     _, temp, _, _, flux_total, *_ = extract_tmap_data_desorption(tmap_data[key])
     interp_flux = numerical_solution_on_experiment_input(experiment_temperature, temp, flux_total)
@@ -139,10 +135,9 @@ for key, fname in [("default", "val-2f_comparison"),
 
 cmap = plt.get_cmap('viridis')
 colors = cmap(np.linspace(0, 1, 7))
-intrinsic_color = 'gray'  # define a distinct color for intrinsic trap
+intrinsic_color = 'gray'
 
 for key, fname in [("default", "val-2f_deuterium_desorption"),
-                   ("low", "val-2f_deuterium_desorption_low_recombination"),
                    ("inf", "val-2f_deuterium_desorption_inf_recombination")]:
     (time, temp, _, _, flux_total,
      _, trapped, mobile,
@@ -160,7 +155,6 @@ for key, fname in [("default", "val-2f_deuterium_desorption"),
     fig = plt.figure(figsize=[6.5, 5.5])
     ax1 = fig.add_subplot(gridspec.GridSpec(1, 1)[0])
 
-    # Plot traps (Trap 1 = t5, Trap 5 = remainder)
     traps = [t5, t4, t3, t2, t_intr, t1, mobile]
     bottom = np.zeros_like(trapped)
     for i, t in enumerate(traps):
