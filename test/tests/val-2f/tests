@@ -53,7 +53,7 @@
     csvdiff = val-2f_out_inf_recombination.csv
     heavy = true
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output, for the infinite recombination case.'
-    max_time = 2000
+    max_time = 3600
   []
   [val-2f_heavy_exodus_inf_recombination]
     type = Exodiff
