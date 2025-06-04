@@ -225,7 +225,7 @@ for i in range(5):
     ax.scatter(0.1, trap_density_0_1_dpa[i])
 
 ax.axvline(0.1, color='gray', linestyle='--')
-ax.text(0.12, 0.05 * max(trap_density_0_1_dpa), '0.1 dpa', color='gray')
+ax.text(0.15, 0.05 * max(trap_density_0_1_dpa), '0.1 dpa', color='gray')
 ax.set(xlabel='Damage (dpa)', ylabel=r"Trap density (m$^{-3}$)", xlim=(0, 3), ylim=(0, None))
 ax.grid(True, linestyle='--', color='0.65', alpha=0.3)
 ax.legend()
