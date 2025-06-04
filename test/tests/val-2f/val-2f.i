@@ -69,15 +69,15 @@
 []
 
 [BCs]
-  active = 'left_concentration right_concentration'
-  [left_concentration]
+  active = 'left_recombination_flux right_recombination_flux'
+  [left_recombination_flux]
     type = ADMatNeumannBC
     variable = deuterium_concentration_W
     boundary = left
     value = 1
     boundary_material = flux_recombination_surface
   []
-  [right_concentration]
+  [right_recombination_flux]
     type = ADMatNeumannBC
     variable = deuterium_concentration_W
     boundary = right
