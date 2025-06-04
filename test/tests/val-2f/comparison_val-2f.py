@@ -190,7 +190,7 @@ for key, fname in [("default", "val-2f_deuterium_desorption"),
         Patch(color=colors[1], alpha=0.5, label='Trap 4'),
         Patch(color=colors[0], alpha=0.5, label='Trap 5'),
 ]
-    fig.legend(handles=patches, loc='center right', bbox_to_anchor=(0.85, 0.5), fontsize=6)
+    fig.legend(handles=patches, loc='center right', bbox_to_anchor=(0.85, 0.5), fontsize=8)
     save_plot(fig, f"{fname}.png")
 
 # ==============================================================================
@@ -222,7 +222,7 @@ for i in range(5):
     A = A0_vals[i] * np.exp(-Ea_vals[i] / (kb_eV * T))
     d = trap_density(dpa_vals, phi, K_vals[i], nmax_vals[i], A)
     ax.plot(dpa_vals, d, label=f'Trap {i+1}')
-    ax.scatter(0.1, trap_density_0_1_dpa[i], color='black')
+    ax.scatter(0.1, trap_density_0_1_dpa[i])
 
 ax.axvline(0.1, color='gray', linestyle='--')
 ax.text(0.12, 0.05 * max(trap_density_0_1_dpa), '0.1 dpa', color='gray')
