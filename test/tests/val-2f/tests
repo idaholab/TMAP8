@@ -1,0 +1,66 @@
+[Tests]
+  design = 'MatNeumannBC.md CoefCoupledTimeDerivative.md TimeDerivativeNodalKernel.md TrappingNodalKernel.md ReleasingNodalKernel.md'
+  issues = '#12'
+  validation = 'val-2f.md'
+  [val-2f_light_csv]
+    type = CSVDiff
+    input = val-2f.i
+    cli_args = "sample_thickness='${units 0.9e-4 m -> mum}' ix1=1 ix2=1 ix3=1 ix4=1 ix5=1 charge_time='${units 1e-1 s}' cooldown_duration='${units 1e-1 s}' Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse Outputs/file_base=val-2f_light_out"
+    csvdiff = val-2f_light_out.csv
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output with a short runtime and coarse mesh testing.'
+    max_parallel = 1 # see #200
+  []
+  [val-2f_light_exodus]
+    type = Exodiff
+    input = val-2f.i
+    cli_args = "sample_thickness='${units 0.9e-4 m -> mum}' ix1=1 ix2=1 ix3=1 ix4=1 ix5=1 charge_time='${units 1e-1 s}' cooldown_duration='${units 1e-1 s}' Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse Outputs/file_base=val-2f_light_out"
+    exodiff = val-2f_light_out.e
+    prereq = val-2f_light_csv
+    should_execute = false # this test relies on the output files from val-2f_light_csv, so it shouldn't be run twice
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport with a short runtime and coarse mesh testing.'
+    max_parallel = 1 # see #200
+  []
+  [val-2f_heavy_csv]
+    type = CSVDiff
+    input = val-2f.i
+    csvdiff = val-2f_out.csv
+    heavy = true
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output.'
+    max_time = 2000
+  []
+  [val-2f_heavy_exodus]
+    type = Exodiff
+    input = val-2f.i
+    exodiff = val-2f_out.e
+    heavy = true
+    prereq = val-2f_heavy_csv
+    should_execute = false # this test relies on the output files from val-2f_heavy_csv, so it shouldn't be run twice
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport.'
+  []
+  [val-2f_heavy_csv_inf_recombination]
+    type = CSVDiff
+    input = val-2f.i
+    cli_args = "ix1='${fparse 500}' ix4='${fparse 500}'
+                AuxVariables/active='bounds_dummy temperature'
+                BCs/active='left_concentration_sieverts right_concentration_sieverts'
+                NodalKernels/trapping_1/Ct0='trap_distribution_function_1_inf'
+                NodalKernels/trapping_2/Ct0='trap_distribution_function_2_inf'
+                NodalKernels/trapping_3/Ct0='trap_distribution_function_3_inf'
+                NodalKernels/trapping_4/Ct0='trap_distribution_function_4_inf'
+                NodalKernels/trapping_5/Ct0='trap_distribution_function_5_inf'
+                Materials/active='diffusivity_W_func diffusivity_nonAD'
+                Postprocessors/active='integral_source_deuterium scaled_implanted_deuterium integral_deuterium_concentration scaled_mobile_deuterium flux_surface_left_sieverts scaled_flux_surface_left_sieverts flux_surface_right_sieverts scaled_flux_surface_right_sieverts temperature diffusion_W max_time_step_size max_time_step_size_coarse integral_trapped_concentration_1 scaled_trapped_deuterium_1 integral_trapped_concentration_2 scaled_trapped_deuterium_2 integral_trapped_concentration_3 scaled_trapped_deuterium_3 integral_trapped_concentration_4 scaled_trapped_deuterium_4 integral_trapped_concentration_5 scaled_trapped_deuterium_5 integral_trapped_concentration_intrinsic scaled_trapped_deuterium_intrinsic'
+                Postprocessors/max_time_step_size/function=max_dt_size_function_inf
+                Outputs/file_base='val-2f_out_inf_recombination'"
+    csvdiff = val-2f_out_inf_recombination.csv
+    heavy = true
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output, for the infinite recombination case.'
+    max_time = 3600
+  []
+  [val-2f_comparison]
+    type = RunCommand
+    command = 'python3 comparison_val-2f.py'
+    requirement = 'The system shall be able to generate comparison plots between simulated solutions and experimental data of validation case val-2f, modeling self-damaged tungsten effects on deuterium transport.'
+    required_python_packages = 'matplotlib numpy pandas scipy os'
+  []
+[]
