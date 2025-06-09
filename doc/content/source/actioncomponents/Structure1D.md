@@ -16,12 +16,6 @@ See more details on the [ComponentPhysicsInterface.md] page.
 To vary the material properties used in each `Physics`, one can set the [!param](/ActionComponents/Structure1D/property_names) and [!param](/ActionComponents/Structure1D/property_values) parameters in the `Structure1D`.
 See more details on the [ComponentMaterialPropertyInterface.md] page.
 
-For a [SpeciesDiffusionReactionCG.md] `Physics` to be used you can define directly on
-the `Structure1D` the:
-
-- diffusivity material property, to be used in the [!param](/Physics/SpeciesDiffusionReaction/SpeciesDiffusionReactionCG/diffusivity_matprops) parameter
-- reaction coefficients material properties for all reactions, to be used in the [!param](/Physics/SpeciesDiffusionReaction/SpeciesDiffusionReactionCG/reaction_coefficients) parameter
-
 For a [MultiSpeciesDiffusionCG.md] `Physics` to be used you can define the:
 
 - diffusivity material property, to be used in the [!param](/Physics/SpeciesDiffusion/MultiSpeciesDiffusionCG/diffusivity_matprops) parameter

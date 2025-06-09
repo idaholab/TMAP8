@@ -14,13 +14,4 @@
       requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of a convective outflow problem involving three enclosures and calculate the pressure and concentration of the gas in the second and third enclosure.'
       required_python_packages = 'matplotlib numpy pandas scipy os'
     []
-    [ver-1ha-physics_csv]
-      type = CSVDiff
-      input = 'ver-1ha-physics.i'
-      csvdiff = ver-1ha-physics_out.csv
-      requirement = 'The system shall be able to model a convective outflow problem and calculate the pressure and concentration of the gas in the second and third enclosure using the Physics shorthand syntax.'
-      prereq = 'ver-1ha_csv'
-      # one species is auxiliary
-      allow_warnings = true
-    []
   []

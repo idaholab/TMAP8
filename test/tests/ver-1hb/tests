@@ -15,11 +15,4 @@
       prereq = 'ver-1hb_csv'
       required_python_packages = 'csv matplotlib numpy pandas scipy os math'
     []
-    [ver-1hb-physics_csv]
-      type = CSVDiff
-      input = 'ver-1hb-physics.i'
-      csvdiff = ver-1hb-physics_out.csv
-      requirement = 'The system shall be able to model a convective outflow problem and calculate the pressure and concentration of tritium and deuterium gas in the first and second enclosure using a shorthand Physics syntax.'
-      prereq = 'ver-1hb_comparison'
-    []
   []

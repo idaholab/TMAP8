@@ -43,10 +43,6 @@ private:
   virtual void addFEBCs() override;
   virtual void checkIntegrity() const override;
 
-  /// Returns an error message if more than one boundary exists on the component
-  void checkSingleBoundary(const std::vector<BoundaryName> & boundaries,
-                           const ComponentName & comp) const;
-
   /// Return the structures connected to the component
   const std::vector<ComponentName> &
   getConnectedStructures(const MooseFunctorName & enc_name) const;
@@ -68,10 +64,6 @@ private:
   /// @param conn_structure name of the connected structure
   Real getConnectedStructureConnectionArea(const ComponentName & comp_name,
                                            const ComponentName & connected_structure_name) const;
-  /// Get the Physics active on the structure connected to the component
-  /// @param conn_structure name of the connected structure
-  const std::vector<PhysicsBase *>
-  getConnectedStructurePhysics(const ComponentName & conn_structure) const;
   /// Get the Physics active on the structure connected to the component
   /// @param conn_structure name of the connected structure
   /// @param species_name name of the species
