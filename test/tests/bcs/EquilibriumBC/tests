@@ -7,4 +7,22 @@
     design = 'EquilibriumBC.md'
     requirement = 'The system shall compute the equilibrium flux condition between an enclosure and a structure when a field variable is used for the enclosure variable.'
   []
+  [errors]
+    requirement = 'The system shall error if'
+    issues = '#134'
+    design = 'EquilibriumBC.md'
+    [missing_temp]
+      type = RunException
+      input = 'equilibriumBC_exceptions.i'
+      expect_err = 'The temperature must be specified'
+      detail = 'the user does not specify a function or a variable for the equilibrium flux boundary condition,'
+    []
+    [missing_block]
+      type = RunException
+      input = 'equilibriumBC_exceptions.i'
+      cli_args = 'BCs/left/temperature=100 BCs/left/Ko=some_functor'
+      expect_err = 'The subdomain of the enclosure should be specified if Ko and Ea are not constants'
+      detail = 'the user does not specify the block to use for the nodal evaluation of equilibrium constant.'
+    []
+  []
 []

@@ -15,22 +15,24 @@ temperature = 1000
 []
 
 [Variables]
-  [mobile][]
-  [trapped][]
+  [mobile]
+  []
+  [trapped]
+  []
 []
 
 [Kernels]
-  [./diff]
+  [diff]
     type = Diffusion
     variable = mobile
     extra_vector_tags = ref
-  [../]
-  [./time]
+  []
+  [time]
     type = TimeDerivative
     variable = mobile
     extra_vector_tags = ref
-  [../]
-  [coupled_time]
+  []
+  [trapping_minus_release]
     type = CoupledTimeDerivative
     variable = mobile
     v = trapped
@@ -42,16 +44,19 @@ temperature = 1000
   [time]
     type = TimeDerivativeNodalKernel
     variable = trapped
+    nodal_mass = nodal_vol
   []
   [trapping]
     type = TrappingNodalKernel
     variable = trapped
     alpha_t = 1e15
-    N = ${fparse 3.1622e22 / cl}
+    N = '${fparse 3.1622e22 / cl}'
     Ct0 = 0.1
     mobile_concentration = 'mobile'
     temperature = ${temperature}
     extra_vector_tags = ref
+    use_mass_lumping = true
+    nodal_mass = nodal_vol
   []
   [release]
     type = ReleasingNodalKernel
@@ -59,14 +64,30 @@ temperature = 1000
     temperature = ${temperature}
     detrapping_energy = 100
     variable = trapped
+    use_mass_lumping = true
+    nodal_mass = nodal_vol
   []
 []
+
+[AuxVariables]
+  [nodal_vol]
+  []
+[]
+
+[AuxKernels]
+  [nodal_vol]
+    type = VolumeAux
+    variable = 'nodal_vol'
+    execute_on = initial
+  []
+[]
+
 
 [BCs]
   [left]
     type = DirichletBC
     variable = mobile
-    value = ${fparse 3.1622e18 / cl}
+    value = '${fparse 3.1622e18 / cl}'
     boundary = left
   []
   [right]
@@ -104,16 +125,16 @@ temperature = 1000
   dt = .01
   dtmin = .01
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type'
-  petsc_options_value = 'lu'
+  petsc_options_iname = '-pc_type -pc_factor_shift_type'
+  petsc_options_value = 'lu       NONZERO'
   automatic_scaling = true
   verbose = true
-  compute_scaling_once = false
 []
 
 [Outputs]
   csv = true
   exodus = true
+  hide = 'nodal_vol'
   [dof]
     type = DOFMap
     execute_on = initial
