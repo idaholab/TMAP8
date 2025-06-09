@@ -1,8 +1,7 @@
 # Species Trapping Physics using a Continuous Galerkin Finite Element discretization / SpeciesTrappingPhysics
 
 This [Physics](syntax/Physics/index.md) creates ordinary differential equations at every
-node to represent the local trapping / releasing of species. It can be coupled with a
-[SpeciesDiffusionReactionCG.md] `Physics` to model the influx/outflux of the species into a diffusing/migrating mobile species.
+node to represent the local trapping / releasing of species.
 
 The ordinary differential equation solved at every node is:
 

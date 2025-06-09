@@ -411,7 +411,8 @@ SpeciesTrappingPhysics::addFEKernels()
         else if (getProblem().hasVariable(_component_temperatures[c_i]))
           params.set<std::vector<VariableName>>("temperature") = {_component_temperatures[c_i]};
         else
-          paramError("temperature", "Should be a constant or the name of a variable");
+          // there is an error right above in the trapping term
+          mooseAssert(false, "Should be a constant or the name of a variable");
 
         getProblem().addNodalKernel(kernel_type, prefix() + species_name + "_enc_release", params);
       }

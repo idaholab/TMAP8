@@ -303,17 +303,6 @@ SorptionExchangePhysics::addFEBCs()
   }
 }
 
-void
-SorptionExchangePhysics::checkSingleBoundary(const std::vector<BoundaryName> & boundaries,
-                                             const ComponentName & comp_name) const
-{
-  if (boundaries.size() != 1)
-    getActionComponent(comp_name).paramError(
-        "connection_boundaries",
-        "Only implemented for a single boundary and component '" + comp_name + "' has " +
-            std::to_string(boundaries.size()) + " connection boundaries.");
-}
-
 const std::vector<ComponentName> &
 SorptionExchangePhysics::getConnectedStructures(const MooseFunctorName & enc_name) const
 {
@@ -333,17 +322,11 @@ SorptionExchangePhysics::getConnectedStructureVariableName(unsigned int c_i,
   const auto multi_D_physics = getConnectedStructurePhysics(connected_struct, _species[c_i][s_j]);
 
   // TODO: handle multiple multi_D_physics being defined with the same variable.
+  // Note: once we handle different physics here, we need to error on non-matching variables
   if (!dynamic_cast<DiffusionPhysicsBase *>(multi_D_physics))
     component.paramError(
         "connected_structure",
         "Connected structure does not have a diffusion Physics defined as its first 'physics'");
-  // Note that DiffusionPhysicsBase only support one variable currently
-  if (multi_D_physics->solverVariableNames().size() != _species[c_i].size())
-    component.paramError(
-        "connected_structure",
-        "The connected structure does not have the same number of nonlinear variables (" +
-            std::to_string(multi_D_physics->solverVariableNames().size()) +
-            ") as the number of species (" + std::to_string(_species[c_i].size()) + ")");
   return multi_D_physics->solverVariableNames()[s_j];
 }
 
@@ -367,16 +350,6 @@ SorptionExchangePhysics::getConnectedStructureConnectionArea(
   const auto & component = dynamic_cast<const Enclosure0D *>(&getActionComponent(comp_name));
   const auto boundary_area = component->connectedStructureBoundaryArea(connected_structure_name);
   return boundary_area;
-}
-
-const std::vector<PhysicsBase *>
-SorptionExchangePhysics::getConnectedStructurePhysics(
-    const ComponentName & connected_structure_name) const
-{
-  const auto & structure = getActionComponent(connected_structure_name);
-  // Only 1D structure supported at this time
-  checkComponentType<Structure1D>(structure);
-  return dynamic_cast<const Structure1D &>(structure).getPhysics();
 }
 
 PhysicsBase *
