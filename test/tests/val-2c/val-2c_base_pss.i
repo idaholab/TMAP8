@@ -28,39 +28,43 @@ lengthscale = 1e18 # ${units 1 m^3 -> mum^3}
     function = experimental_data_hto
     time = time
     execution_order_group = -2
+    execute_on = 'INITIAL TIMESTEP_END'
   []
   [concentration_hto]
     type = ParsedPostprocessor
     pp_names = 'hto_enclosure_edge_concentration'
     expression = 'hto_enclosure_edge_concentration * ${fparse decay_rate_tritium / Curie * lengthscale}'
+    execute_on = 'TIMESTEP_END'
   []
   [concentration_t2_interp]
     type = FunctionValuePostprocessor
     function = experimental_data_t2
     time = time
     execution_order_group = -2
+    execute_on = 'INITIAL TIMESTEP_END'
   []
   [concentration_t2]
     type = ParsedPostprocessor
     pp_names = 't2_enclosure_edge_concentration'
     expression = 't2_enclosure_edge_concentration * ${fparse decay_rate_tritium / Curie * lengthscale}'
+    execute_on = 'TIMESTEP_END'
   []
   [diff_concentration_hto]
-    type = ParsedPostprocessor # DifferencePostprocessor
+    type = ParsedPostprocessor
     pp_names = 'concentration_hto_interp concentration_hto'
-    expression = '(log(concentration_hto_interp) - log(concentration_hto))^2'
+    expression = '(log(concentration_hto_interp) - log(max(concentration_hto,1e-42)))^2' # the 1e-42 is to avoid the Inf at the first timesteps, which would make csvdiff fail
     execution_order_group = -1
     execute_on = 'TIMESTEP_END'
   []
   [diff_concentration_t2]
-    type = ParsedPostprocessor # DifferencePostprocessor
+    type = ParsedPostprocessor
     pp_names = 'concentration_t2_interp concentration_t2'
-    expression = '(log(concentration_t2_interp) - log(concentration_t2))^2'
+    expression = '(log(concentration_t2_interp) - log(max(concentration_t2,1e-42)))^2' # the 1e-42 is to avoid the Inf at the first timesteps, which would make csvdiff fail
     execution_order_group = -1
     execute_on = 'TIMESTEP_END'
   []
   [objective1]
-    type = ParsedPostprocessor # DifferencePostprocessor
+    type = ParsedPostprocessor
     pp_names = 'diff_concentration_hto diff_concentration_t2'
     expression = '1/(diff_concentration_hto*5e3 + diff_concentration_t2)'
   []

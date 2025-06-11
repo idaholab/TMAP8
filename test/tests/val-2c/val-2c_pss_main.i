@@ -15,6 +15,10 @@ solubility_tritiated_water = '${units 6.0e24 1/m^3/Pa -> 1/mum^3/Pa}' # molecule
 ## Numerical parameters
 time_injection_T2_end = ${units 3 h -> s}
 
+## PSS parameters
+num_samplessub = 1000
+num_subsets = 7
+
 sub_app_input = "val-2c_delay_pss.i"
 
 [StochasticTools]
@@ -62,8 +66,8 @@ sub_app_input = "val-2c_delay_pss.i"
     distributions = 'reaction_rate diffusivity_elemental_tritium diffusivity_tritiated_water solubility_elemental_tritium solubility_tritiated_water time_injection_T2_end'
     execute_on = 'PRE_MULTIAPP_SETUP'
     subset_probability = 0.1
-    num_samplessub = 1000 # 1000 # 20
-    num_subsets = 7 # 6
+    num_samplessub = ${num_samplessub}
+    num_subsets = ${num_subsets}
     # num_parallel_chains = 5 # using multiple parallel chains helps with convergence
     inputs_reporter = 'adaptive_MC/inputs'
     output_reporter = 'constant/reporter_transfer:objective:value' # TO CHANGE
