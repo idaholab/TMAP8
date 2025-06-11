@@ -19,6 +19,9 @@ time_injection_T2_end = ${units 3 h -> s}
 num_samplessub = 1000
 num_subsets = 7
 
+## Outputs
+file_base_output = val-2c_pss_results/val-2c_pss_main_out
+
 sub_app_input = "val-2c_delay_pss.i"
 
 [StochasticTools]
@@ -128,6 +131,7 @@ sub_app_input = "val-2c_delay_pss.i"
 []
 
 [Outputs]
+  file_base = ${file_base_output}
   [out]
     type = JSON
   []
