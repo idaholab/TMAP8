@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import gridspec
 import pandas as pd
+import json
 import os
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
@@ -100,6 +101,83 @@ tmap8_time_delay = tmap8_prediction_delay['time']
 tmap8_t2_enclosure_concentration_delay = tmap8_prediction_delay['t2_enclosure_edge_concentration']
 tmap8_hto_enclosure_concentration_delay = tmap8_prediction_delay['hto_enclosure_edge_concentration']
 
+# Extract TMAP8 predictions - calibrated
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
+    csv_folder = "../../../../test/tests/val-2c/gold/val-2c_delay_calibrated_out.csv"
+else:                                  # if in test folder
+    csv_folder = "./gold/val-2c_delay_calibrated_out.csv"
+tmap8_prediction_delay_calibrated = pd.read_csv(csv_folder)
+tmap8_time_delay_calibrated = tmap8_prediction_delay_calibrated['time']
+tmap8_t2_enclosure_concentration_delay_calibrated = tmap8_prediction_delay_calibrated['t2_enclosure_edge_concentration']
+tmap8_hto_enclosure_concentration_delay_calibrated = tmap8_prediction_delay_calibrated['hto_enclosure_edge_concentration']
+
+#===============================================================================
+# Extract information from Parallel Subset Simulation calibration study
+
+# Feature of the Parallel Subset Simulation
+file = 'pss_out.json'
+n_procs = 5 # number of processors with which the pss study was conducted
+n_subsets = 7 # number of subset used in pss study
+n_samples_per_subset = 1000 # number of samples per subset used in pss study
+parameters = ['reaction_rate', 'diffusivity_elemental_tritium', 'diffusivity_tritiated_water', 'solubility_elemental_tritium', 'solubility_tritiated_water', 'time_injection_T2_end']
+n_variables = len(parameters)
+
+# Open output file of pss study
+f = open(file,)
+data = json.load(f)
+
+# determine number of steps and create appropriate input and output files
+n_steps = int(n_subsets * n_samples_per_subset / n_procs)
+n_trials = n_procs*(n_steps-1)
+outputs = np.zeros(n_trials)
+inputs = np.zeros((n_trials,n_variables))
+
+# extract the input values and the corresponding outputs - loop through all steps
+for i in np.arange(n_steps):
+    ind1 = np.arange((i-1)*n_procs,(i)*n_procs,1).astype(int)
+    outputs[ind1] = np.array(data["time_steps"][i.astype(int)]["adaptive_MC"]["output_required"])
+    tmp = np.array(data["time_steps"][i.astype(int)]["adaptive_MC"]["inputs"])
+    # loop through all input dimensions
+    for j in np.arange(0,n_variables):
+        inputs[ind1,j] = tmp[j,:].reshape(n_procs)
+
+# plot the ouputs to check behavior
+fig, ax = plt.subplots(figsize=(5,3))
+ax.plot(outputs)
+ax.set_xlabel(r'Number of steps (-)')
+ax.set_ylabel(r"Metric to be optimized")
+ax.set_xlim(left=0)
+ax.set_xlim(right=n_trials)
+ax.set_ylim(bottom=0) # assumes the metric is positive
+ax.set_ylim(top=np.max(outputs)*1.05)
+ax.minorticks_on()
+plt.savefig('val-2c_pss_output.png', bbox_inches='tight', dpi=300);
+
+# plot the inputs to check behavior (needs to be adapted if the number of inputs changes)
+fig, axs = plt.subplots(2, 3, figsize=(10, 6), layout='constrained')
+for nn, ax in enumerate(axs.flat):
+    row, col = nn//3, nn%3
+    ax.plot(inputs[:, nn])
+    ax.set_xlim(left=0)
+    ax.set_xlim(right=n_trials)
+    ax.set_xlabel('Number of steps (-)')
+    ax.set_ylabel(parameters[nn])
+plt.savefig('val-2c_pss_inputs.png', bbox_inches='tight', dpi=300);
+
+# identified calibrated parameters (maximum output data)
+# find latest index of max output
+index_best = len(outputs) - np.argmax(outputs[::-1]) - 1
+# extract corresponding calibrated input parameter values
+calibrated_inputs = inputs[index_best, :]
+lines = [parameters[i] + ' = ' + str(calibrated_inputs[i]) + '\n' for i in range(n_variables)]
+
+filename = 'calibrated_parameter_values.txt'
+if os.path.exists(filename):
+    os.remove(filename)
+
+with open(filename, 'a') as f:
+    f.writelines(lines)
+
 #===============================================================================
 # Extract Experimental data
 if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
@@ -129,6 +207,10 @@ tmap8_time_delay = tmap8_time_delay / time_scale # s -> h
 tmap8_t2_enclosure_concentration_Ci_delay = tmap8_t2_enclosure_concentration_delay * 2 * conversion_Ci_atom * length_scale**3 # molecules/microns^3 -> Ci/m^3 - the factor 2 is because there are 2 T atoms per T2 molecule
 tmap8_hto_enclosure_concentration_Ci_delay = tmap8_hto_enclosure_concentration_delay * conversion_Ci_atom * length_scale**3 # molecules/microns^3 -> Ci/m^3
 
+tmap8_time_delay_calibrated = tmap8_time_delay_calibrated / time_scale # s -> h
+tmap8_t2_enclosure_concentration_Ci_delay_calibrated = tmap8_t2_enclosure_concentration_delay_calibrated * 2 * conversion_Ci_atom * length_scale**3 # molecules/microns^3 -> Ci/m^3 - the factor 2 is because there are 2 T atoms per T2 molecule
+tmap8_hto_enclosure_concentration_Ci_delay_calibrated = tmap8_hto_enclosure_concentration_delay_calibrated * conversion_Ci_atom * length_scale**3 # molecules/microns^3 -> Ci/m^3
+
 #===============================================================================
 # Plot figure for validation - HTO concentration in enclosure
 
@@ -137,6 +219,7 @@ gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 ax.plot(tmap8_time,tmap8_hto_enclosure_concentration_Ci,label=r"TMAP8 HTO - immediate injection",c='tab:gray', linestyle='--')
 ax.plot(tmap8_time_delay,tmap8_hto_enclosure_concentration_Ci_delay,label=r"TMAP8 HTO - delayed injection",c='tab:gray', linestyle=':')
+ax.plot(tmap8_time_delay_calibrated,tmap8_hto_enclosure_concentration_Ci_delay_calibrated,label=r"TMAP8 HTO - delayed injection - calibrated",c='tab:red', linestyle=':')
 for i in range(int(len(experimental_time_hto)/2)):
     if i==0:
         ax.plot([experimental_time_hto[2*i], experimental_time_hto[2*i+1]],[experimental_hto_enclosure_concentration[2*i], experimental_hto_enclosure_concentration[2*i+1]],label=r"Experimental data HTO",c='k', linestyle='-')
@@ -168,6 +251,10 @@ time_sample_delay, experimental_hto_enclosure_concentration_delay_sampled, tmap8
 RMSE = np.sqrt(np.mean((tmap8_hto_enclosure_concentration_Ci_delay_sampled-experimental_hto_enclosure_concentration_delay_sampled)**2))
 RMSPE = RMSE*100/np.mean(experimental_hto_enclosure_concentration_delay_sampled)
 ax.text(7.5,1.2e-5, '(delay) RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
+time_sample_delay_calibrated, experimental_hto_enclosure_concentration_delay_calibrated_sampled, tmap8_hto_enclosure_concentration_Ci_delay_calibrated_sampled = common_times_generator(experimental_time_hto, experimental_hto_enclosure_concentration, tmap8_time_delay_calibrated,tmap8_hto_enclosure_concentration_Ci_delay_calibrated)
+RMSE = np.sqrt(np.mean((tmap8_hto_enclosure_concentration_Ci_delay_calibrated_sampled-experimental_hto_enclosure_concentration_delay_calibrated_sampled)**2))
+RMSPE = RMSE*100/np.mean(experimental_hto_enclosure_concentration_delay_calibrated_sampled)
+ax.text(11,4e-6, '(delay) RMSPE (calibrated) = %.2f '%RMSPE+'%',fontweight='bold',c='tab:red')
 
 # save figure
 plt.savefig('val-2c_comparison_TMAP8_Exp_HTO_Ci.png', bbox_inches='tight', dpi=300);
@@ -178,6 +265,7 @@ gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 ax.plot(tmap8_time,tmap8_t2_enclosure_concentration_Ci,label=r"TMAP8 T$_2$ - immediate injection",c='tab:gray', linestyle='--')
 ax.plot(tmap8_time_delay,tmap8_t2_enclosure_concentration_Ci_delay,label=r"TMAP8 T$_2$ - delayed injection",c='tab:gray', linestyle=':')
+ax.plot(tmap8_time_delay_calibrated,tmap8_t2_enclosure_concentration_Ci_delay_calibrated,label=r"TMAP8 T$_2$ - delayed injection - calibrated",c='tab:red', linestyle=':')
 ax.scatter(experimental_time_t2[0], experimental_t2_enclosure_concentration[0], label=r"Experimental data T$_2$ (amount injected)",c='k',alpha = 0.6)
 ax.scatter(experimental_time_t2[1:], experimental_t2_enclosure_concentration[1:], label=r"Experimental data T$_2$",c='k')
 ax.set_xlabel(u'Time (hr)')
@@ -205,6 +293,10 @@ tmap8_t2_enclosure_concentration_Ci_delay_sampled = sample_solution(experimental
 RMSE = np.sqrt(np.mean((tmap8_t2_enclosure_concentration_Ci_delay_sampled-experimental_t2_enclosure_concentration[1:])**2))
 RMSPE = RMSE*100/np.mean(experimental_t2_enclosure_concentration[1:])
 ax.text(19,8e-4, '(delay) RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
+tmap8_t2_enclosure_concentration_Ci_delay_calibrated_sampled = sample_solution(experimental_time_t2[1:], tmap8_time_delay_calibrated, tmap8_t2_enclosure_concentration_Ci_delay_calibrated)
+RMSE = np.sqrt(np.mean((tmap8_t2_enclosure_concentration_Ci_delay_calibrated_sampled-experimental_t2_enclosure_concentration[1:])**2))
+RMSPE = RMSE*100/np.mean(experimental_t2_enclosure_concentration[1:])
+ax.text(20,4e-4, '(delay) RMSPE (calibrated) = %.2f '%RMSPE+'%',fontweight='bold',c='tab:red')
 
 # save figure
 plt.savefig('val-2c_comparison_TMAP8_Exp_T2_Ci.png', bbox_inches='tight', dpi=300);
