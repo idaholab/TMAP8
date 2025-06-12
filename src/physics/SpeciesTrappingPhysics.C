@@ -284,18 +284,6 @@ SpeciesTrappingPhysics::addSolverVariables()
 }
 
 void
-SpeciesTrappingPhysics::addAuxiliaryVariables()
-{
-  const std::string variable_type = "MooseVariable";
-  InputParameters params = getFactory().getValidParams(variable_type);
-  params.set<MooseEnum>("family") = "LAGRANGE";
-  params.set<MooseEnum>("order") = FIRST;
-  assignBlocks(params, _blocks);
-  if (!variableExists("nodal_mass", false))
-    getProblem().addAuxVariable(variable_type, "nodal_mass", params);
-}
-
-void
 SpeciesTrappingPhysics::addInitialConditions()
 {
   const std::string ic_type = "FunctorIC";
@@ -366,8 +354,6 @@ SpeciesTrappingPhysics::addFEKernels()
         InputParameters params = getFactory().getValidParams(kernel_type);
         params.set<NonlinearVariableName>("variable") = species_name;
         assignBlocks(params, blocks);
-        if (isNodal())
-          params.set<std::vector<VariableName>>("nodal_mass") = {"nodal_mass"};
 
         const auto kernel_name = prefix() + species_name + "_time";
         if (isNodal())
@@ -378,47 +364,66 @@ SpeciesTrappingPhysics::addFEKernels()
 
       // Trapping term
       {
-        const std::string kernel_type = isNodal() ? "TrappingNodalKernel" : "TrappingKernel";
-        auto params = _factory.getValidParams(kernel_type);
-        assignBlocks(params, blocks);
-        params.set<NonlinearVariableName>("variable") = species_name;
-        params.set<std::vector<VariableName>>("mobile_concentration") = {mobile_species_name};
-        mooseAssert(c_i < _component_temperatures.size(), "Should not happen");
-        // The default coupled value will not have been created by the Builder since we created
-        // the parameter as a MooseFunctorName in the Physics
-        if (MooseUtils::parsesToReal(_component_temperatures[c_i]))
+        auto get_trapping_params = [this, &c_i, &s_j, &blocks, &species_name, &mobile_species_name](
+                                       const bool for_mobile_equation,
+                                       std::string & kernel_type) -> InputParameters
         {
-          std::istringstream ss(_component_temperatures[c_i]);
-          Real value;
-          ss >> value;
-          params.defaultCoupledValue("temperature", value, 0);
-          params.set<std::vector<VariableName>>("temperature") = {};
-        }
-        else if (getProblem().hasVariable(_component_temperatures[c_i]))
-          params.set<std::vector<VariableName>>("temperature") = {_component_temperatures[c_i]};
-        else
-          paramError("temperature", "Should be a constant or the name of a variable");
+          // We can't use a TrappingNodalKernel for the mobile equation. Even with nodal mass
+          // lumping, we are not getting the same results at this time.
+          kernel_type = for_mobile_equation
+                            ? "TrappingKernel"
+                            : (isNodal() ? "TrappingNodalKernel" : "TrappingKernel");
+          auto params = _factory.getValidParams(kernel_type);
 
-        params.set<Real>("alpha_t") = _alpha_ts[c_i][s_j];
-        params.set<Real>("trapping_energy") = _trapping_energies[c_i][s_j];
-        params.set<Real>("N") = _Ns[c_i];
-        params.set<FunctionName>("Ct0") = _Ct0s[c_i][s_j];
-        params.set<Real>("trap_per_free") = _trap_per_frees[c_i];
+          assignBlocks(params, blocks);
+          if (!for_mobile_equation)
+            params.set<NonlinearVariableName>("variable") = species_name;
+          else
+          {
+            params.set<NonlinearVariableName>("variable") = mobile_species_name;
+            params.set<std::vector<VariableName>>("trapped_concentration") = {species_name};
+          }
 
-        if (isNodal())
-        {
-          params.set<bool>("use_mass_lumping") = true;
-          params.set<std::vector<VariableName>>("nodal_mass") = {"nodal_mass"};
-        }
+          params.set<std::vector<VariableName>>("mobile_concentration") = {mobile_species_name};
+          mooseAssert(c_i < _component_temperatures.size(), "Should not happen");
+          // The default coupled value will not have been created by the Builder since we created
+          // the parameter as a MooseFunctorName in the Physics
+          if (MooseUtils::parsesToReal(_component_temperatures[c_i]))
+          {
+            std::istringstream ss(_component_temperatures[c_i]);
+            Real value;
+            ss >> value;
+            params.defaultCoupledValue("temperature", value, 0);
+            params.set<std::vector<VariableName>>("temperature") = {};
+          }
+          else if (getProblem().hasVariable(_component_temperatures[c_i]))
+            params.set<std::vector<VariableName>>("temperature") = {_component_temperatures[c_i]};
+          else
+            paramError("temperature", "Should be a constant or the name of a variable");
 
-        // Add the other species as occupying traps
-        std::vector<VariableName> copy_species;
-        for (const auto & sp_name : _species[c_i])
-          if (sp_name != species_name)
-            copy_species.push_back(sp_name);
-        if (copy_species.size() && !getParam<bool>("different_traps_for_each_species"))
-          params.set<std::vector<VariableName>>("other_trapped_concentration_variables") =
-              copy_species;
+          if (!for_mobile_equation)
+            params.set<Real>("alpha_t") = _alpha_ts[c_i][s_j];
+          else
+            params.set<Real>("alpha_t") = -_alpha_ts[c_i][s_j];
+          params.set<Real>("trapping_energy") = _trapping_energies[c_i][s_j];
+          params.set<Real>("N") = _Ns[c_i];
+          params.set<FunctionName>("Ct0") = _Ct0s[c_i][s_j];
+          params.set<Real>("trap_per_free") = _trap_per_frees[c_i];
+
+          // Add the other species as occupying traps
+          std::vector<VariableName> copy_species;
+          for (const auto & sp_name : _species[c_i])
+            if (sp_name != species_name)
+              copy_species.push_back(sp_name);
+          if (copy_species.size() && !getParam<bool>("different_traps_for_each_species"))
+            params.set<std::vector<VariableName>>("other_trapped_concentration_variables") =
+                copy_species;
+
+          return params;
+        };
+
+        std::string kernel_type;
+        auto params = get_trapping_params(/*for mobile equation*/ false, kernel_type);
 
         const auto kernel_name =
             prefix() + "trapping_of_" + mobile_species_name + "_to_" + species_name;
@@ -431,50 +436,58 @@ SpeciesTrappingPhysics::addFEKernels()
         // We avoid just using the time derivative of the trapped species because another term (such
         // as decay) may be acting on the trapped species concentration
         {
-          assignBlocks(params, blocks);
-          params.set<NonlinearVariableName>("variable") = mobile_species_name;
-          params.set<std::vector<VariableName>>("trapped_concentration") = {species_name};
-          params.set<Real>("alpha_t") = -_alpha_ts[c_i][s_j];
+          auto params = get_trapping_params(/*for mobile equation*/ true, kernel_type);
 
           const auto kernel_name =
               prefix() + "trapping_loss_of_" + mobile_species_name + "_to_" + species_name;
-          if (isNodal())
-            getProblem().addNodalKernel(kernel_type, kernel_name, params);
-          else
-            getProblem().addKernel(kernel_type, kernel_name, params);
+          getProblem().addKernel(kernel_type, kernel_name, params);
         }
       }
 
       // Release term
       {
-        const std::string kernel_type = isNodal() ? "ReleasingNodalKernel" : "ReleasingKernel";
-        auto params = _factory.getValidParams(kernel_type);
-        assignBlocks(params, blocks);
-        params.set<NonlinearVariableName>("variable") = species_name;
-        params.set<Real>("alpha_r") = _alpha_rs[c_i][s_j];
-        params.set<Real>("detrapping_energy") = _detrapping_energies[c_i][s_j];
-        // The default coupled value will not have been created by the Builder since we created
-        // the parameter as a MooseFunctorName in the Physics
-        if (MooseUtils::parsesToReal(_component_temperatures[c_i]))
+        auto get_releasing_params =
+            [this, &c_i, &s_j, &blocks, &species_name, &mobile_species_name](
+                const bool for_mobile_equation, std::string & kernel_type) -> InputParameters
         {
-          std::istringstream ss(_component_temperatures[c_i]);
-          Real value;
-          ss >> value;
-          params.defaultCoupledValue("temperature", value, 0);
-          params.set<std::vector<VariableName>>("temperature") = {};
-        }
-        else if (getProblem().hasVariable(_component_temperatures[c_i]))
-          params.set<std::vector<VariableName>>("temperature") = {_component_temperatures[c_i]};
-        else
-          // there is an error right above in the trapping term
-          mooseAssert(false, "Should be a constant or the name of a variable");
+          kernel_type = for_mobile_equation
+                            ? "ReleasingKernel"
+                            : (isNodal() ? "ReleasingNodalKernel" : "ReleasingKernel");
+          auto params = _factory.getValidParams(kernel_type);
+          assignBlocks(params, blocks);
+          if (!for_mobile_equation)
+            params.set<NonlinearVariableName>("variable") = species_name;
+          else
+          {
+            params.set<NonlinearVariableName>("variable") = mobile_species_name;
+            params.set<std::vector<VariableName>>("trapped_concentration") = {species_name};
+          }
+          if (!for_mobile_equation)
+            params.set<Real>("alpha_r") = _alpha_rs[c_i][s_j];
+          else
+            params.set<Real>("alpha_r") = -_alpha_rs[c_i][s_j];
 
-        if (isNodal())
-        {
-          params.set<bool>("use_mass_lumping") = true;
-          params.set<std::vector<VariableName>>("nodal_mass") = {"nodal_mass"};
-        }
+          params.set<Real>("detrapping_energy") = _detrapping_energies[c_i][s_j];
+          // The default coupled value will not have been created by the Builder since we created
+          // the parameter as a MooseFunctorName in the Physics
+          if (MooseUtils::parsesToReal(_component_temperatures[c_i]))
+          {
+            std::istringstream ss(_component_temperatures[c_i]);
+            Real value;
+            ss >> value;
+            params.defaultCoupledValue("temperature", value, 0);
+            params.set<std::vector<VariableName>>("temperature") = {};
+          }
+          else if (getProblem().hasVariable(_component_temperatures[c_i]))
+            params.set<std::vector<VariableName>>("temperature") = {_component_temperatures[c_i]};
+          else
+            paramError("temperature", "Should be a constant or the name of a variable");
 
+          return params;
+        };
+
+        std::string kernel_type;
+        auto params = get_releasing_params(/* for mobile equation*/ false, kernel_type);
         const auto kernel_name =
             prefix() + "release_loss_of_" + species_name + "_to_" + mobile_species_name;
         if (isNodal())
@@ -486,32 +499,18 @@ SpeciesTrappingPhysics::addFEKernels()
         // We avoid just using the time derivative of the trapped species because another term (such
         // as decay) may be acting on the trapped species concentration
         {
-          assignBlocks(params, blocks);
-          params.set<NonlinearVariableName>("variable") = mobile_species_name;
-          params.set<std::vector<VariableName>>("trapped_concentration") = {species_name};
-          params.set<Real>("alpha_r") = -_alpha_rs[c_i][s_j];
+          auto params = get_releasing_params(/*for mobile equation*/ true, kernel_type);
 
           const auto kernel_name =
               prefix() + "release_of_" + mobile_species_name + "_from_" + species_name;
-          if (isNodal())
-            getProblem().addNodalKernel(kernel_type, kernel_name, params);
-          else
-            getProblem().addKernel(kernel_type, kernel_name, params);
+          getProblem().addKernel(kernel_type, kernel_name, params);
         }
       }
     }
+
+    // Only need kernels once with the combined block restriction if using a single variable for all
+    // the components that we will be solving this Physics on
     if (_single_variable_set)
       break;
   }
-}
-
-void
-SpeciesTrappingPhysics::addAuxiliaryKernels()
-{
-  const std::string kernel_type = "VolumeAux";
-  auto params = _factory.getValidParams(kernel_type);
-  assignBlocks(params, _blocks);
-  params.set<AuxVariableName>("variable") = "nodal_mass";
-  params.set<ExecFlagEnum>("execute_on") = {EXEC_INITIAL};
-  getProblem().addAuxKernel(kernel_type, prefix() + "nodal_mass", params);
 }

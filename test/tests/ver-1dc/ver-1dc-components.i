@@ -55,6 +55,7 @@ scheme = BDF2
       mobile = 'mobile mobile mobile'
       species_initial_concentrations = '0 0 0' #'${units 1.0e-15 m^-3} ${units 1.0e-15 m^-3} ${units 1.0e-15 m^-3}'
       separate_variables_per_component = false
+      discretization = 'nodal'
 
       temperature = '${temperature}'
 

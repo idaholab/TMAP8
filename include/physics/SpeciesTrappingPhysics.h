@@ -60,6 +60,4 @@ private:
   virtual void addSolverVariables() override;
   virtual void addInitialConditions() override;
   virtual void addFEKernels() override;
-  virtual void addAuxiliaryVariables() override;
-  virtual void addAuxiliaryKernels() override;
 };
