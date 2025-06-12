@@ -16,8 +16,8 @@ solubility_tritiated_water = '${units 6.0e24 1/m^3/Pa -> 1/mum^3/Pa}' # molecule
 time_injection_T2_end = ${units 3 h -> s}
 
 ## PSS parameters
-num_samplessub = 1000
-num_subsets = 7
+num_samplessub = 4000
+num_subsets = 8
 
 ## Outputs
 file_base_output = val-2c_pss_results/val-2c_pss_main_out
@@ -47,9 +47,6 @@ sub_app_input = "val-2c_delay_pss.i"
     type = Uniform
     lower_bound = '${fparse 1e-4 * solubility_elemental_tritium}'
     upper_bound = '${fparse 1e-1 * solubility_elemental_tritium}'
-    # type = Lognormal
-    # location = ${fparse log(1e-3) + log(4e37)}
-    # scale = 10
   []
   [solubility_tritiated_water] # KS^w
     type = Uniform
@@ -73,7 +70,7 @@ sub_app_input = "val-2c_delay_pss.i"
     num_subsets = ${num_subsets}
     # num_parallel_chains = 5 # using multiple parallel chains helps with convergence
     inputs_reporter = 'adaptive_MC/inputs'
-    output_reporter = 'constant/reporter_transfer:objective:value' # TO CHANGE
+    output_reporter = 'constant/reporter_transfer:objective:value'
     seed = 1012
   []
 []
@@ -88,15 +85,9 @@ sub_app_input = "val-2c_delay_pss.i"
 []
 
 [Transfers]
-  # [param]
-  #   type = SamplerParameterTransfer
-  #   to_multi_app = sub
-  #   sampler = sample
-  #   parameters = 'BCs/left/value BCs/right/value'
-  # []
   [reporter_transfer]
     type = SamplerReporterTransfer
-    from_reporter = 'objective/value' # TO CHANGE
+    from_reporter = 'objective/value'
     stochastic_reporter = 'constant'
     from_multi_app = sub
     sampler = sample
@@ -105,7 +96,7 @@ sub_app_input = "val-2c_delay_pss.i"
 
 [Controls]
   [cmdline]
-    type = MultiAppCommandLineControl
+    type = MultiAppSamplerControl
     multi_app = sub
     sampler = sample
     param_names = 'reaction_rate diffusivity_elemental_tritium diffusivity_tritiated_water solubility_elemental_tritium solubility_tritiated_water time_injection_T2_end'
@@ -115,12 +106,11 @@ sub_app_input = "val-2c_delay_pss.i"
 [Reporters]
   [constant]
     type = StochasticReporter
-    # outputs = none
   []
 
   [adaptive_MC]
     type = AdaptiveMonteCarloDecision
-    output_value = constant/reporter_transfer:objective:value # TO CHANGE
+    output_value = constant/reporter_transfer:objective:value
     inputs = 'inputs'
     sampler = sample
   []

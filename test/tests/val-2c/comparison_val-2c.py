@@ -115,15 +115,18 @@ tmap8_hto_enclosure_concentration_delay_calibrated = tmap8_prediction_delay_cali
 # Extract information from Parallel Subset Simulation calibration study
 
 # Feature of the Parallel Subset Simulation
-file = 'pss_out.json'
-n_procs = 5 # number of processors with which the pss study was conducted
-n_subsets = 7 # number of subset used in pss study
-n_samples_per_subset = 1000 # number of samples per subset used in pss study
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
+    file_json = "../../../../test/tests/val-2c/gold/val-2c_pss_results/val-2c_pss_main_out.json"
+else:                                  # if in test folder
+    file_json = "./gold/val-2c_pss_results/val-2c_pss_main_out.json"
+n_procs = 10 # number of processors with which the pss study was conducted
+n_subsets = 8 # number of subset used in pss study
+n_samples_per_subset = 4000 # number of samples per subset used in pss study
 parameters = ['reaction_rate', 'diffusivity_elemental_tritium', 'diffusivity_tritiated_water', 'solubility_elemental_tritium', 'solubility_tritiated_water', 'time_injection_T2_end']
 n_variables = len(parameters)
 
 # Open output file of pss study
-f = open(file,)
+f = open(file_json,)
 data = json.load(f)
 
 # determine number of steps and create appropriate input and output files
