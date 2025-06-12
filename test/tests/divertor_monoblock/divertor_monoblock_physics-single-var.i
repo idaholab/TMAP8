@@ -33,7 +33,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
 [GlobalParams]
     species_scaling_factors = '1'
     # The heat conduction physics preconditioning does not apply well across the other physics
-    preconditioning = 'none'
+    preconditioning = 'defer'
 []
 
 # Define the variable outside of the Physics to prevent the Physics from defining it
