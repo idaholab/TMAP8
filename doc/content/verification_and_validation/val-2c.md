@@ -88,16 +88,16 @@ However, this leads to an early HTO peak concentration, which does not exactly m
 In [!cite](ambrosek2008verification), TMAP7 introduces a new enclosure to account for a slower injection of tritium.
 Here, we model this case with two different approaches.
 The first approach, like [!citep](Holland1986,longhurst1992verification), assumes that the entire tritium inventory is immediately injected in the enclosure at the beginning of the experiment.
-The second approach assumes that the tritium inventory is being injected into the enclosure at a linear rate during a period of time $t_injection$ until the entire tritium inventory is injected.
+The second approach assumes that the tritium inventory is being injected into the enclosure at a linear rate during a period of time $t_{injection}$ until the entire tritium inventory is injected.
 The results of these two approaches are presented and discussed below.
 
 
 ## Case and Model Parameters
 
-The case and model parameters used in both approaches in TMAP8 are listed in [val-2c_parameters]. Some of the parameters are directly leveraged from [!cite](Holland1986,longhurst1992verification,ambrosek2008verification), but others were adapted to better match the experimental data.
+The case and model parameters used in both approaches in TMAP8 are listed in [val-2c_parameters]. Some of the parameters are directly leveraged from [!cite](Holland1986,longhurst1992verification,ambrosek2008verification), but others were adapted, originally by hand (see [val-2c_parameters]) and then using a rigorous calibration study (see [val-2c_parameters_calibrated]), to better match the experimental data.
 
 
-!table id=val-2c_parameters caption=Case and model parameters values used in both approaches in TMAP8 with $R$, the gas constant, and $N_A$, Avogadro's number, as defined in [PhysicalConstants](source/utils/PhysicalConstants.md). When values are the same for both approaches, they are noted as identical. Model parameters that have been adapted from [!cite](longhurst1992verification) show a corrective factor in bold. Units are converted in the input file.
+!table id=val-2c_parameters caption=Case and model parameters values used in both immediate and delayed injection approaches in TMAP8 with $R$, the gas constant, and $N_A$, Avogadro's number, as defined in [PhysicalConstants](source/utils/PhysicalConstants.md). When values are the same for both approaches, they are noted as identical. Model parameters that have been adapted from [!cite](longhurst1992verification) show a corrective factor in bold. Units are converted in the input file.
 | Parameter                  | Immediate injection approach                                 | Delayed injection approach                                   | Unit       | Reference                                       |
 | -------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ---------- | ----------------------------------------------- |
 | $V$                        | 0.96                                                         | Identical                                                    | m$^3$      | [!cite](Holland1986)                            |
@@ -114,34 +114,88 @@ The case and model parameters used in both approaches in TMAP8 are listed in [va
 | $K_S^w$                    | $\boldsymbol{3.5 \times 10^{-4}} \times 6.0 \times 10^{24}$ | $\boldsymbol{3.0 \times 10^{-4}} \times 6.0 \times 10^{24}$ | 1/m$^3$/Pa | Adapted from [!cite](longhurst1992verification) |
 | $t_{injection}$            | N/A                                                          | 3                                                            | hr         |                                                 |
 
-## Results and discussion
+The calibration study was performed using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html), and in particular the [Parallel Subset Simulation](https://mooseframework.inl.gov/source/samplers/ParallelSubsetSimulation.html) (PSS) approach. For the PSS study, we used 8 subsets with a subset probability of 0.1 (default) and 4000 samples per subset for a total of 32000 simulations, which were performed in parallel on 10 processors.
+
+To calibrate using both the T$_2$ and HTO concentrations in the enclosure over time, we performed a multi-objective optimization study. The metric to be optimized is defined as the time integral of
+\begin{equation} \label{eq:optimization_metric}
+g = \frac{1}{w_{HTO} \left(\log(c_{\text{HTO}}^{exp}) - \log(c_{\text{HTO}}) \right)^2 + w_{T2} \left(\log(c_{\text{T}_2}^{exp}) - \log(c_{\text{T}_2}) \right)^2 },
+\end{equation}
+where $w_{HTO} = 5\times10^3$ and $w_{T2} = 1$ are the weights being given to the HTO and T$_2$ differences between the experimental measurements $c_{\text{i}}^{exp}$ and the modeling predictions, respectively.
+Notably, the integral difference is defined in logarithmic space to give equal weight to all data points in the logarithmic scale during the optimization process.
+
+The comparison between the original and calibrated values of selected model parameters is summarized in [val-2c_parameters_calibrated].
+
+!table id=val-2c_parameters_calibrated caption=Calibrated model parameters values for the delayed injection case in val-2c..
+| Parameter       | Non-calibrated values (see [val-2c_parameters])             | Calibrated values using [Parallel Subset Simulation](https://mooseframework.inl.gov/source/samplers/ParallelSubsetSimulation.html)                                   | Unit       |
+| --------------- | ----------------------------------------------------------- | ----------------------- | ---------- |
+| $K^0$           | $\boldsymbol{2.8} \times 2.0 \times 10^{-10}$               | 2.931 $\times 10^{-11}$ | m$^3$/Ci/s |
+| $D^e$           | 4.0 $\times 10^{-12}$                                       | 4.164 $\times 10^{-12}$ | m$^2$/s    |
+| $D^w$           | 1.0 $\times 10^{-14}$                                       | 9.300 $\times 10^{-15}$ | m$^2$/s    |
+| $K_S^e$         | $\boldsymbol{1.0 \times 10^{-3}} \times 4.0 \times 10^{19}$ | 1.468 $\times 10^{18}$  | 1/m$^3$/Pa |
+| $K_S^w$         | $\boldsymbol{3.0 \times 10^{-4}} \times 6.0 \times 10^{24}$ | 2.477 $\times 10^{21}$  | 1/m$^3$/Pa |
+| $t_{injection}$ | 3                                                           | 2.125                   | hr         |
+
+## Results and Discussion
 
 [val-2c_comparison_T2] and [val-2c_comparison_HTO] show the comparison of the TMAP8 calculations (both with immediately injected and delayed injected T$_2$) against the experimental data for T$_2$ and HTO concentration in the enclosure over time.
 There is reasonable agreement between the TMAP8 predictions and the experimental data.
 In the case of immediate T$_2$ injection,  the root mean square percentage errors are equal to RMSPE = 58.98 % for T$_2$ and RMSPE = 139.10 % for HTO, respectively.
 When accounting for a delay in T$_2$ injection, the TMAP8 predictions best match the experimental data, in particular the position of the peak HTO concentration. The RMSPE values decrease to RMSPE = 58.05 % for T$_2$ and RMSPE = 74.77 % for HTO, respectively.
 Note that the model parameters listed in [val-2c_parameters] are somewhat different from [!cite](Holland1986,longhurst1992verification,ambrosek2008verification) to better match the experimental data.
-In particular, [!cite](longhurst1992verification,ambrosek2008verification) did not validate the TMAP predictions against T$_2$ concentration, which we do here in [val-2c_comparison_T2].
+In particular, [!cite](longhurst1992verification,ambrosek2008verification) did not validate the TMAP predictions against T$_2$ concentration, which we do here in [val-2c_comparison_T2] and in [!cite](Simon2025).
 This affects some of the model parameters.
-
-The agreement between modeling predictions and experimental data could be further improved by adjusting the model parameters.
-It is also possible to perform this optimization with [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html).
 
 !media comparison_val-2c.py
        image_name=val-2c_comparison_TMAP8_Exp_T2_Ci.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2c_comparison_T2
-       caption=Comparison of TMAP8 calculations against the experimental data for T$_2$ concentration in the enclosure over time. TMAP8 matches the experimental data well, with an improvement when T$_2$ is injected over a given period rather than immediately.
+       caption=Comparison of TMAP8 calculations against the experimental data for T$_2$ concentration in the enclosure over time. TMAP8 matches the experimental data well, with an improvement when T$_2$ is injected over a given period rather than immediately. Calibration of the delayed injection model delivers further improvements.
 
 !media comparison_val-2c.py
        image_name=val-2c_comparison_TMAP8_Exp_HTO_Ci.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2c_comparison_HTO
-       caption=Comparison of TMAP8 calculations against the experimental data for HTO concentration in the enclosure over time. TMAP8 matches the experimental data well, with an improvement when T$_2$ is injected over a given period rather than immediately.
+       caption=Comparison of TMAP8 calculations against the experimental data for HTO concentration in the enclosure over time. TMAP8 matches the experimental data well, with an improvement when T$_2$ is injected over a given period rather than immediately. Calibration of the delayed injection model delivers further improvements.
+
+As shown in the red curve in [val-2c_comparison_T2] and [val-2c_comparison_HTO], using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html) notably increased the agreement between the modeling predictions and experimental data for both the T$_2$ and HTO concentrations.
+The RMSPE for T$_2$ decreases from 74.77 % to 63.26 % and the RMSPE for HTO decreases from 58.5 % to 40.7 %.
+Note that although the calibration approach is similar to the one presented in [!cite](Simon2025), the results presented here include more simulations and the quality of the calibration is increased here (RMSPE values are further decreased here).
+
+[val-2c_calibration_input] and [val-2c_calibration_output] show the evolution of the model parameter values and of the optimization metric (time integral of $g$ defined in [eq:optimization_metric]) as a function of the number of simulation.The calibrated model corresponds to the highest value.
+
+!media comparison_val-2c.py
+       image_name=val-2c_pss_inputs.png
+       style=width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2c_calibration_input
+       caption=Evolution of the model parameter values as a function of the number of simulation.
+
+!media comparison_val-2c.py
+       image_name=val-2c_pss_output.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2c_calibration_output
+       caption=Evolution of the optimization metric (time integral of $g$ defined in [eq:optimization_metric]) as a function of the number of simulation. The calibrated model corresponds to the highest value.
+
 
 ## Input files
 
 !style halign=left
 The input files for this case can be found at [/val-2c_immediate_injection.i] and [/val-2c_delay.i]. Note that both input files utilize a common base file [/val-2c_base.i] with the line `!include val-2c_base.i`. The base input file contains all the features and TMAP8 objects common to both cases, reducing duplication, and this allows the immediate injection and delayed injection inputs to focus on what is specific to each case. Note that both input files are also used as TMAP8 tests, outlined at [/val-2c/tests].
+
+For the calibration study, additional input files are provided.
+- [/val-2c_base_pss.i] provides key functions and postprocessor blocks necessary for the PSS study, including calculations of the multi-objective optimization metric. i.e., the time integral of $g$ defined in [eq:optimization_metric].
+- [/val-2c_delay_pss.i] includes both [/val-2c_base_pss.i] and [/val-2c_delay.i] to generate the needed full input file for the simulation.
+- [/val-2c_pss_main.i] is the main input file for the PSS study. It defines what model parameters to vary and how, what approach to use, and initiate simulations using [/val-2c_delay_pss.i].
+
+To run the PSS study, users can perform, in the terminal:
+
+```
+cd ~/projects/TMAP8/test/tests/val-2c/
+mpirun -np 10 ~/projects/TMAP8/tmap8-opt -i val-2c_pss_main.i
+```
+
+Note that this study is time consuming since a large number of simulation is being run.
+Modifying the PSS parameters can reduce the computational cost
+
+Although a very short PSS study is simulated as a test in [/val-2c/tests] to ensure these files run properly, the full calibration study is not performed regularly in tests to limit computational costs. The gold files [/gold/val-2c_pss_results/val-2c_pss_main_out.json] and [/gold/calibrated_parameter_values.txt] are therefore not continuously tested, and the calibrated model parameters used in [/val-2c/tests] are not continuously updated.
 
 !bibtex bibliography
