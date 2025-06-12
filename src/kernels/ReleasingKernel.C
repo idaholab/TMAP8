@@ -46,6 +46,7 @@ ReleasingKernel::computeQpResidual()
 Real
 ReleasingKernel::computeQpJacobian()
 {
+  std::cout << "r " << _v_is_u << std::endl;
   if (_v_is_u)
     return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]) * _phi[_j][_qp] *
            _test[_i][_qp];
@@ -56,10 +57,15 @@ ReleasingKernel::computeQpJacobian()
 Real
 ReleasingKernel::computeQpOffDiagJacobian(unsigned int jvar)
 {
+  std::cout << "j " << !_v_is_u << " " << (jvar == _v_index) << std::endl;
   if (!_v_is_u && jvar == _v_index)
     return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]) * _phi[_j][_qp] *
            _test[_i][_qp];
   else
+  {
+    mooseError("ahaha");
     return 0;
+  }
+
   // TODO: add temperature off-diagonal term
 }

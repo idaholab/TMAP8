@@ -45,6 +45,8 @@ N = ${fparse 3.1622e22/cl}
       species = 'trapped'
       mobile = 'mobile'
       verbose = true
+
+      # discretization = 'nodal'
     []
   []
 []
@@ -59,7 +61,7 @@ N = ${fparse 3.1622e22/cl}
 [Executioner]
   type = Transient
 
-  num_steps =  2
+  num_steps = 2
   end_time = 3
   dt = .01
   dtmin = .01
