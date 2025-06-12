@@ -61,6 +61,7 @@
     abs_zero = 1e-8
     max_parallel = 1 # see #200
     recover = false # see #196
+    issues = '#266'
   []
   [val-2c_delay_pss_study_csv]
     type = CSVDiff
@@ -75,6 +76,7 @@
     abs_zero = 1e-8
     max_parallel = 1 # see #200
     recover = false # see #196
+    issues = '#266'
   []
   [val-2c_delay_comparison]
     type = RunCommand
