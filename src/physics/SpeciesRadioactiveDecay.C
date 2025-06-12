@@ -180,10 +180,13 @@ SpeciesRadioactiveDecay::addSolverVariables()
       paramError("separate_variables_per_component",
                  "Physics is not defined on any Component, this parameter should be set to false");
   }
-
-  // Check component-indexed parameters
-  checkSizeComponentSpeciesIndexedVectorOfVector(_scaling_factors, "species_scaling_factors", true);
-  checkSizeComponentSpeciesIndexedVectorOfVector(_decay_products, "decay_products", true);
+  else
+  {
+    // Check component-indexed parameters
+    checkSizeComponentSpeciesIndexedVectorOfVector(
+        _scaling_factors, "species_scaling_factors", true);
+    checkSizeComponentSpeciesIndexedVectorOfVector(_decay_products, "decay_products", true);
+  }
 
   for (const auto c_i : index_range(_components))
   {

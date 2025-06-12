@@ -41,6 +41,8 @@ N = ${fparse 3.1622e22/cl}
       mobile = 'mobile'
       verbose = true
 
+      discretization = 'nodal'
+
       # Trapping parameters are specified using functors on the structure component
       # Releasing parameters are specified using functors on the structure component
       temperature = 'temp'  # we can use component ICs to set the temperature on the component

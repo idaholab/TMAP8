@@ -64,6 +64,7 @@ N = ${fparse 3.1622e22/cl}
     [trapped]
       species = 'trapped'
       mobile = 'mobile'
+      discretization = 'nodal'
       verbose = true
     []
   []

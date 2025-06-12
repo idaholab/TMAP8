@@ -44,7 +44,6 @@ temperature = 1000
   [time]
     type = TimeDerivativeNodalKernel
     variable = trapped
-    nodal_mass = nodal_vol
   []
   [trapping]
     type = TrappingNodalKernel
@@ -55,8 +54,6 @@ temperature = 1000
     mobile_concentration = 'mobile'
     temperature = ${temperature}
     extra_vector_tags = ref
-    use_mass_lumping = true
-    nodal_mass = nodal_vol
   []
   [release]
     type = ReleasingNodalKernel
@@ -64,21 +61,6 @@ temperature = 1000
     temperature = ${temperature}
     detrapping_energy = 100
     variable = trapped
-    use_mass_lumping = true
-    nodal_mass = nodal_vol
-  []
-[]
-
-[AuxVariables]
-  [nodal_vol]
-  []
-[]
-
-[AuxKernels]
-  [nodal_vol]
-    type = VolumeAux
-    variable = 'nodal_vol'
-    execute_on = initial
   []
 []
 
@@ -133,7 +115,6 @@ temperature = 1000
 [Outputs]
   csv = true
   exodus = true
-  hide = 'nodal_vol'
   [dof]
     type = DOFMap
     execute_on = initial

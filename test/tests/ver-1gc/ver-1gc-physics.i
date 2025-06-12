@@ -15,9 +15,6 @@ end_time = 1500 # s
       species_initial_concentrations = '${concentration_A_0} 0 0'
       add_decaying_species_initial_conditions = true
 
-      # TODO: figure out why this is necessary
-      species_scaling_factors = '1 1 1'
-
       # | between species, ; between decay reactions
       decay_products       = 'c_B | c_C |'
       # ; between species, ' ' between decay reactions
