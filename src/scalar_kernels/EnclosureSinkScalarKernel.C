@@ -21,7 +21,12 @@ EnclosureSinkScalarKernel::validParams()
   params.addClassDescription("Implements the residual describing a sink term for an enclosure with "
                              "species exiting into a structure.");
   params.addRequiredParam<PostprocessorName>(
-      "flux", "Name of the Postprocessor whose value will be the flux");
+      "flux",
+      "Name of the Postprocessor whose value will be the flux. Note that this flux should "
+      "represent the rate of species leaving the corresponding structure, so a positive value for "
+      "flux will correspond to species leaving the enclosure and entering the structure, and a "
+      "negative value will correspond to species entering the enclosure and leaving the structure. "
+      "The sign convention can be flipped using the conversion factor.");
   params.addRequiredParam<Real>("surface_area", "The surface area of the structure");
   params.addRequiredParam<Real>("volume", "The volume of the enclosure");
   params.addParam<Real>(
@@ -40,9 +45,6 @@ EnclosureSinkScalarKernel::EnclosureSinkScalarKernel(const InputParameters & par
     _concentration_to_pressure_conversion_factor(
         getParam<Real>("concentration_to_pressure_conversion_factor"))
 {
-  if (_mesh.dimension() != 1)
-    mooseError("The EnclosureSinkScalarKernel object is currently coded with the assumption that "
-               "structures are one-dimensional and enclosures are 0-dimensional.");
 }
 
 Real
