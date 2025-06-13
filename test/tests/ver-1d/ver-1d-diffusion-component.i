@@ -1,5 +1,5 @@
 cl = 3.1622e18
-N = ${fparse 3.1622e22/cl}
+N = '${fparse 3.1622e22/cl}'
 
 [ActionComponents]
   [structure]
@@ -42,11 +42,67 @@ N = ${fparse 3.1622e22/cl}
       verbose = true
 
       discretization = 'nodal'
+      dont_create_kernels = true
 
       # Trapping parameters are specified using functors on the structure component
       # Releasing parameters are specified using functors on the structure component
-      temperature = 'temp'  # we can use component ICs to set the temperature on the component
+      temperature = 'temp' # we can use component ICs to set the temperature on the component
     []
+  []
+[]
+
+[Kernels]
+  [trapped_trapping_loss_of_mobile_to_trapped]
+    type = TrappingKernel
+    Ct0 = 0.1
+    N = 10000
+    alpha_t = -1e+15
+    block = structure
+    mobile_concentration = mobile
+    temperature = temp
+    trap_per_free = 1
+    trapped_concentration = trapped
+    trapping_energy = 0
+    variable = mobile
+  []
+  [trapped_release_of_mobile_from_trapped]
+    type = ReleasingKernel
+    alpha_r = -1e+13
+    block = structure
+    detrapping_energy = 100
+    temperature = temp
+    trapped_concentration = trapped
+    variable = mobile
+  []
+[]
+
+[NodalKernels]
+  [trapped_trapped_time]
+    type = TimeDerivativeNodalKernel
+    block = structure
+    matrix_tags = 'system time'
+    variable = trapped
+    vector_tags = time
+  []
+  [trapped_trapping_of_mobile_to_trapped]
+    type = TrappingNodalKernel
+    Ct0 = 0.1
+    N = 10000
+    alpha_t = 1e+15
+    block = structure
+    mobile_concentration = mobile
+    temperature = temp
+    trap_per_free = 1
+    trapping_energy = 0
+    variable = trapped
+  []
+  [trapped_release_loss_of_trapped_to_mobile]
+    type = ReleasingNodalKernel
+    alpha_r = 1e+13
+    block = structure
+    detrapping_energy = 100
+    temperature = temp
+    variable = trapped
   []
 []
 
@@ -80,7 +136,7 @@ N = ${fparse 3.1622e22/cl}
 [Executioner]
   type = Transient
 
-  num_steps =  2
+  num_steps = 2
   end_time = 3
   dt = .01
   dtmin = .01

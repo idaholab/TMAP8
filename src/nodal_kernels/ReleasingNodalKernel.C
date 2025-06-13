@@ -52,6 +52,8 @@ Real
 ReleasingNodalKernel::computeQpResidual()
 {
   const auto mass = _mass_lumped ? _nodal_mass[_qp] : 1.;
+  // std::cout << "Nodal " << _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]) * _v[_qp]
+  //           << std::endl;
   return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]) * _v[_qp] * mass;
 }
 

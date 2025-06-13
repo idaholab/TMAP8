@@ -32,15 +32,22 @@ temperature = 1000
     variable = mobile
     extra_vector_tags = ref
   []
-  [trapping_minus_release]
-    type = CoupledTimeDerivative
-    variable = mobile
-    v = trapped
-    extra_vector_tags = ref
-  []
+  # [trapping_minus_release]
+  #   type = CoupledTimeDerivative
+  #   variable = mobile
+  #   v = trapped
+  #   extra_vector_tags = ref
+  # []
 []
 
 [NodalKernels]
+  [time2]
+    type = TimeDerivativeNodalKernel
+    variable = mobile
+    v = trapped
+    nodal_mass = mass
+  []
+
   [time]
     type = TimeDerivativeNodalKernel
     variable = trapped
@@ -79,6 +86,15 @@ temperature = 1000
   []
 []
 
+[AuxVariables]
+  [mass]
+    [AuxKernel]
+      type = VolumeAux
+      execute_on = 'INITIAL'
+    []
+  []
+[]
+
 [Postprocessors]
   [outflux]
     type = SideDiffusiveFluxAverage
@@ -110,6 +126,7 @@ temperature = 1000
   petsc_options_value = 'lu       NONZERO'
   automatic_scaling = true
   verbose = true
+  nl_abs_tol = 1e-9
 []
 
 [Outputs]
