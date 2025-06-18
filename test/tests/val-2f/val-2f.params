@@ -1,0 +1,96 @@
+# This input file provides the model parameter values for validation case val-2f.
+# It is included in val-2f_base.i
+
+# Physical constants
+kb = '${units 1.380649e-23 J/K}' # Boltzmann constant J/K - from PhysicalConstants.h
+eV_to_J = '${units 1.602176634e-19 J/eV}' # Conversion coefficient from eV to Joules - from PhysicalConstants.h
+kb_eV = '${units ${fparse kb / eV_to_J} eV/K}' # Boltzmann constant eV/K
+
+tungsten_density = '${units 6.3222e28 at/m^3 -> at/mum^3}'
+
+# Temperature conditions
+temperature_initial = '${units 370 K}'
+temperature_cooldown = '${units 295 K}'
+temperature_desorption_min = '${units 300 K}'
+temperature_desorption_max = '${units 1000 K}'
+desorption_heating_rate = '${units ${fparse 3/60} K/s}'
+
+# Important times
+charge_time = '${units 72 h -> s}'
+cooldown_duration = '${units 12 h -> s}'
+desorption_duration = '${fparse (temperature_desorption_max-temperature_desorption_min)/desorption_heating_rate}'
+endtime = '${fparse charge_time + cooldown_duration + desorption_duration}'
+dt_init = 1e-8
+
+# Materials properties
+diffusion_W_preexponential_exp = 7
+diffusion_W_preexponential = '${units ${fparse 1.6 * 10 ^ -diffusion_W_preexponential_exp} m^2/s -> mum^2/s}'
+diffusion_W_energy = '${units 0.28 eV}'
+trapping_energy = '${fparse ${units ${diffusion_W_energy} eV -> J} / kb}'
+trapping_prefactor = '${units ${fparse ${units ${diffusion_W_preexponential} mum^2/s -> m^2/s} / (1.1e-10^2 * 6) } 1/s}'
+detrapping_prefactor = '${units 1e13 1/s}'
+
+# Source term parameters
+sigma = '${units 0.5e-9 m -> mum}'
+R_p = '${units 0.7e-9 m -> mum}'
+flux = '${units ${fparse 5.79e19} at/m^2/s -> at/mum^2/s}'
+
+# Fermi-Dirac trap density distribution
+depth_center = '${units 2.5e-6 m -> mum}'
+depth_width = '${units 5e-7 m -> mum}'
+
+sample_thickness = '${units 0.8e-3 m -> mum}'
+dx1 = '${fparse 6*sigma}'
+dx2 = '${units 3e-6 m -> mum}'
+dx3 = '${units 7.997e-6 m -> mum}'
+dx4 = '${units 7.2e-5 m -> mum}'
+dx5 = '${fparse sample_thickness - dx1 - dx2 - dx3 - dx4}'
+ix1 = 100
+ix2 = 100
+ix3 = 100
+ix4 = 100
+ix5 = 100
+
+# Trap 1 parameters
+trapping_energy_1 = '${fparse trapping_energy}'
+trapping_prefactor_1 = '${fparse trapping_prefactor}'
+detrapping_energy_1 = '${fparse ${units 1.15 eV -> J} / ${kb}}'
+detrapping_prefactor_1 = '${fparse detrapping_prefactor}'
+trap_per_free_1 = 1e7 # (-)
+
+# Trap 2 parameters
+trapping_energy_2 = '${fparse trapping_energy}'
+trapping_prefactor_2 = '${fparse trapping_prefactor}'
+detrapping_energy_2 = '${fparse ${units 1.35 eV -> J} / kb}'
+detrapping_prefactor_2 = '${fparse detrapping_prefactor}'
+trap_per_free_2 = 1e7 # (-)
+
+# Trap 3 parameters
+trapping_energy_3 = '${fparse trapping_energy}'
+trapping_prefactor_3 = '${fparse trapping_prefactor}'
+detrapping_energy_3 = '${fparse ${units 1.65 eV -> J} / kb}'
+detrapping_prefactor_3 = '${fparse detrapping_prefactor}'
+trap_per_free_3 = 1e7 # (-)
+
+# Trap 4 parameters
+trapping_energy_4 = '${fparse trapping_energy}'
+trapping_prefactor_4 = '${fparse trapping_prefactor}'
+detrapping_energy_4 = '${fparse ${units 1.85 eV -> J} / kb}'
+detrapping_prefactor_4 = '${fparse detrapping_prefactor}'
+trap_per_free_4 = 1e7 # (-)
+
+# Trap 5 parameters
+trapping_energy_5 = '${fparse trapping_energy}'
+trapping_prefactor_5 = '${fparse trapping_prefactor}'
+detrapping_energy_5 = '${fparse ${units 2.05 eV -> J} / kb}'
+detrapping_prefactor_5 = '${fparse detrapping_prefactor}'
+trap_per_free_5 = 1e7 # (-)
+
+# Trap intrinsic parameters
+trapping_energy_intrinsic = '${fparse trapping_energy}'
+trapping_prefactor_intrinsic = '${fparse trapping_prefactor}'
+detrapping_energy_intrinsic = '${fparse ${units 1.04 eV -> J} / kb}'
+detrapping_prefactor_intrinsic = '${fparse detrapping_prefactor}'
+trap_density_01dpa_intrinsic = '${units 2.4e22 at/m^3 -> at/mum^3}'
+trapping_site_fraction_intrinsic = '${fparse trap_density_01dpa_intrinsic / tungsten_density}'
+trap_per_free_intrinsic = 1e7 # (-)
