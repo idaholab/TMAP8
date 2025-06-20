@@ -183,8 +183,6 @@ for i, pressure in enumerate(pressure_range):
 # Plot the fit surface
 ax.plot_surface(pressure_mesh, temperature_mesh, atom_ratio_eq_upper_mesh, color='blue', alpha=0.3)
 
-# update the orientation of the figure
-# ax.view_init(30, 30)
 ax.set_xlabel('Partial Pressure (Pa)')
 ax.set_ylabel('Temperature (K)')
 ax.set_zlabel('Atom Ratio (-)')

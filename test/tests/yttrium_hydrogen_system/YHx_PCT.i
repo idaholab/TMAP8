@@ -3,7 +3,7 @@ R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConsta
 N_a = '${units 6.02214076e23 1/mol}' # Avogadro's number from PhysicalConstants.h
 boltzmann_constant = '${units 1.380649e-23 J/K}' # Boltzmann constant from PhysicalConstants.h
 
-# Simulation conditions and materials properties
+# Simulation conditions and material properties
 temperature = '${units 1200 K}'
 density_Y = '${units 48605 mol/m^3}'
 initial_pressure_H2_enclosure_1 = '${units 1e4 Pa}'
@@ -64,12 +64,12 @@ output_file_base = 'YHx_PCT_out'
     paired_block = 2
     new_boundary = interface
   []
-  [interface2]
+  [interface_2]
     type = SideSetsBetweenSubdomainsGenerator
     input = interface
     primary_block = 2
     paired_block = 1
-    new_boundary = interface2
+    new_boundary = interface_2
   []
 []
 
@@ -209,7 +209,7 @@ output_file_base = 'YHx_PCT_out'
     type = InterfaceDiffusion
     variable = concentration_H_enclosure_2
     neighbor_var = concentration_H_enclosure_1
-    boundary = interface2
+    boundary = interface_2
     D = diffusivity_YHx
     D_neighbor = diffusivity_gas
   []
@@ -219,7 +219,7 @@ output_file_base = 'YHx_PCT_out'
     neighbor_var = concentration_H_enclosure_1
     neighbor_temperature = temperature
     density = ${density_Y}
-    boundary = interface2
+    boundary = interface_2
     forward_rate = 'reaction_rate_surface_YHx'
     backward_rate = 'reaction_rate_surface_YHx'
   []
@@ -247,7 +247,7 @@ output_file_base = 'YHx_PCT_out'
   []
   [concentration_H_enclosure_2_at_interface]
     type = SideAverageValue
-    boundary = interface2
+    boundary = interface_2
     variable = concentration_H_enclosure_2
     outputs = 'csv console'
     execute_on = 'initial timestep_end'
