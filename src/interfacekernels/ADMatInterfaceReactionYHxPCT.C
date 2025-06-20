@@ -10,7 +10,7 @@
 
 #include "PhysicalConstants.h"
 
-registerMooseObject("MooseApp", ADMatInterfaceReactionYHxPCT);
+registerMooseObject("TMAP8App", ADMatInterfaceReactionYHxPCT);
 
 InputParameters
 ADMatInterfaceReactionYHxPCT::validParams()
@@ -79,7 +79,7 @@ ADMatInterfaceReactionYHxPCT::computeQpResidual(Moose::DGResidualType type)
   switch (type)
   {
     // Move all the terms to the LHS to get residual, for primary domain
-    // Residual = kf*u - kb*v = kf*u - kb*v
+    // Residual = kf*u - kb*v
     // Weak form for primary domain is: (test, kf*u - kb*v)
     case Moose::Element:
       r = _test[_i][_qp] * (_kf[_qp] * _u[_qp] - _kb[_qp] * _surface_equilibrium_concentration);
