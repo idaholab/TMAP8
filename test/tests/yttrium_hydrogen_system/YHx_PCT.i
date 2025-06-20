@@ -30,8 +30,8 @@ dt_init = '${units 1e-3 s}'
 tau_constant_BC = '${fparse dt_init*2e-2}' # the smaller, the faster the up-ramp for the pressure BC
 
 # convergence parameters
-lower_value_threshold = -1e-20
-lower_value_threshold_1 = -1e-20
+lower_value_threshold_concentration_enclosure_1 = -1e-20
+lower_value_threshold_concentration_enclosure_2 = -1e-20
 
 # file base
 output_file_base = 'YHx_PCT_out'
@@ -91,14 +91,14 @@ output_file_base = 'YHx_PCT_out'
     variable = bounds_dummy_concentration_H_enclosure_1
     bounded_variable = concentration_H_enclosure_1
     bound_type = lower
-    bound_value = ${lower_value_threshold_1}
+    bound_value = ${lower_value_threshold_concentration_enclosure_1}
   []
   [concentration_H_enclosure_2_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy_concentration_H_enclosure_2
     bounded_variable = concentration_H_enclosure_2
     bound_type = lower
-    bound_value = ${lower_value_threshold}
+    bound_value = ${lower_value_threshold_concentration_enclosure_2}
   []
 []
 
