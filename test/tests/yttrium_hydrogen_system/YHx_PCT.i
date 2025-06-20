@@ -21,7 +21,7 @@ reaction_rate_Ea = '${units 1.52 eV -> J}'
 
 # Domain size and mesh parameters
 domain_length = '${units 1 m}'
-num_nodes = 6
+num_nodes = 8
 
 # time
 simulation_time = '${units 1e9 s}'
