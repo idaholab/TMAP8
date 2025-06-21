@@ -571,7 +571,7 @@
 []
 
 [Outputs]
-  exodus = true
+  exodus = ${exodus_output}
   perf_graph = true
   [csv]
     type = CSV

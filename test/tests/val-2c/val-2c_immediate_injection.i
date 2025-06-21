@@ -46,6 +46,9 @@ inflow = ${units 0.54 m^3/h -> mum^3/s} # inflow of normally moist (20% relative
 inflow_concentration = ${fparse initial_H2O_concentration * inflow / volume_enclosure}
 outflow = ${units 0.54 m^3/h -> mum^3/s} # outflow of enclosure air # even if only 0.06 m^3/h is used to do measurements, all that air is purged out.
 
+## Outputs
+exodus_output = false
+
 !include val-2c_base.i
 
 [Variables]
