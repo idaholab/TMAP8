@@ -118,9 +118,9 @@ The calibration study was performed using [MOOSE's stochastic tools module](http
 
 To calibrate using both the T$_2$ and HTO concentrations in the enclosure over time, we performed a multi-objective optimization study. The metric to be optimized is defined as the time integral of
 \begin{equation} \label{eq:optimization_metric}
-g = \frac{1}{w_{HTO} \left(\log(c_{\text{HTO}}^{exp}) - \log(c_{\text{HTO}}) \right)^2 + w_{T2} \left(\log(c_{\text{T}_2}^{exp}) - \log(c_{\text{T}_2}) \right)^2 },
+g = \frac{1}{w_{HTO} \left(\log(c_{\text{HTO}}^{exp}) - \log(c_{\text{HTO}}) \right)^2 + w_{T_2} \left(\log(c_{\text{T}_2}^{exp}) - \log(c_{\text{T}_2}) \right)^2 },
 \end{equation}
-where $w_{HTO} = 5\times10^3$ and $w_{T2} = 1$ are the weights being given to the HTO and T$_2$ differences between the experimental measurements $c_{\text{i}}^{exp}$ and the modeling predictions, respectively.
+where $w_{HTO} = 5\times10^3$ and $w_{T_2} = 1$ are the weights being given to the HTO and T$_2$ differences between the experimental measurements $c_{\text{i}}^{exp}$ and the modeling predictions, respectively.
 Notably, the integral difference is defined in logarithmic space to give equal weight to all data points in the logarithmic scale during the optimization process.
 
 The comparison between the original and calibrated values of selected model parameters is summarized in [val-2c_parameters_calibrated].
@@ -161,7 +161,7 @@ As shown in the red curve in [val-2c_comparison_T2] and [val-2c_comparison_HTO],
 The RMSPE for T$_2$ decreases from 74.77 % to 63.26 % and the RMSPE for HTO decreases from 58.5 % to 40.7 %.
 Note that although the calibration approach is similar to the one presented in [!cite](Simon2025), the results presented here include more simulations and the quality of the calibration is increased here (RMSPE values are further decreased here).
 
-[val-2c_calibration_input] and [val-2c_calibration_output] show the evolution of the model parameter values and of the optimization metric (time integral of $g$ defined in [eq:optimization_metric]) as a function of the number of simulation.The calibrated model corresponds to the highest value.
+[val-2c_calibration_input] and [val-2c_calibration_output] show the evolution of the model parameter values and of the optimization metric (time integral of $g$ defined in [eq:optimization_metric]) as a function of the number of simulation. The calibrated model corresponds to the highest value.
 
 !media comparison_val-2c.py
        image_name=val-2c_pss_inputs.png
