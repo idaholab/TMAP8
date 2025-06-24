@@ -1,197 +1,196 @@
-endtime = 140000 # simulation end time
+# Global parameters
+R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConstants.h
+simulation_time = '${units 140000 s}'
+temperature = '${units 823 K}'
 
-R = 8.31446261815324 # Gas constant (from PhysicalConstants.h - https://physics.nist.gov/cgi-bin/cuu/Value?r)
+# Sorption law parameters
+n_sorption = 1 # Henry' Law
+unit_scale = 1
+unit_scale_neighbor = 1
 
-T = '${units 550 degC -> K}' # temperature
+# Materials properties
+D_FLiBe = '${units 2.0e-9 m^2/s}'
+D_Ni = '${units 1.3e-9 m^2/s}'
+K_s_Ni = '${units 5.6e-2 mol/m^3/Pa^0.5}' # Sieverts' law
+K_d_Ni = '${units 1.9e-8 m^2/s}' # Henry's law
 
-p_bnd = 1210 # pressure
+# Initial conditions
+initial_pressure = '${units 1210 Pa}'
+initial_pressure_Ni = '${units 1e-10 Pa}'
+initial_concentration_Ni = '${units ${fparse initial_pressure_Ni / (R*temperature)} mol/m^3}'
+initial_pressure_FLiBe = '${units 1e-10 Pa}'
+initial_concentration_FLiBe = '${units ${fparse initial_pressure_FLiBe / (R*temperature)} mol/m^3}'
 
-L_Ni = '${units 2 mm -> m}' # nickel thickness
-L_salt = '${units 8.1 mm -> m}' # salt thickness
-
-num_nodes = 200 # (-)
+# Geometry and mesh
+length_Ni = '${units 2 mm -> m}'
+num_nodes_Ni = 100
+length_FLiBe = '${units 8.1 mm -> m}'
+num_nodes_FLiBe = 100
 
 [Mesh]
-  [whole_domain]
-    type = GeneratedMeshGenerator
-    xmin = 0
-    xmax = '${fparse L_Ni + L_salt}'
+  [cmg]
+    type = CartesianMeshGenerator
     dim = 1
-    nx = ${num_nodes}
+    dx = '${length_Ni} ${length_FLiBe}'
+    ix = '${num_nodes_Ni} ${num_nodes_FLiBe}'
+    subdomain_id = '1 2'
   []
-  [block_1]
-    type = ParsedSubdomainMeshGenerator
-    input = whole_domain
-    combinatorial_geometry = 'x <= ${L_Ni}'
-    block_id = 0
-  []
-  [block_2]
-    type = ParsedSubdomainMeshGenerator
-    input = block_1
-    combinatorial_geometry = 'x > ${L_Ni}'
-    block_id = 1
-  []
-  [interface]
+  [interface_Ni_FLiBe]
     type = SideSetsBetweenSubdomainsGenerator
-    input = block_2
-    primary_block = '0' # Ni
-    paired_block = '1' # salt
-    new_boundary = 'interface'
+    input = cmg
+    primary_block = '1'
+    paired_block = '2'
+    new_boundary = 'interface_Ni_FLiBe'
   []
-  [interface_other_side]
+  [interface_Ni_FLiBe_other_side]
     type = SideSetsBetweenSubdomainsGenerator
-    input = interface
-    primary_block = '1' # salt
-    paired_block = '0' # Ni
-    new_boundary = 'interface_other'
+    input = interface_Ni_FLiBe
+    primary_block = '2'
+    paired_block = '1'
+    new_boundary = 'interface_Ni_FLiBe_other_side'
   []
 []
 
 [Variables]
-  [conc_Ni]
-    initial_condition = 1.8
-    block = 0
-  []
-  [conc_salt]
-    initial_condition = 0.47
+  [tritium_concentration_Ni]
+    initial_condition = ${initial_concentration_Ni} # 1.8 # mol/m^3
     block = 1
   []
-[]
-
-[AuxVariables]
-  [enclosure_pressure]
-    family = SCALAR
-    initial_condition = ${p_bnd}
-  []
-  [flux_x]
-    order = FIRST
-    family = MONOMIAL
+  [tritium_concentration_FLiBe]
+    initial_condition = ${initial_concentration_FLiBe} # 0.47 # mol/m^3
+    block = 2
   []
 []
 
 [Kernels]
-  [diff_Ni]
+  # Diffusion in Ni layer
+  [diffusion_Ni]
     type = ADMatDiffusion
-    variable = conc_Ni
-    diffusivity = diffusivity_Ni
-    block = 0
-  []
-  [diff_salt]
-    type = ADMatDiffusion
-    variable = conc_salt
-    diffusivity = diffusivity_salt
+    variable = tritium_concentration_Ni
+    diffusivity = ${D_Ni}
     block = 1
   []
   [time_diff_Ni]
     type = TimeDerivative
-    variable = conc_Ni
-    block = 0
+    variable = tritium_concentration_Ni
+    block = 1
   []
-  [time_diff_salt]
+  # Diffusion in FLiBe layer
+  [diffusion_FLiBe]
+    type = ADMatDiffusion
+    variable = tritium_concentration_FLiBe
+    diffusivity = ${D_FLiBe}
+    block = 2
+  []
+  [time_diff_FLiBe]
     type = TimeDerivative
-    variable = conc_salt
-    block = 1
-  []
-[]
-
-[AuxKernels]
-  [flux_x_Ni]
-    type = DiffusionFluxAux
-    diffusivity = diffusivity_Ni
-    variable = flux_x
-    diffusion_variable = conc_Ni
-    component = x
-    block = 0
-  []
-  [flux_x_salt]
-    type = DiffusionFluxAux
-    diffusivity = diffusivity_salt
-    variable = flux_x
-    diffusion_variable = conc_salt
-    component = x
-    block = 1
+    variable = tritium_concentration_FLiBe
+    block = 2
   []
 []
 
 [BCs]
   [left_flux]
-    type = EquilibriumBC
-    Ko = 0.564
-    activation_energy = 15800.0
-    boundary = left
-    enclosure_var = enclosure_pressure
-    temperature = ${T}
-    variable = conc_Ni
-    p = 0.5
-  []
-  [interfaceBC]
-    type = EquilibriumBC
-    Ko = 0.151119063
-    activation_energy = 0.0
-    boundary = 'interface'
-    enclosure_var = conc_Ni
-    temperature = ${T}
-    variable = conc_salt
-    p = 2.0
-  []
-  [right_flux]
     type = ADDirichletBC
-    boundary = right
-    variable = conc_salt
-    value = 0.0
+    boundary = left
+    variable = tritium_concentration_Ni
+    value = '${fparse K_s_Ni * (initial_pressure)^0.5}'
+  []
+[]
+
+[InterfaceKernels]
+  [interface_sorption_Ni_FLiBe]
+    type = InterfaceSorption
+    K0 = ${K_d_Ni}
+    Ea = 0
+    n_sorption = ${n_sorption}
+    diffusivity = ${D_Ni}
+    unit_scale = ${unit_scale}
+    unit_scale_neighbor = ${unit_scale_neighbor}
+    temperature = ${temperature}
+    variable = tritium_concentration_Ni
+    neighbor_var = tritium_concentration_FLiBe
+    sorption_penalty = 1e1
+    boundary = 'interface_Ni_FLiBe'
   []
 []
 
 [Functions]
-  [diffusivity_Ni_func]
+  [max_dt_size_function]
     type = ParsedFunction
-    symbol_names = 'T'
-    symbol_values = '${T}'
-    expression = '0.0000007*exp(-39500/(${R}*T))'
-  []
-
-  [diffusivity_salt_func]
-    type = ParsedFunction
-    symbol_names = 'T'
-    symbol_values = '${T}'
-    expression = '0.00000093*exp(-42000/(${R}*T))'
-  []
-
-  [solubility_Ni_func]
-    type = ParsedFunction
-    symbol_names = 'T'
-    symbol_values = '${T}'
-    expression = '0.564 * exp(-15800/(${R}*T))'
-  []
-
-  [solubility_salt_func]
-    type = ParsedFunction
-    symbol_names = 'T'
-    symbol_values = '${T}'
-    expression = '0.079 * exp(-35000/(${R}*T))'
-  []
-[]
-
-[Materials]
-  [diff_solu]
-    type = ADGenericFunctionMaterial
-    prop_names = 'diffusivity_Ni diffusivity_salt solubility_Ni solubility_salt'
-    prop_values = 'diffusivity_Ni_func diffusivity_salt_func solubility_Ni_func solubility_salt_func'
-    outputs = all
-  []
-  [converter_to_regular]
-    type = MaterialADConverter
-    ad_props_in = 'diffusivity_Ni diffusivity_salt'
-    reg_props_out = 'diffusivity_Ni_nonAD diffusivity_salt_nonAD'
+    expression = 'if(t<${fparse 8500}, ${fparse 1e2},
+                  if(t<${fparse 37000}, ${fparse 1e1},
+                  if(t<${fparse 38500}, ${fparse 1e0}, ${fparse 1e1})))'
   []
 []
 
 [Postprocessors]
+  [avg_flux_left]
+    type = SideDiffusiveFluxAverage
+    variable = tritium_concentration_Ni
+    boundary = 'left'
+    diffusivity = ${D_Ni}
+  []
   [avg_flux_right]
     type = SideDiffusiveFluxAverage
-    variable = conc_salt
-    boundary = right
-    diffusivity = diffusivity_salt_nonAD
+    variable = tritium_concentration_Ni
+    boundary = 'interface_Ni_FLiBe'
+    diffusivity = ${D_Ni}
+  []
+  [Ni_left]
+    type = SideAverageValue
+    boundary = left
+    variable = tritium_concentration_Ni
+    execute_on = 'initial timestep_end'
+  []
+  [Ni_interface]
+    type = SideAverageValue
+    boundary = interface_Ni_FLiBe
+    variable = tritium_concentration_Ni
+    execute_on = 'initial timestep_end'
+  []
+  [FLiBe_interface]
+    type = SideAverageValue
+    boundary = interface_Ni_FLiBe_other_side
+    variable = tritium_concentration_FLiBe
+    execute_on = 'initial timestep_end'
+  []
+  [concentration_ratio_tritium]
+    type = ParsedPostprocessor
+    expression = 'Ni_interface / (FLiBe_interface)^${n_sorption}'
+    pp_names = 'Ni_interface FLiBe_interface'
+    execute_on = 'initial timestep_end'
+  []
+  [concentration_tritium_Ni_inventory]
+    type = ElementIntegralVariablePostprocessor
+    variable = tritium_concentration_Ni
+    block = 1
+    execute_on = 'initial timestep_end'
+  []
+  [concentration_tritium_FLiBe_inventory]
+    type = ElementIntegralVariablePostprocessor
+    variable = tritium_concentration_FLiBe
+    block = 2
+    execute_on = 'initial timestep_end'
+  []
+  [mass_conservation]
+    type = LinearCombinationPostprocessor
+    pp_names = 'concentration_tritium_Ni_inventory concentration_tritium_FLiBe_inventory'
+    pp_coefs = '1 1'
+    execute_on = 'initial timestep_end'
+  []
+  [sieverts_ratio_tritium]
+    type = ParsedPostprocessor
+    expression = 'Ni_left / (${initial_pressure})^0.5'
+    pp_names = 'Ni_left'
+    execute_on = 'initial timestep_end'
+    outputs = 'csv console'
+  []
+  [max_time_step_size]
+    type = FunctionValuePostprocessor
+    function = max_dt_size_function
+    execute_on = 'initial nonlinear linear timestep_end'
+    outputs = none
   []
 []
 
@@ -204,55 +203,33 @@ num_nodes = 200 # (-)
 
 [Executioner]
   type = Transient
-  steady_state_detection = true
-  steady_state_start_time = 40000
-  steady_state_tolerance = 1e-9
-  scheme = bdf2 # bdf2 # crank-nicolson # explicit-euler
-  solve_type = NEWTON # LINEAR # JFNK # NEWTON
-  petsc_options = '-snes_ksp_ew'
+  end_time = ${simulation_time}
+  nl_max_its = 9
+  l_max_its = 30
+  scheme = 'bdf2'
+  solve_type = 'PJFNK'
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
-  l_max_its = 10
-  nl_max_its = 13
-  nl_rel_tol = 1e-8 # nonlinear relative tolerance
-  nl_abs_tol = 1e-20 #1e-30 # nonlinear absolute tolerance
-  l_tol = 1e-5 # 1e-3 - 1e-5 # linear tolerance
-  end_time = ${endtime}
-  automatic_scaling = true
-  line_search = none
-  dtmax = 10.0
+  nl_abs_tol = 1e-11
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 1e-10
-    optimal_iterations = 18 # 6-10 or 18
+    dt = 1e-6
+    optimal_iterations = 7
+    iteration_window = 1
     growth_factor = 1.1
-    cutback_factor = 0.5
+    cutback_factor = 0.9
+    cutback_factor_at_failure = 0.9
+    timestep_limiting_postprocessor = max_time_step_size
   []
 []
 
 [Outputs]
-  execute_on = timestep_end
-  exodus = true
+  file_base = 'val-flibe_out'
   [csv]
     type = CSV
-    file_base = 'val-flibe_1210_550'
-    time_step_interval = 500
   []
-[]
-
-[Dampers]
-  [limit_salt]
-    type = BoundingValueElementDamper
-    variable = conc_salt
-    max_value = 1e42
-    min_value = -0.01
-    min_damping = 0.001
-  []
-  [limit_Ni]
-    type = BoundingValueElementDamper
-    variable = conc_Ni
-    max_value = 1e42
-    min_value = -0.01
-    min_damping = 0.001
+  [exodus]
+    type = Exodus
+    time_step_interval = 200
   []
 []
