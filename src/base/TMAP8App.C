@@ -22,7 +22,7 @@ TMAP8App::validParams()
   return params;
 }
 
-TMAP8App::TMAP8App(InputParameters parameters) : MooseApp(parameters)
+TMAP8App::TMAP8App(const InputParameters & parameters) : MooseApp(parameters)
 {
   TMAP8App::registerAll(_factory, _action_factory, _syntax);
 }

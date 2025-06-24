@@ -20,7 +20,7 @@ TMAP8TestApp::validParams()
   return params;
 }
 
-TMAP8TestApp::TMAP8TestApp(InputParameters parameters) : MooseApp(parameters)
+TMAP8TestApp::TMAP8TestApp(const InputParameters & parameters) : MooseApp(parameters)
 {
   TMAP8TestApp::registerAll(
       _factory, _action_factory, _syntax, getParam<bool>("allow_test_objects"));

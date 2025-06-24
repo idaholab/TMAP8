@@ -13,7 +13,7 @@
 class TMAP8TestApp : public MooseApp
 {
 public:
-  TMAP8TestApp(InputParameters parameters);
+  TMAP8TestApp(const InputParameters & parameters);
   virtual ~TMAP8TestApp();
 
   static InputParameters validParams();
