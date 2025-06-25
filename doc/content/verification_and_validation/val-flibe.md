@@ -46,8 +46,8 @@ where $P_{T_2}$ is the input pressure of tritium and $n$ is the exponent of the 
 | $P_{T_2, \mathrm{Ni}}$ | Initial pressure in the nickel membrane | $1\times 10^{-10}$ | Pa | - |
 | $P_{T_2, \mathrm{FLiBe}}$ | Initial pressure in FLiBe | $1\times 10^{-10}$ | Pa | - |
 | $D_{\mathrm{FLiBe}}$ | Diffusivity of tritium in FLiBe | $9.3 \times 10^{-7} \exp(- 42 \times 10^3 / RT)$ | m$^2$/s | [!cite](calderoni2008measurement) |
-| $K_{s, \mathrm{FLiBe}}$ | Henry's law solubility for tritium in FLiBe | $7.9 \times 10^{-2} \exp(- 39.5 \times 10^3 / RT)$ | mol/m$^3$/Pa | [!cite](calderoni2008measurement) |
-| $D_{\mathrm{Ni}}$ | Diffusivity of tritium in nickel | $7 \times 10^{-7} \exp(- 15.8 \times 10^3 / RT)$ | m$^2$/s | [!cite](causey2012tritium) |
+| $K_{s, \mathrm{FLiBe}}$ | Henry's law solubility for tritium in FLiBe | $7.9 \times 10^{-2} \exp(- 35 \times 10^3 / RT)$ | mol/m$^3$/Pa | [!cite](calderoni2008measurement) |
+| $D_{\mathrm{Ni}}$ | Diffusivity of tritium in nickel | $7 \times 10^{-7} \exp(- 39.5 \times 10^3 / RT)$ | m$^2$/s | [!cite](causey2012tritium) |
 | $K_{s, \mathrm{Ni}}$ | Sieverts' law solubility for tritium in nickel | $564 \times 10^{-3} \exp(- 15.8 \times 10^3 / RT)$ | mol/m$^3$/Pa$^{0.5}$ | [!cite](calderoni2008measurement) |
 | $K_{d, \mathrm{Ni}}$ | Surface rate of tritium in nickel | $1.44 \times 10^{-6} \exp(- 29.68 \times 10^3 / RT)$ | mol/m$^{2}$/s/Pa | [!cite](altunoglu1991permeation) |
 
