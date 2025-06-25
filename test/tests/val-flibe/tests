@@ -1,13 +1,13 @@
 [Tests]
-  design = 'ADMatDiffusion.md TimeDerivative.md'
+  design = 'SideSetsBetweenSubdomainsGenerator.md InterfaceSorption.md'
   issues = '#193'
     [val-flibe]
       type = CSVDiff
-      heavy = true
       input = val-flibe.i
-	    should_execute = True
-	    csvdiff = val-flibe_out.csv
-      requirement = 'The system shall be able to model transient diffusion through a crucible containing molten salt with a constant concentration boundary condition as the species source.'
+      cli_args = "simulation_time=1
+                  Outputs/file_base=val-flibe_out_light"
+      csvdiff = val-flibe_out_light.csv
+      requirement = 'The system shall be able to model the light test for the transient diffusion through a crucible containing molten salt with a constant concentration boundary condition as the species source for 823K and 1210Pa.'
     []
     [val-flibe_823K_1210Pa]
       type = CSVDiff
@@ -16,6 +16,7 @@
       csvdiff = val-flibe_823K_1210Pa_out.csv
       cli_args = 'temperature="${units 823 K}" initial_pressure="${units 1210 Pa}" Outputs/file_base="val-flibe_823K_1210Pa_out"'
       requirement = 'The system shall be able to model transient diffusion through a crucible containing molten salt with a constant concentration boundary condition as the species source for 823K and 1210Pa.'
+      max_time = 400
     []
     [val-flibe_873K_1210Pa]
       type = CSVDiff
@@ -24,6 +25,7 @@
       csvdiff = val-flibe_873K_1210Pa_out.csv
       cli_args = 'temperature="${units 873 K}" initial_pressure="${units 1210 Pa}" Outputs/file_base="val-flibe_873K_1210Pa_out"'
       requirement = 'The system shall be able to model transient diffusion through a crucible containing molten salt with a constant concentration boundary condition as the species source for 873K and 1210Pa.'
+      max_time = 400
     []
     [val-flibe_923K_1210Pa]
       type = CSVDiff
@@ -32,6 +34,7 @@
       csvdiff = val-flibe_923K_1210Pa_out.csv
       cli_args = 'temperature="${units 923 K}" initial_pressure="${units 1210 Pa}" Outputs/file_base="val-flibe_923K_1210Pa_out"'
       requirement = 'The system shall be able to model transient diffusion through a crucible containing molten salt with a constant concentration boundary condition as the species source for 923K and 1210Pa.'
+      max_time = 400
     []
     [val-flibe_973K_1210Pa]
       type = CSVDiff
@@ -40,37 +43,6 @@
       csvdiff = val-flibe_973K_1210Pa_out.csv
       cli_args = 'temperature="${units 973 K}" initial_pressure="${units 1210 Pa}" Outputs/file_base="val-flibe_973K_1210Pa_out"'
       requirement = 'The system shall be able to model transient diffusion through a crucible containing molten salt with a constant concentration boundary condition as the species source for 973K and 1210Pa.'
-    []
-    [val-flibe_823K_1210Pa]
-      type = CSVDiff
-      heavy = true
-      input = val-flibe.i
-      csvdiff = val-flibe_823K_1210Pa_out.csv
-      cli_args = 'temperature="${units 823 K}" initial_pressure="${units 1210 Pa}" Outputs/file_base="val-flibe_823K_1210Pa_out"'
-      requirement = 'The system shall be able to model transient diffusion through a crucible containing molten salt with a constant concentration boundary condition as the species source for 823K and 1210Pa.'
-    []
-    [val-flibe_873K_1210Pa]
-      type = CSVDiff
-      heavy = true
-      input = val-flibe.i
-      csvdiff = val-flibe_873K_1210Pa_out.csv
-      cli_args = 'temperature="${units 873 K}" initial_pressure="${units 1210 Pa}" Outputs/file_base="val-flibe_873K_1210Pa_out"'
-      requirement = 'The system shall be able to model transient diffusion through a crucible containing molten salt with a constant concentration boundary condition as the species source for 873K and 1210Pa.'
-    []
-    [val-flibe_923K_1210Pa]
-      type = CSVDiff
-      heavy = true
-      input = val-flibe.i
-      csvdiff = val-flibe_923K_1210Pa_out.csv
-      cli_args = 'temperature="${units 923 K}" initial_pressure="${units 1210 Pa}" Outputs/file_base="val-flibe_923K_1210Pa_out"'
-      requirement = 'The system shall be able to model transient diffusion through a crucible containing molten salt with a constant concentration boundary condition as the species source for 923K and 1210Pa.'
-    []
-    [val-flibe_973K_1210Pa]
-      type = CSVDiff
-      heavy = true
-      input = val-flibe.i
-      csvdiff = val-flibe_973K_1210Pa_out.csv
-      cli_args = 'temperature="${units 973 K}" initial_pressure="${units 1210 Pa}" Outputs/file_base="val-flibe_973K_1210Pa_out"'
-      requirement = 'The system shall be able to model transient diffusion through a crucible containing molten salt with a constant concentration boundary condition as the species source for 973K and 1210Pa.'
+      max_time = 400
     []
 []
