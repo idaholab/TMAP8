@@ -53,12 +53,12 @@ num_nodes_FLiBe = 100
     paired_block = '2'
     new_boundary = 'interface_Ni_FLiBe'
   []
-  [interface_Ni_FLiBe_other_side]
+  [interface_Ni_FLiBe_other_direction]
     type = SideSetsBetweenSubdomainsGenerator
     input = interface_Ni_FLiBe
     primary_block = '2'
     paired_block = '1'
-    new_boundary = 'interface_Ni_FLiBe_other_side'
+    new_boundary = 'interface_Ni_FLiBe_other_direction'
   []
 []
 
@@ -153,22 +153,22 @@ num_nodes_FLiBe = 100
 []
 
 [Postprocessors]
-  [avg_flux_left]
+  [average_flux_left]
     type = SideDiffusiveFluxAverage
     variable = 'tritium_concentration_Ni'
     boundary = 'left'
     diffusivity = ${D_Ni}
   []
-  [avg_flux_right]
+  [average_flux_Ni_FLiBe_interface]
     type = SideDiffusiveFluxAverage
     variable = 'tritium_concentration_Ni'
     boundary = 'interface_Ni_FLiBe'
     diffusivity = ${D_Ni}
   []
-  [avg_flux_right_2]
+  [average_flux_Ni_FLiBe_interface_other_direction]
     type = SideDiffusiveFluxAverage
     variable = 'tritium_concentration_FLiBe'
-    boundary = 'interface_Ni_FLiBe_other_side'
+    boundary = 'interface_Ni_FLiBe_other_direction'
     diffusivity = ${D_FLiBe}
   []
   [Ni_left]
