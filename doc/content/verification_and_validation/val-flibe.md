@@ -1,10 +1,10 @@
-# val-flibe
+# val-2g
 
 # Permeation experiment with FLiBe
 
 ## Case Description
 
-In this experiment from [!cite](calderoni2008measurement), tritium permeation through molten FLiBe (2LiF–BeF$_2$) is measured using a stainless steel permeation cell composed of two internal volumes separated by a 2 mm thick nickel membrane. The bottom side of the membrane is exposed to a T$_2$/argon gas mixture at controlled partial pressures ranging from 1 to 1250 Pa, while the top side is in contact with molten FLiBe. Temperatures are varied between 500 °C and 700 °C (773–973 K). As tritium permeated through the membrane and dissolved in the FLiBe, it is carried away from the liquid surface by an argon sweep gas containing 5 $\%$ H$_2$.
+In this experiment from [!cite](calderoni2008measurement), tritium permeation through molten FLiBe (2LiF–BeF$_2$) is measured using a stainless steel permeation cell composed of two internal volumes separated by a 2 mm thick nickel membrane. The bottom side of the membrane is exposed to a T$_2$/argon gas mixture at controlled partial pressures ranging from 1 to 1250 Pa, while the top side is in contact with molten FLiBe. Temperatures are varied between 500°C and 700°C (773–973 K). As tritium permeated through the membrane and dissolved in the FLiBe, it is carried away from the liquid surface by an argon sweep gas containing 5$\%$ H$_2$.
 
 ## Model Description
 
@@ -18,7 +18,7 @@ and
 \frac{\partial C_{T_2, \,  \text{FLiBe}}}{\partial t} = \nabla D_{\text{FLiBe}} \nabla C_{T_2, \,  \text{FLiBe}},
 \end{equation}
 
-where $C_{T_2, \,  \text{Ni}}$ and $C_{T_2, \,  \text{FLiBe}}$ represent the concentration fields in the nickel membrane and FLiBe respectively, $t$ is the time, and $D_{\text{Ni}}$ and $D_{\text{FLiBe}}$ denotes the diffusivity coefficients.
+where $C_{T_2, \,  \text{Ni}}$ and $C_{T_2, \,  \text{FLiBe}}$ represent the concentration fields in the nickel membrane and FLiBe, respectively, $t$ is the time, and $D_{\text{Ni}}$ and $D_{\text{FLiBe}}$ denotes the diffusivity coefficients.
 
 The concentration in FLiBe is related to the partial pressure and concentration in the nickel membrane via the interface sorption law:
 
@@ -28,13 +28,13 @@ C_{T_2, \,  \text{FLiBe}} = K_{s, \,  \text{Ni}} P_{T_2, \,  \text{Ni}}^n = K_{s
 
 where $R$ is the ideal gas constant in J/mol/K, $T$ is the temperature, $K_{s, \,  \text{Ni}}$ is the solubility for tritium in nickel, and $n$ is the exponent of the sorption law. For Sieverts' law, $n=0.5$.
 
-A Dirichlet boundary condition imposes equilibrium between tritium pressure at the bottom surface of the membrane and the tritium concentration in the membrane on Sieverts' law:
+A Dirichlet boundary condition at the membrane-air interface imposes an equilibrium for the tritium concentration based on Sieverts' law:
 
 \begin{equation}
 C_{T_2, \,  \text{Ni}} = K_{s, \,  \text{Ni}} P_{T_2}^n,
 \end{equation}
 
-where $P_{T_2}$ is the input pressure of tritium and $n$ is the exponent of the sorption law. Again for Sieverts' law, $n=0.5$.
+where $P_{T_2}$ is the input pressure of tritium and $n$ is the exponent of the sorption law, defined as $n=0.5$ for Sieverts' law.
 
 ## Model Parameters
 
@@ -75,19 +75,19 @@ where $P_{T_2}$ is the input pressure of tritium and $n$ is the exponent of the 
        id=val-flibe_concentration_ratio_Ni-FLiBe
        caption= Assessment of Henry's law equilibrium ratio at the nickel membrane-FLiBe interface for $T = 823$ K and $P_{T_2} = 1210$ Pa.
 
-# results with flux wrt initial pressure
+# results of tritium flux as a function of temperature and initial pressure
 
 !media comparison_val-flibe.py
        image_name=val-flibe_flux.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-flibe_flux
-       caption= Steady state permeation flux through Ni and FLiBe at different temperatures and input pressures. TMAP8 results (TMAP8) vs [!cite](calderoni2008measurement) (exp).
+       caption= Steady state permeation flux through Ni and FLiBe at different temperatures and input pressures. The TMAP8 results are compared against experimental results from [!cite](calderoni2008measurement).
 
 ## Input files
 
 !style halign=left
 The input file for this case can be found at [/val-flibe.i].
 
-[/val-flibe/tests] used `cli_args` to modify [/val-flibe.i] into simulating the different range of temperatures and initial pressures used during the experiment.
+[/val-flibe/tests] uses `cli_args` to modify [/val-flibe.i] and impose the desired temperatures and initial pressures to reproduce the experimental conditions.
 
 To limit the computational costs of the test case, the test runs a version of the file with a smaller simulation time. More information about the changes can be found in the test specification file for this case, namely [/val-flibe/tests].

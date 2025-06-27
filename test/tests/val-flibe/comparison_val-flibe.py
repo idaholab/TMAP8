@@ -14,7 +14,7 @@ os.chdir(script_folder)
 #===============================================================================
 # Load experimental data
 if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
-    csv_folder = "../../../../test/tests/val-flibe/gold/val-flibe_823K_1210Pa_out.csv"
+    csv_folder = "../../../../test/tests/val-2g/gold/val-flibe_823K_1210Pa_out.csv"
 else:                                       # if in test folder
     csv_folder = "./gold/val-flibe_823K_1210Pa_out.csv"
 expt_data = pd.read_csv(csv_folder)
@@ -22,13 +22,13 @@ TMAP8_time = expt_data['time']
 concentration_ratio = expt_data['concentration_ratio_tritium']
 concentration_ratio_tritium = expt_data['concentration_ratio_tritium']
 sieverts_ratio_tritium = expt_data['sieverts_ratio_tritium']
-avg_flux_left = - expt_data['avg_flux_left']
-avg_flux_right = expt_data['avg_flux_right']
+average_flux_left = - expt_data['average_flux_left']
+average_flux_Ni_FLiBe = expt_data['average_flux_Ni_FLiBe']
 
 #===============================================================================
 # Flux conservation
 begin = 2000
-flux_conservation = avg_flux_left/avg_flux_right
+flux_conservation = average_flux_left/average_flux_right
 fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
@@ -112,7 +112,7 @@ gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
 data_folder = "./gold/"
-data_by_temp = {}
+data_by_temperature = {}
 pattern = re.compile(r"val-flibe_(\d+)K_(\d+)Pa_out\.csv")
 
 for file_path in glob.glob(os.path.join(data_folder, "val-flibe_*K_*Pa_out.csv")):
@@ -121,13 +121,13 @@ for file_path in glob.glob(os.path.join(data_folder, "val-flibe_*K_*Pa_out.csv")
         T = int(match.group(1))
         P = int(match.group(2))
         df = pd.read_csv(file_path)
-        avg_flux = df["avg_flux_right"].iloc[-1]
-        data_by_temp.setdefault(T, []).append((P, avg_flux))
+        average_flux = df["average_flux_right"].iloc[-1]
+        data_by_temperature.setdefault(T, []).append((P, average_flux))
 
 # Define consistent color and marker maps based on temperature in Celsius
-temps_C = [550, 600, 650, 700]
-temp_color_map = {T: f"C{i}" for i, T in enumerate(temps_C)}
-temp_marker_map = {550: 'o', 600: 's', 650: 'D', 700: '^'}
+temperatures_C = [550, 600, 650, 700]
+temperature_color_map = {T: f"C{i}" for i, T in enumerate(temperatures_C)}
+temperature_marker_map = {550: 'o', 600: 's', 650: 'D', 700: '^'}
 
 # Experimental data
 exp_data = pd.DataFrame({
@@ -152,22 +152,22 @@ for T_C in reversed(sorted(exp_data["temperature"].unique())):
     ax.scatter(
         subset["pressure"],
         subset["flux"],
-        marker=temp_marker_map[T_C],
+        marker=temperature_marker_map[T_C],
         facecolors='none',
-        edgecolors=temp_color_map[T_C],
+        edgecolors=temperature_color_map[T_C],
         label=f"{T_C} °C exp"
     )
 
 # Plot TMAP8 data
-for T in sorted(data_by_temp.keys()):
+for T in sorted(data_by_temperature.keys()):
     T_C = T - 273
-    values = sorted(data_by_temp[T])
+    values = sorted(data_by_temperature[T])
     pressures, fluxes = zip(*values)
     ax.scatter(
         pressures,
         fluxes,
-        marker=temp_marker_map[T_C],
-        color=temp_color_map[T_C],
+        marker=temperature_marker_map[T_C],
+        color=temperature_color_map[T_C],
         label=f"{T_C} °C (TMAP8)"
     )
 
