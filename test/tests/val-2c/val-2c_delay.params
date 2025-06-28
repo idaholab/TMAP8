@@ -24,8 +24,10 @@ diffusivity_elemental_tritium = ${units ${fparse 1 * 4.0e-12} m^2/s -> mum^2/s}
 diffusivity_tritiated_water = ${units 1.0e-14 m^2/s -> mum^2/s}
 diffusivity_artificial_enclosure = ${fparse diffusivity_elemental_tritium*1e3}
 reaction_rate = '${units ${fparse 2.8 * 2.0e-10*conversion_Ci_atom} m^3/at/s -> mum^3/at/s}' # ~ 1.5* 9.62e-30 m^3/at/s, close to the 1.0e-29 m3/atoms/s in TMAP4
-solubility_elemental_tritium = '${units ${fparse 1e-3 * 4.0e19} 1/m^3/Pa -> 1/mum^3/Pa}' # molecules/microns^3/Pa = molecules*s^2/m^2/kg
-solubility_tritiated_water = '${units ${fparse 3e-4 * 6.0e24} 1/m^3/Pa -> 1/mum^3/Pa}' # molecules/microns^3/Pa = molecules*s^2/m^2/kg
+log_solubility_elemental_tritium = ${fparse log(1e-3 * 4.0e19 * 1e-18)} # molecules/microns^3/Pa = molecules*s^2/m^2/kg - the log version is defined to enable using the log scale in the stochastic tool methods. 1e-18 is for unit conversion from 1/m^3 to 1/mum^3.
+solubility_elemental_tritium = ${fparse exp(log_solubility_elemental_tritium)}
+log_solubility_tritiated_water = ${fparse log(3e-4 * 6.0e24 * 1e-18)} # molecules/microns^3/Pa = molecules*s^2/m^2/kg - the log version is defined to enable using the log scale in the stochastic tool methods.  1e-18 is for unit conversion from 1/m^3 to 1/mum^3.
+solubility_tritiated_water = ${fparse exp(log_solubility_tritiated_water)}
 
 ## Initial conditions
 # The units below are actually in molecules, not atoms
