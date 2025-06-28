@@ -54,17 +54,17 @@
     csvdiff = YHx_PCT_T1173_P5e4_out.csv
     requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature for P=5e4 Pa and T=1173.15 K.'
   []
-  [YHx_PCT_T1473_P5e4_csv]
+  [YHx_PCT_T1273_P3e3_csv]
     type = CSVDiff
     input = YHx_PCT.i
-    cli_args = 'output_file_base=YHx_PCT_T1473_P5e4_out
-                temperature=1473.15
-                initial_pressure_H2_enclosure_1=5e4
-                initial_atomic_fraction=1.2
-                Executioner/num_steps=300
+    cli_args = 'output_file_base=YHx_PCT_T1273_P3e3_out
+                temperature=1273.15
+                initial_pressure_H2_enclosure_1=3e3
+                initial_atomic_fraction=1.41
+                Executioner/num_steps=200
                 InterfaceKernels/interface_reaction_YHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
-    csvdiff = YHx_PCT_T1473_P5e4_out.csv
-    requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature for P=5e4 Pa and T=1473.15 K.'
+    csvdiff = YHx_PCT_T1273_P3e3_out.csv
+    requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature for P=3e3 Pa and T=1273.15 K.'
   []
   [YHx_PCT_comparison]
     type = RunCommand
