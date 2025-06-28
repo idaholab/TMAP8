@@ -4,6 +4,7 @@ from matplotlib import gridspec
 import pandas as pd
 import json
 import os
+from scipy.stats import norm
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
 script_folder = os.path.dirname(__file__)
@@ -121,8 +122,9 @@ else:                                  # if in test folder
     file_json = "./gold/val-2c_pss_results/val-2c_pss_main_out.json"
 n_procs = 10 # number of processors with which the pss study was conducted
 n_subsets = 8 # number of subset used in pss study
-n_samples_per_subset = 4000 # number of samples per subset used in pss study
-parameters = ['reaction_rate', 'diffusivity_elemental_tritium', 'diffusivity_tritiated_water', 'solubility_elemental_tritium', 'solubility_tritiated_water', 'time_injection_T2_end']
+n_samples_per_subset = 10000 # SHOULD BE UPDATED TO 10000 # number of samples per subset used in pss study
+parameters = ['reaction_rate', 'diffusivity_elemental_tritium', 'diffusivity_tritiated_water', 'log_solubility_elemental_tritium', 'log_solubility_tritiated_water', 'time_injection_T2_end']
+parameters_legend = ['$K^0$', '$D^e$', '$D^w$', 'log($K_S^e$)', 'log($K_S^w$)', '$t_{injection}$']
 n_variables = len(parameters)
 
 # Open output file of pss study
@@ -180,6 +182,91 @@ if os.path.exists(filename):
 
 with open(filename, 'a') as f:
     f.writelines(lines)
+
+Curie = 3.7e10 # 1/s
+decay_rate_tritium = 1.78199e-9 # 1/s/at
+conversion_Ci_atom = decay_rate_tritium / Curie # 1/at
+m_to_mum = 1e6
+
+# provide average and std values for each parameter following a normal distribution, in the same order as `parameters_normal`
+indices_parameters_normal = [0, 1, 2, 5] # indices of the parameters vector corresponding to parameters following a normal distribution
+parameters_normal = [parameters[i] for i in indices_parameters_normal]
+parameters_legend_normal = [parameters_legend[i] for i in indices_parameters_normal]
+calibrated_inputs_normal = [calibrated_inputs[i] for i in indices_parameters_normal]
+parameters_normal_average = [2.8 * 2.0e-10*conversion_Ci_atom*m_to_mum**3,
+                             4.0e-12 * m_to_mum**2,
+                             1.0e-14 * m_to_mum**2,
+                             3*60*60]
+parameters_normal_std = [20/100 * parameters_normal_average[0],
+                         20/100 * parameters_normal_average[1],
+                         20/100 * parameters_normal_average[2],
+                         40/100 * parameters_normal_average[-1]]
+
+# Plot the calibrate inputs on the normal distribution
+fig = plt.figure(figsize=[6.5, 5.5])
+gs = gridspec.GridSpec(1, 1)
+ax1 = fig.add_subplot(gs[0])
+num_bins = 16
+x_limit = [-4,4]
+y_limit = [0,0.5]
+
+# perfect normal distribution
+perfect_norm_distribution_x = np.linspace(x_limit[0], x_limit[1], 1000)
+perfect_norm_distribution_y = norm.pdf(perfect_norm_distribution_x, 0, 1)
+ax1.plot(perfect_norm_distribution_x, perfect_norm_distribution_y, '-', color='k')
+
+# Plot the calibrated value of each parameters on the Gaussian curve
+for i in range(len(parameters_normal)):
+    norm_optimized_input = (calibrated_inputs_normal[i] - parameters_normal_average[i]) / parameters_normal_std[i]
+    ax1.plot([norm_optimized_input,norm_optimized_input], y_limit, '--', label=parameters_legend_normal[i])
+
+ax1.set_xlabel(u'parameters')
+ax1.set_ylabel(u"frequency")
+ax1.set_xlim(x_limit)
+ax1.set_ylim(y_limit)
+ax1.set_xticks([-3,-2,-1,0,1,2,3],[r"$\mu-3\sigma$",r"$\mu-2\sigma$",r"$\mu-1\sigma$",r"$\mu$",r"$\mu+1\sigma$",r"$\mu+2\sigma$",r"$\mu+3\sigma$"])
+ax1.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
+ax1.minorticks_on()
+plt.legend()
+plt.savefig('val-2c_pss_inputs_normal_calibrated.png', bbox_inches='tight', dpi=300)
+plt.close(fig)
+
+# provide average and std values for each parameter following a uniform distribution, in the same order as `parameters_uniform`
+indices_parameters_uniform = [3, 4] # indices of the parameters vector corresponding to parameters following a uniform distribution
+parameters_uniform = [parameters[i] for i in indices_parameters_uniform]
+parameters_legend_uniform = [parameters_legend[i] for i in indices_parameters_uniform]
+calibrated_inputs_uniform = [calibrated_inputs[i] for i in indices_parameters_uniform]
+solubility_elemental_tritium = 4.0e19 / m_to_mum**3 # 1/mum^3/Pa
+solubility_tritiated_water = 6.0e24 / m_to_mum**3 # 1/mum^3/Pa
+parameters_uniform_min = [np.log(1e-4 * solubility_elemental_tritium),
+                         np.log(1e1 * solubility_elemental_tritium)]
+parameters_uniform_max = [np.log(1e-4 * solubility_tritiated_water),
+                         np.log(1e1 * solubility_tritiated_water)]
+
+# Plot the calibrate inputs on the uniform distribution
+fig = plt.figure(figsize=[6.5, 5.5])
+gs = gridspec.GridSpec(1, 1)
+ax1 = fig.add_subplot(gs[0])
+x_limit = [1.1*min(parameters_uniform_min),max(parameters_uniform_max)*1.1]
+y_limit = [0,1.3]
+
+# Plot the calibrated value of each parameters on the uniform distribution
+for i in range(len(parameters_uniform)):
+    # perfect uniform distribution
+    uniform_distribution_x = np.linspace(x_limit[0], x_limit[1], 1000)
+    uniform_distribution_y = [parameters_uniform_min[i] <= x <= parameters_uniform_max[i] for x in uniform_distribution_x]
+    ax1.plot(uniform_distribution_x, uniform_distribution_y, '-', color='k')
+    ax1.plot([calibrated_inputs_uniform[i],calibrated_inputs_uniform[i]], y_limit, '--', label=parameters_legend_uniform[i])
+
+ax1.set_xlabel(u'parameters (log scale)')
+ax1.set_ylabel(u"frequency")
+ax1.set_xlim(x_limit)
+ax1.set_ylim(y_limit)
+ax1.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
+ax1.minorticks_on()
+plt.legend()
+plt.savefig('val-2c_pss_inputs_uniform_calibrated.png', bbox_inches='tight', dpi=300)
+plt.close(fig)
 
 #===============================================================================
 # Extract Experimental data
