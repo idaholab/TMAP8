@@ -114,7 +114,7 @@ The case and model parameters used in both approaches in TMAP8 are listed in [va
 | $K_S^w$                    | $\boldsymbol{3.5 \times 10^{-4}} \times 6.0 \times 10^{24}$ | $\boldsymbol{3.0 \times 10^{-4}} \times 6.0 \times 10^{24}$ | 1/m$^3$/Pa | Adapted from [!cite](longhurst1992verification) |
 | $t_{injection}$            | N/A                                                          | 3                                                            | hr         |                                                 |
 
-The calibration study was performed using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html), and in particular the [Parallel Subset Simulation](https://mooseframework.inl.gov/source/samplers/ParallelSubsetSimulation.html) (PSS) approach. For the PSS study, we used 8 subsets with a subset probability of 0.1 (default) and 4000 samples per subset for a total of 32000 simulations, which were performed in parallel on 10 processors.
+The calibration study was performed using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html), and in particular the [Parallel Subset Simulation](https://mooseframework.inl.gov/source/samplers/ParallelSubsetSimulation.html) (PSS) approach. For the PSS study, we used 8 subsets with a subset probability of 0.1 (default) and 10000 samples per subset for a total of 80000 simulations, which were performed in parallel on 10 processors.
 
 To calibrate using both the T$_2$ and HTO concentrations in the enclosure over time, we performed a multi-objective optimization study. The metric to be optimized is defined as the time integral of
 \begin{equation} \label{eq:optimization_metric}
@@ -128,12 +128,12 @@ The comparison between the original and calibrated values of selected model para
 !table id=val-2c_parameters_calibrated caption=Calibrated model parameters values for the delayed injection case in val-2c..
 | Parameter       | Non-calibrated values (see [val-2c_parameters])             | Calibrated values using [Parallel Subset Simulation](https://mooseframework.inl.gov/source/samplers/ParallelSubsetSimulation.html)                                   | Unit       |
 | --------------- | ----------------------------------------------------------- | ----------------------- | ---------- |
-| $K^0$           | $\boldsymbol{2.8} \times 2.0 \times 10^{-10}$               | 2.931 $\times 10^{-11}$ | m$^3$/Ci/s |
-| $D^e$           | 4.0 $\times 10^{-12}$                                       | 4.164 $\times 10^{-12}$ | m$^2$/s    |
-| $D^w$           | 1.0 $\times 10^{-14}$                                       | 9.300 $\times 10^{-15}$ | m$^2$/s    |
-| $K_S^e$         | $\boldsymbol{1.0 \times 10^{-3}} \times 4.0 \times 10^{19}$ | 1.468 $\times 10^{18}$  | 1/m$^3$/Pa |
-| $K_S^w$         | $\boldsymbol{3.0 \times 10^{-4}} \times 6.0 \times 10^{24}$ | 2.477 $\times 10^{21}$  | 1/m$^3$/Pa |
-| $t_{injection}$ | 3                                                           | 2.125                   | hr         |
+| $K^0$           | $\boldsymbol{2.8} \times 2.0 \times 10^{-10}$               | 2.288 $\times 10^{-11}$ | m$^3$/Ci/s |
+| $D^e$           | 4.0 $\times 10^{-12}$                                       | 2.651 $\times 10^{-12}$ | m$^2$/s    |
+| $D^w$           | 1.0 $\times 10^{-14}$                                       | 1.000 $\times 10^{-14}$ | m$^2$/s    |
+| $K_S^e$         | $\boldsymbol{1.0 \times 10^{-3}} \times 4.0 \times 10^{19}$ | 1.274 $\times 10^{16}$  | 1/m$^3$/Pa |
+| $K_S^w$         | $\boldsymbol{3.0 \times 10^{-4}} \times 6.0 \times 10^{24}$ | 1.719 $\times 10^{21}$  | 1/m$^3$/Pa |
+| $t_{injection}$ | 3                                                           | 1.915                   | hr         |
 
 ## Results and Discussion
 
@@ -158,7 +158,7 @@ This affects some of the model parameters.
        caption=Comparison of TMAP8 calculations against the experimental data for HTO concentration in the enclosure over time. TMAP8 matches the experimental data well, with an improvement when T$_2$ is injected over a given period rather than immediately. Calibration of the delayed injection model delivers further improvements.
 
 As shown in the red curve in [val-2c_comparison_T2] and [val-2c_comparison_HTO], using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html) notably increased the agreement between the modeling predictions and experimental data for both the T$_2$ and HTO concentrations.
-The RMSPE for T$_2$ decreases from 74.77 % to 63.26 % and the RMSPE for HTO decreases from 58.5 % to 40.7 %.
+The RMSPE for T$_2$ decreases from 74.77 % to 68.75 % and the RMSPE for HTO decreases from 58.5 % to 5.66 %.
 Note that although the calibration approach is similar to the one presented in [!cite](Simon2025), the results presented here include more simulations and the quality of the calibration is increased here (RMSPE values are further decreased here).
 
 [val-2c_calibration_input] and [val-2c_calibration_output] show the evolution of the model parameter values and of the optimization metric (time integral of $g$ defined in [eq:optimization_metric]) as a function of the number of simulation. The calibrated model corresponds to the highest value.
@@ -175,6 +175,21 @@ Note that although the calibration approach is similar to the one presented in [
        id=val-2c_calibration_output
        caption=Evolution of the optimization metric (time integral of $g$ defined in [eq:optimization_metric]) as a function of the number of simulation. The calibrated model corresponds to the highest value.
 
+[val-2c_calibration_input_normal_range] and [val-2c_calibration_input_uniform_range] show the value of the calibrated parameters and the range of the data that was explored in the [Parallel Subset Simulation](https://mooseframework.inl.gov/source/samplers/ParallelSubsetSimulation.html) study.
+[val-2c_calibration_input_normal_range] shows the parameters that followed a normal distribution, and [val-2c_calibration_input_uniform_range] shows those that followed a uniform distribution in log scale.
+In both cases, the calibrated parameters are not on the extremes of the distribution, suggesting that the ranges were properly defined.
+
+!media comparison_val-2c.py
+       image_name=val-2c_pss_inputs_normal_calibrated.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2c_calibration_input_normal_range
+       caption=Calibrated parameter values compared to the normalized normal distribution used in the [Parallel Subset Simulation](https://mooseframework.inl.gov/source/samplers/ParallelSubsetSimulation.html) study. None of the parameters are at the extremes of the distribution.
+
+!media comparison_val-2c.py
+       image_name=val-2c_pss_inputs_uniform_calibrated.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2c_calibration_input_uniform_range
+       caption=Calibrated parameter values compared to the normal distribution in the log scale used in the [Parallel Subset Simulation](https://mooseframework.inl.gov/source/samplers/ParallelSubsetSimulation.html) study. None of the parameters are at the extremes of the distributions.
 
 ## Input files
 
@@ -182,6 +197,7 @@ Note that although the calibration approach is similar to the one presented in [
 The input files for this case can be found at [/val-2c_immediate_injection.i] and [/val-2c_delay.i]. Note that both input files utilize a common base file [/val-2c_base.i] with the line `!include val-2c_base.i`. The base input file contains all the features and TMAP8 objects common to both cases, reducing duplication, and this allows the immediate injection and delayed injection inputs to focus on what is specific to each case. Note that both input files are also used as TMAP8 tests, outlined at [/val-2c/tests].
 
 For the calibration study, additional input files are provided.
+
 - [/val-2c_base_pss.i] provides key functions and postprocessor blocks necessary for the PSS study, including calculations of the multi-objective optimization metric. i.e., the time integral of $g$ defined in [eq:optimization_metric].
 - [/val-2c_delay_pss.i] includes both [/val-2c_base_pss.i] and [/val-2c_delay.i] to generate the needed full input file for the simulation.
 - [/val-2c_pss_main.i] is the main input file for the PSS study. It defines what model parameters to vary and how, what approach to use, and initiate simulations using [/val-2c_delay_pss.i].
