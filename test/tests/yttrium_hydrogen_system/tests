@@ -1,0 +1,92 @@
+[Tests]
+  design = 'InterfaceDiffusion.md ADMatInterfaceReactionYHxPCT.md MatDiffusion.md TimeDerivative.md'
+  issues = '#261'
+  [YHx_PCT_csv]
+    type = CSVDiff
+    input = YHx_PCT.i
+    cli_args = 'InterfaceKernels/interface_reaction_YHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
+    csvdiff = YHx_PCT_out.csv
+    max_parallel = 1 # see #200
+    requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature.'
+  []
+  [YHx_PCT_exodus]
+    type = Exodiff
+    input = YHx_PCT.i
+    cli_args = 'InterfaceKernels/interface_reaction_YHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
+    exodiff = YHx_PCT_out.e
+    prereq = YHx_PCT_csv
+    should_execute = false # this test relies on the output files from YHx_PCT_csv, so it shouldn't be run twice
+    requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature and generate an exodus file.'
+  []
+  [YHx_PCT_T1173_P1e3_csv]
+    type = CSVDiff
+    input = YHx_PCT.i
+    cli_args = 'output_file_base=YHx_PCT_T1173_P1e3_out
+                dt_init=1e1
+                temperature=1173.15
+                initial_pressure_H2_enclosure_1=1e3
+                initial_atomic_fraction=1.55
+                Executioner/num_steps=150
+                InterfaceKernels/interface_reaction_YHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
+    csvdiff = YHx_PCT_T1173_P1e3_out.csv
+    max_parallel = 1 # see #200
+    requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e3 Pa and T=1173.15 K.'
+  []
+  [YHx_PCT_T1173_P1e4_csv]
+    type = CSVDiff
+    input = YHx_PCT.i
+    cli_args = 'output_file_base=YHx_PCT_T1173_P1e4_out
+                temperature=1173.15
+                initial_pressure_H2_enclosure_1=1e4
+                initial_atomic_fraction=1.65
+                Executioner/num_steps=200
+                InterfaceKernels/interface_reaction_YHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
+    csvdiff = YHx_PCT_T1173_P1e4_out.csv
+    requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e4 Pa and T=1173.15 K.'
+  []
+  [YHx_PCT_T1173_P5e4_csv]
+    type = CSVDiff
+    input = YHx_PCT.i
+    cli_args = 'output_file_base=YHx_PCT_T1173_P5e4_out
+                temperature=1173.15
+                initial_pressure_H2_enclosure_1=5e4
+                initial_atomic_fraction=1.85
+                Executioner/num_steps=200
+                InterfaceKernels/interface_reaction_YHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
+    csvdiff = YHx_PCT_T1173_P5e4_out.csv
+    requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature for P=5e4 Pa and T=1173.15 K.'
+  []
+  [YHx_PCT_T1273_P3e3_csv]
+    type = CSVDiff
+    input = YHx_PCT.i
+    cli_args = 'output_file_base=YHx_PCT_T1273_P3e3_out
+                temperature=1273.15
+                initial_pressure_H2_enclosure_1=3e3
+                initial_atomic_fraction=1.41
+                Executioner/num_steps=200
+                InterfaceKernels/interface_reaction_YHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
+    csvdiff = YHx_PCT_T1273_P3e3_out.csv
+    max_parallel = 1 # see #200
+    requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature for P=3e3 Pa and T=1273.15 K.'
+  []
+  [YHx_PCT_comparison]
+    type = RunCommand
+    command = 'python3 comparison_YHx_PCT.py'
+    requirement = 'The system shall be able to generate comparison plots between experimental PCT curves, the model used in TMAP8, and TMAP8 predictions.'
+    required_python_packages = 'matplotlib numpy pandas os git'
+  []
+  [YHx_PCT_error_low_pressure]
+    type = RunException
+    input = YHx_PCT.i
+    cli_args = 'initial_pressure_H2_enclosure_1=0.01'
+    expect_err = 'In YHxPCT: pressure'
+    requirement = 'The system shall be able to return a warning when the pressure and temperature are outside the range of validity of the YHxPCT model (pressure too low).'
+  []
+  [YHx_PCT_error_high_pressure]
+    type = RunException
+    input = YHx_PCT.i
+    cli_args = 'initial_pressure_H2_enclosure_1=1e7'
+    expect_err = 'In YHxPCT: pressure'
+    requirement = 'The system shall be able to return a warning when the pressure and temperature are outside the range of validity of the YHxPCT model (pressure too high).'
+  []
+[]
