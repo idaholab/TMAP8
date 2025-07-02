@@ -1,10 +1,10 @@
 # Global parameters
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConstants.h
-simulation_time = '${units 2e5 s}'
-temperature = '${units 823 K}'
+simulation_time = '${units 50000 s}'
+temperature_exp = '${units 823 K}'
 
 # Sorption law parameters
-n_Henry = 1 # Henry's law
+# n_Henry = 1 # Henry's law
 n_Sieverts = 0.5 # Sieverts' law
 unit_scale = 1
 unit_scale_neighbor = 1
@@ -13,11 +13,11 @@ unit_scale_neighbor = 1
 ## diffusivity of tritium in FLiBe
 D_FLiBe_prefactor = '${units 9.3e-7 m^2/s}'
 D_FLiBe_energy = '${units 42e3 J/mol}'
-D_FLiBe = '${units ${fparse D_FLiBe_prefactor * exp(- D_FLiBe_energy / (R*temperature))} m^2/s}'
+D_FLiBe = '${units ${fparse D_FLiBe_prefactor * exp(- D_FLiBe_energy / (R*temperature_exp))} m^2/s}'
 ## diffusivity of tritium in nickel
 D_Ni_prefactor = '${units 7e-7 m^2/s}'
 D_Ni_energy = '${units 39.5e3 J/mol}'
-D_Ni = '${units ${fparse D_Ni_prefactor * exp(- D_Ni_energy / (R*temperature))} m^2/s}'
+D_Ni = '${units ${fparse D_Ni_prefactor * exp(- D_Ni_energy / (R*temperature_exp))} m^2/s}'
 ## Sieverts' law solubility for tritium in nickel
 K_s_Ni_prefactor = '${units 564e-3 mol/m^3/Pa^0.5}'
 K_s_Ni_energy = '${units 15.8e3 J/mol}'
@@ -112,7 +112,7 @@ num_nodes_FLiBe = 100
     activation_energy = ${K_s_Ni_energy}
     boundary = 'left'
     enclosure_var = 'enclosure_pressure'
-    temperature = ${temperature}
+    temperature = ${temperature_exp}
     variable = 'tritium_concentration_Ni'
     p = ${n_Sieverts}
   []
@@ -127,17 +127,17 @@ num_nodes_FLiBe = 100
 [InterfaceKernels]
   [interface_sorption_Ni_FLiBe]
     type = InterfaceSorption
-    K0 = ${K_s_FLiBe_prefactor}
-    Ea = ${K_s_FLiBe_energy}
-    n_sorption = ${n_Henry}
-    diffusivity = ${D_FLiBe}
+    K0 = '${fparse K_s_FLiBe_prefactor / (K_s_Ni_prefactor^2) / (R*temperature_exp)^2}'
+    Ea = '${fparse K_s_FLiBe_energy - (2*K_s_Ni_energy)}'
+    n_sorption = 2
+    diffusivity = ${D_Ni}
     unit_scale = ${unit_scale}
     unit_scale_neighbor = ${unit_scale_neighbor}
-    temperature = ${temperature}
-    variable = 'tritium_concentration_Ni'
-    neighbor_var = 'tritium_concentration_FLiBe'
+    temperature = ${temperature_exp}
+    variable = 'tritium_concentration_FLiBe'
+    neighbor_var = 'tritium_concentration_Ni'
     sorption_penalty = 1e1
-    boundary = 'interface_Ni_FLiBe'
+    boundary = 'interface_Ni_FLiBe_other_direction'
   []
 []
 
@@ -189,8 +189,8 @@ num_nodes_FLiBe = 100
   []
   [concentration_ratio_tritium]
     type = ParsedPostprocessor
-    expression = 'Ni_interface / (FLiBe_interface^${n_Henry})'
-    pp_names = 'Ni_interface FLiBe_interface'
+    expression = 'FLiBe_interface / (Ni_interface^2)'
+    pp_names = 'FLiBe_interface Ni_interface'
     execute_on = 'initial timestep_end'
   []
   [concentration_tritium_Ni_inventory]
