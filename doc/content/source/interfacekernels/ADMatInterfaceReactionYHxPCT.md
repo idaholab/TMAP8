@@ -45,8 +45,8 @@ f_{at}(T,P) = 2-\left[1+\exp(21.6 -0.0225 T + (-0.0445 + 7.18 \times 10^{-4} T) 
 where $P$ is the hydrogen partial pressure in Pa. This fit is plotted in [YHx_PCT_fit_2D].
 
 The [!param](/InterfaceKernels/ADMatInterfaceReactionYHxPCT/silence_warnings) option can be used to dictate how TMAP8 reacts when the pressure gets out of bounds.
-If `silence_warning = false`, which is the default behavior, then TMAP8 will print a warning stating that the pressure and temperature are outside the bounds of the atomic fraction correlation.
-If `silence_warning = true`, then TMAP8 will let the simulation continue without issuing any warnings.
+If `silence_warnings = false`, which is the default behavior, then TMAP8 will print a warning stating that the pressure and temperature are outside the bounds of the atomic fraction correlation.
+If `silence_warnings = true`, then TMAP8 will let the simulation continue without issuing any warnings.
 
 ## Test
 
