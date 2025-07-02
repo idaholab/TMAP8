@@ -3,8 +3,7 @@ import pandas as pd
 import os
 from matplotlib import gridspec
 import matplotlib.pyplot as plt
-import glob
-import re
+from matplotlib.ticker import ScalarFormatter
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
 script_folder = os.path.dirname(__file__)
@@ -35,7 +34,7 @@ average_flux_right = expt_data['average_flux_right']
 
 R = 8.31446261815324 # J/mol/K ideal gas constant from PhysicalConstants.h
 temperature = 823 # K
-n_henry = 1 # Henry's law
+n_sieverts = 0.5 # Sieverts' law
 
 #===============================================================================
 # Flux conservation
@@ -45,7 +44,8 @@ fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
 ratio = [1] * len(TMAP8_time[1:])
-ax.plot(TMAP8_time[start_time:], flux_conservation[start_time:], label=r"Concentration Ratio (TMAP8)", color='tab:blue', linestyle='-')
+ax.plot(TMAP8_time[start_time:], flux_conservation[start_time:], label=r"Flux Ratio (TMAP8)", color='tab:blue', linestyle='-')
+ax.plot(TMAP8_time[start_time:], ratio[start_time-1:], label=r'Analytical Flux Ratio', color='tab:red', linestyle='--')
 ax.set_xlim(TMAP8_time[start_time],TMAP8_time[start_time:].max())
 ax.set_xlabel('Time (s)')
 ax.set_ylabel(r"Flux conservation")
@@ -61,52 +61,58 @@ fig.savefig('val-2g_flux_conservation.png', bbox_inches='tight', dpi=300)
 
 #===============================================================================
 # Sieverts' law conservation enclosure-Ni
-start_time = 100 # characteristic time for convergence
+start_time = 1 # characteristic time for convergence
 K_s_Ni_prefactor = 564e-3 # mol/m^3/Pa^0.5
 K_s_Ni_energy = 15.8e3 # J/mol
 K_s_Ni = K_s_Ni_prefactor * np.exp(- K_s_Ni_energy / (R*temperature)) # mol/m^3/Pa^0.5
 fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
+ax.yaxis.set_major_formatter(ScalarFormatter(useOffset=False))
 solubility_ratio = [K_s_Ni] * len(TMAP8_time[1:])
-ax.plot(TMAP8_time[start_time:], sieverts_ratio_tritium[start_time:], label=r"Concentration Ratio (TMAP8)", color='tab:blue', linestyle='-')
+ax.plot(TMAP8_time[start_time:], sieverts_ratio_tritium[start_time:], label=r"Sieverts' Law Ratio (TMAP8)", color='tab:blue', linestyle='-')
+ax.plot(TMAP8_time[start_time:], solubility_ratio[start_time-1:], label=r"Analytical Sieverts' Law Ratio", color='tab:red', linestyle='--')
 ax.set_xlim(TMAP8_time[start_time],TMAP8_time[start_time:].max())
 ax.set_xlabel('Time (s)')
-ax.set_ylabel(r"Concentrations ratio $C_{\text{Ni}} / \sqrt{P_{T_2}}$")
+ax.set_ylabel(r"Sieverts' law ratio $C_{\text{Ni}} / \sqrt{P_{T_2}}$")
 ax.legend(loc="best")
 ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 RMSE = np.sqrt(np.mean((sieverts_ratio_tritium[start_time:]-solubility_ratio[start_time-1:])**2))
 RMSPE = RMSE*100/np.mean(solubility_ratio[start_time-1:])
 print("RMSPE for sorption law enclosure-Ni: ", RMSPE)
-x_pos = TMAP8_time[start_time:].max() / 50
-y_pos = sieverts_ratio_tritium[start_time].max()*1.005
-ax.text(x_pos, y_pos, 'RMSPE = %.3f ' % RMSPE + '%', fontweight='bold')
+x_range = ax.get_xlim()[1] - ax.get_xlim()[0]
+x_pos = ax.get_xlim()[1] - 0.02 * x_range
+y_range = ax.get_ylim()[1] - ax.get_ylim()[0]
+y_pos = ax.get_ylim()[0] + 0.02 * y_range
+ax.text(x_pos, y_pos, 'RMSPE = %.3f ' % RMSPE + '%', fontweight='bold', ha='right', va='bottom')
 fig.savefig('val-2g_concentration_ratio_enclosure-Ni.png', bbox_inches='tight', dpi=300)
 
 #===============================================================================
-# Henry's law conservation Ni-FLiBe
-start_time = 500 # characteristic time for convergence
+# Conservation Ni-FLiBe
+start_time = 168 # characteristic time for convergence
 K_s_FLiBe_prefactor = 7.9e-2 # mol/m^3/Pa
 K_s_FLiBe_energy = 35e3 # J/mol
 K_s_FLiBe = K_s_FLiBe_prefactor * np.exp(- K_s_FLiBe_energy / (R*temperature)) # mol/m^3/Pa
 fig = plt.figure(figsize=[6.5,5.5])
 gs = gridspec.GridSpec(1,1)
 ax = fig.add_subplot(gs[0])
-solubility_ratio = [K_s_FLiBe*(R*temperature)**n_henry] * len(TMAP8_time[1:])
-ax.ticklabel_format(useOffset=False, style='plain', axis='y')
-ax.get_yaxis().get_offset_text().set_visible(False)
+ax.yaxis.set_major_formatter(ScalarFormatter(useOffset=False))
+solubility_ratio = [K_s_FLiBe / (K_s_Ni)**2] * len(TMAP8_time[1:])
 ax.plot(TMAP8_time[start_time:], concentration_ratio_tritium[start_time:], label=r"Concentration Ratio (TMAP8)", color='tab:blue', linestyle='-')
+ax.plot(TMAP8_time[start_time:], solubility_ratio[start_time-1:], label=r'Analytical Concentration Ratio', color='tab:red', linestyle='--')
 ax.set_xlim(TMAP8_time[start_time],TMAP8_time[start_time:].max())
 ax.set_xlabel('Time (s)')
-ax.set_ylabel(r"Concentrations ratio $C_{\text{Ni}} / C_{\text{FLiBe}}$")
+ax.set_ylabel(r"Concentrations ratio $C_{\text{FLiBe}} / C_{\text{Ni}}^2$")
 ax.legend(loc="best")
 ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 RMSE = np.sqrt(np.mean((concentration_ratio_tritium[start_time:]-solubility_ratio[start_time-1:])**2))
 RMSPE = RMSE*100/np.mean(solubility_ratio[start_time-1:])
 print("RMSPE for sorption law Ni-FLiBe: ", RMSPE)
-x_pos = TMAP8_time[start_time:].max()/10
-y_pos = concentration_ratio_tritium[start_time:].max()
-ax.text(x_pos, y_pos, 'RMSPE = %.3f ' % RMSPE + '%', fontweight='bold')
+x_range = ax.get_xlim()[1] - ax.get_xlim()[0]
+x_pos = ax.get_xlim()[1] - 0.02 * x_range
+y_range = ax.get_ylim()[1] - ax.get_ylim()[0]
+y_pos = ax.get_ylim()[0] + 0.02 * y_range
+ax.text(x_pos, y_pos, 'RMSPE = %.3f ' % RMSPE + '%', fontweight='bold', ha='right', va='bottom')
 fig.savefig('val-2g_concentration_ratio_Ni-FLiBe.png', bbox_inches='tight', dpi=300)
 
 #===============================================================================

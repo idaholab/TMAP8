@@ -8,6 +8,8 @@ In this experiment from [!cite](calderoni2008measurement), tritium permeation th
 
 ## Model Description
 
+We model this experimental study in TMAP8 using a 1D simulation that includes three interfaces: enclosure-nickel membrane, nickel membrane-FLiBe, and FLiBe-air. The governing equations and modeling assumptions are detailed below.
+
 The diffusion for tritium in the nickel membrane and FLiBe can be expressed by
 
 \begin{equation}
@@ -20,13 +22,13 @@ and
 
 where $C_{T_2, \,  \text{Ni}}$ and $C_{T_2, \,  \text{FLiBe}}$ represent the concentration fields in the nickel membrane and FLiBe, respectively, $t$ is the time, and $D_{\text{Ni}}$ and $D_{\text{FLiBe}}$ denotes the diffusivity coefficients.
 
-The concentration in FLiBe is related to the partial pressure and concentration in the nickel membrane via the interface sorption law:
+The concentration in FLiBe is related to the concentration in the nickel membrane via the interface sorption law:
 
 \begin{equation}
-C_{T_2, \,  \text{Ni}} = K_{s, \,  \text{FLiBe}} P_{T_2, \,  \text{FLiBe}}^n = K_{s, \,  \text{FLiBe}} \left( C_{T_2, \,  \text{FLiBe}} RT \right)^n,
+C_{T_2, \,  \text{FLiBe}} = \frac{K_{s, \,  \text{FLiBe}}}{K_{s, \,  \text{Ni}}^2}  C_{T_2, \,  \text{Ni}}^2,
 \end{equation}
 
-where $R$ is the ideal gas constant in J/mol/K, $T$ is the temperature, $K_{s, \,  \text{Ni}}$ is the solubility for tritium in nickel, and $n$ is the exponent of the sorption law. For Henry's law, $n=1$.
+where $K_{s, \,  \text{FLiBe}}$ and $K_{s, \,  \text{Ni}}$ are the solubilities for tritium in FLiBe and nickel respectively.
 
 At the top of the experimental setup, a Dirichlet boundary condition with a tritium concentration set to zero is imposed, reflecting the assumption that tritium is continuously swept away from the surface:
 
@@ -34,13 +36,15 @@ At the top of the experimental setup, a Dirichlet boundary condition with a trit
 C_{T_2, \,  \text{FLiBe}} = 0.
 \end{equation}
 
-An Dirichlet boundary condition at the membrane-air interface imposes an equilibrium for the tritium concentration based on Sieverts' law:
+A Dirichlet boundary condition at the membrane-air interface imposes an equilibrium for the tritium concentration based on Sieverts' law:
 
 \begin{equation}
 C_{T_2, \,  \text{Ni}} = K_{s, \,  \text{Ni}} P_{T_2}^n,
 \end{equation}
 
 where $P_{T_2}$ is the input pressure of tritium and $n$ is the exponent of the sorption law, defined as $n=0.5$ for Sieverts' law.
+
+These sorption law interfaces assume that the kinetics of the surface reactions are much faster than the other kinetics of the problem.
 
 ## Model Parameters
 
@@ -81,7 +85,7 @@ In this section, [val-2g_set_up_values] provides the model parameters for this v
        image_name=val-2g_concentration_ratio_Ni-FLiBe.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2g_concentration_ratio_Ni-FLiBe
-       caption= Assessment of Henry's law equilibrium ratio at the nickel membrane-FLiBe interface for $T = 823$ K and $P_{T_2} = 1210$ Pa.
+       caption= Assessment of the steady-state equilibrium ratio at the nickel membrane-FLiBe interface for $T = 823$ K and $P_{T_2} = 1210$ Pa.
 
 # results of tritium flux as a function of temperature and initial pressure
 
