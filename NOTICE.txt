@@ -1,4 +1,4 @@
-﻿This project contains code from Idaho National Laboratory's Tritium Migration Analysis Program Project
+﻿This project contains code from Idaho National Laboratory's Tritium Migration Analysis Program, Version 8 Project
 Github URL: IdahoLab/TMAP8
 Licensed under LGPL 2.1 License.
 
@@ -31,4 +31,13 @@ PROCESS DISCLOSED, OR REPRESENTS THAT ITS USE WOULD NOT INFRINGE PRIVATELY
 OWNED RIGHTS.
 
 Authors:
-Alexander Lindsay
+Pierre-Clément A. Simon
+Casey T. Icenhour
+Lin Yang
+Lee Kadz
+Chaitanya Bhave
+Alexander D. Lindsay
+Adriaan Riet
+Gyanender Singh
+Paul Humrickhouse
+Masashi Shimada
