@@ -152,19 +152,23 @@ concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} 
 
 [Executioner]
   type = Transient
+
+  # Time stepping and integration
   dt = .1
   end_time = 140
+  dtmin = .1
+  scheme = 'bdf2'
+  timestep_tolerance = 1e-8
+
+  # Nonlinear solver
   solve_type = PJFNK
   automatic_scaling = true
-  dtmin = .1
   l_max_its = 30
   nl_max_its = 5
   petsc_options = '-snes_converged_reason -ksp_monitor_true_residual'
   petsc_options_iname = '-pc_type -mat_mffd_err'
   petsc_options_value = 'lu       1e-5'
   line_search = 'bt'
-  scheme = 'bdf2'
-  timestep_tolerance = 1e-8
 []
 
 [Outputs]
@@ -178,5 +182,9 @@ concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} 
   [csv]
     type = CSV
     execute_on = 'initial timestep_end'
+  []
+  [console]
+    type = Console
+    time_step_interval = 10
   []
 []

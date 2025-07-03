@@ -21,10 +21,14 @@ protected:
   ADReal computeQpResidual() override;
 
   /// The solubility coefficient
-  const Real _Ko;
+  const Moose::Functor<ADReal> & _Ko;
+  /// The solubility coefficient as a constant
+  Real _Ko_const;
 
   /// The solubility activation energy (J/mol)
-  const Real _Ea;
+  const Moose::Functor<ADReal> & _Ea;
+  /// The solubility activation energy (J/mol)
+  Real _Ea_const;
 
   /// The exponent of the solution law
   const Real _p;
@@ -32,10 +36,17 @@ protected:
   /// The enclosure variable
   const bool _enclosure_var_bool_scalar;
   const ADVariableValue & _enclosure_var;
+  /// The subdomain of the enclosure
+  SubdomainID _subdomain;
 
-  /// The temperature (K)
-  const ADVariableValue & _T;
+  /// The temperature as a variable (K)
+  const ADVariableValue * const _T;
+
+  /// The temperature as a function (K)
+  const Function * _T_function;
 
   /// The number of atoms that compose our arbitrary unit for quantity
   const Real _var_scaling_factor;
+  /// A scaling factor on the solubility, convenient for unit conversions
+  const Real _K_scaling_factor;
 };
