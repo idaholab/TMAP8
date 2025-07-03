@@ -3,7 +3,7 @@ Github URL: IdahoLab/TMAP8
 Licensed under LGPL 2.1 License.
 
 
-© 2021 - 2024 Battelle Energy Alliance, LLC
+© 2021 - 2025 Battelle Energy Alliance, LLC
 ALL RIGHTS RESERVED
 
 Prepared by Battelle Energy Alliance, LLC
