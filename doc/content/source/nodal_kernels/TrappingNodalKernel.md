@@ -20,7 +20,7 @@ $\alpha_t$ is defined as
 \end{equation}
 with $\alpha_{t0}$ being the pre-exponential factor in units of 1/s, $\epsilon$ being the trapping energy in units of Kelvin, and $T$ being the temperature in units of Kelvin.
 
-As outlined in [getting_started/user_notes.md#scaling exact=True], it is important
+As outlined in [getting_started/tmap8_user_notes.md#scaling exact=True], it is important
 to scale different specie numerical concentrations to the same order of magnitude
 in order to have robust (non)linear solves. Unfortunately, incorporation of scaling
 tends to obfuscate residual-computing objects a bit, including
