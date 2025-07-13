@@ -13,7 +13,7 @@ os.chdir(script_folder)
 
 def read_csv_from_TMAP8(file_name, parameter_names, delimiter=','):
     # Read simulation data
-    if "/TMAP8/doc/" in script_folder:     # if in documentation folder
+    if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
         csv_folder = f"../../../../test/tests/fuel_cycle_Abdou/gold/{file_name}"
     else:                                  # if in test folder
         csv_folder = f"./gold/{file_name}"
