@@ -28,7 +28,7 @@ run simulations with these instructions.
 !style halign=center
 TMAP8 provides capabilities that can be applied to a wide variety of problems.
 The Code Reference provides detailed documentation of specific code features.
-General user notes on TMAP8 can also be found [here](getting_started/user_notes.md).
+General user notes on TMAP8 can also be found [here](getting_started/tmap8_user_notes.md).
 !col-end!
 
 !col! small=12 medium=4 large=4 icon=assessment
