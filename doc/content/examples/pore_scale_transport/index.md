@@ -32,7 +32,7 @@ This process is illustrated in [fig:pore_scale_process_illustration].
   style=display:block;margin-left:auto;margin-right:auto;width:75%
 
 !alert note title=TMAP8 can also automatically generate microstructures, or import other simulation results
-TMAP8 can also automatically generate microstructures using the [initial condition](ICs/index.md) system, as [MOOSE] is equipped with the user-friendly, built-in [MeshGenerators system](Mesh/index.md) for creating meshes based on simple geometries. It can also import EBSD data or import microstructures generated via other means.
+TMAP8 can also automatically generate microstructures using the [initial condition](syntax/ICs/index.md exact=True) system, as [MOOSE] is equipped with the user-friendly, built-in [MeshGenerators system](Mesh/index.md) for creating meshes based on simple geometries. It can also import EBSD data or import microstructures generated via other means.
 
 ### Generating the pore microstructure based on an image
 
