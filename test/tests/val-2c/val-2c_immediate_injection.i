@@ -34,6 +34,7 @@ initial_T2_inventory = ${units ${fparse 10 / 2 / conversion_Ci_atom} at} # (equi
 initial_T2_concentration = ${units ${fparse initial_T2_inventory / volume_enclosure} at/mum^3}
 initial_H2O_pressure = ${units 714 Pa} # Found in TMAP4 input file, which corresponds to ambient air with 20% relative humidity.
 initial_H2O_concentration = ${units ${fparse initial_H2O_pressure / concentration_to_pressure_conversion_factor} at/mum^3}
+dtmin = ${units 1 s}
 
 ## Numerical parameters
 time_step = ${units 60 s}

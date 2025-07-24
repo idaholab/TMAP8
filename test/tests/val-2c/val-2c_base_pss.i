@@ -62,7 +62,7 @@ default_diff_value = 3 # value to be used as difference between modeling predict
   [diff_concentration_hto]
     type = ParsedPostprocessor
     pp_names = 'time concentration_hto_interp concentration_hto'
-    expression = 'if((${times_measurement_HTO_1_start} <= time & time <= ${times_measurement_HTO_8_end}),
+    expression = 'if((${times_measurement_HTO_start} <= time & time <= ${times_measurement_HTO_end}),
                   (log(concentration_hto_interp) - log(max(concentration_hto,1e-42)))^2*concentration_hto_interp*1e5, ${default_diff_value})' # the 1e-42 is to avoid the Inf at the first timesteps, which would make csvdiff fail
     execution_order_group = -1
     execute_on = 'TIMESTEP_END'
