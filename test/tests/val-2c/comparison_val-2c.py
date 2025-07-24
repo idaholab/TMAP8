@@ -120,9 +120,9 @@ if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     file_json = "../../../../test/tests/val-2c/gold/val-2c_pss_results/val-2c_pss_main_out.json"
 else:                                  # if in test folder
     file_json = "./gold/val-2c_pss_results/val-2c_pss_main_out.json"
-n_procs = 10 # number of processors with which the pss study was conducted
-n_subsets = 8 # number of subset used in pss study
-n_samples_per_subset = 10000 # SHOULD BE UPDATED TO 10000 # number of samples per subset used in pss study
+n_procs = 5 # number of processors with which the pss study was conducted
+n_subsets = 5 # number of subset used in pss study
+n_samples_per_subset = 1000 # number of samples per subset used in pss study
 parameters = ['reaction_rate', 'diffusivity_elemental_tritium', 'diffusivity_tritiated_water', 'log_solubility_elemental_tritium', 'log_solubility_tritiated_water', 'time_injection_T2_end']
 parameters_legend = ['$K^0$', '$D^e$', '$D^w$', 'log($K_S^e$)', 'log($K_S^w$)', '$t_{injection}$']
 n_variables = len(parameters)
@@ -166,7 +166,7 @@ for nn, ax in enumerate(axs.flat):
     ax.set_xlim(left=0)
     ax.set_xlim(right=n_trials)
     ax.set_xlabel('Number of steps (-)')
-    ax.set_ylabel(parameters[nn])
+    ax.set_ylabel(parameters_legend[nn])
 plt.savefig('val-2c_pss_inputs.png', bbox_inches='tight', dpi=300);
 
 # identified calibrated parameters (maximum output data)
@@ -194,13 +194,13 @@ parameters_normal = [parameters[i] for i in indices_parameters_normal]
 parameters_legend_normal = [parameters_legend[i] for i in indices_parameters_normal]
 calibrated_inputs_normal = [calibrated_inputs[i] for i in indices_parameters_normal]
 parameters_normal_average = [2.8 * 2.0e-10*conversion_Ci_atom*m_to_mum**3,
-                             4.0e-12 * m_to_mum**2,
-                             1.0e-14 * m_to_mum**2,
+                             4.0e-12 * m_to_mum**2 * (1.0-0.1),
+                             1.0e-14 * m_to_mum**2 * (1.0+0.4),
                              3*60*60]
-parameters_normal_std = [20/100 * parameters_normal_average[0],
-                         20/100 * parameters_normal_average[1],
+parameters_normal_std = [5/100 * parameters_normal_average[0],
+                         10/100 * parameters_normal_average[1],
                          20/100 * parameters_normal_average[2],
-                         40/100 * parameters_normal_average[-1]]
+                         10/100 * parameters_normal_average[-1]]
 
 # Plot the calibrate inputs on the normal distribution
 fig = plt.figure(figsize=[6.5, 5.5])
@@ -239,9 +239,9 @@ calibrated_inputs_uniform = [calibrated_inputs[i] for i in indices_parameters_un
 solubility_elemental_tritium = 4.0e19 / m_to_mum**3 # 1/mum^3/Pa
 solubility_tritiated_water = 6.0e24 / m_to_mum**3 # 1/mum^3/Pa
 parameters_uniform_min = [np.log(1e-4 * solubility_elemental_tritium),
-                         np.log(1e1 * solubility_elemental_tritium)]
-parameters_uniform_max = [np.log(1e-4 * solubility_tritiated_water),
-                         np.log(1e1 * solubility_tritiated_water)]
+                         np.log(1e-4 * solubility_tritiated_water)]
+parameters_uniform_max = [np.log(1e-3 * solubility_elemental_tritium),
+                         np.log(1e-3 * solubility_tritiated_water)]
 
 # Plot the calibrate inputs on the uniform distribution
 fig = plt.figure(figsize=[6.5, 5.5])

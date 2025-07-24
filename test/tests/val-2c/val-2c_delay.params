@@ -42,6 +42,7 @@ time_end = ${units 180000 s}
 time_injection_T2_start = ${units 0 h -> s}
 time_injection_T2_end = ${units 3 h -> s}
 dtmax = ${units 1e3 s}
+dtmin = ${units 1 s}
 lower_value_threshold = ${units -1e-20 at/mum^3}  # lower limit for concentration
 injection_rate_T2 = ${units ${fparse initial_T2_concentration / (time_injection_T2_end-time_injection_T2_start)} at/mum^3/s}
 
