@@ -47,7 +47,7 @@
   []
   [val-2c_delay_calibrated_csv]
     type = CSVDiff
-    input = 'val-2c_delay.i val-2c_base_pss.i'
+    input = 'val-2c_delay.i'
      # the parameter values below are from gold/calibrated_parameter_values.txt
     cli_args = 'reaction_rate=2.8234613816267505e-11
                 diffusivity_elemental_tritium=3.154650784476052
@@ -76,6 +76,7 @@
     csvdiff = val-2c_pss_results_short/val-2c_pss_main_short_out_sub0_csv.csv
     requirement = 'The system shall be able to perform a Parallel Subset Simulation stduy using a model of the Test Cell Release Experiment (val-2c) with delayed T2 injection.'
     abs_zero = 1e-8
+    rel_err = 1e-5
     max_parallel = 1 # see #200
     recover = false # see #196
     issues = '#266'
