@@ -71,6 +71,7 @@
                 num_subsets=1
                 Samplers/sample/num_parallel_chains=1
                 Samplers/sample/subset_probability=0.5
+                Samplers/sample/seed=1518
                 file_base_output=val-2c_pss_results_short/val-2c_pss_main_short_out'
     csvdiff = val-2c_pss_results_short/val-2c_pss_main_short_out_sub0_csv.csv
     requirement = 'The system shall be able to perform a Parallel Subset Simulation stduy using a model of the Test Cell Release Experiment (val-2c) with delayed T2 injection.'
