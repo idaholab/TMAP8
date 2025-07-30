@@ -113,27 +113,32 @@ The case and model parameters used in both approaches in TMAP8 are listed in [va
 | $K_S^w$                    | $\boldsymbol{3.5 \times 10^{-4}} \times 6.0 \times 10^{24}$ | $\boldsymbol{3.0 \times 10^{-4}} \times 6.0 \times 10^{24}$ | 1/m$^3$/Pa | Adapted from [!cite](longhurst1992verification) |
 | $t_{injection}$            | N/A                                                          | 3                                                            | hr         |                                                 |
 
-The calibration study was performed using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html), and in particular the [Parallel Subset Simulation](https://mooseframework.inl.gov/source/samplers/ParallelSubsetSimulation.html) (PSS) approach.
+The calibration study was performed using [MOOSE's stochastic tools module](modules/stochastic_tools/index.md), and in particular the [Parallel Subset Simulation](samplers/ParallelSubsetSimulation.md) (PSS) approach.
 The inputs and methodology provided here do not correspond to the full PSS study, but a scaled down version of it to minimize the computational costs.
 For this PSS study, we used 5 subsets with a subset probability of 0.1 (default) and 1000 samples per subset for a total of 5000 simulations, which were performed in parallel on 5 processors.
 For a full PSS study, it is common to use 10 subsets with 10000 samples per subset.
 
 To calibrate the model against both the T$_2$ and HTO concentrations in the enclosure over time, we performed a multi-objective optimization study.
 The penalties for the difference between the experimental $c_{i}^{exp}$ data and the modeling prediction $c_{i}^{mod}$ is given by
+
 \begin{equation} \label{eq:optimization_penalty_HTO}
 \delta_{\text{HTO}} = (\log(c_{\text{HTO}}^{exp}) - \log(c_{\text{HTO}}^{mod}))^2 c_{\text{HTO}}^{exp} \times 10^{5}
 \end{equation}
+
 for HTO, and
+
 \begin{equation} \label{eq:optimization_penalty_T2}
 \delta_{\text{T}_2} = (\log(c_{\text{T}_2}^{exp}) - \log(c_{\text{T}_2}^{mod}))^2
 \end{equation}
+
 for T$_2$. The metric to be optimized is then defined as the time integral of
+
 \begin{equation} \label{eq:optimization_metric}
-g = \frac{\delta_{\text{HTO}}^2+8000}{30 \delta_{\text{HTO}}^4+400 \delta_{\text{HTO}}^2+1} + \frac{\delta_{\text{T}_2}^2+45000}{0.1 \delta_{\text{T}_2}^4+50 \delta_{\text{T}_2}^2+1},
+g = \frac{\delta_{\text{HTO}}^2+8000}{30 \delta_{\text{HTO}}^4+400 \delta_{\text{HTO}}^2+1} + \frac{\delta_{\text{T}_2}^2+45000}{0.1 \delta_{\text{T}_2}^4+50 \delta_{\text{T}_2}^2+1}.
 \end{equation}
 
 Notably, the integral difference is defined in logarithmic space to give equal weight to all data points in the logarithmic scale during the optimization process.
-The complexity of the optimization metric is due to large difference in scale for each species, as well as the discrete nature of the T$_2$ measurements compared to the almost continuous nature of the HTO measurements. These differences make it challenging to optimize the fits of both species.
+The complexity of the optimization metric is due to the large difference in scale for each species, as well as the discrete nature of the T$_2$ measurements compared to the almost continuous nature of the HTO measurements. These differences make it challenging to optimize the fits of both species.
 
 The comparison between the original and calibrated values of selected model parameters is summarized in [val-2c_parameters_calibrated].
 
@@ -169,8 +174,8 @@ This affects some of the model parameters.
        id=val-2c_comparison_HTO
        caption=Comparison of TMAP8 calculations against the experimental data for HTO concentration in the enclosure over time. TMAP8 matches the experimental data well, with an improvement when T$_2$ is injected over a given period rather than immediately. Calibration of the delayed injection model delivers further improvements.
 
-As shown in the red curve in [val-2c_comparison_T2] and [val-2c_comparison_HTO], using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html) notably increased the agreement between the modeling predictions and experimental data for both the T$_2$ and HTO concentrations.
-The RMSPE for T$_2$ decreases from 58.5 % to 35.01 % and the RMSPE for HTO decreases from 74.77 % to 66.39 %.
+As shown in the red curve in [val-2c_comparison_T2] and [val-2c_comparison_HTO], using [MOOSE's stochastic tools module](modules/stochastic_tools/index.md) notably increased the agreement between the modeling predictions and experimental data for both the T$_2$ and HTO concentrations.
+The RMSPE for T$_2$ decreases from 58.5% to 35.01% and the RMSPE for HTO decreases from 74.77% to 66.39%.
 Note that although the calibration approach is similar to the one presented in [!cite](Simon2025), the results presented here include more simulations and the quality of the calibration is increased here (RMSPE values are further decreased here).
 
 [val-2c_calibration_input] and [val-2c_calibration_output] show the evolution of the model parameter values and of the optimization metric (time integral of $g$ defined in [eq:optimization_metric]) as a function of the number of simulation. The calibrated model corresponds to the highest value.
@@ -187,7 +192,7 @@ Note that although the calibration approach is similar to the one presented in [
        id=val-2c_calibration_output
        caption=Evolution of the optimization metric (time integral of $g$ defined in [eq:optimization_metric]) as a function of the number of simulation. The calibrated model corresponds to the highest value.
 
-[val-2c_calibration_input_normal_range] and [val-2c_calibration_input_uniform_range] show the value of the calibrated parameters and the range of the data that was explored in the [Parallel Subset Simulation](https://mooseframework.inl.gov/source/samplers/ParallelSubsetSimulation.html) study.
+[val-2c_calibration_input_normal_range] and [val-2c_calibration_input_uniform_range] show the value of the calibrated parameters and the range of the data that was explored in the [Parallel Subset Simulation](samplers/ParallelSubsetSimulation.md) study.
 [val-2c_calibration_input_normal_range] shows the parameters that followed a normal distribution, and [val-2c_calibration_input_uniform_range] shows those that followed a uniform distribution in log scale.
 In both cases, the calibrated parameters are not on the extremes of the distribution, suggesting that the ranges were properly defined.
 
@@ -195,13 +200,13 @@ In both cases, the calibrated parameters are not on the extremes of the distribu
        image_name=val-2c_pss_inputs_normal_calibrated.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2c_calibration_input_normal_range
-       caption=Calibrated parameter values compared to the normalized normal distribution used in the [Parallel Subset Simulation](https://mooseframework.inl.gov/source/samplers/ParallelSubsetSimulation.html) study. None of the parameters are at the extremes of the distribution.
+       caption=Calibrated parameter values compared to the normalized normal distribution used in the [Parallel Subset Simulation](samplers/ParallelSubsetSimulation.md) study. None of the parameters are at the extremes of the distribution.
 
 !media comparison_val-2c.py
        image_name=val-2c_pss_inputs_uniform_calibrated.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2c_calibration_input_uniform_range
-       caption=Calibrated parameter values compared to the normal distribution in the log scale used in the [Parallel Subset Simulation](https://mooseframework.inl.gov/source/samplers/ParallelSubsetSimulation.html) study. None of the parameters are at the extremes of the distributions.
+       caption=Calibrated parameter values compared to the normal distribution in the log scale used in the [Parallel Subset Simulation](samplers/ParallelSubsetSimulation.md) study. None of the parameters are at the extremes of the distributions.
 
 ## Input files
 
@@ -210,20 +215,20 @@ The input files for this case can be found at [/val-2c_immediate_injection.i] an
 
 For the calibration study, additional input files are provided.
 
-- [/val-2c_base_pss.i] provides key functions and postprocessor blocks necessary for the PSS study, including calculations of the multi-objective optimization metric. i.e., the time integral of $g$ defined in [eq:optimization_metric].
+- [/val-2c_base_pss.i] provides key functions and postprocessor blocks necessary for the PSS study, including calculations of the multi-objective optimization metric (i.e., the time integral of $g$ defined in [eq:optimization_metric]).
 - [/val-2c_delay_pss.i] includes both [/val-2c_base_pss.i] and [/val-2c_delay.i] to generate the needed full input file for the simulation.
-- [/val-2c_pss_main.i] is the main input file for the PSS study. It defines what model parameters to vary and how, what approach to use, and initiate simulations using [/val-2c_delay_pss.i].
+- [/val-2c_pss_main.i] is the main input file for the PSS study. It defines what model parameters to vary and how, defines what approach to use, and initiates simulations using [/val-2c_delay_pss.i].
 
-To run the PSS study, users can perform, in the terminal:
+To run the PSS study in the terminal, users can perform:
 
 ```
 cd ~/projects/TMAP8/test/tests/val-2c/
 mpirun -np 10 ~/projects/TMAP8/tmap8-opt -i val-2c_pss_main.i
 ```
 
-Note that this study is time consuming since a large number of simulation is being run.
-Modifying the PSS parameters can reduce the computational cost
+Note that this study is time consuming since a large number of simulations are being run.
+Modifying the PSS parameters can reduce the computational cost.
 
-Although a very short PSS study is simulated as a test in [/val-2c/tests] to ensure these files run properly, the full calibration study is not performed regularly in tests to limit computational costs. The gold files [/gold/val-2c_pss_results/val-2c_pss_main_out.json] and [/gold/calibrated_parameter_values.txt] are therefore not continuously tested, and the calibrated model parameters used in [/val-2c/tests] are not continuously updated.
+Although a very short PSS study is simulated as a test in [/val-2c/tests] to ensure these files run properly, the full calibration study is not performed regularly in tests to limit computational costs within the TMAP8 testing suite. The gold files [/gold/val-2c_pss_results/val-2c_pss_main_out.json] and [/gold/calibrated_parameter_values.txt] are, therefore, not continuously tested, and the calibrated model parameters used in [/val-2c/tests] are not continuously updated.
 
 !bibtex bibliography

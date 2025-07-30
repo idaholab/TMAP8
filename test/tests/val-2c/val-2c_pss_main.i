@@ -1,8 +1,8 @@
 # This is the parallel subset simulation file for val-2c
 
 ## Conversion
-Curie = '${units 3.7e10 1/s}' # desintegrations/s - activity of one Curie
-decay_rate_tritium = '${units 1.78199e-9 1/s/at}' # desintegrations/s/atoms
+Curie = '${units 3.7e10 1/s}' # disintegrations/s - activity of one Curie
+decay_rate_tritium = '${units 1.78199e-9 1/s/at}' # disintegrations/s/atoms
 conversion_Ci_atom = '${units ${fparse decay_rate_tritium / Curie} 1/at}' # 1 tritium at = ~4.82e-20 Ci
 
 ## Material properties

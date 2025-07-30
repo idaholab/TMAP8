@@ -1,4 +1,4 @@
-# This input files adds key blocks to the val-2c_base.i input files for the PSS study
+# This input file adds key blocks to the val-2c_base.i input files for the PSS study
 
 ## Conversion
 lengthscale = 1e18 # ${units 1 m^3 -> mum^3}
