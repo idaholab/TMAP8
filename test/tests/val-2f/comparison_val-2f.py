@@ -97,7 +97,7 @@ ax.set(xlabel='x (m)', ylabel=r"Deuterium source (at/m$^3$/s)", xlim=(0, None), 
 ax.legend(loc='lower left')
 ax.grid(True, linestyle='--', color='0.65', alpha=0.3)
 ax.minorticks_on()
-# save_plot(fig, 'val-2f_implantation_distribution.png')
+save_plot(fig, 'val-2f_implantation_distribution.png')
 
 # ==============================================================================
 # Figure 2: Temperature history
@@ -109,7 +109,7 @@ ax.set(xlabel='Time (h)', ylabel='Temperature (K)', xlim=(0, END_TIME/3600), yli
 ax.legend(loc='lower left')
 ax.grid(True, linestyle='--', color='0.65', alpha=0.3)
 ax.minorticks_on()
-# save_plot(fig, 'val-2f_temperature_history.png')
+save_plot(fig, 'val-2f_temperature_history.png')
 
 # ==============================================================================
 # Figure 3: TMAP8 vs Experimental
@@ -182,7 +182,7 @@ ax.grid(True, linestyle='--', color='0.65', alpha=0.3)
 ax.minorticks_on()
 
 # Save the figure
-# save_plot(fig, "val-2f_comparison_overlay.png")
+save_plot(fig, "val-2f_comparison_overlay.png")
 
 # ==============================================================================
 # Figure 4: Deuterium evolution with curve lines, mobile + intrinsic trap added
@@ -247,7 +247,7 @@ for key, fname in [("default", "val-2f_deuterium_desorption"),
         Patch(color=colors[0], alpha=0.5, label='Trap 5'),
 ]
     fig.legend(handles=patches, loc='center right', bbox_to_anchor=(0.85, 0.5), fontsize=8)
-    # save_plot(fig, f"{fname}.png")
+    save_plot(fig, f"{fname}.png")
 
 # ==============================================================================
 # Figure 5: Trap-induced density vs DPA
@@ -285,7 +285,7 @@ ax.text(0.15, 0.05 * max(trap_density_0_1_dpa), '0.1 dpa', color='gray')
 ax.set(xlabel='Damage (dpa)', ylabel=r"Trap density (m$^{-3}$)", xlim=(0, 3), ylim=(0, None))
 ax.grid(True, linestyle='--', color='0.65', alpha=0.3)
 ax.legend()
-# save_plot(fig, 'val-2f_trap_induced_density.png')
+save_plot(fig, 'val-2f_trap_induced_density.png')
 
 # ==============================================================================
 # Figure 5b: Trap-induced density vs DPA for PSS
@@ -374,7 +374,7 @@ ax.set(
 ax.grid(True, linestyle='--', color='0.65', alpha=0.3)
 ax.legend()
 
-# save_plot(fig, 'val-2f_trap_induced_density_PSS.png')
+save_plot(fig, 'val-2f_trap_induced_density_PSS.png')
 
 # ==============================================================================
 # Figure 6: Diffusion coefficients plot
@@ -453,7 +453,7 @@ ax.grid(True, linestyle='--', color='0.65', alpha=0.3)
 ax.minorticks_on()
 
 # Save
-# save_plot(fig, 'val-2f_deuterium_diffusion_literature.png')
+save_plot(fig, 'val-2f_deuterium_diffusion_literature.png')
 
 # ==============================================================================
 # Figure 6b: Diffusion coefficients plot for PSS
@@ -536,7 +536,7 @@ ax.grid(True, linestyle='--', color='0.65', alpha=0.3)
 ax.minorticks_on()
 
 # Save
-# save_plot(fig, 'val-2f_deuterium_diffusion_literature_PSS.png')
+save_plot(fig, 'val-2f_deuterium_diffusion_literature_PSS.png')
 
 # ==============================================================================
 # Figure 7: Recombination coefficients plot
@@ -638,7 +638,7 @@ ax.legend(sorted_handles, sorted_labels, fontsize=9, loc='upper right')
 # Final formatting
 ax.grid(True, linestyle='--', color='0.65', alpha=0.3)
 ax.minorticks_on()
-# save_plot(fig, 'val-2f_recombination_literature.png')
+save_plot(fig, 'val-2f_recombination_literature.png')
 
 # ==============================================================================
 # Figure 7b: Recombination coefficients plot for PSS
@@ -748,4 +748,4 @@ ax.legend(sorted_handles, sorted_labels, fontsize=9, loc='upper right')
 # Final formatting
 ax.grid(True, linestyle='--', color='0.65', alpha=0.3)
 ax.minorticks_on()
-# save_plot(fig, 'val-2f_recombination_literature_PSS.png')
+save_plot(fig, 'val-2f_recombination_literature_PSS.png')
