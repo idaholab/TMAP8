@@ -1,0 +1,98 @@
+# This file provides the parameters distributions for the PSS.
+# It is included in val-2f_pss_main.i
+
+kb = '${units 1.380649e-23 J/K}' # Boltzmann constant J/K - from PhysicalConstants.h
+
+# PSS parameters
+num_samplessub = 6000
+num_subsets = 10
+
+# diffusion_W_preexponential
+mean_diffusion_W_preexponential_exp = 7.28 # mean of the exponent in the diffusion pre-factor
+std_diffusion_W_preexponential_exp = 0.7 # std of the exponent in the diffusion pre-factor
+
+# diffusion_W_energy
+mean_diffusion_W_energy = '${units 0.28794285714285717 eV}' # mean of the larger and lower diffusion activation energies
+std_diffusion_W_energy = '${units 0.07616723812286558 eV}' # larger and lower diffusion activation energies distance to the mean
+
+# recombination_coefficient
+mean_recombination_preexponential_exp = 22.5
+std_recombination_preexponential_exp = 1 # 6
+
+# recombination_energy
+mean_recombination_energy = '${units -0.04875 eV}' # mean of the exponent in the recombination pre-factor
+std_recombination_energy = '${units 0.05 eV}' # std of the exponent in the recombination pre-factor
+
+# detrapping_prefactor
+mean_detrapping_prefactor = '${units 1e13 1/s}'
+std_detrapping_prefactor = '${fparse mean_detrapping_prefactor * 10/100}'
+
+# annealing prefactor
+mean_A0 = '${units 6.18e-3 1/s}'
+std_A0 = '${fparse mean_A0 * 10/100}'
+
+# detrapping_energy_1
+mean_detrapping_energy_1 = '${fparse ${units 1.15 eV -> J} / kb}'
+std_detrapping_energy_1 = '${fparse mean_detrapping_energy_1 * 10/100}' # it isn't expected to change since the detrapping energy is already optimally positioned
+
+# trap_density_01dpa_1
+mean_K_1 = '${units 9.0e26 traps/m^3/dpa}'
+std_K_1 = '${fparse mean_K_1 * 10/100}'
+mean_nmax_1 = '${units 6.9e25 1/m^3}'
+std_nmax_1 = '${fparse mean_nmax_1 * 10/100}'
+mean_Ea_1 = '${units 0.24 eV}'
+std_Ea_1 = '${fparse mean_Ea_1 * 10/100}'
+
+# detrapping_energy_2
+mean_detrapping_energy_2 = '${fparse ${units 1.35 eV -> J} / kb}'
+std_detrapping_energy_2 = '${fparse mean_detrapping_energy_2 * 10/100}' # it isn't expected to change since the detrapping energy is already optimally positioned
+
+# trap_density_01dpa_2
+mean_K_2 = '${units 4.2e26 traps/m^3/dpa}'
+std_K_2 = '${fparse mean_K_2 * 10/100}'
+mean_nmax_2 = '${units 7.0e25 1/m^3}'
+std_nmax_2 = '${fparse mean_nmax_2 * 10/100}'
+mean_Ea_2 = '${units 0.24 eV}'
+std_Ea_2 = '${fparse mean_Ea_2 * 10/100}'
+
+# detrapping_energy_3
+mean_detrapping_energy_3 = '${fparse ${units 1.65 eV -> J} / kb}'
+std_detrapping_energy_3 = '${fparse mean_detrapping_energy_3 * 10/100}' # it isn't expected to change since the detrapping energy is already optimally positioned
+
+# trap_density_01dpa_3
+mean_K_3 = '${units 2.5e26 traps/m^3/dpa}'
+std_K_3 = '${fparse mean_K_3 * 10/100}'
+mean_nmax_3 = '${units 6.0e25 1/m^3}'
+std_nmax_3 = '${fparse mean_nmax_3 * 10/100}'
+mean_Ea_3 = '${units 0.30 eV}'
+std_Ea_3 = '${fparse mean_Ea_3 * 10/100}'
+
+# detrapping_energy_4
+mean_detrapping_energy_4 = '${fparse ${units 1.85 eV -> J} / kb}'
+std_detrapping_energy_4 = '${fparse mean_detrapping_energy_4 * 10/100}' # it isn't expected to change since the detrapping energy is already optimally positioned
+
+# trap_density_01dpa_4
+mean_K_4 = '${units 5.0e26 traps/m^3/dpa}'
+std_K_4 = '${fparse mean_K_4 * 10/100}'
+mean_nmax_4 = '${units 4.7e25 1/m^3}'
+std_nmax_4 = '${fparse mean_nmax_4 * 10/100}'
+mean_Ea_4 = '${units 0.30 eV}'
+std_Ea_4 = '${fparse mean_Ea_4 * 10/100}'
+
+# detrapping_energy_5
+mean_detrapping_energy_5 = '${fparse ${units 2.05 eV -> J} / kb}'
+std_detrapping_energy_5 = '${fparse mean_detrapping_energy_5 * 10/100}' # it isn't expected to change since the detrapping energy is already optimally positioned
+
+# trap_density_01dpa_5
+mean_K_5 = '${units 1.0e26 traps/m^3/dpa}'
+std_K_5 = '${fparse mean_K_5 * 10/100}'
+mean_nmax_5 = '${units 2.0e25 1/m^3}'
+std_nmax_5 = '${fparse mean_nmax_5 * 10/100}'
+
+# detrapping_energy_intrinsic
+mean_detrapping_energy_intrinsic = '${fparse ${units 1.04 eV -> J} / kb}'
+std_detrapping_energy_intrinsic = '${fparse mean_detrapping_energy_intrinsic * 10/100}' # it isn't expected to change since the detrapping energy is already optimally positioned
+
+# trap_density_01dpa_intrinsic
+mean_trap_density_01dpa_intrinsic = '${units 2.4e22 at/m^3 -> at/mum^3}'
+std_trap_density_01dpa_intrinsic = '${fparse mean_trap_density_01dpa_intrinsic * 10/100}'

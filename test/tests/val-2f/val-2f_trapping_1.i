@@ -59,10 +59,10 @@
     type = ParsedFunction
     expression = '${trapping_site_fraction_1} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
   []
-  [trap_distribution_function_1_inf]
-    type = ParsedFunction
-    expression = '${trapping_site_fraction_1_inf} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
-  []
+  # [trap_distribution_function_1_inf]
+  #   type = ParsedFunction
+  #   expression = '${trapping_site_fraction_1_inf} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
+  # []
 []
 
 [Materials]

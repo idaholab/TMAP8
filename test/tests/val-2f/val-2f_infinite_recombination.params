@@ -1,0 +1,17 @@
+# This file provides the traps parameters for the infinite recombination case.
+# It is included in val-2f_infinite_recombination.i
+
+trap_density_01dpa_1_inf = '${units 4.8e25 at/m^3 -> at/mum^3}'
+trapping_site_fraction_1 = '${fparse trap_density_01dpa_1_inf / tungsten_density}'
+
+trap_density_01dpa_2_inf = '${units 3.8e25 at/m^3 -> at/mum^3}'
+trapping_site_fraction_2 = '${fparse trap_density_01dpa_2_inf / tungsten_density}'
+
+trap_density_01dpa_3_inf = '${units 2.6e25 at/m^3 -> at/mum^3}'
+trapping_site_fraction_3 = '${fparse trap_density_01dpa_3_inf / tungsten_density}'
+
+trap_density_01dpa_4_inf = '${units 3.6e25 at/m^3 -> at/mum^3}'
+trapping_site_fraction_4 = '${fparse trap_density_01dpa_4_inf / tungsten_density}'
+
+trap_density_01dpa_5_inf = '${units 1.1e25 at/m^3 -> at/mum^3}'
+trapping_site_fraction_5 = '${fparse trap_density_01dpa_5_inf / tungsten_density}'
