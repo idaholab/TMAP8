@@ -2,7 +2,7 @@
 []
 [MultiApps] # Designate a subapp to control later
   [runner]
-    type = SamplerFullSolveMultiApp 
+    type = SamplerFullSolveMultiApp
     sampler = sobol
     input_files = 'elm_transient_runner.i'
     mode = batch-reset
@@ -102,7 +102,7 @@
 [Reporters]
   [results]
     type = StochasticReporter
-    execute_on = 'FINAL' # INITIAL TIMESTEP_END MULTIAPP_FIXED_POINT_END 
+    execute_on = 'FINAL' # INITIAL TIMESTEP_END MULTIAPP_FIXED_POINT_END
   []
   [stats]
     type = StatisticsReporter
@@ -118,7 +118,7 @@
                    results/results:time_max_T_CuCrZr:value"""
     compute = 'mean stddev'
     ci_method = 'percentile'
-    ci_levels = """0.05 0.10 0.15 0.20 0.25 0.30 0.35 0.40 0.45 0.50 
+    ci_levels = """0.05 0.10 0.15 0.20 0.25 0.30 0.35 0.40 0.45 0.50
                    0.55 0.60 0.65 0.70 0.75 0.80 0.85 0.90 0.95"""
     execute_on = 'FINAL'
   []
@@ -135,7 +135,7 @@
                    results/results:time_max_T_W:value
                    results/results:time_max_T_Cu:value
                    results/results:time_max_T_CuCrZr:value"""
-    ci_levels = """0.05 0.10 0.15 0.20 0.25 0.30 0.35 0.40 0.45 0.50 
+    ci_levels = """0.05 0.10 0.15 0.20 0.25 0.30 0.35 0.40 0.45 0.50
                    0.55 0.60 0.65 0.70 0.75 0.80 0.85 0.90 0.95"""
     execute_on = 'FINAL'
   []
@@ -154,7 +154,7 @@
   [out]
     type = JSON
     distributed = False
-    execute_on = 'FINAL' 
-    execute_reporters_on = 'FINAL' 
+    execute_on = 'FINAL'
+    execute_reporters_on = 'FINAL'
   []
 []

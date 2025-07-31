@@ -19,7 +19,7 @@
 ###    a. Average and maximum temperatures for all materials
 ###    b. Maximum tritium concentrations for all materials
 ###    c. Temperature and tritium flux along block boundaries
-### 2. Converted to continous-pulse for reduced computation time 
+### 2. Converted to continous-pulse for reduced computation time
 ###    a. 1 Pulse = (500s)*(tritium flux) fluence
 ###    b.
 
@@ -40,7 +40,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
         preserve_volumes = false                                                                   # keep volume between radial mesh points constant
         smoothing_max_it = 3                                                                       # number of laplacian smoothing functions
     []
-    [ssbsg1]                                                                                       # mesh name 
+    [ssbsg1]                                                                                       # mesh name
         type = SideSetsBetweenSubdomainsGenerator                                                  # type of mesh generator, "creates a sideset composed of nodes located between two or more subdomains"
         input = ccmg                                                                               # mesh to modify
         primary_block = '4'     # W                                                                # specifies the 'block'(s) to draw a sidestep between
@@ -575,14 +575,14 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
         penalty = 0.05                                                                             # proportionality between neighbor derivative and the difference in neighbor_var and var values. See: https://mooseframework.inl.gov/source/interfacekernels/PenaltyInterfaceDiffusion.html
         #  it will not converge with > 0.1, but it creates negative C_mobile _Cu with << 0.1
         # jump_prop_name = solubility_ratio_4to3
-        jump_prop_name = solubility_ratio                                                          # material property used in variable jump 
+        jump_prop_name = solubility_ratio                                                          # material property used in variable jump
         boundary = '4to3'                                                                          # boundary to apply the interface condition to.
     []
     [tied_3to2]
         type = ADPenaltyInterfaceDiffusion
         variable = C_mobile_Cu
         neighbor_var = C_mobile_CuCrZr
-        penalty = 0.05            
+        penalty = 0.05
         #  it will not converge with > 0.1, but it creates negative C_mobile _Cu with << 0.1
         # jump_prop_name = solubility_ratio_3to2
         jump_prop_name = solubility_ratio
@@ -593,14 +593,14 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
 [NodalKernels]                                                                                     # Nodal Kernels are used to solve equations that specifically belong on a node.
     ############################## NodalKernels for W (block = 4)
     [time_W]
-        type = TimeDerivativeNodalKernel                                                           # This kernel: forms the contribution to the residual and jacobian of the timer derivative term from an ODE being solves at ALL nodes: https://mooseframework.inl.gov/source/nodalkernels/TimeDerivativeNodalKernel.html 
+        type = TimeDerivativeNodalKernel                                                           # This kernel: forms the contribution to the residual and jacobian of the timer derivative term from an ODE being solves at ALL nodes: https://mooseframework.inl.gov/source/nodalkernels/TimeDerivativeNodalKernel.html
         variable = C_trapped_W                                                                     # variable the residual operates on
     []
     [trapping_W]
         type = TrappingNodalKernel                                                                 # Defines time dependent trapping rate
-        variable = C_trapped_W                                                                     # variable operating on 
+        variable = C_trapped_W                                                                     # variable operating on
         temperature = temperature
-        alpha_t = 2.75e11      # 1e15                                                              # Trapping rate coefficient 
+        alpha_t = 2.75e11      # 1e15                                                              # Trapping rate coefficient
         N = 1.0e0  # = (1e0) x (${tungsten_atomic_density} #/m^3)                                  # Host atom density
         # Ct0 = 1.0e-4                # E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 1
         Ct0 = 1.0e-4                # E.A. Hodille et al 2021 Nucl. Fusion 61 1260033, trap 2      # Host trapping fraction
@@ -671,7 +671,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
     [C_mob_W_top_flux]                                                                             # User defined name
         type = NeumannBC                                                                   # PDE flux boundary condition: https://mooseframework.inl.gov/source/bcs/FunctionNeumannBC.html
         variable = C_mobile_W                                                                      # Applicable variable
-        value = 7.90e-13         
+        value = 7.90e-13
         boundary = 'top'                                                                           # boundary name to apply condition to
     []
     [mobile_tube]
@@ -689,7 +689,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
     [temp_tube]
         type = DirichletBC                                                                 # Constant BC, but the exact value is defined by a later function. 'Constant' is allowed to be spatially and temporally dependent: https://mooseframework.inl.gov/source/bcs/FunctionDirichletBC.html
         variable = temperature                                                                     # specifies inner tube temperature at the boundary: 2to1 (CuCrZr to H20)
-        value = 552        
+        value = 552
         boundary = '2to1'
     []
 []
@@ -860,7 +860,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
         variable = Sc_C_total_W
         execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
     []
-    [F_permeation] # Uses conversion factor, not really flux 
+    [F_permeation] # Uses conversion factor, not really flux
         type = SideDiffusiveFluxAverage
         boundary = '2to1'
         diffusivity = 5.01e-24   # (3.01604928)/(6.02e23)/[gram(T)/m^2]
@@ -885,7 +885,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
         type = SideDiffusiveFluxAverage
         boundary = '2to1'
         diffusivity = thermal_conductivity_CuCrZr
-        variable = temperature 
+        variable = temperature
         execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
     []
     ############################################################ Postprocessors for W (block = 4)

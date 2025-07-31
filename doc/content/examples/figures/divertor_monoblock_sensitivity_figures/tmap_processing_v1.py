@@ -44,7 +44,7 @@ def json_serial_killer(an_obj, **kwargs):
             for item in an_obj:
                return_list.append(json_serial_killer(item))
             return(return_list)
-        elif isinstance(an_obj, (int, float, str)): 
+        elif isinstance(an_obj, (int, float, str)):
             return(an_obj)
         elif isinstance(an_obj, DataFrame):
             return(an_obj.to_dict())
@@ -71,7 +71,7 @@ def json_to_RESULTS(json_path = None, post_dictionary = None, **kwargs):
       for step, result_object in step_dict.items():
          json_results.post_processing_vectors[post_vector][step] = json_to_RESULTS(post_dictionary=result_object)
    return(json_results)
- 
+
 class RESULTS:
     def __init__(self, path: str = None, *args, empty: bool = False, **kwargs):
        self.path = path if not empty else None
@@ -85,21 +85,21 @@ class RESULTS:
        path = path if path else self.path
        self.data_frame = pd.read_csv(path)
        return()
-    
+
     ################################################################################################################## Reading Data Methods #########
     # Reads vector from self's dataframe. Returns a numpy array.
     def read_vector(self, vector: str, *args) ->ndarray:
        data_vector = np.asarray(self.data_frame[vector].tolist())
        self.data_vectors[vector] = data_vector
        return(data_vector)
-    
+
     # Reads multiple vectors, returns a dictionary of vectors and their ndarrays
     def read_vectors(self, vector_list: list[str], **kwargs) ->dict[str,ndarray]:
        vector_dict = {}
        for vector in vector_list:
          vector_dict[vector] = self.read_vector(vector)
        return()
-    
+
     # Reads the results from VectorPostProcessors, expecting a directory containing the .csv files, using the naming convention set by MOOSE.
     def read_vector_post_processor_data(self, directory_path: str, post_processing_vector: str, *args, vector_list: list[str] = [], **kwargs)-> any:
         vector_post_processing_outputs = []
@@ -113,7 +113,7 @@ class RESULTS:
             for vector in vector_list:
                self.post_processing_vectors[post_processing_vector][(file[:-4].split('_'))[-1]].read_vector(vector)
         return()
-     
+
     # Save a vector or post_processor_vector as a json file. Vector must exist as a .data_vector entry in the RESULTS object or one of it's nested RESULTS objects.
     def save_vector(self, *args, path: str = '', vector: str = None, post_processor_vector: str = None, step: str = None, suppress_json: bool = False, **kwargs)-> Union[None, dict]:
        if post_processor_vector:
@@ -130,7 +130,7 @@ class RESULTS:
           with open(f'{path}.json', 'w+') as ftw:
             ftw.write(json.dumps({'name':vector, 'data':saved_vector.tolist()}, indent=4))
        return()
-    
+
     # Saving multiple vectors to the same json file.
     def save_vectors(self, path: str, *args, vector_list: list[str] = None, post_processor_vector_list: list[str] = [], step_list: list[str] = [], **kwargs)-> None:
        saved_dict = {}
@@ -146,16 +146,16 @@ class RESULTS:
        with open(f'{path}.json', 'w+') as ftw:
           ftw.write(json.dumps({'name':vector, 'data':saved_dict}, indent=4))
        return()
-    
+
     # Save the results object, de-composing most or all attributes of the RESULTS object. Be wary of non-serializeable objects or data.
     def save_object(self, path: str, *args, do_not_print: list[str] = ['data_frame', 'plots'], suppress_save = False, **kwargs)-> str:
        do_not_print.append('post_processor_vectors')
        attributes = self.__dict__
        print_attributes = {}
        for k,v in attributes.items():
-          if k not in do_not_print: 
-            print_attributes[k] = v           
-      
+          if k not in do_not_print:
+            print_attributes[k] = v
+
        post_processing_vectors_dict = {}
        for vector, step_dict in self.post_processing_vectors.items():
           post_processing_vectors_dict[vector] = {}
@@ -163,7 +163,7 @@ class RESULTS:
              post_processing_vectors_dict[vector][step] = result.save_object(path = '', *args, do_not_print = do_not_print, suppress_save = True)
 
        print_attributes['post_processing_vectors'] = post_processing_vectors_dict
-       
+
        if suppress_save:
           return(print_attributes)
        else:
@@ -171,14 +171,14 @@ class RESULTS:
              ftw.write(json.dumps(json_serial_killer(print_attributes), indent=4))
              print(f"Object attributes written to {path}.json as a json file.")
              return(print_attributes)
-    
+
     ################################################################################################################## Manipulating Data Methods ####
     # Scales a vector given a user-defined factor, see also normalize_vector.
     def get_scaled_vector(self, vector: str, factor: float, *args, new_name: str = '', **kwargs)-> ndarray:
        new_vector = new_name if new_name else vector
        self.data_vectors[new_vector] = np.multiply(self.data_vectors[vector], factor)
        return(self.data_vectors[new_vector])
-    
+
     # Normalize a vector according to its total or its maximum (default)
     def get_normalized_vector(self, vector: str, *args, by_total: bool = False, new_name: str = '', **kwargs)-> ndarray:
        un_normalized = self.data_vectors[vector]
@@ -187,8 +187,8 @@ class RESULTS:
        new_vector = new_name if new_name else f'{vector}_normalized'
        self.data_vectors[new_vector] = normalized
        return(normalized)
-    
-    # Integrates function to aquire cumulative value, 
+
+    # Integrates function to aquire cumulative value,
     def get_cumulative_function(self, vector: str, *args, new_name: str = '', **kwargs)-> ndarray:
        root_function = self.data_vectors[vector].tolist()
        cumulative_function = [root_function[0]]
@@ -197,7 +197,7 @@ class RESULTS:
        new_vector = new_name if new_name else f'{vector}_cumulative'
        self.data_vectors[new_vector] = np.asarray(cumulative_function)
        return(cumulative_function)
-    
+
     # Differentiates function to get spacing/difference e.g. time step if operating on time
     def get_differential_function(self, vector: str, *args, new_name: str = '', **kwargs)-> ndarray:
        new_vector = new_name if new_name else f'{vector}_differential'
@@ -207,7 +207,7 @@ class RESULTS:
           differential_function.append(root_function[i] - root_function[i-1])
        self.data_vectors[new_vector] = np.asarray(differential_function)
        return(differential_function)
-    
+
     # Get the dot product between two vectors (scalar) or element wise multiplication (element_wise)
     def get_vector_dot_product(self, vector1: str, vector2: str, element_wise: bool = True, *args, new_name: str = '', **kwargs)-> Union[float, ndarray]:
        new_name = new_name if new_name else f'{vector1}_{vector2}_dot_product'
@@ -216,23 +216,23 @@ class RESULTS:
        dot_product = np.dot(func_1, func_2) if not element_wise else np.multiply(func_1, func_2)
        self.data_vectors[new_name] = dot_product
        return(dot_product)
-    
+
     # Sums an arbitrary number of vectors
     def sum_vectors(self, vector_list: list[str], *args, new_name: str = '', **kwargs)-> ndarray:
        if new_name:
           new_vector = new_name
-       else: 
+       else:
           new_vector = 'sum_of'
           for i in vector_list:
-            new_vector += f'_{i}' 
-      
+            new_vector += f'_{i}'
+
        summed_vector = self.data_vectors[vector_list[0]]
        for vector in vector_list[1:]:
           summed_vector = np.add(summed_vector, self.data_vectors[vector])
-      
+
        self.data_vectors[new_vector] = summed_vector
        return(summed_vector)
-    
+
     # Finds the closest point to a given value for a specified vector. Also returns the values of other corresponding vectors at that same index. Only valid for PostProcessors not VectorPostProcessors
     def get_closest_point(self, value: Union[float, int], vector: str, *args, corresponding_vectors: list[str] = [], **kwargs)-> dict[str, Union[float, int]]:
        my_vector = self.data_vectors[vector].tolist()
@@ -242,13 +242,13 @@ class RESULTS:
                   'value': my_vector[closest_index],
                   'corresponding_values' : [float(self.data_vectors[i][closest_index]) for i in corresponding_vectors]}
        return(closest)
-    
+
     def manipulate_post_processor_data(self, post_processor_vector, *args, function = None,  **kwargs):
        #active_function = function
        for time_step, step_results in self.post_processing_vectors[post_processor_vector].items():
          results = function(step_results, *args)
        return()
-    
+
     def apply_kernel(self, vector, function, *args, post_processing_vector = None, step = None, new_name = None, **kwargs):
        new_name = new_name if new_name else f"{vector}_{function}"
        if not post_processing_vector:
@@ -266,7 +266,7 @@ class RESULTS:
     def clear_plot(self):
        plt.clf()
        return()
-    
+
     def plot_time_series_vector(self, x, y, post_processing_vector,
                                 xlabel = '', ylabel = '', title = '', xmin = 0, xmax = 0, ymin = 0, ymax = 0,xscale = 'linear', yscale = 'linear', display_rate = 0, **kwargs):
        xlabel = xlabel if xlabel else x; ylabel = ylabel if ylabel else y
@@ -289,11 +289,11 @@ class RESULTS:
        ax.legend()
        plt.ioff()
        return()
-    
+
     def plot_time_series_vectors(self, x, y_list, post_processing_vector,
                                 xlabel = '', ylabels = [], titles = [], xmin = 0, xmax = 0, ymin = 0, ymax = 0,xscale = 'linear', yscale = 'linear', display_rate = 0, **kwargs):
-       
-       xlabel = xlabel if xlabel else x; 
+
+       xlabel = xlabel if xlabel else x;
        titles = titles if titles else [f'{xlabel} vs {ylabels[i]}' for i in range (0, len(y_list))]
        plt.ion()
 
@@ -324,7 +324,7 @@ class RESULTS:
          axes.legend()
        plt.ioff()
        return()
-    
+
     def general_plot(self, x_list, y_list, figure_title = '', labels = [],post_processor_vector = None, step = None,
                      x_label = 'Abscissa', y_label = 'Ordinate(s)', x_min = None, x_max = None, y_min = None, y_max = None, x_scale = 'linear', yscale = 'linear',
                      marker = 'o', linewidth = 1.5 ):
@@ -339,18 +339,18 @@ class RESULTS:
           else:
              ax.plot(self.post_processing_vectors[post_processor_vector][step].data_vectors[x_list[i]],
                      self.post_processing_vectors[post_processor_vector][step].data_vectors[y_list[i]], label = labels[i], color = 'darkblue', linewidth = 1.5)
-       
+
        ax.set_xlim(x_min, x_max)
        ax.set_ylim(y_min, y_max)
        ax.legend()
        return()
-    
+
     def general_plot2(self, x, y, figure_name = '', post_processor_vector = None, step = None, clear_fig = True, operating_fig = None,
                      x_label = '', y_label = '', plot_label = '', marker = 'o', linewidth = 1.5,
                      x_min = 0, x_max = 0, y_min = 0, y_max = 0, x_scale = 'linear', y_scale = 'linear', **kwargs):
        if clear_fig:
          if figure_name:
-             new_fig = plt.figure(num=figure_name, figsize = [6.0, 4.0], dpi = 300, facecolor = 'aliceblue', edgecolor='slategrey')  
+             new_fig = plt.figure(num=figure_name, figsize = [6.0, 4.0], dpi = 300, facecolor = 'aliceblue', edgecolor='slategrey')
          else:
              figure_name = str(len(self.plots.keys())+1)
              new_fig = plt.figure(num=figure_name, figsize = [6.0, 4.0], dpi = 300, facecolor = 'aliceblue', edgecolor='slategrey')
@@ -370,7 +370,7 @@ class RESULTS:
 
        self.plots[figure_name] = new_fig
        return()
-    
+
     def plot_vector(self, x, y, post_processor_vector = None, step = None,
                     xscale = 'linear',yscale = 'linear', x_units = '', y_units = '',
                     xlabel = None, ylabel = None, x_min = None, x_max = None, y_min = None, y_max = None):
@@ -382,13 +382,13 @@ class RESULTS:
        plt.plot(x_vector, y_vector)
        plt.xlabel(xlabel); plt.ylabel(ylabel); plt.title(f'{ylabel} vs {xlabel}'); plt.yscale(yscale); plt.xscale(xscale)
        #plt.xlim((0,1600))
-       if x_max and x_min: 
+       if x_max and x_min:
           plt.xlim((x_min, x_max));print('HEY')
        else:
           print('huh')
        if x_max and not x_min: plt.xlim(right=x_max)
        if x_min and not x_max: plt.xlim(left=x_min)
-       if y_max and y_min: 
+       if y_max and y_min:
           plt.ylim((y_min, y_max))
        if y_max and not y_min: plt.ylim(top=y_max)
        if y_min and not y_max: plt.ylim(bottom=y_min)
@@ -445,7 +445,7 @@ class RESULTS:
          pass
        my_axs = plt.gca()
        plt.show()
-          
+
 class COMPARISON:
    def __init__(self, comp1, comp2, **kwargs):
       self.comp1 = RESULTS(comp1) if type(comp1) == str else comp1
@@ -454,7 +454,7 @@ class COMPARISON:
       self.comparisons = {}
       self.shared = {}
       return
-   
+
    def get_shared_vector(self, vector):
       self.shared[vector] = self.comp1.data_vectors[vector] if vector in self.comp1.data_vectors.keys() else self.comp2.data_vectors[vector]
       return(self.shared[vector])
@@ -466,7 +466,7 @@ class COMPARISON:
       self.comparisons[f'{vector}_abs_diff'] = np.subtract(self.comp1.data_vectors[vector], self.comp2.data_vectors[vector])
 
       return(self.comparisons[f'{vector}_abs_diff'])
-   
+
    def rel_diff_2to1(self, vector):
       self.comp1.read_vector(vector)
       self.comp2.read_vector(vector)
@@ -474,7 +474,7 @@ class COMPARISON:
       self.comparisons[f'{vector}_rel_diff_2to1'] = np.divide(np.subtract(self.comp2.data_vectors[vector], self.comp1.data_vectors[vector]), self.comp1.data_vectors[vector])
 
       return(self.comparisons[f'{vector}_rel_diff_2to1'])
-   
+
    def rel_diff_1to2(self, vector):
       self.comp1.read_vector(vector)
       self.comp2.read_vector(vector)
@@ -482,13 +482,13 @@ class COMPARISON:
       self.comparisons[f'{vector}_rel_diff_1to2'] = np.divide(np.subtract(self.comp1.data_vectors[vector], self.comp2.data_vectors[vector]), self.comp2.data_vectors[vector])
 
       return(self.comparisons[f'{vector}_rel_diff_1to2'])
-   
+
    def Save_Object(self, path):
        attributes = self.__dict__
        with open(f'{path}.json', 'w+') as ftw:
           ftw.write(json.dumps(attributes, indent=4))
        return(f"Object attributes written to {path}.json as a json file.")
-   
+
    def plot_vector(self, result_obj, x, y):
        x_vector = result_obj.data_vectors[x]
        y_vector = result_obj.data_vectors[y]
@@ -520,11 +520,11 @@ class COMPARISON:
       plt.legend()
       plt.show()
       return()
-      
+
    def general_plot(self, x_list_1, y_list_1, x_list_2, y_list_2, figure_title = '', labels_1 = [], labels_2 = [], post_processor_vector = None, step = None,
                     x_label = 'Abscissa', y_label = 'Ordinate(s)', x_min = 0, x_max = 0, y_min = 0, y_max = 0, x_scale = 'linear', yscale = 'linear',
                     marker = 'o', linewidth = 1.5 ):
-       
+
        x_list_1 = x_list_1 if len(x_list_1)>1 else [x_list_1[0] for i in y_list_1]; labels_1 = labels_1 if labels_1 else y_list_1; labels_1 = labels_1 if len(labels_1)>1 else [labels_1[0] for i in y_list_1]
        x_list_2 = x_list_2 if len(x_list_2)>1 else [x_list_2[0] for i in y_list_2]; labels_2 = labels_2 if labels_2 else y_list_2; labels_2 = labels_2 if len(labels_2)>1 else [labels_2[0] for i in y_list_2]
 
@@ -545,7 +545,7 @@ class COMPARISON:
              ax.plot(self.comp2.post_processing_vectors[post_processor_vector][step].data_vectors[x_list_2[i]],
                      self.comp2.post_processing_vectors[post_processor_vector][step].data_vectors[y_list_2[i]],
                      label = labels_2[i], color = 'darkblue', linewidth = 1.5)
-             
+
        ax.legend()
        return()
 
@@ -554,8 +554,8 @@ class SOBOL:
       #['Heat Flux','Tritium Flux', 'Coolant Temperature', 'Coolant Tritium Concentration']
       self.time_step = time_step
       self.reference_dict = read_json(path)
-      self.path = path 
-      
+      self.path = path
+
       if inputs and inputs != []:
          self.inputs = inputs
       else:
@@ -568,7 +568,7 @@ class SOBOL:
          for key in self.reference_dict["time_steps"][self.time_step]["matrix"].keys():
             if "results" not in key: inputs.append(key)#; print(key)
          self.inputs = inputs
-      
+
       self.sobol = {'confidence_intervals': self.reference_dict['reporters']['sobol']['confidence_intervals']['levels'],
                     'number_of_samples': self.reference_dict['reporters']['sobol']['confidence_intervals']['replicates'],
                     'inputs': inputs,
@@ -589,15 +589,15 @@ class SOBOL:
          if out not in stat_outs: stat_outs.append(out)
       self.statistics['outputs'] = stat_outs
       return
-   
+
    def get_sobol_1st(self):
       keys = self.sobol['confidence_intervals']
       sobol_first = {}
 
       for output in self.sobol['outputs']:
          sobol_first[output] = {}
-        
-         sobol_first[output]['mean'] = {} 
+
+         sobol_first[output]['mean'] = {}
          j = 0
          for inp in self.sobol['inputs']:
             sobol_first[output]['mean'][inp] = self.reference_dict["time_steps"][self.time_step]["sobol"][f"results_results:{output}:value"]["FIRST_ORDER"][0][j]
@@ -610,14 +610,14 @@ class SOBOL:
                sobol_first[output][key][inp] = self.reference_dict["time_steps"][self.time_step]["sobol"][f"results_results:{output}:value"]["FIRST_ORDER"][1][i][j]
                j +=1
             i += 1
-      
+
       sobol_first_df = {}
       for output in self.sobol['outputs']:
           sobol_first_df[output] = pd.DataFrame(sobol_first[output])
 
       self.sobol['FIRST_ORDER'] = sobol_first_df
       return(sobol_first_df)
-   
+
    def get_sobol_2nd(self):
       keys = self.sobol['confidence_intervals']
       sobol_scd = {}
@@ -637,22 +637,22 @@ class SOBOL:
                sobol_scd[output][key][inp] = self.reference_dict["time_steps"][self.time_step]["sobol"][f"results_results:{output}:value"]["SECOND_ORDER"][1][i][j]
                j += 1
             i += 1
-      
+
       sobol_scd_df = {}
       for output in self.sobol['outputs']:
          sobol_scd_df[output] = pd.DataFrame(sobol_scd[output])
-      
+
       self.sobol['SECOND_ORDER'] = sobol_scd_df
       return(sobol_scd_df)
-   
+
    def get_sobol_total(self):
       keys = self.sobol['confidence_intervals']
       sobol_tot = {}
 
       for output in self.sobol['outputs']:
          sobol_tot[output] = {}
-        
-         sobol_tot[output]['mean'] = {} 
+
+         sobol_tot[output]['mean'] = {}
          j = 0
          for inp in self.sobol['inputs']:
             sobol_tot[output]['mean'][inp] = self.reference_dict["time_steps"][self.time_step]["sobol"][f"results_results:{output}:value"]["TOTAL"][0][j]
@@ -665,18 +665,18 @@ class SOBOL:
                sobol_tot[output][key][inp] = self.reference_dict["time_steps"][self.time_step]["sobol"][f"results_results:{output}:value"]["TOTAL"][1][i][j]
                j +=1
             i += 1
-      
+
       sobol_tot_df = {}
       for output in self.sobol['outputs']:
           sobol_tot_df[output] = pd.DataFrame(sobol_tot[output])
 
       self.sobol['TOTAL'] = sobol_tot_df
       return(sobol_tot_df)
-   
+
    def get_var_accounted_for(self):
       if 'SECOND_ORDER' not in self.sobol.keys():
          self.get_sobol_2nd()
-      
+
       self.sobol['var_accounted_for'] = {}
       for output in self.sobol['outputs']:
          var_acc_for = 0
@@ -687,7 +687,7 @@ class SOBOL:
 
          self.sobol['var_accounted_for'][output] = var_acc_for
       return(self.sobol['var_accounted_for'])
-   
+
    def get_statistics(self):
       self.statistics['statistics'] = {}
       for output in self.statistics['outputs']:
@@ -720,7 +720,7 @@ class SOBOL:
                inp_matrix[inp] = self.reference_dict["time_steps"][self.time_step]["matrix"][inp]
             except:
                print(f"Could not find {inp} matrix for {self.path}")
-      
+
       # Third, extract output matricies for each output, store as dictionary of {output: dataframe}
       outp_matrix = {}
       for outp in outputs:
@@ -729,13 +729,13 @@ class SOBOL:
       # package as attribute
       self.matrix = {"inputs": pd.DataFrame(inp_matrix), "outputs": pd.DataFrame(outp_matrix)}
       return(self.matrix)
-   
+
    def save_object(self, path: str, *args, do_not_print: list[str] = [], suppress_save = False, **kwargs)-> str:
        attributes = self.__dict__
        print_attributes = {}
        for k,v in attributes.items():
-          if k not in do_not_print: 
-            print_attributes[k] = v           
+          if k not in do_not_print:
+            print_attributes[k] = v
 
        if suppress_save:
           return(print_attributes)
@@ -744,7 +744,7 @@ class SOBOL:
              ftw.write(json.dumps(json_serial_killer(print_attributes), indent=4))
              print(f"Object attributes written to {path}.json as a json file.")
              return(print_attributes)
-   
+
    def estimate_state_frequency(self, state_limit, output, use_matrix = True, method = 'gamma', pdf=False, plot = True, normalize = True, factor = 'min', function=None):
       if use_matrix:
          print(f"Using a frequency approach based on <{self.statistics['number_of_samples']}> samples.")
@@ -774,7 +774,7 @@ class SOBOL:
          frequency = 0
 
          if method == 'gamma':
-            curve_args = scipy.gamma.fit(data)  
+            curve_args = scipy.gamma.fit(data)
             if pdf and plot:
                self.plot_histogram(labels=[output], plot = [output], normalize = normalize, density=True, factor=factor)
                plt.plot(np.linspace(min(data)-50, max(data)+50, num=len(data)), scipy.gamma.pdf(np.linspace(min(data)-50, max(data)+50, num=len(data)), *curve_args))
@@ -785,7 +785,7 @@ class SOBOL:
             chi_squared, p_value = scipy.chisquare(scipy.relfreq(data, numbins=int(0.01*len(data)))[0],
                                                    scipy.relfreq(scipy.gamma.pdf(np.linspace(min(data), max(data), num=len(data)), *curve_args), numbins=int(0.01*len(data)))[0], axis=0)
             print(f'Chi-squared: {chi_squared}\nP-value: {p_value} ({p_value-1})')
-            
+
 
          elif method == 'normal':
             curve_args = scipy.norm.fit(data)
@@ -825,7 +825,7 @@ class SOBOL:
             chi_squared, p_value = scipy.chisquare(scipy.relfreq(data, numbins=int(0.01*len(data)))[0],
                                                    scipy.relfreq(scipy.beta.pdf(np.linspace(min(data), max(data), num=len(data)), *curve_args), numbins=int(0.01*len(data)))[0], axis=0)
             print(f'Chi-squared: {chi_squared}\nP-value: {p_value} ({p_value-1})')
-         
+
          elif method == 'tukeylambda':
             curve_args = scipy.tukeylambda.fit(data)
             if pdf and plot:
@@ -851,7 +851,7 @@ class SOBOL:
             chi_squared, p_value = scipy.chisquare(scipy.relfreq(data, numbins=int(0.01*len(data)))[0],
                                                    scipy.relfreq(scipy.powerlaw.pdf(np.linspace(min(data), max(data), num=len(data)), *curve_args), numbins=int(0.01*len(data)))[0], axis=0)
             print(f'Chi-squared: {chi_squared}\nP-value: {p_value} ({p_value-1})')
-         
+
          elif method == 'exponential':
             curve_args = scipy.expon.fit(data)
             if pdf and plot:
@@ -893,7 +893,7 @@ class SOBOL:
 
          print(f"Frequency: {frequency}")
          return(frequency, curve_args)
-   
+
    def plot_percentiles(self, labels = [], plot = [], flip = False, normalize = True, factor = 'mean',
                         xlabel = None, ylabel = None, pdf= False):
       # Next: formulate dictionary of {output: {percentiles: [], values: []}}
@@ -909,7 +909,7 @@ class SOBOL:
       # First: normalize confidence intervals with respect to the mean
       for k, v in plotting_dict.items():
          #mean = plotting_dict[k]['values'][0]
-         if normalize: 
+         if normalize:
             plotting_dict[k]['values'] = [i/means[k] for i in v['values']]
       # Plot all using lineplot, markers, and legend
       fig, ax = plt.subplots(1,1, figsize = (6,4))
@@ -931,24 +931,24 @@ class SOBOL:
       else:
          ax.legend(loc = 'upper center', ncols = 3, fontsize = 'small', bbox_to_anchor = (0.5, -0.15))
       return(plotting_dict)
-   
+
    def plot_histogram(self, labels = [], plot = [], density=False, normalize = True, factor = 'mean',
                       xlabel = None, ylabel = None, plot_inp=False):
       if plot_inp:
          plot = list(self.matrix['inputs'].columns) if not plot else plot
       else:
          plot = plot if plot else list(self.matrix["outputs"].columns)
-      
+
       labels = labels if labels else plot
       ylabel = 'Frequency' if not ylabel else ylabel
       histogram_dict = {}
 
       for outp in plot:
-         histogram_dict[outp] = list(self.matrix["inputs"][outp]) if plot_inp else list(self.matrix["outputs"][outp]) 
+         histogram_dict[outp] = list(self.matrix["inputs"][outp]) if plot_inp else list(self.matrix["outputs"][outp])
          if normalize:
             if factor == 'mean':
                xlabel = '(X-Mean)/Mean' if not xlabel else xlabel
-               mean = np.mean(histogram_dict[outp]) 
+               mean = np.mean(histogram_dict[outp])
                histogram_dict[outp] = [(i/mean - 1) for i in histogram_dict[outp]]
             elif factor == 'min':
                xlabel = '(X-Min)/Min' if not xlabel else xlabel
@@ -962,7 +962,7 @@ class SOBOL:
       fig, ax = plt.subplots(1,1, figsize = (6,4))
       ax.set_title('Histogram Distributions'); ax.set_xlabel(xlabel); ax.set_ylabel(ylabel)
       ax.set_facecolor('aliceblue');ax.grid(visible = True, which = 'both', axis = 'both', color = 'gainsboro', linestyle = ':')
-      
+
       for outp, hist in histogram_dict.items():
          ax.hist(hist, fill=False, histtype="step", stacked=True, label=outp, bins=int(len(hist)/100), density = density)
       if labels:
@@ -970,7 +970,7 @@ class SOBOL:
       else:
          ax.legend(loc = 'upper center', ncols = 3, fontsize = 'small', bbox_to_anchor = (0.5, -0.15))
       return()
-   
+
    def plot_violin(self, labels = [], plot = [], normalize = True, factor = 'mean',
                    ylabel = None, xlabel = None):
       plot = plot if plot else self.matrix["outputs"]
@@ -983,7 +983,7 @@ class SOBOL:
          if normalize:
             if factor == 'mean':
                xlabel = '(X-Mean)/Mean' if not xlabel else xlabel
-               mean = np.mean(vio_dict[outp]) 
+               mean = np.mean(vio_dict[outp])
                vio_dict[outp] = [(i/mean - 1) for i in vio_dict[outp]]
             elif factor == 'min':
                xlabel = '(X-Min)/Min' if not xlabel else xlabel
@@ -997,7 +997,7 @@ class SOBOL:
       fig, ax = plt.subplots(1,1, figsize = (6,4))
       ax.set_title('Output Distributions'); ax.set_ylabel(ylabel)
       ax.set_facecolor('aliceblue');ax.grid(visible = True, which = 'both', axis = 'both', color = 'gainsboro', linestyle = ':')
-      
+
       positions = [i+1 for i in range(0, len(vio_dict.keys()))]
       viola = ax.violinplot(vio_dict.values(), positions, showmeans=True, showextrema=True)
 
@@ -1015,11 +1015,11 @@ class SOBOL:
    def plot_sobol(self, outp = '', order = 'FIRST_ORDER', inp_labels = ['Mobile T Flux', 'Cool. T Conc.','Heat Flux','Cool. Temp.'],
                    outp_labels=['H3 Permeation','H3 FLux', 'Coo. Heat Flux','Cu Max T','CCZ Max T','W Max T','H3 Retention'],
                    lci = 0.05, uci = 0.95):
-      
+
       fig, ax = plt.subplots(len(self.inputs),1, figsize = (8,8))
       ax[0].set_title(f'{order} Sensitivity Indicies')
       x = [j+1 for j in range(0, len(self.sobol['outputs']))]
-      
+
       i = 0
       for inp in self.inputs:
          ax[i].set_ylabel(f'{inp_labels[i]}');#ax[i].set_ylim(-0.25,1.25)
@@ -1031,9 +1031,9 @@ class SOBOL:
 
          ax[i].errorbar(x, y, yerr = [n_err, p_err], linewidth=0, elinewidth=1, marker='o')
          i += 1
-         
+
         # if i == 1:
-        #    for j in range(0, len(self.sobol['outputs'])): 
+        #    for j in range(0, len(self.sobol['outputs'])):
         #       print(f"{y[j]}:{n_err[j]}:{p_err[j]}")
 
 
@@ -1045,7 +1045,7 @@ class SOBOL:
       ax[-1].set_xlabel(x_string, loc='left')
       #print(self.sobol[order].keys())
       return()
-   
+
    def sobol_heat_map(self, outp  = 'max_temperature_CuCrZr', outp_label = 'Tritium Permeation',
                      xlabels = ['Tritium Flux','Coolant Tritium \nConcentration','Heat Flux','Coolant Temperature'],
                      ylabels = ['Tritium Flux','Coolant Tritium \nConcentration','Heat Flux','Coolant Temperature']):
@@ -1061,7 +1061,7 @@ class SOBOL:
       new_df = pd.DataFrame(new_df)
       seaborn.heatmap(new_df, cmap='bwr', xticklabels=xlabels, yticklabels=ylabels, label=outp_label, annot=True, vmin=-1.0, vmax=2.0)
       return(new_df)
-   
+
    def confidence_interval_heatmap(self, order = 'FIRST_ORDER', outp  = 'max_temperature_CuCrZr', outp_label = 'CCZ Maximum Temperature',
                                  xlabels = ['Tritium Flux','Coolant Tritium \nConcentration','Heat Flux','Coolant Temperature'],
                                  min_cf = 0.05, max_cf = 0.95, heatmap = True, title = None):
@@ -1079,7 +1079,7 @@ class SOBOL:
             .format(precision=3)
          #new_df
       return(new_df)
-   
+
    def confidence_interval_table(self, outp = 'max_temperature_CuCrZr', outp_label = 'CCZ Maximum Temperature',
                                  xlabels = ['Tritium Flux','Coolant Tritium \nConcentration','Heat Flux','Coolant Temperature'],
                                  min_cf = 0.05, max_cf = 0.95, precision = 2):
@@ -1106,7 +1106,7 @@ class SOBOL:
       return(df.style)
 
    def plot_inp_out(self, outp, inp, xlabel = None, ylabel = None, curve_fit_function = lambda x, a, b: a +b*x, guess_args = [0.0, 1.0]):
-      xlabel = inp if not xlabel else xlabel; ylabel = outp if not ylabel else ylabel; 
+      xlabel = inp if not xlabel else xlabel; ylabel = outp if not ylabel else ylabel;
 
       fig, ax = plt.subplots(1,1, figsize = (6,4))
       ax.set_title(f'{ylabel} vs {xlabel}'); ax.set_ylabel(ylabel); ax.set_xlabel(xlabel)
