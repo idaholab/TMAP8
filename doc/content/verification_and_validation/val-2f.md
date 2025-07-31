@@ -385,7 +385,7 @@ The final optimized values for all model parameters are summarized in [pss_optim
 | $N_6$                | Density for intrinsic trap            | 25268                      | atoms/m$^3$        |
 
 !media comparison_val-2f.py
-       image_name=val-2f_deuterium_desorption_PSS.png
+       image_name=val-2f_deuterium_desorption_pss.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=deuterium_desorption_calibrated
        caption=Quantity of deuterium atoms during the desorption process for the PSS-calibrated model with a finite recombination rate at 0.1 dpa.
