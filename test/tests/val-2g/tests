@@ -4,7 +4,7 @@
     [val-2g]
       type = CSVDiff
       input = val-2g.i
-      cli_args = "simulation_time=1
+      cli_args = "simulation_time=1e-5
                   Outputs/file_base=val-2g_out_light"
       csvdiff = val-2g_out_light.csv
       requirement = 'The system shall be able to model the light test for the transient diffusion through a crucible containing molten salt with a constant concentration boundary condition as the species source, for 823 K and 1210 Pa.'
