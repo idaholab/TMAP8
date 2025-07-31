@@ -21,6 +21,7 @@ As examples, we propose two fuel cycle models.
 
 TMAP8 is used to model tritium transport in a divertor monoblock to elucidate the effects of pulsed operation (up to fifty 1600-second plasma discharge and cool-down cycles) on the tritium in-vessel inventory source term and ex-vessel release term (i.e., tritium retention and permeation) for safety analysis. This example reproduces the results presented in [!cite](Shimada2024114438).
 
+A series of sensitivity studies were performed on the [Divertor Monoblock](examples/divertor_monoblock/index.md) model including:  (1)steady-pulse operation, (2) a shutdown transient, and (3) a ELM transient [Divertor Monoblock Sensitivity](examples/divertor_monoblock_sensitivity). 
 
 ## [Pore-Scale Tritium Transport in Imported Microstructures](examples/pore_scale_transport/index.md)
 
