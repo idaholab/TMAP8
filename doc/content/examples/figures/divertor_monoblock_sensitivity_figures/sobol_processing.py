@@ -39,7 +39,7 @@ def json_serial_killer(an_obj, **kwargs):
             for item in an_obj:
                return_list.append(json_serial_killer(item))
             return(return_list)
-        elif isinstance(an_obj, (int, float, str)): 
+        elif isinstance(an_obj, (int, float, str)):
             return(an_obj)
         elif isinstance(an_obj, DataFrame):
             return(an_obj.to_dict())
@@ -53,12 +53,12 @@ class SOBOL:
    def __init__(self, path, inputs = [], time_step = 0, matrix_reporter_name = 'matrix', sobol_reporter_name = 'sobol', statistics_reporter_name = 'stats', results_transfer_name = 'results'):
       self.time_step = time_step
       self.reference_dict = read_json(path)
-      self.path = path 
+      self.path = path
       self.matrix_reporter = matrix_reporter_name
       self.sobol_reporter = sobol_reporter_name
       self.statistics_reporter = statistics_reporter_name
       self.results_transfer = results_transfer_name
-      
+
       if inputs and inputs != []:
          self.inputs = inputs
       else:
@@ -71,7 +71,7 @@ class SOBOL:
          for key in self.reference_dict["time_steps"][self.time_step][matrix_reporter_name].keys():
             if "results" not in key: inputs.append(key)
          self.inputs = inputs
-      
+
       self.sobol = {'confidence_intervals': self.reference_dict['reporters'][sobol_reporter_name]['confidence_intervals']['levels'],
                     'number_of_samples': self.reference_dict['reporters'][sobol_reporter_name]['confidence_intervals']['replicates'],
                     'inputs': inputs,
@@ -92,15 +92,15 @@ class SOBOL:
          if out not in stat_outs: stat_outs.append(out)
       self.statistics['outputs'] = stat_outs
       return
-   
+
    def get_sobol_1st(self):
       keys = self.sobol['confidence_intervals']
       sobol_first = {}
 
       for output in self.sobol['outputs']:
          sobol_first[output] = {}
-        
-         sobol_first[output]['mean'] = {} 
+
+         sobol_first[output]['mean'] = {}
          j = 0
          for inp in self.sobol['inputs']:
             sobol_first[output]['mean'][inp] = self.reference_dict["time_steps"][self.time_step][self.sobol_reporter][f"{self.results_transfer}_results:{output}:value"]["FIRST_ORDER"][0][j]
@@ -113,14 +113,14 @@ class SOBOL:
                sobol_first[output][key][inp] = self.reference_dict["time_steps"][self.time_step][self.sobol_reporter][f"{self.results_transfer}_results:{output}:value"]["FIRST_ORDER"][1][i][j]
                j +=1
             i += 1
-      
+
       sobol_first_df = {}
       for output in self.sobol['outputs']:
           sobol_first_df[output] = pd.DataFrame(sobol_first[output])
 
       self.sobol['FIRST_ORDER'] = sobol_first_df
       return(sobol_first_df)
-   
+
    def get_sobol_2nd(self):
       keys = self.sobol['confidence_intervals']
       sobol_scd = {}
@@ -140,22 +140,22 @@ class SOBOL:
                sobol_scd[output][key][inp] = self.reference_dict["time_steps"][self.time_step][self.sobol_reporter][f"{self.results_transfer}_results:{output}:value"]["SECOND_ORDER"][1][i][j]
                j += 1
             i += 1
-      
+
       sobol_scd_df = {}
       for output in self.sobol['outputs']:
          sobol_scd_df[output] = pd.DataFrame(sobol_scd[output])
-      
+
       self.sobol['SECOND_ORDER'] = sobol_scd_df
       return(sobol_scd_df)
-   
+
    def get_sobol_total(self):
       keys = self.sobol['confidence_intervals']
       sobol_tot = {}
 
       for output in self.sobol['outputs']:
          sobol_tot[output] = {}
-        
-         sobol_tot[output]['mean'] = {} 
+
+         sobol_tot[output]['mean'] = {}
          j = 0
          for inp in self.sobol['inputs']:
             sobol_tot[output]['mean'][inp] = self.reference_dict["time_steps"][self.time_step][self.sobol_reporter][f"{self.results_transfer}_results:{output}:value"]["TOTAL"][0][j]
@@ -168,18 +168,18 @@ class SOBOL:
                sobol_tot[output][key][inp] = self.reference_dict["time_steps"][self.time_step][self.sobol_reporter][f"{self.results_transfer}_results:{output}:value"]["TOTAL"][1][i][j]
                j +=1
             i += 1
-      
+
       sobol_tot_df = {}
       for output in self.sobol['outputs']:
           sobol_tot_df[output] = pd.DataFrame(sobol_tot[output])
 
       self.sobol['TOTAL'] = sobol_tot_df
       return(sobol_tot_df)
-   
+
    def get_var_accounted_for(self):
       if 'SECOND_ORDER' not in self.sobol.keys():
          self.get_sobol_2nd()
-      
+
       self.sobol['var_accounted_for'] = {}
       for output in self.sobol['outputs']:
          var_acc_for = 0
@@ -190,7 +190,7 @@ class SOBOL:
 
          self.sobol['var_accounted_for'][output] = var_acc_for
       return(self.sobol['var_accounted_for'])
-   
+
    def get_statistics(self):
       self.statistics['statistics'] = {}
       for output in self.statistics['outputs']:
@@ -223,7 +223,7 @@ class SOBOL:
                inp_matrix[inp] = self.reference_dict["time_steps"][self.time_step][self.matrix_reporter][inp]
             except:
                print(f"Could not find {inp} matrix for {self.path}")
-      
+
       # Third, extract output matricies for each output, store as dictionary of {output: dataframe}
       outp_matrix = {}
       for outp in outputs:
@@ -232,13 +232,13 @@ class SOBOL:
       # package as attribute
       self.matrix = {"inputs": pd.DataFrame(inp_matrix), "outputs": pd.DataFrame(outp_matrix)}
       return(self.matrix)
-   
+
    def save_object(self, path: str, *args, do_not_print: list[str] = [], suppress_save = False, **kwargs)-> str:
        attributes = self.__dict__
        print_attributes = {}
        for k,v in attributes.items():
-          if k not in do_not_print: 
-            print_attributes[k] = v           
+          if k not in do_not_print:
+            print_attributes[k] = v
 
        if suppress_save:
           return(print_attributes)
@@ -247,7 +247,7 @@ class SOBOL:
              ftw.write(json.dumps(json_serial_killer(print_attributes), indent=4))
              print(f"Object attributes written to {path}.json as a json file.")
              return(print_attributes)
-   
+
    def estimate_state_frequency(self, state_limit, output, use_matrix = True, method = 'general', pdf=False, plot = True, normalize = True, factor = 'min', function=None,
                                  path = '', dpi =300, save_fig = False):
       path = path if path else f"frequency_of_{state_limit}_for{output}_by_{"matrix" if use_matrix else function}.png"
@@ -294,7 +294,7 @@ class SOBOL:
 
          print(f"Frequency: {frequency}")
          return(frequency, curve_args)
-   
+
    def plot_percentiles(self, labels = [], plot = [], flip = False, normalize = True, factor = 'mean',
                         xlabel = None, ylabel = None, pdf= False, path = '', dpi = 300, save_fig = False):
       # Next: formulate dictionary of {output: {percentiles: [], values: []}}
@@ -311,7 +311,7 @@ class SOBOL:
       # First: normalize confidence intervals with respect to the mean
       for k, v in plotting_dict.items():
          #mean = plotting_dict[k]['values'][0]
-         if normalize: 
+         if normalize:
             plotting_dict[k]['values'] = [i/means[k] for i in v['values']]
       # Plot all using lineplot, markers, and legend
       fig, ax = plt.subplots(1,1, figsize = (6,4))
@@ -332,10 +332,10 @@ class SOBOL:
          ax.legend(labels = labels, loc = 'upper center', ncols = 3, fontsize = 'small', bbox_to_anchor = (0.5, -0.15))
       else:
          ax.legend(loc = 'upper center', ncols = 3, fontsize = 'small', bbox_to_anchor = (0.5, -0.15))
-      
+
       if save_fig: fig.savefig(path, dpi=dpi)
       return(plotting_dict, (fig,ax))
-   
+
    def plot_histogram(self, labels = [], plot = [], density=False, normalize = True, factor = 'mean',
                       xlabel = None, ylabel = None, plot_inp=False, path = '', dpi = 300, save_fig = False):
       path = path if path else f"{plot}_histogram.png"
@@ -343,17 +343,17 @@ class SOBOL:
          plot = list(self.matrix['inputs'].columns) if not plot else plot
       else:
          plot = plot if plot else list(self.matrix["outputs"].columns)
-      
+
       labels = labels if labels else plot
       ylabel = 'Frequency' if not ylabel else ylabel
       histogram_dict = {}
 
       for outp in plot:
-         histogram_dict[outp] = list(self.matrix["inputs"][outp]) if plot_inp else list(self.matrix["outputs"][outp]) 
+         histogram_dict[outp] = list(self.matrix["inputs"][outp]) if plot_inp else list(self.matrix["outputs"][outp])
          if normalize:
             if factor == 'mean':
                xlabel = '(X-Mean)/Mean' if not xlabel else xlabel
-               mean = np.mean(histogram_dict[outp]) 
+               mean = np.mean(histogram_dict[outp])
                histogram_dict[outp] = [(i/mean - 1) for i in histogram_dict[outp]]
             elif factor == 'min':
                xlabel = '(X-Min)/Min' if not xlabel else xlabel
@@ -367,17 +367,17 @@ class SOBOL:
       fig, ax = plt.subplots(1,1, figsize = (6,4))
       ax.set_title('Histogram Distributions'); ax.set_xlabel(xlabel); ax.set_ylabel(ylabel)
       ax.set_facecolor('aliceblue');ax.grid(visible = True, which = 'both', axis = 'both', color = 'gainsboro', linestyle = ':')
-      
+
       for outp, hist in histogram_dict.items():
          ax.hist(hist, fill=False, histtype="step", stacked=True, label=outp, bins=int(len(hist)/100), density = density)
       if labels:
          ax.legend(labels = labels, loc = 'upper center', ncols = 3, fontsize = 'small', bbox_to_anchor = (0.5, -0.15))
       else:
          ax.legend(loc = 'upper center', ncols = 3, fontsize = 'small', bbox_to_anchor = (0.5, -0.15))
-      
+
       if save_fig: fig.savefig(path, dpi=dpi)
       return((fig,ax))
-   
+
    def plot_violin(self, labels = [], plot = [], normalize = True, factor = 'mean',
                    ylabel = None, xlabel = None, path = '', dpi = 300, save_fig = False):
       plot = plot if plot else self.matrix["outputs"]
@@ -391,7 +391,7 @@ class SOBOL:
          if normalize:
             if factor == 'mean':
                xlabel = '(X-Mean)/Mean' if not xlabel else xlabel
-               mean = np.mean(vio_dict[outp]) 
+               mean = np.mean(vio_dict[outp])
                vio_dict[outp] = [(i/mean - 1) for i in vio_dict[outp]]
             elif factor == 'min':
                xlabel = '(X-Min)/Min' if not xlabel else xlabel
@@ -405,7 +405,7 @@ class SOBOL:
       fig, ax = plt.subplots(1,1, figsize = (6,4))
       ax.set_title('Output Distributions'); ax.set_ylabel(ylabel)
       ax.set_facecolor('aliceblue');ax.grid(visible = True, which = 'both', axis = 'both', color = 'gainsboro', linestyle = ':')
-      
+
       positions = [i+1 for i in range(0, len(vio_dict.keys()))]
       viola = ax.violinplot(vio_dict.values(), positions, showmeans=True, showextrema=True)
 
@@ -418,7 +418,7 @@ class SOBOL:
          ax.legend(labels = labels, loc = 'upper center', ncols = 3, fontsize = 'small', bbox_to_anchor = (0.5, -0.15))
       else:
          ax.legend(loc = 'upper center', ncols = 3, fontsize = 'small', bbox_to_anchor = (0.5, -0.15))
-      
+
       if save_fig: fig.savefig(path, dpi=dpi)
       return()
 
@@ -429,7 +429,7 @@ class SOBOL:
       fig, ax = plt.subplots(len(self.inputs),1, figsize = (8,8))
       ax[0].set_title(f'{order} Sensitivity Indicies')
       x = [j+1 for j in range(0, len(self.sobol['outputs']))]
-      
+
       i = 0
       for inp in self.inputs:
          ax[i].set_ylabel(f'{inp_labels[i]}');#ax[i].set_ylim(-0.25,1.25)
@@ -441,9 +441,9 @@ class SOBOL:
 
          ax[i].errorbar(x, y, yerr = [n_err, p_err], linewidth=0, elinewidth=1, marker='o')
          i += 1
-         
+
         # if i == 1:
-        #    for j in range(0, len(self.sobol['outputs'])): 
+        #    for j in range(0, len(self.sobol['outputs'])):
         #       print(f"{y[j]}:{n_err[j]}:{p_err[j]}")
 
 
@@ -458,7 +458,7 @@ class SOBOL:
       #print(self.sobol[order].keys())
       if save_fig: fig.savefig(path, dpi=dpi)
       return()
-   
+
    def sobol_heat_map(self, outp  = 'max_temperature_CuCrZr', outp_label = 'Tritium Permeation',
                      xlabels = ['Tritium Flux','Coolant Tritium \nConcentration','Heat Flux','Coolant Temperature'],
                      ylabels = ['Tritium Flux','Coolant Tritium \nConcentration','Heat Flux','Coolant Temperature'],
@@ -475,10 +475,10 @@ class SOBOL:
             i += 1
       new_df = pd.DataFrame(new_df)
       axes = seaborn.heatmap(new_df, cmap='bwr', xticklabels=xlabels, yticklabels=ylabels, label=outp_label, annot=True, vmin=-1.0, vmax=2.0)
-      if save_fig: 
+      if save_fig:
         figure = axes.get_figure(); figure.savefig(path, dpi=dpi)
       return(new_df)
-   
+
    def confidence_interval_heatmap(self, order = 'FIRST_ORDER', outp  = 'max_temperature_CuCrZr', outp_label = 'CCZ Maximum Temperature',
                                  xlabels = ['Tritium Flux','Coolant Tritium \nConcentration','Heat Flux','Coolant Temperature'],
                                  min_cf = 0.05, max_cf = 0.95, heatmap = True, title = None, path = '', dpi = 200, save_fig = False):
@@ -492,14 +492,14 @@ class SOBOL:
       new_df = pd.DataFrame(new_df)
       if heatmap:
          axes = seaborn.heatmap(new_df, cmap='bwr', xticklabels=xlabels, yticklabels=ylabels, label=outp_label, annot=True)
-         if save_fig: 
+         if save_fig:
             figure = axes.get_figure(); figure.savefig(path, dpi=dpi)
       else:
          styler = new_df.style \
             .format(precision=3)
          #new_df
       return(new_df)
-   
+
    def confidence_interval_table(self, outp = 'max_temperature_CuCrZr', outp_label = 'CCZ Maximum Temperature',
                                  xlabels = ['Tritium Flux','Coolant Tritium \nConcentration','Heat Flux','Coolant Temperature'],
                                  min_cf = 0.05, max_cf = 0.95, precision = 2):
@@ -525,7 +525,7 @@ class SOBOL:
 
    def plot_inp_out(self, outp, inp, xlabel = None, ylabel = None, curve_fit_function = lambda x, a, b: a +b*x, guess_args = [0.0, 1.0], path = '', dpi = 300, save_fig = False):
       xlabel = inp if not xlabel else xlabel; ylabel = outp if not ylabel else ylabel
-      path = path if path else f"{outp}_vs_{inp}.png" 
+      path = path if path else f"{outp}_vs_{inp}.png"
 
       fig, ax = plt.subplots(1,1, figsize = (6,4))
       ax.set_title(f'{ylabel} vs {xlabel}'); ax.set_ylabel(ylabel); ax.set_xlabel(xlabel)
