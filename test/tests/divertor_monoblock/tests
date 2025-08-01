@@ -1,4 +1,5 @@
 [Tests]
+  [initial]
   issues = '#144'
   design = 'divertor_monoblock/index.md'
   [Shimada2024_input_check]
@@ -18,5 +19,34 @@
     heavy = true
     min_parallel = 2
     max_time = 1000
+  []
+  []
+  [stochastics]
+  issues = '#281'
+  design = 'divertor_monoblock_sensitivity/index.md'
+  [steady_run]
+    type = JSONDiff
+    input = 'steady_state_sobol.i'
+    requirement = 'The system shall model heat and tritium transporter for the sensitvity study of a divertor monoblock during steady operation'
+    jsondiff = 'steady_state_sobol_out.json'
+    heavy = true
+    min_parallel = 4
+  []
+  [shutdown_run]
+    type = JSONDiff
+    input = 'shutdown_transient_sobol.i'
+    requirement = 'The system shall model heat and tritium transporter for the sensitvity study of a divertor monoblock during a shutdown transient after steady operation'
+    jsondiff = 'shutdown_transient_sobol.json'
+    heavy = true
+    min_parallel = 4
+  []
+  [elm_run]
+    type = JSONDiff
+    input = 'elm_transient_sobol.i'
+    requirement = 'The system shall model heat and tritium transporter for the sensitvity study of a divertor monoblock during a ELM transient after steady operation'
+    jsondiff = 'elm_transient_sobol.json'
+    heavy = true
+    min_parallel = 4
+  []
   []
 []
