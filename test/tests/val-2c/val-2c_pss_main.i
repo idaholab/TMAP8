@@ -18,6 +18,7 @@ time_injection_T2_end = '${units 3 h -> s}'
 ## PSS parameters
 num_samplessub = 1000 # should be higher for a full PSS study (~6000-10000)
 num_subsets = 5 # should be higher for a full PSS study (~10)
+subset_probability = 0.2 # should be closer to 0.1 for a full PSS study
 
 ## Outputs
 file_base_output = val-2c_pss_results/val-2c_pss_main_out
@@ -65,7 +66,7 @@ sub_app_input = "val-2c_delay_pss.i"
     type = ParallelSubsetSimulation
     distributions = 'reaction_rate diffusivity_elemental_tritium diffusivity_tritiated_water log_solubility_elemental_tritium log_solubility_tritiated_water time_injection_T2_end'
     execute_on = 'PRE_MULTIAPP_SETUP'
-    subset_probability = 0.1
+    subset_probability = ${subset_probability}
     num_samplessub = ${num_samplessub}
     num_subsets = ${num_subsets}
     # num_parallel_chains = 5 # using multiple parallel chains helps with convergence

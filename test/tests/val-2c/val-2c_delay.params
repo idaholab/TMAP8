@@ -50,6 +50,3 @@ injection_rate_T2 = ${units ${fparse initial_T2_concentration / (time_injection_
 inflow = ${units 0.54 m^3/h -> mum^3/s} # inflow of normally moist (20% relative humidity) air at the same temperature as the enclosure
 inflow_concentration = ${fparse initial_H2O_concentration * inflow / volume_enclosure}
 outflow = ${units 0.54 m^3/h -> mum^3/s} # outflow of enclosure air # even if only 0.06 m^3/h is used to do measurements, all that air is purged out.
-
-## Outputs
-exodus_output = false

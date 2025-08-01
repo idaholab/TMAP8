@@ -149,7 +149,7 @@ for i in np.arange(n_steps):
 # plot the ouputs to check behavior
 fig, ax = plt.subplots(figsize=(5,3))
 ax.plot(outputs)
-ax.set_xlabel(r'Number of steps (-)')
+ax.set_xlabel(r'Number of simulations (-)')
 ax.set_ylabel(r"Metric to be optimized")
 ax.set_xlim(left=0)
 ax.set_xlim(right=n_trials)
@@ -165,7 +165,7 @@ for nn, ax in enumerate(axs.flat):
     ax.plot(inputs[:, nn])
     ax.set_xlim(left=0)
     ax.set_xlim(right=n_trials)
-    ax.set_xlabel('Number of steps (-)')
+    ax.set_xlabel('Number of simulations (-)')
     ax.set_ylabel(parameters_legend[nn])
 plt.savefig('val-2c_pss_inputs.png', bbox_inches='tight', dpi=300);
 

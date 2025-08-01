@@ -5,7 +5,7 @@
   [val-2c_immediate_injection_csv]
     type = CSVDiff
     input = val-2c_immediate_injection.i
-    cli_args = 'exodus_output=true'
+    cli_args = 'Outputs/exodus=true'
     csvdiff = val-2c_immediate_injection_csv.csv
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with immediate T2 injection.'
     max_parallel = 1 # see #200
@@ -14,7 +14,7 @@
   [val-2c_immediate_injection_exodus]
     type = Exodiff
     input = val-2c_immediate_injection.i
-    cli_args = 'exodus_output=true'
+    cli_args = 'Outputs/exodus=true'
     prereq = val-2c_immediate_injection_csv
     should_execute = false # this test relies on the output files from val-2c_immediate_injection_csv, so it shouldn't be run twice
     exodiff = val-2c_immediate_injection_out.e
@@ -26,7 +26,7 @@
   [val-2c_delay_csv]
     type = CSVDiff
     input = val-2c_delay.i
-    cli_args = 'exodus_output=true'
+    cli_args = 'Outputs/exodus=true'
     csvdiff = val-2c_delay_csv.csv
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection.'
     abs_zero = 1e-8
@@ -36,7 +36,7 @@
   [val-2c_delay_exodus]
     type = Exodiff
     input = val-2c_delay.i
-    cli_args = 'exodus_output=true'
+    cli_args = 'Outputs/exodus=true'
     prereq = val-2c_delay_csv
     should_execute = false # this test relies on the output files from val-2c_delay_csv, so it shouldn't be run twice
     exodiff = val-2c_delay_out.e
@@ -49,12 +49,12 @@
     type = CSVDiff
     input = 'val-2c_delay.i'
      # the parameter values below are from gold/calibrated_parameter_values.txt
-    cli_args = 'reaction_rate=2.8234613816267505e-11
-                diffusivity_elemental_tritium=3.154650784476052
-                diffusivity_tritiated_water=0.01846486856490902
-                log_solubility_elemental_tritium=-5.153531630648558
-                log_solubility_tritiated_water=6.856011274767723
-                time_injection_T2_end=9837.707236570379
+    cli_args = 'reaction_rate=2.8364333839243048e-11
+                diffusivity_elemental_tritium=3.1603348767852677
+                diffusivity_tritiated_water=0.019621597774149752
+                log_solubility_elemental_tritium=-5.309040626121374
+                log_solubility_tritiated_water=6.848341095383636
+                time_injection_T2_end=9820.798010579283
                 time_step=10
                 Outputs/file_base=val-2c_delay_calibrated_out'
     csvdiff = val-2c_delay_calibrated_out.csv
@@ -66,15 +66,15 @@
     issues = '#266'
   []
   [val-2c_delay_pss_study_csv]
-    type = CSVDiff
+    type = JSONDiff
     input = val-2c_pss_main.i
     cli_args = 'num_samplessub=2
                 num_subsets=1
                 Samplers/sample/num_parallel_chains=1
-                Samplers/sample/subset_probability=0.5
+                subset_probability=0.5
                 Samplers/sample/seed=1518
                 file_base_output=val-2c_pss_results_short/val-2c_pss_main_short_out'
-    csvdiff = val-2c_pss_results_short/val-2c_pss_main_short_out_sub0_csv.csv
+    jsondiff = steady_state_sobol_out.json
     requirement = 'The system shall be able to perform a Parallel Subset Simulation study using a model of the Test Cell Release Experiment (val-2c) with delayed T2 injection.'
     abs_zero = 1e-8
     rel_err = 1e-5

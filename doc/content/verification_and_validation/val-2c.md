@@ -164,13 +164,13 @@ This affects some of the model parameters.
 
 !media comparison_val-2c.py
        image_name=val-2c_comparison_TMAP8_Exp_T2_Ci.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       style=width:70%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2c_comparison_T2
        caption=Comparison of TMAP8 calculations against the experimental data for T$_2$ concentration in the enclosure over time. TMAP8 matches the experimental data well, with an improvement when T$_2$ is injected over a given period rather than immediately. Calibration of the delayed injection model delivers further improvements.
 
 !media comparison_val-2c.py
        image_name=val-2c_comparison_TMAP8_Exp_HTO_Ci.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       style=width:70%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2c_comparison_HTO
        caption=Comparison of TMAP8 calculations against the experimental data for HTO concentration in the enclosure over time. TMAP8 matches the experimental data well, with an improvement when T$_2$ is injected over a given period rather than immediately. Calibration of the delayed injection model delivers further improvements.
 
@@ -182,15 +182,15 @@ Note that although the calibration approach is similar to the one presented in [
 
 !media comparison_val-2c.py
        image_name=val-2c_pss_inputs.png
-       style=width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       style=width:80%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2c_calibration_input
-       caption=Evolution of the model parameter values as a function of the number of simulation.
+       caption=Evolution of the model parameter values as a function of the number of simulations.
 
 !media comparison_val-2c.py
        image_name=val-2c_pss_output.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       style=width:70%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2c_calibration_output
-       caption=Evolution of the optimization metric (time integral of $g$ defined in [eq:optimization_metric]) as a function of the number of simulation. The calibrated model corresponds to the highest value.
+       caption=Evolution of the optimization metric (time integral of $g$ defined in [eq:optimization_metric]) as a function of the number of simulations. The calibrated model corresponds to the highest value.
 
 [val-2c_calibration_input_normal_range] and [val-2c_calibration_input_uniform_range] show the value of the calibrated parameters and the range of the data that was explored in the [Parallel Subset Simulation](samplers/ParallelSubsetSimulation.md) study.
 [val-2c_calibration_input_normal_range] shows the parameters that followed a normal distribution, and [val-2c_calibration_input_uniform_range] shows those that followed a uniform distribution in log scale.
@@ -198,13 +198,13 @@ In both cases, the calibrated parameters are not on the extremes of the distribu
 
 !media comparison_val-2c.py
        image_name=val-2c_pss_inputs_normal_calibrated.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       style=width:70%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2c_calibration_input_normal_range
        caption=Calibrated parameter values compared to the normalized normal distribution used in the [Parallel Subset Simulation](samplers/ParallelSubsetSimulation.md) study. None of the parameters are at the extremes of the distribution.
 
 !media comparison_val-2c.py
        image_name=val-2c_pss_inputs_uniform_calibrated.png
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       style=width:70%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2c_calibration_input_uniform_range
        caption=Calibrated parameter values compared to the normal distribution in the log scale used in the [Parallel Subset Simulation](samplers/ParallelSubsetSimulation.md) study. None of the parameters are at the extremes of the distributions.
 
