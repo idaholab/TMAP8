@@ -74,7 +74,7 @@
                 subset_probability=0.5
                 Samplers/sample/seed=1518
                 file_base_output=val-2c_pss_results_short/val-2c_pss_main_short_out'
-    jsondiff = steady_state_sobol_out.json
+    jsondiff = val-2c_pss_results_short/val-2c_pss_main_short_out.json
     requirement = 'The system shall be able to perform a Parallel Subset Simulation study using a model of the Test Cell Release Experiment (val-2c) with delayed T2 injection.'
     abs_zero = 1e-8
     rel_err = 1e-5
