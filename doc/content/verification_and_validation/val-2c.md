@@ -154,10 +154,13 @@ The comparison between the original and calibrated values of selected model para
 
 ## Results and Discussion
 
+!alert note title=Update from [!cite](Simon2025)
+The results presented here are updated results from thos presented in [!cite](Simon2025). First, the initial time step was reduced from dt=60 s in [!cite](Simon2025) to dt=10 s in the current case. This slightly affects the results for both the immediate and delayed injection cases. However, the results are qualitatively unchanged and conclusions remain valid. Second, the calibration approach was updated since [!cite](Simon2025) with an updated multi-objective function, and new results. This improves the previous calibration results from [!cite](Simon2025).
+
 [val-2c_comparison_T2] and [val-2c_comparison_HTO] show the comparison of the TMAP8 calculations (both with immediately injected and delayed injected T$_2$) against the experimental data for T$_2$ and HTO concentration in the enclosure over time.
 There is reasonable agreement between the TMAP8 predictions and the experimental data.
-In the case of immediate T$_2$ injection, the root mean square percentage errors (RMSPE) are equal to RMSPE = 58.98 % for T$_2$ and RMSPE = 139.10 % for HTO, respectively.
-When accounting for a delay in T$_2$ injection, the TMAP8 predictions best match the experimental data, in particular the position of the peak HTO concentration. The RMSPE values decrease to RMSPE = 58.05 % for T$_2$ and RMSPE = 74.77 % for HTO, respectively.
+In the case of immediate T$_2$ injection, the root mean square percentage errors (RMSPE) are equal to RMSPE = 58.74 % for T$_2$ and RMSPE = 146.48 % for HTO, respectively.
+When accounting for a delay in T$_2$ injection, the TMAP8 predictions best match the experimental data, in particular the position of the peak HTO concentration. The RMSPE values decrease to RMSPE = 93.02 % for T$_2$ and RMSPE = 75.95 % for HTO, respectively.
 Note that the model parameters listed in [val-2c_parameters] are somewhat different from [!cite](Holland1986,longhurst1992verification,ambrosek2008verification) to better match the experimental data.
 In particular, [!cite](longhurst1992verification,ambrosek2008verification) did not validate the TMAP predictions against T$_2$ concentration, which we do here in [val-2c_comparison_T2] and in [!cite](Simon2025).
 This affects some of the model parameters.
@@ -172,10 +175,10 @@ This affects some of the model parameters.
        image_name=val-2c_comparison_TMAP8_Exp_HTO_Ci.png
        style=width:70%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2c_comparison_HTO
-       caption=Comparison of TMAP8 calculations against the experimental data for HTO concentration in the enclosure over time. TMAP8 matches the experimental data well, with an improvement when T$_2$ is injected over a given period rather than immediately. Calibration of the delayed injection model delivers further improvements.
+       caption=Comparison of TMAP8 calculations against the experimental data for HTO concentration in the enclosure over time. Calibration of the delayed injection model delivers further improvements, with more accurate simulation results when T$_2$ is injected over a given period rather than immediately.
 
 As shown in the red curve in [val-2c_comparison_T2] and [val-2c_comparison_HTO], using [MOOSE's stochastic tools module](modules/stochastic_tools/index.md) notably increased the agreement between the modeling predictions and experimental data for both the T$_2$ and HTO concentrations.
-The RMSPE for T$_2$ decreases from 58.5% to 35.17% and the RMSPE for HTO decreases from 74.77% to 65.58%.
+The RMSPE for T$_2$ decreases from 93.02% to 32.31% and the RMSPE for HTO decreases from 75.95% to 69.27%.
 Note that although the calibration approach is similar to the one presented in [!cite](Simon2025), the results presented here include more simulations and the quality of the calibration is increased here (RMSPE values are further decreased here).
 
 [val-2c_calibration_input] and [val-2c_calibration_output] show the evolution of the model parameter values and of the optimization metric (time integral of $g$ defined in [eq:optimization_metric]) as a function of the number of simulation. The calibrated model corresponds to the highest value.

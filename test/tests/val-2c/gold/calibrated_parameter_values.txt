@@ -1,6 +1,6 @@
-reaction_rate = 2.8234613816267505e-11
-diffusivity_elemental_tritium = 3.154650784476052
-diffusivity_tritiated_water = 0.01846486856490902
-log_solubility_elemental_tritium = -5.153531630648558
-log_solubility_tritiated_water = 6.856011274767723
-time_injection_T2_end = 9837.707236570379
+reaction_rate = 2.7090860444844666e-11
+diffusivity_elemental_tritium = 3.5130599067583677
+diffusivity_tritiated_water = 0.02016447969677165
+log_solubility_elemental_tritium = -5.431663532021615
+log_solubility_tritiated_water = 6.856067522948707
+time_injection_T2_end = 9518.3203041007
