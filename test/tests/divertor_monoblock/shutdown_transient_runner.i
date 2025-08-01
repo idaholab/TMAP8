@@ -43,8 +43,8 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
 [Mesh]                                                                                             # Begins the Mesh description block; the mesh spatially describes the problem, based on blocks (subdomains), meshes (geometries), nodes, etc..
     [ccmg]                                                                                         # name of the mesh
         type = ConcentricCircleMeshGenerator                                                       # type of mesh generator following parameters will be dependent on the type
-        num_sectors = 36                                                                           # azimuthmal (angle) sections/divisions
-        rings = '1 30 20 110'                                                                      # number of divisions/meshing between defined (next line) radii -> creates 4 (N+1) blocks (I don't know why this is made for radii and not azimuthmal sections)
+        num_sectors = 12                                                                           # azimuthmal (angle) sections/divisions
+        rings = '1 6 4 22'                                                                      # number of divisions/meshing between defined (next line) radii -> creates 4 (N+1) blocks (I don't know why this is made for radii and not azimuthmal sections)
         radii = '${units 6 mm -> m} ${units 7.5 mm -> m} ${units 8.5 mm -> m}'                     # radii deliminating different blocks/regions/mesh spacings (mesh generator denotes blocks by radii, this line defines 3 blocks)
         has_outer_square = on                                                                      # creates a square boundary for the problem, using the pitch (next line) as the width/height (4th block is generated here)
         pitch = ${units 28 mm -> m}                                                                # square width/height of problem
@@ -1160,9 +1160,9 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
     solve_type = NEWTON
     petsc_options_iname = '-pc_type'
     petsc_options_value = 'lu'
-    nl_rel_tol  = 1e-5 # 1e-6                                                   # Relative independent parameter tolerance
-    nl_abs_tol  = 1e-6 # 1e-7                                                 # Absolute tolerance
-    end_time = 2.01e4   # 50 ITER shots (3.0e4 s plasma, 2.0e4 SSP)                                 # Total simulation time
+    nl_rel_tol  = 1e-2 # 1e-6                                                   # Relative independent parameter tolerance
+    nl_abs_tol  = 1e-1 # 1e-7                                                 # Absolute tolerance
+    end_time = 2.5e1   # 50 ITER shots (3.0e4 s plasma, 2.0e4 SSP)                                 # Total simulation time
     automatic_scaling = true
     line_search = 'none'
     dtmin = 1e-6

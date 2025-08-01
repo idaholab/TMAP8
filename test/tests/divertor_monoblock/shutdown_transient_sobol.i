@@ -47,14 +47,14 @@
   [hypercube_1]
     type = LatinHypercube
     distributions = 'P_val P_dur C_tem W_cond'
-    num_rows = 1000 # N Samples
+    num_rows = 10 # N Samples
     seed = 1001
     execute_on = 'PRE_MULTIAPP_SETUP'
   []
   [hypercube_2]
     type = LatinHypercube
     distributions = 'P_val P_dur C_tem W_cond'
-    num_rows = 1000 # N Samples
+    num_rows = 10 # N Samples
     seed = 1002
     execute_on = 'PRE_MULTIAPP_SETUP'
   []

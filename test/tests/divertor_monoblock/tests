@@ -2,10 +2,11 @@
   [initial]
   issues = '#144'
   design = 'divertor_monoblock/index.md'
+  requirement = 'The system shall maintain a working input file to model heat and tritium transport in a divertor monoblock during'
   [Shimada2024_input_check]
     type = RunApp
     input = 'divertor_monoblock.i'
-    requirement = 'The system shall maintain a working input file to model heat and tritium transport in a divertor monoblock during pulsed operation.'
+    detail = 'pulsed operation.'
     check_input = True
     method = opt
   []
@@ -14,7 +15,7 @@
     input = 'divertor_monoblock.i'
     exodiff = 'divertor_monoblock_exodus.e'
     cli_args = 'Outputs/exodus/sync_only=true Executioner/end_time=1600 Mesh/ccmg/rings="1 10 8 40" Executioner/nl_rel_tol=1e-8 Executioner/nl_abs_tol=1e-11'
-    requirement = 'The system shall model heat and tritium transport in a divertor monoblock during pulsed operation.'
+    detail = 'pulsed operation.'
     rel_err = 8e-4 # increasing the relative error tolerance because the test is sensitive to the environment. This error is still small for physical problems.
     heavy = true
     min_parallel = 2
@@ -24,10 +25,11 @@
   [stochastics]
   issues = '#281'
   design = 'divertor_monoblock_sensitivity/index.md'
+  requirement = 'The system shall model heat and tritium transporter for the sensitvity study of a divertor monoblock during'
   [steady_run]
     type = JSONDiff
     input = 'steady_state_sobol.i'
-    requirement = 'The system shall model heat and tritium transporter for the sensitvity study of a divertor monoblock during steady operation'
+    detail = 'steady operation'
     jsondiff = 'steady_state_sobol_out.json'
     heavy = true
     min_parallel = 4
@@ -35,7 +37,7 @@
   [shutdown_run]
     type = JSONDiff
     input = 'shutdown_transient_sobol.i'
-    requirement = 'The system shall model heat and tritium transporter for the sensitvity study of a divertor monoblock during a shutdown transient after steady operation'
+    detail = 'a shutdown transient after steady operation'
     jsondiff = 'shutdown_transient_sobol.json'
     heavy = true
     min_parallel = 4
@@ -43,7 +45,7 @@
   [elm_run]
     type = JSONDiff
     input = 'elm_transient_sobol.i'
-    requirement = 'The system shall model heat and tritium transporter for the sensitvity study of a divertor monoblock during a ELM transient after steady operation'
+    requirement = 'an ELM transient after steady operation'
     jsondiff = 'elm_transient_sobol.json'
     heavy = true
     min_parallel = 4
