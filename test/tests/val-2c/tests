@@ -55,7 +55,6 @@
                 log_solubility_elemental_tritium=-5.309040626121374
                 log_solubility_tritiated_water=6.848341095383636
                 time_injection_T2_end=9820.798010579283
-                time_step=10
                 Outputs/file_base=val-2c_delay_calibrated_out'
     csvdiff = val-2c_delay_calibrated_out.csv
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection using calibrated model parameters.'
