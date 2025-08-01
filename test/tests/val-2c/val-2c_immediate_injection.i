@@ -36,7 +36,7 @@ initial_H2O_pressure = '${units 714 Pa}' # Found in TMAP4 input file, which corr
 initial_H2O_concentration = '${units ${fparse initial_H2O_pressure / concentration_to_pressure_conversion_factor} at/mum^3}'
 
 ## Numerical parameters
-time_step = '${units 10 s}'
+time_step = '${units 1 s}'
 time_end = '${units 180000 s}'
 dtmax = '${units 1e3 s}'
 dtmin = '${units 1 s}'

@@ -145,22 +145,22 @@ The comparison between the original and calibrated values of selected model para
 !table id=val-2c_parameters_calibrated caption=Calibrated model parameters values for the delayed injection case in val-2c..
 | Parameter       | Non-calibrated values (see [val-2c_parameters])             | Calibrated values using [Parallel Subset Simulation](https://mooseframework.inl.gov/source/samplers/ParallelSubsetSimulation.html) | Unit       |
 | --------------- | ----------------------------------------------------------- | ----------------------- | ---------- |
-| $K^0$           | $\boldsymbol{2.8} \times 2.0 \times 10^{-10}$               | 2.823 $\times 10^{-11}$ | m$^3$/Ci/s |
-| $D^e$           | 4.0 $\times 10^{-12}$                                       | 3.155 $\times 10^{-12}$ | m$^2$/s    |
-| $D^w$           | 1.0 $\times 10^{-14}$                                       | 1.846 $\times 10^{-14}$ | m$^2$/s    |
-| $K_S^e$         | $\boldsymbol{1.0 \times 10^{-3}} \times 4.0 \times 10^{19}$ | 5.779 $\times 10^{15}$  | 1/m$^3$/Pa |
-| $K_S^w$         | $\boldsymbol{3.0 \times 10^{-4}} \times 6.0 \times 10^{24}$ | 9.496 $\times 10^{20}$  | 1/m$^3$/Pa |
-| $t_{injection}$ | 10800                                                       | 9838                    | s          |
+| $K^0$           | $\boldsymbol{2.8} \times 2.0 \times 10^{-10}$               | 2.833 $\times 10^{-11}$ | m$^3$/Ci/s |
+| $D^e$           | 4.0 $\times 10^{-12}$                                       | 3.864 $\times 10^{-12}$ | m$^2$/s    |
+| $D^w$           | 1.0 $\times 10^{-14}$                                       | 1.737 $\times 10^{-14}$ | m$^2$/s    |
+| $K_S^e$         | $\boldsymbol{1.0 \times 10^{-3}} \times 4.0 \times 10^{19}$ | 2.514 $\times 10^{16}$  | 1/m$^3$/Pa |
+| $K_S^w$         | $\boldsymbol{3.0 \times 10^{-4}} \times 6.0 \times 10^{24}$ | 9.862 $\times 10^{20}$  | 1/m$^3$/Pa |
+| $t_{injection}$ | 10800                                                       | 9536                    | s          |
 
 ## Results and Discussion
 
 !alert note title=Update from [!cite](Simon2025)
-The results presented here are updated results from thos presented in [!cite](Simon2025). First, the initial time step was reduced from dt=60 s in [!cite](Simon2025) to dt=10 s in the current case. This slightly affects the results for both the immediate and delayed injection cases. However, the results are qualitatively unchanged and conclusions remain valid. Second, the calibration approach was updated since [!cite](Simon2025) with an updated multi-objective function, and new results. This improves the previous calibration results from [!cite](Simon2025).
+The results presented here are updated results from thos presented in [!cite](Simon2025). First, the initial time step was reduced from dt=60 s in [!cite](Simon2025) to dt=1 s in the current case. This slightly affects the results for both the immediate and delayed injection cases. However, the results are qualitatively unchanged and conclusions remain valid. Second, the calibration approach was updated since [!cite](Simon2025) with an updated multi-objective function, and new results. This improves the previous calibration results from [!cite](Simon2025).
 
 [val-2c_comparison_T2] and [val-2c_comparison_HTO] show the comparison of the TMAP8 calculations (both with immediately injected and delayed injected T$_2$) against the experimental data for T$_2$ and HTO concentration in the enclosure over time.
 There is reasonable agreement between the TMAP8 predictions and the experimental data.
-In the case of immediate T$_2$ injection, the root mean square percentage errors (RMSPE) are equal to RMSPE = 58.74 % for T$_2$ and RMSPE = 146.48 % for HTO, respectively.
-When accounting for a delay in T$_2$ injection, the TMAP8 predictions best match the experimental data, in particular the position of the peak HTO concentration. The RMSPE values decrease to RMSPE = 93.02 % for T$_2$ and RMSPE = 75.95 % for HTO, respectively.
+In the case of immediate T$_2$ injection, the root mean square percentage errors (RMSPE) are equal to RMSPE = 58.68 % for T$_2$ and RMSPE = 146.23 % for HTO, respectively.
+When accounting for a delay in T$_2$ injection, the TMAP8 predictions best match the experimental data, in particular the position of the peak HTO concentration. The RMSPE values decrease to RMSPE = 89.50 % for T$_2$ and RMSPE = 75.66 % for HTO, respectively.
 Note that the model parameters listed in [val-2c_parameters] are somewhat different from [!cite](Holland1986,longhurst1992verification,ambrosek2008verification) to better match the experimental data.
 In particular, [!cite](longhurst1992verification,ambrosek2008verification) did not validate the TMAP predictions against T$_2$ concentration, which we do here in [val-2c_comparison_T2] and in [!cite](Simon2025).
 This affects some of the model parameters.
@@ -178,7 +178,7 @@ This affects some of the model parameters.
        caption=Comparison of TMAP8 calculations against the experimental data for HTO concentration in the enclosure over time. Calibration of the delayed injection model delivers further improvements, with more accurate simulation results when T$_2$ is injected over a given period rather than immediately.
 
 As shown in the red curve in [val-2c_comparison_T2] and [val-2c_comparison_HTO], using [MOOSE's stochastic tools module](modules/stochastic_tools/index.md) notably increased the agreement between the modeling predictions and experimental data for both the T$_2$ and HTO concentrations.
-The RMSPE for T$_2$ decreases from 93.02% to 32.31% and the RMSPE for HTO decreases from 75.95% to 69.27%.
+The RMSPE for T$_2$ decreases from 89.50% to 30.18% and the RMSPE for HTO decreases from 75.66% to 67.07%.
 Note that although the calibration approach is similar to the one presented in [!cite](Simon2025), the results presented here include more simulations and the quality of the calibration is increased here (RMSPE values are further decreased here).
 
 [val-2c_calibration_input] and [val-2c_calibration_output] show the evolution of the model parameter values and of the optimization metric (time integral of $g$ defined in [eq:optimization_metric]) as a function of the number of simulation. The calibrated model corresponds to the highest value.
@@ -226,7 +226,7 @@ To run the PSS study in the terminal, users can perform:
 
 ```
 cd ~/projects/TMAP8/test/tests/val-2c/
-mpirun -np 10 ~/projects/TMAP8/tmap8-opt -i val-2c_pss_main.i
+mpirun -np 5 ~/projects/TMAP8/tmap8-opt -i val-2c_pss_main.i
 ```
 
 Note that this study is time consuming since a large number of simulations are being run.
