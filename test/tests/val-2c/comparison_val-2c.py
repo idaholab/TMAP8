@@ -156,7 +156,7 @@ ax.set_xlim(right=n_trials)
 ax.set_ylim(bottom=0) # assumes the metric is positive
 ax.set_ylim(top=np.max(outputs)*1.05)
 ax.minorticks_on()
-plt.savefig('val-2c_pss_output.png', bbox_inches='tight', dpi=300);
+plt.savefig('val-2c_pss_output.png', bbox_inches='tight', dpi=300)
 
 # plot the inputs to check behavior (needs to be adapted if the number of inputs changes)
 fig, axs = plt.subplots(2, 3, figsize=(10, 6), layout='constrained')
@@ -167,7 +167,7 @@ for nn, ax in enumerate(axs.flat):
     ax.set_xlim(right=n_trials)
     ax.set_xlabel('Number of simulations (-)')
     ax.set_ylabel(parameters_legend[nn])
-plt.savefig('val-2c_pss_inputs.png', bbox_inches='tight', dpi=300);
+plt.savefig('val-2c_pss_inputs.png', bbox_inches='tight', dpi=300)
 
 # identified calibrated parameters (maximum output data)
 # find latest index of max output
@@ -347,7 +347,7 @@ RMSPE = RMSE*100/np.mean(experimental_hto_enclosure_concentration_delay_calibrat
 ax.text(11,4e-6, '(delay) RMSPE (calibrated) = %.2f '%RMSPE+'%',fontweight='bold',c='tab:red')
 
 # save figure
-plt.savefig('val-2c_comparison_TMAP8_Exp_HTO_Ci.png', bbox_inches='tight', dpi=300);
+plt.savefig('val-2c_comparison_TMAP8_Exp_HTO_Ci.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 
 fig = plt.figure(figsize=[6.5,5.5])
@@ -389,5 +389,5 @@ RMSPE = RMSE*100/np.mean(experimental_t2_enclosure_concentration[1:])
 ax.text(20,4e-4, '(delay) RMSPE (calibrated) = %.2f '%RMSPE+'%',fontweight='bold',c='tab:red')
 
 # save figure
-plt.savefig('val-2c_comparison_TMAP8_Exp_T2_Ci.png', bbox_inches='tight', dpi=300);
+plt.savefig('val-2c_comparison_TMAP8_Exp_T2_Ci.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
