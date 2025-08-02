@@ -1,0 +1,151 @@
+{
+    "app_name": "main",
+    "current_time": "Fri Aug  1 14:20:10 2025",
+    "executable": "/Users/simopa/projects/TMAP8/tmap8-opt",
+    "executable_time": "Wed Jul 30 22:31:04 2025",
+    "libmesh_version": "",
+    "moose_version": "git commit af6d54ecda on 2025-06-18",
+    "petsc_version": "3.23.0",
+    "reporters": {
+        "adaptive_MC": {
+            "type": "AdaptiveMonteCarloDecision",
+            "values": {
+                "inputs": {
+                    "type": "std::vector<std::vector<double>>"
+                },
+                "output_required": {
+                    "type": "std::vector<double>"
+                }
+            }
+        },
+        "constant": {
+            "type": "StochasticReporter",
+            "values": {
+                "reporter_transfer:converged": {
+                    "row_begin": 0,
+                    "row_end": 1,
+                    "type": "std::vector<bool>"
+                },
+                "reporter_transfer:objective:value": {
+                    "row_begin": 0,
+                    "row_end": 1,
+                    "type": "std::vector<double>"
+                }
+            }
+        }
+    },
+    "slepc_version": "3.23.0",
+    "time_steps": [
+        {
+            "adaptive_MC": {
+                "inputs": [
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ]
+                ],
+                "output_required": [
+                    0.0
+                ]
+            },
+            "constant": {
+                "reporter_transfer:converged": [
+                    false
+                ],
+                "reporter_transfer:objective:value": [
+                    0.0
+                ]
+            },
+            "time": 0.0,
+            "time_step": 0
+        },
+        {
+            "adaptive_MC": {
+                "inputs": [
+                    [
+                        2.4963608122190893e-11
+                    ],
+                    [
+                        2.8506657131076936
+                    ],
+                    [
+                        0.0159477003133844
+                    ],
+                    [
+                        -4.224862307658037
+                    ],
+                    [
+                        7.19178924705308
+                    ],
+                    [
+                        11903.75319619631
+                    ]
+                ],
+                "output_required": [
+                    1255405793.596708
+                ]
+            },
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:objective:value": [
+                    1255405793.596708
+                ]
+            },
+            "time": 1.0,
+            "time_step": 1
+        },
+        {
+            "adaptive_MC": {
+                "inputs": [
+                    [
+                        2.6441967483600986e-11
+                    ],
+                    [
+                        3.852092488673211
+                    ],
+                    [
+                        0.013496872514517906
+                    ],
+                    [
+                        -3.547329581174231
+                    ],
+                    [
+                        8.080423775721014
+                    ],
+                    [
+                        10808.479223698505
+                    ]
+                ],
+                "output_required": [
+                    1159943479.9546928
+                ]
+            },
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:objective:value": [
+                    1159943479.9546928
+                ]
+            },
+            "time": 2.0,
+            "time_step": 2
+        }
+    ]
+}
