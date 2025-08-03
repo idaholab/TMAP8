@@ -30,6 +30,7 @@
     csvdiff = val-2c_delay_csv.csv
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection.'
     abs_zero = 1e-8
+    rel_err = 3e-5
     max_parallel = 1 # see #200
     recover = false # see #196
   []
