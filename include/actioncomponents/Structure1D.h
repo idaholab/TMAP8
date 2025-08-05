@@ -1,0 +1,43 @@
+/********************************************************/
+/*             DO NOT MODIFY THIS HEADER                */
+/* TMAP8: Tritium Migration Analysis Program, Version 8 */
+/*                                                      */
+/*    Copyright 2021 Battelle Energy Alliance, LLC      */
+/*               ALL RIGHTS RESERVED                    */
+/********************************************************/
+
+#pragma once
+
+#include "ActionComponent.h"
+#include "ComponentPhysicsInterface.h"
+#include "ComponentMaterialPropertyInterface.h"
+#include "ComponentBoundaryConditionInterface.h"
+
+/**
+ * A 1D structure on which a species can diffuse
+ */
+class Structure1D : public virtual ActionComponent,
+                    public virtual ComponentPhysicsInterface,
+                    public virtual ComponentMaterialPropertyInterface,
+                    public virtual ComponentBoundaryConditionInterface
+{
+public:
+  Structure1D(const InputParameters & params);
+
+  static InputParameters validParams();
+
+  virtual void addMeshGenerators() override;
+
+  /// Return the species diffused on this structures
+  const std::vector<NonlinearVariableName> & species() const { return _species; }
+  /// Return the initial conditions fhe species concentrations on this structure
+  const std::vector<MooseFunctorName> & ics() { return _ics; };
+
+protected:
+  /// Names of the variables for the species
+  const std::vector<NonlinearVariableName> _species;
+  /// Initial values for the variables
+  const std::vector<MooseFunctorName> _ics;
+  /// Unit for the mesh
+  const Real _length_unit;
+};

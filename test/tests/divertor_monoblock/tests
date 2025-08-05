@@ -19,4 +19,31 @@
     min_parallel = 2
     max_time = 1000
   []
+  [Shimada2024_run-physics]
+    type = Exodiff
+    input = 'divertor_monoblock_physics.i'
+    exodiff = 'divertor_monoblock_physics_exodus.e'
+    cli_args = 'Outputs/exodus/sync_only=true Executioner/end_time=1600 Mesh/ccmg/rings="1 10 8 40" Executioner/nl_rel_tol=1e-8 Executioner/nl_abs_tol=1e-11'
+    requirement = 'The system shall model heat and tritium transport in a divertor monoblock during pulsed operation using a shorthand physics syntax'
+    rel_err = 8e-4 # increasing the relative error tolerance because the test is sensitive to the environment. This error is still small for physical problems.
+    heavy = true
+    min_parallel = 2
+    max_time = 1000
+    custom_cmp = 'physics_comp.cmp'
+  []
+  [Shimada2024_run-physics_single-var]
+    type = CSVDiff
+    input = 'divertor_monoblock_physics-single-var.i'
+    csvdiff = 'divertor_monoblock_physics-single-var_out.csv'
+    cli_args = 'Outputs/exodus/sync_only=true
+                Executioner/end_time=100
+                Mesh/ccmg/rings="1 10 8 40"
+                Executioner/nl_rel_tol=1e-8 Executioner/nl_abs_tol=1e-11'
+    requirement = 'The system shall model heat and tritium transport in a divertor monoblock during pulsed operation using a shorthand physics syntax and using a single variable for tracking the tritium concentration.'
+    rel_err = 8e-4 # increasing the relative error tolerance because the test is sensitive to the environment. This error is still small for physical problems.
+    abs_zero = 3e-9
+    heavy = true
+    min_parallel = 2
+    max_time = 1000
+  []
 []
