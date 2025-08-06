@@ -51,8 +51,13 @@ InterfaceSorptionTempl<is_ad>::validParams()
                         false,
                         "Whether to use the penalty formulation to enforce the flux balance");
   params.addParam<Real>("flux_penalty", 1.0, "Penalty associated with the flux balance");
-
   params.addParam<MaterialPropertyName>("diffusivity", "diffusivity", "The diffusion coefficient");
+
+
+  params.addParam<bool>("neighbour_is_gas",
+                        true,
+                        "When the neighbour concentration is a gas a factor of RT is applied.");
+
   return params;
 }
 
@@ -61,23 +66,19 @@ InterfaceSorptionTempl<is_ad>::InterfaceSorptionTempl(const InputParameters & pa
   : InterfaceKernelParent<is_ad>(parameters),
     _K0(this->template getParam<Real>("K0")),
     _Ea(this->template getParam<Real>("Ea")),
-
     _n_sorption(this->template getParam<Real>("n_sorption")),
-
     _unit_scale(this->template getParam<Real>("unit_scale")),
     _unit_scale_neighbor(this->template getParam<Real>("unit_scale_neighbor")),
-
     _T(this->template coupledGenericValue<is_ad>("temperature")),
-
     _sorption_penalty(this->template getParam<Real>("sorption_penalty")),
     _use_flux_penalty(this->template getParam<bool>("use_flux_penalty")),
     _flux_penalty(_use_flux_penalty ? this->template getParam<Real>("flux_penalty") : 0.0),
-
     _diffusivity(this->template getGenericMaterialProperty<Real, is_ad>("diffusivity")),
     _diffusivity_neighbor(
-        _use_flux_penalty
-            ? &this->template getGenericNeighborMaterialProperty<Real, is_ad>("diffusivity")
-            : nullptr)
+			  _use_flux_penalty
+			  ? &this->template getGenericNeighborMaterialProperty<Real, is_ad>("diffusivity")
+			  : nullptr),
+    _neighbour_is_gas(this->template getParam<bool>("neighbour_is_gas"))
 {
   if (!_use_flux_penalty && parameters.isParamSetByUser("flux_penalty"))
     this->template paramError(
@@ -101,13 +102,16 @@ InterfaceSorptionTempl<is_ad>::computeQpResidual(Moose::DGResidualType type)
   // The unit scaling affects the residual of the sorption equation, but not the flux equation.
   // Otherwise mass is not conserved.
 
+  // For a gas:  p = RT c
+  auto RT_scalefactor = _neighbour_is_gas ? (R * temperature_limited) : 1.0;
+
   switch (type)
   {
     case Moose::Element:
     {
       residual = _test[_i][_qp] * _sorption_penalty *
                  (u - _K0 * std::exp(-_Ea / R / temperature_limited) *
-                          std::pow(u_neighbor * R * temperature_limited, _n_sorption));
+                          std::pow(u_neighbor * RT_scalefactor, _n_sorption));
       break;
     }
 
@@ -140,6 +144,8 @@ InterfaceSorptionTempl<false>::computeQpJacobian(Moose::DGJacobianType type)
   // The unit scaling affects the jacobian of the sorption equation, but not the flux equation.
   // Otherwise mass is not conserved.
 
+  auto RT_scalefactor = _neighbour_is_gas ? (R * temperature_limited) : 1.0;
+
   switch (type)
   {
     case Moose::ElementElement:
@@ -150,7 +156,7 @@ InterfaceSorptionTempl<false>::computeQpJacobian(Moose::DGJacobianType type)
       jacobian = -_test[_i][_qp] * _sorption_penalty * _unit_scale_neighbor / _unit_scale *
                  _phi_neighbor[_j][_qp] *
                  (_K0 * std::exp(-_Ea / R / temperature_limited) *
-                  std::pow(R * temperature_limited, _n_sorption) * _n_sorption *
+                  std::pow(RT_scalefactor, _n_sorption) * _n_sorption *
                   std::pow(u_neighbor, _n_sorption - 1.));
       break;
 
