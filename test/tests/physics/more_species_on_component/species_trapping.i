@@ -37,7 +37,7 @@ N = ${fparse 3.1622e22/cl}
       diffusivity_matprop = 'diff'
 
       # Test differences are too large with default preconditioning
-      preconditioning = 'none'
+      preconditioning = 'defer'
     []
   []
   [SpeciesTrapping]

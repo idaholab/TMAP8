@@ -38,7 +38,7 @@ specific_heat = '${fparse rho_Cp/density}' # J/kg/K
       fixed_convection_htc = ${conduction_coefficient}
 
       # Default hypre preconditioning fails
-      preconditioning = 'none'
+      preconditioning = 'defer'
     []
   []
 []

@@ -46,7 +46,7 @@ scheme = BDF2
       diffusivity_matprop = '1'
 
       # Does not work for the species trapping
-      preconditioning = 'none'
+      preconditioning = 'defer'
     []
   []
   [SpeciesTrapping]

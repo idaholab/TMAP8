@@ -23,7 +23,7 @@ slab_thickness = '${units 3.30e-5 m -> mum}'
       diffusivity_matprop = 'diff'
 
       # Dont add the default preconditioning
-      preconditioning = 'none'
+      preconditioning = 'defer'
 
       # To help coupling to trapping
       compute_diffusive_fluxes_on = 'structure_left'
