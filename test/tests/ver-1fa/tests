@@ -8,13 +8,6 @@
     exodiff = ver-1fa_out.e
     requirement = 'The system shall be able to model heat conduction in a slab that has heat generation'
   []
-  [ver-1fa-physics]
-    type = Exodiff
-    input = ver-1fa-physics.i
-    exodiff = ver-1fa-physics_out.e
-    requirement = 'The system shall be able to model heat conduction in a slab that has heat generation using the Component and Physics syntax.'
-    verification = 'ver-1fa.md'
-  []
   [ver-1fa_lineplot]
     type = CSVDiff
     input = ver-1fa.i

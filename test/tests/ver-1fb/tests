@@ -46,11 +46,4 @@
     requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1fb, modeling thermal transient in a slab with fixed temperatures at both the ends.'
     required_python_packages = 'matplotlib numpy pandas os'
   []
-  [thermal_transient_physics]
-    type = Exodiff
-    input = ver-1fb-physics.i
-    exodiff = ver-1fb-physics_out.e
-    requirement = 'The system shall be able to model thermal transient in a slab that has temperatures fixed at both the ends using the component and physics syntax.'
-    verification = 'ver-1fb.md'
-  []
 []

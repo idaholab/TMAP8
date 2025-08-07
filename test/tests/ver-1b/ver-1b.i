@@ -6,51 +6,51 @@
 []
 
 [Variables]
-  [u]
-  []
+  [./u]
+  [../]
 []
 
 [AuxVariables]
-  [flux_x]
+  [./flux_x]
     order = FIRST
     family = MONOMIAL
-  []
+  [../]
 []
 
 [Kernels]
-  [diff]
+  [./diff]
     type = Diffusion
     variable = u
-  []
-  [time]
+  [../]
+  [./time]
     type = TimeDerivative
     variable = u
-  []
+  [../]
 []
 
 [AuxKernels]
-  [flux_x]
+  [./flux_x]
     type = DiffusionFluxAux
-    diffusivity = '${fparse 1.0}'
+    diffusivity = ${fparse 1.0}
     variable = flux_x
     diffusion_variable = u
     component = x
-  []
+  [../]
 []
 
 [BCs]
-  [left]
+  [./left]
     type = DirichletBC
     variable = u
     boundary = left
     value = 1
-  []
-  [right]
+  [../]
+  [./right]
     type = DirichletBC
     variable = u
     boundary = right
     value = 0
-  []
+  [../]
 []
 
 [VectorPostprocessors]

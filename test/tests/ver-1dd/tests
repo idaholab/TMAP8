@@ -22,12 +22,4 @@
     requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solutions of verification cases 1dd, modeling a breakthrough problem without traps.'
     required_python_packages = 'matplotlib numpy pandas os'
   []
-  [ver-1dd_csvdiff-components]
-    type = CSVDiff
-    input = ver-1dd-components.i
-    # To make it run at the end
-    prereq = 'ver-1d_comparison'
-    csvdiff = 'ver-1dd-components_out.csv'
-    requirement = 'The system shall be able to model a breakthrough problem without traps using the Physics and Components shorthand syntax.'
-  []
 []

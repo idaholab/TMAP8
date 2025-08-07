@@ -26,17 +26,6 @@
     requirement = 'The system shall be able to model a breakthrough problem where diffusion is the rate limiting process,
     with the fine mesh and time step required to match the analytical solution for the verification case and generate CSV data for use in comparisons with the analytic solution.'
   []
-  [diffusion_limited_components]
-    type = Exodiff
-    input = ver-1d-diffusion-component.i
-    exodiff = ver-1d-diffusion-component_out.e
-    cli_args = "ActionComponents/structure/nx=20 Executioner/num_steps=300"
-    requirement = 'The system shall be able to model a breakthrough problem where diffusion is the rate limiting process using the Physics and Components syntax.'
-    verification = 'ver-1d.md'
-    # Physics does not use reference residual syntax
-    rel_err = 1e-5
-    abs_zero = 1e-8
-  []
   [ver-1d_trapping_limited]
     type = Exodiff
     input = ver-1d-trapping.i

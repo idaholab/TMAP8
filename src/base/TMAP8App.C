@@ -30,23 +30,14 @@ TMAP8App::TMAP8App(const InputParameters & parameters) : MooseApp(parameters)
 TMAP8App::~TMAP8App() {}
 
 void
-TMAP8App::registerAll(Factory & f, ActionFactory & af, Syntax & syntax)
+TMAP8App::registerAll(Factory & f, ActionFactory & af, Syntax & s)
 {
-  ModulesApp::registerAllObjects<TMAP8App>(f, af, syntax);
+  ModulesApp::registerAllObjects<TMAP8App>(f, af, s);
 
   Registry::registerObjectsTo(f, {"TMAP8App"});
   Registry::registerActionsTo(af, {"TMAP8App"});
 
   /* register custom execute flags, action syntax, etc. here */
-
-  // TMAP8 specific Physics
-  registerSyntax("SorptionExchangePhysics", "Physics/SorptionExchange/*");
-  registerSyntax("SpeciesTrappingPhysics", "Physics/SpeciesTrapping/*");
-
-  // Shorter syntax for MOOSE Physics used by TMAP8
-  registerSyntax("DiffusionCG", "Physics/Diffusion/*");
-  registerSyntax("MultiSpeciesDiffusionCG", "Physics/SpeciesDiffusion/*");
-  registerSyntax("HeatConductionCG", "Physics/HeatConduction/*");
 }
 
 void

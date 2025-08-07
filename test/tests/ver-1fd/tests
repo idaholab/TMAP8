@@ -8,12 +8,6 @@
     exodiff = ver-1fd_out.e
     requirement = 'The system shall be able to model convective heating.'
   []
-  [ver-1fd-physics]
-    type = Exodiff
-    input = ver-1fd-physics.i
-    exodiff = ver-1fd-physics_out.e
-    requirement = 'The system shall be able to model convective heating using the shorthand Physics syntax.'
-  []
   [ver-1fd_csv]
     type = CSVDiff
     input = ver-1fd.i
