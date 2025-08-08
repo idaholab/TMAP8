@@ -26,7 +26,7 @@ D_ver = ${units 15.75 mum -> m}
       boundary_values = '50.7079 0' # moles/m^3
 
       # Test differences are too large with default preconditioning
-      preconditioning = 'none'
+      preconditioning = 'defer'
     []
   []
 []

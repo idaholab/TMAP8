@@ -21,7 +21,7 @@
       boundary_values = '1 0'
 
       # Keep closer results to original inputs
-      preconditioning = 'none'
+      preconditioning = 'defer'
     []
   []
 []

@@ -22,7 +22,7 @@
       initial_condition = ic_u
 
       # Dont add the default preconditioning
-      preconditioning = 'none'
+      preconditioning = 'defer'
     []
   []
 []

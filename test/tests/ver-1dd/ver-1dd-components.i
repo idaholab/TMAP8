@@ -11,7 +11,7 @@ interval_time = 0.01 # s
       variable_name = 'mobile'
       diffusivity_matprop = '1'
 
-      preconditioning = 'none'
+      preconditioning = 'defer'
     []
   []
 []
