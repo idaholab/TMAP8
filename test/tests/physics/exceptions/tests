@@ -1,0 +1,209 @@
+[Tests]
+  [sorption_wrong_sizes]
+    design = 'SorptionExchangePhysics.md'
+    issues = '#8'
+    requirement = "The system shall return an error if"
+    [species_initial_p]
+      type = RunException
+      input = sorption_exchange.i
+      cli_args = "Physics/SorptionExchange/0d_solub/species_initial_pressures='1 2'"
+      detail = "the number of species does not match the number of species initial pressures,"
+      expect_err = "Parameter 'species' \(size 1\) and 'species_initial_pressures' \(size 2\) must be the same size if set."
+    []
+    [species_equilibrium]
+      type = RunException
+      input = sorption_exchange.i
+      cli_args = "Physics/SorptionExchange/0d_solub/equilibrium_constants='1 2'"
+      detail = "the number of species does not match the number of sorption equilibrium constants."
+      expect_err = "Parameter 'species' \(size 1\) and 'equilibrium_constants' \(size 2\) must be the same size if set"
+    []
+  []
+  [sorption_bad_data]
+    design = 'SorptionExchangePhysics.md'
+    issues = '#8'
+    requirement = "The system shall return an error if"
+    [temperature]
+      type = RunException
+      input = sorption_exchange.i
+      cli_args = "Physics/SorptionExchange/0d_solub/temperature=-1 ActionComponents/enc/temperature=-1"
+      detail = "the temperature specified is negative,"
+      expect_err = "Temperature '-1' on component 'enc' less than or equal to 0 which is not physical"
+    []
+    [temperature_var]
+      type = RunException
+      input = sorption_exchange.i
+      cli_args = "Physics/SorptionExchange/0d_solub/temperature=temp ActionComponents/enc/temperature=temp AuxVariables/temp/family=LAGRANGE"
+      detail = "the temperature is specified as a variable which is not currently specified,"
+      expect_err = "Only real values are supported"
+    []
+    [scaling_factor]
+      type = RunException
+      input = sorption_exchange.i
+      cli_args = "Physics/SorptionExchange/0d_solub/species_scaling_factors=0 ActionComponents/enc/species_scaling_factors=0"
+      detail = "the species equation scaling factor is negative or null,"
+      expect_err = "Range check failed for parameter ActionComponents/enc/species_scaling_factors"
+    []
+    [initial_pressure]
+      type = RunException
+      input = sorption_exchange.i
+      cli_args = "initial_pressure=-1 Physics/SorptionExchange/0d_solub/species_initial_pressures='-1'"
+      detail = "the species initial pressure is negative,"
+      expect_err = "Initial condition '-1' for species 'v' on component 'enc' less than 0 which is not physical"
+    []
+    [eq_constant]
+      type = RunException
+      input = sorption_exchange.i
+      cli_args = "Physics/SorptionExchange/0d_solub/equilibrium_constants='0'"
+      detail = "the sorption equilibrium constant is negative or null,"
+      expect_err = "Equilibrium constant '0' for species 'v' on component 'enc' inferior or equal to 0"
+    []
+  []
+  [trapping_wrong_sizes]
+    design = 'SpeciesTrappingPhysics.md'
+    issues = '#8'
+    requirement = "The system shall return an error if"
+    [repeated_species]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/species='x x'"
+      detail = "a species is repeated twice in the list of species,"
+      expect_err = "Item 'x' specified in vector parameter 'species' is repeated, which is not allowed."
+    []
+    [species_initial_concentration]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/species_initial_concentrations='1 2'"
+      detail = "the number of species does not match the number of species initial concentrations,"
+      expect_err = "Parameter 'species' \(size 1\) and 'species_initial_concentrations' \(size 2\) must be the same size if set."
+    []
+    [scaling_factors]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/species_scaling_factors='1 2'"
+      detail = "the number of species does not match the number of species balance equation scaling factors."
+      expect_err = "Parameter 'species' \(size 1\) and 'species_scaling_factors' \(size 2\) must be the same size if set"
+    []
+    [mobile]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/mobile='a b'"
+      detail = "the number of trapped species does not match the number of mobile species,"
+      expect_err = "Parameter 'species' \(size 1\) and 'mobile' \(size 2\) must be the same size if set"
+    []
+    [alpha_t]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/alpha_t='1 2'"
+      detail = "the number of species does not match the number of trapping coefficients,"
+      expect_err = "Parameter 'species' \(size 1\) and 'alpha_t' \(size 2\) must be the same size if set"
+    []
+    [Ct0]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/Ct0=''"
+      detail = "the number of species does not match the number of trapping Ct0 coefficients,"
+      expect_err = "Parameter 'species' \(size 1\) and 'Ct0' \(size 0\) must be the same size if set"
+    []
+    [alpha_r]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/alpha_r='1 2'"
+      detail = "the number of species does not match the number of release coefficients,"
+      expect_err = "Parameter 'species' \(size 1\) and 'alpha_r' \(size 2\) must be the same size if set"
+    []
+    [detrapping]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/detrapping_energy='1 2'"
+      detail = "the number of species does not match the number of detrapping energies."
+      expect_err = "Parameter 'species' \(size 1\) and 'detrapping_energy' \(size 2\) must be the same size if set"
+    []
+  []
+  [trapping_bad_data]
+    design = 'SpeciesTrappingPhysics.md'
+    issues = '#8'
+    requirement = "The system shall return an error if"
+    [temperature_fun]
+      type = RunException
+      input = trapping.i
+      cli_args = "Physics/SpeciesTrapping/trapped/temperature=temp_fun Functions/temp_fun/type=ConstantFunction Functions/temp_fun/value=1"
+      detail = "the temperature is specified as a function when only constants and variables are supported at this time."
+      expect_err = "Should be a constant or the name of a variable"
+    []
+    [no_component_yet_asking_for_vars_per_comp]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/separate_variables_per_component=true"
+      detail = "no components are specified yet the Physics is set to create variables for each component,"
+      expect_err = "Physics is not defined on any Component, this parameter should be set to false"
+    []
+  []
+  [trapping_missing_data]
+    design = 'SpeciesTrappingPhysics.md'
+    issues = '#8'
+    requirement = "The system shall return an error if the species trapping Physics is not used on a component and "
+    [species]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/species=''"
+      detail = "the species is not specified,"
+      expect_err = "Parameter 'species' should not be set to an empty vector"
+    []
+    [alpha_t]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff"
+      detail = "the trapping coefficient is not specified,"
+      expect_err = "alpha_t: Should not be empty if not using Components"
+    []
+    [trapping_energy]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/alpha_t=1"
+      detail = "the trapping energy is not specified,"
+      expect_err = "trapping_energy: Should not be empty if not using Components"
+    []
+    [N]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/alpha_t=1 Physics/SpeciesTrapping/trapped/trapping_energy=0"
+      detail = "the number density of the traps is not specified,"
+      expect_err = "N: Should not be empty if not using Components"
+    []
+    [Ct0]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/alpha_t=1
+                  Physics/SpeciesTrapping/trapped/trapping_energy=0 Physics/SpeciesTrapping/trapped/N=1"
+      detail = "the trapping Ct0 coefficient is not specified,"
+      expect_err = "Ct0: Should not be empty if not using Components"
+    []
+    [trap_per_free]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/alpha_t=1
+                  Physics/SpeciesTrapping/trapped/trapping_energy=0 Physics/SpeciesTrapping/trapped/N=1 Physics/SpeciesTrapping/trapped/Ct0=1"
+      detail = "the number of traps filled per free particle trapped is not specified,"
+      expect_err = "trap_per_free: Should not be empty if not using Components"
+    []
+    [alpha_r]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/alpha_t=1
+                  Physics/SpeciesTrapping/trapped/trapping_energy=0 Physics/SpeciesTrapping/trapped/N=1
+                  Physics/SpeciesTrapping/trapped/Ct0=1 Physics/SpeciesTrapping/trapped/trap_per_free=1"
+      detail = "the release coefficient is not specified,"
+      expect_err = "alpha_r: Should not be empty if not using Components"
+    []
+    [detrapping_energy]
+      type = RunException
+      input = trapping.i
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/alpha_t=1
+                  Physics/SpeciesTrapping/trapped/trapping_energy=0 Physics/SpeciesTrapping/trapped/N=1
+                  Physics/SpeciesTrapping/trapped/Ct0=1 Physics/SpeciesTrapping/trapped/trap_per_free=1
+                  Physics/SpeciesTrapping/trapped/alpha_r=100"
+      detail = "the detrapping energy is not specified."
+      expect_err = "detrapping_energy: Should not be empty if not using Components"
+    []
+  []
+[]
