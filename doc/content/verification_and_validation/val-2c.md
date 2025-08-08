@@ -155,12 +155,12 @@ The comparison between the original and calibrated values of selected model para
 ## Results and Discussion
 
 !alert note title=Update from [!cite](Simon2025)
-The results presented here are updated results from thos presented in [!cite](Simon2025). First, the initial time step was reduced from dt=60 s in [!cite](Simon2025) to dt=1 s in the current case. This slightly affects the results for both the immediate and delayed injection cases. However, the results are qualitatively unchanged and conclusions remain valid. Second, the calibration approach was updated since [!cite](Simon2025) with an updated multi-objective function, and new results. This improves the previous calibration results from [!cite](Simon2025).
+The results presented here are updated results from those presented in [!cite](Simon2025). First, the initial time step was reduced from dt=60 s in [!cite](Simon2025) to dt=1 s in the current case. This slightly affects the results for both the immediate and delayed injection cases. However, the results are qualitatively unchanged and conclusions remain valid. Second, the calibration approach was updated since [!cite](Simon2025) with an updated multi-objective function, and new results. This improves the previous calibration results from [!cite](Simon2025).
 
 [val-2c_comparison_T2] and [val-2c_comparison_HTO] show the comparison of the TMAP8 calculations (both with immediately injected and delayed injected T$_2$) against the experimental data for T$_2$ and HTO concentration in the enclosure over time.
 There is reasonable agreement between the TMAP8 predictions and the experimental data.
-In the case of immediate T$_2$ injection, the root mean square percentage errors (RMSPE) are equal to RMSPE = 58.68 % for T$_2$ and RMSPE = 146.23 % for HTO, respectively.
-When accounting for a delay in T$_2$ injection, the TMAP8 predictions best match the experimental data, in particular the position of the peak HTO concentration. The RMSPE values decrease to RMSPE = 89.50 % for T$_2$ and RMSPE = 75.66 % for HTO, respectively.
+In the case of immediate T$_2$ injection, the root mean square percentage errors (RMSPE) are equal to RMSPE = 58.68% for T$_2$ and RMSPE = 146.23% for HTO, respectively.
+When accounting for a delay in T$_2$ injection, the TMAP8 predictions best match the experimental data, in particular the position of the peak HTO concentration. The RMSPE values decrease to RMSPE = 89.50% for T$_2$ and RMSPE = 75.66% for HTO, respectively.
 Note that the model parameters listed in [val-2c_parameters] are somewhat different from [!cite](Holland1986,longhurst1992verification,ambrosek2008verification) to better match the experimental data.
 In particular, [!cite](longhurst1992verification,ambrosek2008verification) did not validate the TMAP predictions against T$_2$ concentration, which we do here in [val-2c_comparison_T2] and in [!cite](Simon2025).
 This affects some of the model parameters.
