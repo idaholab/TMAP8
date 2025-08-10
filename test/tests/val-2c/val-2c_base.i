@@ -11,7 +11,7 @@
   [base_mesh]
     type = GeneratedMeshGenerator
     dim = 1
-    nx = ${fparse mesh_num_nodes_paint + 2}
+    nx = '${fparse mesh_num_nodes_paint + 2}'
     xmax = ${length_domain}
   []
   [subdomain_id]
@@ -331,7 +331,7 @@
     type = ADInterfaceSorption
     variable = t2_paint_concentration
     neighbor_var = t2_enclosure_concentration # molecules/microns^3
-    unit_scale_neighbor = ${fparse 1e18/NA} # to convert neighbor concentration to mol/m^3
+    unit_scale_neighbor = '${fparse 1e18/NA}' # to convert neighbor concentration to mol/m^3
     K0 = ${solubility_elemental_tritium}
     Ea = 0
     n_sorption = 1 # Henry's law
@@ -343,7 +343,7 @@
     type = ADInterfaceSorption
     variable = ht_paint_concentration
     neighbor_var = ht_enclosure_concentration # molecules/microns^3
-    unit_scale_neighbor = ${fparse 1e18/NA} # to convert neighbor concentration to mol/m^3
+    unit_scale_neighbor = '${fparse 1e18/NA}' # to convert neighbor concentration to mol/m^3
     K0 = ${solubility_elemental_tritium}
     Ea = 0
     n_sorption = 1 # Henry's law
@@ -355,7 +355,7 @@
     type = ADInterfaceSorption
     variable = hto_paint_concentration
     neighbor_var = hto_enclosure_concentration # molecules/microns^3
-    unit_scale_neighbor = ${fparse 1e18/NA} # to convert neighbor concentration to mol/m^3
+    unit_scale_neighbor = '${fparse 1e18/NA}' # to convert neighbor concentration to mol/m^3
     K0 = ${solubility_tritiated_water}
     Ea = 0
     n_sorption = 1 # Henry's law
@@ -367,7 +367,7 @@
     type = ADInterfaceSorption
     variable = h2o_paint_concentration
     neighbor_var = h2o_enclosure_concentration # molecules/microns^3
-    unit_scale_neighbor = ${fparse 1e18/NA} # to convert neighbor concentration to mol/m^3
+    unit_scale_neighbor = '${fparse 1e18/NA}' # to convert neighbor concentration to mol/m^3
     K0 = ${solubility_tritiated_water}
     Ea = 0
     n_sorption = 1 # Henry's law
@@ -559,6 +559,7 @@
 
   end_time = ${time_end}
   dtmax = ${dtmax}
+  dtmin = ${dtmin}
   nl_max_its = 16
   [TimeStepper]
     type = IterationAdaptiveDT
@@ -566,12 +567,11 @@
     optimal_iterations = 12
     iteration_window = 1
     growth_factor = 1.1
-    cutback_factor = 0.9
+    cutback_factor = 0.7
   []
 []
 
 [Outputs]
-  exodus = true
   perf_graph = true
   [csv]
     type = CSV
