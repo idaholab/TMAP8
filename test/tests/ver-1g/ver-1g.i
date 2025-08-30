@@ -62,8 +62,8 @@ Na = 6.02214076E23 # Avogadro's constant (from PhysicalConstants.h - https://phy
 [Materials]
   [K]
     type = ADParsedMaterial
-    f_name = 'K'
-    function = '4.14e3' # units: molecule.micrometer^3/atom/second
+    property_name = 'K'
+    expression = '4.14e3' # units: molecule.micrometer^3/atom/second
   []
 []
 
