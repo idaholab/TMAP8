@@ -41,7 +41,7 @@
       input = sorption_exchange.i
       cli_args = "Physics/SorptionExchange/0d_solub/species_scaling_factors=0 ActionComponents/enc/species_scaling_factors=0"
       detail = "the species equation scaling factor is negative or null,"
-      expect_err = "ActionComponents/enc/species_scaling_factors: Range check failed"
+      expect_err = "Range check failed for parameter ActionComponents/enc/species_scaling_factors; expression = 'species_scaling_factors>0', component 0"
     []
     [initial_pressure]
       type = RunException
