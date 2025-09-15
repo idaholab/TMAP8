@@ -12,7 +12,7 @@
 
 /**
  *
- * Implements a reaction to establish ReactionRate=k_f*u-k_b*v to compute the surface H
+ * Implements a reactio n to establish ReactionRate=k_f*u-k_b*v to compute the surface H
  * concentration in YHx from the temperature and partial pressure based on the PCT curves with u the
  * concentration in the solid and v (neighbor) the concentration in the gas.
  *
