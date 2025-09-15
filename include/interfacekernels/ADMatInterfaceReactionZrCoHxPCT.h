@@ -13,22 +13,27 @@
 /**
  *
  * Implements a reaction to establish ReactionRate=k_f*u-k_b*v to compute the surface H
- * concentration in YHx from the temperature and partial pressure based on the PCT curves with u the
- * concentration in the solid and v (neighbor) the concentration in the gas.
+ * concentration in ZrCoHx from the temperature and partial pressure based on the PCT curves with u
+ * the concentration in the solid and v (neighbor) the concentration in the gas.
  *
- * The original data is from C. E. Lundin, J. P. Blackledge, Pressure-Temperature-Composition
- * Relationships of the Yttrium-Hydrogen System, Journal of The Electrochemical Society 109 (9)
- * (1962) 838–5.
- * The fits are from Matthews et al., Metal Hydride Simulations Using SWIFT, LANL technical report
- * LA-UR-21-27538, 2021.
+
+Ram Avtar Jat, S. C. Parida, J. Nuwad, Renu Agarwal, and S. G. Kulkarni. Hydrogen
+sorption–desorption studies on zrco–hydrogen system. Journal of Thermal Analysis and Calorimetry,
+112(1):37–43, 2013. doi:10.1007/s10973-012-2783-7.[BibTeX] Takanori Nagasaki, Satoshi Konishi,
+Hiroji Katsuta, and Yuji Naruse. A zirconium-cobalt compound as the material for a reversible
+tritium getter. Fusion Technology, 9(3):506–509, 1986. doi:10.13182/FST86-A24739.[BibTeX] R.-D.
+Penzhorn, M. Devillers, and M. Sirch. Evaluation of zrco and other getters for tritium handling and
+storage. Journal of Nuclear Materials, 170:217–231, 1990. doi:10.1016/0022-3115(90)90292-U.[BibTeX]
+
+
  */
 
-class ADMatInterfaceReactionYHxPCT_LowPressure : public ADInterfaceKernel
+class ADMatInterfaceReactionZrCoHxPCT : public ADInterfaceKernel
 {
 public:
   static InputParameters validParams();
 
-  ADMatInterfaceReactionYHxPCT_LowPressure(const InputParameters & parameters);
+  ADMatInterfaceReactionZrCoHxPCT(const InputParameters & parameters);
 
 protected:
   virtual ADReal computeQpResidual(Moose::DGResidualType type) override;
@@ -44,7 +49,4 @@ protected:
 
   /// Backward reaction rate coefficient
   const ADMaterialProperty<Real> & _kb;
-
-  /// Flag to silence correlation out of bound warnings
-  const bool _silence_warnings;
 };
