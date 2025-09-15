@@ -3,38 +3,43 @@ R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConsta
 N_a = '${units 6.02214076e23 1/mol}' # Avogadro's number from PhysicalConstants.h
 boltzmann_constant = '${units 1.380649e-23 J/K}' # Boltzmann constant from PhysicalConstants.h
 
-# Simulation conditions and material properties
-temperature = '${units 1323 K}'
-density_Y = '${units 48605 mol/m^3}'
-initial_pressure_H2_enclosure_1 = '${units 2e02 Pa}'
+## Simulation conditions and material properties
+temperature = '${units 604.15 K}'
+density_ZrCo = '${units 51579.35 mol/m^3}'
+
+
+initial_pressure_H2_enclosure_1 = '${units 5e04 Pa}'
 initial_concentration_H_enclosure_1 = '${units ${fparse 2*initial_pressure_H2_enclosure_1 / (R*temperature)} mol/m^3}'
-initial_atomic_fraction = 0.2# (-)
-initial_concentration_H_enclosure_2 = '${units ${fparse initial_atomic_fraction*density_Y} mol/m^3}'
+initial_atomic_fraction =  1 # (-)
+initial_concentration_H_enclosure_2 = '${units ${fparse initial_atomic_fraction*density_ZrCo} mol/m^3}'
 
-# diffusivity from Majer et al., Journal of Alloys and Compounds 330-332 (2002) 438-442.
-diffusivity_Do = '${units 1.e-8 m^2/s}'
-diffusivity_Ea = '${units 0.38 eV -> J}'
-diffusivity_ratio_gas_YHx = '${fparse initial_concentration_H_enclosure_2 / initial_concentration_H_enclosure_1 * 10}' # this ratio is large and helps InterfaceDiffusion due to the ratio of concentrations
-# Surface reaction rate from P. W. Fisher, M. Tanase, Journal of Nuclear Materials 122-123 (1984) 1536-1540.
-reaction_rate_0 = '${units 4.95e5 1/s}'
-reaction_rate_Ea = '${units 1.52 eV -> J}'
+# diffusivity from:
+#Zr:Yu, Feifei, et al. “Hydrogen Diffusion in Zirconium Hydrides from On-the-Fly Machine Learning Molecular Dynamics.” International Journal of Hydrogen Energy, vol. 56, Feb. 2024, pp. 1057–66. DOI.org (Crossref), https://doi.org/10.1016/j.ijhydene.2023.12.241
 
+diffusivity_Do = '${units 1.53e-7 m^2/s}'
+diffusivity_Ea = '${units 0.61 eV -> J}'
+
+diffusivity_ratio_gas_ZrCoHx = '${fparse initial_concentration_H_enclosure_2 / initial_concentration_H_enclosure_1 * 10}' # this ratio is large and helps InterfaceDiffusion due to the ratio of concentrations
+# Surface reaction rate from Jat, Ram Avtar, et al. Hydrogen Sorption–Desorption Studies on ZrCo–Hydrogen System. Zotero.
+
+reaction_rate_0 = '${units 3.9e8 1/s}' #
+reaction_rate_Ea = '${units 1.2437 eV -> J}'#
 # Domain size and mesh parameters
 domain_length = '${units 1 m}'
-num_nodes = 8
+num_nodes = 100
 
 # time
-simulation_time = '${units 1e5 s}'
+simulation_time = '${units 1e9 s}'
 dt_max = '${fparse simulation_time/100}'
-dt_init = '${units 1e-5 s}'
+dt_init = '${units 1e-4 s}'
 tau_constant_BC = '${fparse dt_init*2e-2}' # the smaller, the faster the up-ramp for the pressure BC
 
 # convergence parameters
-lower_value_threshold_concentration_enclosure_1 = 1e-20
-lower_value_threshold_concentration_enclosure_2 = 1e-20
+lower_value_threshold_concentration_enclosure_1 = -1e-20
+lower_value_threshold_concentration_enclosure_2 = -1e-20
 
 # file base
-output_file_base = 'YHx_PCT_out'
+output_file_base = 'ZrCoHx_PCT_out'
 
 [Mesh]
   [generated]
@@ -140,7 +145,7 @@ output_file_base = 'YHx_PCT_out'
   [H_diffusion_enclosure_2]
     type = MatDiffusion
     variable = concentration_H_enclosure_2
-    diffusivity = diffusivity_YHx
+    diffusivity = diffusivity_ZrCoHx
     block = '2'
   []
 []
@@ -174,9 +179,9 @@ output_file_base = 'YHx_PCT_out'
 []
 
 [Materials]
-  [diffusivity_YHx]
+  [diffusivity_ZrCoHx]
     type = DerivativeParsedMaterial
-    property_name = diffusivity_YHx
+    property_name = diffusivity_ZrCoHx
     coupled_variables = 'temperature'
     expression = '${diffusivity_Do} * exp(-${fparse diffusivity_Ea*N_a/R}/temperature)'
     outputs = exodus
@@ -184,20 +189,20 @@ output_file_base = 'YHx_PCT_out'
   [diffusivity_gas]
     type = DerivativeParsedMaterial
     property_name = diffusivity_gas
-    material_property_names = diffusivity_YHx
-    expression = '${diffusivity_ratio_gas_YHx}*diffusivity_YHx'
+    material_property_names = diffusivity_ZrCoHx
+    expression = '${diffusivity_ratio_gas_ZrCoHx}*diffusivity_ZrCoHx'
     outputs = exodus
   []
-  [reaction_rate_surface_YHx_1]
+  [reaction_rate_surface_ZrCoHx_1]
     type = ADDerivativeParsedMaterial
-    property_name = reaction_rate_surface_YHx
+    property_name = reaction_rate_surface_ZrCoHx
     coupled_variables = 'temperature'
     expression = '${reaction_rate_0} * exp(-${fparse reaction_rate_Ea/boltzmann_constant}/temperature)' # 1/s
     block = '1'
   []
-  [reaction_rate_surface_YHx_2]
+  [reaction_rate_surface_ZrCoHx_2]
     type = ADDerivativeParsedMaterial
-    property_name = reaction_rate_surface_YHx
+    property_name = reaction_rate_surface_ZrCoHx
     coupled_variables = 'temperature'
     expression = '${reaction_rate_0} * exp(-${fparse reaction_rate_Ea/boltzmann_constant}/temperature)' # 1/s
     block = '2'
@@ -210,18 +215,18 @@ output_file_base = 'YHx_PCT_out'
     variable = concentration_H_enclosure_2
     neighbor_var = concentration_H_enclosure_1
     boundary = interface_2
-    D = diffusivity_YHx
+    D = diffusivity_ZrCoHx
     D_neighbor = diffusivity_gas
   []
-  [interface_reaction_YHx_PCT]
-    type = ADMatInterfaceReactionYHxPCT_LowPressure
+  [interface_reaction_ZrCoHx_PCT]
+    type = ADMatInterfaceReactionZrCoHxPCT
     variable = concentration_H_enclosure_2
     neighbor_var = concentration_H_enclosure_1
     neighbor_temperature = temperature
-    density = ${density_Y}
+    density = ${density_ZrCo}
     boundary = interface_2
-    forward_rate = 'reaction_rate_surface_YHx'
-    backward_rate = 'reaction_rate_surface_YHx'
+    forward_rate = 'reaction_rate_surface_ZrCoHx'
+    backward_rate = 'reaction_rate_surface_ZrCoHx'
   []
 []
 
@@ -255,7 +260,7 @@ output_file_base = 'YHx_PCT_out'
   [atomic_fraction_H_enclosure_2_at_interface]
     type = ParsedPostprocessor
     pp_names = 'concentration_H_enclosure_2_at_interface'
-    expression = 'concentration_H_enclosure_2_at_interface / ${density_Y}'
+    expression = 'concentration_H_enclosure_2_at_interface / ${density_ZrCo}'
     outputs = 'csv console'
     execute_on = 'initial timestep_end'
   []
@@ -308,7 +313,7 @@ output_file_base = 'YHx_PCT_out'
   dtmax = ${dt_max}
   nl_max_its = 16
   l_max_its = 30
-  nl_rel_tol = 1e-5
+  nl_rel_tol = 1e-4
   nl_abs_tol = 4e-12
   scheme = 'bdf2'
   solve_type = 'Newton'
