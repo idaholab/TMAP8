@@ -102,7 +102,7 @@ The pressures on the upstream and downstream sides are close to vacuum pressures
 C = 0.
 \end{equation}
 
-Due to the high thermal conductivity in Tungsten, the model simplifies the thermal diffusion as a instantaneous process to increase the model efficiency. The temperature inside the Tungsten sample is consistent with the temperature on surface of Tungsten sample. The temperatures is 300 K during implantation, and the temperature after implantation on the upstream and downstream sides are defined as:
+Due to the high thermal conductivity in Tungsten, the model simplifies the thermal diffusion as a instantaneous process to increase the model efficiency. The temperature inside the Tungsten sample is consistent with the temperature on the surface of Tungsten sample. The temperatures is 300 K during implantation, and the temperature after implantation on the upstream and downstream sides are defined as:
 
 \begin{equation} \label{eq:temperature}
 T =
