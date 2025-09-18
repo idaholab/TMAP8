@@ -6,7 +6,7 @@
   [Shimada2024_input_check]
     type = RunApp
     input = 'divertor_monoblock.i'
-    detail = 'pulsed operation.'
+    detail = 'pulsed operation (input check only).'
     check_input = True
     method = opt
   []
@@ -24,7 +24,7 @@
   []
   [stochastics]
   issues = '#281'
-  design = 'divertor_monoblock_sensitivity/index.md'
+  design = 'divertor_monoblock/sensitivity.md'
   requirement = 'The system shall model heat and tritium transporter for the sensitvity study of a divertor monoblock during'
   [steady_run]
     type = JSONDiff
@@ -45,7 +45,7 @@
   [elm_run]
     type = JSONDiff
     input = 'elm_transient_sobol.i'
-    requirement = 'an ELM transient after steady operation'
+    detail = 'an ELM transient after steady operation'
     jsondiff = 'elm_transient_sobol.json'
     heavy = true
     min_parallel = 4
