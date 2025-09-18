@@ -16,6 +16,15 @@
     cli_args = 'BCs/lhs/type=DirichletBC Outputs/file_base=ver-1c_tmap7'
     requirement = 'The system shall be able to model species permeation into an unloaded portion of a slab from a pre-loaded portion with boundary conditions consistent with TMAP7'
   []
+  [ver-1c-components]
+    type = Exodiff
+    input = 'ver-1c-component.i'
+    exodiff = ver-1c-component_out.e
+    requirement = 'The system shall be able to model species permeation into an unloaded portion of a slab from a pre-loaded portion, using a Physics and Components syntax.'
+    # Different preconditioning
+    abs_zero = 1e-8
+    method = 'opt'
+  []
   [ver-1c_TMAP4_csvdiff]
     type = CSVDiff
     input = ver-1c.i
