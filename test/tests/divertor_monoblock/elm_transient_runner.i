@@ -105,7 +105,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
     [temperature]                                                                                  # variable name
         order = FIRST                                                                              # order of the FE shape function used for this variable (Constant, 1st-4th) (shape of variable within a finite element (FE))
         family = LAGRANGE                                                                          # FE shape function family
-        initial_condition = ${units 300 K}                                                         # Initial condition for this variable, and t=0. '${}' specifies units, to be replaced in code.
+        #initial_condition = ${units 300 K}                                                         # Initial condition for this variable, and t=0. '${}' specifies units, to be replaced in code.
     []
     ######################### Variables for W (block = 4)
     [C_mobile_W]
@@ -147,6 +147,13 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
         block = 2
     []
 []                                                                                                 # End main variables
+[ICs]
+  [t_ic]
+    type = FunctionIC
+    function = temp_ss
+    variable= temperature
+  []
+[]
 
 [AuxVariables]                                                                                     # Define auxillary variables; these are NOT solved by the problem's defining PDE's (defined by the Kernels later). AuxKernels will be used to define the AuxVariables as functions of the known variables (solved for by the Kernels)
     [flux_y]
@@ -711,25 +718,29 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
     ### 1.80e23/m^2-s = (5.0e23/m^2-s) *(1-0.999) = (7.90e-13)*(${tungsten_atomic_density})/(1.0e-4)  at steady state
     [mobile_flux_bc_func]
         type = ParsedFunction
-        expression =   """if(t<2e4, (${inter_pwr}*7.9e-13/1e7),
-                          if(t<(2e4+${elm_duration}*1/3),
-                             (${inter_pwr}*7.9e-13/1e7)+(t-2e4)/(${elm_duration}*1/3)*((${elm_value}*7.9e-13/1e7)-(${inter_pwr}*7.9e-13/1e7)),
-                          if(t<(2e4+(${elm_duration}*1/3)+(${elm_duration}*2/3)),
-                             (${elm_value}*7.9e-13/1e7)-(t-2e4-(${elm_duration}*1/3))/(${elm_duration}*2/3)*((${elm_value}*7.9e-13/1e7)-(${inter_pwr}*7.9e-13/1e7)), (${inter_pwr}*7.9e-13/1e7))))"""
+        expression =   """if(t<2e2, (${inter_pwr}*7.9e-13/1e7),
+                          if(t<(2e2+${elm_duration}*1/3),
+                             (${inter_pwr}*7.9e-13/1e7)+(t-2e2)/(${elm_duration}*1/3)*((${elm_value}*7.9e-13/1e7)-(${inter_pwr}*7.9e-13/1e7)),
+                          if(t<(2e2+(${elm_duration}*1/3)+(${elm_duration}*2/3)),
+                             (${elm_value}*7.9e-13/1e7)-(t-2e2-(${elm_duration}*1/3))/(${elm_duration}*2/3)*((${elm_value}*7.9e-13/1e7)-(${inter_pwr}*7.9e-13/1e7)), (${inter_pwr}*7.9e-13/1e7))))"""
     []
     ### Heat flux of 10MW/m^2 at steady state
     [temp_flux_bc_func]
         type = ParsedFunction
-        expression =   """if(t<2e4, ${inter_pwr},
-                          if(t<(2e4+${elm_duration}*1/3),
-                             ${inter_pwr}+(t-2e4)/(${elm_duration}*1/3)*(${elm_value}-${inter_pwr}),
-                          if(t<(2e4+(${elm_duration}*1/3)+(${elm_duration}*2/3)),
-                             ${elm_value}-(t-2e4-(${elm_duration}*1/3))/(${elm_duration}*2/3)*(${elm_value}-${inter_pwr}), ${inter_pwr})))"""
+        expression =   """if(t<2e2, ${inter_pwr},
+                          if(t<(2e2+${elm_duration}*1/3),
+                             ${inter_pwr}+(t-2e2)/(${elm_duration}*1/3)*(${elm_value}-${inter_pwr}),
+                          if(t<(2e2+(${elm_duration}*1/3)+(${elm_duration}*2/3)),
+                             ${elm_value}-(t-2e2-(${elm_duration}*1/3))/(${elm_duration}*2/3)*(${elm_value}-${inter_pwr}), ${inter_pwr})))"""
     []
     [timestep_function]
         type = ParsedFunction
-        expression = """if(t<2e4, 500,
-                        if(t<(2e4+${elm_duration}*1/3+${elm_duration}*2/3), 0.0001, 500))"""
+        expression = """if(t<2e2, 500,
+                        if(t<(2e2+${elm_duration}*1/3+${elm_duration}*2/3), 0.0001, 500))"""
+    []
+    [temp_ss]
+      type = ParsedFunction
+      expression = "-1.59786e4*x^2  -1.11629611e4*x + 4.84297313e2 + 1.9491599e6*y^2 + 1.55723201e4*y - 7.312884e5*x*y"
     []
 []
 [Materials]                                                                                        # Material properties and relationships to apply to subdomains.
@@ -1169,7 +1180,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
     petsc_options_value = 'lu'
     nl_rel_tol  = 1e-5 # 1e-6                                                   # Relative independent parameter tolerance
     nl_abs_tol  = 1e-6 # 1e-7                                                 # Absolute tolerance
-    end_time = 2.01e4   # 50 ITER shots (3.0e4 s plasma, 2.0e4 SSP)                                 # Total simulation time
+    end_time = 2.01e2   # 50 ITER shots (3.0e4 s plasma, 2.0e4 SSP)                                 # Total simulation time
     automatic_scaling = true
     line_search = 'none'
     dtmin = 1e-6                                                                                   # Minimum time step for convergence, time step size is reduced upon non-convergence, but dtmin is an absolute limit. Passing this will result in an error
@@ -1178,7 +1189,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
     [TimeStepper]
         type = IterationAdaptiveDT
         dt = 125
-        time_t = '0 2e4 2.01e4'
+        time_t = '0 2e2 2.01e2'
         time_dt = '100 0.0001 100'
         optimal_iterations = 15
         iteration_window = 1
