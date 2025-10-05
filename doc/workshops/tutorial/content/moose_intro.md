@@ -50,12 +50,12 @@
 
 # MOOSE Framework: Core Philosophy
 
-- **Object-oriented design**: Everything is an object with clear interfaces
-- **Modular architecture**: Mix and match components to achieve simulation goals
-- **Physics-agnostic**: Framework handles numerics, you focus on physics
-- **Dimension-independent**: Write once, run in 1D, 2D, or 3D
-- **Automatic differentiation**: No need to compute Jacobians manually
-- **Strict separation of concerns**: Systems don't communicate directly
+- +Object-oriented design+: Everything is an object with clear interfaces
+- +Modular architecture+: Mix and match components to achieve simulation goals
+- +Physics-agnostic+: Framework handles numerics, you focus on physics
+- +Dimension-independent+: Write once, run in 1D, 2D, or 3D
+- +Automatic differentiation+: No need to compute Jacobians manually
+- +Strict separation of concerns+: Systems don't communicate directly
 
 !---
 
@@ -70,7 +70,8 @@
 !row!
 !col! width=40%
 
-**Core Systems:**
++Core Systems:+
+
 - Mesh
 - Variables
 - Kernels
@@ -83,7 +84,8 @@
 
 !col! width=60%
 
-**Advanced Systems:**
++Advanced Systems:+
+
 - MultiApps (multi-scale coupling)
 - Transfers (data exchange)
 - Postprocessors (scalar values)
@@ -105,14 +107,16 @@
 
 MOOSE solves PDEs using the Galerkin finite element method
 
-**Key steps:**
++Key steps:+
+
 1. Write strong form of PDE
 2. Convert to weak form (multiply by test function, integrate by parts)
 3. Discretize with shape functions
 4. Form residual vector and Jacobian matrix
 5. Solve nonlinear system with Newton's method
 
-**MOOSE handles:**
++MOOSE handles:+
+
 - Mesh management
 - Shape functions
 - Quadrature rules
@@ -149,7 +153,8 @@ protected:
 !col-end!
 !row-end!
 
-**Available variables:**
++Available variables:+
+
 - `_u`, `_grad_u`: Variable value and gradient
 - `_test`, `_grad_test`: Test function value and gradient
 - `_qp`: Quadrature point index
@@ -162,13 +167,15 @@ protected:
 !row!
 !col! width=60%
 
-**Producer/Consumer Pattern:**
++Producer/Consumer Pattern:+
+
 - Materials produce properties
 - Other objects consume properties
 - Properties can vary in space and time
 - Properties can be coupled to variables
 
-**Key Methods:**
++Key Methods:+
+
 - `declareProperty<Type>()` - produce
 - `getMaterialProperty<Type>()` - consume
 - `getADMaterialProperty<Type>()` - consume with derivatives
@@ -196,13 +203,14 @@ _permeability =
 
 # Auxiliary System: Derived Quantities
 
-- **Purpose**: Compute derived quantities from primary variables
-- **Use cases**: Postprocessing, visualization, coupling
+- +Purpose+: Compute derived quantities from primary variables
+- +Use cases+: Postprocessing, visualization, coupling
 
 !row!
 !col! width=50%
 
-**Auxiliary Variables:**
++Auxiliary Variables:+
+
 - Not solved for directly
 - Computed from other variables
 - Can be nodal or elemental
@@ -211,10 +219,12 @@ _permeability =
 
 !col! width=50%
 
-**Example: Velocity from Pressure**
++Example: Velocity from Pressure+
+
 ```
 v = -K/μ * ∇p
 ```
+
 - Pressure (p) is nonlinear variable
 - Velocity (v) is auxiliary variable
 - Computed via AuxKernel
@@ -256,14 +266,16 @@ v = -K/μ * ∇p
 
 !col! width=40%
 
-**Hierarchical Input Text (HIT):**
++Hierarchical Input Text (HIT):+
+
 - Block-based structure
 - Parameters in key=value format
 - Strong typing
 - Extensive error checking
 - Documentation built-in
 
-**Required blocks:**
++Required blocks:+
+
 - Mesh
 - Variables
 - Kernels
@@ -278,17 +290,19 @@ v = -K/μ * ∇p
 
 # Solver System: PJFNK Method
 
-**Preconditioned Jacobian-Free Newton-Krylov (PJFNK)**
++Preconditioned Jacobian-Free Newton-Krylov (PJFNK)+
 
 !row!
 !col! width=50%
 
-**Newton's Method:**
++Newton's Method:+
+
 - Solves nonlinear system: R(u) = 0
 - Update: u^{n+1} = u^n - J^{-1}R
 - Quadratic convergence
 
-**Jacobian-Free:**
++Jacobian-Free:+
+
 - Approximate J*v via finite differences
 - No explicit Jacobian formation
 - Reduces memory requirements
@@ -297,12 +311,14 @@ v = -K/μ * ∇p
 
 !col! width=50%
 
-**Krylov Solvers:**
++Krylov Solvers:+
+
 - GMRES (default)
 - CG, BiCGStab
 - Build Krylov subspace
 
-**Preconditioning:**
++Preconditioning:+
+
 - Hypre/BoomerAMG
 - Block Jacobi
 - ILU/LU
@@ -315,7 +331,8 @@ v = -K/μ * ∇p
 
 # Automatic Differentiation in MOOSE
 
-**Benefits:**
++Benefits:+
+
 - No manual Jacobian calculations
 - Reduces development time
 - Eliminates Jacobian bugs
@@ -338,13 +355,15 @@ virtual ADReal computeQpResidual() {...}
 
 !col! width=40%
 
-**How it works:**
++How it works:+
+
 - Operator overloading
 - Chain rule application
 - Forward mode AD
 - MetaPhysicL library
 
-**Best practice:**
++Best practice:+
+
 - Use AD kernels/materials
 - Let MOOSE handle derivatives
 
@@ -355,18 +374,20 @@ virtual ADReal computeQpResidual() {...}
 
 # MultiApp and Transfer Systems
 
-**Solving Multiple Applications Together**
++Solving Multiple Applications Together+
 
 !row!
 !col! width=50%
 
-**MultiApp System:**
++MultiApp System:+
+
 - Run multiple MOOSE apps
 - Different time scales
 - Different spatial scales
 - Master/sub-app hierarchy
 
-**Use cases:**
++Use cases:+
+
 - Multiscale modeling
 - Micro/macro coupling
 - Reduced-order models
@@ -375,13 +396,15 @@ virtual ADReal computeQpResidual() {...}
 
 !col! width=50%
 
-**Transfer System:**
++Transfer System:+
+
 - Exchange data between apps
 - Spatial interpolation
 - Temporal interpolation
 - Conservative transfers
 
-**Types:**
++Types:+
+
 - Field transfers
 - Postprocessor transfers
 - VectorPostprocessor transfers
@@ -393,19 +416,20 @@ virtual ADReal computeQpResidual() {...}
 
 # Testing Framework
 
-**Continuous Integration via Testing**
++Continuous Integration via Testing+
 
 !row!
 !col! width=60%
 
-**Test Types:**
++Test Types:+
+
 - `Exodiff`: Compare Exodus files
 - `CSVDiff`: Compare CSV output
 - `RunException`: Test error conditions
 - `PetscJacobianTester`: Verify Jacobians
 - `RunApp`: Basic execution test
 
-**Test Organization:**
++Test Organization:+
 ```
 tests/
   kernels/
@@ -420,18 +444,21 @@ tests/
 
 !col! width=40%
 
-**Benefits:**
++Benefits:+
+
 - Prevent regressions
 - Document expected behavior
 - Enable refactoring
 - Build confidence
 
-**Running tests:**
++Running tests:+
+
 ```bash
 ./run_tests -j 12
 ```
 
-**Test spec (HIT format):**
++Test spec (HIT format):+
+
 ```
 [Tests]
   [my_test]
@@ -449,12 +476,13 @@ tests/
 
 # Output System
 
-**Flexible and Extensible Output**
++Flexible and Extensible Output+
 
 !row!
 !col! width=50%
 
-**Supported Formats:**
++Supported Formats:+
+
 - Exodus (recommended)
 - VTK/VTU
 - CSV (scalar data)
@@ -462,7 +490,8 @@ tests/
 - Checkpoint (restart)
 - Nemesis (parallel)
 
-**Features:**
++Features:+
+
 - Control output frequency
 - Select variables to output
 - Multiple outputs simultaneously
@@ -471,7 +500,8 @@ tests/
 
 !col! width=50%
 
-**Input file control:**
++Input file control:+
+
 ```
 [Outputs]
   exodus = true
@@ -484,7 +514,8 @@ tests/
 []
 ```
 
-**Output control:**
++Output control:+
+
 - By time
 - By timestep
 - On events (initial, final, failed)
@@ -496,18 +527,20 @@ tests/
 
 # MOOSE Development Process
 
-**Nuclear Quality Assurance Level 1 (NQA-1)**
++Nuclear Quality Assurance Level 1 (NQA-1)+
 
 !row!
 !col! width=50%
 
-**Version Control:**
++Version Control:+
+
 - Git/GitHub workflow
 - Pull request reviews
 - Continuous integration
 - Extensive testing (30M tests/week)
 
-**Code Standards:**
++Code Standards:+
+
 - Consistent style (clang-format)
 - Documentation required
 - Test coverage required
@@ -516,13 +549,15 @@ tests/
 
 !col! width=50%
 
-**Development Tools:**
++Development Tools:+
+
 - CIVET (testing system)
 - Peacock (GUI)
 - VSCode integration
 - Input file syntax highlighting
 
-**Community:**
++Community:+
+
 - 250+ contributors
 - Discussion forum
 - Workshops and training
@@ -535,19 +570,21 @@ tests/
 
 # Getting Help with MOOSE
 
-**Resources Available:**
++Resources Available:+
 
 !row!
 !col! width=50%
 
-**Documentation:**
++Documentation:+
+
 - https://mooseframework.inl.gov
 - Syntax documentation
 - Theory manuals
 - Example problems
 - Video tutorials
 
-**Community:**
++Community:+
+
 - GitHub discussions
 - User meetings
 - Workshops
@@ -556,13 +593,15 @@ tests/
 
 !col! width=50%
 
-**Development:**
++Development:+
+
 - GitHub issues
 - Pull requests
 - Code review process
 - Contributing guidelines
 
-**Training:**
++Training:+
+
 - Regular workshops
 - Online tutorials
 - Example repository
@@ -575,12 +614,12 @@ tests/
 
 # Summary: Why MOOSE for TMAP8?
 
-- **Proven framework**: Used in 500+ publications, tested extensively
-- **Parallel scalability**: Handles problems from laptop to supercomputer
-- **Multiphysics capable**: Natural coupling of transport phenomena
-- **Active development**: Continuous improvements and support
-- **Extensible design**: Easy to add new physics for tritium transport
-- **Quality assurance**: NQA-1 process ensures reliability
-- **Community support**: Large user base and developer team
+- +Proven framework+: Used in 500+ publications, tested extensively
+- +Parallel scalability+: Handles problems from laptop to supercomputer
+- +Multiphysics capable+: Natural coupling of transport phenomena
+- +Active development+: Continuous improvements and support
+- +Extensible design+: Easy to add new physics for tritium transport
+- +Quality assurance+: NQA-1 process ensures reliability
+- +Community support+: Large user base and developer team
 
-**TMAP8 leverages all these capabilities for tritium transport modeling!**
++TMAP8 leverages all these capabilities for tritium transport modeling!+
