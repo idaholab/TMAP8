@@ -208,11 +208,6 @@ return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 
 !---
 
-!col-end!
-!row-end!
-
-!---
-
 # Boundary Condition System
 
 +Purpose+: Apply constraints and fluxes at domain boundaries
