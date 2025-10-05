@@ -215,17 +215,19 @@ return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 
 # Boundary Condition System
 
-**Purpose**: Apply constraints and fluxes at domain boundaries
++Purpose+: Apply constraints and fluxes at domain boundaries
 
 !row!
 !col! width=50%
 
-**Mathematical Forms:**
-- **Dirichlet (Essential)**: u = g on Γ
-- **Neumann (Natural)**: ∇u·n = h on Γ  
-- **Robin (Mixed)**: αu + β∇u·n = γ on Γ
++Mathematical Forms:+
 
-**Base Classes:**
+- +Dirichlet (Essential)+: u = g on Γ
+- +Neumann (Natural)+: ∇u·n = h on Γ  
+- +Robin (Mixed)+: αu + β∇u·n = γ on Γ
+
++Base Classes:+
+
 - `NodalBC`: Applied at nodes (Dirichlet)
 - `IntegratedBC`: Applied over sides (Neumann/Robin)
 - AD versions for automatic differentiation
@@ -234,14 +236,16 @@ return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 
 !col! width=50%
 
-**Common BCs in MOOSE:**
++Common BCs in MOOSE:+
+
 - `DirichletBC`: Fixed value
 - `NeumannBC`: Fixed flux
 - `FunctionDirichletBC`: Time/space varying
 - `VacuumBC`: Partial absorption
 - `ConvectiveFluxBC`: Heat transfer
 
-**TMAP8 Example - Surface Recombination:**
++TMAP8 Example - Surface Recombination:+
+
 ```cpp
 class SurfaceRecombination : public ADIntegratedBC
 {
@@ -259,18 +263,20 @@ class SurfaceRecombination : public ADIntegratedBC
 
 # InterfaceKernel System
 
-**Purpose**: Couple physics across internal interfaces between subdomains
++Purpose+: Couple physics across internal interfaces between subdomains
 
 !row!
 !col! width=50%
 
-**Key Concepts:**
++Key Concepts:+
+
 - Operates on internal subdomain boundaries
 - Access to both sides (primary/neighbor)
 - Enforces flux continuity and jump conditions
 - Conservation: [[u]] = u⁺ - u⁻
 
-**Implementation:**
++Implementation:+
+
 ```cpp
 class ThermalContact : public ADInterfaceKernel
 {
@@ -288,18 +294,21 @@ class ThermalContact : public ADInterfaceKernel
 
 !col! width=50%
 
-**Applications:**
++Applications:+
+
 - Material interfaces (metal/ceramic)
 - Phase boundaries
 - Membrane transport
 - Contact mechanics
 
-**TMAP8 Usage:**
++TMAP8 Usage:+
+
 - Metal/coating permeation barriers
 - Multi-layer diffusion
 - Interface trapping
 
-**Setup in Input File:**
++Setup in Input File:+
+
 ```
 [InterfaceKernels]
   [permeation]
