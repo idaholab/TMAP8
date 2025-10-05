@@ -50,12 +50,12 @@
 
 # MOOSE Framework: Core Philosophy
 
-- +Object-oriented design+: Everything is an object with clear interfaces
-- +Modular architecture+: Mix and match components to achieve simulation goals
-- +Physics-agnostic+: Framework handles numerics, you focus on physics
-- +Dimension-independent+: Write once, run in 1D, 2D, or 3D
-- +Automatic differentiation+: No need to compute Jacobians manually
-- +Strict separation of concerns+: Systems don't communicate directly
+- +Object-oriented design+ : Everything is an object with clear interfaces
+- +Modular architecture+ : Mix and match components to achieve simulation goals
+- +Physics-agnostic+ : Framework handles numerics, you focus on physics
+- +Dimension-independent+ : Write once, run in 1D, 2D, or 3D
+- +Automatic differentiation+ : No need to compute Jacobians manually
+- +Strict separation of concerns+ : Systems don't communicate directly
 
 !---
 
@@ -125,10 +125,16 @@ MOOSE solves PDEs using the Galerkin finite element method
 
 !---
 
+# Example: Strong form, weak form, and implementation
+
+!media large_media/tutorials/darcy_thermo_mech/moose_code.png style=display:block;margin-left:auto;margin-right:auto;
+
+!---
+
 # Kernels System: Building PDEs
 
 !row!
-!col! width=70%
+!col! width=60%
 
 ```cpp
 class DiffusionKernel : public ADKernel
@@ -143,7 +149,7 @@ protected:
 
 !col-end!
 
-!col! width=30%
+!col! width=40%
 
 - Kernels represent volume terms in PDEs
 - Each kernel computes one term
@@ -174,27 +180,33 @@ protected:
 - Properties can vary in space and time
 - Properties can be coupled to variables
 
-+Key Methods:+
-
-- `declareProperty<Type>()` - produce
-- `getMaterialProperty<Type>()` - consume
-- `getADMaterialProperty<Type>()` - consume with derivatives
-
 !col-end!
 
 !col! width=40%
 
 ```cpp
-// Producer
-_permeability = 
-  declareADProperty<Real>
-    ("permeability");
+// Material object
+_permeability(declareADProperty<Real>("permeability"))
+...
+_permeability = 2.0;
 
-// Consumer  
-_permeability = 
-  getADMaterialProperty<Real>
-    ("permeability");
+// Consumer object (Kernel, BCs, etc.)
+_permeability(getADMaterialProperty<Real>("permeability"))
+...
+return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 ```
+
+!col-end!
+!row-end!
+
++Key Methods:+
+
+- `declareProperty<Type>()` - produce a standard material property
+- `getMaterialProperty<Type>()` - consume a standard material property
+- `declareProperty<Type>()` - produce an AD material property
+- `getADMaterialProperty<Type>()` - consume an AD material property
+
+!---
 
 !col-end!
 !row-end!
@@ -430,6 +442,7 @@ virtual ADReal computeQpResidual() {...}
 - `RunApp`: Basic execution test
 
 +Test Organization:+
+
 ```
 tests/
   kernels/
