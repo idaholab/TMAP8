@@ -213,6 +213,109 @@ return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 
 !---
 
+# Boundary Condition System
+
+**Purpose**: Apply constraints and fluxes at domain boundaries
+
+!row!
+!col! width=50%
+
+**Mathematical Forms:**
+- **Dirichlet (Essential)**: u = g on Γ
+- **Neumann (Natural)**: ∇u·n = h on Γ  
+- **Robin (Mixed)**: αu + β∇u·n = γ on Γ
+
+**Base Classes:**
+- `NodalBC`: Applied at nodes (Dirichlet)
+- `IntegratedBC`: Applied over sides (Neumann/Robin)
+- AD versions for automatic differentiation
+
+!col-end!
+
+!col! width=50%
+
+**Common BCs in MOOSE:**
+- `DirichletBC`: Fixed value
+- `NeumannBC`: Fixed flux
+- `FunctionDirichletBC`: Time/space varying
+- `VacuumBC`: Partial absorption
+- `ConvectiveFluxBC`: Heat transfer
+
+**TMAP8 Example - Surface Recombination:**
+```cpp
+class SurfaceRecombination : public ADIntegratedBC
+{
+  virtual ADReal computeQpResidual() {
+    return _test[_i][_qp] * 
+           (-_Kr * _u[_qp] * _u[_qp]);
+  }
+};
+```
+
+!col-end!
+!row-end!
+
+!---
+
+# InterfaceKernel System
+
+**Purpose**: Couple physics across internal interfaces between subdomains
+
+!row!
+!col! width=50%
+
+**Key Concepts:**
+- Operates on internal subdomain boundaries
+- Access to both sides (primary/neighbor)
+- Enforces flux continuity and jump conditions
+- Conservation: [[u]] = u⁺ - u⁻
+
+**Implementation:**
+```cpp
+class ThermalContact : public ADInterfaceKernel
+{
+  ADReal computeQpResidual(Moose::DGResidualType type) {
+    ADReal flux = _h * (_u[_qp] - _neighbor_value[_qp]);
+    if (type == Moose::Element)
+      return _test[_i][_qp] * flux;
+    else
+      return -_test_neighbor[_i][_qp] * flux;
+  }
+};
+```
+
+!col-end!
+
+!col! width=50%
+
+**Applications:**
+- Material interfaces (metal/ceramic)
+- Phase boundaries
+- Membrane transport
+- Contact mechanics
+
+**TMAP8 Usage:**
+- Metal/coating permeation barriers
+- Multi-layer diffusion
+- Interface trapping
+
+**Setup in Input File:**
+```
+[InterfaceKernels]
+  [permeation]
+    type = PermeationInterface
+    variable = c_metal
+    neighbor_var = c_coating
+    boundary = 'interface'
+  []
+[]
+```
+
+!col-end!
+!row-end!
+
+!---
+
 # Auxiliary System: Derived Quantities
 
 - +Purpose+: Compute derived quantities from primary variables
