@@ -259,6 +259,9 @@ The input file for this case can be found at [/val-2f.i]. To minimize the length
 
 To combine them into one input file when running the simulation, [/val-2f.i] uses the `!include` feature.
 
+!alert tip title=include feature
+To learn more about the `!include` feature, refer to [application_usage/input_syntax.md].
+
 Note that both surface conditions can be modeled using [/val-2f.i]. By running it as is, the recombination condition with the updated recombination rate is utilized. [/val-2f/tests] used `cli_args` to modify [/val-2f.i] into using the effectively infinite recombination rate at the surface and impose a null concentration at the surfaces.
 
 To limit the computational costs of the test case, the test runs a version of the file with a smaller and coarser mesh, and fewer time steps. More information about the changes can be found in the test specification file for this case, namely [/val-2f/tests].
