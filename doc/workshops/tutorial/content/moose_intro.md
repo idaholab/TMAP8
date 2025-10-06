@@ -224,7 +224,7 @@ return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 +Mathematical Forms:+
 
 - +Dirichlet+: $u = g$ on $\Gamma$
-- +Neumann+: $\nabla u \cdot n = h$ on $\Gamma$  
+- +Neumann+: $\nabla u \cdot n = h$ on $\Gamma$
 - +Robin (Mixed)+: $\alpha u + \beta \nabla u \cdot n = \gamma$ on $\Gamma$
 
 +Base Classes:+
@@ -254,7 +254,7 @@ return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 
 Located in the MOOSE Scalar Transport Module. ([Link](https://github.com/idaholab/moose/blob/next/modules/scalar_transport/src/bcs/BinaryRecombinationBC.C))
 
-Strong form: 
+Strong form:
 
 !equation
 \int_{\Omega} \psi_i K_r u v d\Omega
