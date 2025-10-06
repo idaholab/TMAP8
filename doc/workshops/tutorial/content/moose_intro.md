@@ -270,14 +270,76 @@ Source:
 +Purpose+: Couple physics across internal interfaces between subdomains
 
 !row!
-!col! width=50%
+!col! width=47%
 
 +Key Concepts:+
 
 - Operates on internal subdomain boundaries
 - Access to both sides (primary/neighbor)
 - Enforces flux continuity and jump conditions
-- Conservation: [[u]] = u⁺ - u⁻
+
+!col-end!
+
+!col! width=50%
+
++Applications:+
+
+- Material interfaces (metal/ceramic)
+- Phase boundaries
+- Membrane transport
+- Contact mechanics
+
+!col-end!
+!row-end!
+
++TMAP8 Usage:+
+
+- Metal/coating permeation barriers
+- Multi-layer diffusion
+- Interface trapping/sorption
+
+!---
+
+# TMAP8 Example: InterfaceSorption
+
+!row!
+!col! width=48%
+
+Computes a sorption law at the interface between solid and gas in isothermal conditions.
+
+!equation
+C_s = K P^n = K(C_g RT)^n
+
+where:
+
+- $R$ = ideal gas constant (J/mol/K)
+- $T$ = temperature (K)
+- $K$ = solubility (units depend on $C_s$ and $P$)
+
+!equation
+K = K_0 \exp \left(\frac{-E_a}{RT}\right)
+
+- $K_0$ = pre-exponential constant
+- $E_a$ = activation energy (J/mol)
+- $n$ = sorption law exponent (1 = Henry's, 1/2 = Sievert's)
+
+
+!col-end!
+
+!col! width=2%
+!! intentionally empty column to produce whitespace separation between listing snippet that goes out-of-box and the right-hand column
+!col-end!
+
+!col! width=50%
+
++InterfaceKernels block in Input File ([ver-1kb](https://mooseframework.inl.gov/TMAP8/verification_and_validation/ver-1kb.html)):+
+
+!listing test/tests/ver-1kb/ver-1kb.i block=InterfaceKernels
+
+!col-end!
+!row-end!
+
+!---
 
 +Implementation:+
 
@@ -293,39 +355,6 @@ class ThermalContact : public ADInterfaceKernel
   }
 };
 ```
-
-!col-end!
-
-!col! width=50%
-
-+Applications:+
-
-- Material interfaces (metal/ceramic)
-- Phase boundaries
-- Membrane transport
-- Contact mechanics
-
-+TMAP8 Usage:+
-
-- Metal/coating permeation barriers
-- Multi-layer diffusion
-- Interface trapping
-
-+Setup in Input File:+
-
-```
-[InterfaceKernels]
-  [permeation]
-    type = PermeationInterface
-    variable = c_metal
-    neighbor_var = c_coating
-    boundary = 'interface'
-  []
-[]
-```
-
-!col-end!
-!row-end!
 
 !---
 
