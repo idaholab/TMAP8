@@ -359,15 +359,14 @@ K = K_0 \exp \left(\frac{-E_a}{RT}\right)
 
 !col! width=50%
 
-+Example: Velocity from Pressure+
++Example: Flux Vector from Concentration+
 
-```
-v = -K/μ * ∇p
-```
+!equation
+\vec{J} = -D \cdot \nabla C
 
-- Pressure (p) is nonlinear variable
-- Velocity (v) is auxiliary variable
-- Computed via AuxKernel
+- Concentration ($C$) is a nonlinear variable, computed by the solver.
+- Diffusive flux ($\vec{J}$) is an auxiliary variable.
+- Expression is computed via AuxKernel ([DiffusionFluxAux](https://mooseframework.inl.gov/TMAP8/source/auxkernels/DiffusionFluxAux.html))
 
 !col-end!
 !row-end!
@@ -377,39 +376,24 @@ v = -K/μ * ∇p
 # Input File System: HIT Format
 
 !row!
-!col! width=60%
+!col! width=45%
 
-```
-[Mesh]
-  type = GeneratedMeshGenerator
-  dim = 2
-  nx = 100
-  ny = 10
-[]
++Example: simple_diffusion.i:+
 
-[Variables]
-  [pressure]
-    order = FIRST
-    family = LAGRANGE
-  []
-[]
-
-[Kernels]
-  [diffusion]
-    type = ADDiffusion
-    variable = pressure
-  []
-[]
-```
+!listing tutorials/tutorial01_app_development/step01_moose_app/test/tests/kernels/simple_diffusion/simple_diffusion.i link=False
 
 !col-end!
 
-!col! width=40%
+!col! width=5%
+!! intentionally empty column to produce whitespace separation between listing snippet that goes out-of-box and the right-hand column
+!col-end!
+
+!col! width=50%
 
 +Hierarchical Input Text (HIT):+
 
 - Block-based structure
-- Parameters in key=value format
+- Parameters in `key=value` format
 - Strong typing
 - Extensive error checking
 - Documentation built-in
@@ -437,13 +421,13 @@ v = -K/μ * ∇p
 
 +Newton's Method:+
 
-- Solves nonlinear system: R(u) = 0
-- Update: u^{n+1} = u^n - J^{-1}R
+- Solves nonlinear system: $R(u) = 0$
+- Update: $u^{n+1} = u^n - J^{-1}R$
 - Quadratic convergence
 
 +Jacobian-Free:+
 
-- Approximate J*v via finite differences
+- Approximate $J(u) P^{-1} v$ operation via finite differences
 - No explicit Jacobian formation
 - Reduces memory requirements
 
@@ -454,7 +438,7 @@ v = -K/μ * ∇p
 +Krylov Solvers:+
 
 - GMRES (default)
-- CG, BiCGStab
+- Conjuate Gradient (CG), BiCGStab
 - Build Krylov subspace
 
 +Preconditioning:+
@@ -466,6 +450,8 @@ v = -K/μ * ∇p
 
 !col-end!
 !row-end!
+
++Note that a standard Newton solve (using the exact Jacobian) with preconditioning is also available!+
 
 !---
 
