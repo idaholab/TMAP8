@@ -191,14 +191,14 @@ These are used in Ver-1d.
 !col! width=40%
 
 ```cpp
-// Material object
+// Material object, in the constructor
 _permeability(declareADProperty<Real>("permeability"))
-...
+// In the compute method
 _permeability = 2.0;
 
-// Consumer object (Kernel, BCs, etc.)
+// Consumer object (Kernel, BCs, etc.) in the constructor
 _permeability(getADMaterialProperty<Real>("permeability"))
-...
+// In the compute method
 return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 ```
 
@@ -207,10 +207,10 @@ return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 
 +Key Methods:+
 
-- `declareProperty<Type>()` - produce a standard material property
-- `getMaterialProperty<Type>()` - consume a standard material property
-- `declareProperty<Type>()` - produce an AD material property
-- `getADMaterialProperty<Type>()` - consume an AD material property
+- `declareProperty<Type>()` - produce a standard material property in a material object
+- `getMaterialProperty<Type>()` - consume a standard material property in a Kernel, IK, BC, etc. object
+- `declareProperty<Type>()` - produce an AD material property in a material object
+- `getADMaterialProperty<Type>()` - consume an AD material property in a Kernel, IK, BC, etc. object
 
 !---
 
@@ -219,13 +219,13 @@ return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 +Purpose+: Apply constraints and fluxes at domain boundaries
 
 !row!
-!col! width=50%
+!col! width=45%
 
 +Mathematical Forms:+
 
-- +Dirichlet (Essential)+: u = g on Γ
-- +Neumann (Natural)+: ∇u·n = h on Γ  
-- +Robin (Mixed)+: αu + β∇u·n = γ on Γ
+- +Dirichlet+: $u = g$ on $\Gamma$
+- +Neumann+: $\nabla u \cdot n = h$ on $\Gamma$  
+- +Robin (Mixed)+: $\alpha u + \beta \nabla u \cdot n = \gamma$ on $\Gamma$
 
 +Base Classes:+
 
@@ -242,23 +242,26 @@ return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 - `DirichletBC`: Fixed value
 - `NeumannBC`: Fixed flux
 - `FunctionDirichletBC`: Time/space varying
-- `VacuumBC`: Partial absorption
-- `ConvectiveFluxBC`: Heat transfer
-
-+TMAP8 Example - Surface Recombination:+
-
-```cpp
-class SurfaceRecombination : public ADIntegratedBC
-{
-  virtual ADReal computeQpResidual() {
-    return _test[_i][_qp] * 
-           (-_Kr * _u[_qp] * _u[_qp]);
-  }
-};
-```
+- `VacuumBC`: Vacuum boundary condition for diffusive species
+- `ConvectiveFluxBC`: Convective heat transfer
 
 !col-end!
 !row-end!
+
+!---
+
+# TMAP8 BC Example - Binary Recombination
+
+Located in the MOOSE Scalar Transport Module. ([Link](https://github.com/idaholab/moose/blob/next/modules/scalar_transport/src/bcs/BinaryRecombinationBC.C))
+
+Strong form: 
+
+!equation
+\int_{\Omega} \psi_i K_r u v d\Omega
+
+Source:
+
+!listing moose/modules/scalar_transport/src/bcs/BinaryRecombinationBC.C
 
 !---
 
