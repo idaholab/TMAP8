@@ -168,6 +168,12 @@ protected:
 
 !---
 
+# Special Note: Nodal Kernels
+
+These are used in Ver-1d.
+
+!---
+
 # Materials System: Property Management
 
 !row!
