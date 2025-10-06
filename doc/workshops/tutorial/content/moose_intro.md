@@ -341,23 +341,6 @@ K = K_0 \exp \left(\frac{-E_a}{RT}\right)
 
 !---
 
-+Implementation:+
-
-```cpp
-class ThermalContact : public ADInterfaceKernel
-{
-  ADReal computeQpResidual(Moose::DGResidualType type) {
-    ADReal flux = _h * (_u[_qp] - _neighbor_value[_qp]);
-    if (type == Moose::Element)
-      return _test[_i][_qp] * flux;
-    else
-      return -_test_neighbor[_i][_qp] * flux;
-  }
-};
-```
-
-!---
-
 # Auxiliary System: Derived Quantities
 
 - +Purpose+: Compute derived quantities from primary variables
