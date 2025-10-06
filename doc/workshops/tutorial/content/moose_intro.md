@@ -457,6 +457,9 @@ K = K_0 \exp \left(\frac{-E_a}{RT}\right)
 
 # Automatic Differentiation in MOOSE
 
+!row!
+!col! width=45%
+
 +Benefits:+
 
 - No manual Jacobian calculations
@@ -464,34 +467,36 @@ K = K_0 \exp \left(\frac{-E_a}{RT}\right)
 - Eliminates Jacobian bugs
 - Maintains accuracy
 
-!row!
-!col! width=60%
-
 ```cpp
 // Traditional approach
-virtual Real computeQpResidual() {...}
-virtual Real computeQpJacobian() {...}
-virtual Real computeQpOffDiagJacobian() {...}
+Real computeQpResidual() {...}
+Real computeQpJacobian() {...}
+Real computeQpOffDiagJacobian() {...}
 
 // AD approach - Jacobian automatic!
-virtual ADReal computeQpResidual() {...}
+ADReal computeQpResidual() {...}
 ```
 
+!col-end!
+
+!col! width=5%
+!! intentionally empty column to produce whitespace separation between listing snippet that goes out-of-box and the right-hand column
 !col-end!
 
 !col! width=40%
 
 +How it works:+
 
-- Operator overloading
-- Chain rule application
-- Forward mode AD
-- MetaPhysicL library
+- Based on the chain rule of partial derivatives
+- Operator overloading (derivatives propagated with `+`,`-`,`*`, etc.)
+- "Forward mode" AD
+- Uses MetaPhysicL library (from the libMesh team)
 
 +Best practice:+
 
 - Use AD kernels/materials
 - Let MOOSE handle derivatives
+- +More overhead with this method, but *much* easier to develop!+
 
 !col-end!
 !row-end!
@@ -500,6 +505,7 @@ virtual ADReal computeQpResidual() {...}
 
 # MultiApp and Transfer Systems
 
+!style halign=center
 +Solving Multiple Applications Together+
 
 !row!
@@ -515,6 +521,7 @@ virtual ADReal computeQpResidual() {...}
 +Use cases:+
 
 - Multiscale modeling
+- Multiphysics coupling (when adjustable levels of coupling are desired)
 - Micro/macro coupling
 - Reduced-order models
 
@@ -542,10 +549,8 @@ virtual ADReal computeQpResidual() {...}
 
 # Testing Framework
 
-+Continuous Integration via Testing+
-
 !row!
-!col! width=60%
+!col! width=45%
 
 +Test Types:+
 
@@ -555,21 +560,13 @@ virtual ADReal computeQpResidual() {...}
 - `PetscJacobianTester`: Verify Jacobians
 - `RunApp`: Basic execution test
 
-+Test Organization:+
-
-```
-tests/
-  kernels/
-    my_kernel/
-      my_kernel.i
-      tests
-      gold/
-        my_kernel_out.e
-```
-
 !col-end!
 
-!col! width=40%
+!col! width=5%
+!! intentionally empty column to produce whitespace separation between listing snippet that goes out-of-box and the right-hand column
+!col-end!
+
+!col! width=50%
 
 +Benefits:+
 
@@ -578,11 +575,32 @@ tests/
 - Enable refactoring
 - Build confidence
 
-+Running tests:+
+!col-end!
+!row-end!
 
-```bash
-./run_tests -j 12
+!row!
+!col! width=45%
+
++Test Organization:+
+
 ```
+test/
+  tests/
+    kernels/
+      my_kernel/
+        my_kernel.i
+        tests
+        gold/
+          my_kernel_out.e
+```
+
+!col-end!
+
+!col! width=5%
+!! intentionally empty column to produce whitespace separation between listing snippet that goes out-of-box and the right-hand column
+!col-end!
+
+!col! width=50%
 
 +Test spec (HIT format):+
 
@@ -591,6 +609,7 @@ tests/
   [my_test]
     type = Exodiff
     input = test.i
+    cli_args = 'Kernels/my_kernel/active=true'
     exodiff = test_out.e
   []
 []
