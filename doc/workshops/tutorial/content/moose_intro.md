@@ -636,12 +636,6 @@ test/
 - Checkpoint (restart)
 - Nemesis (parallel)
 
-+Features:+
-
-- Control output frequency
-- Select variables to output
-- Multiple outputs simultaneously
-
 !col-end!
 
 !col! width=50%
@@ -659,6 +653,22 @@ test/
   []
 []
 ```
+
+!col-end!
+!row-end!
+
+!row!
+!col! width=50%
+
++Features:+
+
+- Control output frequency
+- Select variables to output
+- Multiple outputs simultaneously
+
+!col-end!
+
+!col! width=50%
 
 +Output control:+
 
@@ -683,11 +693,11 @@ test/
 - Git/GitHub workflow
 - Pull request reviews
 - Continuous integration
-- Extensive testing (30M tests/week)
+- Extensive testing (30M+ tests/week)
 
 +Code Standards:+
 
-- Consistent style (clang-format)
+- Consistent style (via clang-format)
 - Documentation required
 - Test coverage required
 
@@ -697,17 +707,17 @@ test/
 
 +Development Tools:+
 
-- CIVET (testing system)
+- [CIVET](https://github.com/idaholab/civet) (testing system)
 - Peacock (GUI)
-- VSCode integration
+- VSCode integration with language server support
 - Input file syntax highlighting
 
 +Community:+
 
 - 250+ contributors
 - Discussion forum
-- Workshops and training
-- Extensive documentation
+- [Workshops and training](https://mooseframework.inl.gov/getting_started/examples_and_tutorials/index.html)
+- Extensive documentation ([https://mooseframework.inl.gov](https://mooseframework.inl.gov))
 
 !col-end!
 !row-end!
@@ -716,24 +726,23 @@ test/
 
 # Getting Help with MOOSE
 
-+Resources Available:+
++Resources Available (all links):+
 
 !row!
 !col! width=50%
 
 +Documentation:+
 
-- https://mooseframework.inl.gov
-- Syntax documentation
-- Theory manuals
-- Example problems
-- Video tutorials
+- [https://mooseframework.inl.gov](https://mooseframework.inl.gov)
+- [Syntax documentation](https://mooseframework.inl.gov/syntax/index.html)
+- [Module documentation](https://mooseframework.inl.gov/modules/index.html)
+- [Example problems](https://mooseframework.inl.gov/getting_started/examples_and_tutorials/index.html)
+- [Video tutorials](https://mooseframework.inl.gov/getting_started/examples_and_tutorials/index.html)
 
 +Community:+
 
-- GitHub discussions
-- User meetings
-- Workshops
+- [GitHub discussions forum](https://github.com/idaholab/moose/discussions)
+- [Workshops and in-person Training](https://mooseframework.inl.gov/training/index.html)
 
 !col-end!
 
@@ -741,17 +750,10 @@ test/
 
 +Development:+
 
-- GitHub issues
-- Pull requests
-- Code review process
-- Contributing guidelines
-
-+Training:+
-
-- Regular workshops
-- Online tutorials
-- Example repository
-- Module-specific guides
+- [GitHub issues (bugs/feature suggestions)](https://github.com/idaholab/moose/issues)
+- [Pull requests](https://github.com/idaholab/moose/pulls)
+- [Code review process](https://mooseframework.inl.gov/framework/patch_to_code.html)
+- [Contributing guidelines](https://mooseframework.inl.gov/framework/contributing.html)
 
 !col-end!
 !row-end!
@@ -761,11 +763,12 @@ test/
 # Summary: Why MOOSE for TMAP8?
 
 - +Proven framework+: Used in 500+ publications, tested extensively
-- +Parallel scalability+: Handles problems from laptop to supercomputer
+- +Parallel scalability+: Handles problems from workstation to supercomputer
 - +Multiphysics capable+: Natural coupling of transport phenomena
 - +Active development+: Continuous improvements and support
 - +Extensible design+: Easy to add new physics for tritium transport
 - +Quality assurance+: NQA-1 process ensures reliability
-- +Community support+: Large user base and developer team
+- +Community support+: Large user base and developer team across the world
 
+!style halign=center
 +TMAP8 leverages all these capabilities for tritium transport modeling!+
