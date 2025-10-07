@@ -53,7 +53,7 @@ Extensions:
               TMAP8-only Syntax: syntax/tmap_only.md
               Complete Code Syntax: syntax/index.md
               TMAP8 Tutorial Slides: tutorial/index.md
-              Theory: theory.md
+              Theory Manual: theory_manual.md
               V&V: /verification_and_validation/index.md
               Examples: /examples/index.md
               Publications using TMAP8: publications.md

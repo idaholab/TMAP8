@@ -4,7 +4,7 @@
 
 !alert tip title=TMAP8 supports different surface reaction models
 The current case uses what TMAP7 called the `surfdep` model.
-The [theory.md] page describes the `surfdep` model and other surface models.
+The [theory_manual.md] page describes the `surfdep` model and other surface models.
 
 ## General Case Description
 
@@ -15,14 +15,14 @@ This verification problem is taken from [!cite](ambrosek2008verification) and bu
 [!cite](ambrosek2008verification) provides the analytical equation for the partial pressure of AB as
 
 \begin{equation}
-\label{eq:analytical_solution}
+\label{eq:surfdep:analytical_solution}
 P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} \left(1 - \exp \left(- \frac{t}{\tau}\right)\right),
 \end{equation}
 
 where $\tau$ is defined as
 
 \begin{equation}
-\label{eq:tau}
+\label{eq:surfdep:tau}
 \tau = \frac{V (\hat{K_r} + \hat{K_b})}{S k_B T \hat{K_d} \hat{K_b}}.
 \end{equation}
 

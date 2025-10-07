@@ -27,7 +27,7 @@ Documents:
     communication_and_contact_information: sqa/tmap8_cci.md
     software_coding_standards: sqa/tmap8_scs.md
     user_manual: sqa/user_manual.md
-    theory_manual: sqa/theory_manual.md
+    theory_manual: theory_manual.md
     working_dirs:
         - ${ROOT_DIR}/doc/content
         - ${MOOSE_DIR}/framework/doc/content

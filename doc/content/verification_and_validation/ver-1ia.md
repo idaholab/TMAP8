@@ -4,7 +4,7 @@
 
 !alert tip title=TMAP8 supports different surface reaction models
 The current case uses what TMAP7 called the `ratedep` model.
-The [theory.md] page describes the `ratedep` model and other surface models.
+The [theory_manual.md] page describes the `ratedep` model and other surface models.
 
 ## General Case Description
 
@@ -13,14 +13,14 @@ When two species react on a surface to form a third, it is possible to predict t
 For example, the reaction between two isotopic species, A$_2$ and B$_2$, is described as
 
 \begin{equation}
-\label{eq:reaction}
+\label{eq:ratedep:reaction}
 \frac{1}{2} A_2 + \frac{1}{2} B_2 \rightleftharpoons AB,
 \end{equation}
 
 and the partial pressure of A$_2$, B$_2$, and AB in equilibrium of the reaction is defined by
 
 \begin{equation}
-\label{eq:reaction_equilibrium_pressure}
+\label{eq:ratedep:reaction_equilibrium_pressure}
 \frac{P_{AB}}{\sqrt{P_{A_2}} \sqrt{P_{B_2}}} = K_{eq},
 \end{equation}
 
@@ -29,7 +29,7 @@ where $P_i$ is the partial pressure of corresponding gas $i$, $K_{eq}$ is the eq
 Assuming that the molecular species have the same mass and chemical properties such that there is no enthalpy change associated with this reaction and only configurational entropy $s_f$ is driving the reaction. Then
 
 \begin{equation}
-\label{eq:reaction_rate}
+\label{eq:ratedep:reaction_rate}
 K_{eq} = \exp\left( - \frac{\Delta G_f}{RT} \right) = \exp\left( - \frac{-T \Delta s_f}{RT} \right) = \exp\left( - \frac{-RT \ln(2)}{RT} \right) = 2,
 \end{equation}
 
@@ -38,35 +38,35 @@ where $G_f$ is the Gibbs free energy, $R$ is the ideal gas constant, $T$ is the 
 Therefore, the partial pressure of AB in equilibrium depends on initial partial pressure of A$_2$ and B$_2$:
 
 \begin{equation}
-\label{eq:p_AB_equilibrium}
+\label{eq:ratedep:p_AB_equilibrium}
 P_{AB}^{eq} = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0}.
 \end{equation}
 
 At equilibrium, the surface concentrations of A$_2$ (i.e., $C_A$) and B$_2$ (i.e., $C_B$) from Sieverts' law are given by
 
 \begin{equation}
-\label{eq:p_ca_relation}
+\label{eq:ratedep:p_ca_relation}
 C_A = K_s \sqrt{P_{A_2}},
 \end{equation}
 
 and
 
 \begin{equation}
-\label{eq:p_cb_relation}
+\label{eq:ratedep:p_cb_relation}
 C_B = K_s \sqrt{P_{B_2}},
 \end{equation}
 
 where $K_s$ is Sieverts’ solubility. Because we are considering isotopic variants, $K_s$ will be the same for each homonuclear species. Under equilibrium conditions, we also expect
 
 \begin{equation}
-\label{eq:equation_p_a2}
+\label{eq:ratedep:equation_p_a2}
 K_d P_{A_2} = K_r C_A^2,
 \end{equation}
 
 where $K_d$ is the dissociation coefficient and $K_r$ is the recombination coefficient. That leads to
 
 \begin{equation}
-\label{eq:Kd_Kr_Ks}
+\label{eq:ratedep:Kd_Kr_Ks}
 K_d = K_s^2 K_r,
 \end{equation}
 
@@ -74,14 +74,14 @@ Under `ratedep` condition, equilibrium is not assumed, but the relationships bet
 coefficients for AB, A$_2$, and B$_2$ molecules should be identical. Because two different microscopic processes can produce AB (A jumping to find B and B jumping to find A) and only one (A finding A) can form A$_2$, and similarly for B$_2$, the recombination coefficient for AB should be twice of the coefficient for homonuclear molecules. We solve the net current of AB molecules from the surface to the enclosure by
 
 \begin{equation}
-\label{eq:equation_p_ab}
+\label{eq:ratedep:equation_p_ab}
 \frac{d P_{AB}}{dt} = \frac{S k_B T}{V} (2 K_r C_A C_B - K_d P_{AB}),
 \end{equation}
 
 where $t$ is the time, $S$ is the surface area, $k_B$ is the Boltzmann’s constant, $T$ is the temperature, and $V$ is the volume in the enclosure. If diffusion is small, the almost constant numbers of A and B atoms in the gas imply that $C_A$ and $C_B$ should have an almost constant value regardless of the isotopic species composition. The production of A$_2$ and B$_2$ in equilibration conditions is given by
 
 \begin{equation}
-\label{eq:equal_c_a_c_b}
+\label{eq:ratedep:equal_c_a_c_b}
 C_A C_B = \frac{K_d}{2 K_r} P_{AB}^{eq}.
 \end{equation}
 
@@ -93,7 +93,7 @@ This case uses equal starting pressures of $1 \times 10^{4}$ Pa of A$_2$ and B$_
 [!cite](ambrosek2008verification) provides the analytical equation for the partial pressure of AB when the conversion rate at the surface is high as
 
 \begin{equation}
-\label{eq:analytical_solution}
+\label{eq:ratedep:analytical_solution}
 P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} \left(1 - \exp \left( -\frac{S K_d k_B T}{V} t \right)\right).
 \end{equation}
 

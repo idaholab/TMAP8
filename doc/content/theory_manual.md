@@ -1,7 +1,8 @@
 # Base Theory for TMAP8
 
 This page introduces some of the basic theoretical concepts used in TMAP8.
-However, this list is not exhaustive, and users should refer to the publications listed in the [publications.md], including [!cite](Simon2025), or the [verification_and_validation/index.md] for a more comprehensive description of capabilities and theoritical concepts.
+However, this list is not exhaustive, and users should refer to the publications listed in the [publications.md] (including [!cite](Simon2025)),
+the [verification_and_validation/index.md], and the [syntax/index.md] page for a more comprehensive description of capabilities, theoritical concepts, and available objects.
 
 ## Surface Reactions
 
