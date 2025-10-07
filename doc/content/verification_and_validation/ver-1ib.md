@@ -2,6 +2,10 @@
 
 # Species Equilibration Problem in Ratedep Condition with Unequal Starting Pressures
 
+!alert tip title=TMAP8 supports different surface reaction models
+The current case uses what TMAP7 called the `ratedep` model.
+The [theory.md] page describes the `ratedep` model and other surface models.
+
 ## General Case Description
 
 This verification problem is taken from [!cite](ambrosek2008verification) and builds on [ver-1ia](ver-1ia.md). The configuration and modeling parameters are the same as in [ver-1ia](ver-1ia.md), except that, in the current case, the starting pressures for A$_2$ and B$_2$ are not equal. The case is simulated in [/ver-1ia.i], but the starting pressures of A$_2$ and B$_2$ are $1 \times 10^4$ Pa and $1 \times 10^5$, respectively, and there is no AB initially present.
@@ -12,7 +16,7 @@ This verification problem is taken from [!cite](ambrosek2008verification) and bu
 
 \begin{equation}
 \label{eq:analytical_solution}
-P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} \left(1 - \exp \left( -\frac{S K_d k_b T}{V} t \right)\right).
+P_{AB}  = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0} \left(1 - \exp \left( -\frac{S K_d k_B T}{V} t \right)\right).
 \end{equation}
 
 ## Results

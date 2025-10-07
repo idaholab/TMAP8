@@ -2,6 +2,10 @@
 
 # Species Equilibration Model in Surfdep Conditions with Low Barrier Energy
 
+!alert tip title=TMAP8 supports different surface reaction models
+The current case uses what TMAP7 called the `surfdep` model.
+The [theory.md] page describes the `surfdep` model and other surface models.
+
 ## General Case Description
 
 This verification problem is taken from [!cite](ambrosek2008verification) and builds on [ver-1ia](ver-1ia.md). The configuration and modeling parameters are similar to [ver-1ia](ver-1ia.md), except that, in the current case, the reaction is in surfdep condition. The case is simulated in [/ver-1ic.i].
@@ -17,19 +21,19 @@ Under surfdep condition, there are again no assumptions about equilibrium except
 
 \begin{equation}
 \label{eq:k_d_equation}
-\hat{K_d} = \frac{1}{\sqrt{2 \pi M k_b T}} \exp \left( - \frac{E_x}{k_b T} \right),
+\hat{K_d} = \frac{1}{\sqrt{2 \pi M k_B T}} \exp \left( - \frac{E_x}{k_B T} \right),
 \end{equation}
 
 \begin{equation}
 \label{eq:k_r_equation}
-\hat{K_r} = \nu_0 \exp \left( \frac{E_c - E_x}{k_b T} \right),
+\hat{K_r} = \nu_0 \exp \left( \frac{E_c - E_x}{k_B T} \right),
 \end{equation}
 
 and
 
 \begin{equation}
-\label{eq:k_b_equation}
-\hat{K_b} = \nu_0 \exp \left( - \frac{E_b}{k_b T} \right),
+\label{eq:k_B_equation}
+\hat{K_b} = \nu_0 \exp \left( - \frac{E_b}{k_B T} \right),
 \end{equation}
 
 where $M$ is the mass of species molecules, $\nu_0$ is the Debye frequency, $E_x$ is the adsorption barrier energy, $E_c$ is the surface binding energy, and $E_b$ is the dissociation activation energy.
@@ -76,10 +80,10 @@ For the recombination step and dissociation step, we solve
 
 \begin{equation}
 \label{eq:equation_p_ab}
-\frac{d P_{AB}}{dt} = \frac{S k_b T \hat{K_d} \hat{K_b}}{V (\hat{K_r} + \hat{K_b})} \left( C_A C_B 2 D_s \lambda \frac{\hat{K_r}}{\hat{K_d} \hat{K_b}} - P_{AB} \right),
+\frac{d P_{AB}}{dt} = \frac{S k_B T \hat{K_d} \hat{K_b}}{V (\hat{K_r} + \hat{K_b})} \left( C_A C_B 2 D_s \lambda \frac{\hat{K_r}}{\hat{K_d} \hat{K_b}} - P_{AB} \right),
 \end{equation}
 
-where $t$ is the time, $S$ is the surface area, $k_b$ is the Boltzmann’s constant, $T$ is the temperature, $V$ is the volume in the enclosure. The production of A$_2$ and B$_2$ in equilibration conditions is given by
+where $t$ is the time, $S$ is the surface area, $k_B$ is the Boltzmann’s constant, $T$ is the temperature, $V$ is the volume in the enclosure. The production of A$_2$ and B$_2$ in equilibration conditions is given by
 
 \begin{equation}
 \label{eq:equal_c_a_c_b}
@@ -102,7 +106,7 @@ where $\tau$ is defined as
 
 \begin{equation}
 \label{eq:tau}
-\tau = \frac{V (\hat{K_r} + \hat{K_b})}{S k_b T \hat{K_d} \hat{K_b}}.
+\tau = \frac{V (\hat{K_r} + \hat{K_b})}{S k_B T \hat{K_d} \hat{K_b}}.
 \end{equation}
 
 ## Results

@@ -2,6 +2,10 @@
 
 # Species Equilibration Problem in Lawdep Condition with Equal Starting Pressures
 
+!alert tip title=TMAP8 supports different surface reaction models
+The current case uses what TMAP7 called the `lawdep` model.
+The [theory.md] page describes the `lawdep` model and other surface models.
+
 ## General Case Description
 
 This verification problem is taken from [!cite](ambrosek2008verification) and builds on [ver-1ia](ver-1ia.md). The configuration and modeling parameters are similar to [ver-1ia](ver-1ia.md), except that, in the current case, the reaction is in lawdep condition. The case is simulated in [/ver-1ie.i].
@@ -17,10 +21,10 @@ Just as in [ver-1ia](ver-1ia.md), we solve the net current of AB molecules from 
 
 \begin{equation}
 \label{eq:equation_p_ab}
-\frac{d P_{AB}}{dt} = \frac{S k_b T}{V} (2 K_r C_A C_B - K_d P_{AB}),
+\frac{d P_{AB}}{dt} = \frac{S k_B T}{V} (2 K_r C_A C_B - K_d P_{AB}),
 \end{equation}
 
-where $t$ is the time, $S$ is the surface area, $k_b$ is the Boltzmann’s constant, $T$ is the temperature, $V$ is the volume in the enclosure, $K_r$ and $K_d$ are the recombination and dissociation coefficients, and $C_A$ and $C_B$ are the concentration of atoms from A$_2$ and B$_2$ on the reactive surface, respectively. In lawdep diffusion boundary condition, the concentration of A$_2$ and B$_2$ are always fixed relative to the partial pressures in the gas over the surface. When heteronuclear species formation is involved, TMAP8 uses logic similar to that used in the ratedep and surfdep condition for the arrival rate of gas atoms to the surface. However, there are no barriers to adsorption or release, and conversion is assumed to take place instantaneously. Any gas that does not diffuse away is immediately released from the surface. Therefore, the concentration of A$_2$ and B$_2$ from Sieverts' law are given by
+where $t$ is the time, $S$ is the surface area, $k_B$ is the Boltzmann’s constant, $T$ is the temperature, $V$ is the volume in the enclosure, $K_r$ and $K_d$ are the recombination and dissociation coefficients, and $C_A$ and $C_B$ are the concentration of atoms from A$_2$ and B$_2$ on the reactive surface, respectively. In lawdep diffusion boundary condition, the concentration of A$_2$ and B$_2$ are always fixed relative to the partial pressures in the gas over the surface. When heteronuclear species formation is involved, TMAP8 uses logic similar to that used in the ratedep and surfdep condition for the arrival rate of gas atoms to the surface. However, there are no barriers to adsorption or release, and conversion is assumed to take place instantaneously. Any gas that does not diffuse away is immediately released from the surface. Therefore, the concentration of A$_2$ and B$_2$ from Sieverts' law are given by
 
 \begin{equation}
 \label{eq:p_ca_relation}
@@ -50,14 +54,14 @@ After combining [eq:p_ca_relation] and [eq:p_cb_relation], [eq:equation_p_ab] be
 
 \begin{equation}
 \label{eq:equation_p_ab_final}
-\frac{d P_{AB}}{dt} = \frac{S k_b T K_d}{V} \left(2 \sqrt{P^0_{A_2} - \frac{P_{AB}}{2}} \sqrt{P^0_{B_2} - \frac{P_{AB}}{2}} - P_{AB} \right).
+\frac{d P_{AB}}{dt} = \frac{S k_B T K_d}{V} \left(2 \sqrt{P^0_{A_2} - \frac{P_{AB}}{2}} \sqrt{P^0_{B_2} - \frac{P_{AB}}{2}} - P_{AB} \right).
 \end{equation}
 
 This is a non-linear function, but it has a special solution when $P^0_{A_2} = P^0_{B_2}$, which is true in the current case. Thus, the analytical solution for the partial pressure of AB is given by
 
 \begin{equation}
 \label{eq:analytical_solution}
-P_{AB}  = P_{A_2}^0 \left(1 - \exp \left( -\frac{ 2 S K_d k_b T}{V} t \right)\right).
+P_{AB}  = P_{A_2}^0 \left(1 - \exp \left( -\frac{ 2 S K_d k_B T}{V} t \right)\right).
 \end{equation}
 
 ## Results
