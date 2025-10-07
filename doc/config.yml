@@ -24,6 +24,7 @@ Content:
             - application_development/performance_benchmarking.md
             - application_usage/command_line_usage.md
             - application_usage/restart_recover.md
+            - application_usage/input_syntax.md
             - citing.md
     - python:
         root_dir: ${MOOSE_DIR}/python/doc/content

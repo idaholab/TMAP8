@@ -216,6 +216,9 @@ In both cases, the calibrated parameters are not on the extremes of the distribu
 !style halign=left
 The input files for this case can be found at [/val-2c_immediate_injection.i] and [/val-2c_delay.i]. Note that both input files utilize a common base file [/val-2c_base.i] with the line `!include val-2c_base.i`. The base input file contains all the features and TMAP8 objects common to both cases, reducing duplication, and this allows the immediate injection and delayed injection inputs to focus on what is specific to each case. Note that both input files are also used as TMAP8 tests, outlined at [/val-2c/tests].
 
+!alert tip title=Input file include syntax information
+To learn more about the `!include` feature, refer to the [application_usage/input_syntax.md] page.
+
 For the calibration study, additional input files are provided.
 
 - [/val-2c_base_pss.i] provides key functions and postprocessor blocks necessary for the PSS study, including calculations of the multi-objective optimization metric (i.e., the time integral of $g$ defined in [eq:optimization_metric]).
