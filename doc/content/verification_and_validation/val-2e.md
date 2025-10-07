@@ -266,4 +266,7 @@ Due to the corrected typos in [val-2e_parameters], the simulation results in val
 !style halign=left
 For this case, the main input files are [/val-2ea.i], [/val-2ed.i], and [/val-2ee.i]. Note that [/val-2ed.i] and [/val-2ee.i] utilize a common base file [/val-2e_base_three_gases.i] with the line `!include val-2e_base_three_gases.i`, and [/val-2ea.i] and [/val-2e_base_three_gases.i] utilize a common base file [/val-2e_base.i] with the line `!include val-2e_base.i`. The base input files contain all the features and TMAP8 objects common to these cases, reducing duplication. These files are also used as tests in TMAP8 at [/val-2e/tests]. Sub-cases `ver-1eb` and `ver-1ec` are adapted from [/val-2ea.i], as it done in [/val-2e/tests].
 
+!alert tip title=Input file include syntax information
+To learn more about the `!include` feature, refer to the [application_usage/input_syntax.md] page.
+
 !bibtex bibliography
