@@ -70,7 +70,7 @@ where $K_d$ is the dissociation coefficient and $K_r$ is the recombination coeff
 K_d = K_s^2 K_r,
 \end{equation}
 
-Under `ratedep` condition, equilibrium is not assumed, but the relationships between the coefficients are maintained. In particular, the recombination and dissociation coefficients are assumed to be independent of the surface species concentrations and gas partial pressures, respectively. If the species molecular masses and solubilities are assumed equal, the dissociation
+Under the `ratedep` condition, equilibrium is not assumed, but the relationships between the coefficients are maintained. In particular, the recombination and dissociation coefficients are assumed to be independent of the surface species concentrations and gas partial pressures, respectively. If the species molecular masses and solubilities are assumed equal, the dissociation
 coefficients for AB, A$_2$, and B$_2$ molecules should be identical. Because two different microscopic processes can produce AB (A jumping to find B and B jumping to find A) and only one (A finding A) can form A$_2$, and similarly for B$_2$, the recombination coefficient for AB should be twice of the coefficient for homonuclear molecules. We solve the net current of AB molecules from the surface to the enclosure by
 
 \begin{equation}
@@ -105,7 +105,7 @@ A comparison of the concentration of AB as a function of time is plotted in [ver
        image_name=ver-1ia_comparison_pressure.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1ia_comparison_pressure
-       caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the solution in `ratedep` condition when A and B have equal pressures [!citep](ambrosek2008verification).
+       caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the solution in the `ratedep` condition when A and B have equal pressures [!citep](ambrosek2008verification).
 
 ## Input files
 

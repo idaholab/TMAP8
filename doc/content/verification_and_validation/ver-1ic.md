@@ -83,7 +83,7 @@ For the recombination step and dissociation step, we solve
 \frac{d P_{AB}}{dt} = \frac{S k_B T \hat{K_d} \hat{K_b}}{V (\hat{K_r} + \hat{K_b})} \left( C_A C_B 2 D_s \lambda \frac{\hat{K_r}}{\hat{K_d} \hat{K_b}} - P_{AB} \right),
 \end{equation}
 
-where $t$ is the time, $S$ is the surface area, $k_B$ is the Boltzmann’s constant, $T$ is the temperature, $V$ is the volume in the enclosure. The production of A$_2$ and B$_2$ in equilibration conditions is given by
+where $t$ is the time, $S$ is the surface area, $k_B$ is the Boltzmann constant, $T$ is the temperature, $V$ is the volume in the enclosure. The production of A$_2$ and B$_2$ in equilibration conditions is given by
 
 \begin{equation}
 \label{eq:surfdep:equal_c_a_c_b}
