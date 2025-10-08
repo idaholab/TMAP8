@@ -36,7 +36,7 @@ and
 \hat{K_b} = \nu_0 \exp \left( - \frac{E_b}{k_B T} \right),
 \end{equation}
 
-where $M$ is the mass of species molecules, $\nu_0$ is the Debye frequency, $E_x$ is the adsorption barrier energy, $E_c$ is the surface binding energy, and $E_b$ is the dissociation activation energy.
+where $M$ is the mass of species molecules, $\nu_0$ is the Debye frequency, $E_x$ is the adsorption barrier energy, $E_c$ is the surface binding energy, $E_b$ is the dissociation activation energy, $k_B$ is the Boltzmann constant, and $T$ is the temperature.
 
 At steady-state, the flux to the surface will be balanced by the flux from the surface, and surface concentration will be related to the gas over-pressure by
 
@@ -83,7 +83,7 @@ For the recombination step and dissociation step, we solve
 \frac{d P_{AB}}{dt} = \frac{S k_B T \hat{K_d} \hat{K_b}}{V (\hat{K_r} + \hat{K_b})} \left( C_A C_B 2 D_s \lambda \frac{\hat{K_r}}{\hat{K_d} \hat{K_b}} - P_{AB} \right),
 \end{equation}
 
-where $t$ is the time, $S$ is the surface area, $k_B$ is the Boltzmann constant, $T$ is the temperature, $V$ is the volume in the enclosure. The production of A$_2$ and B$_2$ in equilibration conditions is given by
+where $t$ is the time, $S$ is the surface area, and $V$ is the volume in the enclosure. The production of A$_2$ and B$_2$ in equilibration conditions is given by
 
 \begin{equation}
 \label{eq:surfdep:equal_c_a_c_b}

@@ -17,9 +17,9 @@ The `ratedep` condition applies when dissociation and recombination reaction kin
 `ratedep` assumes that the generation and release rate of molecules is the product of two or more atom concentrations at the surface and a recombination rate coefficient.
 Once formed, molecules immediately leave the surface.
 
-Note that in TMAP8, just like in TMAP7, we assume that atoms in the first nodes of the mesh all contribute to recombination proceses.
-As a result, unless the mesh is refined at the surface, atoms deeper in the materials contribute to recombinations,
-as opposed to explusively having surface atoms contribute.
+Note that in TMAP8, just like in TMAP7, atoms in the nodes closest to the surface contribute to recombination processes.
+Atoms deeper in the mesh do not directly contribute to recombinations.
+However, if the size of the nodes in the mesh is larger than the size of the lattice, which is usually is, atoms from lattice layers deeper in the materials also contribute to recombinations, as opposed to having only surface atoms contribute.
 
 Under the `ratedep` assumptions, the net flux of atoms of species $s$ into the surface is given by
 
@@ -61,7 +61,7 @@ J_m = \frac{P_m}{\sqrt{2 \pi M k T}} \exp\left( -\frac{E_x}{k_B T} \right) - C_m
 where $M$ is the molecular mass,
 $E_x$ is the barrier energy for molecular entry to the surface (assumed positive),
 and $E_c$ is the surface binding energy of molecule $m$,
-and $\nu_0$ is the Debye frequency ($\sim$ 10$^{13}$ s$^{-1}$).
+and $\nu_0$ is the Debye frequency ($\sim$ 10$^{13}$ s$^{-1}$ for tungsten).
 
 The following V&V cases, among others, utilize the `surfdep` conditions: [ver-1ic](ver-1ic.md) and [ver-1id](ver-1id.md).
 
