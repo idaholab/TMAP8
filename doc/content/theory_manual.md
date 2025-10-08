@@ -19,7 +19,7 @@ Once formed, molecules immediately leave the surface.
 
 Note that in TMAP8, just like in TMAP7, atoms in the nodes closest to the surface contribute to recombination processes.
 Atoms deeper in the mesh do not directly contribute to recombinations.
-However, if the size of the nodes in the mesh is larger than the size of the lattice, which is usually is, atoms from lattice layers deeper in the materials also contribute to recombinations, as opposed to having only surface atoms contribute.
+However, if the size of the nodes in the mesh is larger than the size of the lattice, which it usually is, atoms from lattice layers deeper in the materials also contribute to recombinations, as opposed to having only surface atoms contribute.
 
 Under the `ratedep` assumptions, the net flux of atoms of species $s$ into the surface is given by
 
