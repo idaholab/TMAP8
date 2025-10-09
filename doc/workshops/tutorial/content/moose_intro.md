@@ -52,8 +52,8 @@
 
 - +Object-oriented design+ : Everything is an object with clear interfaces
 - +Modular architecture+ : Mix and match components to achieve simulation goals
-- +Physics-agnostic+ : Framework handles numerics, you focus on physics
-- +Dimension-independent+ : Write once, run in 1D, 2D, or 3D
+- +Supporting Many Physics+ : Framework handles numerics, you focus on physics
+- +Dimension-independent+ : Run in 1D, 2D, or 3D with minimal changes to the input file
 - +Automatic differentiation+ : No need to compute Jacobians manually
 - +Strict separation of concerns+ : Systems don't communicate directly
 
@@ -105,7 +105,7 @@
 
 # The Finite Element Method in MOOSE
 
-MOOSE solves PDEs using the Galerkin finite element method
+MOOSE solves PDEs using the Galerkin finite element method (the finite volume method is also available for fluid flow).
 
 +Key steps:+
 
@@ -170,7 +170,7 @@ protected:
 
 # Special Note: Nodal Kernels
 
-These are used in Ver-1d.
+Nodal kernels are used to model non-diffusive species. In the case of TMAP8, nodal kernels are key to modeling trapped species. For example, these are used in the Ver-1d verification case and several validation cases.
 
 !---
 
@@ -181,10 +181,10 @@ These are used in Ver-1d.
 
 +Producer/Consumer Pattern:+
 
-- Materials produce properties
+- Materials produce properties than can be used in the rest of the simulation
 - Other objects consume properties
 - Properties can vary in space and time
-- Properties can be coupled to variables
+- Properties can be functions of variables or other properties
 
 !col-end!
 
@@ -216,7 +216,7 @@ return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 
 # Boundary Condition System
 
-+Purpose+: Apply constraints and fluxes at domain boundaries
++Purpose+: Apply constraints at domain boundaries
 
 !row!
 !col! width=45%
@@ -237,13 +237,15 @@ return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 
 !col! width=50%
 
-+Common BCs in MOOSE:+
++Common BCs in MOOSE/TMAP8:+
 
 - `DirichletBC`: Fixed value
 - `NeumannBC`: Fixed flux
 - `FunctionDirichletBC`: Time/space varying
 - `VacuumBC`: Vacuum boundary condition for diffusive species
 - `ConvectiveFluxBC`: Convective heat transfer
+- `BinaryRecombinationBC`: Recombination of atoms into molecules
+- `EquilibriumBC`: Sorption laws (Sievert's or Henry's)
 
 !col-end!
 !row-end!
@@ -263,6 +265,8 @@ Source:
 
 !listing moose/modules/scalar_transport/src/bcs/BinaryRecombinationBC.C
 
+More information about the surface models available in TMAP8 is available in the [theory manual](https://mooseframework.inl.gov/TMAP8/theory_manual.html)
+
 !---
 
 # InterfaceKernel System
@@ -275,8 +279,8 @@ Source:
 +Key Concepts:+
 
 - Operates on internal subdomain boundaries
-- Access to both sides (primary/neighbor)
-- Enforces flux continuity and jump conditions
+- Accesses both sides (primary/neighbor)
+- Used to enforce flux continuity and jump conditions
 
 !col-end!
 
@@ -296,7 +300,7 @@ Source:
 
 - Metal/coating permeation barriers
 - Multi-layer diffusion
-- Interface trapping/sorption
+- Interface trapping/sorption (see [theory manual](https://mooseframework.inl.gov/TMAP8/theory_manual.html))
 
 !---
 
@@ -362,7 +366,7 @@ K = K_0 \exp \left(\frac{-E_a}{RT}\right)
 +Example: Flux Vector from Concentration+
 
 !equation
-\vec{J} = -D \cdot \nabla C
+\vec{J} = -D \nabla C
 
 - Concentration ($C$) is a nonlinear variable, computed by the solver.
 - Diffusive flux ($\vec{J}$) is an auxiliary variable.
@@ -513,7 +517,7 @@ ADReal computeQpResidual() {...}
 
 +MultiApp System:+
 
-- Run multiple MOOSE apps
+- Run multiple MOOSE apps / physics
 - Different time scales
 - Different spatial scales
 - Master/sub-app hierarchy
@@ -522,7 +526,6 @@ ADReal computeQpResidual() {...}
 
 - Multiscale modeling
 - Multiphysics coupling (when adjustable levels of coupling are desired)
-- Micro/macro coupling
 - Reduced-order models
 
 !col-end!
@@ -762,13 +765,14 @@ test/
 
 # Summary: Why MOOSE for TMAP8?
 
-- +Proven framework+: Used in 500+ publications, tested extensively
+- +Proven framework+: Used in 500+ publications, tested extensively, production-ready
 - +Parallel scalability+: Handles problems from workstation to supercomputer
 - +Multiphysics capable+: Natural coupling of transport phenomena
 - +Active development+: Continuous improvements and support
 - +Extensible design+: Easy to add new physics for tritium transport
 - +Quality assurance+: NQA-1 process ensures reliability
 - +Community support+: Large user base and developer team across the world
+- +Open source access+: Free and easily available, with contributions from many different fields
 
 !style halign=center
 +TMAP8 leverages all these capabilities for tritium transport modeling!+
