@@ -182,7 +182,7 @@ Nodal kernels are used to model non-diffusive species. In the case of TMAP8, nod
 +Producer/Consumer Pattern:+
 
 - Materials produce properties than can be used in the rest of the simulation
-- Other objects consume properties
+- Other objects (including other materials), can consume properties
 - Properties can vary in space and time
 - Properties can be functions of variables or other properties
 
