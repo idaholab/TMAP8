@@ -51,11 +51,10 @@
 # MOOSE Framework: Core Philosophy
 
 - +Object-oriented design+ : Everything is an object with clear interfaces
-- +Modular architecture+ : Mix and match components to achieve simulation goals
+- +Modular architecture+ : Mix and match components and/or physics to achieve simulation goals
 - +Supporting Many Physics+ : Framework handles numerics, you focus on physics
 - +Dimension-independent+ : Run in 1D, 2D, or 3D with minimal changes to the input file
 - +Automatic differentiation+ : No need to compute Jacobians manually
-- +Strict separation of concerns+ : Systems don't communicate directly
 
 !---
 
@@ -168,9 +167,92 @@ protected:
 
 !---
 
-# Special Note: Nodal Kernels
+# Special Note: NodalKernels System
 
-Nodal kernels are used to model non-diffusive species. In the case of TMAP8, nodal kernels are key to modeling trapped species. For example, these are used in the Ver-1d verification case and several validation cases.
+!! Nodal kernels are used to model non-diffusive species. In the case of TMAP8, nodal kernels are key to modeling trapped species. For example, these are used in the Ver-1d verification case and several validation cases.
+
++Purpose+: Compute residual contributions at nodes rather than quadrature points
+
+!row!
+!col! width=50%
+
++When to Use NodalKernels:+
+
+- ODEs or time-derivative only terms
+- Point sources or sinks
+- Reaction terms without spatial derivatives
+- Lumped parameter models
+- Lower computational cost (no quadrature)
+
+!col-end!
+
+!col! width=5%
+!! intentionally empty column to produce whitespace separation between listing snippet that goes out-of-box and the right-hand column
+!col-end!
+
+!col! width=50%
+
++Key Differences from Kernels:+
+
+- Operates on nodes, not elements
+- No spatial gradients available
+- `_qp = 0` always (single evaluation point)
+- No test function needed in residual
+- More efficient for non-spatial terms
+
+!col-end!
+!row-end!
+
+!row!
+!col! width=50%
+
++Implementation:+
+
+```cpp
+  ADReal
+  ReactionNodalKernel::computeQpResidual()
+  {
+    // Note: _qp = 0 for nodal kernels
+    // (evaluated at only a single point)
+    return _coef * _u[_qp];
+  }
+};
+```
+
+!col-end!
+
+!col! width=5%
+!! intentionally empty column to produce whitespace separation between listing snippet that goes out-of-box and the right-hand column
+!col-end!
+
+!col! width=50%
+
++Input File Example:+
+
+```
+[NodalKernels]
+  ...
+  [decay]
+    type = ReactionNodalKernel
+    variable = C_tritium
+    coef = 1.0
+  []
+[]
+```
+
+!col-end!
+!row-end!
+
+!---
+
+# NodalKernels in TMAP8
+
+Nodal kernels are used to model non-diffusive species. In the case of TMAP8, nodal kernels are key to modeling trapped species. For example, these are used in the [Ver-1d verification case](ver-1d.md) and several validation cases.
+
++Application Examples:+
+
+- Trap filling/release (Ver-1d)
+- Surface reactions at nodes
 
 !---
 
@@ -345,9 +427,9 @@ K = K_0 \exp \left(\frac{-E_a}{RT}\right)
 
 !---
 
-# Auxiliary System: Derived Quantities
+# Auxiliary System: Arbitrarily Calculated Variables
 
-- +Purpose+: Compute derived quantities from primary variables
+- +Purpose+: Variables that are not solved for as part of a PDE/ODE.
 - +Use cases+: Postprocessing, visualization, coupling
 
 !row!
@@ -356,7 +438,11 @@ K = K_0 \exp \left(\frac{-E_a}{RT}\right)
 +Auxiliary Variables:+
 
 - Not solved for directly
-- Computed from other variables
+- Can be computed from other variables
+- Can be computed directly or imposed
+
+  - Example: temperature/pressure with a set history)
+
 - Can be nodal or elemental
 
 !col-end!
@@ -374,6 +460,24 @@ K = K_0 \exp \left(\frac{-E_a}{RT}\right)
 
 !col-end!
 !row-end!
+
+!---
+
+# Another Aux Example: Temperature
+
+This is sampled from the [val-2b validation case](val-2b.md). First, we need to declare the `temperature` variable, as we would any other variable. Except, we do it here under the `AuxVariables` block. Then, we set up an `AuxKernel` to calculate it.
+
+!listing val-2b.i block=AuxVariables/temperature
+
+!listing val-2b.i block=AuxKernels/temperature_aux
+
+!---
+
+# Example, cont.: Aux Temperature in a BC
+
+Now, `temperature` can be used wherever a regular `MooseVariable` is used. For example, we use it in [val-2b](val-2b.md) in an [EquilibriumBC](EquilibriumBC.md) boundary condition on the `left` boundary.
+
+!listing val-2b.i block=BCs/left_flux
 
 !---
 
@@ -413,6 +517,57 @@ K = K_0 \exp \left(\frac{-E_a}{RT}\right)
 
 !col-end!
 !row-end!
+
+!---
+
+# Inline Unit Conversions in Input Files
+
++Built-in parser enables calculations and unit conversions directly in input files using the MOOSE `fparse` and `units` systems.+
+
+```
+${fparse num1 * num2}  # On-the-fly calculations
+
+${units num1 unit1 -> unit2}  # Unit conversions
+
+param = 5.0 * ${top_level_coef1} + ${top_level_coef2}  # Replacements
+```
+
+!row!
+!col! width=50%
+
++Available Functions in `fparse`:+
+
+- Basic: `+ - * / ^`
+- Trig: `sin cos tan`
+- Exp/Log: `exp log log10`
+- Other: `sqrt abs min max`
+- Constants: `pi` (3.14159...)
+
+!col-end!
+
+!col! width=50%
+
++Advantages:+
+
+- Self-documenting calculations
+- Avoid external calculators
+- Useful when performing parametric studies
+- Version control friendly
+
+!col-end!
+!row-end!
+
+!---
+
+# Fparse / Units Conversion Usage Example
+
++At the input file top level:+
+
+!listing val-2d.i start=Diffusion parameters end=Traps parameters
+
++In an object:+
+
+!listing val-2d.i block=Postprocessors/scaled_flux_surface_right
 
 !---
 
@@ -550,7 +705,123 @@ ADReal computeQpResidual() {...}
 
 !---
 
+# Output System
+
++Flexible and Extensible Output+
+
+!row!
+!col! width=50%
+
++Supported Formats:+
+
+- Exodus (recommended)
+- VTK/VTU
+- CSV (scalar data)
+- Console
+- Checkpoint (restart)
+- Nemesis (parallel)
+
+!col-end!
+
+!col! width=50%
+
++Input file control:+
+
+```
+[Outputs]
+  exodus = true
+  csv = true
+  [custom_out]
+    type = Exodus
+    interval = 10
+    execute_on = 'timestep_end'
+  []
+[]
+```
+
+!col-end!
+!row-end!
+
+!row!
+!col! width=50%
+
++Features:+
+
+- Control output frequency
+- Select variables to output
+- Multiple outputs simultaneously
+
+!col-end!
+
+!col! width=50%
+
++Output control:+
+
+- By time
+- By timestep
+- On events (initial, final, failed)
+
+!col-end!
+!row-end!
+
+!---
+
+# MOOSE/TMAP8 Development Process
+
++Nuclear Quality Assurance Level 1 (NQA-1)+
+
+!row!
+!col! width=50%
+
++Version Control:+
+
+- Git/GitHub workflow
+- Pull request reviews
+- Continuous integration
+- Extensive testing (30M+ tests/week)
+
+!col-end!
+
+!col! width=50%
+
++Development Tools:+
+
+- [CIVET](https://github.com/idaholab/civet) (testing system)
+- [VSCode integration](VSCode.md) with language server support
+- Input file syntax highlighting
+
+!col-end!
+!row-end!
+
+!row!
+!col! width=50%
+
++Code Standards:+
+
+- [Consistent style](sqa/tmap8_scs.md) (via clang-format)
+- Documentation required
+- Test coverage required
+
+!col-end!
+
+!col! width=50%
+
++Community:+
+
+- 250+ contributors to MOOSE
+- [MOOSE discussion forum](https://github.com/idaholab/moose/discussions)
+- [TMAP8 discussion forum](https://github.com/idaholab/TMAP8/discussions)
+- [MOOSE workshops and training](https://mooseframework.inl.gov/getting_started/examples_and_tutorials/index.html)
+- Extensive documentation ([MOOSE](https://mooseframework.inl.gov), [TMAP8](https://mooseframework.inl.gov/TMAP8))
+
+!col-end!
+!row-end!
+
+!---
+
 # Testing Framework
+
+[TMAP8 Software Quality Assurance Documentation](sqa/index.md exact=True)
 
 !row!
 !col! width=45%
@@ -623,118 +894,14 @@ test/
 
 !---
 
-# Output System
-
-+Flexible and Extensible Output+
-
-!row!
-!col! width=50%
-
-+Supported Formats:+
-
-- Exodus (recommended)
-- VTK/VTU
-- CSV (scalar data)
-- Console
-- Checkpoint (restart)
-- Nemesis (parallel)
-
-!col-end!
-
-!col! width=50%
-
-+Input file control:+
-
-```
-[Outputs]
-  exodus = true
-  csv = true
-  [custom_out]
-    type = Exodus
-    interval = 10
-    execute_on = 'timestep_end'
-  []
-[]
-```
-
-!col-end!
-!row-end!
-
-!row!
-!col! width=50%
-
-+Features:+
-
-- Control output frequency
-- Select variables to output
-- Multiple outputs simultaneously
-
-!col-end!
-
-!col! width=50%
-
-+Output control:+
-
-- By time
-- By timestep
-- On events (initial, final, failed)
-
-!col-end!
-!row-end!
-
-!---
-
-# MOOSE Development Process
-
-+Nuclear Quality Assurance Level 1 (NQA-1)+
-
-!row!
-!col! width=50%
-
-+Version Control:+
-
-- Git/GitHub workflow
-- Pull request reviews
-- Continuous integration
-- Extensive testing (30M+ tests/week)
-
-+Code Standards:+
-
-- Consistent style (via clang-format)
-- Documentation required
-- Test coverage required
-
-!col-end!
-
-!col! width=50%
-
-+Development Tools:+
-
-- [CIVET](https://github.com/idaholab/civet) (testing system)
-- Peacock (GUI)
-- VSCode integration with language server support
-- Input file syntax highlighting
-
-+Community:+
-
-- 250+ contributors
-- Discussion forum
-- [Workshops and training](https://mooseframework.inl.gov/getting_started/examples_and_tutorials/index.html)
-- Extensive documentation ([https://mooseframework.inl.gov](https://mooseframework.inl.gov))
-
-!col-end!
-!row-end!
-
-!---
-
-# Getting Help with MOOSE
+# Getting Help
 
 +Resources Available (all links):+
 
 !row!
 !col! width=50%
 
-+Documentation:+
++Documentation (MOOSE):+
 
 - [https://mooseframework.inl.gov](https://mooseframework.inl.gov)
 - [Syntax documentation](https://mooseframework.inl.gov/syntax/index.html)
@@ -742,9 +909,29 @@ test/
 - [Example problems](https://mooseframework.inl.gov/getting_started/examples_and_tutorials/index.html)
 - [Video tutorials](https://mooseframework.inl.gov/getting_started/examples_and_tutorials/index.html)
 
+!col-end!
+
+!col! width=50%
+
++Documentation (TMAP8):+
+
+- [https://mooseframework.inl.gov/TMAP8](index.md exact=True)
+- [Syntax documentation](syntax/index.md exact=True)
+- [V&V problems](verification_and_validation/index.md)
+- [Example cases](examples/index.md exact=True)
+
+!col-end!
+!row-end!
+
+!row!
+!col! width=50%
+
 +Community:+
 
-- [GitHub discussions forum](https://github.com/idaholab/moose/discussions)
+- [MOOSE discussions forum](https://github.com/idaholab/moose/discussions)
+- [MOOSE GitHub issues (bugs/feature suggestions)](https://github.com/idaholab/moose/issues)
+- [TMAP8 discussion forum](https://github.com/idaholab/TMAP8/discussions)
+- [TMAP8 GitHub issues (bugs/feature suggestions)](https://github.com/idaholab/TMAP8/issues)
 - [Workshops and in-person Training](https://mooseframework.inl.gov/training/index.html)
 
 !col-end!
@@ -753,8 +940,8 @@ test/
 
 +Development:+
 
-- [GitHub issues (bugs/feature suggestions)](https://github.com/idaholab/moose/issues)
-- [Pull requests](https://github.com/idaholab/moose/pulls)
+- [MOOSE Pull requests](https://github.com/idaholab/moose/pulls)
+- [TMAP8 Pull requests](https://github.com/idaholab/TMAP8/pulls)
 - [Code review process](https://mooseframework.inl.gov/framework/patch_to_code.html)
 - [Contributing guidelines](https://mooseframework.inl.gov/framework/contributing.html)
 
