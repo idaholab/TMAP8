@@ -92,5 +92,9 @@ This block adds some vertical spacing between the text and the image
 
 Once the setup instructions are followed above, you may re-create and enter the environment at any time using Steps 4 and 5 in "Instructions For All Platforms".
 
+!alert! tip title=Run into any issues?
+If you run into any issues with this installation procedure, please consider posting a question to [TMAP8's GitHub Discussion Forum](https://github.com/idaholab/TMAP8/discussions).
+!alert-end!
+
 !! Uncomment this section to add information about how to overcome known issues with the installation
 !! ## Known Issues
