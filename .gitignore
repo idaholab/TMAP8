@@ -229,5 +229,20 @@ unit/tmap8-unit.yaml
 tmap8.yaml
 
 # Generated image files
-doc/**/ver-*_comparison*.png
-doc/**/val-*_comparison*.png
+doc/content/verification_and_validation/figures/ver-*_comparison_*.png
+doc/content/verification_and_validation/figures/ver-*_concentration_ratio*.png
+doc/content/verification_and_validation/figures/ver-*_mass_conservation*.png
+doc/content/verification_and_validation/figures/ver-*_equilibrium_constant_*.png
+doc/content/verification_and_validation/figures/ver-1dc-mms-spatial.png
+doc/content/verification_and_validation/figures/ver-1jb_equivalent_concentrations_profile.png
+doc/content/verification_and_validation/figures/ver-1jb_profile.png
+doc/content/verification_and_validation/figures/val-*_comparison_*.png
+doc/content/verification_and_validation/figures/val-*_comparison.png
+doc/content/verification_and_validation/figures/val-*_pss_*.png
+doc/content/verification_and_validation/figures/val-*_temperature*history.png
+doc/content/verification_and_validation/figures/val-*_deuterium_desorption*.png
+doc/content/verification_and_validation/figures/val-2b_ratio.png
+doc/content/verification_and_validation/figures/val-2f_implantation_distribution.png
+doc/content/verification_and_validation/figures/val-2f_trap_induced_density.png
+doc/content/examples/figures/fuel_cycle_*.png
+doc/content/source/interfacekernels/figures/YHx_PCT_*.png
