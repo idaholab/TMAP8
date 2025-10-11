@@ -270,7 +270,11 @@ Nodal kernels are used to model non-diffusive species. In the case of TMAP8, nod
 
 !col-end!
 
-!col! width=40%
+!col! width=2%
+!! test
+!col-end!
+
+!col! width=38%
 
 ```cpp
 // Material object, in the constructor
@@ -280,8 +284,12 @@ _permeability = 2.0;
 
 // Consumer object (Kernel, BCs, etc.) in the constructor
 _permeability(getADMaterialProperty<Real>("permeability"))
-// In the compute method
+
+// In the "computeQp..." method
+ADReal
+SomeObject::computeQpResidual() {
 return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
+}
 ```
 
 !col-end!
@@ -290,9 +298,9 @@ return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 +Key Methods:+
 
 - `declareProperty<Type>()` - produce a standard material property in a material object
-- `getMaterialProperty<Type>()` - consume a standard material property in a Kernel, IK, BC, etc. object
+- `getMaterialProperty<Type>()` - consume a standard material property in a MOOSE object
 - `declareProperty<Type>()` - produce an AD material property in a material object
-- `getADMaterialProperty<Type>()` - consume an AD material property in a Kernel, IK, BC, etc. object
+- `getADMaterialProperty<Type>()` - consume an AD material property in a MOOSE object
 
 !---
 
