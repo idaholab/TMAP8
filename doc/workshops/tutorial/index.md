@@ -42,6 +42,10 @@
 
 !---
 
+!include tmap8_ver-1d_tutorial.md
+
+!---
+
 !include outro.md
 
 !---
