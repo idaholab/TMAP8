@@ -102,6 +102,7 @@ Extensions:
             - hales15homogenization
             - kim_phase-field_1999
             - incropera2002
+            - rhebergen2017analysis
     MooseDocs.extensions.civet:
         test_results_cache: '/tmp/civet/jobs'
         branch: main
