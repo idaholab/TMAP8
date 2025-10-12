@@ -66,12 +66,12 @@ From Simple Diffusion to Complex Multi-trap Systems
 
 ## Key Sections We'll Explore
 
-- +[Mesh]+ - Define geometry
-- +[Variables]+ - Declare unknowns to solve for
-- +[Kernels]+ - Physics equations
-- +[BCs]+ - Boundary conditions
-- +[Executioner]+ - Solution method
-- +[Outputs]+ - Results to save
+- `[Mesh]` - Define geometry
+- `[Variables]` - Declare unknowns to solve for
+- `[Kernels]` - Physics equations
+- `[BCs]` - Boundary conditions
+- `[Executioner]` - Solution method
+- `[Outputs]` - Results to save
 
 !---
 
@@ -553,16 +553,19 @@ Each trap evolves independently (i = 1, 2, 3)
 ## Step-by-Step Process
 
 1. +Navigate to TMAP8 directory+
+
    ```bash
    cd ~/projects/TMAP8
    ```
 
 2. +Run the simple diffusion case+
+
    ```bash
    ./tmap8-opt -i test/tests/ver-1dd/ver-1dd.i
    ```
 
 3. +Examine the output+
+
    ```bash
    peacock -i test/tests/ver-1dd/ver-1dd.i
    ```
@@ -580,6 +583,7 @@ Each trap evolves independently (i = 1, 2, 3)
 ## Try These Changes to ver-1dd.i:
 
 1. +Change mesh resolution+
+
    ```
    [Mesh]
      nx = 400  # Was 200
@@ -587,6 +591,7 @@ Each trap evolves independently (i = 1, 2, 3)
    ```
 
 2. +Adjust time stepping+
+
    ```
    [Executioner]
      dt = 0.0001  # Smaller initial step
@@ -594,6 +599,7 @@ Each trap evolves independently (i = 1, 2, 3)
    ```
 
 3. +Modified diffusivity+
+
    ```
    [Kernels]
      [./diff]
