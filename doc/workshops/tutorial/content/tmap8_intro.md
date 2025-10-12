@@ -41,6 +41,60 @@ TMAP8 directly inherits all of MOOSE's features, including:
 
 !---
 
+# TMAP8 key capabilities - fuel cycle
+
+!row!
+!col! width=50%
+
+TMAP8 is able to perform fuel cycle calculations at the system scale.
+
+It has been benchmarked against the fuel cycle model described by [Abdou et al. (2021)](examples/fuel_cycle_Abdou/index.md), and the model described in [Meschini et al. (2023)](examples/fuel_cycle_Meschini/index.md).
+
+Ongoing efforts are using the multiapp system to concurrently perform component-level calculations and use the results in fuel cycle calculations to accurately model the tritium fuel cycle.
+
+!col-end!
+
+!col! width=50%
+
+!media examples/figures/fuel_cycle_abdou_03.png style=width:100%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
+
+!style halign=center
+Figure from the [fuel cycle example from Abdou et al.](examples/fuel_cycle_Abdou/index.md).
+
+!col-end!
+!row-end!
+
+!---
+
+# TMAP8 key capabilities - Stochastic tools
+
+!row!
+!col! width=50%
+
+The integration of the [stochastic tools module](stochastic_tools/index.md) in TMAP8 supports key capabilities:
+
+- Model calibration
+- Experimental analysis
+- Uncertainty quantification
+- Error identification (experimental uncertainty vs. model inadequacy vs. parameter uncertainty)
+- Sensitivity analysis
+- Surrogate model development
+- etc.
+
+!col-end!
+
+!col! width=50%
+
+!media verification_and_validation/figures/val-2c_comparison_TMAP8_Exp_HTO_Ci.png style=width:100%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
+
+!style halign=center
+Figure from the [val-2c validation case calibration](val-2c.md).
+
+!col-end!
+!row-end!
+
+!---
+
 # TMAP8 Verification & Validation (V&V)
 
 !style halign=center
