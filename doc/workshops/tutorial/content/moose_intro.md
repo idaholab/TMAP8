@@ -169,7 +169,6 @@ protected:
 
 # Special Note: NodalKernels System
 
-!! Nodal kernels are used to model non-diffusive species. In the case of TMAP8, nodal kernels are key to modeling trapped species. For example, these are used in the Ver-1d verification case and several validation cases.
 
 +Purpose+: Compute residual contributions at nodes rather than quadrature points
 
@@ -178,11 +177,11 @@ protected:
 
 +When to Use NodalKernels:+
 
+- Non-diffusive species
 - ODEs or time-derivative only terms
 - Point sources or sinks
 - Reaction terms without spatial derivatives
 - Lumped parameter models
-- Lower computational cost (no quadrature)
 
 !col-end!
 
@@ -473,7 +472,7 @@ K = K_0 \exp \left(\frac{-E_a}{RT}\right)
 
 # Another Aux Example: Temperature
 
-This is sampled from the [val-2b validation case](val-2b.md). First, we need to declare the `temperature` variable, as we would any other variable. Except, we do it here under the `AuxVariables` block. Then, we set up an `AuxKernel` to calculate it.
+This is sampled from the [val-2b validation case](val-2b.md). First, we need to declare the `temperature` variable, as we would any other variable. Except, we do it here under the `AuxVariables` block. Then, we set up an `AuxKernel` to calculate it using a time-dependent function.
 
 !listing val-2b.i block=AuxVariables/temperature
 
