@@ -70,7 +70,7 @@ Ongoing efforts are using the multiapp system to concurrently perform component-
 
 !col! width=50%
 
-!media examples/figures/fuel_cycle_abdou_03.png style=width:100%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
+!media examples/figures/plot_comparison.py image_name=examples/figures/fuel_cycle_abdou_03.png style=width:100%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
 
 !style halign=center
 Figure from the [fuel cycle example from Abdou et al](examples/fuel_cycle_Abdou/index.md).
@@ -99,7 +99,7 @@ The integration of the [stochastic tools module](stochastic_tools/index.md) in T
 
 !col! width=50%
 
-!media verification_and_validation/figures/val-2c_comparison_TMAP8_Exp_HTO_Ci.png style=width:100%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
+!media verification_and_validation/figures/comparison_val-2c.py image_name=verification_and_validation/figures/val-2c_comparison_TMAP8_Exp_HTO_Ci.png style=width:100%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
 
 !style halign=center
 Figure from the [val-2c validation case calibration](val-2c.md).
