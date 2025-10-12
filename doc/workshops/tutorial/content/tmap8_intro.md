@@ -64,7 +64,7 @@ TMAP8 is able to perform fuel cycle calculations at the system scale.
 
 It has been benchmarked against the fuel cycle model described by [Abdou et al. (2021)](examples/fuel_cycle_Abdou/index.md), and the model described in [Meschini et al. (2023)](examples/fuel_cycle_Meschini/index.md).
 
-Ongoing efforts are using the multiapp system to concurrently perform component-level calculations and use the results in fuel cycle calculations to accurately model the tritium fuel cycle.
+Ongoing efforts are using the MultiApp system to concurrently perform component-level calculations and use the results in fuel cycle calculations to accurately model the tritium fuel cycle.
 
 !col-end!
 
@@ -145,14 +145,14 @@ Verification can be satisfied by comparing modeling predictions against analytic
 
 Validation, on the other hand, is the process of determining the extent to which a model accurately represents the real world for its intended uses, which requires comparison against experimental data.
 
-TMAP8's V&V case suite now surpasses TMAP4's and TMAP7's, and continues to grow. It is a ressource for users wanting to learn more about TMAP8's accuracy, and for users wanting to use them as starting point for their simulations.
+TMAP8's V&V case suite now surpasses TMAP4's and TMAP7's, and continues to grow. It is a resource for users wanting to learn more about TMAP8's accuracy, and for users wanting to use them as starting point for their simulations.
 
 Check out the TMAP8 V&V cases and all relevant input files and documentation on the:
 
 !style halign=center
 [V&V page in the TMAP8 documentation](verification_and_validation/index.md).
 
-Later in the hands on part of this workshop, we will go through some V&V cases in more details.
+Later in the hands on part of this workshop, we will go through some V&V cases in more detail.
 
 !---
 
