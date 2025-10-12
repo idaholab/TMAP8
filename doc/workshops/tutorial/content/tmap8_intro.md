@@ -95,6 +95,33 @@ Figure from the [val-2c validation case calibration](val-2c.md).
 
 !---
 
+# TMAP8 key capabilities \\ pore-scale transport
+
+!media examples/figures/pore_scale_process_illustration_2.png style=width:70%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
+
+!style halign=center
+Figure from the [pore-scale tritium transport example](examples/pore_scale_transport/index.md).
+
+!row!
+!col! width=50%
+
+!media examples/figures/3D_microstructure_example.png style=width:90%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
+
+!col-end!
+
+!col! width=50%
+
+Thanks to the [ImageFunction](ImageFunction.md) and [phase-field module](phase_field/index.md) capabilities, TMAP8 can perform mesoscale simulations of tritium transport.
+
+It can use sequential images of real or generated microstructures and perform tritium transport on them.
+
+This capability is detailed in the [pore-scale tritium transport example](examples/pore_scale_transport/index.md).
+
+!col-end!
+!row-end!
+
+!---
+
 # TMAP8 Verification & Validation (V&V)
 
 !style halign=center
@@ -109,7 +136,7 @@ TMAP8's V&V case suite now surpasses TMAP4's and TMAP7's, and continues to grow.
 Check out the TMAP8 V&V cases and all relevant input files and documentation on the:
 
 !style halign=center
-[V&V page in the TMAP8 documentation](https://mooseframework.inl.gov/TMAP8/verification_and_validation/index.html).
+[V&V page in the TMAP8 documentation](verification_and_validation/index.md).
 
 Later in the hands on part of this workshop, we will go through some V&V cases in more details.
 
@@ -125,10 +152,10 @@ In geenral, the example cases also describe how the input file relates to the si
 Check out the TMAP8 example cases and all relevant input file and documentation on the:
 
 !style halign=center
-[TMAP8 Example documentation page](https://mooseframework.inl.gov/TMAP8/examples/index.html)
+[TMAP8 Example documentation page](examples/index.md)
 
 It includes examples for fuel cycle calculations, divertor monoblock modeling, and pore microstructure modeling.
 
 !---
 
-# Summary:
+# Summary
