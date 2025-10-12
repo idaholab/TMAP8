@@ -9,9 +9,9 @@ From Simple Diffusion to Multi-trap Systems
 
 - +Purpose:+ Modeling tritium transport with progressing complexity.
 
-  - +ver-1dd:+ Pure diffusion without trapping
-  - +ver-1d:+ Diffusion with single trap type
-  - +ver-1dc:+ Diffusion with multiple trap types
+  - +ver-1dd:+ Pure diffusion without trapping ([Documentation](ver-1dd.md))
+  - +ver-1d:+ Diffusion with single trap type ([Documentation](ver-1d.md))
+  - +ver-1dc:+ Diffusion with multiple trap types ([Documentation](ver-1dc.md))
 
 - Based on established literature resources from the TMAP4 and TMAP7 eras:
 
@@ -585,14 +585,16 @@ For the deep trapping limit case, we'll cover the additions of objects to determ
 
 !---
 
-# Case 2 Strong Trapping Input File - \\ Numerical Considerations
+# Case 2: Numerical Considerations
+
+- The trapping test input file can generate oscillations in the solution due to the feedback loop between the diffusion PDE and trap evolution ODE. Two strategies are used:
 
 !row!
 !col! width=48%
 
-### Input File Settings for Stability
+### Finer Mesh and Time Step
 
-!listing ver-1d-trapping.i block=Executioner/TimeStepper
+!listing ver-1d-trapping.i block=Mesh Executioner/TimeStepper
 
 !col-end!
 
@@ -620,7 +622,7 @@ As a reminder, the trapping parameter $\zeta$ is the key discriminant to which r
 !row!
 !col! width=50%
 
-### Effective Diffusivity Regime
+### Effective Diffusivity \\ Regime
 
 - When $\zeta$ $\gg$ c/$\rho$
 - Set: $\epsilon = 100$
