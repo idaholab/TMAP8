@@ -102,6 +102,18 @@
 
 !---
 
+# MOOSE Systems Architecture \\ example for a TMAP8-relevant case
+
+The upcoming slides will describe the main components of the MOOSE systems architecture. This slide illustrates in which context different systems are used in a TMAP8-relevant case.
+
+Let's assume one wants to model hydrogen and tritium transport through the metallic walls of a pipe.
+The model would include diffusion, decay, and reactions between diatomic molecules inside the pipe; surface reactions at the inner and outer walls; and diffusion, decay, and trapping for single atoms in the walls.
+The figure below illustrates the case and specifies how MOOSE's systems would apply when constructing the case in a MOOSE input file:
+
+!media figures/TMAP8_workshop_case_illustration.png style=display:block;margin-left:auto;margin-right:auto;width:80%;
+
+!---
+
 # The Finite Element Method in MOOSE
 
 MOOSE solves PDEs using the Galerkin finite element method (the finite volume method is also available for fluid flow).

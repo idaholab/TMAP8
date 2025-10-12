@@ -1,19 +1,25 @@
-# Tritium Migration Analysis Program, Version 8 (TMAP8) Tutorial
+# Tutorial \\ Tritium Migration Analysis Program, \\ Version 8 (TMAP8)
 
 !style halign=center fontsize=120%
 !datetime today format=%B %Y
 
+!media figures/TMAP8_logo_blue.png style=display:block;box-shadow:none;margin-left:auto;margin-right:auto;width:30%;
+
+!style halign=center
+[https://mooseframework.inl.gov/TMAP8/](https://mooseframework.inl.gov/TMAP8/)
+
 !---
 
-# Outline of the meeting
+# Outline of the workshop slides
 
-- Introductions
+- Goals and Objectives
 - Introduction to MOOSE
 
-  - Overview
-  - Key features
-  - Applications
-  - Solving specific physics
+  - Overview and key features
+  - Understanding input files
+  - Development process and SQA
+  - Getting help
+  - Why MOOSE for TMAP8?
 
 - TMAP8 vs Legacy TMAP (TMAP4, TMAP7)
 - TMAP8 Verification & Validation
@@ -23,6 +29,10 @@
   - Run a verification case
 
 - Concluding Remarks (Q&A, Feedback, Future discussions)
+
+!---
+
+!include goals_objectives.md
 
 !---
 
