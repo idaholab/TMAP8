@@ -10,7 +10,7 @@ Help for troubleshooting is available at the bottom of the page.
 
 Different installation procedures are available for different operating systems (OS, linux, virtual, HPC) and different needs (user vs developer).
 
-Note that if you plan on contributing to TMAP8 (code, documentation, etc.), the instructions in the [Contributing to TMAP8 page](contributing.md) are here for you.
+Note that if you plan on contributing to TMAP8 (code, documentation, etc.), the instructions in the [Contributing to TMAP8 page](getting_started/contributing.md) are here for you.
 
 !---
 
