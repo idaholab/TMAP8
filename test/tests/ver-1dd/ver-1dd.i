@@ -12,12 +12,6 @@ interval_time = 0.01 # s
   xmax = 1
 []
 
-[Problem]
-  type = ReferenceResidualProblem
-  extra_tag_vectors = 'ref'
-  reference_vector = 'ref'
-[]
-
 [Variables]
   [mobile]
   []
@@ -27,12 +21,10 @@ interval_time = 0.01 # s
   [diff]
     type = Diffusion
     variable = mobile
-    extra_vector_tags = ref
   []
   [time]
     type = TimeDerivative
     variable = mobile
-    extra_vector_tags = ref
   []
 []
 
