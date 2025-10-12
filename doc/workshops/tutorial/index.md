@@ -5,15 +5,16 @@
 
 !---
 
-# Outline of the meeting
+# Outline of the workshop slides
 
-- Introductions
+- Goals and Objectives
 - Introduction to MOOSE
 
-  - Overview
-  - Key features
-  - Applications
-  - Solving specific physics
+  - Overview and key features
+  - Understanding input files
+  - Development process and SQA
+  - Getting help
+  - Why MOOSE for TMAP8?
 
 - TMAP8 vs Legacy TMAP (TMAP4, TMAP7)
 - TMAP8 Verification & Validation
@@ -23,6 +24,10 @@
   - Run a verification case
 
 - Concluding Remarks (Q&A, Feedback, Future discussions)
+
+!---
+
+!include goals_objectives.md
 
 !---
 

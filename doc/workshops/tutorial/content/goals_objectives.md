@@ -9,6 +9,7 @@
 - Help participants navigate resources and communities for continued learning.
 
 ## Objectives
+
 By the end of this workshop slides, participants will:
 
 - Understand the purpose and capabilities of MOOSE and TMAP8.
