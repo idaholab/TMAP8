@@ -293,6 +293,12 @@ tmap8-opt -i ver-1dd.i
 
 The output can then be visualized using ParaView, or by using the `comparison_ver-1dd.py` script with some light modifications (change the location of the data file to the output you just generated).
 
+## What to Look For
+
+- Convergence messages in terminal
+- Exodus output files with field data (.e extension)
+- CSV files with Postprocessor data
+
 !---
 
 # Case 1: Verification Results
@@ -669,131 +675,99 @@ As a reminder, the trapping parameter $\zeta$ is the key discriminant to which r
 
 ## Extended System of Equations
 
-Mobile species with three trap interactions:
-\begin{equation}
-\frac{\partial C_M}{\partial t} = \nabla \cdot (D \nabla C_M) - \text{trap\_per\_free} \cdot \sum_{i=1}^{3} \frac{\partial C_{T_i}}{\partial t}
-\end{equation}
+This case is very similar to Case 2, except there are now three different types of traps.
 
-Each trap evolves independently (i = 1, 2, 3)
+Mobile species with three trap interactions:
+
+!equation
+\frac{\partial C_M}{\partial t} = \nabla \cdot (D \nabla C_M) - \text{trap\_per\_free} \cdot \sum_{i=1}^{3} \frac{\partial C_{T_i}}{\partial t}
+
+!equation
+\frac{dC_{T_i}}{dt} = \alpha_t^i  \frac {C_{T_i}^{empty} C_M } {(N \cdot \text{trap\_per\_free})} - \alpha_r^i C_{T_i}
+
+Each trap evolves independently (i = 1, 2, 3). Finally, for the empty trapping sites:
+
+!equation
+C_{T_i}^{empty} = (C_{{T_i}0} \cdot N - \text{trap\_per\_free} \cdot C_{T_i}  )
 
 !---
 
 # Case 3: Base Input File Strategy
 
-```
-# ver-1dc_base.i - Shared components
-[Mesh]
-  type = GeneratedMesh
-  dim = 1
-  nx = 1000
-  xmax = 1
-[]
+- This case introduces the "input file include" capability in practice.
+- `ver-1dc_base.i` contains the mesh, Problem, Variables, Kernels, NodalKernels, Preconditioning, and Executioner settings for both the standard and MMS input files.
+- This is done to enable multiple input files to use the same common elements.
+- This modular design:
 
-[Variables]
-  [mobile]
-    initial_condition = 0
-  []
-[]
-```
+  - Eases maintainability and repeatability
+  - Reduces redundancy and errors
+  - Allows for case-specific input files
+  - Enables more readable highlight of unique physics
 
-```
-# ver-1dc.i - Specific case
-[GlobalParams]
-  !include ver-1dc_base.i
-[]
+!---
 
-[ScalarKernels]
-  # Add three trap definitions
-[]
-```
+# Case 3: Base Input File
 
-## Modular Design
-
-- Base file contains common elements
-- Case-specific files add unique physics
-- Reduces redundancy and errors
+!listing ver-1dc_base.i
 
 !---
 
 # Case 3: Defining Multiple Traps
 
-```
-[AuxVariables]
-  [trapped_1]
-    family = SCALAR
-    order = FIRST
-    initial_condition = 0
-  []
-  [trapped_2]
-    family = SCALAR
-    order = FIRST
-    initial_condition = 0
-  []
-  [trapped_3]
-    family = SCALAR
-    order = FIRST
-    initial_condition = 0
-  []
-[]
-```
+Multiple sites can have different properties through the use of separate sets of NodalKernels to represent the unique properties of each trap.
 
-## Each Trap Gets:
+!row!
+!col! width=45%
 
-- Its own scalar variable
+For example, for `trapped_1`:
+
+!listing ver-1dc_base.i block=NodalKernels/time_1 NodalKernels/trapping_1 NodalKernels/release_1
+
+!col-end!
+
+!col! width=5%
+
+!! This provides empty space between each column
+
+!col-end!
+
+!col! width=50%
+
+Each Trap Gets:
+
+- Its own solution variable
 - Independent evolution equation
 - Unique parameters (site fraction, energy)
+
+!col-end!
+!row-end!
 
 !---
 
 # Case 3: Three Trap Parameters
 
-```
-[ScalarKernels]
-  [trap_1]
-    type = ScalarTrappingEquilibriumEquation
-    variable = trapped_1
-    n_traps = 0.1     # 10% sites
-    trap_energy_depth = 100  # ε/k = 100 K
-    # ... other parameters
-  []
+Three traps that are relatively weak are assumed to be active in the slab. Other parameters are the same as the trap in the effective diffusivity limit in [ver-1d](ver-1d.md).
 
-  [trap_2]
-    # ... similar with
-    n_traps = 0.15    # 15% sites
-    trap_energy_depth = 500  # ε/k = 500 K
-  []
+- Trap Type 1
 
-  [trap_3]
-    # ... similar with
-    n_traps = 0.20    # 20% sites
-    trap_energy_depth = 800  # ε/k = 800 K
-  []
-[]
-```
+  - Trapping site fraction: 0.1
+  - $\epsilon/k$ = 100 K
+
+- Trap Type 2
+
+  - Trapping site fraction: 0.15
+  - $\epsilon/k$ = 500 K
+
+- Trap Type 3
+
+  - Trapping site fraction: 0.2
+  - $\epsilon/k$ = 800 K
 
 !---
 
 # Case 3: Coupling All Traps to Mobile Species
 
-```
-[Kernels]
-  [time_deriv_trapping]
-    type = TimeDerivativeTrapping
-    variable = mobile
-    property = trap_per_free
-    prop_values = '100000 100000 100000'  # Three values
-    aux_variables = 'trapped_1_node trapped_2_node trapped_3_node'
-    aux_var_derivatives = 'trap_1_deriv trap_2_deriv trap_3_deriv'
-    aux_coupled_var_derivs = true
-  []
-[]
-```
-
-## Key Insight
-
-- Single kernel handles multiple traps
-- Lists of auxiliary variables and derivatives
-- Automatic summation: Σ(∂C_Ti/∂t)
+!listing ver-1dc_base.i block=Kernels
 
 !---
 
@@ -801,8 +775,7 @@ Each trap evolves independently (i = 1, 2, 3)
 
 !media comparison_ver-1dc.py
        image_name=ver-1dc_comparison_diffusion.png
-       style=width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       caption=Multiple traps: TMAP8 matches theory with RMSPE = 0.41%
+       style=display:block;box-shadow:none;width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
 
 - Breakthrough time: 4.04 s (analytical) vs 4.12 s (TMAP8)
 - Combined effect of all three traps
@@ -811,28 +784,17 @@ Each trap evolves independently (i = 1, 2, 3)
 
 # Case 3: MMS Verification Approach
 
-## Input File for MMS
+Exact solutions and forcing functions:
 
-```
-[Functions]
-  [exact_u]
-    type = ParsedFunction
-    expression = 'cos(x)*t'  # Manufactured solution
-  []
-  [forcing_u]
-    type = ParsedFunction
-    expression = 'cos(x) + D*t*cos(x) + trap_contributions'
-  []
-[]
+!listing ver-1dc/functions.i
 
-[Kernels]
-  [mms_source]
-    type = BodyForce
-    variable = mobile
-    function = forcing_u
-  []
-[]
-```
+!---
+
+# Case 3: MMS Verification Approach (continued)
+
+Application of functions to Kernels/NodalKernels/BCs to "force" exact solution:
+
+!listing ver-1dc_mms.i block=Kernels NodalKernels BCs
 
 !---
 
@@ -840,8 +802,7 @@ Each trap evolves independently (i = 1, 2, 3)
 
 !media spatial_mms.py
        image_name=ver-1dc-mms-spatial.png
-       style=width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       caption=Spatial convergence study shows expected quadratic convergence of L₂ error
+       style=display:block;box-shadow:none;width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
 
 - 10 levels of mesh refinement
 - Confirms proper implementation
@@ -849,41 +810,14 @@ Each trap evolves independently (i = 1, 2, 3)
 
 !---
 
-# Running Your First TMAP8 Verification Case
-
-## Step-by-Step Process
-
-1. +Navigate to TMAP8 directory+
-
-   ```bash
-   cd ~/projects/TMAP8
-   ```
-
-2. +Run the simple diffusion case+
-
-   ```bash
-   ./tmap8-opt -i test/tests/ver-1dd/ver-1dd.i
-   ```
-
-3. +Examine the output+
-
-   ```bash
-   peacock -i test/tests/ver-1dd/ver-1dd.i
-   ```
-
-## What to Look For
-
-- Convergence messages in terminal
-- Exodus output files (.e extension)
-- CSV files with flux data
-
-!---
-
 # Modifying Input Files - Exercise
 
 ## Try These Changes to ver-1dd.i:
 
-1. +Change mesh resolution+
+!row!
+!col! width=45%
+
+- +Change mesh resolution+
 
    ```
    [Mesh]
@@ -891,7 +825,7 @@ Each trap evolves independently (i = 1, 2, 3)
    []
    ```
 
-2. +Adjust time stepping+
+- +Adjust time stepping+
 
    ```
    [Executioner]
@@ -899,7 +833,17 @@ Each trap evolves independently (i = 1, 2, 3)
    []
    ```
 
-3. +Modified diffusivity+
+!col-end!
+
+!col! width=5%
+
+!! This provides empty space between each column
+
+!col-end!
+
+!col! width=50%
+
+- +Modified diffusivity+
 
    ```
    [Kernels]
@@ -909,90 +853,12 @@ Each trap evolves independently (i = 1, 2, 3)
    []
    ```
 
-!---
-
-# Visualization with Peacock
-
-## MOOSE's GUI for Results
-
-```bash
-peacock -i ver-1d-diffusion.i
-```
-
-## Features to Explore
-
-- Time slider for transient results
-- Line plots along boundaries
-- Flux calculations at surfaces
-- Comparison with CSV data
-
-## Export Options
-
-- Images for reports
-- Data for external analysis
-- Animation of transients
-
-!---
-
-# Common Input File Patterns
-
-!row!
-!col! width=50%
-
-## Time-Dependent BCs
-
-```
-[Functions]
-  [time_bc]
-    type = ParsedFunction
-    expression = '1-exp(-t)'
-  []
-[]
-
-[BCs]
-  [left]
-    type = FunctionDirichletBC
-    function = time_bc
-  []
-[]
-```
-
-!col-end!
-
-!col! width=50%
-
-## Postprocessors for Flux
-
-```
-[Postprocessors]
-  [flux_right]
-    type = SideDiffusiveFlux
-    variable = mobile
-    boundary = right
-    diffusivity = D
-  []
-[]
-
-[Outputs]
-  csv = true
-[]
-```
-
 !col-end!
 !row-end!
 
 !---
 
-# Troubleshooting Tips
-
-## Common Issues and Solutions
-
-| Problem | Likely Cause | Solution |
-|---------|--------------|----------|
-| Oscillations in solution | Fourier number too large | Decrease dt or refine mesh |
-| Slow convergence | Poor initial guess | Use ramped BCs |
-| Trap equations unstable | Stiff coupling | Use implicit schemes |
-| Results don't match theory | Wrong units | Check diffusivity, concentrations |
+# Tips and Tricks
 
 ## Debug Strategies
 
@@ -1000,31 +866,14 @@ peacock -i ver-1d-diffusion.i
 - Use simple BCs first, add complexity
 - Compare with analytical solutions when available
 
-!---
+## Building Complex Cases
 
-# Building Complex Cases
-
-## Progressive Development Strategy
+Use a progressive development strategy:
 
 1. +Start Simple+: Pure diffusion (ver-1dd)
 2. +Add One Trap+: Test both regimes (ver-1d)
 3. +Multiple Traps+: Build incrementally (ver-1dc)
 4. +Validate Each Step+: Compare with theory
-
-## Use Base Input Files
-
-```
-# my_base.i - Common settings
-[Mesh]
-  # Standard mesh
-[]
-
-# my_case.i - Specific physics
-!include my_base.i
-[Kernels]
-  # Additional physics
-[]
-```
 
 !---
 
@@ -1066,18 +915,9 @@ mpirun -np 4 ~/projects/TMAP8/tmap8-opt -i input.i
 - +Coupled Physics+: Heat transfer, mechanics
 - +Custom Kernels+: Extend with C++
 
-## Example: Adding Temperature Dependence
+## Example: Temp. Dependence Directly in Input
 
-```
-[Materials]
-  [diffusivity]
-    type = ParsedMaterial
-    property_name = D
-    expression = 'D0*exp(-Ea/R/T)'
-    coupled_variables = 'temperature'
-  []
-[]
-```
+!listing ver-1jb.i block=Materials/diffusivity
 
 !---
 
@@ -1104,8 +944,8 @@ mpirun -np 4 ~/projects/TMAP8/tmap8-opt -i input.i
 
 ## Your Turn: Modify ver-1d
 
-1. Open `ver-1d-diffusion.i` in VSCode
-2. Change trap energy: `trap_energy_depth = 200`
+1. Open `ver-1d-diffusion.i` in your editor
+2. Change detrapping energy: $\epsilon = 200$
 3. Run the simulation
 4. Compare breakthrough time with original
 
@@ -1113,27 +953,4 @@ mpirun -np 4 ~/projects/TMAP8/tmap8-opt -i input.i
 
 - How does breakthrough time change?
 - Which regime are we in now?
-- What ζ value does this correspond to?
-
-!---
-
-# Resources for Continued Learning
-
-## Input Files to Study
-
-- `/ver-1dd.i` - Start here
-- `/ver-1d-diffusion.i` - Single trap
-- `/ver-1dc_base.i` - Modular design example
-- `/ver-1dc_mms.i` - Advanced verification
-
-## Documentation
-
-- [https://mooseframework.inl.gov/TMAP8/](https://mooseframework.inl.gov/TMAP8/)
-- Example problems with full input files
-- Syntax documentation for all kernels
-
-## Getting Help
-
-- MOOSE users forum
-- TMAP8 GitHub issues
-- INL support team
+- What $\zeta$ value does this correspond to?
