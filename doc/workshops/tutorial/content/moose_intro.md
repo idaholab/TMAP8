@@ -60,7 +60,7 @@
 
 # MOOSE Framework: Applications
 
-!media large_media/tutorials/darcy_thermo_mech/moose_herd_2019.png style=width:100%;margin-left:auto;margin-right:auto;display:block;
+!media large_media/tutorials/darcy_thermo_mech/moose_herd_2022.png style=width:100%;margin-left:auto;margin-right:auto;display:block;
 
 !---
 
