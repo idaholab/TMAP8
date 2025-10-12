@@ -1,25 +1,25 @@
-# TMAP8 Verification: Tritium Permeation and Trapping
+# TMAP8 Verification Walkthrough: \\ Tritium Permeation and Trapping
 
 !style halign=center fontsize=120%
-From Simple Diffusion to Complex Multi-trap Systems
+From Simple Diffusion to Multi-trap Systems
 
 !---
 
-# Overview: Verification Cases for Permeation
+# Overview
 
-- Progressive complexity in tritium transport modeling
+- +Purpose:+ Modeling tritium transport with progressing complexity.
 
-  - +ver-1dd+: Pure diffusion without trapping
-  - +ver-1d+: Diffusion with single trap type
-  - +ver-1dc+: Diffusion with multiple trap types
+  - +ver-1dd:+ Pure diffusion without trapping
+  - +ver-1d:+ Diffusion with single trap type
+  - +ver-1dc:+ Diffusion with multiple trap types
 
-- Based on established benchmarks from literature
+- Based on established literature resources from the TMAP4 and TMAP7 eras:
 
-  - Longhurst (1992, 2005)
-  - Ambrosek (2008)
-  - Simon (2025)
+  - [!cite](longhurst1992verification), [!cite](longhurst2005verification)
+  - [!cite](ambrosek2008verification)
 
-- Demonstrates TMAP8's capability to handle increasingly complex physics
+- Expanded upon & updated in [!cite](Simon2025)
+- Demonstrates TMAP8's capability to handle increasingly complex tritium transport scenarios.
 
 !---
 
@@ -31,8 +31,8 @@ From Simple Diffusion to Complex Multi-trap Systems
 ## Configuration
 
 - 1D slab geometry
-- Constant source at upstream side (x = 0)
-- Permeation flux measured at downstream side
+- Constant source at upstream side ($x = 0$)
+- Permeation flux measured at downstream side ($x = 1$)
 - Breakthrough time characterizes transport
 
 !col-end!
@@ -41,10 +41,10 @@ From Simple Diffusion to Complex Multi-trap Systems
 
 ## Key Parameters
 
-- Diffusivity: D = 1 m²/s
-- Temperature: T = 1000 K
-- Upstream concentration: C₀ = 0.0001 atom fraction
-- Slab thickness: l = 1 m
+- Diffusivity: $D = 1$ $\text{m}^{2}$/s
+- Temperature: $T = 1000$ K
+- Upstream concentration: $C_{0} = 0.0001$ atom fraction
+- Slab thickness: $l = 1$ m
 
 !col-end!
 !row-end!
@@ -56,8 +56,9 @@ From Simple Diffusion to Complex Multi-trap Systems
 ## Basic Anatomy of a TMAP8 Input File
 
 ```
-[Section]
-  [subsection]
+[Block]
+  [subblock]
+    type = MyObject
     parameter1 = value1
     parameter2 = value2
   []
@@ -68,10 +69,10 @@ From Simple Diffusion to Complex Multi-trap Systems
 
 - `[Mesh]` - Define geometry
 - `[Variables]` - Declare unknowns to solve for
-- `[Kernels]` - Physics equations
-- `[BCs]` - Boundary conditions
-- `[Executioner]` - Solution method
-- `[Outputs]` - Results to save
+- `[Kernels]` - Define physics equations
+- `[BCs]` - Define boundary conditions
+- `[Executioner]` - Define the solution method
+- `[Outputs]` - Setup how results should be saved
 
 !---
 
@@ -92,76 +93,206 @@ From Simple Diffusion to Complex Multi-trap Systems
 
 # Case 1: Input File Structure - Mesh and Variables
 
-```
-[Mesh]
-  type = GeneratedMesh
-  dim = 1
-  nx = 200
-  xmax = 1  # 1 meter slab
-[]
+!row!
+!col! width=45%
 
-[Variables]
-  [u]  # Mobile concentration
-    initial_condition = 0
-  []
-[]
-```
+!listing ver-1dd.i block=Mesh Variables
 
-## Key Points
+!col-end!
 
-- 1D mesh with 200 elements
-- Single variable `u` for mobile concentration
-- Starts with zero initial concentration
+!col! width=5%
 
-!---
+!! This empty columns helps to provide spacing
 
-# Case 1: Input File Structure - Physics
+!col-end!
 
-```
-[Kernels]
-  [diff]
-    type = Diffusion
-    variable = u
-    diffusivity = 1  # D = 1 m²/s
-  []
-  [time]
-    type = TimeDerivative
-    variable = u
-  []
-[]
-```
+!col! width=50%
 
-## Physics Implementation
+- 1D mesh with 200 elements and a maximum length of 1
 
-- `Diffusion` kernel: ∇·(D∇u)
-- `TimeDerivative` kernel: ∂u/∂t
-- Together they form the diffusion equation
+  - `nx_num` is defined as 200 at the top of the file, and `${}` syntax is used to utilize it elsewhere.
+  - `xmin` in a `Mesh` object generally defaults to 0.
+
+- Single variable `mobile` for the mobile species concentration
+- Starts with zero initial concentration (not giving an `ICs` block and not setting `initial_condition` in this sub-block defaults to zero).
+
+!col-end!
+!row-end!
 
 !---
 
-# Case 1: Input File Structure - Boundary Conditions
+# Case 1: Input File Structure - \\ Physics Implementation
 
+!row!
+!col! width=45%
+
+!listing ver-1dd.i block=Kernels
+
+!col-end!
+
+!col! width=5%
+
+!! This empty columns helps to provide spacing
+
+!col-end!
+
+!col! width=50%
+
+- `Diffusion` kernel:
+
+  !equation
+  \nabla \cdot (D \nabla C_M)
+
+  where $D = 1$.
+
+- `TimeDerivative` kernel:
+
+  !equation
+  \frac{\partial C_M}{\partial t}
+
+- Together, they form the diffusion equation that we are aiming to solve.
+
+!col-end!
+!row-end!
+
+!---
+
+# Case 1: Input File Structure - \\ Boundary Conditions
+
+!row!
+!col! width=45%
+
+!listing ver-1dd.i block=BCs
+
+!col-end!
+
+!col! width=5%
+
+!! This empty column helps to provide spacing
+
+!col-end!
+
+!col! width=50%
+
+- A constant source of `value = 1` is placed at left (upstream), due to normalizing the concentration (`cl = 3.1622e18` atoms/$m^3$).
+
+  - Note the use of the `fparse` system to perform this simple calculation.
+  - In this case, the action of calculating the source is simple, but use of the parsing system can, in general, enhance readability of the input file.
+
+- A concentration of zero is set at right (downstream).
+
+!col-end!
+!row-end!
+
+!---
+
+# Case 1: Input File Structure - \\ Postprocessors
+
+!row!
+!col! width=45%
+
+!listing ver-1dd.i block=Postprocessors
+
+!col-end!
+
+!col! width=5%
+
+!! This empty column helps to provide spacing
+
+!col-end!
+
+!col! width=50%
+
+- Here, postprocessors are used to calculate two quantities:
+
+  - The raw outward flux average on the downstream boundary using the [SideDiffusiveFluxAverage.md] object, given the `diffusivity` from the top of the input.
+  - The raw outward flux average is then scaled to its actual value using the [ScalePostprocessor.md], which takes the `outflux` value and scales it by the concentration `cl`.
+
+!col-end!
+!row-end!
+
+!---
+
+# Case 1: Input File Structure - \\ Preconditioning and Solving
+
+!row!
+!col! width=40%
+
+!listing ver-1dd.i block=Preconditioning Executioner
+
+!col-end!
+
+!col! width=5%
+
+!! This empty column helps to provide spacing
+
+!col-end!
+
+!col! width=55%
+
+- For preconditioning, we have a [SingleMatrixPreconditioner.md] (Single Matrix Preconditioner).
+
+  - SMP builds a preconditioning matrix using user-defined off-diagonal parts of the Jacobian matrix.
+  - Use of `full = true` uses *all* of the off-diagonal blocks, but tuning of the preconditioning can allow focus on one or more physics in your system.
+
+- Given the time derivative term, we use a Transient executioner with a Newton solver.
+- Total simulation time, the timestep, and the minimum timestep allowed is set using parser syntax.
+- We'll come back to the other settings when traps are inserted; for this simple scenario, most of them are not needed.
+
+!col-end!
+!row-end!
+
+!---
+
+# Case 1: Input File Structure - Outputs
+
+!row!
+!col! width=45%
+
+!listing ver-1dd.i block=Outputs
+
+!col-end!
+
+!col! width=5%
+
+!! This empty column helps to provide spacing
+
+!col-end!
+
+!col! width=50%
+
+- Here, we want both [Exodus.md] and [CSV.md] output. By simply setting:
+
+  ```
+  exodus = true
+  csv = true
+  ```
+
+- We also turn on [DOFMapOutput.md], only executing it on the initial timestep (after the matrix is constructed). This provides output information on how the matrix is constructed, which is helpful for complicated models.
+- Finally, we turn on a simple performance table in the Console output.
+
+!col-end!
+!row-end!
+
+!---
+
+# Case 1: Let's Run It!
+
+If using a cloned and locally-built copy of TMAP8:
+
+```bash
+cd test/tests/ver-1dd/
+../../../tmap8-opt -i ver-1dd.i
 ```
-[BCs]
-  [left]  # Upstream side
-    type = DirichletBC
-    variable = u
-    boundary = left
-    value = 1  # Normalized concentration
-  []
-  [right]  # Downstream side
-    type = DirichletBC
-    variable = u
-    boundary = right
-    value = 0  # Initially no concentration
-  []
-[]
+
+If using a Docker container:
+
+```bash
+cd /tmap8-workdir/tmap8/ver-1dd
+tmap8-opt -i ver-1dd.i
 ```
 
-## Boundary Setup
-
-- Constant source at left (upstream)
-- Zero concentration at right (downstream)
+The output can then be visualized using ParaView, or by using the `comparison_ver-1dd.py` script with some light modifications (change the location of the data file to the output you just generated).
 
 !---
 
@@ -169,10 +300,9 @@ From Simple Diffusion to Complex Multi-trap Systems
 
 !media comparison_ver-1dd.py
        image_name=ver-1dd_comparison_diffusion.png
-       style=width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       caption=Pure diffusion case: TMAP8 matches analytical solution with RMSPE = 0.14%
+       style=display:block;box-shadow:none;width:55%;margin-left:auto;margin-right:auto;
 
-- Breakthrough time: τ_b = 0.05 s (both analytical and TMAP8)
+- Breakthrough time: $\tau_b = 0.05$ seconds (both analytical and TMAP8)
 - Excellent agreement throughout transient
 
 !---
