@@ -41,6 +41,20 @@ TMAP8 directly inherits all of MOOSE's features, including:
 
 !---
 
+# TMAP8 Theory
+
+TMAP8's documentation provides a [theory manual](theory_manual.md) to describe the base theory used in TMAP8, focused in particular on different approaches available to model surface reactions.
+
+However, this list is not exhaustive, and for a more comprehensive description of capabilities, theoretical concepts, and available objects, refer to:
+
+- the publications listed in the [publications.md]
+- the [verification_and_validation/index.md]
+- the [syntax/index.md] page.
+
+For the derivation of the weak form of the tritium transport system of equations in solids, refer to the appendix of [this TMAP8 publication](https://www.sciencedirect.com/science/article/pii/S0920379625000766).
+
+!---
+
 # TMAP8 key capabilities - fuel cycle
 
 !row!
@@ -59,7 +73,7 @@ Ongoing efforts are using the multiapp system to concurrently perform component-
 !media examples/figures/fuel_cycle_abdou_03.png style=width:100%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
 
 !style halign=center
-Figure from the [fuel cycle example from Abdou et al.](examples/fuel_cycle_Abdou/index.md).
+Figure from the [fuel cycle example from Abdou et al](examples/fuel_cycle_Abdou/index.md).
 
 !col-end!
 !row-end!
