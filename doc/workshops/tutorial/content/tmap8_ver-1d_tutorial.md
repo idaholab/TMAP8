@@ -236,8 +236,7 @@ From Simple Diffusion to Multi-trap Systems
   - Use of `full = true` uses *all* of the off-diagonal blocks, but tuning of the preconditioning can allow focus on one or more physics in your system.
 
 - Given the time derivative term, we use a Transient executioner with a Newton solver.
-- Total simulation time, the timestep, and the minimum timestep allowed is set using parser syntax.
-- We'll come back to the other settings when traps are inserted; for this simple scenario, most of them are not needed.
+- Other solver parameters - including total simulation time, the timestep, and the minimum timestep allowed - is set using parser syntax.
 
 !col-end!
 !row-end!
@@ -311,6 +310,9 @@ The output can then be visualized using ParaView, or by using the `comparison_ve
 
 In this case, we are modeling permeation through a membrane with a constant source in which traps are operative. We solve the following equations:
 
+!row!
+!col! width=50%
+
 For mobile species:
 
 !equation
@@ -325,6 +327,23 @@ For empty trapping sites:
 
 !equation
 C_T^{empty} = C_{T0} \cdot N - \text{trap\_per\_free} \cdot C_T
+
+!col-end!
+
+!col! width=50%
+
+where:
+
+- $C_M$ and $C_T$ are the concentrations of the mobile and trapped species respectively
+- $D$ is the diffusivity of the mobile species
+- $\alpha_t$ and $\alpha_r$ are the trapping and release rate coefficients
+- $\text{trap\_per\_free}$ is a factor converting the magnitude of $C_T$ to be closer to $C_M$ for better numerical convergence
+- $C_{T0}$ is the fraction of host sites that can contribute to trapping
+- $C_T^{empty}$ is the concentration of empty trapping sites
+- $N$ is the host density.
+
+!col-end!
+!row-end!
 
 !---
 
@@ -388,143 +407,234 @@ In this scenario, examine reach regime using two input files:
 - +ver-1d-diffusion.i:+ where diffusion is the rate-limiting step
 - +ver-1d-trapping.i:+ where trapping is the rate-limiting step.
 
-A few problem notes:
+This is the same domain configuration as in Case 1.
+
+### Key Parameters
 
 !row!
 !col! width=50%
-
-### Configuration
-
-- 1D slab geometry
-- Constant source at upstream side ($x = 0$)
-- Permeation flux measured at downstream side ($x = 1$)
-- Breakthrough time characterizes transport
-
-!col-end!
-
-!col! width=50%
-
-### Key Parameters
 
 - Diffusivity: $D = 1$ $\text{m}^{2}$/s
 - Temperature: $T = 1000$ K
 - Upstream concentration: $C_{0} = 0.0001$ atom fraction
 - Slab thickness: $l = 1$ m
 - Trapping site fraction: 10$\%$ (0.1)
+
+!col-end!
+
+!col! width=50%
+
 - Lattice parameter: $\lambda^2 = 10^{-15} \; m^2$
+- $\text{trap\_per\_free} = 1$ (Diffusion), $10^3$ (Trapping)
+- Trapping coefficient: $\alpha_t = 10^{15}$
+- Release coefficient: $\alpha_r = 10^{13}$
+- Host density: $N = 3.1622 \times 10^22$ atoms / $m^3$
 
 !col-end!
 !row-end!
 
 !---
 
-# Case 2: Input File - Variables for Trapping
+# Case 2: Diffusion Limit Input File - Variables
 
-```
-[Variables]
-  [mobile]
-    initial_condition = 0
-  []
-[]
+In this case, we'll be highlighting the main changes from Case 1, where we only had diffusion for a single mobile species.
 
-[AuxVariables]
-  [trapped_c]
-    family = SCALAR
-    order = FIRST
-    initial_condition = 0
-  []
-  [trapped_c_node]  # For visualization
-    order = FIRST
-    family = LAGRANGE
-  []
-[]
-```
+!listing ver-1d-diffusion.i block=Variables
 
-## Two-Species System
-
-- Primary variable: `mobile` concentration
-- Auxiliary scalar variable: `trapped_c` for ODE
-- Nodal auxiliary: `trapped_c_node` for plotting
+- Now, we have two species, `trapped` and `mobile`. Similar to Case 1, the `mobile` variable is our primary variable, as we'll plot the downstream flux for comparison to analytical solutions.
+- Both use the default initial concentrations of zero, as well as the default FEM families/order.
 
 !---
 
-# Case 2: Input File - Trapping Physics
+# Case 2: Diffusion Limit Input File - Trapping Physics
 
-```
-[ScalarKernels]
-  [scalar_time_deriv]
-    type = ODETimeDerivative
-    variable = trapped_c
-  []
-  [scalar_trapping_equilibrium]
-    type = ScalarTrappingEquilibriumEquation
-    variable = trapped_c
-    v = mobile_node
-    n_traps = 0.1  # 10% trap sites
-    vi = 1.3e13     # Debye frequency
-    alphar = 1e13
-    trap_per_free = 100000
-    n_sol = 5e28    # Host density
-    temperature = 1000
-    trap_energy_depth = ${trap_depth}
-  []
-[]
-```
+!listing ver-1d-diffusion.i block=NodalKernels
 
 !---
 
-# Case 2: Input File - Coupling Mobile and Trapped
+# A Note on ReferenceResidualProblem
 
-```
-[Kernels]
-  [time_deriv]
-    type = TimeDerivativeTrapping
-    variable = mobile
-    property = trap_per_free
-    prop_values = '100000'
-    aux_variables = 'trapped_c_node'
-    aux_var_derivatives = 'trapped_deriv'
-    aux_coupled_var_derivs = true
-  []
-[]
+- The [ReferenceResidualProblem.md] MOOSE Problem type is designed to allow custom criteria for convergence for separate, coupled physics by using tagged vectors to designate portions of the system matrix.
+- These tags are set in the `[Problem]` block using `reference vector` and `extra_tag_vectors` and then used in the *Kernel blocks (of all types).
 
-[UserObjects]
-  [trapped_c_node_uo]
-    type = ProjectionAux
-    variable = trapped_c_node
-    v = trapped_c
-    execute_on = 'TIMESTEP_BEGIN LINEAR'
-  []
-[]
-```
+!listing ver-1d-diffusion.i block=Problem Kernels/diff
 
 !---
 
-# Case 2: Trapping Parameter Study
-
-## Key Discriminant
-
-\begin{equation}
-\zeta = \frac{\lambda^2 \nu}{\rho D_0} \exp \left( \frac{E_d - \epsilon}{kT} \right) + \frac{c}{\rho}
-\end{equation}
+# Case 2: Diffusion Limit Input File - Coupling Mobile and Trapped
 
 !row!
-!col! width=50%
+!col! width=45%
 
-### Effective Diffusivity Regime
-- When ζ >> c/ρ
-- Set: `trap_energy_depth = 100`
-- ζ = 91.47 c/ρ
+!listing ver-1d-diffusion.i block=Kernels
+
+!col-end!
+
+!col! width=5%
+
+!! This empty column helps to provide spacing
 
 !col-end!
 
 !col! width=50%
 
-### Deep Trapping Regime
+- We now have a new Kernel in the PDE corresponding to `mobile`:
 
-- When ζ ≈ c/ρ
-- Set: `trap_energy_depth = 10000`
-- ζ = 1.00454 c/ρ
+  !equation
+  \frac{\partial C_T}{\partial t}
+
+  represented by [CoupledTimeDerivative.md].
+- Note that "v" is a common parameter name representing the coupled variable in many MOOSE objects.
+
+!col-end!
+!row-end!
+
+!---
+
+# Case 2: Diffusion Limit Input File - Trapped Physics
+
+!row!
+!col! width=45%
+
+!listing ver-1d-diffusion.i block=NodalKernels
+
+!col-end!
+
+!col! width=5%
+
+!! This empty column helps to provide spacing
+
+!col-end!
+
+!col! width=50%
+
+- To represent the trapping physics on the nodes, we can use the [syntax/NodalKernels/index.md].
+- [TimeDerivativeNodalKernel.md] is used for:
+
+  !equation
+  \frac{dC_T}{dt}
+- [TrappingNodalKernel.md] is used for:
+
+  !equation
+  -\alpha_t  \frac {C_T^{empty} C_M } {(N \cdot \text{trap\_per\_free})}
+
+- Finally, [ReleasingNodalKernel.md] is used for:
+
+  !equation
+  \alpha_r C_T
+
+!col-end!
+!row-end!
+
+!---
+
+# Case 2: Diffusion Limit Input File - Executioner
+
+!row!
+!col! width=45%
+
+!listing ver-1d-diffusion.i block=Executioner
+
+!col-end!
+
+!col! width=5%
+
+!! This empty column helps to provide spacing
+
+!col-end!
+
+!col! width=50%
+
+- The executioner in this case is similar to that in Case 1.
+- Note that a different [TimeStepper/index.md] is used (the default, `implicit-euler`).
+- The absolute non-linear tolerance is also using the smaller default value (`1e-50`).
+
+!col-end!
+!row-end!
+
+!---
+
+# Case 2: Strong Trapping Input File - \\ AuxVariables and AuxKernels
+
+For the deep trapping limit case, we'll cover the additions of objects to determine the empty trapping site concentration.
+
+!row!
+!col! width=45%
+
+!listing ver-1d-trapping.i block=AuxVariables AuxKernels
+
+!col-end!
+
+!col! width=5%
+
+!! This empty column helps to provide spacing
+
+!col-end!
+
+!col! width=50%
+
+- Becuase the empty trapping concentration is not a differential equation, we can solve for it using the [AuxKernels/index.md]:
+
+  !equation
+  C_T^{empty} = C_{T0} \cdot N - \text{trap\_per\_free} \cdot C_T
+
+- AuxKernels are also used (in the case of `scaled_empty` and `trapped_sites`) to calculate the total number of trapping sites in the model.
+
+!col-end!
+!row-end!
+
+!---
+
+# Case 2 Strong Trapping Input File - \\ Numerical Considerations
+
+!row!
+!col! width=48%
+
+### Input File Settings for Stability
+
+!listing ver-1d-trapping.i block=Executioner/TimeStepper
+
+!col-end!
+
+!col! width=4%
+
+!! This empty column helps to provide spacing
+
+!col-end!
+
+!col! width=48%
+
+### Ramped Boundary Condition
+
+!listing ver-1d-trapping.i block=BCs/left Functions
+
+!col-end!
+!row-end!
+
+!---
+
+# Case 2: Trapping Parameter Study
+
+As a reminder, the trapping parameter $\zeta$ is the key discriminant to which regime is dominating.
+
+!row!
+!col! width=50%
+
+### Effective Diffusivity Regime
+
+- When $\zeta$ $\gg$ c/$\rho$
+- Set: $\epsilon = 100$
+- $\zeta = 91.47$ c/$\rho$
+
+!col-end!
+
+!col! width=50%
+
+### Strong-Trapping Regime / Deep Trapping Limit
+
+- When $\zeta$ $\approx$ c/$\rho$
+- Set $\epsilon = 10000$
+- $\zeta = 1.00454$ c/$\rho$
 
 !col-end!
 !row-end!
@@ -535,8 +645,7 @@ A few problem notes:
 
 !media comparison_ver-1d.py
        image_name=ver-1d_comparison_diffusion.png
-       style=width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       caption=Effective diffusivity regime: Gradual breakthrough with RMSPE = 0.96%
+       style=display:block;box-shadow:none;width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
 
 - Trapping slows but doesn't stop diffusion
 - Smooth permeation curve
@@ -547,45 +656,10 @@ A few problem notes:
 
 !media comparison_ver-1d.py
        image_name=ver-1d_comparison_trapping.png
-       style=width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       caption=Deep trapping regime: Sharp breakthrough after trap saturation
+       style=display:block;box-shadow:none;width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
 
 - Must fill traps before significant permeation
 - Sharp transition at breakthrough
-
-!---
-
-# Case 2: Numerical Considerations
-
-## Input File Settings for Stability
-
-```
-[Executioner]
-  type = Transient
-  solve_type = NEWTON
-  petsc_options_iname = '-pc_type -pc_factor_shift_type'
-  petsc_options_value = 'lu       NONZERO'
-
-  # Adaptive time stepping
-  dt = 1e-6  # Start very small
-  adapt_type = IterationAdaptiveTS
-  optimal_iterations = 3
-  growth_factor = 1.2
-
-  end_time = 2000
-[]
-```
-
-## Ramped Boundary Condition
-
-```
-[Functions]
-  [ramp]
-    type = ParsedFunction
-    expression = 'tanh(3*t)'  # Smooth ramp-up
-  []
-[]
-```
 
 !---
 
