@@ -50,4 +50,8 @@
 
 !---
 
+!bibtex bibliography title-level=1
+
+!---
+
 !media large_media/framework/inl_blue.png style=width:50%;margin-left:auto;margin-right:auto;display:block;
