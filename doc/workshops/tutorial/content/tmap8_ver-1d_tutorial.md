@@ -819,19 +819,19 @@ Application of functions to Kernels/NodalKernels/BCs to "force" exact solution:
 
 - +Change mesh resolution+
 
-   ```
-   [Mesh]
-     nx = 400  # Was 200
-   []
-   ```
+  ```
+  [Mesh]
+    nx = 400  # Was 200
+  []
+  ```
 
 - +Adjust time stepping+
 
-   ```
-   [Executioner]
-     dt = 0.0001  # Smaller initial step
-   []
-   ```
+  ```
+  [Executioner]
+    dt = 0.0001  # Smaller initial step
+  []
+  ```
 
 !col-end!
 
@@ -845,13 +845,13 @@ Application of functions to Kernels/NodalKernels/BCs to "force" exact solution:
 
 - +Modified diffusivity+
 
-   ```
-   [Kernels]
-     [diff]
-       diffusivity = 0.5  # Slower diffusion
-     []
-   []
-   ```
+  ```
+  [Kernels]
+    [diff]
+      diffusivity = 0.5  # Slower diffusion
+    []
+  []
+  ```
 
 !col-end!
 !row-end!
