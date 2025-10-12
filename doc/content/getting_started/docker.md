@@ -76,7 +76,7 @@ This block adds some vertical spacing between the text and the image
 
 !media getting_started/media/terminal.png style=width:80%;display:block;margin-left:auto;margin-right:auto;
 
-7. In the terminal window within the web browser, type the following commands to download the TMAP8 tests, which include the input files for TMAP8's [V&V cases](verification_and_validation/index.md), [example cases](examples/index.md), and the cases highlighted in the TMAP8 [tutorial](workshops/tutorial/index.md):
+7. In the terminal window within the web browser, type the following commands to download the TMAP8 tests, which include the input files for TMAP8's [V&V cases](verification_and_validation/index.md), [example cases](examples/index.md), and the cases highlighted in the TMAP8 [tutorial](https://mooseframework.inl.gov/TMAP8/tutorial/index.html):
 
    ```bash
    cd /tmap8-workdir
