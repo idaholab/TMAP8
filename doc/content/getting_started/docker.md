@@ -54,7 +54,7 @@ The remaining commands should be run within the WSL window on Windows and within
    ```bash
    docker run --rm -p 8080:8080 --mount type=bind,source=$HOME/tmap8-workdir,target=/tmap8-workdir idaholab/tmap8:2025.10.07-999a9a7 code-server-start
    ```
-5. In the Terminal window where you ran the command in step 4, there will be green text that states "Connect to the instance at [http://localhost:8080](http://localhost:8080) with password <PASSWORD>". Copy this password, open any web browser and navigate to [https://localhost:8080](http://localhost:8080), pasting in the password copied from the green text (example below in the red box; your password will be different!)
+5. In the Terminal window where you ran the command in step 4, there will be text that states "Connect to the instance at [http://localhost:8080](http://localhost:8080) with password <PASSWORD>". Copy this password, open any web browser and navigate to [https://localhost:8080](http://localhost:8080), pasting in the password copied from the text (example below in the red box; your password will be different!)
 
 !!!
 This block adds some vertical spacing between the text and the image
@@ -70,7 +70,7 @@ This block adds some vertical spacing between the text and the image
 
 !media getting_started/media/terminal.png style=width:80%;display:block;margin-left:auto;margin-right:auto;
 
-7. In the terminal window within the web browser, type the following commands to download the TMAP8 tests, which include the workshop input files:
+7. In the terminal window within the web browser, type the following commands to download the TMAP8 tests, which include the input files for TMAP8's [V&V cases](verification_and_validation/index.md), [example cases](examples/index.md), and the cases highlighted in the TMAP8 [tutorial](workshops/tutorial/index.md):
 
    ```bash
    cd /tmap8-workdir
