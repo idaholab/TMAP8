@@ -309,17 +309,112 @@ The output can then be visualized using ParaView, or by using the `comparison_ve
 
 # Case 2: Single Trap Type (ver-1d)
 
-## Coupled Equations
+In this case, we are modeling permeation through a membrane with a constant source in which traps are operative. We solve the following equations:
 
-Mobile species:
-\begin{equation}
+For mobile species:
+
+!equation
 \frac{\partial C_M}{\partial t} = \nabla \cdot (D \nabla C_M) - \text{trap\_per\_free} \cdot \frac{\partial C_T}{\partial t}
+
+For trapped species:
+
+!equation
+\frac{\partial C_T}{\partial t} = \alpha_t \frac{C_T^{empty} C_M}{N \cdot \text{trap\_per\_free}} - \alpha_r C_T
+
+For empty trapping sites:
+
+!equation
+C_T^{empty} = C_{T0} \cdot N - \text{trap\_per\_free} \cdot C_T
+
+!---
+
+# Trapping parameter
+
+The breakthrough time may have one of two limiting values depending on whether the trapping is in the effective diffusivity or strong-trapping regimes. A trapping parameter is defined by:
+
+\begin{equation}
+    \zeta = \frac{\lambda^2 \nu}{\rho D_0} \exp \left( \frac{E_d - \epsilon}{kT} \right) + \frac{c}{\rho}
 \end{equation}
 
-Trapped species:
+where:
+
+- $\lambda$ = lattice parameter
+- $\nu$ = Debye frequency ($\approx$ $10^{13} \; s^{-1}$)
+- $\rho$ = trapping site fraction
+- $D_0$ = diffusivity pre-exponential
+- $E_d$ = diffusion activation energy
+- $\epsilon$ = trap energy
+- $k$ = Boltzmann's constant
+- $T$ = temperature
+- $c$ = dissolved gas atom fraction
+
+!---
+
+# Effective Diffusivity Regime
+
+The discriminant for which regime is dominant is the ratio of $\zeta$ to c/$\rho$. If $\zeta$ $\gg$ c/$\rho$, then the effective diffusivity regime applies, and the permeation transient is identical to the standard diffusion transient, with the diffusivity replaced by an effective diffusivity
+
+!equation
+D_{eff} = \frac{D}{1 + \frac{1}{\zeta}}
+
+to account for the fact that trapping leads to slower transport.
+
+In this limit, the breakthrough time, defined as the intersection of the steepest tangent to the diffusion transient with the time axis, will be
+
 \begin{equation}
-\frac{\partial C_T}{\partial t} = \alpha_t \frac{C_T^{empty} C_M}{N \cdot \text{trap\_per\_free}} - \alpha_r C_T
+    \tau_{b_e} = \frac{l^2}{2 \; \pi^2 \; D_{eff}}
 \end{equation}
+
+where $l$ is the thickness of the slab and D is the diffusivity of the gas through the material.
+
+!---
+
+# Strong-trapping Regime
+
+In the deep-trapping limit, $\zeta$ $\approx$ c/$\rho$, and no permeation occurs until essentially all the traps have been filled. Then the system quickly reaches steady-state. The breakthrough time is given by
+
+\begin{equation}
+    \tau_{b_d} = \frac{l^2 \rho}{2 \; C_0 \; D}
+\end{equation}
+
+where $C_0$ is the steady dissolved gas concentration at the upstream (x = 0) side.
+
+!---
+
+# Case Description
+
+In this scenario, examine reach regime using two input files:
+
+- +ver-1d-diffusion.i:+ where diffusion is the rate-limiting step
+- +ver-1d-trapping.i:+ where trapping is the rate-limiting step.
+
+A few problem notes:
+
+!row!
+!col! width=50%
+
+### Configuration
+
+- 1D slab geometry
+- Constant source at upstream side ($x = 0$)
+- Permeation flux measured at downstream side ($x = 1$)
+- Breakthrough time characterizes transport
+
+!col-end!
+
+!col! width=50%
+
+### Key Parameters
+
+- Diffusivity: $D = 1$ $\text{m}^{2}$/s
+- Temperature: $T = 1000$ K
+- Upstream concentration: $C_{0} = 0.0001$ atom fraction
+- Slab thickness: $l = 1$ m
+- Trapping site fraction: 10$\%$ (0.1)
+- Lattice parameter: $\lambda^2 = 10^{-15} \; m^2$
+
+!col-end!
+!row-end!
 
 !---
 
