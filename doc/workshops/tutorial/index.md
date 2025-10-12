@@ -3,7 +3,7 @@
 !style halign=center fontsize=120%
 !datetime today format=%B %Y
 
-!media figures/TMAP8_logo_blue.png style=display:block;margin-left:auto;margin-right:auto;width:30%;
+!media figures/TMAP8_logo_blue.png style=display:block;box-shadow:none;margin-left:auto;margin-right:auto;width:30%;
 
 !style halign=center
 [https://mooseframework.inl.gov/TMAP8/](https://mooseframework.inl.gov/TMAP8/)
