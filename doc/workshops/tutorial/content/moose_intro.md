@@ -31,7 +31,7 @@
 !row!
 !col! width=50%
 
-!media large_media/tutorials/darcy_thermo_mech/moose_intro.png
+!media large_media/tutorials/darcy_thermo_mech/moose_systems.png
 
 !col-end!
 
