@@ -33,6 +33,12 @@
 
 1. Download and install ParaView from [https://www.paraview.org/download](https://www.paraview.org/download).
 
+!alert! tip title=What is ParaView used for?
+ParaView is a visualization software from [Kitware](https://www.kitware.com) that will help you visualize TMAP8's results. Placing the input files you
+plan to run into an external working directory (as in Step 3 below) will enable output to be placed there as well. Then, ParaView can be used in the
+base operating system to view and visualize that output.
+!alert-end!
+
 !alert! warning
 The remaining commands should be run within the WSL window on Windows and within a normal terminal window if on Linux or Mac!
 !alert-end!
