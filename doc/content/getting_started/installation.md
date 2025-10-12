@@ -11,7 +11,7 @@ you do not need to follow the steps from the section titled "Cloning MOOSE" and 
 return to this page and continue with Step Two.
 
 - [Linux and MacOS](https://mooseframework.inl.gov/getting_started/installation/conda.html)
-- [Windows 10 (experimental)](https://mooseframework.inl.gov/getting_started/installation/windows10.html)
+- [Windows 10 (experimental)](https://mooseframework.inl.gov/getting_started/installation/windows10.html) (Consider a virtual container [using Docker instead!](getting_started/docker.md exact=True))
 
 Advanced manual installation instructions for this environment are available
 [via the MOOSE website](https://mooseframework.inl.gov/getting_started/installation/index.html).
@@ -22,6 +22,10 @@ please see [the MOOSE troubleshooting guide for Conda](https://mooseframework.in
 !alert! note title=Interested in TMAP8 on HPC?
 Those users & developers interested in running TMAP8 on an HPC cluster environment can find more
 information about that user case in our [getting_started/hpc.md] instructions.
+!alert-end!
+
+!alert! note title=Interested in Using a Pre-built TMAP8 in a Virtual Container?
+Note that a Docker container image of TMAP8 is available, that contains a pre-built copy of the TMAP8 executable, as well as installable versions of the TMAP8 tests. This is intended mostly for users who desire a pre-compiled copy of TMAP8 for testing or use in production simulations and do not mind the overhead of virtualization. To view these instructons, please proceed to the [getting_started/docker.md exact=True] page.
 !alert-end!
 
 ## Step Two: Clone TMAP8
