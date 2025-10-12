@@ -57,10 +57,10 @@ From Simple Diffusion to Complex Multi-trap Systems
 
 ```
 [Section]
-  [./subsection]
+  [subsection]
     parameter1 = value1
     parameter2 = value2
-  [../]
+  []
 []
 ```
 
@@ -101,9 +101,9 @@ From Simple Diffusion to Complex Multi-trap Systems
 []
 
 [Variables]
-  [./u]  # Mobile concentration
+  [u]  # Mobile concentration
     initial_condition = 0
-  [../]
+  []
 []
 ```
 
@@ -119,15 +119,15 @@ From Simple Diffusion to Complex Multi-trap Systems
 
 ```
 [Kernels]
-  [./diff]
+  [diff]
     type = Diffusion
     variable = u
     diffusivity = 1  # D = 1 m²/s
-  [../]
-  [./time]
+  []
+  [time]
     type = TimeDerivative
     variable = u
-  [../]
+  []
 []
 ```
 
@@ -143,18 +143,18 @@ From Simple Diffusion to Complex Multi-trap Systems
 
 ```
 [BCs]
-  [./left]  # Upstream side
+  [left]  # Upstream side
     type = DirichletBC
     variable = u
     boundary = left
     value = 1  # Normalized concentration
-  [../]
-  [./right]  # Downstream side
+  []
+  [right]  # Downstream side
     type = DirichletBC
     variable = u
     boundary = right
     value = 0  # Initially no concentration
-  [../]
+  []
 []
 ```
 
@@ -197,21 +197,21 @@ Trapped species:
 
 ```
 [Variables]
-  [./mobile]
+  [mobile]
     initial_condition = 0
-  [../]
+  []
 []
 
 [AuxVariables]
-  [./trapped_c]
+  [trapped_c]
     family = SCALAR
     order = FIRST
     initial_condition = 0
-  [../]
-  [./trapped_c_node]  # For visualization
+  []
+  [trapped_c_node]  # For visualization
     order = FIRST
     family = LAGRANGE
-  [../]
+  []
 []
 ```
 
@@ -227,11 +227,11 @@ Trapped species:
 
 ```
 [ScalarKernels]
-  [./scalar_time_deriv]
+  [scalar_time_deriv]
     type = ODETimeDerivative
     variable = trapped_c
-  [../]
-  [./scalar_trapping_equilibrium]
+  []
+  [scalar_trapping_equilibrium]
     type = ScalarTrappingEquilibriumEquation
     variable = trapped_c
     v = mobile_node
@@ -242,7 +242,7 @@ Trapped species:
     n_sol = 5e28    # Host density
     temperature = 1000
     trap_energy_depth = ${trap_depth}
-  [../]
+  []
 []
 ```
 
@@ -252,7 +252,7 @@ Trapped species:
 
 ```
 [Kernels]
-  [./time_deriv]
+  [time_deriv]
     type = TimeDerivativeTrapping
     variable = mobile
     property = trap_per_free
@@ -260,16 +260,16 @@ Trapped species:
     aux_variables = 'trapped_c_node'
     aux_var_derivatives = 'trapped_deriv'
     aux_coupled_var_derivs = true
-  [../]
+  []
 []
 
 [UserObjects]
-  [./trapped_c_node_uo]
+  [trapped_c_node_uo]
     type = ProjectionAux
     variable = trapped_c_node
     v = trapped_c
     execute_on = 'TIMESTEP_BEGIN LINEAR'
-  [../]
+  []
 []
 ```
 
@@ -355,10 +355,10 @@ Trapped species:
 
 ```
 [Functions]
-  [./ramp]
+  [ramp]
     type = ParsedFunction
     expression = 'tanh(3*t)'  # Smooth ramp-up
-  [../]
+  []
 []
 ```
 
@@ -389,9 +389,9 @@ Each trap evolves independently (i = 1, 2, 3)
 []
 
 [Variables]
-  [./mobile]
+  [mobile]
     initial_condition = 0
-  [../]
+  []
 []
 ```
 
@@ -418,21 +418,21 @@ Each trap evolves independently (i = 1, 2, 3)
 
 ```
 [AuxVariables]
-  [./trapped_1]
+  [trapped_1]
     family = SCALAR
     order = FIRST
     initial_condition = 0
-  [../]
-  [./trapped_2]
+  []
+  [trapped_2]
     family = SCALAR
     order = FIRST
     initial_condition = 0
-  [../]
-  [./trapped_3]
+  []
+  [trapped_3]
     family = SCALAR
     order = FIRST
     initial_condition = 0
-  [../]
+  []
 []
 ```
 
@@ -448,25 +448,25 @@ Each trap evolves independently (i = 1, 2, 3)
 
 ```
 [ScalarKernels]
-  [./trap_1]
+  [trap_1]
     type = ScalarTrappingEquilibriumEquation
     variable = trapped_1
     n_traps = 0.1     # 10% sites
     trap_energy_depth = 100  # ε/k = 100 K
     # ... other parameters
-  [../]
+  []
 
-  [./trap_2]
+  [trap_2]
     # ... similar with
     n_traps = 0.15    # 15% sites
     trap_energy_depth = 500  # ε/k = 500 K
-  [../]
+  []
 
-  [./trap_3]
+  [trap_3]
     # ... similar with
     n_traps = 0.20    # 20% sites
     trap_energy_depth = 800  # ε/k = 800 K
-  [../]
+  []
 []
 ```
 
@@ -476,7 +476,7 @@ Each trap evolves independently (i = 1, 2, 3)
 
 ```
 [Kernels]
-  [./time_deriv_trapping]
+  [time_deriv_trapping]
     type = TimeDerivativeTrapping
     variable = mobile
     property = trap_per_free
@@ -484,7 +484,7 @@ Each trap evolves independently (i = 1, 2, 3)
     aux_variables = 'trapped_1_node trapped_2_node trapped_3_node'
     aux_var_derivatives = 'trap_1_deriv trap_2_deriv trap_3_deriv'
     aux_coupled_var_derivs = true
-  [../]
+  []
 []
 ```
 
@@ -514,22 +514,22 @@ Each trap evolves independently (i = 1, 2, 3)
 
 ```
 [Functions]
-  [./exact_u]
+  [exact_u]
     type = ParsedFunction
     expression = 'cos(x)*t'  # Manufactured solution
-  [../]
-  [./forcing_u]
+  []
+  [forcing_u]
     type = ParsedFunction
     expression = 'cos(x) + D*t*cos(x) + trap_contributions'
-  [../]
+  []
 []
 
 [Kernels]
-  [./mms_source]
+  [mms_source]
     type = BodyForce
     variable = mobile
     function = forcing_u
-  [../]
+  []
 []
 ```
 
@@ -602,9 +602,9 @@ Each trap evolves independently (i = 1, 2, 3)
 
    ```
    [Kernels]
-     [./diff]
+     [diff]
        diffusivity = 0.5  # Slower diffusion
-     [../]
+     []
    []
    ```
 
@@ -642,17 +642,17 @@ peacock -i ver-1d-diffusion.i
 
 ```
 [Functions]
-  [./time_bc]
+  [time_bc]
     type = ParsedFunction
     expression = '1-exp(-t)'
-  [../]
+  []
 []
 
 [BCs]
-  [./left]
+  [left]
     type = FunctionDirichletBC
     function = time_bc
-  [../]
+  []
 []
 ```
 
@@ -664,12 +664,12 @@ peacock -i ver-1d-diffusion.i
 
 ```
 [Postprocessors]
-  [./flux_right]
+  [flux_right]
     type = SideDiffusiveFlux
     variable = mobile
     boundary = right
     diffusivity = D
-  [../]
+  []
 []
 
 [Outputs]
@@ -769,12 +769,12 @@ mpirun -np 4 ~/projects/TMAP8/tmap8-opt -i input.i
 
 ```
 [Materials]
-  [./diffusivity]
+  [diffusivity]
     type = ParsedMaterial
     property_name = D
     expression = 'D0*exp(-Ea/R/T)'
     coupled_variables = 'temperature'
-  [../]
+  []
 []
 ```
 
