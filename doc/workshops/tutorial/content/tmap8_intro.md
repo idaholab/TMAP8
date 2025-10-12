@@ -4,23 +4,40 @@
 
 !---
 
-# TMAP8 vs Legacy TMAP (TMAP4, TMAP7)
+# TMAP8 inherited features from MOOSE
 
-- TMAP8 directly inherits all of MOOSE's features
+TMAP8 directly inherits all of MOOSE's features, including:
 
-  - Easy to use and customize
-  - Takes advantage of high performance computing by default
-  - Developed and supported by full time INL staff - long-term support
-  - Massively parallel computation
-  - Multiphysics solve capability
-  - Multiscale solve capability - multiple applications can perform computation for a problem simultaneously
-  - Provides high-level interface to implement customized physics, geometries, boundary conditions, and material models
+- Easy to use and customize
+- Takes advantage of high performance computing by default
+- Developed and supported by INL staff and the community - long-term support
+- Massively parallel computation
+- Multiphysics solve capability
+- Multiscale solve capability - multiple applications can perform computations for a problem simultaneously
+- Provides high-level interface to implement customized physics, geometries, boundary conditions, and material models
+- Enables 2D and 3D simulations
+- Open source and available on [GitHub](https://github.com/idaholab/TMAP8).
 
-    - Enables 2D and 3D simulations
+!---
 
-  - The capabilities/physics in TMAP4 are added to TMAP8
-  - The addition of TMAP7 capabilities are in progress
+# TMAP8 features
 
+!row!
+!col! width=50%
+
+!media figures/TMAP8_features.png style=width:100%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
+
+!col-end!
+
+!col! width=50%
+
+- The TMAP4/7 capabilities and physics are available in TMAP8.
+- TMAP4 and TMAP7, although widely used, have limitations that TMAP8 overcomes.
+- TMAP8 enables high fidelity, multi-scale, 0D to 3D, multispecies, multiphysics simulations of tritium transport, and offers massively parallel capabilities.
+- TMAP8 is open source, Nuclear Quality Assurance level 1 (NQA-1) compliant, offers user support and a licensing approach (LGPL-2.1) selected for collaboration.
+
+!col-end!
+!row-end!
 
 !---
 
@@ -40,6 +57,8 @@ Check out the TMAP8 V&V cases and all relevant input files and documentation on 
 !style halign=center
 [V&V page in the TMAP8 documentation](https://mooseframework.inl.gov/TMAP8/verification_and_validation/index.html).
 
+Later in the hands on part of this workshop, we will go through some V&V cases in more details.
+
 !---
 
 # TMAP8 Examples
@@ -53,6 +72,8 @@ Check out the TMAP8 example cases and all relevant input file and documentation 
 
 !style halign=center
 [TMAP8 Example documentation page](https://mooseframework.inl.gov/TMAP8/examples/index.html)
+
+It includes examples for fuel cycle calculations, divertor monoblock modeling, and pore microstructure modeling.
 
 !---
 
