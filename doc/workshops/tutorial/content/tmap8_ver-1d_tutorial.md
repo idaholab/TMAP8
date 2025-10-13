@@ -31,8 +31,8 @@ From Simple Diffusion to Multi-trap Systems
 ## Configuration
 
 - 1D slab geometry
-- Constant source at upstream side ($x = 0$)
-- Permeation flux measured at downstream side ($x = 1$)
+- Constant source at upstream side ($x = 0$ m)
+- Permeation flux measured at downstream side ($x = 1$ m)
 - Breakthrough time characterizes transport
 
 !col-end!
@@ -108,7 +108,7 @@ From Simple Diffusion to Multi-trap Systems
 
 !col! width=50%
 
-- 1D mesh with 200 elements and a maximum length of 1
+- 1D mesh with 200 elements and a maximum length of 1 m. 
 
   - `nx_num` is defined as 200 at the top of the file, and `${}` syntax is used to utilize it elsewhere.
   - `xmin` in a `Mesh` object generally defaults to 0.
@@ -143,7 +143,7 @@ From Simple Diffusion to Multi-trap Systems
   !equation
   \nabla \cdot (D \nabla C_M)
 
-  where $D = 1$.
+  where $D = 1$ m$^2$/s.
 
 - `TimeDerivative` kernel:
 
@@ -420,7 +420,7 @@ This is the same domain configuration as in Case 1.
 !row!
 !col! width=50%
 
-- Diffusivity: $D = 1$ $\text{m}^{2}$/s
+- Diffusivity: $D = 1$ m$^2$/s
 - Temperature: $T = 1000$ K
 - Upstream concentration: $C_{0} = 0.0001$ atom fraction
 - Slab thickness: $l = 1$ m
@@ -430,11 +430,11 @@ This is the same domain configuration as in Case 1.
 
 !col! width=50%
 
-- Lattice parameter: $\lambda^2 = 10^{-15} \; m^2$
+- Lattice parameter: $\lambda^2 = 10^{-15}$ m$^2$
 - $\text{trap\_per\_free} = 1$ (Diffusion), $10^3$ (Trapping)
-- Trapping coefficient: $\alpha_t = 10^{15}$
-- Release coefficient: $\alpha_r = 10^{13}$
-- Host density: $N = 3.1622 \times 10^22$ atoms / $m^3$
+- Trapping rate coefficient: $\alpha_t = 10^{15}$ 1/s
+- Release rate coefficient: $\alpha_r = 10^{13}$ 1/s
+- Host density: $N = 3.1622 \times 10^{22}$ atoms / m$^3$
 
 !col-end!
 !row-end!
@@ -579,7 +579,7 @@ For the deep trapping limit case, we'll cover the additions of objects to determ
 
 !col! width=50%
 
-- Becuase the empty trapping concentration is not a differential equation, we can solve for it using the [AuxKernels/index.md]:
+- Because the empty trapping concentration is not a differential equation, we can solve for it using the [AuxKernels/index.md]:
 
   !equation
   C_T^{empty} = C_{T0} \cdot N - \text{trap\_per\_free} \cdot C_T
