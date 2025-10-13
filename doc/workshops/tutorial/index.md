@@ -40,15 +40,7 @@
 
 !---
 
-!include tmap8_vs_legacy.md
-
-!---
-
-!include tmap8_v_and_v.md
-
-!---
-
-!include tutorial_getting_started.md
+!include tmap8_intro.md
 
 !---
 
