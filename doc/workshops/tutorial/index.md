@@ -12,23 +12,50 @@
 
 # Outline of the workshop slides
 
-- Goals and Objectives
-- Introduction to MOOSE
+!row!
+!col! width=50%
+
+1. Goals and Objectives
+1. Introduction to MOOSE
 
   - Overview and key features
+
   - Understanding input files
+
   - Development process and SQA
+
   - Getting help
+
   - Why MOOSE for TMAP8?
 
-- TMAP8 vs Legacy TMAP (TMAP4, TMAP7)
-- TMAP8 Verification & Validation
-- Getting started with TMAP8
+1. Introduction to TMAP8
 
-  - How to install
+  - TMAP8 Overview and key features
+
+  - Theory
+
+  - TMAP8 Capabilities
+
+  - TMAP8 Verification & Validation
+
+  - TMAP8 Examples
+
+!col-end!
+
+!col! width=50%
+
+1. Getting started with TMAP8
+
+  - Installing TMAP8
+
   - Run a verification case
 
-- Concluding Remarks (Q&A, Feedback, Future discussions)
+  - Visualize results
+
+1. Concluding Remarks (Q&A, Feedback, Future discussions)
+
+!col-end!
+!row-end!
 
 !---
 
@@ -40,15 +67,7 @@
 
 !---
 
-!include tmap8_vs_legacy.md
-
-!---
-
-!include tmap8_v_and_v.md
-
-!---
-
-!include tutorial_getting_started.md
+!include tmap8_intro.md
 
 !---
 

@@ -460,7 +460,7 @@ K = K_0 \exp \left(\frac{-E_a}{RT}\right)
 - Can be computed from other variables
 - Can be computed directly or imposed
 
-  - Example: temperature/pressure with a set history)
+  - Example: temperature/pressure with a set history
 
 - Can be nodal or elemental
 
