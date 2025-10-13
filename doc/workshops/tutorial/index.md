@@ -71,8 +71,16 @@
 
 !---
 
+!include tmap8_ver-1d_tutorial.md
+
+!---
+
 !include outro.md
 
 !---
 
-!media large_media/framework/inl_blue.png style=width:50%;margin-left:auto;margin-right:auto;display:block;
+!bibtex bibliography title-level=1
+
+!---
+
+!media large_media/framework/inl_blue.png style=display:block;box-shadow:none;width:50%;margin-left:auto;margin-right:auto;

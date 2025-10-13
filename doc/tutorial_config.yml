@@ -33,3 +33,5 @@ Extensions:
     MooseDocs.extensions.datetime: default
     MooseDocs.extensions.katex:
         macros: !include ${MOOSE_DIR}/modules/doc/katex_macros.yml
+    MooseDocs.extensions.bibtex:
+        !include ${ROOT_DIR}/doc/config.yml Extensions MooseDocs.extensions.bibtex
