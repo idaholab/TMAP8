@@ -131,7 +131,7 @@ Note the usage of `initial_condition` and `block` parameters in order to set ini
 ### Kernels
 
 !style halign=left
-For the mass conservation equation, we use [ADTimeDerivative.md] and [ADMatDiffusion.md] to represent the 1$^{\text{st}}$ and 3$^{\text{rd}}$ terms of [eq:concentration_weak].
+For the mass conservation equation, we use [ADTimeDerivative.md] and [MatDiffusion.md] to represent the 1$^{\text{st}}$ and 3$^{\text{rd}}$ terms of [eq:concentration_weak].
 The TMAP8 kernels [TrappingNodalKernel.md] and [ReleasingNodalKernel.md] represent the 4$^{\text{th}}$ and 5$^{\text{th}}$ terms of [eq:concentration_weak],
 respectively, and simulate the trapping/release behavior of hydrogen isotopes in/from trap sites.
 For the conservation of energy equation, [SpecificHeatConductionTimeDerivative.md] and [HeatConduction.md] solve the 1$^{\text{st}}$ and 3$^{\text{rd}}$ terms of [eq:temperature_weak].
