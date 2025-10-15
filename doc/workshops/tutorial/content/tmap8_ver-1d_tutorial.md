@@ -108,7 +108,7 @@ From Simple Diffusion to Multi-trap Systems
 
 !col! width=50%
 
-- 1D mesh with 200 elements and a maximum length of 1 m. 
+- 1D mesh with 200 elements and a maximum length of 1 m.
 
   - `nx_num` is defined as 200 at the top of the file, and `${}` syntax is used to utilize it elsewhere.
   - `xmin` in a `Mesh` object generally defaults to 0.
@@ -452,12 +452,6 @@ In this case, we'll be highlighting the main changes from Case 1, where we only 
 
 !---
 
-# Case 2: Diffusion Limit Input File - Trapping Physics
-
-!listing ver-1d-diffusion.i block=NodalKernels
-
-!---
-
 # A Note on ReferenceResidualProblem
 
 - The [ReferenceResidualProblem.md] MOOSE Problem type is designed to allow custom criteria for convergence for separate, coupled physics by using tagged vectors to designate portions of the system matrix.
@@ -584,7 +578,7 @@ For the deep trapping limit case, we'll cover the additions of objects to determ
   !equation
   C_T^{empty} = C_{T0} \cdot N - \text{trap\_per\_free} \cdot C_T
 
-- AuxKernels are also used (in the case of `scaled_empty` and `trapped_sites`) to calculate the total number of trapping sites in the model.
+- AuxKernels are also used (in the case of `scaled_empty` and `trapped_sites`) to calculate the total concentration of trapping sites in the model.
 
 !col-end!
 !row-end!
@@ -762,12 +756,6 @@ Three traps that are relatively weak are assumed to be active in the slab. Other
 
   - Trapping site fraction: 0.2
   - $\epsilon/k$ = 800 K
-
-!---
-
-# Case 3: Coupling All Traps to Mobile Species
-
-!listing ver-1dc_base.i block=Kernels
 
 !---
 
