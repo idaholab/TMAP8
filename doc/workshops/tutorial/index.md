@@ -44,6 +44,10 @@
 
 !col! width=50%
 
+1. TMAP8 Verification Walkthrough
+
+  - Go through diffusion and trapping verification case
+
 1. Getting started with TMAP8
 
   - Installing TMAP8
