@@ -310,7 +310,7 @@ return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 
 - `declareProperty<Type>()` - produce a standard material property in a material object
 - `getMaterialProperty<Type>()` - consume a standard material property in a MOOSE object
-- `declareProperty<Type>()` - produce an AD material property in a material object
+- `declareADProperty<Type>()` - produce an AD material property in a material object
 - `getADMaterialProperty<Type>()` - consume an AD material property in a MOOSE object
 
 !---
