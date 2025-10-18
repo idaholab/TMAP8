@@ -826,6 +826,42 @@ Application of functions to Kernels/NodalKernels/BCs to "force" exact solution:
 
 !---
 
+# Case 1 to 3: effect of trapping on transport
+
+Comparing the three cases below highlights the important effect of trapping sites on tritium transport.
+All three cases use the same diffusivity for different traps.
+
+!row!
+!col! width=33%
+
+!media comparison_ver-1dd.py
+       image_name=ver-1dd_comparison_diffusion.png
+       style=display:block;box-shadow:none;width:100%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       caption=Case 1: Diffusion only.
+
+!col-end!
+
+!col! width=33%
+
+!media comparison_ver-1d.py
+       image_name=ver-1d_comparison_diffusion.png
+       style=display:block;box-shadow:none;width:100%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       caption=Case 2: One trap, \\ diffusion-limited regime.
+
+!col-end!
+
+!col! width=33%
+
+!media comparison_ver-1dc.py
+       image_name=ver-1dc_comparison_diffusion.png
+       style=display:block;box-shadow:none;width:100%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       caption=Case 3: three traps, \\ diffusion-limited regime.
+
+!col-end!
+!row-end!
+
+!---
+
 # Modifying Input Files - Exercise
 
 ## Try These Changes to ver-1dd.i:
