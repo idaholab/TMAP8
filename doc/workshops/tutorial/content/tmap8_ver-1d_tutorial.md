@@ -786,6 +786,20 @@ Three traps that are relatively weak are assumed to be active in the slab. Other
 
 # Case 3: MMS Verification Approach
 
+A detailed and step by step description of the method of manufacturing solution (MMS) approach is available on the [MOOSE MMS page](mms.md).
+The [ver-1dc](ver-1dc.md) documentation page provides more information about how to apply the MMS approach to this case.
+
+The main steps of the MMS approach are:
+
+- select spatial smoothly-varying sinusoidal spatial solutions for the mobile and trapped species.
+- input them in the desired equations and derive the forcing functions.
+- re-write the equations to include the forcing function and equate 0 with the solutions slected above.
+- solve these equations, which have the known solutions selected above that can be compared against the calculated solutions.
+
+!---
+
+# Case 3: MMS Verification Approach (continued)
+
 Exact solutions and forcing functions:
 
 !listing ver-1dc/functions.i
