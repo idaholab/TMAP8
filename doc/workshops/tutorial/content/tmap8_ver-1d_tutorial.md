@@ -317,7 +317,7 @@ The output can then be visualized using ParaView, or by using the `comparison_ve
 In this case, we are modeling permeation through a membrane with a constant source in which traps are operative.
 
 Traps correspond to physical places in materials where tritium atoms can get trapped, and therefore slow down transport.
-For example, tritium atoms can be trapped in interstitial sites, vacancies, grain boundaries, pores, etc., which can all be included as trapps in the model.
+For example, tritium atoms can be trapped in interstitial sites, vacancies, dislocations, grain boundaries, pores, etc., which can all be included as trapps in the model.
 These trapping sites are described with an associated density (which can evolve as a function of space, time, irradiation, etc.) and rates and energies for trapping and release.
 
 In the current casse, we account for one type of trapping sites.
