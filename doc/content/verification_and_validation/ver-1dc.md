@@ -118,7 +118,7 @@ u_i(x,t) = \frac{ N u_{i,0}}{2} (t\cos(x) + 1)
 
 with $u_{i,0}$ the equivalent of $C_{{T_i}0}$ in [eqn:trapping_empty].
 
-With the manufactured solutions selected, we generate forcing functions $f$ and $f_i$ by substituting the exact solutions into the strong-form PDEs, [eqn:diffusion_mobile_step1] and [eqn:trapped_rate_step1], leading to (assuming $\text{trap\_per\_free}=1$):
+With the manufactured solutions selected, we generate forcing functions $f$ and $f_i$ by substituting the exact solutions into the strong-form PDEs, [eqn:diffusion_mobile] and [eqn:trapped_rate], leading to (assuming $\text{trap\_per\_free}=1$):
 
 \begin{equation} \label{eqn:diffusion_mobile_mms}
     \frac{\partial u}{\partial t} - \nabla \cdot \left( D \nabla u \right) + \sum_{i=1}^{3} \frac{\partial u_i}{\partial t} - f = 0,
