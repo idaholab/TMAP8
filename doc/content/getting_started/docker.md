@@ -66,7 +66,7 @@ The remaining commands should be run within the WSL window on Windows and within
 This block adds some vertical spacing between the text and the image
 !!!
 
-!media getting_started/media/docker_pw.png style=width:80%;display:block;margin-left:auto;margin-right:auto;
+!media getting_started/media/docker_pw.png alt=Example of terminal output after starting the TMAP8 docker container with a sample web server password highlighted. style=width:80%;display:block;margin-left:auto;margin-right:auto;
 
 6. Within the web browser window from step 5, click on the three bars in the top left corner and click on Terminal -> New Terminal:
 
@@ -74,9 +74,9 @@ This block adds some vertical spacing between the text and the image
 This block adds some vertical spacing between the text and the image
 !!!
 
-!media getting_started/media/terminal.png style=width:80%;display:block;margin-left:auto;margin-right:auto;
+!media getting_started/media/terminal.png alt=Example of using the web browser interface to open the local container terminal. style=width:80%;display:block;margin-left:auto;margin-right:auto;
 
-7. In the terminal window within the web browser, type the following commands to download the TMAP8 tests, which include the input files for TMAP8's [V&V cases](verification_and_validation/index.md), [example cases](examples/index.md), and the cases highlighted in the TMAP8 [tutorial](https://mooseframework.inl.gov/TMAP8/tutorial/index.html):
+7. In the terminal window within the web browser, type the following commands to download the TMAP8 tests, which include the input files for TMAP8's [V&V cases](verification_and_validation/index.md), [example cases](examples/index.md exact=True), and the cases highlighted in the TMAP8 [tutorial](https://mooseframework.inl.gov/TMAP8/tutorial/index.html):
 
    ```bash
    cd /tmap8-workdir
@@ -92,7 +92,7 @@ This block adds some vertical spacing between the text and the image
 This block adds some vertical spacing between the text and the image
 !!!
 
-!media getting_started/media/copy_tests.png style=width:80%;display:block;margin-left:auto;margin-right:auto;
+!media getting_started/media/copy_tests.png alt=Example of terminal output showing success message after downloading TMAP8 tests. style=width:80%;display:block;margin-left:auto;margin-right:auto;
 
 ## Entering the Environment
 
