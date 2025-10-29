@@ -8,13 +8,13 @@ Tritium transport in solid materials can be divided in two main phenomena: (1) b
 
 ## Bulk Tramsport
 
-### main system of equations
+### Main system of equations (the so-called strong forms)
 
 Bulk transport in TMAP8 can be represented as
 
 \begin{equation}
     \label{eqn:diffusion_mobile}
-    \frac{dC_M}{dt} = \nabla D \nabla C_M - \text{trap\_per\_free} \cdot \sum_{i=1}^{N_{trap}} \frac{dC_{T_i}}{dt} ,
+    \frac{dC_M}{dt} = \nabla \cdot (D \nabla C_M) - \text{trap\_per\_free} \cdot \sum_{i=1}^{N_{trap}} \frac{dC_{T_i}}{dt} ,
 \end{equation}
 and, for $i$ $\in$ $[0,N_{trap}]$ with $N_{trap}$ the number of traps:
 \begin{equation}
@@ -25,26 +25,26 @@ and
 \begin{equation} \label{eqn:trapping_empty}
     C_{T_i}^{empty} = (C_{{T_i}0} \cdot N - \text{trap\_per\_free} \cdot C_{T_i}  ) ,
 \end{equation}
-where $C_M$ is the concentrations of the mobile, $C_{T_i}$ is the trapped species in trap $i$, $D$ is the diffusivity of the mobile species, $\alpha_t^i$ and $\alpha_r^i$ are the trapping and release rate coefficients for trap $i$, $\text{trap\_per\_free}$ is a factor scaling $C_{T_i}$ to be closer to $C_M$ for better numerical convergence, $C_{{T_i}0}$ is the fraction of host sites $i$ that can contribute to trapping, $C_{T_i}^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density.
+where $C_M$ is the concentrations of the mobile species, $C_{T_i}$ is the trapped species in trap $i$, $D$ is the diffusivity of the mobile species, $\alpha_t^i$ and $\alpha_r^i$ are the trapping and release rate coefficients for trap $i$, $\text{trap\_per\_free}$ is a factor scaling $C_{T_i}$ to be closer to $C_M$ for better numerical convergence, $C_{{T_i}0}$ is the fraction of host sites $i$ that can contribute to trapping, $C_{T_i}^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density.
 
-Traps correspond to physical places in materials where tritium atoms can get trapped, and therefore slow down transport.
-For example, tritium atoms can be trapped in interstitial sites, vacancies, dislocations, grain boundaries, pores, etc., which can all be included as trapps in the model.
+Traps correspond to physical places in materials where tritium atoms can get trapped and, therefore, slow down transport.
+For example, tritium atoms can be trapped in interstitial sites, vacancies, dislocations, grain boundaries, pores, etc., which can all be included as traps in the model.
 These trapping sites are described with an associated density (which can evolve as a function of space, time, irradiation, etc.) and rates and energies for trapping and release.
 
 Note that other contributions to tritium transport, such as the Soret effect, can also be included in TMAP8.
 
 ### Derivation of the weak forms of the equations
 
-#### Step 1: Define and rearrange the strong form of the equations
+#### Step 1: Define and rearrange the strong forms of the equations
 
-The strong form of the governing equations is provided in [eqn:diffusion_mobile] and [eqn:trapped_rate], and can be slightly rearranged as:
+The strong forms of the governing equations is provided in [eqn:diffusion_mobile] and [eqn:trapped_rate], and can be slightly rearranged as:
 
 \begin{equation} \label{eqn:diffusion_mobile_step1}
     \frac{\partial C_M}{\partial t} - \nabla \cdot \left( D \nabla C_M \right) + \text{trap\_per\_free} \cdot \sum_{i=1}^{N_{trap}} \frac{\partial C_{T_i}}{\partial t} = 0,
 \end{equation}
 and, for $i$ $\in$ $[0,N_{trap}]$:
 \begin{equation} \label{eqn:trapped_rate_step1}
-    \frac{\partial C_{T_i}}{\partial t} - \alpha_t^i \frac{C_{T_i}^{\text{empty}} C_M}{N \cdot \text{trap\_per\_free}} + \alpha_r^i C_{T_i} = 0,
+    \frac{\partial C_{T_i}}{\partial t} - \alpha_t^i \frac{C_{T_i}^{\text{empty}} C_M}{(N \cdot \text{trap\_per\_free})} + \alpha_r^i C_{T_i} = 0,
 \end{equation}
 respectively.
 
@@ -54,7 +54,7 @@ Multiply each term of the equations by an appropriate test function $\psi$ (or $
 
 [eqn:diffusion_mobile_step1] becomes
 \begin{equation} \label{eqn:diffusion_mobile_step2}
-    \psi \frac{\partial C_M}{\partial t} - \psi \nabla \cdot \left( D \nabla C_M \right) + \psi \text{trap\_per\_free} \cdot \sum_{i=1}^{N_{trap}} \frac{\partial C_{T_i}}{\partial t} = 0,
+    \psi \frac{\partial C_M}{\partial t} - \psi \nabla \cdot \left( D \nabla C_M \right) + \psi \, \text{trap\_per\_free} \cdot \sum_{i=1}^{N_{trap}} \frac{\partial C_{T_i}}{\partial t} = 0,
 \end{equation}
 and, for $i$ $\in$ $[0,N_{trap}]$, [eqn:trapped_rate_step1] becomes
 \begin{equation} \label{eqn:trapped_rate_step2}
@@ -66,7 +66,7 @@ and, for $i$ $\in$ $[0,N_{trap}]$, [eqn:trapped_rate_step1] becomes
 After integration over the domain, we obtain:
 
 \begin{equation} \label{eqn:diffusion_mobile_step3}
-    \int_\Omega \psi \frac{\partial C_M}{\partial t} \, d\Omega - \int_\Omega \psi \nabla \cdot \left( D \nabla C_M \right) \, d\Omega + \int_\Omega \psi \text{trap\_per\_free} \cdot \sum_{i=1}^{N_{trap}} \frac{\partial C_{T_i}}{\partial t} \, d\Omega = 0,
+    \int_\Omega \psi \frac{\partial C_M}{\partial t} \, d\Omega - \int_\Omega \psi \nabla \cdot \left( D \nabla C_M \right) \, d\Omega + \int_\Omega \psi \, \text{trap\_per\_free} \cdot \sum_{i=1}^{N_{trap}} \frac{\partial C_{T_i}}{\partial t} \, d\Omega = 0,
 \end{equation}
 
 and, for $i$ $\in$ $[0,N_{trap}]$,
@@ -84,7 +84,7 @@ where $\partial \Omega$ is the boundary of the domain and $\mathbf{n}$ is the ou
 
 This update term is then substituted back into [eqn:diffusion_mobile_step3], which leads to:
 \begin{equation} \label{eqn:diffusion_mobile_step4}
-    \int_\Omega \psi \frac{\partial C_M}{\partial t} \, d\Omega + \int_\Omega \nabla \psi \cdot \left( D \nabla C_M \right) \, d\Omega - \oint\limits_{\partial \Omega} \psi \left( D \nabla C_M \right) \cdot \mathbf{n} \, d\partial \Omega + \int_\Omega \psi \text{trap\_per\_free} \cdot \sum_{i=1}^{N_{trap}} \frac{\partial C_{T_i}}{\partial t} \, d\Omega = 0.
+    \int_\Omega \psi \frac{\partial C_M}{\partial t} \, d\Omega + \int_\Omega \nabla \psi \cdot \left( D \nabla C_M \right) \, d\Omega - \oint\limits_{\partial \Omega} \psi \left( D \nabla C_M \right) \cdot \mathbf{n} \, d\partial \Omega + \int_\Omega \psi \, \text{trap\_per\_free} \cdot \sum_{i=1}^{N_{trap}} \frac{\partial C_{T_i}}{\partial t} \, d\Omega = 0.
 \end{equation}
 
 Since no divergence terms exist in [eqn:trapped_rate_step3], no integration by parts is needed.

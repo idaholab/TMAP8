@@ -317,12 +317,12 @@ The output can then be visualized using ParaView, or by using the `comparison_ve
 In this case, we are modeling permeation through a membrane with a constant source in which traps are operative.
 
 Traps correspond to physical places in materials where tritium atoms can get trapped, and therefore slow down transport.
-For example, tritium atoms can be trapped in interstitial sites, vacancies, dislocations, grain boundaries, pores, etc., which can all be included as trapps in the model.
+For example, tritium atoms can be trapped in interstitial sites, vacancies, dislocations, grain boundaries, pores, etc., which can all be included as traps in the model.
 These trapping sites are described with an associated density (which can evolve as a function of space, time, irradiation, etc.) and rates and energies for trapping and release.
 
-In the current casse, we account for one type of trapping sites.
+In the current case, we account for one type of trapping site.
 The following case will introduce a total of three trapping types.
-TMAP8 can incorporate an arbitrary number of trapping sites.
+Note that TMAP8 can incorporate an arbitrary number of trapping sites.
 
 !---
 
@@ -786,15 +786,15 @@ Three traps that are relatively weak are assumed to be active in the slab. Other
 
 # Case 3: MMS Verification Approach
 
-A detailed and step by step description of the method of manufacturing solution (MMS) approach is available on the [MOOSE MMS page](mms.md).
+A detailed and step-by-step description of the method of manufactured solutions (MMS) approach is available on the [MOOSE MMS page](mms.md).
 The [ver-1dc](ver-1dc.md) documentation page provides more information about how to apply the MMS approach to this case.
 
 The main steps of the MMS approach are:
 
 - select spatial smoothly-varying sinusoidal spatial solutions for the mobile and trapped species.
 - input them in the desired equations and derive the forcing functions.
-- re-write the equations to include the forcing function and equate 0 with the solutions slected above.
-- solve these equations, which have the known solutions selected above that can be compared against the calculated solutions.
+- re-write the equations to include the forcing function such that the solution for the modified system is that selected above.
+- solve these equations, comparing the calculated solutions against the selected solutions for each species.
 
 !---
 

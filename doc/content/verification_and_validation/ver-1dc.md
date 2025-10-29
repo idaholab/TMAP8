@@ -95,8 +95,8 @@ The analytical solution for the permeation transient is compared with TMAP8 resu
 Although the flux and breakthrough time can be verified using analytical solutions as presented above, the [MMS](mms.md) approach is a powerful method to verify complex systems of PDEs such as the one studied in this case.
 Here, we apply the [MMS](mms.md) approach available as a Python-based utility in the [MOOSE framework](https://mooseframework.inl.gov) to verify TMAP8's predictions for ver-1dc through spatial convergence.
 
-The derivation of the weak form of the system of equations in [eqn:diffusion_mobile] and [eqn:trapped_rate] is detailed in [TMAP8's theory manual](theory_manual.md).
-With the weak form of the equations, we can apply the MMS.
+The derivation of the weak forms of the system of equations in [eqn:diffusion_mobile] and [eqn:trapped_rate] is detailed in [TMAP8's theory manual](theory_manual.md).
+With the weak forms of the equations, we can apply the MMS.
 Below, we (1) detail how we apply the MMS approach to this case, and
 (2) discuss the results.
 
