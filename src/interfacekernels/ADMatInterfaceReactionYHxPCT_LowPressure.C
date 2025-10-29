@@ -20,7 +20,8 @@ ADMatInterfaceReactionYHxPCT_LowPressure::validParams()
   params.addClassDescription(
       "Implements a reaction to establish ReactionRate=k_f*u-k_b*v to compute the surface H "
       "concentration in YHx from the temperature and partial pressure based on the PCT curves with "
-      "u the co nc entration in the solid and v (neighbor) the concentration in the gas in mol/m^3.");
+      "u the co nc entration in the solid and v (neighbor) the concentration in the gas in "
+      "mol/m^3.");
   params.addRequiredCoupledVar(
       "neighbor_temperature",
       "The variable on the other side of the interface for temperature (K).");
@@ -34,7 +35,8 @@ ADMatInterfaceReactionYHxPCT_LowPressure::validParams()
   return params;
 }
 
-ADMatInterfaceReactionYHxPCT_LowPressure::ADMatInterfaceReactionYHxPCT_LowPressure(const InputParameters & parameters)
+ADMatInterfaceReactionYHxPCT_LowPressure::ADMatInterfaceReactionYHxPCT_LowPressure(
+    const InputParameters & parameters)
   : ADInterfaceKernel(parameters),
     _neighbor_temperature(this->template coupledGenericValue<true>("neighbor_temperature")),
     _density(getADMaterialProperty<Real>("density")),
@@ -70,9 +72,10 @@ ADMatInterfaceReactionYHxPCT_LowPressure::computeQpResidual(Moose::DGResidualTyp
   // Calculate the atomic fraction based on the PCT curve
   auto atomic_fraction =
       5.0e-01 -
-      std::pow(1.0e-03 + std::exp(-89.3906 + 7.5958e-02 * _neighbor_temperature[_qp] +
-                             (1.1924 -4.4124e-03 * _neighbor_temperature[_qp]) *
-                                 (std::log(std::max(limit_pressure-neighbor_pressure  , 1e-10)))),
+      std::pow(1.0e-03 +
+                   std::exp(-89.3906 + 7.5958e-02 * _neighbor_temperature[_qp] +
+                            (1.1924 - 4.4124e-03 * _neighbor_temperature[_qp]) *
+                                (std::log(std::max(limit_pressure - neighbor_pressure, 1e-10)))),
                -1);
 
   // Convert to concentration
