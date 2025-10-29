@@ -8,6 +8,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import os
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
+#End whitetrailingspace
 script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
 
@@ -211,10 +212,10 @@ for i, temperature in enumerate(temperature_list):
     # Select only the values that are above the transition region
     pressures_upper = pressures.loc[index_limit]
     atom_ratios_upper = atom_ratios.loc[index_limit]
-  
+
     # Calculate the fit values using the function
     fit_values_upper = atom_ratio_eq_upper_func(temperature, pressures_upper)
-    
+
     # remove nan values from fit_values_upper and the corresponding index from atom_ratios_upper and pressures_upper
     index_not_nan = ~np.isnan(fit_values_upper)
     fit_values_upper = fit_values_upper[index_not_nan]
