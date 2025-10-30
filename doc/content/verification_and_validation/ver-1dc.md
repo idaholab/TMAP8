@@ -95,79 +95,10 @@ The analytical solution for the permeation transient is compared with TMAP8 resu
 Although the flux and breakthrough time can be verified using analytical solutions as presented above, the [MMS](mms.md) approach is a powerful method to verify complex systems of PDEs such as the one studied in this case.
 Here, we apply the [MMS](mms.md) approach available as a Python-based utility in the [MOOSE framework](https://mooseframework.inl.gov) to verify TMAP8's predictions for ver-1dc through spatial convergence.
 
-Below, we (1) describe how to derive the weak form of the equation, which is necessary to apply the MMS,
-(2) detail how we apply the MMS approach to this case, and
-(3) discuss the results.
-
-### Derivation of the weak forms of the equations
-
-#### Step 1: Define and rearrange the strong form of the equations
-
-The strong form of the governing equations is provided in [eqn:diffusion_mobile] and [eqn:trapped_rate], and can be slightly rearranged as:
-
-\begin{equation} \label{eqn:diffusion_mobile_step1}
-    \frac{\partial C_M}{\partial t} - \nabla \cdot \left( D \nabla C_M \right) + \text{trap\_per\_free} \cdot \sum_{i=1}^{3} \frac{\partial C_{T_i}}{\partial t} = 0,
-\end{equation}
-and, for $i=1$, $i=2$, and $i=3$:
-\begin{equation} \label{eqn:trapped_rate_step1}
-    \frac{\partial C_{T_i}}{\partial t} - \alpha_t^i \frac{C_{T_i}^{\text{empty}} C_M}{N \cdot \text{trap\_per\_free}} + \alpha_r^i C_{T_i} = 0,
-\end{equation}
-respectively.
-
-#### Step 2: Multiply every term by a test function
-
-Multiply each term of the equations by an appropriate test function $\psi$ (or $\psi_i$ for $C_{T_i}$):
-
-[eqn:diffusion_mobile_step1] becomes
-\begin{equation} \label{eqn:diffusion_mobile_step2}
-    \psi \frac{\partial C_M}{\partial t} - \psi \nabla \cdot \left( D \nabla C_M \right) + \psi \text{trap\_per\_free} \cdot \sum_{i=1}^{3} \frac{\partial C_{T_i}}{\partial t} = 0,
-\end{equation}
-and, for $i=1$, $i=2$, and $i=3$, [eqn:trapped_rate_step1] becomes
-\begin{equation} \label{eqn:trapped_rate_step2}
-    \psi_i \left( \frac{\partial C_{T_i}}{\partial t} - \alpha_t^i \frac{C_{T_i}^{\text{empty}} C_M}{N \cdot \text{trap\_per\_free}} + \alpha_r^i C_{T_i} \right) = 0.
-\end{equation}
-
-#### Step 3: Integrate over the domain $\Omega$
-
-After integration over the domain, we obtain:
-
-\begin{equation} \label{eqn:diffusion_mobile_step3}
-    \int_\Omega \psi \frac{\partial C_M}{\partial t} \, d\Omega - \int_\Omega \psi \nabla \cdot \left( D \nabla C_M \right) \, d\Omega + \int_\Omega \psi \text{trap\_per\_free} \cdot \sum_{i=1}^{3} \frac{\partial C_{T_i}}{\partial t} \, d\Omega = 0,
-\end{equation}
-
-and, for $i=1$, $i=2$, and $i=3$,
-\begin{equation} \label{eqn:trapped_rate_step3}
-    \int_\Omega \psi_i \frac{\partial C_{T_i}}{\partial t} \, d\Omega - \int_\Omega \psi_i \alpha_t^i \frac{C_{T_i}^{\text{empty}} C_M}{N \cdot \text{trap\_per\_free}} \, d\Omega + \int_\Omega \psi_i \alpha_r^i C_{T_i} \, d\Omega = 0.
-\end{equation}
-
-#### Step 4: Integrate by parts and apply the divergence theorem
-
-For the divergence term in [eqn:diffusion_mobile_step3], applying integration by parts and the divergence theorem provides
-\begin{equation}
-    \int_\Omega \psi \nabla \cdot \left( D \nabla C_M \right) \, d\Omega = - \int_\Omega \nabla \psi \cdot \left( D \nabla C_M \right) \, d\Omega + \oint\limits_{\partial \Omega} \psi \left( D \nabla C_M \right) \cdot \mathbf{n} \, d\partial \Omega,
-\end{equation}
-where $\partial \Omega$ is the boundary of the domain and $\mathbf{n}$ is the outward-facing normal vector.
-
-This update term is then substituted back into [eqn:diffusion_mobile_step3], which leads to:
-\begin{equation} \label{eqn:diffusion_mobile_step4}
-    \int_\Omega \psi \frac{\partial C_M}{\partial t} \, d\Omega + \int_\Omega \nabla \psi \cdot \left( D \nabla C_M \right) \, d\Omega - \oint\limits_{\partial \Omega} \psi \left( D \nabla C_M \right) \cdot \mathbf{n} \, d\partial \Omega + \int_\Omega \psi \text{trap\_per\_free} \cdot \sum_{i=1}^{3} \frac{\partial C_{T_i}}{\partial t} \, d\Omega = 0.
-\end{equation}
-
-Since no divergence terms exist in [eqn:trapped_rate_step3], no integration by parts is needed.
-
-#### Step 5: Derive the final weak form in inner product notation
-
-[eqn:diffusion_mobile_step4] and [eqn:trapped_rate_step3] can be expressed in inner product notation, where $\langle a, b \rangle = \int_\Omega a b \, d\Omega$.
-
-[eqn:diffusion_mobile_step4] becomes
-\begin{equation}
-    \langle \psi, \frac{\partial C_M}{\partial t} \rangle + \langle \nabla \psi, D \nabla C_M \rangle - \langle \psi, \text{trap\_per\_free} \cdot \sum_{i=1}^{3} \frac{\partial C_{T_i}}{\partial t} \rangle + \int_{\partial \Omega} \psi \left( D \nabla C_M \right) \cdot \mathbf{n} \, d\Gamma = 0,
-\end{equation}
-and, for $i=1$, $i=2$, and $i=3$, [eqn:trapped_rate_step3] becomes
-\begin{equation}
-    \langle \psi_i, \frac{\partial C_{T_i}}{\partial t} \rangle - \langle \psi_i, \alpha_t^i \frac{C_{T_i}^{\text{empty}} C_M}{N \cdot \text{trap\_per\_free}} \rangle + \langle \psi_i, \alpha_r^i C_{T_i} \rangle = 0.
-\end{equation}
-These weak forms of the equations can now be used for finite element analysis.
+The derivation of the weak forms of the system of equations in [eqn:diffusion_mobile] and [eqn:trapped_rate] is detailed in [TMAP8's theory manual](theory_manual.md).
+With the weak forms of the equations, we can apply the MMS.
+Below, we (1) detail how we apply the MMS approach to this case, and
+(2) discuss the results.
 
 ### Application of the MMS
 
@@ -187,7 +118,7 @@ u_i(x,t) = \frac{ N u_{i,0}}{2} (t\cos(x) + 1)
 
 with $u_{i,0}$ the equivalent of $C_{{T_i}0}$ in [eqn:trapping_empty].
 
-With the manufactured solutions selected, we generate forcing functions $f$ and $f_i$ by substituting the exact solutions into the strong-form PDEs, [eqn:diffusion_mobile_step1] and [eqn:trapped_rate_step1], leading to (assuming $\text{trap\_per\_free}=1$):
+With the manufactured solutions selected, we generate forcing functions $f$ and $f_i$ by substituting the exact solutions into the strong-form PDEs, [eqn:diffusion_mobile] and [eqn:trapped_rate], leading to (assuming $\text{trap\_per\_free}=1$):
 
 \begin{equation} \label{eqn:diffusion_mobile_mms}
     \frac{\partial u}{\partial t} - \nabla \cdot \left( D \nabla u \right) + \sum_{i=1}^{3} \frac{\partial u_i}{\partial t} - f = 0,

@@ -314,7 +314,21 @@ The output can then be visualized using ParaView, or by using the `comparison_ve
 
 # Case 2: Single Trap Type (ver-1d)
 
-In this case, we are modeling permeation through a membrane with a constant source in which traps are operative. We solve the following equations:
+In this case, we are modeling permeation through a membrane with a constant source in which traps are operative.
+
+Traps correspond to physical places in materials where tritium atoms can get trapped, and therefore slow down transport.
+For example, tritium atoms can be trapped in interstitial sites, vacancies, dislocations, grain boundaries, pores, etc., which can all be included as traps in the model.
+These trapping sites are described with an associated density (which can evolve as a function of space, time, irradiation, etc.) and rates and energies for trapping and release.
+
+In the current case, we account for one type of trapping site.
+The following case will introduce a total of three trapping types.
+Note that TMAP8 can incorporate an arbitrary number of trapping sites.
+
+!---
+
+# Case 2: Single Trap Type (ver-1d)
+
+We solve the following equations:
 
 !row!
 !col! width=50%
@@ -772,6 +786,20 @@ Three traps that are relatively weak are assumed to be active in the slab. Other
 
 # Case 3: MMS Verification Approach
 
+A detailed and step-by-step description of the method of manufactured solutions (MMS) approach is available on the [MOOSE MMS page](mms.md).
+The [ver-1dc](ver-1dc.md) documentation page provides more information about how to apply the MMS approach to this case.
+
+The main steps of the MMS approach are:
+
+- select spatial smoothly-varying sinusoidal spatial solutions for the mobile and trapped species.
+- input them in the desired equations and derive the forcing functions.
+- re-write the equations to include the forcing function such that the solution for the modified system is that selected above.
+- solve these equations, comparing the calculated solutions against the selected solutions for each species.
+
+!---
+
+# Case 3: MMS Verification Approach (continued)
+
 Exact solutions and forcing functions:
 
 !listing ver-1dc/functions.i
@@ -795,6 +823,42 @@ Application of functions to Kernels/NodalKernels/BCs to "force" exact solution:
 - 10 levels of mesh refinement
 - Confirms proper implementation
 - Quadratic convergence as expected
+
+!---
+
+# Case 1 to 3: effect of trapping on transport
+
+Comparing the three cases below highlights the important effect of trapping sites on tritium transport.
+All three cases use the same diffusivity for different traps.
+
+!row!
+!col! width=33%
+
+!media comparison_ver-1dd.py
+       image_name=ver-1dd_comparison_diffusion.png
+       style=display:block;box-shadow:none;width:100%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       caption=Case 1: Diffusion only.
+
+!col-end!
+
+!col! width=33%
+
+!media comparison_ver-1d.py
+       image_name=ver-1d_comparison_diffusion.png
+       style=display:block;box-shadow:none;width:100%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       caption=Case 2: One trap, \\ diffusion-limited regime.
+
+!col-end!
+
+!col! width=33%
+
+!media comparison_ver-1dc.py
+       image_name=ver-1dc_comparison_diffusion.png
+       style=display:block;box-shadow:none;width:100%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       caption=Case 3: three traps, \\ diffusion-limited regime.
+
+!col-end!
+!row-end!
 
 !---
 

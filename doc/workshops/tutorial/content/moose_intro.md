@@ -353,20 +353,27 @@ return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 
 !---
 
-# TMAP8 BC Example - Binary Recombination
+# TMAP8 BC Example \\ Binary Recombination
 
-Located in the MOOSE Scalar Transport Module. ([Link](https://github.com/idaholab/moose/blob/next/modules/scalar_transport/src/bcs/BinaryRecombinationBC.C))
+This capability is located in the MOOSE Scalar Transport Module ([Link](https://github.com/idaholab/moose/blob/next/modules/scalar_transport/src/bcs/BinaryRecombinationBC.C)). More information about the surface models available in TMAP8 is available in the [theory manual](https://mooseframework.inl.gov/TMAP8/theory_manual.html).
 
 Strong form:
 
 !equation
 \int_{\Omega} \psi_i K_r u v d\Omega
 
+Input file:
+
+!listing multiple-species.i block=BCs/ht_t_left
+
+!---
+
+# TMAP8 BC Example \\ Binary Recombination (continued)
+
 Source:
 
 !listing moose/modules/scalar_transport/src/bcs/BinaryRecombinationBC.C
 
-More information about the surface models available in TMAP8 is available in the [theory manual](https://mooseframework.inl.gov/TMAP8/theory_manual.html)
 
 !---
 
