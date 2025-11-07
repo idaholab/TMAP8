@@ -6,10 +6,10 @@ TPE_hold_time = '${units 7200 s}'
 TDS_initial_time = '${units 12000 s}'
 TDS_ramp_end = '${units 17238 s}'
 simulation_time = '${units 19038 s}'
-outputs_initial_time = 1 #'${units 12000 s}'
-# step_interval_max = 50 # (-)
-# step_interval_mid = 15 # (-)
-# step_interval_min = 6 # (-)
+outputs_initial_time = 0 #'${units 12000 s}'
+step_interval_max = 50 # (-)
+step_interval_mid = 15 # (-)
+step_interval_min = 6 # (-)
 # bound_value_max = '${units 2e4 at/mum^3}'
 # bound_value_min = '${units -1e-10 at/mum^3}'
 
@@ -32,7 +32,7 @@ detrapping_energy_1 = '${fparse ${trapping_energy} + ${binding_energy}}' # (K)
 W_lattice_constant = '${units 3.16e-10 m -> mum}'
 trapping_rate_prefactor = '${fparse ${diffusivity_coefficient} / ${W_lattice_constant}^2}' # (1/s)
 release_rate_prefactor = '${units 1e13 1/s}'
-trap_per_free_1 = 1e6 # (-)
+trap_per_free_1 = 1e4 # (-)
 
 
 # Thermal parameters
@@ -47,8 +47,8 @@ temperature_min = '${units 300 K}'
   [cmg]
     type = GeneratedMeshGenerator
     dim = 1
-    nx = 100
-    xmax = '${units 0.5 mm -> mum}'
+    nx = 500
+    xmax = '${units 5e-4 m -> mum}'
   []
 []
 
@@ -201,6 +201,17 @@ temperature_min = '${units 300 K}'
     symbol_values = 'source_distribution_function surface_flux_function'
     expression = 'source_distribution_function * surface_flux_function'
   []
+
+  [max_dt_size_function]
+    type = ParsedFunction
+    expression = 'if(t<${TDS_initial_time}, ${step_interval_mid}, ${step_interval_min})'
+  []
+
+  [max_dt_size_function_coarse]
+    type = ParsedFunction
+    expression = 'if(t<${TDS_initial_time}, ${step_interval_mid},
+                  if(t<${TDS_ramp_end}, ${step_interval_min}, ${step_interval_max}))'
+  []
 []
 
 [Postprocessors]
@@ -229,6 +240,12 @@ temperature_min = '${units 300 K}'
     type = ScalePostprocessor
     scaling_factor = '${units 1 m^2 -> mum^2}'
     value = flux_surface_right
+    execute_on = 'initial nonlinear linear timestep_end'
+    outputs = none
+  []
+  [max_time_step_size]
+    type = FunctionValuePostprocessor
+    function = max_dt_size_function
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = none
   []
@@ -261,7 +278,7 @@ temperature_min = '${units 300 K}'
     growth_factor = 1.1
     cutback_factor = 0.9
     cutback_factor_at_failure = 0.9
-    #timestep_limiting_postprocessor = max_time_step_size
+    timestep_limiting_postprocessor = max_time_step_size
   []
 []
 
