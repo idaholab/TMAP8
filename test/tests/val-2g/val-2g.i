@@ -75,6 +75,8 @@ temperature_min = '${units 300 K}'
 [AuxVariables]
   [temperature]
   []
+  [source]
+  []
 []
 
 [AuxKernels]
@@ -82,6 +84,12 @@ temperature_min = '${units 300 K}'
     type = FunctionAux
     variable = temperature
     function = temperature_function
+    execute_on = 'initial timestep_end linear'
+  []
+  [source_aux]
+    type = FunctionAux
+    variable = source
+    function = concentration_source_normal_function
     execute_on = 'initial timestep_end linear'
   []
 []
