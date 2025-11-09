@@ -1,5 +1,5 @@
 #######################################################################
-# Model Description 
+# Model Description
 # Vanadium Pipe Benchmark Model
 # Created by Samuel Walker on Apr23-2025
 #######################################################################
@@ -11,14 +11,15 @@
 
 
 #p_outlet = 1e5
-Dh = 0.0234
-#Vin = 0.465926 #2Kg/s
-#Vin = 0.698889 #3Kg/s
-Vin = 0.931852 #4Kg/s
-Temp_fluid = 573.15
-C_D = 1e-3
-R_gas = 8.314
-#D_H_f = 
+radius_inner = ${units 0.0117 m}
+radius_outer = ${units 0.0127 m}
+cylinder_height = ${units 1 m}
+#velocity_inlet = 0.465926 #2Kg/s
+#velocity_inlet = 0.698889 #3Kg/s
+velocity_inlet = 0.931852 #4Kg/s # units?
+Temperature_fluid = ${units 573.15 K}
+tritium_liquid_concentration_inlet = 1e-3 # units?
+R_gas = ${units 8.31446261815324 J/mol/K} # from PhysicalConstants.h
 #mu = 2.6
 #rho = 1.0
 advected_interp_method = 'upwind'
@@ -27,10 +28,6 @@ advected_interp_method = 'upwind'
 
 #vanadium = '1'
 #fluid  = '2'
-#fuel  = '3'
-
-#fuelair_matid = '1'
-#steel_matid = '2'
 
 [GlobalParams]
   rhie_chow_user_object = 'rc'
@@ -38,11 +35,10 @@ advected_interp_method = 'upwind'
 
 [Mesh]
 
-  # create a circle first with concentric layers (air, steel, air/fuel, steel)
-
+  # create a circle first with concentric layers (PbLi, Vanadium, Vacuum [not meshed])
   [circle]
     type = ConcentricCircleMeshGenerator
-    radii            = '0.0117 0.0127'
+    radii            = '${radius_inner} ${radius_outer}'
     rings            = '4 4'
     num_sectors      = 6
     has_outer_square = false
@@ -51,23 +47,17 @@ advected_interp_method = 'upwind'
 
   # turn the circle into a cylinder with the corresponding heights for each block
   # then assign new subdomains to be renamed later
-
   [extrude]
-    type = MeshExtruderGenerator
-    extrusion_vector    = '0 0 1'
-    input               = circle
-    #layer_thickness     = '1'
-    #layer_subdivisions  = '100'
-    num_layers = 100
-    layers              = '0'
-    #existing_subdomains = '${old_blocks}'
-    #new_ids             = 'wall fluid'
-    top_sideset         = 'outlet'
-    bottom_sideset      = 'inlet'
+    type = AdvancedExtruderGenerator
+    input = circle
+    heights = '${cylinder_height}'
+    num_layers = '100'
+    direction = '0 0 1'
+    top_boundary    = 'outlet'
+    bottom_boundary = 'inlet'
   []
 
-  # rename each of the 16 blocks to make them the correct block for material assignment
-
+  # rename each of the blocks to make them the correct block for material assignment
   [rename]
     type = RenameBlockGenerator
     input = extrude
@@ -87,7 +77,7 @@ advected_interp_method = 'upwind'
     input = add_wall
     new_boundary = 'fluid_outlet'
     block = 'fluid'
-    #include_only_external∂_sides = 'true'
+    #include_only_external_sides = 'true'
     normal = '0 0 1'
     #normals = '0.00898026 -0.00898026 1'
     #new_boundary = 'wall_outlet'
@@ -117,7 +107,7 @@ advected_interp_method = 'upwind'
     input = fix_sideset_3
     new_boundary = 'solid_outlet'
     block = 'pipe'
-    #include_only_external∂_sides = 'true'
+    #include_only_external_sides = 'true'
     normal = '0 0 1'
     #normals = '0.00898026 -0.00898026 1'
     #new_boundary = 'wall_outlet'
@@ -129,7 +119,6 @@ advected_interp_method = 'upwind'
     #normals = '0.00898026 -0.00898026 1'
     #new_boundary = 'wall_outlet'
   []
-
 []
 
 ###################################
@@ -140,7 +129,7 @@ fluid_blocks = 'fluid'
 solid_blocks = 'pipe'
 
 [Problem]
-  linear_sys_names = 'u_system v_system w_system pressure_system T_liq_system T_sol_system'
+  linear_sys_names = 'u_system v_system w_system pressure_system tritium_liquid_system tritium_solid_system'
   previous_nl_solution_required = true
   kernel_coverage_check = false
   material_coverage_check = false
@@ -164,57 +153,44 @@ solid_blocks = 'pipe'
 
 [Variables]
   #TH Variables
-  [vel_x]
+  [vel_x] # units ?
     type = MooseLinearVariableFVReal
     initial_condition = 0
     block = ${fluid_blocks}
     solver_sys = u_system
   []
-  [vel_y]
+  [vel_y] # units ?
     type = MooseLinearVariableFVReal
     initial_condition = 0
     block = ${fluid_blocks}
     solver_sys = v_system
   []
-  [vel_z]
+  [vel_z] # units ?
     type = MooseLinearVariableFVReal
-    initial_condition = 0.8
+    initial_condition = ${velocity_inlet}
     block = ${fluid_blocks}
     solver_sys = w_system
   []
-  [pressure]
+  [pressure] # units ?
     type = MooseLinearVariableFVReal
-    initial_condition = 0.2
+    initial_condition = 0.2  # ?
     block = ${fluid_blocks}
     solver_sys = pressure_system
   []
 
   #Tritium Variables
-  [T_liq]
+  [tritium_liquid]
     type = MooseLinearVariableFVReal
-    #initial_condition = ${C_D}
     initial_condition = 0.0
     block = ${fluid_blocks}
-    solver_sys = 'T_liq_system'
+    solver_sys = 'tritium_liquid_system'
   []
-  [T_sol]
+  [tritium_solid]
     type = MooseLinearVariableFVReal
-    #initial_condition = ${C_D}
     initial_condition = 0.0
     block = ${solid_blocks}
-    solver_sys = 'T_sol_system'
+    solver_sys = 'tritium_solid_system'
   []
-
-  # [Temp_fluid]
-  #   type = INSFVEnergyVariable
-  #   initial_condition = ${T_Salt_initial}
-  #   block = ${fluid_blocks}
-  # []
-  # [T_solid]
-  #   type = INSFVEnergyVariable
-  #   initial_condition = ${T_Salt_initial}
-  #   block = ${solid_blocks}
-  # []
 []
 
 # [FluidProperties]
@@ -296,29 +272,29 @@ solid_blocks = 'pipe'
     force_boundary_execution = true
   []
 
-  #Tritium Kernels 
-  #T_liq Kernels
-  [T_liq_advection]
+  #Tritium Kernels
+  #tritium_liquid Kernels
+  [tritium_liquid_advection]
     type = LinearFVScalarAdvection
-    variable = T_liq
+    variable = tritium_liquid
     #rhie_chow_user_object = rhie_chow_user_object
     #vel = 'vel_x_mat vel_y_mat'
     #vel = 'vel_x vel_y'
     #rho = ${rho}
     block = ${fluid_blocks}
   []
-  [T_diffusion]
+  [tritium_liquid_diffusion]
     type = LinearFVDiffusion
-    diffusion_coeff = 'D_H_F'
-    variable = T_liq
+    diffusion_coeff = 'diffusivity_tritium_liquid'
+    variable = tritium_liquid
     block = ${fluid_blocks}
     use_nonorthogonal_correction = false
   []
-  #T_solid Kernels - TMAP8 Here
-  [T_sol_diffusion]
+  #tritium_solid Kernels - TMAP8 Here
+  [tritium_solid_diffusion]
     type = LinearFVDiffusion
-    diffusion_coeff = 'D_H_S'
-    variable = T_sol
+    diffusion_coeff = 'diffusivity_tritium_solid'
+    variable = tritium_solid
     #block = ${fluid_blocks}
     use_nonorthogonal_correction = false
   []
@@ -390,70 +366,66 @@ solid_blocks = 'pipe'
   []
 
   #Tritium BCs
-  #T_liq inlet and outlets
-  [T_liq_inlet]
+  #tritium_liquid inlet and outlets
+  [tritium_liquid_inlet]
     type = LinearFVAdvectionDiffusionFunctorDirichletBC
     boundary = 'fluid_inlet'
-    functor = ${C_D}
-    #functor = 1e5
-    variable = T_liq
-    #block = ${fluid_blocks}
+    functor = ${tritium_liquid_concentration_inlet}
+    variable = tritium_liquid
   []
-  [T_liq_outlet]
+  [tritium_liquid_outlet]
     type = LinearFVAdvectionDiffusionOutflowBC
     boundary = 'fluid_outlet'
-    #functor = 1e5
-    variable = T_liq
+    variable = tritium_liquid
     use_two_term_expansion = false
-    #block = ${fluid_blocks}
   []
 
   #Mass Transfer at Interface. -TMPAP8 Here
-  [T_sol_source]
+  [tritium_solid_source]
     type = LinearFVConvectiveHeatTransferBC
     boundary = 'wall'
-    T_fluid = T_liq
-    T_solid = T_sol
+    T_fluid = tritium_liquid
+    T_solid = tritium_solid
     h = 1 # mass transfer exchange rate at interface - tune
     #functor = 1e5
-    variable = T_sol
+    variable = tritium_solid
     #is_solid = true
     #block = ${fluid_blocks}
   []
-  [T_liq_loss]
+  [tritium_liquid_loss]
     type = LinearFVConvectiveHeatTransferBC
     boundary = 'wall'
-    T_fluid = T_liq
-    T_solid = T_sol
+    T_fluid = tritium_liquid
+    T_solid = tritium_solid
     h = 1
     #functor = 1e5
-    variable = T_liq
+    variable = tritium_liquid
     #is_solid = false
     #block = ${fluid_blocks}
   []
 
   #Solid Outlets from diffusion
-  [T_sol_outer]
+  [tritium_solid_outer]
     type = LinearFVAdvectionDiffusionOutflowBC
     boundary = 'outer'
     #value = 0
-    variable = T_sol
+    variable = tritium_solid
     use_two_term_expansion = false
     #block = ${fluid_blocks}
   []
-  [T_sol_outer_2]
+  [tritium_solid_outer_2]
     type = LinearFVAdvectionDiffusionOutflowBC
     boundary = 'solid_outlet'
     #value = 0
-    variable = T_sol
+    variable = tritium_solid
     use_two_term_expansion = false
     #block = ${fluid_blocks}
   []
-  [T_sol_outer_3]
+  [tritium_solid_outer_3]
     type = LinearFVAdvectionDiffusionOutflowBC
     boundary = 'solid_inlet'
     #value = 0
-    variable = T_sol
+    variable = tritium_solid
     use_two_term_expansion = false
     #block = ${fluid_blocks}
   []
@@ -463,8 +435,8 @@ solid_blocks = 'pipe'
   # [fluid_props_to_mat_props]
   #   type = GeneralFunctorFluidProps
   #   pressure = 'pressure'
-  #   Temp_fluid = ${Temp_fluid}
-  #   #Temp_fluid = 450
+  #   Temperature_fluid = ${Temperature_fluid}
+  #   #Temperature_fluid = 450
   #   speed = 'speed'
   #   characteristic_length = 1.0
   #   fp = fluid_properties_obj
@@ -479,30 +451,30 @@ solid_blocks = 'pipe'
   #   execute_on = 'INITIAL'
   # []
   [rho]
-    type = ParsedFunctorMaterial  
+    type = ParsedFunctorMaterial
     property_name = 'rho'
-    expression = '10520-1.19051*${Temp_fluid}'
+    expression = '10520-1.19051*${Temperature_fluid}'
     block = 'fluid'
     #execute_on = 'Always'
   []
   [mu]
-    type = ParsedFunctorMaterial  
+    type = ParsedFunctorMaterial
     property_name = 'mu'
-    expression = '0.187*10^-3*exp(1400/${Temp_fluid})+1*exp(-t/10)'
+    expression = '0.187*10^-3*exp(1400/${Temperature_fluid})+1*exp(-t/10)'
     block = 'fluid'
     #exe
   []
-  [D_H_F]
-    type = ParsedFunctorMaterial  
-    property_name = 'D_H_F'
-    expression = '4.03*10^-8*exp(-19500/(${R_gas}*${Temp_fluid}))'
+  [diffusivity_tritium_liquid] # PbLi # ?
+    type = ParsedFunctorMaterial
+    property_name = 'diffusivity_tritium_liquid'
+    expression = '4.03*10^-8*exp(-19500/(${R_gas}*${Temperature_fluid}))'
     block = 'fluid'
     #exe
   []
-  [D_H_S]
-    type = ParsedFunctorMaterial  
-    property_name = 'D_H_S'
-    expression = '2.0*10^-8*exp(-4200/(${R_gas}*${Temp_fluid}))'
+  [diffusivity_tritium_solid] # Vanadium # ?
+    type = ParsedFunctorMaterial
+    property_name = 'diffusivity_tritium_solid'
+    expression = '2.0*10^-8*exp(-4200/(${R_gas}*${Temperature_fluid}))'
     block = 'pipe'
     #exe
   []
@@ -525,20 +497,18 @@ solid_blocks = 'pipe'
 [Functions]
   [InletLaminar]
     type = ParsedFunction
-    symbol_names = 'R ubar'
-    symbol_values = '${fparse Dh/2} ${Vin}'
-    expression = 2.*ubar*(1.0-(y/R)^2.0-(x/R)^2)
+    expression = 2.*${velocity_inlet}*(1.0-(y/${radius_inner})^2.0-(x/${radius_inner})^2)
   []
   [rho_calc]
     type = ParsedFunction
     symbol_names = 'T'
-    symbol_values = '${Temp_fluid}'
+    symbol_values = '${Temperature_fluid}'
     expression = 10520.35-1.19051*T
   []
   [mu_calc]
     type = ParsedFunction
     symbol_names = 'T'
-    symbol_values = '${Temp_fluid}'
+    symbol_values = '${Temperature_fluid}'
     expression = 0.187*10^-3*exp(1400/T)
   []
 []
@@ -557,7 +527,7 @@ solid_blocks = 'pipe'
   momentum_systems = 'u_system v_system w_system'
   pressure_system = 'pressure_system'
   #energy_system = 'energy_system'
-  passive_scalar_systems = 'T_liq_system T_sol_system'
+  passive_scalar_systems = 'tritium_liquid_system tritium_solid_system'
   momentum_equation_relaxation = 0.8
   pressure_variable_relaxation = 0.3
   #energy_equation_relaxation = 0.9
@@ -630,9 +600,9 @@ solid_blocks = 'pipe'
   #   #density = 'rho'
   #   #advected_quantity = 'rho'
   # []
-  [T_liq_avg]
+  [tritium_liquid_avg]
     type = ElementAverageValue
-    variable = T_liq
+    variable = tritium_liquid
     block = 'fluid'
     #pp_names = 'rho'
     #vel_x = vel_x
