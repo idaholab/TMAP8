@@ -26,19 +26,18 @@ depth_source = '${units 2.64e-9 m -> mum}'
 
 # Traps parameters
 N = '${units 6.323e28 at/m^3 -> at/mum^3}'
-initial_concentration_trap_1 = 2e-3 # (Trap/W)
-activation_energy = '${fparse ${units 0.39 eV -> J} / ${kB}}' # Activation energy of D diffusion in W
-trapping_energy = '${activation_energy}' # (K)
+trapping_energy = '${fparse ${units 0.39 eV -> J} / ${kB}}'
 binding_energy = '${fparse ${units 1.41 eV -> J} / ${kB}}'
 detrapping_energy_1 = '${fparse ${trapping_energy} + ${binding_energy}}' # (K)
 W_lattice_constant = '${units 3.16e-10 m -> mum}'
+trapping_site_fraction_1 = 0.002 # (-)
 trapping_rate_prefactor = '${fparse ${diffusivity_coefficient} / ${W_lattice_constant}^2}' # (1/s)
 release_rate_prefactor = '${units 1e13 1/s}'
 trap_per_free_1 = 1e4 # (-)
 
 
 # Thermal parameters
-temperature_exposure = '${units 400 degC -> K}'
+temperature_exposure = '${units 673 K}'
 time_constant = '${units 1200 s}'
 temperature_TDS = '${units 1173 K}'
 temperature_rate = '${fparse ${units 10 K} / ${units 60 s}}'
@@ -86,7 +85,7 @@ temperature_min = '${units 300 K}'
   [trapped_1]
     order = FIRST
     family = LAGRANGE
-    initial_condition = '${fparse initial_concentration_trap_1 * N}'
+    #initial_condition = '${fparse initial_concentration_trap_1 * trapping_site_fraction_1 * N}'
     #outputs = none
   []
 []
@@ -158,7 +157,7 @@ temperature_min = '${units 300 K}'
     alpha_t = '${trapping_rate_prefactor}'
     trapping_energy = '${trapping_energy}'
     N = '${N}'
-    Ct0 = 0
+    Ct0 = '${trapping_site_fraction_1}'
     temperature = 'temperature'
     trap_per_free = ${trap_per_free_1}
     extra_vector_tags = ref
