@@ -91,17 +91,23 @@ ax = fig.add_subplot(gs[0])
 
 for i in range(len(cooling_data)):
   label = "TMAP8 - " + str(initial_temperature[i]) + " K"
-  ax.plot(time_series, cooling_data[i], linestyle='-', label=label)
+  ax.plot(time_series, cooling_data[i], linestyle='-', linewidth=4.0, label=label)
 
-ax.set_xlabel(u'Time [s]', weight='bold')
-ax.set_ylabel(u'Temperature [K]', weight='bold')
-ax.legend(loc="best")
+# Font sizes for labels and axes
+SMALL_SIZE = 12
+MEDIUM_SIZE = 14
+BIGGER_SIZE = 16
+
+ax.set_xlabel(u'Time [s]', weight='bold', fontsize=BIGGER_SIZE)
+ax.set_ylabel(u'Temperature [K]', weight='bold', fontsize=BIGGER_SIZE)
+ax.legend(loc="best", fontsize=SMALL_SIZE)
 ax.set_xlim(left=0, right=20001)
 start, end = ax.get_xlim()
 ax.xaxis.set_ticks(np.arange(start, end, 5000))
 ax.set_ylim(bottom=290, top=1200)
 ax.minorticks_on()
-ax.tick_params(axis='both', which='both', direction='out', bottom=True, top=True, left=True, right=True)
+ax.tick_params(axis='both', which='both', direction='out', bottom=True, top=True, left=True,
+               right=True, labelsize=MEDIUM_SIZE)
 plt.savefig(f'{file_base}.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 
