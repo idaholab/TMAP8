@@ -10,8 +10,8 @@ outputs_initial_time = 0 #'${units 12000 s}'
 step_interval_max = 50 # (-)
 step_interval_mid = 15 # (-)
 step_interval_min = 6 # (-)
-# bound_value_max = '${units 2e4 at/mum^3}'
-# bound_value_min = '${units -1e-10 at/mum^3}'
+#bound_value_max = '${units 2e4 at/mum^3}'
+bound_value_min = '${units -1e-10 at/mum^3}'
 
 # Diffusion parameters
 flux_high = '${units 7.1e21 at/m^2/s -> at/mum^2/s}'
@@ -58,6 +58,23 @@ temperature_min = '${units 300 K}'
   reference_vector = 'ref'
 []
 
+[Bounds]
+  [concentration_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = concentration
+    bound_type = lower
+    bound_value = ${bound_value_min}
+  []
+  [trapped_1_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = trapped_1
+    bound_type = lower
+    bound_value = ${bound_value_min}
+  []
+[]
+
 [Variables]
   [concentration]
     order = FIRST
@@ -76,6 +93,10 @@ temperature_min = '${units 300 K}'
   [temperature]
   []
   [source]
+  []
+  [bounds_dummy]
+    order = FIRST
+    family = LAGRANGE
   []
 []
 
