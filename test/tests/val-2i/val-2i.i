@@ -46,10 +46,14 @@ temperature_min = '${units 300 K}'
 
 [Mesh]
   [cmg]
-    type = GeneratedMeshGenerator
+    nx_scale = 2
+    type = CartesianMeshGenerator
     dim = 1
-    nx = 500
-    xmax = '${units 5e-4 m -> mum}'
+    dx = '${fparse 10 * ${units 1.79e-9 m -> mum}}
+          ${units 1e-9 m -> mum} ${units 1e-8 m -> mum} ${units 1e-7 m -> mum} ${units 1e-6 m -> mum} ${units 3.8711e-6 m -> mum} ${units 5e-6 m -> mum} ${fparse 9 * ${units 1e-5 m -> mum}} ${fparse 4 * ${units 1e-4 m -> mum}}'
+    ix = '${fparse 10 * ${nx_scale}}
+          ${fparse 1 * ${nx_scale}}    ${fparse 1 * ${nx_scale}}   ${fparse 1 * ${nx_scale}} ${fparse 1 * ${nx_scale}} ${fparse 1 * ${nx_scale}} ${fparse 50 * ${nx_scale}}   ${fparse 50 * ${nx_scale}} ${fparse 50 * ${nx_scale}}'
+    subdomain_id = '0 0 0 0 0 0 0 0 0'
   []
 []
 
