@@ -16,6 +16,8 @@ bound_value_min = '${units -1e-10 at/mum^3}'
 # Diffusion parameters
 flux_high = '${units 7.1e21 at/m^2/s -> at/mum^2/s}'
 flux_low = '${units 0      at/mum^2/s}'
+reflection_coefficient = 0.90 # (-)
+transmission_coefficient = '${fparse 1 - ${reflection_coefficient}}' # (-)
 diffusivity_coefficient = '${fparse ${units 4.1e-7 m^2/s -> mum^2/s} / sqrt(2)}'
 E_D = '${units 0.39 eV -> J}'
 initial_concentration = '${units 0.0 at/m^3 -> at/mum^3}' # '${units 1e-10 at/m^3 -> at/mum^3}'
@@ -226,9 +228,9 @@ temperature_min = '${units 300 K}'
 
   [concentration_source_normal_function]
     type = ParsedFunction
-    symbol_names = 'source_distribution_function surface_flux_function'
-    symbol_values = 'source_distribution_function surface_flux_function'
-    expression = 'source_distribution_function * surface_flux_function'
+    symbol_names = 'source_distribution_function surface_flux_function transmission_coefficient'
+    symbol_values = 'source_distribution_function surface_flux_function ${transmission_coefficient}'
+    expression = 'source_distribution_function * surface_flux_function * transmission_coefficient'
   []
 
   [max_dt_size_function]
