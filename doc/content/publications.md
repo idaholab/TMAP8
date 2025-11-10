@@ -4,6 +4,8 @@ Below is a known list of publications supporting TMAP8 development, and might be
 your work should be included on this list, please make a post in the
 [TMAP8 Discussion Forum](https://github.com/idaholab/TMAP8/discussions).
 
+For information about what reference to use when citing TMAP8 as a whole, please refer to [citing_tmap8.md].
+
 ## Journal Articles
 
 !bibtex list bib_files=articles_using_tmap8.bib

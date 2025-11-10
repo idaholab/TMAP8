@@ -24,6 +24,7 @@ Content:
             - application_development/performance_benchmarking.md
             - application_usage/command_line_usage.md
             - application_usage/restart_recover.md
+            - application_usage/input_syntax.md
             - citing.md
     - python:
         root_dir: ${MOOSE_DIR}/python/doc/content
@@ -53,6 +54,7 @@ Extensions:
               TMAP8-only Syntax: syntax/tmap_only.md
               Complete Code Syntax: syntax/index.md
               TMAP8 Tutorial Slides: tutorial/index.md
+              Theory Manual: theory_manual.md
               V&V: /verification_and_validation/index.md
               Examples: /examples/index.md
               Publications using TMAP8: publications.md
@@ -100,6 +102,7 @@ Extensions:
             - hales15homogenization
             - kim_phase-field_1999
             - incropera2002
+            - rhebergen2017analysis
     MooseDocs.extensions.civet:
         test_results_cache: '/tmp/civet/jobs'
         branch: main

@@ -14,7 +14,7 @@ Next, we need to define our system. Following the convention in [!cite](Abdou202
 their own ODE and tritium inventory:
 
 !table id=tritsystems caption=Systems and labels used in this example.
-| System Name | System number | Tritium inventory variable| system equation |
+| System Name | System Number | Tritium Inventory Variable| System Equation |
 | --- | --- | --- | --- |
 | Breeding zone | 1 | `T_01_BZ` | [eqn:t1] |
 | Tritium Extraction System | 2 | `T_02_TES` | [eqn:t2] |

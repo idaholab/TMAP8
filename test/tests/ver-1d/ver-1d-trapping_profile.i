@@ -73,17 +73,17 @@ trap_profile_depth = 0.2 # position of the transition from Ct0_surface to Ct0_bu
 []
 
 [Kernels]
-  [./diff]
+  [diff]
     type = MatDiffusion
     variable = mobile
     diffusivity = ${fparse 1. / time_scaling}
     extra_vector_tags = ref
-  [../]
-  [./time]
+  []
+  [time]
     type = TimeDerivative
     variable = mobile
     extra_vector_tags = ref
-  [../]
+  []
   [coupled_time]
     type = ScaledCoupledTimeDerivative
     variable = mobile
