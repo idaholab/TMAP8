@@ -7,11 +7,15 @@
 /************************************************************/
 
 #pragma once
+#include <cmath>
 #include "PhysicalConstants.h"
 namespace PhysicalConstants
 {
 // Tritium half-life (seconds)
 // https://nvlpubs.nist.gov/nistpubs/jres/105/4/j54luc2.pdf
 const auto tritium_half_life = 388800000.0;
-const auto tritium_decay_const = 1.782785958230312e-09;
+const auto tritium_decay_const = std::log(2.0) / tritium_half_life;
+// Definition of a curie
+// https://www.nrc.gov/reading-rm/basic-ref/glossary/curie-ci
+const auto curie_to_bq = 3.7e10;
 } // namespace PhysicalConstants
