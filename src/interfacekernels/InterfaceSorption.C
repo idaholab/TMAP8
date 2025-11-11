@@ -7,7 +7,7 @@
 /************************************************************/
 
 #include "InterfaceSorption.h"
-#include "PhysicalConstants.h"
+#include "TMAP8Constants.h"
 
 registerMooseObject("TMAP8App", InterfaceSorption);
 registerMooseObject("TMAP8App", ADInterfaceSorption);
