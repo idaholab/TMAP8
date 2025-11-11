@@ -6,7 +6,7 @@ TPE_hold_time = '${units 7200 s}'
 TDS_initial_time = '${units 12000 s}'
 TDS_ramp_end = '${units 17238 s}'
 simulation_time = '${units 19038 s}'
-outputs_initial_time = 0 #'${units 12000 s}'
+outputs_initial_time = '${units 12000 s}'
 step_interval_max = 50 # (-)
 step_interval_mid = 15 # (-)
 step_interval_min = 6 # (-)
@@ -240,12 +240,6 @@ temperature_min = '${units 300 K}'
     type = ParsedFunction
     expression = 'if(t<${TDS_initial_time}, ${step_interval_mid}, ${step_interval_min})'
   []
-
-  [max_dt_size_function_coarse]
-    type = ParsedFunction
-    expression = 'if(t<${TDS_initial_time}, ${step_interval_mid},
-                  if(t<${TDS_ramp_end}, ${step_interval_min}, ${step_interval_max}))'
-  []
 []
 
 [Postprocessors]
@@ -302,7 +296,8 @@ temperature_min = '${units 300 K}'
   end_time = ${simulation_time}
   line_search = 'none'
   automatic_scaling = true
-  nl_rel_tol = 1e-10
+  nl_rel_tol = 1e-08
+  nl_abs_tol = 1e-10
   nl_max_its = 34
   [TimeStepper]
     type = IterationAdaptiveDT
@@ -317,7 +312,7 @@ temperature_min = '${units 300 K}'
 []
 
 [Outputs]
-  file_base = 'val-2g_out'
+  file_base = 'val-2g_${temperature_exposure}_out'
   [csv]
     type = CSV
     start_time = ${outputs_initial_time}
@@ -326,6 +321,6 @@ temperature_min = '${units 300 K}'
     type = Exodus
     start_time = ${outputs_initial_time}
     output_material_properties = true
-    #time_step_interval = 20
+    time_step_interval = 20
   []
 []
