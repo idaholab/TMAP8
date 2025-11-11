@@ -33,7 +33,7 @@ W_lattice_constant = '${units 3.16e-10 m -> mum}'
 trapping_site_fraction_1 = 0.002 # (-)
 trapping_rate_prefactor = '${fparse ${diffusivity_coefficient} / ${W_lattice_constant}^2}' # (1/s)
 release_rate_prefactor = '${units 1e13 1/s}'
-trap_per_free_1 = 1e4 # (-)
+trap_per_free_1 = 1e6 # (-)
 
 
 # Thermal parameters
@@ -49,7 +49,7 @@ temperature_min = '${units 300 K}'
     nx_scale = 2
     type = CartesianMeshGenerator
     dim = 1
-    dx = '${fparse 10 * ${units 1.79e-9 m -> mum}}
+    dx = '${fparse 15 * ${units 1.79e-9 m -> mum}}
           ${units 1e-9 m -> mum} ${units 1e-8 m -> mum} ${units 1e-7 m -> mum} ${units 1e-6 m -> mum} ${units 3.8711e-6 m -> mum} ${units 5e-6 m -> mum} ${fparse 9 * ${units 1e-5 m -> mum}} ${fparse 4 * ${units 1e-4 m -> mum}}'
     ix = '${fparse 10 * ${nx_scale}}
           ${fparse 1 * ${nx_scale}}    ${fparse 1 * ${nx_scale}}   ${fparse 1 * ${nx_scale}} ${fparse 1 * ${nx_scale}} ${fparse 1 * ${nx_scale}} ${fparse 50 * ${nx_scale}}   ${fparse 50 * ${nx_scale}} ${fparse 50 * ${nx_scale}}'
