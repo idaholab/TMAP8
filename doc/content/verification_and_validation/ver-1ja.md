@@ -30,7 +30,7 @@ and
 where $t$ is the time in seconds, concentrations are in atoms/m$^3$, and $k= 0.693/t_{1/2}$ is the decay rate constant in 1/s.
 
 !alert warning title=TMAP8 uses different model parameters than TMAP7
-The initial tritium concentration in TMAP7 was defined as $C_T^0 = 1.5$ atoms/m$^3$. To use a more realistic values, TMAP8 uses $C_T^0 = 1.5 \times 10^{5}$ atoms/m$^3$.
+The initial tritium concentration in TMAP7 was defined as $C_T^0 = 1.5$ atoms/m$^3$. To use more realistic values, TMAP8 uses $C_T^0 = 1.5 \times 10^{5}$ atoms/m$^3$.
 Moreover, $k$ is defined as $k=0.693/t_{1/2} \approx 1.78199 \times 10^{-9}$ 1/s instead of $1.78241 \times 10^{-9}$ 1/s to be fully consistent with the half-life value (assuming 365.25 days in a year).
 
 ## Analytical Solution
