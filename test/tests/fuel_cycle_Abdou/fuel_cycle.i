@@ -419,7 +419,7 @@
   [tdecay]
     type = ConstantPostprocessor
     execute_on = 'TIMESTEP_BEGIN INITIAL LINEAR NONLINEAR'
-    value = 1.7828336471961835e-9
+    value = ${fparse log(2)/388800000.0}
   []
   [tritium_burn_fraction]
     type = ConstantPostprocessor

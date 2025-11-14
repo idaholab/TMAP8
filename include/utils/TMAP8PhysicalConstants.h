@@ -16,6 +16,6 @@ namespace PhysicalConstants
 const auto tritium_half_life = 388800000.0;
 const auto tritium_decay_const = std::log(2.0) / tritium_half_life;
 // Definition of a curie
-// https://www.nrc.gov/reading-rm/basic-ref/glossary/curie-ci
+// https://gnssn.iaea.org/main/bptc/BPTC%20Module%20Documents/Module01%20Nuclear%20physics%20and%20reactor%20theory.pdf}
 const auto curie_to_bq = 3.7e10;
 } // namespace PhysicalConstants
