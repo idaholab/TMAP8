@@ -255,7 +255,7 @@ Concerning boundary conditions, we apply no-flux boundary conditions except for 
 c_{s,BC,pore} = \frac{P}{RT}
 \end{equation}
 
-where $P$ is the tritium pressure (Pa), $R$ is the gas constant from [PhysicalConstants](TMAP8Constants.md), and $T$ is the temperature (K).
+where $P$ is the tritium pressure (Pa), $R$ is the gas constant from [PhysicalConstants](TMAP8PhysicalConstants.md), and $T$ is the temperature (K).
 
 !listing test/tests/pore_scale_transport/2D_absorption_base.i link=false block=BCs
 

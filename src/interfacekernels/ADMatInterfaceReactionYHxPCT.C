@@ -8,7 +8,7 @@
 
 #include "ADMatInterfaceReactionYHxPCT.h"
 
-#include "TMAP8Constants.h"
+#include "TMAP8PhysicalConstants.h"
 
 registerMooseObject("TMAP8App", ADMatInterfaceReactionYHxPCT);
 

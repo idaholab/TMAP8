@@ -2,7 +2,7 @@
 
 ## Overview
 
-This object lists physical constants to use consistent values across TMAP8. It contains the values listed in [PhysicalConstants_table]. To use these constants in the code, add `#include "TMAP8Constants.h"` at the top of your class and use `PhysicalConstants::<IN_CODE_NAME>`. For example, to use the ideal gas constant, use `PhysicalConstants::ideal_gas_constant`.
+This object lists physical constants to use consistent values across TMAP8. It contains the values listed in [PhysicalConstants_table]. To use these constants in the code, add `#include "TMAP8PhysicalConstants.h"` at the top of your class and use `PhysicalConstants::<IN_CODE_NAME>`. For example, to use the ideal gas constant, use `PhysicalConstants::ideal_gas_constant`.
 
 !table id=PhysicalConstants_table caption=List of physical constants available in PhysicalConstants.
 | Symbol   | In code name              | Description                              | Value            | Units     | Reference                 |
