@@ -183,9 +183,6 @@ if os.path.exists(filename):
 with open(filename, 'a') as f:
     f.writelines(lines)
 
-Curie = 3.7e10 # 1/s
-decay_rate_tritium = np.log(2)/388800000.0 # 1/s/at
-conversion_Ci_atom = decay_rate_tritium / Curie # 1/at
 m_to_mum = 1e6
 
 # provide average and std values for each parameter following a normal distribution, in the same order as `parameters_normal`
