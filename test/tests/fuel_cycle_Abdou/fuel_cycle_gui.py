@@ -22,7 +22,7 @@ import shutil
 import argparse
 import PIL
 dir_path = os.path.dirname(os.path.realpath(__file__))
-icon_path = os.path.join(dir_path,'..','..','..','doc','content','figures','TMAP8_logo_blue.png')
+icon_path = os.path.join(dir_path,'..','..','..','doc','content','figures','TMAP8_logo','TMAP8_vertical_blue.png')
 
 class fake_tk():
     def __init__(self,x=0,text=None,row=0,column=0,grid=None,textvariable=None,validate=None,validatecommand=None, width=True, height=True,master=None,**kwargs):
