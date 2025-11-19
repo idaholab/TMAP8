@@ -7,6 +7,61 @@
     csvdiff = 'fuel_cycle_out.csv'
     requirement = 'The system shall reproduce a consistent solution to an ODE system of equations modeling the tritium fuel cycle.'
   []
+  [fuel_cycle_kernel]
+    type = CSVDiff
+    input = 'fuel_cycle_abdou_generic.i'
+    issues = '#329'
+    design = 'FuelCycleSystemScalarKernel.md'
+    csvdiff = 'fuel_cycle_out.csv'
+    cli_args = 'Outputs/file_base=fuel_cycle_out'
+    rel_err = 1.6e-6
+    requirement = 'The system shall reproduce a consistent solution to an ODE system of equations modeling the tritium fuel cycle with a built-in kernel.'
+  []
+  [fuel_cycle_kernel_ss]
+    type = CSVDiff
+    input = 'ss_kernel.i'
+    issues = '#329'
+    design = 'FuelCycleSystemScalarKernel.md'
+    csvdiff = 'ss_kernel_out.csv'
+    requirement = 'The fuel cycle system kernel shall have a steady-state flag that will allow the kernel to neglect time-dependent contributions.'
+  []
+  [fuel_cycle_kernel_implicit]
+    type = CSVDiff
+    input = 'ss_kernel.i'
+    issues = '#329'
+    design = 'FuelCycleSystemScalarKernel.md'
+    cli_args = 'ScalarKernels/I1/steady_state=false ScalarKernels/I1/is_implicit=true Outputs/file_base=implicit_out'
+    csvdiff = 'implicit_out.csv'
+    requirement = 'The fuel cycle system kernel shall run with either current or old state inputs.'
+  []
+  [fuel_cycle_kernel_inputs_mismatch]
+    type = RunException
+    input = 'ss_kernel.i'
+    issues = '#329'
+    design = 'FuelCycleSystemScalarKernel.md'
+    cli_args = 'ScalarKernels/I1/input_fractions=0.2'
+    expect_err = '"input_fractions" must be defined with the same length as "inputs".'
+    requirement = 'The fuel cycle system kernel shall not run with inconsistent inputs.'
+  []
+  [fuel_cycle_kernel_invalid_coupling]
+    type = RunException
+    input = 'ss_kernel.i'
+    issues = '#329'
+    design = 'FuelCycleSystemScalarKernel.md'
+    cli_args = 'ScalarKernels/I1/input_fractions=0.2 ScalarKernels/I1/inputs=T_01_BZ'
+    expect_err = 'Primary variable cannot be listed as a coupled variable'
+    requirement = 'The fuel cycle system kernel shall not run with the primary variable listed in inputs.'
+  []
+  [fuel_cycle_kernel_AD]
+    type = CSVDiff
+    input = 'fuel_cycle_abdou_generic_AD.i'
+    issues = '#329'
+    design = 'FuelCycleSystemScalarKernel.md'
+    csvdiff = 'fuel_cycle_out.csv'
+    cli_args = 'Outputs/file_base=fuel_cycle_out'
+    rel_err = 1.6e-6
+    requirement = 'The system shall reproduce a consistent solution to an ODE system of equations modeling the tritium fuel cycle with a built-in AD kernel.'
+  []
   [fuel_cycle_Abdou_comparison]
     type = RunCommand
     command = 'python3 plot_comparison.py'

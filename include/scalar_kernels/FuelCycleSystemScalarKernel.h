@@ -10,35 +10,40 @@
 
 #include "ODETimeDerivative.h"
 #include "ADScalarTimeDerivative.h"
+#include "FunctorInterface.h"
 #include "MooseTypes.h"
 
 template <bool is_ad>
-class GenericSystemScalarKernelTempl
-  : public std::conditional<is_ad, ADScalarTimeDerivative, ODETimeDerivative>::type
+class FuelCycleSystemScalarKernelTempl
+  : public std::conditional<is_ad, ADScalarTimeDerivative, ODETimeDerivative>::type,
+    public FunctorInterface
 {
   using Base = typename std::conditional<is_ad, ADScalarTimeDerivative, ODETimeDerivative>::type;
 
 public:
-  GenericSystemScalarKernelTempl(const InputParameters & parameters);
-
+  FuelCycleSystemScalarKernelTempl(const InputParameters & parameters);
+  virtual bool isADObject() const override { return is_ad; };
   static InputParameters validParams();
 
 protected:
-  virtual GenericReal<is_ad> computeQpResidual() final;
+  virtual GenericReal<is_ad> computeQpResidual() override;
+  virtual Real computeQpJacobian();
   size_t _n_inputs;
-  std::vector<VariableName> _input_variable_names;
+  size_t _n_other_sources;
+  size_t _n_other_sinks;
   std::vector<const VariableValue *> _input_vals;
-  size_t _n_outputs;
-  std::vector<VariableName> _output_variable_names;
-  std::vector<const VariableValue *> _output_vals;
   std::vector<const Moose::Functor<GenericReal<is_ad>> *> _input_fractions;
-  std::vector<const Moose::Functor<GenericReal<is_ad>> *> _output_fractions;
   const Moose::Functor<GenericReal<is_ad>> & _decay_constant;
+  const Moose::Functor<GenericReal<is_ad>> & _residence_time;
+  const Moose::Functor<GenericReal<is_ad>> & _leakage_rate;
   bool _pseudo_steady_state;
+  bool _disable_residence_time;
   bool _is_implicit;
   const Moose::Functor<GenericReal<is_ad>> & _TBR;
+  std::vector<const Moose::Functor<GenericReal<is_ad>> *> _other_sources;
+  std::vector<const Moose::Functor<GenericReal<is_ad>> *> _other_sinks;
   const Moose::Functor<GenericReal<is_ad>> & _burn_rate;
 };
 
-typedef GenericSystemScalarKernelTempl<false> GenericSystemScalarKernel;
-typedef GenericSystemScalarKernelTempl<true> ADGenericSystemScalarKernel;
+typedef FuelCycleSystemScalarKernelTempl<false> FuelCycleSystemScalarKernel;
+typedef FuelCycleSystemScalarKernelTempl<true> ADFuelCycleSystemScalarKernel;
