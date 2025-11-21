@@ -51,7 +51,7 @@ ax.plot(TMAP8_time_k10[1:], solubility_ratio, label=r"Solubility Ratio (Analytic
 ax.set_yticks(np.arange(0, 21, 10))
 ax.set_xlim(0,TMAP8_time_k10.max())
 ax.set_xlabel('Time (s)')
-ax.set_ylabel(r"Concentrations ratio $C_{\text{encl1}} / \sqrt{C_{\text{encl2}}}$")
+ax.set_ylabel(r"Concentrations ratio $C_{\mathrm{encl1}} / \sqrt{C_{\mathrm{encl2}}}$")
 ax.legend(loc="best")
 ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
 RMSE = np.sqrt(np.mean((concentration_ratio_k10[1:]-solubility_ratio)**2))
