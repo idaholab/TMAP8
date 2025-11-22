@@ -62,6 +62,11 @@ protected:
   const GenericMaterialProperty<Real, is_ad> * _diffusivity_neighbor;
   ///@}
 
+
+  /// Defines whether a factor of RT is needeed
+  const bool _neighbour_is_gas;
+
+
   ///@{Retrieve parent members
   using InterfaceKernelParent<is_ad>::_u;
   using InterfaceKernelParent<is_ad>::_qp;
