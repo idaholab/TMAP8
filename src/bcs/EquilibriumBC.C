@@ -84,6 +84,8 @@ EquilibriumBC::EquilibriumBC(const InputParameters & parameters)
 ADReal
 EquilibriumBC::computeQpResidual()
 {
+  using std::exp;
+  using std::pow;
   ADReal Ko, Ea;
   // Use the functors if a subdomain has been provided for the nodal evaluation
   if (_subdomain != Moose::INVALID_BLOCK_ID)
@@ -103,9 +105,9 @@ EquilibriumBC::computeQpResidual()
 
   ADReal K;
   if (_T)
-    K = Ko * std::exp(-Ea / (PhysicalConstants::ideal_gas_constant * (*_T)[0]));
+    K = Ko * exp(-Ea / (PhysicalConstants::ideal_gas_constant * (*_T)[0]));
   else
-    K = Ko * std::exp(-Ea / (PhysicalConstants::ideal_gas_constant *
-                             _T_function->value(_t, *_current_node)));
-  return (_u * _var_scaling_factor - _K_scaling_factor * K * std::pow(_enclosure_var[0], _p));
+    K = Ko *
+        exp(-Ea / (PhysicalConstants::ideal_gas_constant * _T_function->value(_t, *_current_node)));
+  return (_u * _var_scaling_factor - _K_scaling_factor * K * pow(_enclosure_var[0], _p));
 }

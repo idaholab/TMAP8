@@ -88,12 +88,12 @@ template <bool is_ad>
 GenericReal<is_ad>
 InterfaceSorptionTempl<is_ad>::computeQpResidual(Moose::DGResidualType type)
 {
+  using std::max;
   // restrict inputs to physically meaningful values to avoid encountering NANs during linear solve
   const auto small = 1.0e-20;
-  const GenericReal<is_ad> u = std::max(small, _unit_scale * _u[_qp]);
-  const GenericReal<is_ad> u_neighbor =
-      std::max(small, _unit_scale_neighbor * _neighbor_value[_qp]);
-  const GenericReal<is_ad> temperature_limited = std::max(small, _T[_qp]);
+  const GenericReal<is_ad> u = max(small, _unit_scale * _u[_qp]);
+  const GenericReal<is_ad> u_neighbor = max(small, _unit_scale_neighbor * _neighbor_value[_qp]);
+  const GenericReal<is_ad> temperature_limited = max(small, _T[_qp]);
   const auto R = PhysicalConstants::ideal_gas_constant; // ideal gas constant (J/K/mol)
 
   GenericReal<is_ad> residual = 0.;
@@ -105,9 +105,11 @@ InterfaceSorptionTempl<is_ad>::computeQpResidual(Moose::DGResidualType type)
   {
     case Moose::Element:
     {
+      using std::exp;
+      using std::pow;
       residual = _test[_i][_qp] * _sorption_penalty *
-                 (u - _K0 * std::exp(-_Ea / R / temperature_limited) *
-                          std::pow(u_neighbor * R * temperature_limited, _n_sorption));
+                 (u - _K0 * exp(-_Ea / R / temperature_limited) *
+                          pow(u_neighbor * R * temperature_limited, _n_sorption));
       break;
     }
 
