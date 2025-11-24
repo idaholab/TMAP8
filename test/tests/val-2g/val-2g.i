@@ -9,8 +9,7 @@ simulation_time = '${units 19200 s}'
 outputs_initial_time = '${units 12000 s}'
 step_interval_max = 15 # (-)
 step_interval_min = 6 # (-)
-#bound_value_max = '${units 2e4 at/mum^3}'
-bound_value_min = '${units -1e-10 at/mum^3}'
+bound_value_min = '${units 1e-10 at/mum^3}'
 
 # Diffusion parameters
 flux_high = '${units 7.1e21 at/m^2/s -> at/mum^2/s}'
@@ -19,7 +18,7 @@ reflection_coefficient = 0.90 # (-)
 transmission_coefficient = '${fparse 1 - ${reflection_coefficient}}' # (-)
 diffusivity_coefficient = '${fparse ${units 4.1e-7 m^2/s -> mum^2/s} / sqrt(2)}'
 E_D = '${units 0.39 eV -> J}'
-initial_concentration = '${units 0.0 at/m^3 -> at/mum^3}' # '${units 1e-10 at/m^3 -> at/mum^3}'
+initial_concentration = '${units 0.0 at/m^3 -> at/mum^3}'
 width_source = '${units 3.58e-9 m -> mum}'
 depth_source = '${units 2.64e-9 m -> mum}'
 
@@ -88,8 +87,7 @@ temperature_min = '${units 300 K}'
   [trapped_1]
     order = FIRST
     family = LAGRANGE
-    #initial_condition = '${fparse initial_concentration_trap_1 * trapping_site_fraction_1 * N}'
-    #outputs = none
+    outputs = none
   []
 []
 
@@ -137,7 +135,7 @@ temperature_min = '${units 300 K}'
     function = concentration_source_normal_function
   []
 
-  # trapping kernel
+  # Trapping kernel
   [coupled_time_trap_1]
     type = ADCoefCoupledTimeDerivative
     variable = concentration
@@ -295,9 +293,7 @@ temperature_min = '${units 300 K}'
   end_time = ${simulation_time}
   line_search = 'none'
   automatic_scaling = true
-  nl_rel_tol = 1e-08
   nl_abs_tol = 1e-10
-  nl_max_its = 34
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 1.0
