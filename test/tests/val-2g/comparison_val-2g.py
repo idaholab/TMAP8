@@ -63,7 +63,7 @@ BIGGER_SIZE = 16
 ax.set_xlabel(u'Time (s)', weight='bold', fontsize=BIGGER_SIZE)
 ax.set_ylabel(u"Desorption flux (H$_2$/m$^2$/s)", weight='bold', fontsize=BIGGER_SIZE)
 ax.legend(loc="upper left", fontsize=SMALL_SIZE)
-ax.set_ylim(bottom=1e16, top=4.0e18)
+ax.set_ylim(bottom=5e15, top=4.0e18)
 ax.set_xlim(left=0,right=7200)
 ax.xaxis.set_ticks(np.arange(0, 7205, 1800))
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)

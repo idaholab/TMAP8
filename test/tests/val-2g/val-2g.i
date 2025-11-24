@@ -5,10 +5,9 @@ kB = '${units 1.380649e-23 J/K}' # Boltzmann constant (from PhysicalConstants.h 
 TPE_hold_time = '${units 7200 s}'
 TDS_initial_time = '${units 12000 s}'
 TDS_ramp_end = '${units 17238 s}'
-simulation_time = '${units 19038 s}'
+simulation_time = '${units 19200 s}'
 outputs_initial_time = '${units 12000 s}'
-step_interval_max = 50 # (-)
-step_interval_mid = 15 # (-)
+step_interval_max = 15 # (-)
 step_interval_min = 6 # (-)
 #bound_value_max = '${units 2e4 at/mum^3}'
 bound_value_min = '${units -1e-10 at/mum^3}'
@@ -238,7 +237,7 @@ temperature_min = '${units 300 K}'
 
   [max_dt_size_function]
     type = ParsedFunction
-    expression = 'if(t<${TDS_initial_time}, ${step_interval_mid}, ${step_interval_min})'
+    expression = 'if(t<${TDS_initial_time}, ${step_interval_max}, ${step_interval_min})'
   []
 []
 
