@@ -47,13 +47,21 @@ simulation_flux_TMAP4_873 = simulation_TMAP4_data['TMAP - 600C']
 simulation_flux_TMAP4_973 = simulation_TMAP4_data['TMAP - 700C']
 
 # Read experiment data
-# if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
-#     csv_folder = "../../../../test/tests/val-2g/gold/experiment_data_paper.csv"
-# else:                                  # if in test folder
-#     csv_folder = "./gold/experiment_data_paper.csv"
-# experiment_data = pd.read_csv(csv_folder)
-# experiment_time = experiment_data['time (s)']
-# experiment_flux = experiment_data['flux (atom/m^2/s)']
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
+    csv_folder = "../../../../test/tests/val-2g/experimental_data.csv"
+else:                                  # if in test folder
+    csv_folder = "./experimental_data.csv"
+experiment_data = pd.read_csv(csv_folder)
+experiment_time = experiment_data['time']
+experiment_temperature = experiment_data['temperature']
+experiment_flux_673 = experiment_data['Exp - 400C']
+experiment_flux_873 = experiment_data['Exp - 600C']
+experiment_flux_973 = experiment_data['Exp - 700C']
+
+# Setup mask using a random sampling method to reduce density of scatter plot points in experimental
+# data (there is a lot of "noise").
+# These preserve 10% of the data points. (adjusted within the 'size' parameter).
+mask = np.random.choice(len(experiment_flux_673), size=int(len(experiment_flux_673) * 0.1), replace=False)
 
 
 file_base = 'val-2g_comparison'
@@ -72,16 +80,21 @@ ax.semilogy(simulation_time_TMAP4, simulation_flux_TMAP4_673, linestyle='--', la
 ax.semilogy(simulation_time_TMAP4, simulation_flux_TMAP4_873, linestyle='--', label=r"TMAP4 - 873 K", c='red', linewidth=3.0)
 ax.semilogy(simulation_time_TMAP4, simulation_flux_TMAP4_973, linestyle='--', label=r"TMAP4 - 973 K", c='green', linewidth=3.0)
 
+# Experimental Data
+ax.scatter(experiment_time[mask], experiment_flux_673[mask], marker='o', label=r"Exp - 673 K", c='blue')
+ax.scatter(experiment_time[mask], experiment_flux_873[mask], marker='o', label=r"Exp - 873 K", c='red')
+ax.scatter(experiment_time[mask], experiment_flux_973[mask], marker='o', label=r"Exp - 973 K", c='green')
+
 
 # Font sizes for labels and axes
-SMALL_SIZE = 12
+SMALL_SIZE = 10
 MEDIUM_SIZE = 14
 BIGGER_SIZE = 16
 
 ax.set_xlabel(u'Time (s)', weight='bold', fontsize=BIGGER_SIZE)
 ax.set_ylabel(u"Desorption flux (H$_2$/m$^2$/s)", weight='bold', fontsize=BIGGER_SIZE)
 ax.legend(loc="upper left", fontsize=SMALL_SIZE)
-ax.set_ylim(bottom=5e15, top=4.0e18)
+ax.set_ylim(bottom=6e15, top=4.0e18)
 ax.set_xlim(left=0,right=7200)
 ax.xaxis.set_ticks(np.arange(0, 7205, 1800))
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
