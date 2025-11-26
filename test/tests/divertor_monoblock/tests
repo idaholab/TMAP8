@@ -1,49 +1,84 @@
 [Tests]
+  [initial]
   issues = '#144'
   design = 'divertor_monoblock/index.md'
-  [Shimada2024_input_check]
-    type = RunApp
-    input = 'divertor_monoblock.i'
-    requirement = 'The system shall maintain a working input file to model heat and tritium transport in a divertor monoblock during pulsed operation.'
-    check_input = True
-    method = opt
+  requirement = 'The system shall maintain a working input file to model heat and tritium transport in a divertor monoblock during'
+    [Shimada2024_input_check]
+      type = RunApp
+      input = 'divertor_monoblock.i'
+      detail = 'pulsed operation (input check only).'
+      check_input = True
+      method = opt
+    []
+    [Shimada2024_run]
+      type = Exodiff
+      input = 'divertor_monoblock.i'
+      exodiff = 'divertor_monoblock_exodus.e'
+      cli_args = 'Outputs/exodus/sync_only=true Executioner/end_time=1600 Mesh/ccmg/rings="1 10 8 40" Executioner/nl_rel_tol=1e-8 Executioner/nl_abs_tol=1e-11'
+      detail = 'pulsed operation.'
+      rel_err = 8e-4 # increasing the relative error tolerance because the test is sensitive to the environment. This error is still small for physical problems.
+      heavy = true
+      min_parallel = 2
+      max_time = 1000
+    []
+    [Shimada2024_run-physics]
+      type = Exodiff
+      input = 'divertor_monoblock_physics.i'
+      exodiff = 'divertor_monoblock_physics_exodus.e'
+      cli_args = 'Outputs/exodus/sync_only=true Executioner/end_time=1600 Mesh/ccmg/rings="1 10 8 40" Executioner/nl_rel_tol=1e-8 Executioner/nl_abs_tol=1e-11'
+      detail = 'pulsed operation using a shorthand physics syntax'
+      rel_err = 8e-4 # increasing the relative error tolerance because the test is sensitive to the environment. This error is still small for physical problems.
+      heavy = true
+      min_parallel = 2
+      max_time = 1000
+      custom_cmp = 'physics_comp.cmp'
+    []
+    [Shimada2024_run-physics_single-var]
+      type = CSVDiff
+      input = 'divertor_monoblock_physics-single-var.i'
+      csvdiff = 'divertor_monoblock_physics-single-var_out.csv'
+      cli_args = 'Outputs/exodus/sync_only=true
+                  Executioner/end_time=100
+                  Mesh/ccmg/rings="1 10 8 40"
+                  Executioner/nl_rel_tol=1e-8 Executioner/nl_abs_tol=1e-11'
+      detail = 'pulsed operation using a shorthand physics syntax and using a single variable for tracking the tritium concentration.'
+      rel_err = 8e-4 # increasing the relative error tolerance because the test is sensitive to the environment. This error is still small for physical problems.
+      abs_zero = 3e-9
+      heavy = true
+      min_parallel = 2
+      max_time = 1000
+    []
   []
-  [Shimada2024_run]
-    type = Exodiff
-    input = 'divertor_monoblock.i'
-    exodiff = 'divertor_monoblock_exodus.e'
-    cli_args = 'Outputs/exodus/sync_only=true Executioner/end_time=1600 Mesh/ccmg/rings="1 10 8 40" Executioner/nl_rel_tol=1e-8 Executioner/nl_abs_tol=1e-11'
-    requirement = 'The system shall model heat and tritium transport in a divertor monoblock during pulsed operation.'
-    rel_err = 8e-4 # increasing the relative error tolerance because the test is sensitive to the environment. This error is still small for physical problems.
-    heavy = true
-    min_parallel = 2
-    max_time = 1000
-  []
-  [Shimada2024_run-physics]
-    type = Exodiff
-    input = 'divertor_monoblock_physics.i'
-    exodiff = 'divertor_monoblock_physics_exodus.e'
-    cli_args = 'Outputs/exodus/sync_only=true Executioner/end_time=1600 Mesh/ccmg/rings="1 10 8 40" Executioner/nl_rel_tol=1e-8 Executioner/nl_abs_tol=1e-11'
-    requirement = 'The system shall model heat and tritium transport in a divertor monoblock during pulsed operation using a shorthand physics syntax'
-    rel_err = 8e-4 # increasing the relative error tolerance because the test is sensitive to the environment. This error is still small for physical problems.
-    heavy = true
-    min_parallel = 2
-    max_time = 1000
-    custom_cmp = 'physics_comp.cmp'
-  []
-  [Shimada2024_run-physics_single-var]
-    type = CSVDiff
-    input = 'divertor_monoblock_physics-single-var.i'
-    csvdiff = 'divertor_monoblock_physics-single-var_out.csv'
-    cli_args = 'Outputs/exodus/sync_only=true
-                Executioner/end_time=100
-                Mesh/ccmg/rings="1 10 8 40"
-                Executioner/nl_rel_tol=1e-8 Executioner/nl_abs_tol=1e-11'
-    requirement = 'The system shall model heat and tritium transport in a divertor monoblock during pulsed operation using a shorthand physics syntax and using a single variable for tracking the tritium concentration.'
-    rel_err = 8e-4 # increasing the relative error tolerance because the test is sensitive to the environment. This error is still small for physical problems.
-    abs_zero = 3e-9
-    heavy = true
-    min_parallel = 2
-    max_time = 1000
+  [stochastics]
+  issues = '#281'
+  design = 'divertor_monoblock/sensitivity.md'
+  requirement = 'The system shall model heat and tritium transporter for the sensitvity study of a divertor monoblock during'
+    [steady_run]
+      type = JSONDiff
+      input = 'steady_state_sobol.i'
+      detail = 'steady operation'
+      cli_args = 'runner:Mesh/ccmg/rings="1 3 3 3" runner:Mesh/ccmg/num_sectors=4 Outputs/out/file_base=steady_state_sobol'
+      jsondiff = 'steady_state_sobol.json'
+      heavy = true
+      min_parallel = 4
+    []
+    [shutdown_run]
+      type = JSONDiff
+      input = 'shutdown_transient_sobol.i'
+      detail = 'a shutdown transient after steady operation'
+      cli_args = 'runner:Mesh/ccmg/rings="1 3 3 3" runner:Mesh/ccmg/num_sectors=4 Outputs/out/file_base=shutdown_transient_sobol'
+      jsondiff = 'shutdown_transient_sobol.json'
+      heavy = true
+      min_parallel = 4
+    []
+    [elm_run]
+      type = JSONDiff
+      input = 'elm_transient_sobol.i'
+      detail = 'an ELM transient after steady operation'
+      cli_args = 'runner:Mesh/ccmg/rings="1 3 3 3" Outputs/out/file_base=elm_transient_sobol runner:Executioner/end_time=2.000005e2 Samplers/hypercube_1/num_rows=5 Samplers/hypercube_2/num_rows=5 runner:/Mesh/ccmg/num_sectors=4'
+      jsondiff = 'elm_transient_sobol.json'
+      heavy = true
+      min_parallel = 4
+    []
   []
 []
