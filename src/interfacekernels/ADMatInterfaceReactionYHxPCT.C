@@ -47,6 +47,10 @@ ADMatInterfaceReactionYHxPCT::ADMatInterfaceReactionYHxPCT(const InputParameters
 ADReal
 ADMatInterfaceReactionYHxPCT::computeQpResidual(Moose::DGResidualType type)
 {
+  using std::exp;
+  using std::log;
+  using std::max;
+  using std::pow;
   ADReal r = 0;
 
   // Calculate the equilibrium concentration value based on PCT curve
@@ -55,8 +59,8 @@ ADMatInterfaceReactionYHxPCT::computeQpResidual(Moose::DGResidualType type)
       PhysicalConstants::ideal_gas_constant * _neighbor_temperature[_qp] * _neighbor_value[_qp] / 2;
 
   // Calculate the value of the pressures for the phase transition plateau (pressure in Pa)
-  auto limit_pressure = std::exp(-26.1 + 3.88e-2 * _neighbor_temperature[_qp] -
-                                 9.7e-6 * Utility::pow<2>(_neighbor_temperature[_qp]));
+  auto limit_pressure = exp(-26.1 + 3.88e-2 * _neighbor_temperature[_qp] -
+                            9.7e-6 * Utility::pow<2>(_neighbor_temperature[_qp]));
 
   // return warning if the PCT curves is used out of bounds (pressure in Pa)
   if (!_silence_warnings && ((neighbor_pressure < limit_pressure) || (neighbor_pressure > 1.e6)))
@@ -69,10 +73,9 @@ ADMatInterfaceReactionYHxPCT::computeQpResidual(Moose::DGResidualType type)
 
   // Calculate the atomic fraction based on the PCT curve
   auto atomic_fraction =
-      2. -
-      std::pow(1. + std::exp(21.6 - 0.0225 * _neighbor_temperature[_qp] +
-                             (-0.0445 + 7.18e-4 * _neighbor_temperature[_qp]) *
-                                 (std::log(std::max(neighbor_pressure - limit_pressure, 1e-10)))),
+      2. - pow(1. + exp(21.6 - 0.0225 * _neighbor_temperature[_qp] +
+                        (-0.0445 + 7.18e-4 * _neighbor_temperature[_qp]) *
+                            (log(max(neighbor_pressure - limit_pressure, 1e-10)))),
                -1);
 
   // Convert to concentration
