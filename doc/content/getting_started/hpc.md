@@ -23,11 +23,13 @@ An optimized, pre-packaged environment is available for use on the Sawtooth and 
 When logged in, run:
 
 ```bash
-module load use.moose moose-dev
+module load use.moose moose-dev-openmpi/2025.10.27
+moose-dev-shell
 ```
 
 A set of appropriate MOOSE dependency modules will be loaded for use. Note that these modules
-+require activation+ each time you log in.
++require activation+ each time you log in, and the date may change as models develop. This will start a shell in
+a containerized environment. You can learn more about how this works in the [MOOSE Documentation](https://mooseframework.inl.gov/getting_started/installation/inl_hpc_install_moose.html).
 
 ## Step Three: Clone TMAP8
 
