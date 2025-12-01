@@ -75,8 +75,8 @@ def sample_solution(time_stamps, time_solution, value_solution):
 
 #===============================================================================
 # Physical constants, conversion, and model constants
-Curie = 3.7e10 # desintegrations/s - activity of one Curie
-decay_rate_tritium = 1.78199e-9 # desintegrations/s/atoms
+Curie = 3.7e10 # disintegrations/s - activity of one Curie
+decay_rate_tritium = np.log(2)/388800000.0 # disintegrations/s/atoms
 conversion_Ci_atom = decay_rate_tritium / Curie # 1 tritium at = ~4.82e-20 Ci
 length_scale = 1e6 # m -> microns
 time_scale = 60*60 # h -> s
@@ -183,9 +183,6 @@ if os.path.exists(filename):
 with open(filename, 'a') as f:
     f.writelines(lines)
 
-Curie = 3.7e10 # 1/s
-decay_rate_tritium = 1.78199e-9 # 1/s/at
-conversion_Ci_atom = decay_rate_tritium / Curie # 1/at
 m_to_mum = 1e6
 
 # provide average and std values for each parameter following a normal distribution, in the same order as `parameters_normal`

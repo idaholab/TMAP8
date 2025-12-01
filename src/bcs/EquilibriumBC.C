@@ -7,7 +7,7 @@
 /************************************************************/
 
 #include "EquilibriumBC.h"
-#include "PhysicalConstants.h"
+#include "TMAP8PhysicalConstants.h"
 #include "Function.h"
 #include "MooseFunctorArguments.h"
 #include "FEProblemBase.h"
