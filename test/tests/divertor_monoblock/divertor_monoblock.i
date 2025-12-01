@@ -20,8 +20,8 @@ plasma_ramp_time = 100.0 #s
 plasma_ss_duration = 400.0 #s
 plasma_cycle_time = 1600.0 #s
 
-plasma_ss_end = ${plasma_ramp_time + plasma_ss_duration} #s
-plasma_ramp_down_end = ${plasma_ramp_time + plasma_ss_duration + plasma_ramp_time} #s
+plasma_ss_end = ${fparse plasma_ramp_time + plasma_ss_duration} #s
+plasma_ramp_down_end = ${fparse plasma_ramp_time + plasma_ss_duration + plasma_ramp_time} #s
 
 plasma_max_heat = 1.0e7 #W/m^2
 plasma_min_heat = 300.0 #W/m^2
@@ -673,7 +673,7 @@ plasma_min_flux = 0.0
         type = FunctionNeumannBC
         variable = C_mobile_W
         boundary = 'top'
-        function = mobile_flux_bc_func
+        function = mobile_flux_bc_function
     []
     [mobile_tube]
         type = DirichletBC
@@ -685,7 +685,7 @@ plasma_min_flux = 0.0
         type = FunctionNeumannBC
         variable = temperature
         boundary = 'top'
-        function = temp_flux_bc_func
+        function = temp_flux_bc_function
     []
     [temp_tube]
         type = FunctionDirichletBC
@@ -696,23 +696,28 @@ plasma_min_flux = 0.0
 []
 
 [Functions]
-    ### Maximum mobile flux of 7.90e-13 at the top surface (1.0e-4 [m])
-    ### 1.80e23/m^2-s = (5.0e23/m^2-s) *(1-0.999) = (7.90e-13)*(${tungsten_atomic_density})/(1.0e-4)  at steady state
-    [plasma_time_func]
+    [t_in_cycle]
         type = ParsedFunction
-        expression =   'if((t % ${plasma_cycle_time}) < ${plasma_ramp_time}, (t % ${plasma_cycle_time})/${plasma_ramp_time},
-                        if((t % ${plasma_cycle_time}) < ${plasma_ss_end_time}, 1,
-                        if((t % ${plasma_cycle_time}) < ${plasma_ramp_down_time}, 1 - ((t % ${plasma_cycle_time})-${plasma_ss_end_time})/${plasma_ramp_time}, 0.0)))'
+        expression = 't % ${plasma_cycle_time}'
     []
-    [mobile_flux_bc_func]
+    [plasma_time_function]
         type = ParsedFunction
-        symbol_values = 'plasma_time_func ${plasma_max_flux} ${plasma_min_flux}'
-        symbol_names = 'time_func max_val min_val'
-        expression = '(max_val - min_val) * time_func + min_val'
+        symbol_values = 't_in_cycle'
+        symbol_names = 't_in_cycle'
+        expression =   'if(t_in_cycle < ${plasma_ramp_time}, (t % ${plasma_cycle_time})/${plasma_ramp_time},
+                        if(t_in_cycle < ${plasma_ss_end}, 1,
+                        if(t_in_cycle < ${plasma_ramp_down_end}, 1 - ((t % ${plasma_cycle_time})-${plasma_ss_end})/${plasma_ramp_time}, 0.0)))'
+    []
+    [mobile_flux_bc_function]
+        type = ParsedFunction
+        symbol_values = 'plasma_time_function'
+        symbol_names = 'time_function'
+        expression = '(${plasma_max_flux} - ${plasma_min_flux}) * time_function + ${plasma_min_flux}'
     []
     ### Heat flux of 10MW/m^2 at steady state
-    [temp_flux_bc_func]
+    [temp_flux_bc_function]
         type = ParsedFunction
+<<<<<<< HEAD
 <<<<<<< HEAD
         expression =   'if((t % 1600) < 100.0, 0.0   + 1.0e7*(t % 1600)/100,
                         if((t % 1600) < 500.0, 1.0e7,
@@ -722,6 +727,11 @@ plasma_min_flux = 0.0
         symbol_names = 'time_func max_val min_val'
         expression = '(max_val - min_val) * time_func + min_val'
 >>>>>>> 1fff86c7 (Added timing functions for plasma discharge)
+=======
+        symbol_values = 'plasma_time_function'
+        symbol_names = 'time_function'
+        expression = '(${plasma_max_heat} - ${plasma_min_heat}) * time_function + ${plasma_min_heat}'
+>>>>>>> b9c1206d (added t_in_cycle function, changed function names)
     []
     ### Maximum coolant temperature of 552K at steady state
     [temp_inner_func]
