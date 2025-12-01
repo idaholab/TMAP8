@@ -38,7 +38,7 @@ f_DIR = 0.5 # -
 eta_2 = 0.7 # -
 TBR_value = 1.067 # -
 AF_value = 0.75 # -
-t_decay = '${units 1.73e-9 1/s}'
+t_decay = '${fparse log(2)/388800000.0}'
 TBE_value = 0.025 # -
 tritium_burn_rate_value = 8.99e-7 # -
 

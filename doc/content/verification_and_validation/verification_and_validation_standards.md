@@ -16,7 +16,7 @@
 2. +Validation data+: The experimental data used for validation cases should be in a CSV file in the gold folder, and properly referenced in the Python script.
 3. +Quantified Comparisons+: When performing a comparison of a TMAP8 result against an analytical equation or experimental data, a Root Mean Square Percentage Error (RMSPE) or other relevant quantitative metric should be calculated. This error metric should be clearly displayed next to the plot line in the comparison plot figures.
 4. +Unit Clarity+: Utilize comments within the script to specify the units for all values employed in the analytical solution.
-5. +Standardized Constants+: Whenever possible, employ values from [PhysicalConstants](source/utils/PhysicalConstants.md).
+5. +Standardized Constants+: Whenever possible, employ values from [PhysicalConstants](source/utils/TMAP8PhysicalConstants.md).
 6. +Gold File V&V+: The Python scripts should run on the gold files associated with the V&V case. This enables building on-the-fly documentation with the latest simulation results.
 7. +Visualization Consistency+: In V&V plots, consistently use solid lines to represent TMAP8 results and dashed lines for analytical solutions. Points should only be used when the focus is on specific data points (e.g., validation or benchmarking).
 8. +Write Pythonic code+: When writing Python scripts, aim to follow the [PEP8](https://peps.python.org/pep-0008/) style guide. A key principle is to use existing Python functionality whenever possible instead of writing your own code to do the same thing.
