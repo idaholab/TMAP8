@@ -24,7 +24,11 @@ plasma_ss_end = ${fparse plasma_ramp_time + plasma_ss_duration} #s
 plasma_ramp_down_end = ${fparse plasma_ramp_time + plasma_ss_duration + plasma_ramp_time} #s
 
 plasma_max_heat = 1.0e7 #W/m^2
+<<<<<<< HEAD
 plasma_min_heat = 0.0 # W/m^2 # no flux while the pulse is off. 
+=======
+plasma_min_heat = 0.0 # W/m^2 # no flux while the pulse is off.
+>>>>>>> d3e87cd (added t_in_cycles everywhere)
 
 ### Maximum mobile flux of 7.90e-13 at the top surface (1.0e-4 [m])
 ### 1.80e23/m^2-s = (5.0e23/m^2-s) *(1-0.999) = (7.90e-13)*(${tungsten_atomic_density})/(1.0e-4)  at steady state
@@ -736,21 +740,25 @@ plasma_min_flux = 0.0
     ### Maximum coolant temperature of 552K at steady state
     [temp_inner_func]
         type = ParsedFunction
-        expression =   'if((t % 1600) < 100.0, 300.0 + (552-300)*(t % 1600)/100,
-                        if((t % 1600) < 500.0, 552,
-                        if((t % 1600) < 600.0, 552.0 - (552-300)*((t % 1600)-500)/100, 300)))'
+        symbol_values = 't_in_cycle'
+        symbol_names = 't_in_cycle'
+        expression =   'if(t_in_cycle < 100.0, 300.0 + (552-300)*t_in_cycle/100,
+                        if(t_in_cycle < 500.0, 552,
+                        if(t_in_cycle < 600.0, 552.0 - (552-300)*(t_in_cycle-500)/100, 300)))'
     []
     [timestep_function]
         type = ParsedFunction
-        expression = 'if((t % 1600) <   10.0,  20,
-                      if((t % 1600) <   90.0,  40,
-                      if((t % 1600) <  110.0,  20,
-                      if((t % 1600) <  480.0,  40,
-                      if((t % 1600) <  500.0,  20,
-                      if((t % 1600) <  590.0,   4,
-                      if((t % 1600) <  610.0,  20,
-                      if((t % 1600) < 1500.0, 200,
-                      if((t % 1600) < 1600.0,  40,  2)))))))))'
+        symbol_values = 't_in_cycle'
+        symbol_names = 't_in_cycle'
+        expression = 'if(t_in_cycle <   10.0,  20,
+                      if(t_in_cycle <   90.0,  40,
+                      if(t_in_cycle <  110.0,  20,
+                      if(t_in_cycle <  480.0,  40,
+                      if(t_in_cycle <  500.0,  20,
+                      if(t_in_cycle <  590.0,   4,
+                      if(t_in_cycle <  610.0,  20,
+                      if(t_in_cycle < 1500.0, 200,
+                      if(t_in_cycle < 1600.0,  40,  2)))))))))'
     []
 []
 
