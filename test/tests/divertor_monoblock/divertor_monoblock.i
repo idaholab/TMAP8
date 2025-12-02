@@ -24,7 +24,7 @@ plasma_ss_end = ${fparse plasma_ramp_time + plasma_ss_duration} #s
 plasma_ramp_down_end = ${fparse plasma_ramp_time + plasma_ss_duration + plasma_ramp_time} #s
 
 plasma_max_heat = 1.0e7 #W/m^2
-plasma_min_heat = 300.0 #W/m^2
+plasma_min_heat = 0.0 # W/m^2 # no flux while the pulse is off. 
 
 ### Maximum mobile flux of 7.90e-13 at the top surface (1.0e-4 [m])
 ### 1.80e23/m^2-s = (5.0e23/m^2-s) *(1-0.999) = (7.90e-13)*(${tungsten_atomic_density})/(1.0e-4)  at steady state
@@ -704,9 +704,9 @@ plasma_min_flux = 0.0
         type = ParsedFunction
         symbol_values = 't_in_cycle'
         symbol_names = 't_in_cycle'
-        expression =   'if(t_in_cycle < ${plasma_ramp_time}, (t % ${plasma_cycle_time})/${plasma_ramp_time},
+        expression =   'if(t_in_cycle < ${plasma_ramp_time}, t_in_cycle/${plasma_ramp_time},
                         if(t_in_cycle < ${plasma_ss_end}, 1,
-                        if(t_in_cycle < ${plasma_ramp_down_end}, 1 - ((t % ${plasma_cycle_time})-${plasma_ss_end})/${plasma_ramp_time}, 0.0)))'
+                        if(t_in_cycle < ${plasma_ramp_down_end}, 1 - (t_in_cycle-${plasma_ss_end})/${plasma_ramp_time}, 0.0)))'
     []
     [mobile_flux_bc_function]
         type = ParsedFunction
