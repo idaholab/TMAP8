@@ -19,6 +19,21 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
 !include mesh_base.i
 !include outputs_base_single_var.i
 
+plasma_ramp_time = 100.0 #s
+plasma_ss_duration = 400.0 #s
+plasma_cycle_time = 1600.0 #s
+
+plasma_ss_end = ${fparse plasma_ramp_time + plasma_ss_duration} #s
+plasma_ramp_down_end = ${fparse plasma_ramp_time + plasma_ss_duration + plasma_ramp_time} #s
+
+plasma_max_heat = 1.0e7 #W/m^2
+plasma_min_heat = 0.0 # W/m^2 # no flux while the pulse is off.
+
+### Maximum mobile flux of 7.90e-13 at the top surface (1.0e-4 [m])
+### 1.80e23/m^2-s = (5.0e23/m^2-s) *(1-0.999) = (7.90e-13)*(${tungsten_atomic_density})/(1.0e-4)  at steady state
+plasma_max_flux = 7.90e-13
+plasma_min_flux = 0.0
+
 
 [Problem]
     # TODO: add support for reference residual problem in Physics
@@ -53,7 +68,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
             specific_heat = 'specific_heat'
 
             heat_flux_boundaries = 'top'
-            boundary_heat_fluxes = 'temp_flux_bc_func'
+            boundary_heat_fluxes = 'temp_flux_bc_function'
             fixed_temperature_boundaries = '2to1'
             boundary_temperatures = 'temp_inner_func'
         []
@@ -65,7 +80,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
             initial_condition = ${units 1.0e-20 m^-3}
 
             neumann_boundaries = 'top'
-            boundary_fluxes = 'mobile_flux_bc_func'
+            boundary_fluxes = 'mobile_flux_bc_function'
         []
     []
     # TODO: modify the code to:
@@ -128,39 +143,53 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
 []
 
 [Functions]
-    ### Maximum mobile flux of 7.90e-13 at the top surface (1.0e-4 [m])
-    ### 1.80e23/m^2-s = (5.0e23/m^2-s) *(1-0.999) = (7.90e-13)*(${tungsten_atomic_density})/(1.0e-4)  at steady state
-    [mobile_flux_bc_func]
+    [t_in_cycle]
         type = ParsedFunction
-        expression =   'if((t % 1600) < 100.0, 0.0      + 7.90e-13*(t % 1600)/100,
-                        if((t % 1600) < 500.0, 7.90e-13,
-                        if((t % 1600) < 600.0, 7.90e-13 - 7.90e-13*((t % 1600)-500)/100, 0.0)))'
+        expression = 't % ${plasma_cycle_time}'
+    []
+    [plasma_time_function]
+        type = ParsedFunction
+        symbol_values = 't_in_cycle'
+        symbol_names = 't_in_cycle'
+        expression =   'if(t_in_cycle < ${plasma_ramp_time}, t_in_cycle/${plasma_ramp_time},
+                        if(t_in_cycle < ${plasma_ss_end}, 1,
+                        if(t_in_cycle < ${plasma_ramp_down_end}, 1 - (t_in_cycle-${plasma_ss_end})/${plasma_ramp_time}, 0.0)))'
+    []
+    [mobile_flux_bc_function]
+        type = ParsedFunction
+        symbol_values = 'plasma_time_function'
+        symbol_names = 'time_function'
+        expression = '(${plasma_max_flux} - ${plasma_min_flux}) * time_function + ${plasma_min_flux}'
     []
     ### Heat flux of 10MW/m^2 at steady state
-    [temp_flux_bc_func]
+    [temp_flux_bc_function]
         type = ParsedFunction
-        expression =   'if((t % 1600) < 100.0, 0.0   + 1.0e7*(t % 1600)/100,
-                        if((t % 1600) < 500.0, 1.0e7,
-                        if((t % 1600) < 600.0, 1.0e7 - 1.0e7*((t % 1600)-500)/100, 0.0)))'
+        symbol_values = 'plasma_time_function'
+        symbol_names = 'time_function'
+        expression = '(${plasma_max_heat} - ${plasma_min_heat}) * time_function + ${plasma_min_heat}'
     []
     ### Maximum coolant temperature of 552K at steady state
     [temp_inner_func]
         type = ParsedFunction
-        expression =   'if((t % 1600) < 100.0, 300.0 + (552-300)*(t % 1600)/100,
-                        if((t % 1600) < 500.0, 552,
-                        if((t % 1600) < 600.0, 552.0 - (552-300)*((t % 1600)-500)/100, 300)))'
+        symbol_values = 't_in_cycle'
+        symbol_names = 't_in_cycle'
+        expression =   'if(t_in_cycle < 100.0, 300.0 + (552-300)*t_in_cycle/100,
+                        if(t_in_cycle < 500.0, 552,
+                        if(t_in_cycle < 600.0, 552.0 - (552-300)*(t_in_cycle-500)/100, 300)))'
     []
     [timestep_function]
         type = ParsedFunction
-        expression = 'if((t % 1600) <   10.0,  20,
-                      if((t % 1600) <   90.0,  40,
-                      if((t % 1600) <  110.0,  20,
-                      if((t % 1600) <  480.0,  40,
-                      if((t % 1600) <  500.0,  20,
-                      if((t % 1600) <  590.0,   4,
-                      if((t % 1600) <  610.0,  20,
-                      if((t % 1600) < 1500.0, 200,
-                      if((t % 1600) < 1600.0,  40,  2)))))))))'
+        symbol_values = 't_in_cycle'
+        symbol_names = 't_in_cycle'
+        expression = 'if(t_in_cycle <   10.0,  20,
+                      if(t_in_cycle <   90.0,  40,
+                      if(t_in_cycle <  110.0,  20,
+                      if(t_in_cycle <  480.0,  40,
+                      if(t_in_cycle <  500.0,  20,
+                      if(t_in_cycle <  590.0,   4,
+                      if(t_in_cycle <  610.0,  20,
+                      if(t_in_cycle < 1500.0, 200,
+                      if(t_in_cycle < 1600.0,  40,  2)))))))))'
     []
 []
 
