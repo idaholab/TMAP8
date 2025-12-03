@@ -24,11 +24,7 @@ plasma_ss_end = ${fparse plasma_ramp_time + plasma_ss_duration} #s
 plasma_ramp_down_end = ${fparse plasma_ramp_time + plasma_ss_duration + plasma_ramp_time} #s
 
 plasma_max_heat = 1.0e7 #W/m^2
-<<<<<<< HEAD
-plasma_min_heat = 0.0 # W/m^2 # no flux while the pulse is off. 
-=======
 plasma_min_heat = 0.0 # W/m^2 # no flux while the pulse is off.
->>>>>>> d3e87cd (added t_in_cycles everywhere)
 
 ### Maximum mobile flux of 7.90e-13 at the top surface (1.0e-4 [m])
 ### 1.80e23/m^2-s = (5.0e23/m^2-s) *(1-0.999) = (7.90e-13)*(${tungsten_atomic_density})/(1.0e-4)  at steady state
