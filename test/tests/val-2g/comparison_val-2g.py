@@ -76,14 +76,15 @@ ax.semilogy(simulation_time_873-12000, simulation_flux_left_873, linestyle='-', 
 ax.semilogy(simulation_time_973-12000, simulation_flux_left_973, linestyle='-', label=r"973 K", c='green', linewidth=3.0)
 
 # TMAP4
-ax.semilogy(simulation_time_TMAP4, simulation_flux_TMAP4_673, linestyle='--', label=r"TMAP4 - 673 K", c='blue', linewidth=3.0)
-ax.semilogy(simulation_time_TMAP4, simulation_flux_TMAP4_873, linestyle='--', label=r"TMAP4 - 873 K", c='red', linewidth=3.0)
-ax.semilogy(simulation_time_TMAP4, simulation_flux_TMAP4_973, linestyle='--', label=r"TMAP4 - 973 K", c='green', linewidth=3.0)
+ax.semilogy(simulation_time_TMAP4, simulation_flux_TMAP4_673, linestyle='--', label=r"TMAP4 - 673 K", c='blue', linewidth=3.0, alpha=0.7)
+ax.semilogy(simulation_time_TMAP4, simulation_flux_TMAP4_873, linestyle='--', label=r"TMAP4 - 873 K", c='red', linewidth=3.0, alpha=0.7)
+ax.semilogy(simulation_time_TMAP4, simulation_flux_TMAP4_973, linestyle='--', label=r"TMAP4 - 973 K", c='green', linewidth=3.0, alpha=0.7)
 
 # Experimental Data
-ax.scatter(experiment_time[mask], experiment_flux_673[mask], marker='o', label=r"Exp - 673 K", c='blue')
-ax.scatter(experiment_time[mask], experiment_flux_873[mask], marker='o', label=r"Exp - 873 K", c='red')
-ax.scatter(experiment_time[mask], experiment_flux_973[mask], marker='o', label=r"Exp - 973 K", c='green')
+s = (3.0)**2
+ax.scatter(experiment_time[mask], experiment_flux_673[mask], marker='o', s=s, label=r"Exp - 673 K", c='blue')
+ax.scatter(experiment_time[mask], experiment_flux_873[mask], marker='o', s=s, label=r"Exp - 873 K", c='red')
+ax.scatter(experiment_time[mask], experiment_flux_973[mask], marker='o', s=s, label=r"Exp - 973 K", c='green')
 
 
 # Font sizes for labels and axes
@@ -102,8 +103,9 @@ plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 # RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe-experiment_flux)**2) )
 # RMSPE = RMSE*100/np.mean(experiment_flux)
 # ax.text(6000.0,0.85e18, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
-ax.minorticks_on()
 ax.tick_params(axis='both', which='both', direction='out', bottom=True, top=True, left=True,
                right=True, labelsize=MEDIUM_SIZE)
+ax.grid(True, which='minor', color='0.9', linestyle='--')
+ax.set_axisbelow(True) # Ensures that grid is drawn behind data. Without this, sometimes the grid is seen atop marker points.
 plt.savefig(f'{file_base}.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
