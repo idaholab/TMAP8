@@ -36,7 +36,7 @@
     should_execute = False
     csvdiff = ver-1e-component_test_exodus.csv
     cli_args = 'Executioner/dt=0.2 Executioner/end_time=50 Outputs/exodus/file_base=ver-1e-component_test_exodus Outputs/csv/file_base=ver-1e-component_test_exodus'
-    requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition as the species source, using the shorthand Physics and Components syntax.'
+    requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition as the species source, using the shorthand Physics and Components syntax to generate CSV data for use in comparisons with the analytic solution.'
     prereq = ver-1e-component
   []
   [ver-1e_TMAP4_heavy]
