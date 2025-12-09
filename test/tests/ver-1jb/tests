@@ -48,6 +48,15 @@
                    distributed traps with equivalent initial mobile and trapped tritium concentration and output the
                    profiles of concentrations.'
   []
+  [ver-1jb]
+    type = Exodiff
+    input = ver-1jb.i
+    exodiff = ver-1jb_out.e
+    should_execute = false # this test relies on the output files from ver-1jb, so it shouldn't be run twice
+    requirement = 'The system shall be able to model decay of tritium and associated growth of He in a diffusion segment with
+                   distributed traps, with the fine mesh and timestep required to match the analytical solution.'
+    prereq = ver-1jb_csvdiff
+  []
   [ver-1jb_comparison]
     type = RunCommand
     command = 'python3 comparison_ver-1jb.py'

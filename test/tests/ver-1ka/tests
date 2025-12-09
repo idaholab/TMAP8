@@ -6,7 +6,15 @@
     type = CSVDiff
     input = ver-1ka.i
     csvdiff = ver-1ka_out.csv
-    requirement = 'The system shall be able to model a tritium volumetric source in one enclosure'
+    requirement = 'The system shall be able to model a tritium volumetric source in one enclosure and to generate CSV data for use in comparisons with the analytic solution.'
+  []
+  [ver-1ka]
+    type = Exodiff
+    input = ver-1ka.i
+    should_execute = False # this test relies on the output files from ver-1ka_csv, so it shouldn't be run twice
+    exodiff = ver-1ka_out.e
+    requirement = 'The system shall be able to model a tritium volumetric source in one enclosure.'
+    prereq = ver-1ka_csv
   []
   [ver-1ka_comparison]
     type = RunCommand

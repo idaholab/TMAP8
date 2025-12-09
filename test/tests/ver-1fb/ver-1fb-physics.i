@@ -78,5 +78,10 @@ simulation_time = '${units 10 s}'
 [Outputs]
   #execute_on = FINAL
   exodus = true
-  csv = false
+  [vector_postproc]
+    type = CSV
+    sync_times = '0.1'
+    sync_only = true
+    file_base = 'ver-1fb-physics_u_vs_x'
+  []
 []

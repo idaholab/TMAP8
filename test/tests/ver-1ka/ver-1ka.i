@@ -53,4 +53,5 @@ V = ${units 1 m^3} # Volume
 [Outputs]
   file_base = 'ver-1ka_out'
   csv = true
+  exodus = true
 []
