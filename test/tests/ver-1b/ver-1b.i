@@ -1,8 +1,21 @@
+# Verification Problem #1b from TMAP4/TMAP7 V&V document
+# Tritium diffusion through SiC layer with constant source
+# No Soret effect, solubility, or trapping included.
+
+# Modeling parameters
+node_num = 5000
+end_time = '${units 50 s}'
+thickness = '${units 0.2 mm -> mum}' # 200 mum
+diffusivity = '${units 1.0 mum^2/s}'
+concentration_left = '${units 1 atom/mum^3}'
+
+
+
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 5000
-  xmax = 200
+  nx = ${node_num}
+  xmax = ${thickness}
 []
 
 [Variables]
@@ -31,7 +44,7 @@
 [AuxKernels]
   [flux_x]
     type = DiffusionFluxAux
-    diffusivity = '${fparse 1.0}'
+    diffusivity = ${diffusivity}
     variable = flux_x
     diffusion_variable = u
     component = x
@@ -43,7 +56,7 @@
     type = DirichletBC
     variable = u
     boundary = left
-    value = 1
+    value = ${concentration_left}
   []
   [right]
     type = DirichletBC
@@ -82,7 +95,7 @@
 
 [Executioner]
   type = Transient
-  end_time = 50
+  end_time = ${end_time}
   dt = .1
   solve_type = NEWTON
   petsc_options_iname = '-pc_type '

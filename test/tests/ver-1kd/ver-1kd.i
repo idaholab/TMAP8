@@ -1,12 +1,18 @@
+# Verification Problem #1kd from TMAP7 V&V document
+# A diffusion on two connected enclosures by a membrane with a volumetric source using Sieverts’ Law and chemical reactions
+
+# Physical Constants
+R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConstants.h
+N_a = '${units 6.02214076e23 1/mol}' # Avogadro's number from PhysicalConstants.h
+
+# Modeling parameters
 nb_segments_TMAP7 = 20
 node_size_TMAP7 = '${units 1.25e-5 m}'
 long_total = '${units ${fparse nb_segments_TMAP7 * node_size_TMAP7} m}'
 nb_segments_TMAP8 = 1e2
 simulation_time = '${units 2 s}'
-N_a = '${units 6.02214076e23 1/mol}' # Avogadro's number from PhysicalConstants.h
 source = '${units ${fparse 1e23 / N_a} mol/m^3/s}' # Source term for T2 in enclosure 1
 temperature = '${units 500 K}'
-R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConstants.h
 initial_pressure_1 = '${units 1e5 Pa}'
 initial_pressure_2 = '${units 1e-10 Pa}'
 initial_concentration_1 = '${units ${fparse initial_pressure_1 / (R*temperature)} mol/m^3}'

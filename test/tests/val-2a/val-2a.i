@@ -1,12 +1,21 @@
+# Validation Problem #2a from TMAP4/TMAP7 V&V document
+# Deuterium ion implantation through PCA disk
+# No trapping or Soret effects
+
+# Mesh and solver controls
 nx_scale = 5
 high_dt_max = 300
 low_dt_max = 4
 simulation_time = '${units 2e4 s}'
+
+# Material properties and boundary coefficients
 diffusivity_D = '${units 3e-10 m^2/s -> mum^2/s}'
 recombination_parameter_enclos2 = '${units 2e-31 m^4/at/s -> mum^4/at/s}'
+recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> mum^4/at/s}'
+
+# Source term definition (normal distribution) and applied surface flux history
 flux_high = '${units 4.9e19 at/m^2/s -> at/mum^2/s}'
 flux_low =  '${units 0      at/mum^2/s}'
-recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> mum^4/at/s}'
 width = '${units 2.4e-9 m -> mum}'
 depth = '${units 14e-9 m -> mum}'
 time_1 = '${units 5820 s}'
@@ -16,13 +25,15 @@ time_4 = '${units 14572 s}'
 time_5 = '${units 17678 s}'
 
 [Variables]
-  [concentration]  # (atoms/mum^3/s)
+  # Concentration of deuterium in PCA (atoms/mum^3/s)
+  [concentration]
     order = FIRST
     family = LAGRANGE
   []
 []
 
 [Mesh]
+  # mesh for implantation input manually
   [cartesian]
     type = CartesianMeshGenerator
     dim = 1
@@ -34,6 +45,7 @@ time_5 = '${units 17678 s}'
 []
 
 [Kernels]
+  # Diffusion and transient terms for deuterium concentration
   [diffusion]
     type = ADMatDiffusion
     variable = concentration
@@ -43,6 +55,7 @@ time_5 = '${units 17678 s}'
     type = ADTimeDerivative
     variable = concentration
   []
+  # Normal-distribution implantation source term
   [source]
     type = ADBodyForce
     variable = concentration
@@ -51,8 +64,10 @@ time_5 = '${units 17678 s}'
 []
 
 [AuxVariables]
+  # Source term profile used for postprocessing
   [concentration_source]
   []
+  # Time-dependent recombination coefficient on the upstream side
   [recombination_TMAP4]
   []
 []
@@ -73,6 +88,7 @@ time_5 = '${units 17678 s}'
 []
 
 [BCs]
+  # Flux balance from recombination on upstream surface (left)
   [left]
     type = ADMatNeumannBC
     variable = concentration
@@ -80,6 +96,7 @@ time_5 = '${units 17678 s}'
     value = 1
     boundary_material = flux_on_left
   []
+  # Flux balance from recombination on downstream surface (right)
   [right]
     type = ADMatNeumannBC
     variable = concentration
@@ -90,6 +107,7 @@ time_5 = '${units 17678 s}'
 []
 
 [Materials]
+  # Recombination-driven flux on upstream boundary (left)
   [flux_on_left]
     type = ADDerivativeParsedMaterial
     coupled_variables = 'concentration'
@@ -98,6 +116,7 @@ time_5 = '${units 17678 s}'
     functor_symbols = 'Kr_left_func'
     expression = '- 2 * Kr_left_func * concentration ^ 2'
   []
+  # Recombination-driven flux on downstream boundary (right)
   [flux_on_right]
     type = ADDerivativeParsedMaterial
     coupled_variables = 'concentration'
@@ -107,12 +126,13 @@ time_5 = '${units 17678 s}'
 []
 
 [Functions]
-  [Kr_left_func] # microns^4/at/s
+  # Upstream recombination coefficient (time-dependent exponential) in microns^4/at/s
+  [Kr_left_func]
     type = ParsedFunction
     expression = '${recombination_coefficient_parameter_enclos1_TMAP4} * (1 - 0.9999 * exp(-6e-5 * t))'
   []
-
-  [surface_flux_func] # atoms/mum^2/s
+  # Beam flux schedule applied to upstream surface (atoms/mum^2/s)
+  [surface_flux_func]
     type = ParsedFunction
     expression = 'if(t < ${time_1}, ${flux_high},
                   if(t < ${time_2}, ${flux_low},
@@ -120,19 +140,19 @@ time_5 = '${units 17678 s}'
                   if(t < ${time_4},  ${flux_low},
                   if(t < ${time_5},  ${flux_high}, ${flux_low}))))) * 0.75'
   []
-
+  # Normalized implantation distribution across PCA thickness
   [source_distribution] # (-)
     type = ParsedFunction
     expression = '1.5 / (${width} * sqrt(2 * pi)) * exp(-0.5 * ((x - ${depth}) / ${width})^2)'
   []
-
+  # Spatial-temporal source term from beam flux and implantation profile (atoms/microns^2/s)
   [concentration_source_norm_func] # atoms/microns^2/s
     type = ParsedFunction
     symbol_names = 'source_distribution surface_flux_func'
     symbol_values = 'source_distribution surface_flux_func'
     expression = 'source_distribution * surface_flux_func'
   []
-
+  # Adaptive timestep ceiling near beam on/off transitions (s)
   [max_dt_size_func] # s
     type = ParsedFunction
     expression = 'if(t<${time_1}-100,  ${high_dt_max},
@@ -149,12 +169,14 @@ time_5 = '${units 17678 s}'
 []
 
 [Postprocessors]
+  # Average flux on upstream surface (left) from recombination
   [dcdx_left]
     type = ADSideAverageMaterialProperty
     boundary = left
     property = flux_on_left
     outputs = none
   []
+  # Output upstream recombination flux (scaled to atoms/mum^2/s)
   [scaled_recombination_flux_left]
     type = ScalePostprocessor
     scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
@@ -162,12 +184,14 @@ time_5 = '${units 17678 s}'
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = 'console csv exodus'
   []
+  # Average flux on downstream surface (right) from recombination
   [dcdx_right]
     type = ADSideAverageMaterialProperty
     boundary = right
     property = flux_on_right
     outputs = none
   []
+  # Output downstream recombination flux (scaled to atoms/mum^2/s)
   [scaled_recombination_flux_right]
     type = ScalePostprocessor
     scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
@@ -175,6 +199,7 @@ time_5 = '${units 17678 s}'
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = 'console csv exodus'
   []
+  # Limit timestep size according to beam on/off schedule
   [max_time_step_size]
     type = FunctionValuePostprocessor
     function = max_dt_size_func

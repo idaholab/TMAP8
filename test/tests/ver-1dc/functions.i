@@ -1,3 +1,5 @@
+# It will be used in ver-1dc_mms.i to form a complete input file
+
 [exact_u]
   type = ParsedFunction
   expression = 't*cos(x)'
