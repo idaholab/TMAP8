@@ -2,11 +2,17 @@
 
 # Diffusion Problem with Partially Preloaded Slab
 
+## Test Description
+
 This verification problem is taken from [!cite](longhurst1992verification,ambrosek2008verification), and it has been updated and extended in [!cite](Simon2025). Diffusion of tritium through a semi-infinite SiC layer is modeled with an initial
 loading of 1 atom/m$^3$ in the first 10 m of a 100 m slab. TMAP4 uses a slab length of 2275 m (the slab length is not specified in the TMAP7 document [!cite](ambrosek2008verification)); however, using a smaller slab length was found not to change the results. Additionally, the smaller domain size allows getting a finer simulation mesh for the same computational cost, which improves the agreement between the TMAP8 and analytical calculations.
 
 Diffusivity is set to 1 m$^2$/s
-and no trapping is included. The boundary condition on the left-hand side of the slab (at $x=0$ m) is different for the TMAP4 and TMAP7 cases. For TMAP4, an insulating boundary condition is assumed, and the analytical solution is given by [!citep](Carslaw1959conduction):
+and no trapping is included. The boundary condition on the left-hand side of the slab (at $x=0$ m) is different for the TMAP4 and TMAP7 cases.
+
+## Analytical solution
+
+For TMAP4, an insulating boundary condition is assumed, and the analytical solution is given by [!citep](Carslaw1959conduction):
 
 \begin{equation}
 \label{eq:c_func_4}
@@ -25,6 +31,8 @@ where $h=10$ m is the thickness of the pre-loaded portion of the layer, $C_0$ is
 
 !alert warning title=Typo in [!cite](longhurst1992verification)
 The value of $C$ found in [!cite](longhurst1992verification) has a typographical error, $\sqrt{Dt}$ should be at the denominator. [eq:c_func_4] follows the form of [!cite](Carslaw1959conduction).
+
+## Results and comparison against analytical solution
 
 TMAP4 and TMAP7 verification cases are also evaluated at slightly different locations: TMAP4 verifies the mobile species concentration at three points:
 
