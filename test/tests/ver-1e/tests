@@ -6,20 +6,38 @@
     type = Exodiff
     input = ver-1e.i
     exodiff = ver-1e_test_exodus.e
-    cli_args = 'Executioner/dt=0.2 Executioner/end_time=50 Outputs/exodus/file_base=ver-1e_test_exodus'
+    cli_args = 'Executioner/dt=0.2 Executioner/end_time=50 Outputs/exodus/file_base=ver-1e_test_exodus Outputs/csv/file_base=ver-1e_test_exodus'
     requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition as the species source.'
     exodiff_opts = '-match_ids'
     map = False
+  []
+  [ver-1e_csvdiff]
+    type = CSVDiff
+    input = ver-1e.i
+    should_execute = False
+    csvdiff = ver-1e_test_exodus.csv
+    cli_args = 'Executioner/dt=0.2 Executioner/end_time=50 Outputs/exodus/file_base=ver-1e_test_exodus Outputs/csv/file_base=ver-1e_test_exodus'
+    requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition as the species source to generate CSV data for use in comparisons with the analytic solution.'
+    prereq = ver-1e
   []
   [ver-1e-component]
     type = Exodiff
     input = ver-1e-component.i
     exodiff = ver-1e-component_test_exodus.e
-    cli_args = 'Executioner/dt=0.2 Executioner/end_time=50 Outputs/exodus/file_base=ver-1e-component_test_exodus'
+    cli_args = 'Executioner/dt=0.2 Executioner/end_time=50 Outputs/exodus/file_base=ver-1e-component_test_exodus Outputs/csv/file_base=ver-1e-component_test_exodus'
     requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition as the species source, using the shorthand Physics and Components syntax.'
     # Very small dimensions
     exodiff_opts = '-match_ids'
     map = False
+  []
+  [ver-1e-component_csvdiff]
+    type = CSVDiff
+    input = ver-1e-component.i
+    should_execute = False
+    csvdiff = ver-1e-component_test_exodus.csv
+    cli_args = 'Executioner/dt=0.2 Executioner/end_time=50 Outputs/exodus/file_base=ver-1e-component_test_exodus Outputs/csv/file_base=ver-1e-component_test_exodus'
+    requirement = 'The system shall be able to model transient diffusion through a composite slab with a constant concentration boundary condition as the species source, using the shorthand Physics and Components syntax.'
+    prereq = ver-1e-component
   []
   [ver-1e_TMAP4_heavy]
     type = Exodiff
