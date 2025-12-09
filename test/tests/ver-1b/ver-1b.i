@@ -5,9 +5,9 @@
 # Modeling parameters
 node_num = 5000
 end_time = '${units 50 s}'
-thickness = '${units 0.2 mm -> mum}' # 200 mum
-diffusivity = '${units 1.0 mum^2/s}'
-concentration_left = '${units 1 atom/mum^3}'
+thickness = '${units 200 m}' # 200 m
+diffusivity = '${units 1.0 m^2/s}'
+concentration_left = '${units 1 atom/m^3}'
 
 
 

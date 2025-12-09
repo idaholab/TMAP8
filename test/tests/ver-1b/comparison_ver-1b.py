@@ -25,9 +25,9 @@ tmap_conc = tmap_sol['conc_point1']
 idx = np.where(tmap_time >= 10.0)[0][0]
 
 analytical_time = tmap_time
-x = 0.2
-C_o = 1
-D = 1
+x = 0.2 # m
+C_o = 1 # atom/m^3
+D = 1 # m^2/s
 analytical_conc = C_o * special.erfc( x / (2 * np.sqrt(D*analytical_time)))
 ax.plot(tmap_time,tmap_conc,label=r"TMAP8",c='tab:gray')
 ax.plot(analytical_time,analytical_conc,label=r"Analytical",c='k', linestyle='--')
@@ -63,9 +63,9 @@ tmap_distance = tmap_sol['x']
 tmap_conc = tmap_sol['u']
 
 analytical_distance = tmap_distance
-time = 25
-C_o = 1
-D = 1
+time = 25 # s
+C_o = 1 # atom/m^3
+D = 1 # m^2/s
 analytical_conc = C_o * special.erfc( analytical_distance / (2 * np.sqrt(D * time)))
 
 ax.plot(tmap_distance,tmap_conc,label=r"TMAP8",c='tab:gray')
@@ -99,9 +99,9 @@ tmap_time = tmap_sol['time']
 tmap_flux = tmap_sol['flux_point2']
 
 analytical_time = tmap_time
-x = 0.5
-C_o = 1
-D = 1
+x = 0.5 # m
+C_o = 1 # atom/m^3
+D = 1 # m^2/s
 analytical_flux = C_o * np.sqrt(D/(np.pi * analytical_time)) * \
                   np.exp( x / (2 * np.sqrt(D * analytical_time)))
 ax.plot(tmap_time[1:],tmap_flux[1:],label=r"TMAP8",c='tab:gray')
