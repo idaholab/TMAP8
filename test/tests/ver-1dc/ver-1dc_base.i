@@ -12,7 +12,7 @@ temperature = ${units 1000 K}
 trapping_site_fraction_1 = 0.10 # (-)
 trapping_site_fraction_2 = 0.15 # (-)
 trapping_site_fraction_3 = 0.20 # (-)
-diffusivity = 1 # m^2/s
+diffusivity = ${units 1 m^2/s}
 
 [Mesh]
   type = GeneratedMesh

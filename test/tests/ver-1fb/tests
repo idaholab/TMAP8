@@ -53,4 +53,12 @@
     requirement = 'The system shall be able to model thermal transient in a slab that has temperatures fixed at both the ends using the component and physics syntax.'
     verification = 'ver-1fb.md'
   []
+  [thermal_transient_physics_csvdiff_0pt1sec]
+    type = CSVDiff
+    input = ver-1fb-physics.i
+    csvdiff = ver-1fb-physics_u_vs_x_line_0010.csv
+    should_execute = False  # this test relies on the output files from ver-1fb, so it shouldn't be run twice
+    requirement = 'The system shall be able to model thermal transient in a slab that has temperatures fixed at both the ends using the component and physics syntax to generate CSV data at time of 0.1 s for use in comparison with analytical solution.'
+    prereq = thermal_transient_physics
+  []
 []

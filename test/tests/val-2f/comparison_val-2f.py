@@ -29,10 +29,10 @@ def save_plot(fig, name):
     plt.close(fig)
 
 # Time configuration
-K_MIN, K_MAX = 300, 1000
-HEATING_RATE = 3 / 60
-CHARGE_TIME = 72 * 3600
-COOLDOWN_TIME = 12 * 3600
+K_MIN, K_MAX = 300, 1000 # K
+HEATING_RATE = 3 / 60 # K/s
+CHARGE_TIME = 72 * 3600 # s
+COOLDOWN_TIME = 12 * 3600 # s
 START_TIME = CHARGE_TIME + COOLDOWN_TIME
 DURATION = (K_MAX - K_MIN) / HEATING_RATE
 END_TIME = START_TIME + DURATION
@@ -83,7 +83,7 @@ experiment_flux = experiment['Deuterium Loss Rate (at/s)'] / (12e-3 * 15e-3)
 
 fig = plt.figure(figsize=[6.5, 5.5])
 ax = fig.add_subplot(gridspec.GridSpec(1, 1)[0])
-sigma, R_p, flux = 0.5e-9, 0.7e-9, 5.79e19
+sigma, R_p, flux = 0.5e-9, 0.7e-9, 5.79e19 # m, m, at/m^2/s
 x = np.linspace(0, 6 * sigma, 1000)
 gaussian = np.exp(-0.5 * ((x - R_p) / sigma)**2) / (sigma * np.sqrt(2 * np.pi))
 source = flux * gaussian
@@ -196,17 +196,17 @@ for key, fname in [("default", "val-2f_deuterium_desorption"),
 # ==============================================================================
 # Figure 5: Trap-induced density vs DPA
 
-kb = 1.380649e-23
-eV_to_J = 1.602176634e-19
-kb_eV = kb / eV_to_J
-phi = 8.9e-5
-T = 800
+kb = 1.380649e-23 # J/K
+eV_to_J = 1.602176634e-19 # J/eV
+kb_eV = kb / eV_to_J # eV/K
+phi = 8.9e-5 # dpa/s
+T = 800 # K
 
-K_vals = [9e26, 4.2e26, 2.5e26, 5e26, 1e26]
-nmax_vals = [6.9e25, 7e25, 6e25, 4.7e25, 2e25]
-A0_vals = [6.18e-3]*4 + [0]
-Ea_vals = [0.24, 0.24, 0.30, 0.30, 0]
-trap_density_0_1_dpa = [4.8e25, 3.8e25, 2.6e25, 3.6e25, 1.1e25]
+K_vals = [9e26, 4.2e26, 2.5e26, 5e26, 1e26] # traps/m^3/dpa
+nmax_vals = [6.9e25, 7e25, 6e25, 4.7e25, 2e25] # traps/m^3
+A0_vals = [6.18e-3]*4 + [0] # 1/s
+Ea_vals = [0.24, 0.24, 0.30, 0.30, 0] # eV
+trap_density_0_1_dpa = [4.8e25, 3.8e25, 2.6e25, 3.6e25, 1.1e25] # traps/m^3
 
 def trap_density(dpa, phi, K, nmax, A):
     S = phi * K

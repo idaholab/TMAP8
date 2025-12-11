@@ -1,10 +1,16 @@
+# Verification Problem #1kb from TMAP7 V&V document
+# A diffusion on two connected enclosures by a membrane without a volumetric source using Henry’s Law
+
+# Physical Constants
+R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConstants.h
+
+# Modeling parameters
 nb_segments_TMAP7 = 20
 node_size_TMAP7 = '${units 1.25e-5 m}'
 long_total = '${fparse nb_segments_TMAP7 * node_size_TMAP7}' # m
 nb_segments_TMAP8 = 100
 simulation_time = '${units 10 s}'
 temperature = '${units 500 K}'
-R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConstants.h
 initial_pressure_1 = '${units 1e5 Pa}'
 initial_pressure_2 = '${units 1e-10 Pa}'
 initial_concentration_1 = '${units ${fparse initial_pressure_1 / (R*temperature)} mol/m^3}'
@@ -36,6 +42,7 @@ unit_scale_neighbor = 1
     bottom_left = '${fparse 1/3 * long_total} 0 0'
     top_right = '${fparse long_total} 0 0'
   []
+  # Two surfaces from interface
   [interface]
     type = SideSetsBetweenSubdomainsGenerator
     input = enclosure_2
@@ -83,6 +90,7 @@ unit_scale_neighbor = 1
 []
 
 [Kernels]
+  # Kernel for enclosure 1
   [diffusion_enclosure_1]
     type = MatDiffusion
     variable = concentration_enclosure_1
@@ -94,6 +102,7 @@ unit_scale_neighbor = 1
     variable = concentration_enclosure_1
     block = '1'
   []
+  # Kernel for enclosure 2
   [diffusion_enclosure_2]
     type = MatDiffusion
     variable = concentration_enclosure_2

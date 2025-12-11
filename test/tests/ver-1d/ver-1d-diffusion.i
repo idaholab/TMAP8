@@ -1,11 +1,27 @@
-cl=3.1622e18
-temperature = 1000
+# Verification Problem #1d from TMAP4/TMAP7 V&V document
+# Permeation Problem with Trapping in Diffusion-limited Case
+# No Soret effect, or solubility included.
+
+# Modeling parameters
+node_num = 200
+thickness = '${units 1 m}'
+end_time = ${units 3 s}
+temperature = '${units 1000 K}'
+diffusivity = ${units 1 m^2/s}
+
+# Trapping parameters
+density = '${units 3.1622e22 at/m^3}'
+cl = '${units 3.1622e18 at/m^3}'
+trapping_prefactor = ${units 1e15 1/s}
+release_prefactor = ${units 1e13 1/s}
+release_energy = ${units 100 K}
+trapping_fraction = 0.1 # -
 
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 200
-  xmax = 1
+  nx = ${node_num}
+  xmax = ${thickness}
 []
 
 [Problem]
@@ -15,13 +31,16 @@ temperature = 1000
 []
 
 [Variables]
+  # mobile tritium variable
   [mobile]
   []
+  # trapped tritium variable
   [trapped]
   []
 []
 
 [Kernels]
+  # kernel for mobile tritium
   [diff]
     type = Diffusion
     variable = mobile
@@ -32,6 +51,7 @@ temperature = 1000
     variable = mobile
     extra_vector_tags = ref
   []
+  # kernel for trapped tritium
   [coupled_time]
     type = CoupledTimeDerivative
     variable = mobile
@@ -41,6 +61,7 @@ temperature = 1000
 []
 
 [NodalKernels]
+  # kernel for trapped tritium in nodal sites
   [time]
     type = TimeDerivativeNodalKernel
     variable = trapped
@@ -48,18 +69,18 @@ temperature = 1000
   [trapping]
     type = TrappingNodalKernel
     variable = trapped
-    alpha_t = 1e15
-    N = '${fparse 3.1622e22 / cl}'
-    Ct0 = 0.1
+    alpha_t = ${trapping_prefactor}
+    N = '${fparse density / cl}'
+    Ct0 = ${trapping_fraction}
     mobile_concentration = 'mobile'
     temperature = ${temperature}
     extra_vector_tags = ref
   []
   [release]
     type = ReleasingNodalKernel
-    alpha_r = 1e13
+    alpha_r = ${release_prefactor}
     temperature = ${temperature}
-    detrapping_energy = 100
+    detrapping_energy = ${release_energy}
     variable = trapped
   []
 []
@@ -68,7 +89,7 @@ temperature = 1000
   [left]
     type = DirichletBC
     variable = mobile
-    value = '${fparse 3.1622e18 / cl}'
+    value = '${fparse cl / cl}'
     boundary = left
   []
   [right]
@@ -83,7 +104,7 @@ temperature = 1000
   [outflux]
     type = SideDiffusiveFluxAverage
     boundary = 'right'
-    diffusivity = 1
+    diffusivity = ${diffusivity}
     variable = mobile
   []
   [scaled_outflux]
@@ -102,7 +123,7 @@ temperature = 1000
 
 [Executioner]
   type = Transient
-  end_time = 3
+  end_time = ${end_time}
   dt = .01
   dtmin = .01
   solve_type = NEWTON

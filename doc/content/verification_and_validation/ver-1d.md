@@ -56,7 +56,9 @@ The discriminant for which regime is dominant is the ratio of $\zeta$ to c/$\rho
 
 to account for the fact that trapping leads to slower transport.
 
-In this limit, the breakthrough time, defined as the intersection of the steepest tangent to the diffusion transient with the time axis, will be
+## Analytical solution
+
+In [!cite](longhurst1992verification), the breakthrough time, defined as the intersection of the steepest tangent to the diffusion transient with the time axis, is given by
 
 \begin{equation}
 \label{eqn:tau_be}
@@ -83,8 +85,9 @@ where $C_0$ is the steady dissolved gas concentration at the upstream (x = 0) si
 
 Using TMAP8 we examine these two different regimes, one where diffusion is the rate-limiting step, and one where trapping is the rate-limiting step. The upstream-side starting concentration of 0.0001 atom fraction, a diffusivity of 1 $m^2$/s, a trapping site fraction of 0.1, $\lambda^2 = 10^{-15} \; m^2$, and a temperature of 1000 K is considered.
 
+## Results and comparison against analytical solution
 
-## Diffusion-limited
+### Diffusion-limited
 
 For the effective diffusivity limit, we selected $\epsilon/k = 100$ K to give $\zeta = 91.47 c/\rho$. The comparison results are presented in [ver-1d_comparison_diffusion] with a root mean square percentage error of RMSPE = 0.96% for $t \geq 0.4$ s.
 
@@ -94,7 +97,7 @@ For the effective diffusivity limit, we selected $\epsilon/k = 100$ K to give $\
        id=ver-1d_comparison_diffusion
        caption=Permeation history of a slab subject to effective-diffusivity limit trapping.
 
-## Trapping-limited
+### Trapping-limited
 
 For the deep trapping limit we took $\epsilon/k = 10000$ K to give $\zeta = 1.00454 c/\rho$.  The comparison results are presented in [ver-1d_comparison_trapping].
 
@@ -104,7 +107,7 @@ For the deep trapping limit we took $\epsilon/k = 10000$ K to give $\zeta = 1.00
        id=ver-1d_comparison_trapping
        caption=Permeation transient in a slab subject to strong trapping.
 
-### Notes
+#### Notes
 
 The trapping test input file can generate oscillations in the solution due to the feedback loop between the diffusion PDE and trap evolution ODE. In order for the oscillations to not take over the simulation, it seems
 that the ratio of the inverse of the Fourier number must be kept

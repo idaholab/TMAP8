@@ -1,15 +1,29 @@
-cl = 3.1622e18
-trap_per_free = 1e3
-N = 3.1622e22
+# Verification Problem #1d from TMAP4/TMAP7 V&V document
+# Permeation Problem with Trapping in Trapping-limited Case
+# No Soret effect, or solubility included.
+
+# Modeling parameters
+node_num = 1000
+thickness = '${units 1 m}'
+end_time = '${units 1000 s}'
 time_scaling = 1
-epsilon=10000
-temperature = 1000
+temperature = '${units 1000 K}'
+diffusivity = '${fparse ${units 1 m^2/s} / time_scaling}'
+
+# Trapping parameters
+cl = '${units 3.1622e18 at/m^3}'
+N = '${units 3.1622e22 at/m^3}'
+trapping_prefactor = '${fparse ${units 1e15 1/s} / time_scaling}'
+release_prefactor = '${fparse ${units 1e13 1/s} / time_scaling}'
+epsilon=${units 10000 K}
+trapping_fraction = 0.1 # -
+trap_per_free = 1e3
 
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 1000
-  xmax = 1
+  nx = ${node_num}
+  xmax = ${thickness}
 []
 
 [Problem]
@@ -41,7 +55,7 @@ temperature = 1000
     variable = empty_sites
     type = EmptySitesAux
     N = '${fparse N / cl}'
-    Ct0 = .1
+    Ct0 = ${trapping_fraction}
     trap_per_free = ${trap_per_free}
     trapped_concentration_variables = trapped
   []
@@ -69,7 +83,7 @@ temperature = 1000
   [diff]
     type = MatDiffusion
     variable = mobile
-    diffusivity = '${fparse 1. / time_scaling}'
+    diffusivity = ${diffusivity}
     extra_vector_tags = ref
   []
   [time]
@@ -94,9 +108,9 @@ temperature = 1000
   [trapping]
     type = TrappingNodalKernel
     variable = trapped
-    alpha_t = '${fparse 1e15 / time_scaling}'
+    alpha_t = ${trapping_prefactor}
     N = '${fparse N / cl}'
-    Ct0 = 0.1
+    Ct0 = ${trapping_fraction}
     mobile_concentration = 'mobile'
     temperature = ${temperature}
     trap_per_free = ${trap_per_free}
@@ -104,7 +118,7 @@ temperature = 1000
   []
   [release]
     type = ReleasingNodalKernel
-    alpha_r = ${fparse 1e13 / time_scaling}
+    alpha_r = ${release_prefactor}
     temperature = ${temperature}
     detrapping_energy = ${epsilon}
     variable = trapped
@@ -160,7 +174,7 @@ temperature = 1000
 
 [Executioner]
   type = Transient
-  end_time = 1000
+  end_time = ${end_time}
   dtmax = 5
   solve_type = NEWTON
   scheme = BDF2

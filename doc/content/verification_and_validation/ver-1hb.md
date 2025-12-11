@@ -28,7 +28,7 @@ Mass balance between the two enclosures gives the following relationship between
 \begin{equation} \label{eq:mass_balance}
 P^1_j (t) + P^2_j (t) = P^1_i (t=0) + P^2_i (t=0),
 \end{equation}
-where $t$ is time, and $P^i_j (t=0)$ is the initial pressure of the gas $j$ in enclosure $i$. By substituting [eq:mass_balance] into [eq:dt_P1_T] and [eq:dt_P2_T], we get
+where $t$ is time, and $P^i_j (t=0)$ is the initial pressure of the gas $j$ in enclosure $i$. By substituting [eq:mass_balance] into [eq:dt_P1_T] and [eq:dt_P2_T] based on [!cite](ambrosek2008verification), we get
 \begin{equation} \label{eq:T2_analytical_soln}
 P^i_{T_2} = P^S_{T_2} + \left(P^i_{T_2}-P^S_{T_2}\right) \exp\left(-\frac{2Q}{V} t \right),
 \end{equation}

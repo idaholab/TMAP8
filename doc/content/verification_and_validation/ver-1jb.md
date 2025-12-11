@@ -70,7 +70,7 @@ To limit the computational challenges related to the orders-of-magnitude differe
 
 ## Analytical Solution
 
-The total inventory of T in atoms, $I_{tot} = I_M + I_T$ where $I_M$ and $I_T$ are the mobile and trapped tritium inventories, respectively, is given at any given time by
+In [!cite](ambrosek2008verification), the total inventory of T in atoms, $I_{tot} = I_M + I_T$ where $I_M$ and $I_T$ are the mobile and trapped tritium inventories, respectively, is given at any given time by
 
 \begin{equation}
     I_{tot} = I_{tot}^0 \exp(-kt),

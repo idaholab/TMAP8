@@ -1,3 +1,4 @@
+# The initial concentrations of A and B are different and use the TMAP4 verification case values
 [ICs]
     ca_IC = '${fparse ${units 1 muPa -> Pa}   * ${Na} / ( ${R} * ${T} ) }'
     cb_IC = '${fparse ${units 0.1 muPa -> Pa} * ${Na} / ( ${R} * ${T} ) }'

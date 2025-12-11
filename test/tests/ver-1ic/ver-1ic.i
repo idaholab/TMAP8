@@ -1,13 +1,21 @@
+# Verification Problem #1ic/1id from TMAP7 V&V document
+# A Species Equilibration Problem in Surfdep Conditions with Low/High Barrier Energy
+
+# Physical Constants
 k = '${units 1.380649e-23 J/K}' # Boltzmann constant (from PhysicalConstants.h - https://physics.nist.gov/cgi-bin/cuu/Value?r)
 amu = '${units 1.6605390666e-27 kg}' # Atomic mass unit
+
+# Modeling parameters
+end_time = '${units 10 s}'
+time_interval = '${units 0.1 s}'
 T = '${units 1000 K}' # Temperature
 V = '${units 1 m^3}' # Volume
 S = '${units 25 cm^2 -> m^2}' # Area
 p0_A2 = '${units 1e4 Pa}' # Initial pressure for A2
 p0_B2 = '${units 1e4 Pa}' # Initial pressure for B2
 peq_AB = '${units ${fparse 2 * ${p0_A2} * ${p0_B2} / ( ${p0_A2} + ${p0_B2} )} Pa}' # pressure in equilibration for AB
-end_time = '${units 10 s}'
-time_interval = '${units 0.1 s}'
+
+# Surface reaction parameters
 E_x = '${units 0.05 eV -> J}'
 E_c = '${units -0.01 eV -> J}'
 E_b = '${units 0.00 eV -> J}'

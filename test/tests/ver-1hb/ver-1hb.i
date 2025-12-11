@@ -1,3 +1,11 @@
+# Verification Problem #1hb from TMAP7 V&V document
+# A Convective Gas Outflow Problem with Two Enclosures in Equilibrating Enclosures
+
+# Modeling parameters
+simulation_time = '${units 40 s}'
+time_step_size = '${units 0.1 s}'
+
+# Gas flow parameters
 Q = '${units 0.1 m^3/s}'
 V = '${units 1 m^3}'
 Q_by_V = '${fparse Q / V}'
@@ -7,9 +15,6 @@ P1_T = '${units 1.0 Pa}'
 P2_T = '${units 0 Pa}'
 P1_D = '${units 0 Pa}'
 P2_D = '${units 1.0 Pa}'
-
-simulation_time = '${units 40 s}'
-time_step_size = '${units 0.1 s}'
 
 [Mesh]
     type = GeneratedMesh

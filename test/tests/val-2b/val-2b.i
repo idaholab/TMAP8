@@ -1,3 +1,6 @@
+# Validation Problem #2b from TMAP4/TMAP7 V&V document
+# Thermal desorption of deuterium from BeO/Be with time-varying temperature and enclosure pressure
+# No trapping terms
 
 # Physical constants
 R = ${units 8.31446261815324 J/mol/K} # ideal gas constant based on number used in include/utils/PhysicalConstants.h
@@ -73,6 +76,7 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
     #               18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37'
 
   []
+  # two surfaces for interface
   [interface]
     type = SideSetsBetweenSubdomainsGenerator
     input = cmg
@@ -90,6 +94,7 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
 []
 
 [Variables]
+  # Mobile deuterium concentrations in BeO and Be domains
   [deuterium_concentration_Be] # (atoms/microns^3) / concentration_scaling
     block = 1
   []
@@ -99,6 +104,7 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
 []
 
 [AuxVariables]
+  # Transient enclosure pressure and temperature used in source/BC functions
   [enclosure_pressure]
     family = SCALAR
     initial_condition = ${pressure_enclosure_init}
@@ -106,6 +112,7 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
   [temperature]
     initial_condition = ${temperature_initial}
   []
+  # Flux diagnostic across both materials
   [flux_x]
     order = FIRST
     family = MONOMIAL
@@ -113,6 +120,7 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
 []
 
 [Kernels]
+  # Transient diffusion of deuterium in BeO
   [time_BeO]
     type = TimeDerivative
     variable = deuterium_concentration_BeO
@@ -124,6 +132,7 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
     diffusivity = diffusivity_BeO
     block = 0
   []
+  # Transient diffusion of deuterium in Be
   [time_Be]
     type = TimeDerivative
     variable = deuterium_concentration_Be
@@ -138,6 +147,7 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
 []
 
 [InterfaceKernels]
+  # Penalized continuity with solubility jump at BeO/Be interface
   [tied]
     type = ADPenaltyInterfaceDiffusion
     variable = deuterium_concentration_BeO
@@ -149,6 +159,7 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
 []
 
 [AuxScalarKernels]
+  # Time-dependent enclosure pressure driving equilibrium BC
   [enclosure_pressure_aux]
     type = FunctionScalarAux
     variable = enclosure_pressure
@@ -157,12 +168,14 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
 []
 
 [AuxKernels]
+  # Temperature schedule applied as an auxiliary variable and used in functions
   [temperature_aux]
     type = FunctionAux
     variable = temperature
     function = temperature_bc_func
     execute_on = 'INITIAL LINEAR'
   []
+  # Flux reconstruction for Be and BeO regions
   [flux_x_Be]
     type = DiffusionFluxAux
     diffusivity = diffusivity_Be
@@ -182,6 +195,7 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
 []
 
 [BCs]
+  # Sieverts-law equilibrium on the left surface; symmetry on the right
   [left_flux]
     type = EquilibriumBC
     Ko = ${solubility_constant_BeO}
@@ -201,6 +215,7 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
 []
 
 [Functions]
+  # Temperature, pressure, and property functions driving modeling
   [temperature_bc_func]
     type = ParsedFunction
     expression = 'if(t<${charge_time}, ${temperature_initial}, if(t<${fparse charge_time + cooldown_duration}, ${temperature_initial}-((1-exp(-(t-${charge_time})/${cooldown_time_constant}))*${fparse temperature_initial - temperature_cooldown_min}), ${temperature_desorption_min}+${desorption_heating_rate}*(t-${fparse charge_time + cooldown_duration})))'
@@ -240,6 +255,7 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
 []
 
 [Materials]
+  # Temperature-dependent diffusivity and solubility materials plus interface jump ratio
   [diffusion_solubility]
     type = ADGenericFunctionMaterial
     prop_names = 'diffusivity_BeO diffusivity_Be solubility_Be solubility_BeO'
@@ -264,6 +280,7 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
 []
 
 [Postprocessors]
+  # Flux
   [avg_flux_left]
     type = SideDiffusiveFluxAverage
     variable = deuterium_concentration_BeO
@@ -279,6 +296,7 @@ node_length_Be = ${fparse length_Be_modeled / num_nodes_Be}
     # is twice the flux calculated at the left side of the domain.
     # The 'concentration_scaling' parameter is used to get a consistent concentration unit
   []
+  # material properties
   [temperature]
     type = ElementAverageValue
     block = 0

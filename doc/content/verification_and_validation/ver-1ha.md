@@ -23,7 +23,7 @@ We solve these time evolution equations for $P_2$ and $P_3$ using TMAP8 with $t$
 
 ## Analytical solution
 
-The analytical solution to the equations [eq:dt_P2] and [eq:dt_P3] is
+In [!cite](longhurst1992verification), the analytical solution to the equations [eq:dt_P2] and [eq:dt_P3] is
 \begin{equation} \label{eq:P2}
 P_2 = P_1 \left[ 1 - \exp\left(-\frac{Q}{V_2}t\right) \right],
 \end{equation}

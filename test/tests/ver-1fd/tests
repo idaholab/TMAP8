@@ -22,6 +22,14 @@
     requirement = 'The system shall be able to model convective heating to generate CSV data for use in comparisons with the analytic solution.'
     prereq = ver-1fd
   []
+  [ver-1fd-physics_csv]
+    type = CSVDiff
+    input = ver-1fd-physics.i
+    should_execute = False
+    csvdiff = ver-1fd-physics_out.csv
+    requirement = 'The system shall be able to model convective heating using the shorthand Physics syntax to generate CSV data for use in comparisons with the analytic solution.'
+    prereq = ver-1fd-physics
+  []
   [ver-1fd_comparison]
     type = RunCommand
     command = 'python3 comparison_ver-1fd.py'
