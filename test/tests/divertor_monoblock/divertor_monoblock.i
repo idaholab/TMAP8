@@ -694,7 +694,7 @@ tungsten_atomic_density = ${units 6.338e28 m^-3}
         type = ParsedFunction
         expression =   'if((t % 1600) < 100.0, 0.0   + 1.0e7*(t % 1600)/100,
                         if((t % 1600) < 500.0, 1.0e7,
-                        if((t % 1600) < 600.0, 1.0e7 - 1.0e7*((t % 1600)-500)/100, 300)))'
+                        if((t % 1600) < 600.0, 1.0e7 - 1.0e7*((t % 1600)-500)/100, 0.0)))'
     []
     ### Maximum coolant temperature of 552K at steady state
     [temp_inner_func]

@@ -193,6 +193,9 @@ solute T atom concentration at the exposed surface ($y = 14.0$ mm)
 as a simplification of the complex plasma implantation and recombination phenomena,
 which would require a very fine mesh and increase computational costs.
 
+!alert warning title=Small typo fixed for the heat flux from [!cite](Shimada2024114438)
+Since publication, the input file has been updated to fix a small typo that has a minor, almost insignificant effect on the results. The typo fixed the heat flux to be equal to 300 W/m$^2$  while the pulse was off, as opposed to being equal to 0 W/m$^2$ . This was likely due to a mistake in using the off-pulse temperature of the cooling channel (300 K) rather than the zero flux. The change from 300 W/m$^2$ to 0 W/m$^2$ was observed to be negligible, which is attributed to the fact that 300 W/m$^2$ is a small value. For context, the maximum heat flux value is 1 $\times 10^{7}$ W/m$^2$. The current version of the input file uses 0 W/m$^2$.
+
 !listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=BCs
 
 
