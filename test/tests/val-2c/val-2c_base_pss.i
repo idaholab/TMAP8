@@ -3,15 +3,14 @@
 ## Conversion
 lengthscale = 1e18 # ${units 1 m^3 -> mum^3}
 
-# times in second
-times_measurement_HTO_start = 2440.415722
-times_measurement_HTO_end = 174765.6056
+times_measurement_HTO_start = 2440.415722 # s
+times_measurement_HTO_end = 174765.6056 # s
 
-times_measurement_T2_1 = 32003.54498
-times_measurement_T2_2 = 49281.50916
-times_measurement_T2_3 = 57804.64646
-times_measurement_T2_4 = 71561.68891
-time_measurement_T2 = 600 # - assuming it takes 10 minutes to take the measurement
+times_measurement_T2_1 = 32003.54498 # s
+times_measurement_T2_2 = 49281.50916 # s
+times_measurement_T2_3 = 57804.64646 # s
+times_measurement_T2_4 = 71561.68891 # s
+time_measurement_T2 = 600 # s - assuming it takes 10 minutes to take the measurement
 default_diff_value = 3 # value to be used as difference between modeling prediction and experimental data when experimental data is not available
 
 [Functions]
