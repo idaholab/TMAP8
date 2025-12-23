@@ -1,5 +1,5 @@
 # Validation Problem #2f
-# Self-damaged Tungsten Effects on Deuterium Transport based on
+# Self-damaged Tungsten Effects on Deuterium Transport extended from an original model from
 # Dark, J., Delaporte-Mathurin, R., Schwarz-Selinger, T., Hodille, E. A., Mougenot, J.,
 # Charles, Y., & Grisolia, C. (2024). Modelling neutron damage effects on tritium transport
 # in tungsten. Nuclear Fusion, 64(8), 086026.

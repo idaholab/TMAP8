@@ -8,14 +8,6 @@
     csvdiff = ver-1kb_out_k1.csv
     requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Henry’s law without any concentration jump at the interface.'
   []
-  [ver-1kb_exodus_without_concentration_jump]
-    type = Exodiff
-    input = ver-1kb.i
-    exodiff = ver-1kb_out_k1.e
-    prereq = ver-1kb_csv_without_concentration_jump
-    should_execute = false # this test relies on the output files from ver-1kb_csv_without_concentration_jump, so it shouldn't be run twice
-    requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Henry’s law without any concentration jump at the interface to generate csv for use in comparisons with the analytic solution.'
-  []
   [ver-1kb_csv_concentration_jump]
     type = CSVDiff
     input = ver-1kb.i

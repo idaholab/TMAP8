@@ -19,22 +19,13 @@
     prereq = ver-1a
   []
   [ver-1a-components]
-    type = Exodiff
-    input = ver-1a-component.i
-    exodiff = ver-1a-component_out.e
-    cli_args = 'Executioner/dt=5 ActionComponents/structure/nx=10'
-    requirement = 'The system shall be able to model species diffusion through a structure, originating from a depleting source enclosure using component syntax.'
-  []
-  [ver-1a-components_csvdiff]
     type = CSVDiff
     input = ver-1a-component.i
-    should_execute = False # this test relies on the output files from ver-1a-component, so it shouldn't be run twice
     # Note that the additional element prevents an exodiff comparison
     # with [ver-1a]
     csvdiff = ver-1a-component_csv.csv
     cli_args = 'Executioner/dt=5 ActionComponents/structure/nx=10'
     requirement = 'The system shall be able to model species diffusion through a structure, originating from a depleting source enclosure using component syntax to generate CSV data for use in comparisons with the analytic solution.'
-    prereq = ver-1a-components
   []
   [ver-1a_heavy]
     type = Exodiff

@@ -347,7 +347,6 @@ dt_max = ${fparse end_time/100} # s
 [Outputs]
   perf_graph = true
   file_base = ver-1jb_out
-  exodus = true
   [time_dependent_out]
     type = CSV
     execute_vector_postprocessors_on = NONE
