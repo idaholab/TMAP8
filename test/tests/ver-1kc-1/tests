@@ -9,6 +9,7 @@
                 simulation_time=4
                 Executioner/nl_abs_tol=1e-5
                 Executioner/nl_rel_tol=1e-4
+                Outputs/exodus=false
                 Outputs/file_base=ver-1kc-1_out_k10_light"
     csvdiff = ver-1kc-1_out_k10_light.csv
     requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface.'

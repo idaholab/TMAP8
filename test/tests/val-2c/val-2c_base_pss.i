@@ -3,7 +3,8 @@
 ## Conversion
 lengthscale = 1e18 # ${units 1 m^3 -> mum^3}
 
-times_measurement_HTO_start =2440.415722
+# times in second
+times_measurement_HTO_start = 2440.415722
 times_measurement_HTO_end = 174765.6056
 
 times_measurement_T2_1 = 32003.54498
