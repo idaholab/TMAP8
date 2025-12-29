@@ -7,6 +7,7 @@
     input = ver-1kd.i
     cli_args = "simulation_time=0.05
                 Executioner/nl_rel_tol=1e-6
+                Outputs/exodus=false
                 Outputs/file_base=ver-1kd_out_k10_light"
     csvdiff = ver-1kd_out_k10_light.csv
     requirement = 'The system shall be able to model the diffusion of T2, H2 and HT across a membrane separating two enclosures in accordance with Sieverts’ law with a concentration jump at the interface and a T2 volumetric source term.'
