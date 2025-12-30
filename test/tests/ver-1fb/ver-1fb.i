@@ -9,6 +9,7 @@ T_1 = '${units 400 K}'
 density = '${units 1 kg/m^3}'
 specific_heat = '${units 10 J/kg/K}'
 thermal_conductivity = '${units 10 W/m/K}'
+simulation_time = '${units 10 s}'
 
 [Mesh]
   type = GeneratedMesh
@@ -78,7 +79,7 @@ thermal_conductivity = '${units 10 W/m/K}'
   nl_abs_tol = 1e-10
   l_tol = 1e-4
   dt = 0.01
-  end_time = 10
+  end_time = '${simulation_time}'
   automatic_scaling = true
 []
 

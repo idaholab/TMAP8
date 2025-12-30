@@ -19,6 +19,7 @@
     type = SubdomainPerElementGenerator
     subdomain_ids = '0 0 0 0 0 0 0 0 0 0 0 0 1 1'
   []
+  # Two surfaces on interface
   [interface]
     type = SideSetsBetweenSubdomainsGenerator
     input = subdomain_id

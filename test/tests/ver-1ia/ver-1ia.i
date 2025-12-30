@@ -1,12 +1,18 @@
+# Verification Problem #1ia/1ib from TMAP7 V&V document
+# A Species Equilibration Problem in Ratedep Conditions with Equal/Unequal Starting Pressures
+
+# Physical Constants
 k_b = '${units 1.380649e-23 J/K}' # Boltzmann constant (from PhysicalConstants.h - https://physics.nist.gov/cgi-bin/cuu/Value?r)
+
+# modeling parameters
+simulation_time = '${units 6 s}'
+time_interval = '${units 0.01 s}'
 T = '${units 1000 K}' # Temperature
 V = '${units 1 m^3}' # Volume
 S = '${units 25 cm^2 -> m^2}' # Area
 p0_A2 = '${units 1e4 Pa}' # Initial pressure for A2
 p0_B2 = '${units 1e4 Pa}' # Initial pressure for B2
 peq_AB = '${units ${fparse 2 * ${p0_A2} * ${p0_B2} / ( ${p0_A2} + ${p0_B2} )} Pa}' # pressure in equilibration for AB
-simulation_time = '${units 6 s}'
-time_interval = '${units 0.01 s}'
 K_r = '${units 5.88e-26 m^4/at/s}' # recombination rate for A2 or B2
 K_d = '${units ${fparse 1.858e24 / sqrt( ${T} )} at/m^2/s/Pa}' # dissociation rate for AB
 

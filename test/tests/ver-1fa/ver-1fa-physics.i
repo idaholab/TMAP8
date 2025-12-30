@@ -1,7 +1,19 @@
+# Verification Problem #1fa from TMAP4/TMAP7 V&V document
+# Heat conduction with heat generation using a Physics and Components syntax
+
+# Data used in TMAP4/TMAP7 case
+length = '${units 1.6 m}'
+initial_temperature = '${units 300 K}'
+density = '${units 1 kg/m^3}'
+specific_heat = '${units 1 J/kg/K}'
+thermal_conductivity = '${units 10 W/m/K}'
+volumetric_heat = '${units 1e4 W/m^3}'
+simulation_time = '${units 10 s}'
+
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  xmax = 1.6
+  xmax = '${length}'
   nx = 20
 []
 
@@ -11,14 +23,14 @@
       temperature_name = 'temperature'
       heat_source_functor = 'volumetric_heat'
 
-      initial_temperature = 300
+      initial_temperature = '${initial_temperature}'
 
       # Thermal properties
       thermal_conductivity = 'thermal_conductivity'
 
       # Boundary conditions
       fixed_temperature_boundaries = 'right'
-      boundary_temperatures = '300'
+      boundary_temperatures = '${initial_temperature}'
       heat_flux_boundaries = 'left'
       boundary_heat_fluxes = '0'
     []
@@ -29,14 +41,14 @@
   [density]
     type = ADGenericConstantMaterial
     prop_names = 'density  thermal_conductivity specific_heat'
-    prop_values = '1.0 10.0 1.0'
+    prop_values = '${density} ${thermal_conductivity} ${specific_heat}'
   []
 []
 
 [Functions]
   [volumetric_heat]
     type = ParsedFunction
-    expression = 1.0e4
+    expression = '${volumetric_heat}'
   []
 []
 
@@ -57,7 +69,7 @@
   nl_abs_tol = 1e-10
   l_tol = 1e-4
   dt = 1
-  end_time = 10
+  end_time = ${simulation_time}
   automatic_scaling = true
 []
 
@@ -65,7 +77,7 @@
   [line]
     type = LineValueSampler
     start_point = '0 0 0'
-    end_point = '1.6 0 0'
+    end_point = '${length} 0 0'
     num_points = 40
     sort_by = 'x'
     variable = temperature
