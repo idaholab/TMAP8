@@ -1,5 +1,22 @@
-cl = 3.1622e18
-N = ${fparse 3.1622e22/cl}
+# Verification Problem #1d from TMAP4/TMAP7 V&V document
+# Permeation Problem with Trapping in Diffusion-limited Case using a Physics and Components syntax
+# No Soret effect, or solubility included.
+
+# Modeling parameters
+node_num = 200
+end_time = ${units 3 s}
+thickness = '${units 1 m}'
+temperature = '${units 1000 K}'
+diffusivity = '${units 1 m^2/s}'
+
+# Trapping parameters
+density = '${units 3.1622e22 at/m^3}'
+cl = '${units 3.1622e18 at/m^3}'
+trapping_prefactor = ${units 1e15 1/s}
+release_prefactor = ${units 1e13 1/s}
+release_energy = ${units 100 K}
+trapping_fraction = 0.1 # -
+N = ${fparse density/cl}
 
 [ActionComponents]
   [structure]
@@ -11,16 +28,16 @@ N = ${fparse 3.1622e22/cl}
 
     # Material properties
     property_names = 'alpha_t trapping_energy    N  Ct0 trap_per_free alpha_r detrapping_energy diff'
-    property_values = '1e15   0                ${N} 0.1 1             1e13    100                1'
+    property_values = '${trapping_prefactor} 0   ${N} ${trapping_fraction} 1 ${release_prefactor} ${release_energy} ${diffusivity}'
 
     # Boundary conditions
     fixed_value_bc_variables = 'mobile'
     fixed_value_bc_boundaries = 'structure_left structure_right'
-    fixed_value_bc_values = '${fparse 3.1622e18 / cl} 0'
+    fixed_value_bc_values = '${fparse cl / cl} 0'
 
     # Geometry
-    nx = 200
-    xmax = 1
+    nx = ${node_num}
+    xmax = ${thickness}
     length_unit_scaling = 1
   []
 []
@@ -50,7 +67,7 @@ N = ${fparse 3.1622e22/cl}
 
 [AuxVariables]
   [temp]
-    initial_condition = 1000
+    initial_condition = ${temperature}
   []
 []
 
@@ -58,7 +75,7 @@ N = ${fparse 3.1622e22/cl}
   [outflux]
     type = SideDiffusiveFluxAverage
     boundary = 'structure_right'
-    diffusivity = 1
+    diffusivity = ${diffusivity}
     variable = mobile
   []
   [scaled_outflux]
@@ -79,7 +96,7 @@ N = ${fparse 3.1622e22/cl}
   type = Transient
 
   num_steps =  2
-  end_time = 3
+  end_time = ${end_time}
   dt = .01
   dtmin = .01
   solve_type = NEWTON

@@ -16,6 +16,7 @@ specific_heat_Fe = '${units 447.0 J/kg/K}'
 
 # Data selected for TMAP8 case
 num_nodes = 800 # (-)
+simulation_time = '${units 10000 s}'
 
 [Mesh]
   [whole_domain]
@@ -136,7 +137,7 @@ num_nodes = 800 # (-)
   nl_abs_tol = 1e-12
   l_tol = 1e-8
   dtmax = 5e2
-  end_time = 10000
+  end_time = '${simulation_time}'
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 1e-1

@@ -8,7 +8,7 @@ This problem involves two enclosures connected by a diffusive membrane that foll
 
 ## Case Set Up
 
-This verification problem is taken from [!cite](ambrosek2008verification). 
+This verification problem is taken from [!cite](ambrosek2008verification).
 The rise in pressure of T$_2$ molecules in the first enclosure can be monitored by not enabling T$_2$ molecules to traverse the membrane between the two enclosures (no tritium flux). Consequently, the rate of pressure increase in the first enclosure can be expressed as:
 
 \begin{equation} \label{eq:source_term}
@@ -16,11 +16,11 @@ The rise in pressure of T$_2$ molecules in the first enclosure can be monitored 
 \end{equation}
 
 where $S$ represents the volumetric T$_2$ source rate, $V$ is the volume of the enclosure, $k$ is the Boltzmann constant, and $T$ is the temperature of the enclosure.
-In this case, $S$ is set to 10$^{20}$ molecules/m$^{-3}$/s, $V = 1$ m$^3$, and the temperature of the enclosure is constant at $T = 500$ K. 
+In this case, $S$ is set to 10$^{20}$ molecules/m$^{-3}$/s, $V = 1$ m$^3$, and the temperature of the enclosure is constant at $T = 500$ K.
 
 ## Analytical Solution
 
-The analytical solution for [eq:source_term] is simply
+In [!cite](ambrosek2008verification), the analytical solution for [eq:source_term] is simply
 
 \begin{equation}
 P_{T_2}(t) = \frac{S}{V} kT t.
@@ -31,7 +31,7 @@ P_{T_2}(t) = \frac{S}{V} kT t.
 Comparison of the TMAP8 results and the analytical solution is shown in
 [ver-1ka_comparison_time] as a function of time. The TMAP8 code predictions match very well with the analytical solution with a root mean squared percentage error of RMSPE $= 0.00$ %.
 
-!media comparison_ver-1ka.py 
+!media comparison_ver-1ka.py
        image_name=ver-1ka_comparison_time.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1ka_comparison_time

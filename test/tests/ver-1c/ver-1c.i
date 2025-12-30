@@ -1,23 +1,37 @@
+# Verification Problem #1c from TMAP4/TMAP7 V&V document
+# Diffusion Problem with Partially Preloaded Slab
+# No Soret effect, solubility, or trapping included.
+
 # Locations for concentration comparison
 # TMAP7 - 12, 0.25, h (10)
 # TMAP4 - 12, 0,    h (10)
+
+# Modeling parameters
+node_num = 1e4
+thickness = '${units 100 m}'
+pre_load_thickness = '${units 10 m}'
+pre_load_concentration = '${units 1 atom/m^3}'
+end_time = '${units 100 s}'
+
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 1e4
-  xmax = 100
+  nx = ${node_num}
+  xmax = ${thickness}
 []
 
 [Variables]
+  # mobile tritium variable
   [u]
   []
 []
 
 [ICs]
+  # Initial concentration with pre-load tritium
   [function]
     type = FunctionIC
     variable = u
-    function = 'if(x<10.0,1,0)'
+    function = 'if(x<${pre_load_thickness},${pre_load_concentration},0)'
   []
 []
 
@@ -66,7 +80,7 @@
 
 [Executioner]
   type = Transient
-  end_time = 100
+  end_time = ${end_time}
   solve_type = NEWTON
   scheme = bdf2
   petsc_options_iname = '-pc_type'

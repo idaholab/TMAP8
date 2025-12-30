@@ -36,7 +36,7 @@ Moreover, $k$ is defined as $k=0.693/t_{1/2} \approx 1.78199 \times 10^{-9}$ 1/s
 ## Analytical Solution
 
 !style halign=left
-The concentration of T at any given time is given by
+In [!cite](ambrosek2008verification), the concentration of T at any given time is given by
 
 \begin{equation}
     C_T = C_T^0 \exp(-kt),
