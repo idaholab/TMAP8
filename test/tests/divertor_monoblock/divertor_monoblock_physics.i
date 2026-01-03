@@ -14,6 +14,11 @@
 ### Int_            Integrated
 ### ScInt_          Scaled and integrated
 
+# geometry and design
+radius_coolant = ${units 6 mm -> m}
+radius_CuCrZr = ${units 7.5 mm -> m}
+radius_Cu = ${units 8.5 mm -> m}
+
 tungsten_atomic_density = ${units 6.338e28 m^-3}
 
 !include mesh_base.i

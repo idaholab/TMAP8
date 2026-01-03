@@ -3,7 +3,7 @@
     [exodus]
         type = Exodus
         sync_only = false
-        # output at key moment in the first two cycles, and then at the end of the simulation
+        # output at key moments in the first two cycles, and then at the end of the simulation
         sync_times = '110.0 480.0 590.0 1600.0 1710.0 2080.0 2190.0 3400.0 8.0e4'
     []
     csv = true
@@ -425,7 +425,7 @@
   []
   [Int_C_trapped_CuCrZr]
       type = ElementIntegralVariablePostprocessor
-      variable =C_trapped
+      variable = C_trapped
       block = 2
   []
   [ScInt_C_trapped_CuCrZr]
@@ -455,7 +455,7 @@
   [temperature_tube]
       type = PointValue
       variable = temperature
-      point = '0 6.0e-3 0'
+      point = '0 ${radius_coolant} 0'
   []
 []
 
@@ -463,7 +463,7 @@
   [line]
       type = LineValueSampler
       start_point = '0 14.0e-3 0'
-      end_point = '0 6.0e-3 0'
+      end_point = '0 ${radius_coolant} 0'
       num_points = 100
       sort_by = 'y'
       variable = 'C_total_W C_total_Cu C_total_CuCrZr C_mobile C_trapped flux_y temperature'
