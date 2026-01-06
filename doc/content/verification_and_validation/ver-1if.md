@@ -12,7 +12,7 @@ This verification problem is taken from [!cite](ambrosek2008verification) and bu
 
 ## Analytical solution
 
-Similar with [ver-1ie](ver-1ie.md), the governing equation becomes
+Similar to [ver-1ie](ver-1ie.md), the governing equation becomes
 
 \begin{equation}
 \label{eq:lawdep:equation_p_ab_final}

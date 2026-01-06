@@ -21,10 +21,10 @@ where $T_i = 100$ K is the initial temperature, $T_{\infty} = 500$ K is the temp
 \end{equation}
 is the thermal diffusivity. The volumetric specific heat is defined as $\rho C_p = 3.439 \times 10^6$ J/m$^3$/K, which gives us $\alpha \approx 1.17 \times 10^{-4}$ m$^2$/s.
 
-Note that the simulated length of the semi-infinite slab is not explicitely specified in [!cite](ambrosek2008verification). In TMAP8, a length of $l=100$ cm with a zero-flux boundary condition at the end was found to be sufficient to match the analytical solution (i.e., the temperature at the desired position $x = 5$ cm is not affected by the boundary condition at position $l$), as shown in [ver-1fd_comparison_convective_heating].
+Note that the simulated length of the semi-infinite slab is not explicitly specified in [!cite](ambrosek2008verification). In TMAP8, a length of $l=100$ cm with a zero-flux boundary condition at the end was found to be sufficient to match the analytical solution (i.e., the temperature at the desired position $x = 5$ cm is not affected by the boundary condition at position $l$), as shown in [ver-1fd_comparison_convective_heating].
 
 !alert warning title=Typo in [!cite](ambrosek2008verification)
-In [!cite](ambrosek2008verification), the value of $k = 801$ W/m/K is provided, whereas the input file lists $k = 401$ W/m/K. In TMAP8, we have decided to use $k = 401$ W/m/K since it provides the same results as those shown in Figure 9 in [!cite](ambrosek2008verification), and provides the appropriate value for $\alpha$. Moreover, [!cite](ambrosek2008verification) lists $\alpha = 1.17 \times 10^{-4}$ m$^2$/s in the documentation, but the input file lists $\rho C_p = 3.439 \times 10^6$ instead of $\alpha$. TMAP8 assumes a density and specific heat value to match $\rho C_p = 3.439 \times 10^6$ to reproduce TMAP7's input file rather than documentation.
+In [!cite](ambrosek2008verification), the value of $k = 801$ W/m/K is provided, whereas the input file lists $k = 401$ W/m/K. In TMAP8, we have decided to use $k = 401$ W/m/K since it provides the same results as those shown in Figure 9 in [!cite](ambrosek2008verification), and provides the appropriate value for $\alpha$. Moreover, [!cite](ambrosek2008verification) lists $\alpha = 1.17 \times 10^{-4}$ m$^2$/s in the documentation, but the input file lists $\rho C_p = 3.439 \times 10^6$ instead of $\alpha$. TMAP8 assumes a density and specific heat value to match $\rho C_p = 3.439 \times 10^6$ to reproduce TMAP7's input file rather than its documentation.
 
 ## Results
 
