@@ -45,7 +45,7 @@ where $t$ is the time in s, $c_{A0} = 2.415 \times 10^{14}$ atoms/m$^3$ is the i
 
 
 The concentration of $C$ was found by applying a mass balance over the system in [!cite](ambrosek2008verification). From the
-stoichiometry of this reaction it was found that
+stoichiometry of this reaction, it was found that
 \begin{equation} \label{eq:chemical_reaction_solution_C}
 c_C(t) = c_{A0} - c_A(t) - c_B(t).
 \end{equation}

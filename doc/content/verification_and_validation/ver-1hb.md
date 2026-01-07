@@ -20,7 +20,7 @@ and for gas $D_2$ are given by
 \end{equation}
 where $Q$ is the volumetric flow rate (m$^3 \cdot$s$^{-1}$), $V$ is the volume (m$^3$), $P^i_j$ is the pressure in enclosure $i$ of gas species $j$ ($j$ = $T_2$ or $D_2$).
 
-We solve these time evolution equations for the T$_2$ and D$_2$ pressures in the two enclosures using TMAP8 with $t$ the time and with the initial condition set to $P^1_{T_2} = P^2_{D_2} = 1$ Pa, and $P^2_{T_2} = P^1_{D_2} = 0$ Pa. We use $V = 1$ m$^3$ and $Q = 0.1$ m$^3$s$^-1$.
+We solve these time evolution equations for the T$_2$ and D$_2$ pressures in the two enclosures using TMAP8 with $t$ the time and with the initial condition set to $P^1_{T_2} = P^2_{D_2} = 1$ Pa, and $P^2_{T_2} = P^1_{D_2} = 0$ Pa. We use $V = 1$ m$^3$ and $Q = 0.1$ m$^3\cdot $s$^{-1}$.
 
 ## Analytical solution
 
