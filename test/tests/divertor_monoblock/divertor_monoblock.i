@@ -717,21 +717,9 @@ plasma_min_flux = 0.0
     ### Heat flux of 10MW/m^2 at steady state
     [temp_flux_bc_function]
         type = ParsedFunction
-<<<<<<< HEAD
-<<<<<<< HEAD
-        expression =   'if((t % 1600) < 100.0, 0.0   + 1.0e7*(t % 1600)/100,
-                        if((t % 1600) < 500.0, 1.0e7,
-                        if((t % 1600) < 600.0, 1.0e7 - 1.0e7*((t % 1600)-500)/100, 0.0)))'
-=======
-        symbol_values = 'plasma_time_func ${plasma_max_heat} ${plasma_min_heat}'
-        symbol_names = 'time_func max_val min_val'
-        expression = '(max_val - min_val) * time_func + min_val'
->>>>>>> 1fff86c7 (Added timing functions for plasma discharge)
-=======
         symbol_values = 'plasma_time_function'
         symbol_names = 'time_function'
         expression = '(${plasma_max_heat} - ${plasma_min_heat}) * time_function + ${plasma_min_heat}'
->>>>>>> b9c1206d (added t_in_cycle function, changed function names)
     []
     ### Maximum coolant temperature of 552K at steady state
     [temp_inner_func]
