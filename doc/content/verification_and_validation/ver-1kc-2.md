@@ -91,7 +91,7 @@ As shown in [ver-1kc-2_mass_conservation_k10], mass is conserved between the two
        image_name=ver-1kc-2_comparison_time_k10.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1kc-2_comparison_time_k10
-       caption=Evolution of species concentration over time governed by Sieverts' law with $K = 10/\sqrt{RT}$ and $\eta = \sqrt{2K_1/K_2}$.
+       caption=Evolution of species pressure over time governed by Sieverts' law with $K = 10/\sqrt{RT}$ and $\eta = \sqrt{2K_1/K_2}$.
 
 !media comparison_ver-1kc-2.py
        image_name=ver-1kc-2_equilibrium_constant_k10.png
