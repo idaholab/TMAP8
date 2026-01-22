@@ -3,6 +3,7 @@ import numpy as np
 from matplotlib import gridspec
 import os
 import math
+import pandas as pd
 
 # This file recreates Figure 3 from M. Shimada, et al., Fus. Eng. Des., 136, 1161 (2018)
 # Caption:
@@ -44,46 +45,39 @@ temperature_ramp_rate = 10/60 # K/s
 
 file_base = 'val-2g_temperature'
 
-def newton_cool_down(initial_temperature, time_constant, environment_temperature, current_time, start_time=0.0):
-    """Calculate current temperature of a pre-heated sample over time using Newton's law of cooling
-
-    Args:
-        initial_temperature (float): starting temperature of the sample (K)
-        time_constant (float): time constant of heat transfer (s)
-        environment_temperature (float): temperature of the environment, suitably far from the surface (K)
-        start_time (float): time when source heating the sample is removed and cooling begins, defaulted to zero (s)
-        current_time (float): current time (s)
-
-    Returns:
-        float: current temperature of the sample (K)
-    """
-    return environment_temperature + (initial_temperature - environment_temperature) \
-                                   * math.exp(-(current_time - start_time) / time_constant)
-
 time_series = []
 cooling_data = []
-for i in range(len(initial_temperature)):
-    # Build complete time series for all phases
-    time_series = list(range(0, TDS_end, 1))
 
-    # Calculate temperature at each point in time
-    temperature = []
-    for t in time_series:
-        if t < hold_time[i]:
-            # Constant heat source phase
-            temperature.append(initial_temperature[i])
-        elif t < TDS_start:
-            # Cooldown phase
-            temperature.append(newton_cool_down(initial_temperature[i], cooling_time_constant,
-                                         temperature_room, t, hold_time[i]))
-        elif t < TDS_ramp_end:
-            # Ramp phase
-            temperature.append(temperature_ramp_rate * (t - TDS_start) + temperature_min)
-        else:
-            # Final hold phase
-            temperature.append(final_temperature)
+# Read TMAP8 simulation data
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
+    csv_folder = "../../../../test/tests/val-2g/gold/val-2g_673_out.csv"
+else:                                  # if in test folder
+    csv_folder = "./val-2g_673_out.csv"
+simulation_673_data = pd.read_csv(csv_folder)
+simulation_time_673 = simulation_673_data['time']
+simulation_temperature_673 = simulation_673_data['temperature']
+time_series.append(simulation_time_673)
+cooling_data.append(simulation_temperature_673)
 
-    cooling_data.append(temperature)
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
+    csv_folder = "../../../../test/tests/val-2g/gold/val-2g_873_out.csv"
+else:                                  # if in test folder
+    csv_folder = "./val-2g_873_out.csv"
+simulation_873_data = pd.read_csv(csv_folder)
+simulation_time_873 = simulation_873_data['time']
+simulation_temperature_873 = simulation_873_data['temperature']
+time_series.append(simulation_time_873)
+cooling_data.append(simulation_temperature_873)
+
+if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
+    csv_folder = "../../../../test/tests/val-2g/gold/val-2g_973_out.csv"
+else:                                  # if in test folder
+    csv_folder = "./val-2g_973_out.csv"
+simulation_973_data = pd.read_csv(csv_folder)
+simulation_time_973 = simulation_973_data['time']
+simulation_temperature_973 = simulation_973_data['temperature']
+time_series.append(simulation_time_973)
+cooling_data.append(simulation_temperature_973)
 
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
@@ -91,7 +85,7 @@ ax = fig.add_subplot(gs[0])
 
 for i in range(len(cooling_data)):
   label = "TMAP8 - " + str(initial_temperature[i]) + " K"
-  ax.plot(time_series, cooling_data[i], linestyle='-', linewidth=4.0, label=label)
+  ax.plot(time_series[i], cooling_data[i], linestyle='-', linewidth=4.0, label=label)
 
 # Font sizes for labels and axes
 SMALL_SIZE = 12

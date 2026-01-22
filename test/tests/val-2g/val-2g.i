@@ -13,7 +13,7 @@ TPE_hold_time = '${units 7200 s}'
 TDS_initial_time = '${units 12000 s}'
 TDS_ramp_end = '${units 17238 s}'
 simulation_time = '${units 19200 s}'
-outputs_initial_time = '${units 12000 s}'
+outputs_initial_time = '${units 0 s}'
 step_interval_max = 15 # (-)
 step_interval_min = 6 # (-)
 bound_value_min = '${units 1e-10 at/mum^3}'
@@ -249,6 +249,10 @@ temperature_min = '${units 300 K}'
 []
 
 [Postprocessors]
+  [temperature]
+    type = FunctionValuePostprocessor
+    function = temperature_function
+  []
   [flux_surface_left]
     type = SideDiffusiveFluxIntegral
     variable = concentration
