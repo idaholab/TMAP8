@@ -1,3 +1,10 @@
+# Validation Problem #2g
+# Deuterium retention in neutron-irradiated single-crystal tungsten based on
+# Shimada, M., Oya, Y., Wampler, W. R., Yamauchi, Y., Taylor, C. N., Garrison, L. M.,
+# Buchenauer, D. A., & Hatano, Y. (2018). Deuterium retention in neutron-irradiated
+# single-crystal tungsten. Fusion Engineering and Design, 136(B), 1161.
+# DOI: 10.1016/j.fusengdes.2018.04.094
+
 # General parameters
 kB = '${units 1.380649e-23 J/K}' # Boltzmann constant (from PhysicalConstants.h - https://physics.nist.gov/cgi-bin/cuu/Value?r)
 
