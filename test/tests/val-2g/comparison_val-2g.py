@@ -40,11 +40,11 @@ if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
 else:                                  # if in test folder
     csv_folder = "./tmap4_data.csv"
 simulation_TMAP4_data = pd.read_csv(csv_folder)
-simulation_time_TMAP4 = simulation_TMAP4_data['time']
-simulation_temperature_TMAP4 = simulation_TMAP4_data['temperature']
-simulation_flux_TMAP4_673 = simulation_TMAP4_data['TMAP - 400C']
-simulation_flux_TMAP4_873 = simulation_TMAP4_data['TMAP - 600C']
-simulation_flux_TMAP4_973 = simulation_TMAP4_data['TMAP - 700C']
+simulation_time_TMAP4 = simulation_TMAP4_data['time (s)']
+simulation_temperature_TMAP4 = simulation_TMAP4_data['temperature (K)']
+simulation_flux_TMAP4_673 = simulation_TMAP4_data['TMAP - 400C (D m^-2 s^-1)']
+simulation_flux_TMAP4_873 = simulation_TMAP4_data['TMAP - 600C (D m^-2 s^-1)']
+simulation_flux_TMAP4_973 = simulation_TMAP4_data['TMAP - 700C (D m^-2 s^-1)']
 
 # Read experiment data
 if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
@@ -52,11 +52,11 @@ if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
 else:                                  # if in test folder
     csv_folder = "./experimental_data.csv"
 experiment_data = pd.read_csv(csv_folder)
-experiment_time = experiment_data['time']
-experiment_temperature = experiment_data['temperature']
-experiment_flux_673 = experiment_data['Exp - 400C']
-experiment_flux_873 = experiment_data['Exp - 600C']
-experiment_flux_973 = experiment_data['Exp - 700C']
+experiment_time = experiment_data['time (s)']
+experiment_temperature = experiment_data['temperature (K)']
+experiment_flux_673 = experiment_data['Exp - 400C (D m^-2 s^-1)']
+experiment_flux_873 = experiment_data['Exp - 600C (D m^-2 s^-1)']
+experiment_flux_973 = experiment_data['Exp - 700C (D m^-2 s^-1)']
 
 # Setup mask using a random sampling method to reduce density of scatter plot points in experimental
 # data (there is a lot of "noise").
