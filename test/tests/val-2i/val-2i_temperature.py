@@ -67,23 +67,23 @@ for i in range(len(initial_temperature)):
     time_series = list(range(0, TDS_end, 1))
 
     # Calculate temperature at each point in time
-    temp = []
+    temperature = []
     for t in time_series:
         if t < hold_time[i]:
             # Constant heat source phase
-            temp.append(initial_temperature[i])
+            temperature.append(initial_temperature[i])
         elif t < TDS_start:
             # Cooldown phase
-            temp.append(newton_cool_down(initial_temperature[i], cooling_time_constant,
+            temperature.append(newton_cool_down(initial_temperature[i], cooling_time_constant,
                                          temperature_room, t, hold_time[i]))
         elif t < TDS_ramp_end:
             # Ramp phase
-            temp.append(temperature_ramp_rate * (t - TDS_start) + temperature_min)
+            temperature.append(temperature_ramp_rate * (t - TDS_start) + temperature_min)
         else:
             # Final hold phase
-            temp.append(final_temperature)
+            temperature.append(final_temperature)
 
-    cooling_data.append(temp)
+    cooling_data.append(temperature)
 
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
