@@ -1,4 +1,4 @@
-﻿time,temperature,TMAP - 400C,TMAP - 600C,TMAP - 700C
+﻿time (s),temperature (K),TMAP - 400C (D m^-2 s^-1),TMAP - 600C (D m^-2 s^-1),TMAP - 700C (D m^-2 s^-1)
 0.00E+00,3.00E+02,2.71E+00,2.80E-06,7.87E-10
 1.00E+01,2.95E+02,8.27E-01,1.50E-06,1.07E-09
 2.00E+01,2.96E+02,1.21E+00,2.05E-06,1.46E-09
