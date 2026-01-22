@@ -11,16 +11,18 @@ step_interval_max = 15 # (-)
 step_interval_min = 6 # (-)
 bound_value_min = '${units 1e-10 at/mum^3}'
 
-# Diffusion parameters
+# Implantation parameters
 flux_high = '${units 7.1e21 at/m^2/s -> at/mum^2/s}'
 flux_low = '${units 0      at/mum^2/s}'
 reflection_coefficient = 0.90 # (-)
 transmission_coefficient = '${fparse 1 - ${reflection_coefficient}}' # (-)
-diffusivity_coefficient = '${fparse ${units 4.1e-7 m^2/s -> mum^2/s} / sqrt(2)}'
-E_D = '${units 0.39 eV -> J}'
 initial_concentration = '${units 0.0 at/m^3 -> at/mum^3}'
 width_source = '${units 3.58e-9 m -> mum}'
 depth_source = '${units 2.64e-9 m -> mum}'
+
+# Diffusion parameters
+diffusivity_coefficient = '${fparse ${units 4.1e-7 m^2/s -> mum^2/s} / sqrt(2)}'
+E_D = '${units 0.39 eV -> J}'
 
 # Traps parameters
 N = '${units 6.323e28 at/m^3 -> at/mum^3}'
