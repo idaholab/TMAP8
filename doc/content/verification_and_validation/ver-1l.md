@@ -4,7 +4,7 @@
 
 ## General Case Description
 
-This verification case considers tritium diffusion through a semi-infinite layer under the influence of a temperature gradient. The two transport driving forces are Fickian diffusion (which was verified in other verification cases including [ver-1b](ver-1b.md) and [ver-1dd](ver-1dd.md), and the Soret effect (also known as thermodiffusion or thermophoresis). 
+This verification case considers tritium diffusion through a semi-infinite layer under the influence of a temperature gradient. The two transport driving forces are Fickian diffusion (which was verified in other verification cases including [ver-1b](ver-1b.md) and [ver-1dd](ver-1dd.md)), and the Soret effect (also known as thermodiffusion or thermophoresis).
 The Soret effect describes the phenomenon where species migration occurs in response to a temperature gradient. This coupling of thermal and mass transport can be particularly important in fusion applications where significant temperature gradients exist across material structures.
 
 In this problem, tritium diffuses through a material layer subjected to a constant linear temperature gradient. The left boundary maintains a constant tritium concentration, while the right boundary is impermeable. The combined effects of concentration-driven diffusion and temperature-driven thermodiffusion are verified against an analytical solution. For simplicity, no trapping or solubility effects are included in this case.
@@ -49,7 +49,7 @@ where $\text{erfc}$ is the error function.
 
 ### Verification of concentration at a fixed location as a function of time
 
-[ver-1l_comparison_analytical_concentration_location] shows the comparison of the TMAP8 calculation and the analytical solution for the concentration at location $x = 10$ m as a function of time. The TMAP8 prediction matches the analytical solution with excellent agreement, yielding a root mean square percentage error of RMSPE = 2.18 %.
+[ver-1l_comparison_analytical_concentration_location] shows the comparison of the TMAP8 calculation and the analytical solution for the concentration at location $x = 10$ m as a function of time. The TMAP8 prediction matches the analytical solution with excellent agreement, yielding a root mean square percentage error of RMSPE = 0.87 %.
 
 !media comparison_ver-1l.py
        image_name=ver-1l_comparison_analytical_concentration_location.png
@@ -59,7 +59,7 @@ where $\text{erfc}$ is the error function.
 
 ### Verification of concentration profile as a function of position at a fixed time
 
-[ver-1l_comparison_analytical_concentration_time] shows the comparison of the TMAP8 calculation and the analytical solution for the concentration profile at time $t = 100$ s. The concentration profile exhibits a characteristic shape that differs from pure Fickian diffusion due to the thermodiffusion contribution. The TMAP8 prediction is in good agreement with the analytical solution, with a root mean square percentage error of RMSPE = 0.28 %.
+[ver-1l_comparison_analytical_concentration_time] shows the comparison of the TMAP8 calculation and the analytical solution for the concentration profile at time $t = 100$ s. The concentration profile exhibits a characteristic shape that differs from pure Fickian diffusion due to the thermodiffusion contribution. The TMAP8 prediction is in good agreement with the analytical solution, with a root mean square percentage error of RMSPE = 0.21 %.
 
 !media comparison_ver-1l.py
        image_name=ver-1l_comparison_analytical_concentration_time.png
