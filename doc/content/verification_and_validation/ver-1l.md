@@ -47,7 +47,7 @@ where $\text{erfc}$ is the error function.
 
 ### Verification of concentration at a fixed location as a function of time
 
-[ver-1l_comparison_analytical_concentration_location] shows the comparison of the TMAP8 calculation and the analytical solution for the concentration at location $x = 10$ m as a function of time. The TMAP8 prediction matches the analytical solution with excellent agreement, yielding a root mean square percentage error of RMSPE = 0.59 %.
+[ver-1l_comparison_analytical_concentration_location] shows the comparison of the TMAP8 calculation and the analytical solution for the concentration at location $x = 10$ m as a function of time. The TMAP8 prediction matches the analytical solution with excellent agreement, yielding a root mean square percentage error of RMSPE = 2.18 %.
 
 !media comparison_ver-1l.py
        image_name=ver-1l_comparison_analytical_concentration_location.png
@@ -57,7 +57,7 @@ where $\text{erfc}$ is the error function.
 
 ### Verification of concentration profile as a function of position at a fixed time
 
-[ver-1l_comparison_analytical_concentration_time] shows the comparison of the TMAP8 calculation and the analytical solution for the concentration profile at time $t = 100$ s. The concentration profile exhibits a characteristic shape that differs from pure Fickian diffusion due to the thermodiffusion contribution. The TMAP8 prediction is in good agreement with the analytical solution, with a root mean square percentage error of RMSPE = 0.07 %.
+[ver-1l_comparison_analytical_concentration_time] shows the comparison of the TMAP8 calculation and the analytical solution for the concentration profile at time $t = 100$ s. The concentration profile exhibits a characteristic shape that differs from pure Fickian diffusion due to the thermodiffusion contribution. The TMAP8 prediction is in good agreement with the analytical solution, with a root mean square percentage error of RMSPE = 0.28 %.
 
 !media comparison_ver-1l.py
        image_name=ver-1l_comparison_analytical_concentration_time.png

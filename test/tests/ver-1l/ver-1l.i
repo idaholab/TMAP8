@@ -22,7 +22,7 @@ simulation_time = '${units 100 s}'
 [Mesh]
   type = GeneratedMesh
   dim = 1
-  nx = 200
+  nx = 100
   xmax = '${thickness}'
 []
 
