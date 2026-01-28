@@ -6,20 +6,20 @@
     type = Exodiff
     input = ver-1l.i
     exodiff = ver-1l_out.e
-    requirement = 'The system shall be able to model species diffusion through a semi-infinity layer under Soret effect.'
+    requirement = 'The system shall be able to model species Fickian and Soret diffusion through a semi-infinity layer.'
   []
   [ver-1l_csvdiff]
     type = CSVDiff
     input = ver-1l.i
-    should_execute = False # this test relies on the output files from ver-1a, so it shouldn't be run twice
+    should_execute = False # this test relies on the output files from ver-1l, so it shouldn't be run twice
     csvdiff = ver-1l_csv.csv
-    requirement = 'The system shall be able to model species diffusion through a semi-infinity layer under Soret effect to generate CSV data for use in comparisons with the analytic solution.'
+    requirement = 'The system shall be able to model species Fickian and Soret diffusion through a semi-infinity layer to generate CSV data for use in comparisons with the analytic solution.'
     prereq = ver-1l
   []
   [ver-1l_comparison]
     type = RunCommand
     command = 'python3 comparison_ver-1l.py'
-    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1l, modeling species diffusion through a semi-infinity layer under Soret effect.'
+    requirement = 'The system shall be able to generate comparison plots between the analytical solution and simulated solution of verification case 1l, modeling species Fickian and Soret diffusion through a semi-infinity layer.'
     required_python_packages = 'matplotlib numpy pandas scipy os'
   []
 []
