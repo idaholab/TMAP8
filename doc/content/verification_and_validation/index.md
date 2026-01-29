@@ -36,6 +36,7 @@ TMAP8 also contains [example cases](examples/tmap_index.md), which showcase how 
 | ver-1kc-1 | [Sieverts’ Law Boundaries with No Volumetric Source](ver-1kc-1.md)                                  |
 | ver-1kc-2 | [Sieverts’ Law Boundaries with Chemical Reaction and No Volumetric Source](ver-1kc-2.md)            |
 | ver-1kd   | [Sieverts’ Law Boundaries with Chemical Reaction and Volumetric Source](ver-1kd.md)                 |
+| ver-1l    | [Diffusion with Soret Effect](ver-1l.md)                                                            |
 
 # List of benchmarking cases
 
