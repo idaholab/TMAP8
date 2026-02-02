@@ -1,3 +1,5 @@
+!include parameters_no_trapping_initial_validation.params
+
 # Physical constants
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
 eV_to_J = '${units 1.602176634e-19 eV/J}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
@@ -633,7 +635,6 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
     type = MaterialADConverter
     ad_props_in = 'diffusivity_OT diffusivity_V_O diffusivity_e'
     reg_props_out = 'diffusivity_OT_nonAD diffusivity_V_O_nonAD diffusivity_e_nonAD'
-    outputs = 'none'
   []
   [reaction_equilibrium_constant_T2O]
     type = ADParsedMaterial
@@ -644,8 +645,6 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
   [reaction_forward_T2O]
     type = ADParsedMaterial
     property_name = 'T2O_K_forward'
-    # coupled_variables = 'temperature'
-    # expression = '${T2O_reaction_forward_value_pre} * exp( ${T2O_reaction_forward_value_energy} / ${R} / temperature)'
     expression = '${T2O_reaction_forward_value}'
   []
   [reaction_reverse_T2O]
@@ -663,8 +662,6 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
   [reaction_forward_T2]
     type = ADParsedMaterial
     property_name = 'T2_K_forward'
-    # coupled_variables = 'temperature'
-    # expression = '${T2_reaction_forward_value_pre} * exp( ${T2_reaction_forward_value_energy} / ${R} / temperature)'
     expression = '${T2_reaction_forward_value}'
   []
   [reaction_reverse_T2]
@@ -1093,6 +1090,5 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
   []
   [exodus]
     type = Exodus
-    # enable = false
   []
 []

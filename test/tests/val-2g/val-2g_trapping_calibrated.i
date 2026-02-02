@@ -1,3 +1,5 @@
+!include parameters_trapping_calibrated_validation.params
+
 # Physical constants
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
 eV_to_J = '${units 1.602176634e-19 eV/J}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
@@ -637,7 +639,6 @@ diffusivity_e_energy = '${units 9.53470966e+04 J/mol}'
     type = MaterialADConverter
     ad_props_in = 'diffusivity_OT diffusivity_V_O diffusivity_e'
     reg_props_out = 'diffusivity_OT_nonAD diffusivity_V_O_nonAD diffusivity_e_nonAD'
-    outputs = 'none'
   []
   [reaction_equilibrium_constant_T2O]
     type = ADParsedMaterial
@@ -1064,8 +1065,8 @@ diffusivity_e_energy = '${units 9.53470966e+04 J/mol}'
   solve_type = NEWTON
   petsc_options_iname = '-pc_type -snes_type'
   petsc_options_value = 'lu vinewtonrsls'
-  nl_rel_tol = 1e-6
-  nl_abs_tol = 1e-7
+  nl_rel_tol = 1e-7
+  nl_abs_tol = 1e-10
   end_time = ${endtime}
   automatic_scaling = true
   compute_scaling_once = true
@@ -1090,11 +1091,8 @@ diffusivity_e_energy = '${units 9.53470966e+04 J/mol}'
 [Outputs]
   [csv]
     type = CSV
-    # start_time = ${fparse dissolve_duration + cooldown_duration}
   []
-  # file_base = ${file_name}
   [exodus]
     type = Exodus
-    # enable = false
   []
 []

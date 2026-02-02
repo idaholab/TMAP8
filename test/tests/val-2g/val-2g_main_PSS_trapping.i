@@ -1,4 +1,4 @@
-!include distribution_parameters.params
+!include parameters_trapping_initial_distribution_PSS.params
 
 [StochasticTools]
 []

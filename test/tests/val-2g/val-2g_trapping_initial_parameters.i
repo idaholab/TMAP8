@@ -1,3 +1,5 @@
+!include parameters_trapping_initial_validation.params
+
 # Physical constants
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
 eV_to_J = '${units 1.602176634e-19 eV/J}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
@@ -36,20 +38,20 @@ OT_concentration_initial = 0
 hydration_limit_S = 0.1
 oxygen_vacancy_concentration_initial = '${units ${fparse hydration_limit_S / 2 * N} at/mum^3}'
 oxygen_concentration_initial = '${units ${fparse 3 * N - oxygen_vacancy_concentration_initial - OT_concentration_initial} at/mum^3}'
-electron_concentration_initial_expo = -5.4
+# electron_concentration_initial_expo = -5.4
 electron_concentration_initial = '${units ${fparse 10 ^ electron_concentration_initial_expo * N} at/mum^3}' # 0.001
 
 # Traps parameters
 initial_concentration_trap_1 = 0 # (-)
-detrapping_energy_1_ev = '${units 1.60 eV}'
+# detrapping_energy_1_ev = '${units 1.60 eV}'
 detrapping_energy_1 = '${fparse detrapping_energy_1_ev / k_B}'
-trapping_site_fraction_1_expo = -5
+# trapping_site_fraction_1_expo = -5
 trapping_site_fraction_1 = ${fparse 3 * 10 ^ trapping_site_fraction_1_expo} # (-)
-trapping_rate_prefactor_expo = 11
+# trapping_rate_prefactor_expo = 11
 trapping_rate_prefactor = '${units ${fparse 4.8 * 10 ^ trapping_rate_prefactor_expo} 1/s}' # 9.1316e12
-release_rate_profactor_expo = 14
+# release_rate_profactor_expo = 14
 release_rate_profactor = '${units ${fparse 2.6 * 10 ^ release_rate_profactor_expo }1/s}' # 8.4e12
-trapping_energy_ev = '${units 0.38 eV}'
+# trapping_energy_ev = '${units 0.38 eV}'
 trapping_energy = '${fparse trapping_energy_ev / k_B}'
 trap_per_free_1 = 1e0 # (-)
 ##### Dry Pressure conditions
@@ -62,28 +64,26 @@ pressure_T2O_low = '${units 1e-5 Pa}'
 pressure_T2_wet = '${units 0 Pa}' # We assume the pressure of T2O is 0
 
 # chemical_reaction
-delta_H_T2O = '${units -79.5e3 J/mol}'
-delta_S_T2O = '${units -88.9 J/mol/K}'
-delta_H_T2 = '${units -79.5e3 J/mol}'
-delta_S_T2 = '${units -124.53 J/mol/K}' # ${fparse -88.9 + R * np.log(0.01)}
-T2O_reaction_forward_value_expo = -33
+# delta_H_T2O = '${units -79.5e3 J/mol}'
+# delta_S_T2O = '${units -88.9 J/mol/K}'
+# delta_H_T2 = '${units -79.5e3 J/mol}'
+# delta_S_T2 = '${units -124.53 J/mol/K}' # ${fparse -88.9 + R * np.log(0.01)}
+# T2O_reaction_forward_value_expo = -33
 T2O_reaction_forward_value = '${units ${fparse 2 * 10 ^ T2O_reaction_forward_value_expo} m^4/at/s -> mum^4/at/s}'
-T2_reaction_forward_value_expo = -41
+# T2_reaction_forward_value_expo = -41
 T2_reaction_forward_value = '${units ${fparse 2 * 10 ^ T2_reaction_forward_value_expo} m^4/at/s -> mum^4/at/s}'
 
 # Materials diffusivities (Deuterium: diffusivity and solubility data from Hossain 2020)
-diffusivity_OT_prefactor_m2s = '${units 2e-9 m^2/s}'
+# diffusivity_OT_prefactor_m2s = '${units 2e-9 m^2/s}'
 diffusivity_OT_prefactor = '${units ${fparse diffusivity_OT_prefactor_m2s * sqrt(3/2)} m^2/s -> mum^2/s}'
-diffusivity_OT_energy_ev = '${units 0.23 eV}'
+# diffusivity_OT_energy_ev = '${units 0.23 eV}'
 diffusivity_OT_energy = '${units ${fparse diffusivity_OT_energy_ev * eV_to_J * N_a} J/mol}'
-diffusivity_V_O_prefactor_m2s = '${units 1.021e-7 m^2/s}'
+# diffusivity_V_O_prefactor_m2s = '${units 1.021e-7 m^2/s}'
 diffusivity_V_O_prefactor = '${units ${diffusivity_V_O_prefactor_m2s} m^2/s -> mum^2/s}'
-diffusivity_V_O_energy = '${units 89216.77 J/mol}'
-diffusivity_e_prefactor_m2s = '${units 2.05e-2 m^2/s}'
+# diffusivity_V_O_energy = '${units 89216.77 J/mol}'
+# diffusivity_e_prefactor_m2s = '${units 2.05e-2 m^2/s}'
 diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2/s}'
-diffusivity_e_energy = '${units 103818.22 J/mol}'
-
-# file_name = 'val-2g_trapping_initial'
+# diffusivity_e_energy = '${units 103818.22 J/mol}'
 
 [Mesh]
   active = 'cmg_edge'
@@ -633,7 +633,6 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
     type = MaterialADConverter
     ad_props_in = 'diffusivity_OT diffusivity_V_O diffusivity_e'
     reg_props_out = 'diffusivity_OT_nonAD diffusivity_V_O_nonAD diffusivity_e_nonAD'
-    outputs = 'none'
   []
   [reaction_equilibrium_constant_T2O]
     type = ADParsedMaterial
@@ -644,8 +643,6 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
   [reaction_forward_T2O]
     type = ADParsedMaterial
     property_name = 'T2O_K_forward'
-    # coupled_variables = 'temperature'
-    # expression = '${T2O_reaction_forward_value_pre} * exp( ${T2O_reaction_forward_value_energy} / ${R} / temperature)'
     expression = '${T2O_reaction_forward_value}'
   []
   [reaction_reverse_T2O]
@@ -663,8 +660,6 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
   [reaction_forward_T2]
     type = ADParsedMaterial
     property_name = 'T2_K_forward'
-    # coupled_variables = 'temperature'
-    # expression = '${T2_reaction_forward_value_pre} * exp( ${T2_reaction_forward_value_energy} / ${R} / temperature)'
     expression = '${T2_reaction_forward_value}'
   []
   [reaction_reverse_T2]
@@ -1091,9 +1086,7 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
   [csv]
     type = CSV
   []
-  # file_base = ${file_name}
   [exodus]
     type = Exodus
-    # enable = false
   []
 []
