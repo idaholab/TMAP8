@@ -145,7 +145,7 @@ For example, [ver-1ia](ver-1ia.md) considers the following reaction and model:
 
 !include /ver-1ia.md start=When two species react on a surface to form a third end=This case uses equal starting pressures
 
-### Surface energy-driven kinetics - Surfdep conditions
+### Surface-energy-driven kinetics - Surfdep conditions
 
 !style halign=left
 The `surfdep` condition applies when recombination is limited by surface energy.

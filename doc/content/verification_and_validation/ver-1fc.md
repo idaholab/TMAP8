@@ -38,8 +38,8 @@ At steady state, the flux in and out of any section of the slab are equal. The t
 
 The interface temperature at steady state is therefore equal to $T_I = 500$ K. The temperature profile for conduction in steady state, with constant physical properties, is linear. The temperature profile of A and B can therefore be found through linear interpolation.
 
-With TMAP8, the steady state solution can be obtained in different ways: by using the [steady state solve](source/executioners/Steady.md) or by running a [transient simulation](source/executioners/Transient.md) until steady state is reached.
-[!cite](ambrosek2008verification) indicates that the steady state solution was obtained by running the transient solution until $t=10,000$ s, which is what is reproduced with TMAP8 here.
+With TMAP8, the steady state solution can be obtained in different ways: by using the [steady-state solve](source/executioners/Steady.md) or by running a [transient simulation](source/executioners/Transient.md) until a steady state is reached.
+[!cite](ambrosek2008verification) indicates that the steady-state solution was obtained by running the transient solution until $t=10,000$ s, which is what is reproduced with TMAP8 here.
 TMAP8 predictions were found to be identical to the analytical solution with a root mean square percentage error (RMSPE) of 0.23 %, as shown in [ver-1fc_comparison_temperature_steady_state].
 
 !media comparison_ver-1fc.py

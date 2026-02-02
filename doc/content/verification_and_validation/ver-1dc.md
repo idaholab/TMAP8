@@ -62,7 +62,7 @@ Three traps that are relatively weak are assumed to be active in a slab. The tra
 \label{eqn:Jp}
     J_p = \frac{C_0 D}{l} \left\{ 1 + 2 \sum_{m=1}^{\infty} \left[ (-1)^m \exp \left( -m^2 \frac{t}{2 \; \tau_{b_e}} \right) \right] \right\},
 \end{equation}
-where $C_0$ is the steady dissolved gas concentration at the upstream ($x =$ 0) side, $l$ is the thickness of the slab, $D$ is the diffusivity of the gas through the material, and $\tau_{b_e}$, the breakthrough time, is defined as
+where $C_0$ is the steady dissolved gas concentration at the upstream ($x = 0$) side, $l$ is the thickness of the slab, $D$ is the diffusivity of the gas through the material, and $\tau_{b_e}$, the breakthrough time, is defined as
 
 \begin{equation}
 \label{eqn:tau_be}
