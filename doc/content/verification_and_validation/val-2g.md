@@ -211,8 +211,6 @@ To improve the agreement with experimental data, the model parameters were calib
 
 The calibrated parameters are listed in [val-2g_calibrated_diffusivity_parameters], [val-2g_calibrated_trapping_parameters], and [val-2g_calibrated_thermodynamic_parameters]. These calibrated parameters are taken directly from [!cite](yang2026elucidating), since the optimization performed in this validation case is a simplified version intended to verify that the optimization framework functions correctly.
 
-[val-2g_diffusivity_parameters] lists the calibrated diffusivity parameters.
-
 !table id=val-2g_calibrated_diffusivity_parameters caption=Calibrated diffusivity parameters.
 | Parameter | Description | Value | Units | Reference |
 | --------- | ----------- | ----- | ----- | --------- |
