@@ -486,13 +486,6 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
                   if(t<${dissolve_duration} + ${cooldown_duration}, ${pressure_T2O_high} - (1-exp(-(t - ${dissolve_duration} - ${cooldown_duration} + 1000)/10)) * ${fparse pressure_T2O_high - pressure_T2O_low},
                                                                     ${pressure_T2O_low}))'
   []
-  # [max_dt_size_function]
-  #   type = ParsedFunction
-  #   expression = 'if(t<${dissolve_duration} + 200,                      50,
-  #                 if(t<${dissolve_duration} + ${cooldown_duration} - 950, 10,
-  #                 if(t<${dissolve_duration} + ${cooldown_duration} - 10, 10,
-  #                 if(t<${dissolve_duration} + ${cooldown_duration} + 100, 10, 10))))'
-  # []
   [max_dt_size_function]
     type = ParsedFunction
     expression = 'if(t<${dissolve_duration} + 200,                      50,
@@ -1072,5 +1065,6 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
   []
   [exodus]
     type = Exodus
+    start_time = ${fparse dissolve_duration + cooldown_duration}
   []
 []

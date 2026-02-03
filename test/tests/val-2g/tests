@@ -2,54 +2,21 @@
   design = 'TrappingNodalKernel.md ReleasingNodalKernel.md'
   issues = '#349'
   validation = 'val-2g.md'
-  # Light tests (fast, coarse mesh)
-  [val-2g_no_trapping_initial_light_csv]
-    type = CSVDiff
-    input = 'parameters_no_trapping_initial_validation.params val-2g_trapping_initial_parameters.i'
-    cli_args = "edge_number=5 num_nodes=15 dissolve_duration='${units 60 s}' cooldown_duration='${units 60 s}' temperature_high='${units 400 K}' trapping_site_fraction_1=0 Outputs/file_base=val-2g_no_trapping_initial_light_out"
-    csvdiff = val-2g_no_trapping_initial_light_out.csv
-    requirement = 'The system shall be able to model deuterium transport in proton-conducting ceramics without trapping effects to generate CSV data for use in comparisons with the experimental data.'
-  []
-  [val-2g_no_trapping_initial_light_exodus]
-    type = Exodiff
-    input = 'parameters_no_trapping_initial_validation.params val-2g_trapping_initial_parameters.i'
-    cli_args = "edge_number=10 num_nodes=30 dissolve_duration='${units 60 s}' cooldown_duration='${units 60 s}' temperature_high='${units 400 K}' trapping_site_fraction_1=0 Outputs/file_base=val-2g_no_trapping_initial_light_out"
-    exodiff = val-2g_no_trapping_initial_light_out.e
-    prereq = val-2g_no_trapping_light_csv
-    should_execute = false # this test relies on the output files from val-2g_no_trapping_light_csv, so it shouldn't be run twice
-    requirement = 'The system shall be able to model deuterium transport in proton-conducting ceramics without trapping effects.'
-  []
   [val-2g_trapping_initial_light_csv]
     type = CSVDiff
-    input = 'parameters_trapping_initial_validation.params val-2g_trapping_initial_parameters.i'
-    cli_args = "edge_number=10 num_nodes=30 dissolve_duration='${units 60 s}' cooldown_duration='${units 60 s}' temperature_high='${units 400 K}' Outputs/file_base=val-2g_trapping_initial_light_out"
+    input = 'val-2g_trapping_light.i'
+    cli_args = "Outputs/file_base=val-2g_trapping_initial_light_out"
     csvdiff = val-2g_trapping_initial_light_out.csv
     requirement = 'The system shall be able to model deuterium transport in proton-conducting ceramics with trapping effects to generate CSV data for use in comparisons with the experimental data.'
   []
   [val-2g_trapping_initial_light_exodus]
     type = Exodiff
-    input = 'parameters_trapping_initial_validation.params val-2g_trapping_initial_parameters.i'
-    cli_args = "edge_number=10 num_nodes=30 dissolve_duration='${units 60 s}' cooldown_duration='${units 60 s}' temperature_high='${units 400 K}' Outputs/file_base=val-2g_trapping_initial_light_out"
+    input = 'val-2g_trapping_light.i'
+    cli_args = "Outputs/file_base=val-2g_trapping_initial_light_out"
     exodiff = val-2g_trapping_initial_light_out.e
     prereq = val-2g_trapping_initial_light_csv
     should_execute = false # this test relies on the output files from val-2g_trapping_initial_light_csv, so it shouldn't be run twice
     requirement = 'The system shall be able to model deuterium transport in proton-conducting ceramics with trapping effects.'
-  []
-  [val-2g_trapping_calibrated_light_csv]
-    type = CSVDiff
-    input = 'parameters_trapping_calibrated_validation.params val-2g_trapping_initial_parameters.i'
-    cli_args = "edge_number=10 num_nodes=30 dissolve_duration='${units 60 s}' cooldown_duration='${units 60 s}' temperature_high='${units 400 K}' Outputs/file_base=val-2g_trapping_calibrated_light_out"
-    csvdiff = val-2g_trapping_calibrated_light_out.csv
-    requirement = 'The system shall be able to model deuterium transport in proton-conducting ceramics with trapping effects using calibrated parameters to generate CSV data for use in comparisons with the experimental data.'
-  []
-  [val-2g_trapping_calibrated_light_exodus]
-    type = Exodiff
-    input = 'parameters_trapping_calibrated_validation.params val-2g_trapping_initial_parameters.i'
-    cli_args = "edge_number=10 num_nodes=30 dissolve_duration='${units 60 s}' cooldown_duration='${units 60 s}' temperature_high='${units 400 K}' Outputs/file_base=val-2g_trapping_calibrated_light_out"
-    exodiff = val-2g_trapping_calibrated_light_out.e
-    prereq = val-2g_trapping_calibrated_light_csv
-    should_execute = false # this test relies on the output files from val-2g_trapping_calibrated_light_csv, so it shouldn't be run twice
-    requirement = 'The system shall be able to model deuterium transport in proton-conducting ceramics with trapping effects using calibrated parameters.'
   []
   # Heavy tests
   [val-2g_no_trapping_initial_csv]
@@ -80,8 +47,8 @@
   [val-2g_pss_optimization]
     type = JSONDiff
     input = val-2g_main_PSS_trapping.i
-    # cli_args = "MultiApps/sub/cli_args='edge_number=100;num_nodes=250'"
-    jsondiff = both_cases_trapping.json
+    cli_args = "MultiApps/sub/cli_args='Postprocessors/max_time_step_size/function=100;edge_number=100;num_nodes=300'"
+    jsondiff = val-2g_PSS/both_cases_trapping.json
     abs_zero = 1e-8
     rel_err = 1e-5
     max_parallel = 1

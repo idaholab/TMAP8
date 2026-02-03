@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import gridspec
@@ -20,25 +22,6 @@ A = 7.7e-3 * 2.2e-3 # m
 
 #===============================================================================
 # Define methods
-
-def numerical_solution_on_experiment_input(experiment_input, tmap_input, tmap_output):
-    """interpolate numerical solution to the experimental time step
-
-    Args:
-        experiment_input (float, ndarray): experimental input data points
-        tmap_input (float, ndarray): numerical input data points
-        tmap_output (float, ndarray): numerical output data points
-
-    Returns:
-        float, ndarray: updated tmap_output based on the data points in experiment_input
-    """
-    new_tmap_output = np.zeros(len(experiment_input))
-    for i in range(len(experiment_input)):
-        left_limit = np.argwhere((np.diff(tmap_input < experiment_input[i])))[0][0]
-        right_limit = left_limit + 1
-        new_tmap_output[i] = (experiment_input[i] - tmap_input[left_limit]) / (tmap_input[right_limit] - tmap_input[left_limit]) * (tmap_output[right_limit] - tmap_output[left_limit]) + tmap_output[left_limit]
-    return new_tmap_output
-
 def read_csv_from_TMAP8(file_name, parameter_names):
     """Read simulation data in csv files from TMAP8
 
@@ -79,32 +62,40 @@ endtime = dissolve_duration + cooldown_duration + desorption_duration
 
 parameter_names = ['time','recombination_flux_T2O_dry_left','recombination_flux_T2_dry_left','recombination_flux_T2O_wet_left','recombination_flux_T2_wet_left','temperature_average', 'pressure_T2_average', 'pressure_T2O_average', 'RMSPE_T2O_dry', 'RMSPE_T2_dry', 'RMSPE_T2O_wet', 'RMSPE_T2_wet']
 
+# Cache index lookups for performance
+IDX_TIME = parameter_names.index('time')
+IDX_FLUX_T2_DRY = parameter_names.index('recombination_flux_T2_dry_left')
+IDX_FLUX_T2O_DRY = parameter_names.index('recombination_flux_T2O_dry_left')
+IDX_FLUX_T2_WET = parameter_names.index('recombination_flux_T2_wet_left')
+IDX_FLUX_T2O_WET = parameter_names.index('recombination_flux_T2O_wet_left')
+IDX_TEMP = parameter_names.index('temperature_average')
+
 file_name = './val-2g_no_trapping_initial_parameters.csv'
 simulation_results2 = read_csv_from_TMAP8(file_name, parameter_names) # read csv file
-simulation_results2[parameter_names.index('recombination_flux_T2_dry_left')] = simulation_results2[parameter_names.index('recombination_flux_T2_dry_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
-simulation_results2[parameter_names.index('recombination_flux_T2O_dry_left')] = simulation_results2[parameter_names.index('recombination_flux_T2O_dry_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
-simulation_results2[parameter_names.index('recombination_flux_T2O_wet_left')] = simulation_results2[parameter_names.index('recombination_flux_T2O_wet_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
-simulation_results2[parameter_names.index('recombination_flux_T2_wet_left')] = simulation_results2[parameter_names.index('recombination_flux_T2_wet_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
+simulation_results2[IDX_FLUX_T2_DRY] = simulation_results2[IDX_FLUX_T2_DRY] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
+simulation_results2[IDX_FLUX_T2O_DRY] = simulation_results2[IDX_FLUX_T2O_DRY] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
+simulation_results2[IDX_FLUX_T2O_WET] = simulation_results2[IDX_FLUX_T2O_WET] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
+simulation_results2[IDX_FLUX_T2_WET] = simulation_results2[IDX_FLUX_T2_WET] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
 
 file_name = './val-2g_trapping_initial_parameters.csv'
 simulation_results3 = read_csv_from_TMAP8(file_name, parameter_names) # read csv file
-simulation_results3[parameter_names.index('recombination_flux_T2_dry_left')] = simulation_results3[parameter_names.index('recombination_flux_T2_dry_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
-simulation_results3[parameter_names.index('recombination_flux_T2O_dry_left')] = simulation_results3[parameter_names.index('recombination_flux_T2O_dry_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
-simulation_results3[parameter_names.index('recombination_flux_T2O_wet_left')] = simulation_results3[parameter_names.index('recombination_flux_T2O_wet_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
-simulation_results3[parameter_names.index('recombination_flux_T2_wet_left')] = simulation_results3[parameter_names.index('recombination_flux_T2_wet_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
+simulation_results3[IDX_FLUX_T2_DRY] = simulation_results3[IDX_FLUX_T2_DRY] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
+simulation_results3[IDX_FLUX_T2O_DRY] = simulation_results3[IDX_FLUX_T2O_DRY] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
+simulation_results3[IDX_FLUX_T2O_WET] = simulation_results3[IDX_FLUX_T2O_WET] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
+simulation_results3[IDX_FLUX_T2_WET] = simulation_results3[IDX_FLUX_T2_WET] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
 
 file_name = './val-2g_trapping_calibrated.csv'
 simulation_results4 = read_csv_from_TMAP8(file_name, parameter_names) # read csv file
-simulation_results4[parameter_names.index('recombination_flux_T2_dry_left')] = simulation_results4[parameter_names.index('recombination_flux_T2_dry_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
-simulation_results4[parameter_names.index('recombination_flux_T2O_dry_left')] = simulation_results4[parameter_names.index('recombination_flux_T2O_dry_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
-simulation_results4[parameter_names.index('recombination_flux_T2O_wet_left')] = simulation_results4[parameter_names.index('recombination_flux_T2O_wet_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
-simulation_results4[parameter_names.index('recombination_flux_T2_wet_left')] = simulation_results4[parameter_names.index('recombination_flux_T2_wet_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
+simulation_results4[IDX_FLUX_T2_DRY] = simulation_results4[IDX_FLUX_T2_DRY] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
+simulation_results4[IDX_FLUX_T2O_DRY] = simulation_results4[IDX_FLUX_T2O_DRY] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
+simulation_results4[IDX_FLUX_T2O_WET] = simulation_results4[IDX_FLUX_T2O_WET] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
+simulation_results4[IDX_FLUX_T2_WET] = simulation_results4[IDX_FLUX_T2_WET] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
 
 # select only the simulation data for desorption
 start_time = 2 * 3600 # s
-chosen_matrix2 = simulation_results2[parameter_names.index('time')]>=start_time
-chosen_matrix3 = simulation_results3[parameter_names.index('time')]>=start_time
-chosen_matrix4 = simulation_results4[parameter_names.index('time')]>=start_time
+chosen_matrix2 = simulation_results2[IDX_TIME]>=start_time
+chosen_matrix3 = simulation_results3[IDX_TIME]>=start_time
+chosen_matrix4 = simulation_results4[IDX_TIME]>=start_time
 
 # ============================================================================ #
 # Extract BZY from experiments
@@ -131,36 +122,6 @@ experiment4_input = (experiment_results4[experiment_parameter_names.index('Time'
 experiment4_output = experiment_results4[experiment_parameter_names.index('Flux')]
 
 ################################################################################
-####################### Temperature and pressure history #######################
-################################################################################
-fig = plt.figure(figsize=[6.5, 5.5])
-gs = gridspec.GridSpec(1, 1)
-ax1 = fig.add_subplot(gs[0])
-ax1.plot(simulation_results2[parameter_names.index('time')],
-        simulation_results2[parameter_names.index('pressure_T2_average')], '-', label=rf"D$_2$ pressure", c='C0')
-ax1.plot(simulation_results2[parameter_names.index('time')],
-        simulation_results2[parameter_names.index('pressure_T2O_average')], '--', label=rf"D$_2$O pressure", c='C0')
-ax1.set_xlabel(u'Time (s)',fontsize=14)
-ax1.set_ylabel(u"Pressure (Pa)", color='C0',fontsize=14)
-ax1.set_yscale("log")
-ax1.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-ax1.minorticks_on()
-ax1.tick_params(axis='y', labelcolor='C0')
-
-ax2 = ax1.twinx()
-ax2.plot(simulation_results2[parameter_names.index('time')],
-        simulation_results2[parameter_names.index('temperature_average')], label=rf"temperature", c='C1')
-ax2.set_ylabel(u"Temperature (K)", color='C1',fontsize=14)
-ax2.tick_params(axis='y', labelcolor='C1')
-# add labels
-lines_1, labels_1 = ax1.get_legend_handles_labels()
-lines_2, labels_2 = ax2.get_legend_handles_labels()
-ax1.legend(lines_1 + lines_2, labels_1 + labels_2, loc='best',fontsize=14)
-ax1.set_xlim([0,np.max(simulation_results2[parameter_names.index('time')])])
-plt.savefig('./val-2g_environment_history.png', bbox_inches='tight', dpi=300)
-plt.close(fig)
-
-################################################################################
 ######################## Plot dry case from no trapping ########################
 ################################################################################
 fig = plt.figure(figsize=[6.5, 5.5])
@@ -168,10 +129,10 @@ gs = gridspec.GridSpec(1, 1)
 ax1 = fig.add_subplot(gs[0])
 ax1.plot(experiment_input,
         experiment_output, 's', label=rf"experiment: D from D$_2$", c='C0', markersize=3)
-ax1.plot(simulation_results2[parameter_names.index('temperature_average')][chosen_matrix2],
-        simulation_results2[parameter_names.index('recombination_flux_T2_dry_left')][chosen_matrix2] * A / N_A, label=rf"no trapping: D from D$_2$", c='C0')
-ax1.plot(simulation_results2[parameter_names.index('temperature_average')][chosen_matrix2],
-        simulation_results2[parameter_names.index('recombination_flux_T2O_dry_left')][chosen_matrix2] * A / N_A, label=rf"no trapping: D from D$_2$O", c='C1')
+ax1.plot(simulation_results2[IDX_TEMP][chosen_matrix2],
+        simulation_results2[IDX_FLUX_T2_DRY][chosen_matrix2] * A / N_A, label=rf"no trapping: D from D$_2$", c='C0')
+ax1.plot(simulation_results2[IDX_TEMP][chosen_matrix2],
+        simulation_results2[IDX_FLUX_T2O_DRY][chosen_matrix2] * A / N_A, label=rf"no trapping: D from D$_2$O", c='C1')
 ax1.plot(experiment2_input,
         experiment2_output, '.', label=rf"experiment: D from D$_2$O", c='C1')
 ax1.set_xlabel(u'Temperature (K)',fontsize=14)
@@ -181,22 +142,22 @@ ax1.minorticks_on()
 ax1.tick_params(axis='y')
 ax1.set_xlim([300,1400])
 ax1.set_ylim([0,1.55e-11])
-simulation_result2_temperature = simulation_results2[parameter_names.index('temperature_average')][chosen_matrix2]
-simulation_result2_flux = simulation_results2[parameter_names.index('recombination_flux_T2_dry_left')][chosen_matrix2]
+simulation_result2_temperature = simulation_results2[IDX_TEMP][chosen_matrix2]
+simulation_result2_flux = simulation_results2[IDX_FLUX_T2_DRY][chosen_matrix2]
 sorted_indices = np.argsort(simulation_result2_temperature)
 simulation_result2_temperature_order = simulation_result2_temperature[sorted_indices]
 simulation_result2_flux_order = simulation_result2_flux[sorted_indices]
-flux_trapping = numerical_solution_on_experiment_input(experiment_input,
+flux_trapping = np.interp(experiment_input,
                                                         simulation_result2_temperature_order,
                                                         simulation_result2_flux_order)
 RMSPE = np.sqrt(np.mean((flux_trapping * A / N_A - experiment_output)**2))/np.mean(experiment_output)*100
 ax1.text(380,1.0e-11, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',c='C0',fontsize=11)
-simulation_result2_temperature = simulation_results2[parameter_names.index('temperature_average')][chosen_matrix2]
-simulation_result2_flux = simulation_results2[parameter_names.index('recombination_flux_T2O_dry_left')][chosen_matrix2]
+simulation_result2_temperature = simulation_results2[IDX_TEMP][chosen_matrix2]
+simulation_result2_flux = simulation_results2[IDX_FLUX_T2O_DRY][chosen_matrix2]
 sorted_indices = np.argsort(simulation_result2_temperature)
 simulation_result2_temperature_order = simulation_result2_temperature[sorted_indices]
 simulation_result2_flux_order = simulation_result2_flux[sorted_indices]
-flux_trapping = numerical_solution_on_experiment_input(experiment2_input,
+flux_trapping = np.interp(experiment2_input,
                                                         simulation_result2_temperature_order,
                                                         simulation_result2_flux_order)
 RMSPE = np.sqrt(np.mean((flux_trapping * A / N_A - experiment2_output)**2))/np.mean(experiment2_output)*100
@@ -211,14 +172,14 @@ plt.close(fig)
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax1 = fig.add_subplot(gs[0])
-ax1.plot(simulation_results2[parameter_names.index('temperature_average')][chosen_matrix2],
-        simulation_results2[parameter_names.index('recombination_flux_T2O_wet_left')][chosen_matrix2] * A / N_A, label=rf"no trapping: D from D$_2$O", c='C1')
+ax1.plot(simulation_results2[IDX_TEMP][chosen_matrix2],
+        simulation_results2[IDX_FLUX_T2O_WET][chosen_matrix2] * A / N_A, label=rf"no trapping: D from D$_2$O", c='C1')
 ax1.plot(experiment4_input,
         experiment4_output, '.', label=rf"experiment: D from D$_2$O", c='C1')
 ax1.plot(experiment3_input,
         experiment3_output, 's', label=rf"experiment: D from D$_2$", c='C0', markersize=3)
-ax1.plot(simulation_results2[parameter_names.index('temperature_average')][chosen_matrix2],
-        simulation_results2[parameter_names.index('recombination_flux_T2_wet_left')][chosen_matrix2] * A / N_A, label=rf"no trapping: D from D$_2$", c='C0')
+ax1.plot(simulation_results2[IDX_TEMP][chosen_matrix2],
+        simulation_results2[IDX_FLUX_T2_WET][chosen_matrix2] * A / N_A, label=rf"no trapping: D from D$_2$", c='C0')
 ax1.set_xlabel(u'Temperature (K)',fontsize=14)
 ax1.set_ylabel(u"Deuterium flux (mol/s)",fontsize=14)
 ax1.set_xlim([300,1400])
@@ -226,22 +187,22 @@ ax1.set_ylim([0,2.2e-9])
 ax1.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 ax1.minorticks_on()
 ax1.tick_params(axis='y')
-simulation_result2_temperature = simulation_results2[parameter_names.index('temperature_average')][chosen_matrix2]
-simulation_result2_flux = simulation_results2[parameter_names.index('recombination_flux_T2_wet_left')][chosen_matrix2]
+simulation_result2_temperature = simulation_results2[IDX_TEMP][chosen_matrix2]
+simulation_result2_flux = simulation_results2[IDX_FLUX_T2_WET][chosen_matrix2]
 sorted_indices = np.argsort(simulation_result2_temperature)
 simulation_result2_temperature_order = simulation_result2_temperature[sorted_indices]
 simulation_result2_flux_order = simulation_result2_flux[sorted_indices]
-flux_trapping = numerical_solution_on_experiment_input(experiment3_input,
+flux_trapping = np.interp(experiment3_input,
                                                         simulation_result2_temperature_order,
                                                         simulation_result2_flux_order)
 RMSPE = np.sqrt(np.mean((flux_trapping * A / N_A - experiment3_output)**2))/np.mean(experiment3_output)*100
 ax1.text(380,0.5e-9, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',c='C0',fontsize=11)
-simulation_result2_temperature = simulation_results2[parameter_names.index('temperature_average')][chosen_matrix2]
-simulation_result2_flux = simulation_results2[parameter_names.index('recombination_flux_T2O_wet_left')][chosen_matrix2]
+simulation_result2_temperature = simulation_results2[IDX_TEMP][chosen_matrix2]
+simulation_result2_flux = simulation_results2[IDX_FLUX_T2O_WET][chosen_matrix2]
 sorted_indices = np.argsort(simulation_result2_temperature)
 simulation_result2_temperature_order = simulation_result2_temperature[sorted_indices]
 simulation_result2_flux_order = simulation_result2_flux[sorted_indices]
-flux_trapping = numerical_solution_on_experiment_input(experiment4_input,
+flux_trapping = np.interp(experiment4_input,
                                                         simulation_result2_temperature_order,
                                                         simulation_result2_flux_order)
 RMSPE = np.sqrt(np.mean((flux_trapping * A / N_A - experiment4_output)**2))/np.mean(experiment4_output)*100
@@ -258,10 +219,10 @@ gs = gridspec.GridSpec(1, 1)
 ax1 = fig.add_subplot(gs[0])
 ax1.plot(experiment_input,
         experiment_output, 's', label=rf"experiment: D from D$_2$", c='C0', markersize=3)
-ax1.plot(simulation_results3[parameter_names.index('temperature_average')][chosen_matrix3],
-        simulation_results3[parameter_names.index('recombination_flux_T2_dry_left')][chosen_matrix3] * A / N_A, label=rf"trapping: D from D$_2$", c='C0')
-ax1.plot(simulation_results3[parameter_names.index('temperature_average')][chosen_matrix3],
-        simulation_results3[parameter_names.index('recombination_flux_T2O_dry_left')][chosen_matrix3] * A / N_A, label=rf"trapping: D from D$_2$O", c='C1')
+ax1.plot(simulation_results3[IDX_TEMP][chosen_matrix3],
+        simulation_results3[IDX_FLUX_T2_DRY][chosen_matrix3] * A / N_A, label=rf"trapping: D from D$_2$", c='C0')
+ax1.plot(simulation_results3[IDX_TEMP][chosen_matrix3],
+        simulation_results3[IDX_FLUX_T2O_DRY][chosen_matrix3] * A / N_A, label=rf"trapping: D from D$_2$O", c='C1')
 ax1.plot(experiment2_input,
         experiment2_output, '.', label=rf"experiment: D from D$_2$O", c='C1')
 ax1.set_xlabel(u'Temperature (K)',fontsize=14)
@@ -269,22 +230,22 @@ ax1.set_ylabel(u"Deuterium flux (mol/s)",fontsize=14)
 ax1.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 ax1.minorticks_on()
 ax1.tick_params(axis='y')
-simulation_result3_temperature = simulation_results3[parameter_names.index('temperature_average')][chosen_matrix3]
-simulation_result3_flux = simulation_results3[parameter_names.index('recombination_flux_T2_dry_left')][chosen_matrix3]
+simulation_result3_temperature = simulation_results3[IDX_TEMP][chosen_matrix3]
+simulation_result3_flux = simulation_results3[IDX_FLUX_T2_DRY][chosen_matrix3]
 sorted_indices = np.argsort(simulation_result3_temperature)
 simulation_result3_temperature_order = simulation_result3_temperature[sorted_indices]
 simulation_result3_flux_order = simulation_result3_flux[sorted_indices]
-flux_trapping = numerical_solution_on_experiment_input(experiment_input,
+flux_trapping = np.interp(experiment_input,
                                                         simulation_result3_temperature_order,
                                                         simulation_result3_flux_order)
 RMSPE = np.sqrt(np.mean((flux_trapping * A / N_A - experiment_output)**2))/np.mean(experiment_output)*100
 ax1.text(350,1.0e-11, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',c='C0',fontsize=11)
-simulation_result3_temperature = simulation_results3[parameter_names.index('temperature_average')][chosen_matrix3]
-simulation_result3_flux = simulation_results3[parameter_names.index('recombination_flux_T2O_dry_left')][chosen_matrix3]
+simulation_result3_temperature = simulation_results3[IDX_TEMP][chosen_matrix3]
+simulation_result3_flux = simulation_results3[IDX_FLUX_T2O_DRY][chosen_matrix3]
 sorted_indices = np.argsort(simulation_result3_temperature)
 simulation_result3_temperature_order = simulation_result3_temperature[sorted_indices]
 simulation_result3_flux_order = simulation_result3_flux[sorted_indices]
-flux_trapping = numerical_solution_on_experiment_input(experiment2_input,
+flux_trapping = np.interp(experiment2_input,
                                                         simulation_result3_temperature_order,
                                                         simulation_result3_flux_order)
 RMSPE = np.sqrt(np.mean((flux_trapping * A / N_A - experiment2_output)**2))/np.mean(experiment2_output)*100
@@ -299,35 +260,35 @@ plt.close(fig)
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax1 = fig.add_subplot(gs[0])
-ax1.plot(simulation_results3[parameter_names.index('temperature_average')][chosen_matrix3],
-        simulation_results3[parameter_names.index('recombination_flux_T2O_wet_left')][chosen_matrix3] * A / N_A, label=rf"trapping: D from D$_2$O", c='C1')
+ax1.plot(simulation_results3[IDX_TEMP][chosen_matrix3],
+        simulation_results3[IDX_FLUX_T2O_WET][chosen_matrix3] * A / N_A, label=rf"trapping: D from D$_2$O", c='C1')
 ax1.plot(experiment4_input,
         experiment4_output, '.', label=rf"experiment: D from D$_2$O", c='C1')
 ax1.plot(experiment3_input,
         experiment3_output, 's', label=rf"experiment: D from D$_2$", c='C0', markersize=3)
-ax1.plot(simulation_results3[parameter_names.index('temperature_average')][chosen_matrix3],
-        simulation_results3[parameter_names.index('recombination_flux_T2_wet_left')][chosen_matrix3] * A / N_A, label=rf"trapping: D from D$_2$", c='C0')
+ax1.plot(simulation_results3[IDX_TEMP][chosen_matrix3],
+        simulation_results3[IDX_FLUX_T2_WET][chosen_matrix3] * A / N_A, label=rf"trapping: D from D$_2$", c='C0')
 ax1.set_xlabel(u'Temperature (K)',fontsize=14)
 ax1.set_ylabel(u"Deuterium flux (mol/s)",fontsize=14)
 ax1.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 ax1.minorticks_on()
 ax1.tick_params(axis='y')
-simulation_result3_temperature = simulation_results3[parameter_names.index('temperature_average')][chosen_matrix3]
-simulation_result3_flux = simulation_results3[parameter_names.index('recombination_flux_T2_wet_left')][chosen_matrix3]
+simulation_result3_temperature = simulation_results3[IDX_TEMP][chosen_matrix3]
+simulation_result3_flux = simulation_results3[IDX_FLUX_T2_WET][chosen_matrix3]
 sorted_indices = np.argsort(simulation_result3_temperature)
 simulation_result3_temperature_order = simulation_result3_temperature[sorted_indices]
 simulation_result3_flux_order = simulation_result3_flux[sorted_indices]
-flux_trapping = numerical_solution_on_experiment_input(experiment3_input,
+flux_trapping = np.interp(experiment3_input,
                                                         simulation_result3_temperature_order,
                                                         simulation_result3_flux_order)
 RMSPE = np.sqrt(np.mean((flux_trapping * A / N_A - experiment3_output)**2))/np.mean(experiment3_output)*100
 ax1.text(350,1.0e-9, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',c='C0',fontsize=11)
-simulation_result3_temperature = simulation_results3[parameter_names.index('temperature_average')][chosen_matrix3]
-simulation_result3_flux = simulation_results3[parameter_names.index('recombination_flux_T2O_wet_left')][chosen_matrix3]
+simulation_result3_temperature = simulation_results3[IDX_TEMP][chosen_matrix3]
+simulation_result3_flux = simulation_results3[IDX_FLUX_T2O_WET][chosen_matrix3]
 sorted_indices = np.argsort(simulation_result3_temperature)
 simulation_result3_temperature_order = simulation_result3_temperature[sorted_indices]
 simulation_result3_flux_order = simulation_result3_flux[sorted_indices]
-flux_trapping = numerical_solution_on_experiment_input(experiment4_input,
+flux_trapping = np.interp(experiment4_input,
                                                         simulation_result3_temperature_order,
                                                         simulation_result3_flux_order)
 RMSPE = np.sqrt(np.mean((flux_trapping * A / N_A - experiment4_output)**2))/np.mean(experiment4_output)*100
@@ -344,10 +305,10 @@ gs = gridspec.GridSpec(1, 1)
 ax1 = fig.add_subplot(gs[0])
 ax1.plot(experiment_input,
         experiment_output, 's', label="experiment: D from D2", c='C0', markersize=3)
-ax1.plot(simulation_results4[parameter_names.index('temperature_average')][chosen_matrix4],
-        simulation_results4[parameter_names.index('recombination_flux_T2_dry_left')][chosen_matrix4] * A / N_A, label=rf"trapping: D from D$_2$", c='C0')
-ax1.plot(simulation_results4[parameter_names.index('temperature_average')][chosen_matrix4],
-        simulation_results4[parameter_names.index('recombination_flux_T2O_dry_left')][chosen_matrix4] * A / N_A, label=rf"trapping: D from D$_2$O", c='C1')
+ax1.plot(simulation_results4[IDX_TEMP][chosen_matrix4],
+        simulation_results4[IDX_FLUX_T2_DRY][chosen_matrix4] * A / N_A, label=rf"trapping: D from D$_2$", c='C0')
+ax1.plot(simulation_results4[IDX_TEMP][chosen_matrix4],
+        simulation_results4[IDX_FLUX_T2O_DRY][chosen_matrix4] * A / N_A, label=rf"trapping: D from D$_2$O", c='C1')
 ax1.plot(experiment2_input,
         experiment2_output, '.', label="experiment: D from D2O", c='C1')
 ax1.set_xlabel(u'Temperature (K)',fontsize=14)
@@ -358,22 +319,22 @@ ax1.set_ylim(bottom=0)
 ax1.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 ax1.minorticks_on()
 ax1.tick_params(axis='y')
-simulation_result4_temperature = simulation_results4[parameter_names.index('temperature_average')][chosen_matrix4]
-simulation_result4_flux = simulation_results4[parameter_names.index('recombination_flux_T2_dry_left')][chosen_matrix4]
+simulation_result4_temperature = simulation_results4[IDX_TEMP][chosen_matrix4]
+simulation_result4_flux = simulation_results4[IDX_FLUX_T2_DRY][chosen_matrix4]
 sorted_indices = np.argsort(simulation_result4_temperature)
 simulation_result4_temperature_order = simulation_result4_temperature[sorted_indices]
 simulation_result4_flux_order = simulation_result4_flux[sorted_indices]
-flux_trapping = numerical_solution_on_experiment_input(experiment_input,
+flux_trapping = np.interp(experiment_input,
                                                         simulation_result4_temperature_order,
                                                         simulation_result4_flux_order)
 RMSPE = np.sqrt(np.mean((flux_trapping * A / N_A - experiment_output)**2))/np.mean(experiment_output)*100
 ax1.text(380,1.0e-11, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',c='C0',fontsize=11)
-simulation_result4_temperature = simulation_results4[parameter_names.index('temperature_average')][chosen_matrix4]
-simulation_result4_flux = simulation_results4[parameter_names.index('recombination_flux_T2O_dry_left')][chosen_matrix4]
+simulation_result4_temperature = simulation_results4[IDX_TEMP][chosen_matrix4]
+simulation_result4_flux = simulation_results4[IDX_FLUX_T2O_DRY][chosen_matrix4]
 sorted_indices = np.argsort(simulation_result4_temperature)
 simulation_result4_temperature_order = simulation_result4_temperature[sorted_indices]
 simulation_result4_flux_order = simulation_result4_flux[sorted_indices]
-flux_trapping = numerical_solution_on_experiment_input(experiment2_input,
+flux_trapping = np.interp(experiment2_input,
                                                         simulation_result4_temperature_order,
                                                         simulation_result4_flux_order)
 RMSPE = np.sqrt(np.mean((flux_trapping * A / N_A - experiment2_output)**2))/np.mean(experiment2_output)*100
@@ -388,14 +349,14 @@ plt.close(fig)
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax1 = fig.add_subplot(gs[0])
-ax1.plot(simulation_results4[parameter_names.index('temperature_average')][chosen_matrix4],
-        simulation_results4[parameter_names.index('recombination_flux_T2O_wet_left')][chosen_matrix4] * A / N_A, label=rf"trapping: D from D$_2$O", c='C1')
+ax1.plot(simulation_results4[IDX_TEMP][chosen_matrix4],
+        simulation_results4[IDX_FLUX_T2O_WET][chosen_matrix4] * A / N_A, label=rf"trapping: D from D$_2$O", c='C1')
 ax1.plot(experiment4_input,
         experiment4_output, '.', label="experiment: D from D2O", c='C1')
 ax1.plot(experiment3_input,
         experiment3_output, 's', label="experiment: D from D2", c='C0', markersize=3)
-ax1.plot(simulation_results4[parameter_names.index('temperature_average')][chosen_matrix4],
-        simulation_results4[parameter_names.index('recombination_flux_T2_wet_left')][chosen_matrix4] * A / N_A, label=rf"trapping: D from D$_2$", c='C0')
+ax1.plot(simulation_results4[IDX_TEMP][chosen_matrix4],
+        simulation_results4[IDX_FLUX_T2_WET][chosen_matrix4] * A / N_A, label=rf"trapping: D from D$_2$", c='C0')
 ax1.set_xlabel(u'Temperature (K)',fontsize=14)
 ax1.set_ylabel(u"Deuterium flux (mol/s)",fontsize=14)
 ax1.set_xlim([300,1400])
@@ -404,22 +365,22 @@ ax1.set_ylim([0,2.4e-9])
 ax1.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 ax1.minorticks_on()
 ax1.tick_params(axis='y')
-simulation_result4_temperature = simulation_results4[parameter_names.index('temperature_average')][chosen_matrix4]
-simulation_result4_flux = simulation_results4[parameter_names.index('recombination_flux_T2_wet_left')][chosen_matrix4]
+simulation_result4_temperature = simulation_results4[IDX_TEMP][chosen_matrix4]
+simulation_result4_flux = simulation_results4[IDX_FLUX_T2_WET][chosen_matrix4]
 sorted_indices = np.argsort(simulation_result4_temperature)
 simulation_result4_temperature_order = simulation_result4_temperature[sorted_indices]
 simulation_result4_flux_order = simulation_result4_flux[sorted_indices]
-flux_trapping = numerical_solution_on_experiment_input(experiment3_input,
+flux_trapping = np.interp(experiment3_input,
                                                         simulation_result4_temperature_order,
                                                         simulation_result4_flux_order)
 RMSPE = np.sqrt(np.mean((flux_trapping * A / N_A - experiment3_output)**2))/np.mean(experiment3_output)*100
 ax1.text(380,0.5e-9, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold',c='C0',fontsize=11)
-simulation_result4_temperature = simulation_results4[parameter_names.index('temperature_average')][chosen_matrix4]
-simulation_result4_flux = simulation_results4[parameter_names.index('recombination_flux_T2O_wet_left')][chosen_matrix4]
+simulation_result4_temperature = simulation_results4[IDX_TEMP][chosen_matrix4]
+simulation_result4_flux = simulation_results4[IDX_FLUX_T2O_WET][chosen_matrix4]
 sorted_indices = np.argsort(simulation_result4_temperature)
 simulation_result4_temperature_order = simulation_result4_temperature[sorted_indices]
 simulation_result4_flux_order = simulation_result4_flux[sorted_indices]
-flux_trapping = numerical_solution_on_experiment_input(experiment4_input,
+flux_trapping = np.interp(experiment4_input,
                                                         simulation_result4_temperature_order,
                                                         simulation_result4_flux_order)
 RMSPE = np.sqrt(np.mean((flux_trapping * A / N_A - experiment4_output)**2))/np.mean(experiment4_output)*100
@@ -432,16 +393,16 @@ plt.close(fig)
 ######################### Extract json file information ########################
 ################################################################################
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-    file = f"../../../../test/tests/val-2g/gold/both_cases_trapping.json"
+    file = f"../../../../test/tests/val-2g/gold/val-2g_PSS/both_cases_trapping.json"
 else:                                  # if in test folder
-    file = f"./gold/both_cases_trapping.json"
+    file = f"./gold/val-2g_PSS/both_cases_trapping.json"
 num_iter = 10
 parallel_props = 1
 dim = 18
 num_cases = num_iter * parallel_props
 
-f = open(file,)
-data = json.load(f)
+with open(file) as f:
+    data = json.load(f)
 inputs = np.zeros((num_iter,dim,parallel_props))
 obj_values = np.zeros((num_iter,parallel_props))
 for ii in np.arange(1,num_iter+1,1):
