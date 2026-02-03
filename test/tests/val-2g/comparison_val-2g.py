@@ -432,9 +432,9 @@ plt.close(fig)
 ######################### Extract json file information ########################
 ################################################################################
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-    file = f"../../../../test/tests/val-2g/gold/both_cases_trapping.json"
+    file = f"../../../../test/tests/val-2g/gold/val-2g_PSS/both_cases_trapping.json"
 else:                                  # if in test folder
-    file = f"./gold/both_cases_trapping.json"
+    file = f"./gold/val-2g_PSS/both_cases_trapping.json"
 num_iter = 10
 parallel_props = 1
 dim = 18
