@@ -16,7 +16,7 @@ The rise in pressure of T$_2$ molecules in the first enclosure can be monitored 
 \end{equation}
 
 where $S$ represents the volumetric T$_2$ source rate, $V$ is the volume of the enclosure, $k$ is the Boltzmann constant, and $T$ is the temperature of the enclosure.
-In this case, $S$ is set to 10$^{20}$ molecules/m$^{-3}$/s, $V = 1$ m$^3$, and the temperature of the enclosure is constant at $T = 500$ K.
+In this case, $S$ is set to 10$^{20}$ molecules/m$^{3}$/s, $V = 1$ m$^3$, and the temperature of the enclosure is constant at $T = 500$ K.
 
 ## Analytical Solution
 
@@ -35,7 +35,7 @@ Comparison of the TMAP8 results and the analytical solution is shown in
        image_name=ver-1ka_comparison_time.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1ka_comparison_time
-       caption=Comparison of T$_2$ partial pressure in an enclosure with no loss pathways as function of time calculated through TMAP8 and analytically. TMAP8 matches the analytical solution.
+       caption=Comparison of T$_2$ partial pressure in an enclosure with no loss pathways as a function of time, calculated through TMAP8 and analytically. TMAP8 matches the analytical solution.
 
 ## Input files
 

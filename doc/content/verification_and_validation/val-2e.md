@@ -87,7 +87,7 @@ C_i = K_s P_{Ij}^{n},
 
 where $K_s$ is the solubility of hydrogen isotope in the membrane, and $n$ is the exponent for the relation of pressure and concentration.
 
-However, for the kinetics of surface reactions to be captured, the boundary conditions is set as
+However, for the kinetics of surface reactions to be captured, the boundary conditions are set as
 
 \begin{equation} \label{eq:recombination}
 J_{ij} = 2 A (K_r C_i^2 - K_d P_{Ij}),
@@ -118,7 +118,7 @@ $T$ are the temperature.
 
 ## Case and Model Parameters
 
-The pressure history of deuterium on the enclosure 5 for first three simulations (val-2ea, val-2eb, and val-2ec) is presented in [val-2e_abc_pressure_history], as shown in [val-2e_comparison_pressure_history]. The initial pressures on other enclosures are presented in [val-2e_abc_pressure_initial].
+The pressure history of deuterium in enclosure 5 for the first three simulations (val-2ea, val-2eb, and val-2ec) is presented in [val-2e_abc_pressure_history], as shown in [val-2e_comparison_pressure_history]. The initial pressures on other enclosures are presented in [val-2e_abc_pressure_initial].
 
 !table id=val-2e_abc_pressure_history caption=Values of deuterium pressure on enclosure 5 during simulations val-2ea, val-2eb, and val-2ec [!citep](ambrosek2008verification).
 | time (s)      | Pressure $P_{D_2,5}$ (Pa)      |
@@ -152,7 +152,7 @@ The pressure history of deuterium on the enclosure 5 for first three simulations
 | $P_{D_2,3}$ | Deuterium pressure in enclosure 3    | 1 $\times 10^{-6}$                                          | Pa                    |
 | $P_{D_2,4}$ | Deuterium pressure in enclosure 4    | 1 $\times 10^{-10}$                                         | Pa                    |
 
-The pressure history of D$_2$ on the enclosure 5 for next two simulations (val-2ed and val-2ee) is presented in [val-2e_de_pressure_history], as shown in [val-2e_comparison_mixture_pressure_history]. The initial pressures on other enclosures are presented in [val-2e_de_pressure_initial].
+The pressure history of D$_2$ in enclosure 5 for the next two simulations (val-2ed and val-2ee) is presented in [val-2e_de_pressure_history], as shown in [val-2e_comparison_mixture_pressure_history]. The initial pressures on other enclosures are presented in [val-2e_de_pressure_initial].
 
 !table id=val-2e_de_pressure_history caption=Values of deuterium pressure on enclosure 5 during simulations val-2ed and val-2ee [!citep](ambrosek2008verification).
 | time (s)      | Pressure $P_{D_2,5}$ (Pa)      |
@@ -192,7 +192,7 @@ The pressure history of D$_2$ on the enclosure 5 for next two simulations (val-2
 
 
 !alert note title=Updates of times and initial pressures in val-2ee to be consistent with val-2ed.
-In [!cite](ambrosek2008verification), the times and initial pressures in val-2ee are different from the values used in val-2ed. However, we use the same values from val-2ed in val-2ee for consistency. The trivial difference in times and initial pressures do not impact the final results.
+In [!cite](ambrosek2008verification), the times and initial pressures in val-2ee are different from the values used in val-2ed. However, we use the same values from val-2ed in val-2ee for consistency. The trivial differences in times and initial pressures do not impact the final results.
 
 Other case and model parameters used in TMAP8 are listed in [val-2e_parameters]:
 
@@ -223,7 +223,7 @@ Other case and model parameters used in TMAP8 are listed in [val-2e_parameters]:
 | $K_{d,HD}$ | HD dissociation coefficient | 2.1897$\times 10^{22} / \sqrt{3T}$     | molecular/m$^2$/Pa              | [!cite](ambrosek2008verification) |
 
 !alert warning title=Typo in [!cite](ambrosek2008verification)
-There are typos on the equations for hydrogen diffusivity, recombination and dissociation coefficients in the input files from TMAP7 in val-2ed and val-2ee. The correct values are provided in [val-2e_parameters] and used in TMAP8. The pre-factor for hydrogen diffusivity used in TMAP8 is 3.728 $\times 10^{-4}$ m$^2$/s instead of 2.636 $\times 10^{-4}$ m$^2$/s as used in the input file published in [!cite](ambrosek2008verification). The activation energy for recombination coefficient used in TMAP8 is -11836 K (making the term in the exponential positive) instead of the 11836 K value used in the input file in [!cite](ambrosek2008verification) - note that the value listed in Eq. (71) in [!cite](ambrosek2008verification) is correct. The values of the species molecular weight in amu are also updated from the input files shown in [!cite](ambrosek2008verification).
+There are typos in the equations for hydrogen diffusivity, recombination and dissociation coefficients in the input files from TMAP7 in val-2ed and val-2ee. The correct values are provided in [val-2e_parameters] and used in TMAP8. The pre-factor for hydrogen diffusivity used in TMAP8 is 3.728 $\times 10^{-4}$ m$^2$/s instead of 2.636 $\times 10^{-4}$ m$^2$/s as used in the input file published in [!cite](ambrosek2008verification). The activation energy for recombination coefficient used in TMAP8 is -11836 K (making the term in the exponential positive) instead of the 11836 K value used in the input file in [!cite](ambrosek2008verification) - note that the value listed in Eq. (71) in [!cite](ambrosek2008verification) is correct. The values of the species molecular weight in amu are also updated from the input files shown in [!cite](ambrosek2008verification).
 
 !alert warning title=Solubility values for val-2ea, val-2eb, val-2ec differ from those for val-2ed, val-2ee
 To achieve a lower RMSPE in [val-2e_comparison_diffusion], the solubility values for val-2ea, val-2eb, and val-2ec were taken from the simulation input files in [!cite](ambrosek2008verification), rather than using the values provided in the documentation in [!cite](ambrosek2008verification).

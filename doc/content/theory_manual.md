@@ -110,7 +110,7 @@ At surfaces, atoms and molecules go through dissociations and recombinations, wh
 There are two main dissociation/recombination conditions that TMAP7 offered, namely `ratedep` and `surfdep`.
 These cases are both reproduced in TMAP8 in a more general way, and are detailed below:
 
-### Ratedep conditions
+### Dissociation and recombination reaction kinetics - Ratedep conditions
 
 !style halign=left
 The `ratedep` condition applies when dissociation and recombination reaction kinetics govern the surface reactions [!cite](ambrosek2008verification).
@@ -145,7 +145,7 @@ For example, [ver-1ia](ver-1ia.md) considers the following reaction and model:
 
 !include /ver-1ia.md start=When two species react on a surface to form a third end=This case uses equal starting pressures
 
-### Surfdep conditions
+### Surface-energy-driven kinetics - Surfdep conditions
 
 !style halign=left
 The `surfdep` condition applies when recombination is limited by surface energy.
@@ -169,7 +169,7 @@ For example, [ver-1ic](ver-1ic.md) considers the following reaction and model:
 
 !include /ver-1ic.md start=The problem considers the reaction between end=This case uses equal starting pressures
 
-## Surface Equilibrium
+### Surface Equilibrium - Lawdep conditions
 
 !style halign=left
 Both conditions described capture dissociation and recombination reactions, including their kinetics.
