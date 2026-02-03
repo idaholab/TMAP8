@@ -1,6 +1,4 @@
 detrapping_energy_1_ev = 1.60
-trapping_site_fraction_1_expo = -5
-trapping_site_fraction_1 = 0
 trapping_rate_prefactor_expo = 11
 release_rate_profactor_expo = 14
 trapping_energy_ev = 0.38

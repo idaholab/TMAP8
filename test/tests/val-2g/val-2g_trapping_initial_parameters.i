@@ -1,5 +1,3 @@
-!include parameters_trapping_initial_validation.params
-
 # Physical constants
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
 eV_to_J = '${units 1.602176634e-19 eV/J}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
@@ -676,7 +674,6 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
     property_name = 'flux_base_on_T2_dry'
     material_property_names = 'T2_K_forward T2_K_reverse'
     expression = '(T2_K_forward * pressure_T2_dry * Oxygen_concentration_dry^2 - T2_K_reverse * OT_concentration_dry^2 * electron_concentration_dry^2)'
-    output_properties = flux_base_on_T2_dry
   []
   [flux_base_on_T2O_dry] # T2O + V_O + O -> 2 OT
     type = ADDerivativeParsedMaterial
@@ -684,7 +681,6 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
     property_name = 'flux_base_on_T2O_dry'
     material_property_names = 'T2O_K_forward T2O_K_reverse'
     expression = '(T2O_K_forward * ${pressure_T2O_dry} * Oxygen_concentration_dry * Oxygen_vacancy_concentration_dry - T2O_K_reverse * OT_concentration_dry^2)'
-    output_properties = flux_base_on_T2O_dry
   []
   #### Reaction for wet
   [flux_base_on_T2O_wet] # T2O + V_O + O -> 2 OT
@@ -693,7 +689,6 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
     property_name = 'flux_base_on_T2O_wet'
     material_property_names = 'T2O_K_forward T2O_K_reverse'
     expression = '(T2O_K_forward * pressure_T2O_wet * Oxygen_concentration_wet * Oxygen_vacancy_concentration_wet - T2O_K_reverse * OT_concentration_wet^2)'
-    output_properties = flux_base_on_T2O_wet
   []
   [flux_base_on_T2_wet] # T2 + 2 O -> 2 OT + 2 e
     type = ADDerivativeParsedMaterial
@@ -701,7 +696,6 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
     property_name = 'flux_base_on_T2_wet'
     material_property_names = 'T2_K_forward T2_K_reverse'
     expression = '(T2_K_forward * ${pressure_T2_wet} * Oxygen_concentration_wet^2 - T2_K_reverse * OT_concentration_wet^2 * electron_concentration_wet^2)'
-    output_properties = flux_base_on_T2_wet
   []
 
   #### Flux for dry
@@ -710,35 +704,30 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
     property_name = 'flux_on_e_dry'
     material_property_names = 'flux_base_on_T2_dry'
     expression = '2 * flux_base_on_T2_dry'
-    output_properties = flux_on_e_dry
   []
   [flux_on_OT_dry] # OT
     type = ADDerivativeParsedMaterial
     property_name = 'flux_on_OT_dry'
     material_property_names = 'flux_base_on_T2_dry flux_base_on_T2O_dry'
     expression = '2 * flux_base_on_T2_dry + 2 * flux_base_on_T2O_dry'
-    output_properties = flux_on_OT_dry
   []
   [flux_on_T2_dry] # T2
     type = ADDerivativeParsedMaterial
     property_name = 'flux_on_T2_dry'
     material_property_names = 'flux_base_on_T2_dry'
     expression = '-1 * flux_base_on_T2_dry'
-    output_properties = flux_on_T2_dry
   []
   [flux_on_V_O_dry] # V_O
     type = ADDerivativeParsedMaterial
     property_name = 'flux_on_V_O_dry'
     material_property_names = 'flux_base_on_T2O_dry'
     expression = '-1 * flux_base_on_T2O_dry'
-    output_properties = flux_on_V_O_dry
   []
   [flux_on_T2O_dry] # T2O
     type = ADDerivativeParsedMaterial
     property_name = 'flux_on_T2O_dry'
     material_property_names = 'flux_base_on_T2O_dry'
     expression = '-1 * flux_base_on_T2O_dry'
-    output_properties = flux_on_T2O_dry
   []
   #### Flux for wet
   [flux_on_e_wet] # electron
@@ -746,35 +735,30 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
     property_name = 'flux_on_e_wet'
     material_property_names = 'flux_base_on_T2_wet'
     expression = '2 * flux_base_on_T2_wet'
-    output_properties = flux_on_e_wet
   []
   [flux_on_OT_wet] # OT
     type = ADDerivativeParsedMaterial
     property_name = 'flux_on_OT_wet'
     material_property_names = 'flux_base_on_T2O_wet'
     expression = '2 * flux_base_on_T2O_wet'
-    output_properties = flux_on_OT_wet
   []
   [flux_on_T2_wet] # T2
     type = ADDerivativeParsedMaterial
     property_name = 'flux_on_T2_wet'
     material_property_names = 'flux_base_on_T2_wet'
     expression = '-1 * flux_base_on_T2_wet'
-    output_properties = flux_on_T2_wet
   []
   [flux_on_V_O_wet] # V_O
     type = ADDerivativeParsedMaterial
     property_name = 'flux_on_V_O_wet'
     material_property_names = 'flux_base_on_T2O_wet'
     expression = '-1 * flux_base_on_T2O_wet'
-    output_properties = flux_on_V_O_wet
   []
   [flux_on_T2O_wet] # T2O
     type = ADDerivativeParsedMaterial
     property_name = 'flux_on_T2O_wet'
     material_property_names = 'flux_base_on_T2O_wet'
     expression = '-1 * flux_base_on_T2O_wet'
-    output_properties = flux_on_T2O_wet
   []
 []
 

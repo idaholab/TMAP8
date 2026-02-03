@@ -267,9 +267,7 @@ This validation demonstrates TMAP8's capability to model hydrogen isotope transp
 !style halign=left
 The input files for this validation case are:
 
-- [/val-2g_no_trapping_initial_parameters.i]: Simulates deuterium transport without trapping effects using initial literature parameters.
-- [/val-2g_trapping_initial_parameters.i]: Simulates deuterium transport with trapping effects using initial literature parameters.
-- [/val-2g_trapping_calibrated.i]: Simulates deuterium transport with trapping effects using calibrated parameters from the PSS optimization.
+- [/val-2g_trapping_initial_parameters.i]: Simulates deuterium transport with and without trapping effects using corresponding parameters. [/parameters_no_trapping_initial_validation.params] includes the initial parameters for simulation without trapping, [/parameters_trapping_initial_validation.params] includes the initial parameters for simulation with trapping, and [/parameters_trapping_calibrated_validation.params] includes the calibrated parameters for simulation with trapping.
 - [/val-2g_main_PSS_trapping.i]: Performs the Parallel Subset Simulation optimization study to calibrate model parameters.
 
 The test suite includes both light tests (using a coarser mesh and shorter simulation duration of 60 seconds for dissolution and cooldown phases) for routine verification, and heavy tests (using the full mesh resolution and 1-hour durations) for comprehensive validation. More information about the test configurations can be found in the test specification file [/val-2g/tests].

@@ -60,7 +60,6 @@ def read_csv_from_TMAP8(file_name, parameter_names):
     simulation_results = np.array(simulation_results)
     return simulation_results
 
-
 ################################################################################
 ############################## Result Extraction ###############################
 ################################################################################
@@ -80,27 +79,26 @@ endtime = dissolve_duration + cooldown_duration + desorption_duration
 
 parameter_names = ['time','recombination_flux_T2O_dry_left','recombination_flux_T2_dry_left','recombination_flux_T2O_wet_left','recombination_flux_T2_wet_left','temperature_average', 'pressure_T2_average', 'pressure_T2O_average', 'RMSPE_T2O_dry', 'RMSPE_T2_dry', 'RMSPE_T2O_wet', 'RMSPE_T2_wet']
 
-file_name = './val-2g_no_trapping_initial_parameters_csv.csv'
+file_name = './val-2g_no_trapping_initial_parameters.csv'
 simulation_results2 = read_csv_from_TMAP8(file_name, parameter_names) # read csv file
 simulation_results2[parameter_names.index('recombination_flux_T2_dry_left')] = simulation_results2[parameter_names.index('recombination_flux_T2_dry_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
 simulation_results2[parameter_names.index('recombination_flux_T2O_dry_left')] = simulation_results2[parameter_names.index('recombination_flux_T2O_dry_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
 simulation_results2[parameter_names.index('recombination_flux_T2O_wet_left')] = simulation_results2[parameter_names.index('recombination_flux_T2O_wet_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
 simulation_results2[parameter_names.index('recombination_flux_T2_wet_left')] = simulation_results2[parameter_names.index('recombination_flux_T2_wet_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
 
-file_name = './val-2g_trapping_initial_parameters_csv.csv'
+file_name = './val-2g_trapping_initial_parameters.csv'
 simulation_results3 = read_csv_from_TMAP8(file_name, parameter_names) # read csv file
 simulation_results3[parameter_names.index('recombination_flux_T2_dry_left')] = simulation_results3[parameter_names.index('recombination_flux_T2_dry_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
 simulation_results3[parameter_names.index('recombination_flux_T2O_dry_left')] = simulation_results3[parameter_names.index('recombination_flux_T2O_dry_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
 simulation_results3[parameter_names.index('recombination_flux_T2O_wet_left')] = simulation_results3[parameter_names.index('recombination_flux_T2O_wet_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
 simulation_results3[parameter_names.index('recombination_flux_T2_wet_left')] = simulation_results3[parameter_names.index('recombination_flux_T2_wet_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
 
-file_name = './val-2g_trapping_calibrated_csv.csv'
+file_name = './val-2g_trapping_calibrated.csv'
 simulation_results4 = read_csv_from_TMAP8(file_name, parameter_names) # read csv file
 simulation_results4[parameter_names.index('recombination_flux_T2_dry_left')] = simulation_results4[parameter_names.index('recombination_flux_T2_dry_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
 simulation_results4[parameter_names.index('recombination_flux_T2O_dry_left')] = simulation_results4[parameter_names.index('recombination_flux_T2O_dry_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
 simulation_results4[parameter_names.index('recombination_flux_T2O_wet_left')] = simulation_results4[parameter_names.index('recombination_flux_T2O_wet_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
 simulation_results4[parameter_names.index('recombination_flux_T2_wet_left')] = simulation_results4[parameter_names.index('recombination_flux_T2_wet_left')] * 1e12 * 2 # atoms/mum^2/s -> atoms/m^2/s
-
 
 # select only the simulation data for desorption
 start_time = 2 * 3600 # s
@@ -135,7 +133,6 @@ experiment4_output = experiment_results4[experiment_parameter_names.index('Flux'
 ################################################################################
 ####################### Temperature and pressure history #######################
 ################################################################################
-
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax1 = fig.add_subplot(gs[0])
@@ -160,15 +157,12 @@ lines_1, labels_1 = ax1.get_legend_handles_labels()
 lines_2, labels_2 = ax2.get_legend_handles_labels()
 ax1.legend(lines_1 + lines_2, labels_1 + labels_2, loc='best',fontsize=14)
 ax1.set_xlim([0,np.max(simulation_results2[parameter_names.index('time')])])
-
 plt.savefig('./val-2g_environment_history.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
-
 
 ################################################################################
 ######################## Plot dry case from no trapping ########################
 ################################################################################
-
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax1 = fig.add_subplot(gs[0])
@@ -211,24 +205,20 @@ plt.legend(fontsize=12)
 plt.savefig('./val-2g_dry_no_trapping_flux_comparison.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 
-
 ################################################################################
 ######################## Plot wet case from no trapping ########################
 ################################################################################
-
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax1 = fig.add_subplot(gs[0])
 ax1.plot(simulation_results2[parameter_names.index('temperature_average')][chosen_matrix2],
         simulation_results2[parameter_names.index('recombination_flux_T2O_wet_left')][chosen_matrix2] * A / N_A, label=rf"no trapping: D from D$_2$O", c='C1')
-print(f"wet D2O peak: {np.max(simulation_results2[parameter_names.index('recombination_flux_T2O_wet_left')][chosen_matrix2] * A / N_A)}")
 ax1.plot(experiment4_input,
         experiment4_output, '.', label=rf"experiment: D from D$_2$O", c='C1')
 ax1.plot(experiment3_input,
         experiment3_output, 's', label=rf"experiment: D from D$_2$", c='C0', markersize=3)
 ax1.plot(simulation_results2[parameter_names.index('temperature_average')][chosen_matrix2],
         simulation_results2[parameter_names.index('recombination_flux_T2_wet_left')][chosen_matrix2] * A / N_A, label=rf"no trapping: D from D$_2$", c='C0')
-print(f"wet D2 peak: {np.max(simulation_results2[parameter_names.index('recombination_flux_T2_wet_left')][chosen_matrix2] * A / N_A)}")
 ax1.set_xlabel(u'Temperature (K)',fontsize=14)
 ax1.set_ylabel(u"Deuterium flux (mol/s)",fontsize=14)
 ax1.set_xlim([300,1400])
@@ -260,11 +250,9 @@ plt.legend(fontsize=12)
 plt.savefig('./val-2g_wet_no_trapping_flux_comparison.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 
-
 ################################################################################
 ######################## Plot dry case from trapping ########################
 ################################################################################
-
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax1 = fig.add_subplot(gs[0])
@@ -305,24 +293,20 @@ plt.legend(fontsize=12)
 plt.savefig('./val-2g_dry_trapping_flux_comparison.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 
-
 ################################################################################
 ######################## Plot wet case from trapping ########################
 ################################################################################
-
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax1 = fig.add_subplot(gs[0])
 ax1.plot(simulation_results3[parameter_names.index('temperature_average')][chosen_matrix3],
         simulation_results3[parameter_names.index('recombination_flux_T2O_wet_left')][chosen_matrix3] * A / N_A, label=rf"trapping: D from D$_2$O", c='C1')
-print(f"wet D2O peak: {np.max(simulation_results3[parameter_names.index('recombination_flux_T2O_wet_left')][chosen_matrix3] * A / N_A)}")
 ax1.plot(experiment4_input,
         experiment4_output, '.', label=rf"experiment: D from D$_2$O", c='C1')
 ax1.plot(experiment3_input,
         experiment3_output, 's', label=rf"experiment: D from D$_2$", c='C0', markersize=3)
 ax1.plot(simulation_results3[parameter_names.index('temperature_average')][chosen_matrix3],
         simulation_results3[parameter_names.index('recombination_flux_T2_wet_left')][chosen_matrix3] * A / N_A, label=rf"trapping: D from D$_2$", c='C0')
-print(f"wet D2 peak: {np.max(simulation_results3[parameter_names.index('recombination_flux_T2_wet_left')][chosen_matrix3] * A / N_A)}")
 ax1.set_xlabel(u'Temperature (K)',fontsize=14)
 ax1.set_ylabel(u"Deuterium flux (mol/s)",fontsize=14)
 ax1.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
@@ -352,12 +336,9 @@ plt.legend(fontsize=12)
 plt.savefig('./val-2g_wet_trapping_flux_comparison.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 
-
-
 ################################################################################
 #################### Plot dry case from calibrated results #####################
 ################################################################################
-
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax1 = fig.add_subplot(gs[0])
@@ -401,24 +382,20 @@ plt.legend(fontsize=12)
 plt.savefig('./val-2g_dry_trapping_flux_calibrated_comparison.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 
-
 ################################################################################
 ##################### Plot wet case from calibrated results ####################
 ################################################################################
-
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax1 = fig.add_subplot(gs[0])
 ax1.plot(simulation_results4[parameter_names.index('temperature_average')][chosen_matrix4],
         simulation_results4[parameter_names.index('recombination_flux_T2O_wet_left')][chosen_matrix4] * A / N_A, label=rf"trapping: D from D$_2$O", c='C1')
-print(f"wet D2O peak: {np.max(simulation_results4[parameter_names.index('recombination_flux_T2O_wet_left')][chosen_matrix4] * A / N_A)}")
 ax1.plot(experiment4_input,
         experiment4_output, '.', label="experiment: D from D2O", c='C1')
 ax1.plot(experiment3_input,
         experiment3_output, 's', label="experiment: D from D2", c='C0', markersize=3)
 ax1.plot(simulation_results4[parameter_names.index('temperature_average')][chosen_matrix4],
         simulation_results4[parameter_names.index('recombination_flux_T2_wet_left')][chosen_matrix4] * A / N_A, label=rf"trapping: D from D$_2$", c='C0')
-print(f"wet D2 peak: {np.max(simulation_results4[parameter_names.index('recombination_flux_T2_wet_left')][chosen_matrix4] * A / N_A)}")
 ax1.set_xlabel(u'Temperature (K)',fontsize=14)
 ax1.set_ylabel(u"Deuterium flux (mol/s)",fontsize=14)
 ax1.set_xlim([300,1400])
@@ -451,13 +428,13 @@ plt.legend(fontsize=12)
 plt.savefig('./val-2g_wet_trapping_flux_calibrated_comparison.png', bbox_inches='tight', dpi=300)
 plt.close(fig)
 
-
-# ============================================================================ #
-# Extract json file information
+################################################################################
+######################### Extract json file information ########################
+################################################################################
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-    file = f"../../../../test/tests/val-2g/gold/val-2g_PSS/both_cases_trapping.json"
+    file = f"../../../../test/tests/val-2g/gold/both_cases_trapping.json"
 else:                                  # if in test folder
-    file = f"./gold/val-2g_PSS/both_cases_trapping.json"
+    file = f"./gold/both_cases_trapping.json"
 num_iter = 10
 parallel_props = 1
 dim = 18
@@ -471,6 +448,11 @@ for ii in np.arange(1,num_iter+1,1):
     inputs[ii-1,:,:] = np.array(data["time_steps"][ii]['PSS_reporter']['inputs'])
     obj_values[ii-1, :] = np.array(data["time_steps"][ii]['PSS_reporter']['output_required'])
 
+index_max = np.argmax(obj_values[:,:]) # max index in 1D
+index_max_2d = np.unravel_index(index_max, obj_values.shape) # max index in 2D
+input_optimized = inputs[index_max_2d[0],:,index_max_2d[1]] # input in max index
+# print('Optimized input values: '+str(input_optimized))
+# print(f'Optimized objective (log inv error): {obj_values[index_max_2d]} at {index_max_2d}')
 plt.plot(np.maximum.accumulate(obj_values))
 plt.xlabel('Iteration',fontsize=14)
 plt.ylabel('Log inverse error',fontsize=14)
@@ -479,17 +461,8 @@ plt.ylim([-0.24, -0.2])
 plt.savefig("./val-2g_trapping_optimization_PSS_iterations", bbox_inches='tight', dpi=300)
 plt.close()
 
-index_max = np.argmax(obj_values[:,:]) # max index in 1D
-index_max_2d = np.unravel_index(index_max, obj_values.shape) # max index in 2D
-input_optimized = inputs[index_max_2d[0],:,index_max_2d[1]] # input in max index
-
-print('Optimized input values: '+str(input_optimized))
-print(f'Optimized objective (log inv error): {obj_values[index_max_2d]} at {index_max_2d}')
-
-
 # ======================== plot parameter distribution ======================= #
 
-# label_names = ["detrapping_energy_1_ev", "trapping_site_fraction_1_expo", "trapping_rate_prefactor_expo", "release_rate_profactor_expo", "trapping_energy_ev","electron_concentration_initial_expo","T2O_reaction_forward_value_expo","T2_reaction_forward_value_expo","diffusivity_OT_prefactor_m2s","diffusivity_OT_energy_ev","diffusivity_V_O_prefactor_m2s","diffusivity_V_O_energy","diffusivity_e_prefactor_m2s","diffusivity_e_energy","delta_H_T2O","delta_S_T2O","delta_H_T2","delta_S_T2"]
 corresponding_ave = [1.244, -2.557, 8.91, 17.898, 4.670e-01, -1.61, -30.403, -44.027, 1.902e-9, 0.1216, 1.237e-7, 1.003e5, 2.063e-2, 9.535e4, -1.564e5, -1.374e2, -1.122e5, -3.699e1]
 corresponding_std = [0.001 , 0.001  , 0.01  , 0.001 , 0.001, 0.01,  0.001 ,   0.001, 0.001e-9, 0.0001, 0.001e-7, 0.001e5, 0.001e-2, 0.001e4, 0.001e5,  0.001e2, 0.001e5 ,  0.001e1]
 label_names = [r"$\epsilon_r$", r"$\chi$", r"$\tau_{t0}$", r"$\tau_{r0}$", r"$\epsilon_t$",r"$C_{e^\prime0}$",r"$K_1^{D_2O}$",r"$K_1^{D_2}$",r"$D_0^{OD^{\cdot}}$",r"$E^{OD^{\cdot}}$",r"$D_0^{V_O^{\cdot\cdot}}$","$E^{V_O^{\cdot\cdot}}$","$D_0^{e^\prime}$","$E^{e^\prime}$",r"$\Delta H_{D_2O}^0$",r"$\Delta S_{D_2O}^0$",r"$\Delta H_{D_2}^0$",r"$\Delta S_{D_2}^0$"]
@@ -533,13 +506,7 @@ for i in range(dim):
     organized_input = inputs[:,i,:].flatten()
     average_input = np.mean(organized_input)
     std_input = np.std(organized_input)
-    # norm_optimized_input = (input_optimized[i] - average_input) / std_input
     norm_optimized_input = (input_optimized[i] - corresponding_ave[i]) / corresponding_std[i]
-
-    # norm_organized_input = (organized_input - average_input) / std_input
-    # counts, bins = np.histogram(norm_organized_input, bins=num_bins)
-    # ax1.plot((bins[:-1]+bins[1:])/2, counts/len(norm_organized_input), "o", label=label_names[i], color=f'C{i}',markersize=3)
-    # ax1.plot((bins[:-1]+bins[1:])/2, counts/len(norm_organized_input), "-", color=f'C{i}',markersize=3,alpha=0.4)
     ax1.plot([norm_optimized_input,norm_optimized_input], y_limit, '--', color=colors[i], label=label_names[i])
 
 ax1.set_xlabel(u'Parameters',fontsize=18)
