@@ -1065,5 +1065,6 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
   []
   [exodus]
     type = Exodus
+    start_time = ${fparse dissolve_duration + cooldown_duration}
   []
 []
