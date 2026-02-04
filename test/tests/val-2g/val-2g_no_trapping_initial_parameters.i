@@ -3,6 +3,20 @@ R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant based on number use
 eV_to_J = '${units 1.602176634e-19 eV/J}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
 N_a = '${units 6.02214076e23 at/mol}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
 
+electron_concentration_initial_expo = -5.4
+T2O_reaction_forward_value_expo = -33
+T2_reaction_forward_value_expo = -41
+diffusivity_OT_prefactor_m2s = 2e-9
+diffusivity_OT_energy_ev = 0.23
+diffusivity_V_O_prefactor_m2s = 1.021e-7
+diffusivity_V_O_energy = 89216.77
+diffusivity_e_prefactor_m2s = 2.05e-2
+diffusivity_e_energy = 103818.22
+delta_H_T2O = -79.5e3
+delta_S_T2O = -88.9
+delta_H_T2 = -79.5e3
+delta_S_T2 = -124.53
+
 # thermal parameters
 temperature_low = '${units 300 K}'
 temperature_initial = '${units 873 K}'
