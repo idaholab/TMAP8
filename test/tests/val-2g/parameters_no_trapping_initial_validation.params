@@ -1,7 +1,3 @@
-detrapping_energy_1_ev = 1.60
-trapping_rate_prefactor_expo = 11
-release_rate_profactor_expo = 14
-trapping_energy_ev = 0.38
 electron_concentration_initial_expo = -5.4
 T2O_reaction_forward_value_expo = -33
 T2_reaction_forward_value_expo = -41
