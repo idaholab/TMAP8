@@ -131,36 +131,6 @@ experiment4_input = (experiment_results4[experiment_parameter_names.index('Time'
 experiment4_output = experiment_results4[experiment_parameter_names.index('Flux')]
 
 ################################################################################
-####################### Temperature and pressure history #######################
-################################################################################
-fig = plt.figure(figsize=[6.5, 5.5])
-gs = gridspec.GridSpec(1, 1)
-ax1 = fig.add_subplot(gs[0])
-ax1.plot(simulation_results2[parameter_names.index('time')],
-        simulation_results2[parameter_names.index('pressure_T2_average')], '-', label=rf"D$_2$ pressure", c='C0')
-ax1.plot(simulation_results2[parameter_names.index('time')],
-        simulation_results2[parameter_names.index('pressure_T2O_average')], '--', label=rf"D$_2$O pressure", c='C0')
-ax1.set_xlabel(u'Time (s)',fontsize=14)
-ax1.set_ylabel(u"Pressure (Pa)", color='C0',fontsize=14)
-ax1.set_yscale("log")
-ax1.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-ax1.minorticks_on()
-ax1.tick_params(axis='y', labelcolor='C0')
-
-ax2 = ax1.twinx()
-ax2.plot(simulation_results2[parameter_names.index('time')],
-        simulation_results2[parameter_names.index('temperature_average')], label=rf"temperature", c='C1')
-ax2.set_ylabel(u"Temperature (K)", color='C1',fontsize=14)
-ax2.tick_params(axis='y', labelcolor='C1')
-# add labels
-lines_1, labels_1 = ax1.get_legend_handles_labels()
-lines_2, labels_2 = ax2.get_legend_handles_labels()
-ax1.legend(lines_1 + lines_2, labels_1 + labels_2, loc='best',fontsize=14)
-ax1.set_xlim([0,np.max(simulation_results2[parameter_names.index('time')])])
-plt.savefig('./val-2g_environment_history.png', bbox_inches='tight', dpi=300)
-plt.close(fig)
-
-################################################################################
 ######################## Plot dry case from no trapping ########################
 ################################################################################
 fig = plt.figure(figsize=[6.5, 5.5])
