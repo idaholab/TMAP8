@@ -17,7 +17,6 @@ temperature_rate = '${units 0.5 K/s}'
 
 # Model parameters
 dissolve_duration = '${units 60 s}'
-cooldown_time_constant = '${units 600 s}'
 cooldown_duration = '${units 60 s}'
 desorption_duration = '${fparse (temperature_high - temperature_low) / temperature_rate}'
 endtime = '${units ${fparse dissolve_duration + cooldown_duration + desorption_duration} s}'
@@ -37,9 +36,6 @@ oxygen_concentration_initial = '${units ${fparse 2.95 * N} at/mum^3}'
 electron_concentration_initial = '${units ${fparse 1e-5 * N} at/mum^3}'
 
 # ##### Dry Pressure conditions
-# pressure_T2_high = '${units 1.33e3 Pa}'
-# pressure_T2_low = '${units 1e-5 Pa}'
-# pressure_T2O_dry = '${units 0 Pa}' # We assume the pressure of T2O is 0
 ##### Wet Pressure conditions
 pressure_T2O_high = '${units 2.8e3 Pa}'
 pressure_T2O_low = '${units 1e-5 Pa}'
@@ -66,17 +62,6 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
 []
 
 [Variables]
-  # #### Dry variable
-  # [OT_concentration_dry] # (atoms/microns^3)
-  #   initial_condition = 0
-  # []
-  # [Oxygen_vacancy_concentration_dry]
-  #   initial_condition = ${oxygen_vacancy_concentration_initial}
-  # []
-  # [electron_concentration_dry]
-  #   initial_condition = ${electron_concentration_initial}
-  # []
-
   #### Wet variable
   [OT_concentration_wet] # (atoms/microns^3)
     initial_condition = 0
@@ -90,13 +75,6 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
 []
 
 [Bounds]
-  # [concentration_dry_lower_bound]
-  #   type = ConstantBounds
-  #   variable = bounds_dummy
-  #   bounded_variable = OT_concentration_dry
-  #   bound_type = lower
-  #   bound_value = ${bound_value_min}
-  # []
   [concentration_wet_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy
@@ -114,13 +92,6 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
   [temperature]
     initial_condition = ${temperature_initial}
   []
-  # #### Dry auxvariable
-  # [pressure_T2_dry]
-  #   initial_condition = ${pressure_T2_high}
-  # []
-  # [Oxygen_concentration_dry]
-  #   initial_condition = ${oxygen_concentration_initial}
-  # []
   #### Wet auxvariable
   [pressure_T2O_wet]
     initial_condition = ${pressure_T2O_high}
@@ -136,20 +107,6 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
     variable = temperature
     function = Temperature_function
   []
-
-  # #### Dry auxkernels
-  # [pressure_T2_dry_Aux]
-  #   type = FunctionAux
-  #   variable = pressure_T2_dry
-  #   function = Pressure_T2_dry_function
-  # []
-  # [Oxygen_concentration_dry_Aux] # at/mum^3
-  #   type = ParsedAux
-  #   variable = Oxygen_concentration_dry
-  #   coupled_variables = 'Oxygen_vacancy_concentration_dry OT_concentration_dry'
-  #   expression = '3  * ${N} - Oxygen_vacancy_concentration_dry - OT_concentration_dry'
-  # []
-
   #### Wet auxkernels
   [pressure_T2O_wet_Aux]
     type = FunctionAux
@@ -171,41 +128,6 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
 []
 
 [Kernels]
-  # #### Dry kernels
-  # [time_OT_dry]
-  #   type = ADTimeDerivative
-  #   variable = OT_concentration_dry
-  #   extra_vector_tags = ref
-  # []
-  # [diffusion_OT_dry]
-  #   type = ADMatDiffusion
-  #   variable = OT_concentration_dry
-  #   diffusivity = diffusivity_OT
-  #   extra_vector_tags = ref
-  # []
-  # [time_V_O_dry]
-  #   type = ADTimeDerivative
-  #   variable = Oxygen_vacancy_concentration_dry
-  #   extra_vector_tags = ref
-  # []
-  # [diffusion_V_O_dry]
-  #   type = ADMatDiffusion
-  #   variable = Oxygen_vacancy_concentration_dry
-  #   diffusivity = diffusivity_V_O
-  #   extra_vector_tags = ref
-  # []
-  # [time_e_dry]
-  #   type = ADTimeDerivative
-  #   variable = electron_concentration_dry
-  #   extra_vector_tags = ref
-  # []
-  # [diffusion_e_dry]
-  #   type = ADMatDiffusion
-  #   variable = electron_concentration_dry
-  #   diffusivity = diffusivity_e
-  #   extra_vector_tags = ref
-  # []
-
   #### Wet kernels
   [time_OT_wet]
     type = ADTimeDerivative
@@ -243,50 +165,6 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
 []
 
 [BCs]
-  # #### Dry BCs
-  # [left_OT_dry]
-  #   type = ADMatNeumannBC
-  #   variable = OT_concentration_dry
-  #   boundary = left
-  #   value = 1
-  #   boundary_material = flux_on_OT_dry
-  # []
-  # [right_OT_dry]
-  #   type = ADMatNeumannBC
-  #   variable = OT_concentration_dry
-  #   boundary = right
-  #   value = 1
-  #   boundary_material = flux_on_OT_dry
-  # []
-  # [left_V_O_dry]
-  #   type = ADMatNeumannBC
-  #   variable = Oxygen_vacancy_concentration_dry
-  #   boundary = left
-  #   value = 1
-  #   boundary_material = flux_on_V_O_dry
-  # []
-  # [right_V_O_dry]
-  #   type = ADMatNeumannBC
-  #   variable = Oxygen_vacancy_concentration_dry
-  #   boundary = right
-  #   value = 1
-  #   boundary_material = flux_on_V_O_dry
-  # []
-  # [left_e_dry]
-  #   type = ADMatNeumannBC
-  #   variable = electron_concentration_dry
-  #   boundary = left
-  #   value = 1
-  #   boundary_material = flux_on_e_dry
-  # []
-  # [right_e_dry]
-  #   type = ADMatNeumannBC
-  #   variable = electron_concentration_dry
-  #   boundary = right
-  #   value = 1
-  #   boundary_material = flux_on_e_dry
-  # []
-
   #### Wet BCs
   [left_OT_wet]
     type = ADMatNeumannBC
@@ -338,21 +216,15 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
     expression = 'if(t<${dissolve_duration},
                               ${temperature_initial},
                   if(t<${dissolve_duration} + ${cooldown_duration},
-                              ${temperature_initial}-((1-exp(-(t-${dissolve_duration})/${cooldown_time_constant}))*${fparse temperature_initial - temperature_low}),
+                              ${temperature_low},
                   if(t<${dissolve_duration} + ${cooldown_duration} + ${desorption_duration},
                               ${temperature_low} + ${temperature_rate} * (t - ${dissolve_duration} - ${cooldown_duration}),
                               ${temperature_high})))'
   []
-  # [Pressure_T2_dry_function]
-  #   type = ParsedFunction
-  #   expression = 'if(t<${dissolve_duration} + ${cooldown_duration} - 1000, ${pressure_T2_high},
-  #                 if(t<${dissolve_duration} + ${cooldown_duration}, ${pressure_T2_high} - (1-exp(-(t - ${dissolve_duration} - ${cooldown_duration} + 1000)/10)) * ${fparse pressure_T2_high - pressure_T2_low},
-  #                                                                   ${pressure_T2_low}))'
-  # []
   [Pressure_T2O_wet_function]
     type = ParsedFunction
     expression = 'if(t<${dissolve_duration} + ${cooldown_duration} - 1000, ${pressure_T2O_high},
-                  if(t<${dissolve_duration} + ${cooldown_duration}, ${pressure_T2O_high} - (1-exp(-(t - ${dissolve_duration} - ${cooldown_duration} + 1000)/10)) * ${fparse pressure_T2O_high - pressure_T2O_low},
+                  if(t<${dissolve_duration} + ${cooldown_duration}, ${pressure_T2O_low},
                                                                     ${pressure_T2O_low}))'
   []
   [max_dt_size_function]
@@ -415,22 +287,6 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
     material_property_names = 'T2_K_forward T2_K_eq'
     expression = 'T2_K_forward / T2_K_eq'
   []
-
-  # #### Reaction for dry
-  # [flux_base_on_T2_dry] # T2 + 2 O -> 2 OT + 2 e
-  #   type = ADDerivativeParsedMaterial
-  #   coupled_variables = 'OT_concentration_dry pressure_T2_dry Oxygen_concentration_dry electron_concentration_dry'
-  #   property_name = 'flux_base_on_T2_dry'
-  #   material_property_names = 'T2_K_forward T2_K_reverse'
-  #   expression = '(T2_K_forward * pressure_T2_dry * Oxygen_concentration_dry^2 - T2_K_reverse * OT_concentration_dry^2 * electron_concentration_dry^2)'
-  # []
-  # [flux_base_on_T2O_dry] # T2O + V_O + O -> 2 OT
-  #   type = ADDerivativeParsedMaterial
-  #   coupled_variables = 'OT_concentration_dry Oxygen_concentration_dry Oxygen_vacancy_concentration_dry'
-  #   property_name = 'flux_base_on_T2O_dry'
-  #   material_property_names = 'T2O_K_forward T2O_K_reverse'
-  #   expression = '(T2O_K_forward * ${pressure_T2O_dry} * Oxygen_concentration_dry * Oxygen_vacancy_concentration_dry - T2O_K_reverse * OT_concentration_dry^2)'
-  # []
   #### Reaction for wet
   [flux_base_on_T2O_wet] # T2O + V_O + O -> 2 OT
     type = ADDerivativeParsedMaterial
@@ -446,38 +302,6 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
     material_property_names = 'T2_K_forward T2_K_reverse'
     expression = '(T2_K_forward * ${pressure_T2_wet} * Oxygen_concentration_wet^2 - T2_K_reverse * OT_concentration_wet^2 * electron_concentration_wet^2)'
   []
-
-  # #### Flux for dry
-  # [flux_on_e_dry] # electron
-  #   type = ADDerivativeParsedMaterial
-  #   property_name = 'flux_on_e_dry'
-  #   material_property_names = 'flux_base_on_T2_dry'
-  #   expression = '2 * flux_base_on_T2_dry'
-  # []
-  # [flux_on_OT_dry] # OT
-  #   type = ADDerivativeParsedMaterial
-  #   property_name = 'flux_on_OT_dry'
-  #   material_property_names = 'flux_base_on_T2_dry flux_base_on_T2O_dry'
-  #   expression = '2 * flux_base_on_T2_dry + 2 * flux_base_on_T2O_dry'
-  # []
-  # [flux_on_T2_dry] # T2
-  #   type = ADDerivativeParsedMaterial
-  #   property_name = 'flux_on_T2_dry'
-  #   material_property_names = 'flux_base_on_T2_dry'
-  #   expression = '-1 * flux_base_on_T2_dry'
-  # []
-  # [flux_on_V_O_dry] # V_O
-  #   type = ADDerivativeParsedMaterial
-  #   property_name = 'flux_on_V_O_dry'
-  #   material_property_names = 'flux_base_on_T2O_dry'
-  #   expression = '-1 * flux_base_on_T2O_dry'
-  # []
-  # [flux_on_T2O_dry] # T2O
-  #   type = ADDerivativeParsedMaterial
-  #   property_name = 'flux_on_T2O_dry'
-  #   material_property_names = 'flux_base_on_T2O_dry'
-  #   expression = '-1 * flux_base_on_T2O_dry'
-  # []
   #### Flux for wet
   [flux_on_e_wet] # electron
     type = ADDerivativeParsedMaterial
@@ -512,21 +336,7 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
 []
 
 [Postprocessors]
-  #### Postprocessors for flux under dry and wet
-  # [recombination_flux_T2O_dry_left]
-  #   type = ADSideAverageMaterialProperty
-  #   boundary = left
-  #   property = flux_on_T2O_dry
-  #   execute_on = 'INITIAL TIMESTEP_END'
-  #   outputs = 'console csv exodus'
-  # []
-  # [recombination_flux_T2_dry_left]
-  #   type = ADSideAverageMaterialProperty
-  #   boundary = left
-  #   property = flux_on_T2_dry
-  #   execute_on = 'INITIAL TIMESTEP_END'
-  #   outputs = 'console csv exodus'
-  # []
+  #### Postprocessors for flux under wet
   [recombination_flux_T2O_wet_left]
     type = ADSideAverageMaterialProperty
     boundary = left
