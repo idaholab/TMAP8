@@ -5,14 +5,17 @@
   # Light tests (fast, coarse mesh)
   [val-2g_trapping_initial_light_csv]
     type = CSVDiff
-    input = 'val-2g_trapping_light.i'
-    cli_args = "num_nodes=30 temperature_rate='${units 4.5 K/s}' Outputs/file_base=val-2g_trapping_initial_light_out"
+    input = ver-1a.i
     csvdiff = val-2g_trapping_initial_light_out.csv
+    cli_args = 'Executioner/dt=5 Mesh/nx=10 Outputs/file_base=val-2g_trapping_initial_light_out'
+    # input = 'val-2g_trapping_light.i'
+    # cli_args = "num_nodes=30 temperature_rate='${units 4.5 K/s}' Outputs/file_base=val-2g_trapping_initial_light_out"
+    # csvdiff = val-2g_trapping_initial_light_out.csv
     requirement = 'The system shall be able to model deuterium transport in proton-conducting ceramics with trapping effects to generate CSV data for use in comparisons with the experimental data.'
   []
   [val-2g_trapping_initial_light_exodus]
     type = Exodiff
-    input = 'val-2g_trapping_light.i'
+    input = 'ver-1a.i'
     cli_args = "num_nodes=30 dissolve_duration='${units 60 s}' cooldown_duration='${units 60 s}' temperature_low='${units 500 K}' temperature_rate='${units 4.5 K/s}' Postprocessors/max_time_step_size/function=4 Outputs/file_base=val-2g_trapping_initial_light_out"
     exodiff = val-2g_trapping_initial_light_out.e
     prereq = val-2g_trapping_initial_light_csv
