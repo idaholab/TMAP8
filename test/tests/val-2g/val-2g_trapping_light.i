@@ -1,14 +1,6 @@
 # Physical constants
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
 
-# Critical parameters
-diffusivity_V_O_energy = 89216.77
-diffusivity_e_energy = 103818.22
-delta_H_T2O = -79.5e3
-delta_S_T2O = -88.9
-delta_H_T2 = -79.5e3
-delta_S_T2 = -124.53
-
 # thermal parameters
 temperature_low = '${units 1000 K}'
 temperature_initial = '${units 873 K}'
@@ -19,8 +11,8 @@ temperature_rate = '${units 10 K/s}'
 dissolve_duration = '${units 1 s}'
 cooldown_duration = '${units 1 s}'
 desorption_duration = '${fparse (temperature_high - temperature_low) / temperature_rate}'
-endtime = '${units ${fparse dissolve_duration + cooldown_duration + desorption_duration} s}'
-dt_start_charging = '${units 1e-1 s}'
+# endtime = '${units ${fparse dissolve_duration + cooldown_duration + desorption_duration} s}'
+# dt_start_charging = '${units 1e-1 s}'
 
 # Geometry and mesh
 length = '${units 0.5 mm -> mum}'
@@ -32,11 +24,15 @@ oxygen_vacancy_concentration_initial = '${units ${fparse 0.05 * N} at/mum^3}'
 oxygen_concentration_initial = '${units ${fparse 2.95 * N} at/mum^3}'
 electron_concentration_initial = '${units ${fparse 1e-5 * N} at/mum^3}'
 
-##### Wet Pressure conditions
+# Wet Pressure conditions
 pressure_T2O_high = '${units 2.8e3 Pa}'
 pressure_T2_wet = '${units 0 Pa}' # We assume the pressure of T2O is 0
 
 # chemical_reaction
+delta_H_T2O = '${units -79.5e3 J/mol}'
+delta_S_T2O = '${units -88.9 J/mol/K}'
+delta_H_T2 = '${units -79.5e3 J/mol}'
+delta_S_T2 = '${units -124.53 J/mol/K}'
 T2O_reaction_forward_value = '${units 2e-33 m^4/at/s -> mum^4/at/s}'
 T2_reaction_forward_value = '${units 2e-41 m^4/at/s -> mum^4/at/s}'
 
@@ -44,7 +40,9 @@ T2_reaction_forward_value = '${units 2e-41 m^4/at/s -> mum^4/at/s}'
 diffusivity_OT_prefactor = '${units 2e-9 m^2/s -> mum^2/s}'
 diffusivity_OT_energy = '${units 22191 J/mol}'
 diffusivity_V_O_prefactor = '${units 1.021e-7 m^2/s -> mum^2/s}'
+diffusivity_V_O_energy = '${units 89216.77 J/mol}'
 diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
+diffusivity_e_energy = '${units 103818.22 J/mol}'
 
 [Mesh]
   [cmg]
@@ -329,20 +327,21 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
   petsc_options_value = 'lu'
   nl_rel_tol = 1e-7
   nl_abs_tol = 1e-10
-  end_time = ${endtime}
+  end_time = 3
   automatic_scaling = true
   compute_scaling_once = true
   line_search = none
   nl_max_its = 10
-  dtmax = 50
-  [TimeStepper]
-    type = IterationAdaptiveDT
-    dt = ${dt_start_charging}
-    optimal_iterations = 7
-    growth_factor = 1.1
-    cutback_factor = 0.9
-    cutback_factor_at_failure = 0.9
-  []
+  dt=0.1
+
+  # [TimeStepper]
+  #   type = IterationAdaptiveDT
+  #   dt = ${dt_start_charging}
+  #   optimal_iterations = 7
+  #   growth_factor = 1.1
+  #   cutback_factor = 0.9
+  #   cutback_factor_at_failure = 0.9
+  # []
 []
 
 [Outputs]
