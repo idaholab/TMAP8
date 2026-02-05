@@ -26,18 +26,14 @@ dt_start_charging = '${units 1e-1 s}'
 length = '${units 0.5 mm -> mum}'
 num_nodes = 30
 
-# Material properties
-N = '${units 1.3043954487e28 at/m^3 -> at/mum^3}'
-
 # Initial concentrations
+N = '${units 1.3043954487e28 at/m^3 -> at/mum^3}'
 oxygen_vacancy_concentration_initial = '${units ${fparse 0.05 * N} at/mum^3}'
 oxygen_concentration_initial = '${units ${fparse 2.95 * N} at/mum^3}'
 electron_concentration_initial = '${units ${fparse 1e-5 * N} at/mum^3}'
 
-# ##### Dry Pressure conditions
 ##### Wet Pressure conditions
 pressure_T2O_high = '${units 2.8e3 Pa}'
-pressure_T2O_low = '${units 1e-5 Pa}'
 pressure_T2_wet = '${units 0 Pa}' # We assume the pressure of T2O is 0
 
 # chemical_reaction
@@ -206,12 +202,7 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
   [Pressure_T2O_wet_function]
     type = ParsedFunction
     expression = 'if(t<${dissolve_duration} + ${cooldown_duration} - 1000, ${pressure_T2O_high},
-                  if(t<${dissolve_duration} + ${cooldown_duration}, ${pressure_T2O_low},
-                                                                    ${pressure_T2O_low}))'
-  []
-  [max_dt_size_function]
-    type = ParsedFunction
-    expression = '50'
+                  if(t<${dissolve_duration} + ${cooldown_duration}, 1e-5, 1e-5))'
   []
 []
 
@@ -322,21 +313,11 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
     type = ADSideAverageMaterialProperty
     boundary = left
     property = flux_on_T2O_wet
-    execute_on = 'INITIAL TIMESTEP_END'
-    outputs = 'console csv exodus'
   []
   [recombination_flux_T2_wet_left]
     type = ADSideAverageMaterialProperty
     boundary = left
     property = flux_on_T2_wet
-    execute_on = 'INITIAL TIMESTEP_END'
-    outputs = 'console csv exodus'
-  []
-  [max_time_step_size]
-    type = FunctionValuePostprocessor
-    function = max_dt_size_function
-    execute_on = 'initial nonlinear linear timestep_end'
-    outputs = none
   []
 []
 
@@ -353,6 +334,7 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
   compute_scaling_once = true
   line_search = none
   nl_max_its = 10
+  dtmax = 50
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = ${dt_start_charging}
@@ -360,7 +342,6 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
     growth_factor = 1.1
     cutback_factor = 0.9
     cutback_factor_at_failure = 0.9
-    timestep_limiting_postprocessor = max_time_step_size
   []
 []
 
