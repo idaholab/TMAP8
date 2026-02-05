@@ -8,17 +8,17 @@ This verification problem is taken from [!cite](longhurst1992verification), and 
 
 \begin{equation}
     \label{eqn:diffusion_mobile}
-    \frac{dC_M}{dt} = \nabla D \nabla C_M - \text{trap\_per\_free} \cdot \frac{dC_T}{dt},
+    \frac{dC_M}{dt} = \nabla D \nabla C_M - f_{T/M} \cdot \frac{dC_T}{dt},
 \end{equation}
 \begin{equation}
     \label{eqn:trapped_rate}
-    \frac{dC_T}{dt} = \alpha_t  \frac {C_T^{empty} C_M } {(N \cdot \text{trap\_per\_free})} - \alpha_r C_T,
+    \frac{dC_T}{dt} = \alpha_t  \frac {C_T^{empty} C_M } {(N \cdot f_{T/M})} - \alpha_r C_T,
 \end{equation}
 and
 \begin{equation}
-    C_T^{empty} = C_{T0} \cdot N - \text{trap\_per\_free} \cdot C_T ,
+    C_T^{empty} = C_{T0} \cdot N - f_{T/M} \cdot C_T ,
 \end{equation}
-where $C_M$ and $C_T$ are the concentrations of the mobile and trapped species respectively, $D$ is the diffusivity of the mobile species, $\alpha_t$ and $\alpha_r$ are the trapping and release rate coefficients, $\text{trap\_per\_free}$ is a factor converting the magnitude of $C_T$ to be closer to $C_M$ for better numerical convergence, $C_{T0}$ is the fraction of host sites that can contribute to trapping, $C_T^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density.
+where $C_M$ and $C_T$ are the concentrations of the mobile and trapped species respectively, $D$ is the diffusivity of the mobile species, $\alpha_t$ and $\alpha_r$ are the trapping and release rate coefficients, $f_{T/M}$ is a factor converting the magnitude of $C_T$ to be closer to $C_M$ for better numerical convergence, $C_{T0}$ is the fraction of host sites that can contribute to trapping, $C_T^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density.
 
 The breakthrough time may have one of two limiting values depending on whether the trapping is in the effective diffusivity or strong-trapping regime. A trapping parameter is defined by:
 

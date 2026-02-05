@@ -19,22 +19,22 @@ $C_M$, $C_T$, and $C_{He}$, respectively, is governed by
 
 \begin{equation}
     \label{eqn:diffusion_mobile}
-    \frac{dC_M}{dt} = - \nabla D_T \nabla C_M - \text{trap\_per\_free} \cdot \left(\frac{dC_T}{dt} + k C_T \right) - k C_M,
+    \frac{dC_M}{dt} = - \nabla D_T \nabla C_M - f_{T/M} \cdot \left(\frac{dC_T}{dt} + k C_T \right) - k C_M,
 \end{equation}
 \begin{equation}
     \label{eqn:trapped_rate}
-    \frac{dC_T}{dt} = \alpha_t  \frac {C_T^{empty} C_M } {(N \cdot \text{trap\_per\_free})} - \alpha_r C_T - k C_T,
+    \frac{dC_T}{dt} = \alpha_t  \frac {C_T^{empty} C_M } {(N \cdot f_{T/M})} - \alpha_r C_T - k C_T,
 \end{equation}
 and
 \begin{equation}
-    C_T^{empty} = C_{T0} \cdot N - \text{trap\_per\_free} \cdot C_T,
+    C_T^{empty} = C_{T0} \cdot N - f_{T/M} \cdot C_T,
 \end{equation}
 \begin{equation}
     \frac{d C_{He}}{dt} = k (C_M + C_T),
 \end{equation}
 where $t$ is the time in s, concentrations are in atoms/m$^3$,
 $D_T$ is the tritium diffusivity in m$^2$/s,
-$\text{trap\_per\_free}$ is a factor converting the magnitude of $C_T$ to be closer to $C_M$ for better numerical convergence,
+$f_{T/M}$ is a factor converting the magnitude of $C_T$ to be closer to $C_M$ for better numerical convergence,
 $k= 0.693/t_{1/2}$ is the decay rate constant in 1/s, $t_{1/2} = 12.3232$ years is the half life of tritium decay to $^3$He,
 $C_T^{empty}$ is the concentration of empty trapping sites,
 $N$ is the host density,
@@ -66,7 +66,7 @@ We define two different initial conditions for the mobile tritium concentration 
 - $C_M^0 = 1$ atoms/m$^3$, which is much lower than the initial trapped tritium concentration. This case corresponds to the TMAP7 case in [!citep](ambrosek2008verification).
 - $C_M^0 = 1 \times 10^{25}$ atoms/m$^3$, which makes it equivalent to the initial trapped tritium concentration. This new case demonstrates TMAP8's improved ability (over TMAP7) to model the decay, trapping, detrapping, and diffusion of tritium when the concentration of mobile tritium is non-negligible.
 
-To limit the computational challenges related to the orders-of-magnitude difference in trapped and mobile tritium in the first case, we make the concentration dimensionless by dividing them by $1 \times 10^{25}$ atoms/m$^3$ and setting $\text{trap\_per\_free} = 1 \times 10^{25}$ (-). In the second case, when the concentrations are equivalent, $\text{trap\_per\_free} = 1$ (-).
+To limit the computational challenges related to the orders-of-magnitude difference in trapped and mobile tritium in the first case, we make the concentration dimensionless by dividing them by $1 \times 10^{25}$ atoms/m$^3$ and setting $f_{T/M} = 1 \times 10^{25}$ (-). In the second case, when the concentrations are equivalent, $f_{T/M} = 1$ (-).
 
 ## Analytical Solution
 
