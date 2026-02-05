@@ -200,52 +200,61 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
     property_name = 'diffusivity_OT'
     coupled_variables = 'temperature'
     expression = '${diffusivity_OT_prefactor} * exp(-${diffusivity_OT_energy} / ${R} / temperature)'
+    enable_jit = false
   []
   [diffusivity_V_O]
     type = ParsedMaterial
     property_name = 'diffusivity_V_O'
     coupled_variables = 'temperature'
     expression = '${diffusivity_V_O_prefactor} * exp(-${diffusivity_V_O_energy} / ${R} / temperature)'
+    enable_jit = false
   []
   [diffusivity_e]
     type = ParsedMaterial
     property_name = 'diffusivity_e'
     coupled_variables = 'temperature'
     expression = '${diffusivity_e_prefactor} * exp(-${diffusivity_e_energy} / ${R} / temperature)'
+    enable_jit = false
   []
   [reaction_equilibrium_constant_T2O]
     type = ParsedMaterial
     property_name = 'T2O_K_eq'
     coupled_variables = 'temperature'
     expression = 'exp( (temperature * ${delta_S_T2O} - ${delta_H_T2O}) / ${R} / temperature )'
+    enable_jit = false
   []
   [reaction_forward_T2O]
     type = ParsedMaterial
     property_name = 'T2O_K_forward'
     expression = '${T2O_reaction_forward_value}'
+    enable_jit = false
   []
   [reaction_reverse_T2O]
     type = ParsedMaterial
     property_name = 'T2O_K_reverse'
     material_property_names = 'T2O_K_forward T2O_K_eq'
     expression = 'T2O_K_forward / T2O_K_eq'
+    enable_jit = false
   []
   [reaction_equilibrium_constant_T2]
     type = ParsedMaterial
     property_name = 'T2_K_eq'
     coupled_variables = 'temperature'
     expression = 'exp( (temperature * ${delta_S_T2} - ${delta_H_T2}) / ${R} / temperature )'
+    enable_jit = false
   []
   [reaction_forward_T2]
     type = ParsedMaterial
     property_name = 'T2_K_forward'
     expression = '${T2_reaction_forward_value}'
+    enable_jit = false
   []
   [reaction_reverse_T2]
     type = ParsedMaterial
     property_name = 'T2_K_reverse'
     material_property_names = 'T2_K_forward T2_K_eq'
     expression = 'T2_K_forward / T2_K_eq'
+    enable_jit = false
   []
   #### Reaction for wet
   [flux_base_on_T2O_wet] # T2O + V_O + O -> 2 OT
@@ -254,6 +263,7 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
     property_name = 'flux_base_on_T2O_wet'
     material_property_names = 'T2O_K_forward T2O_K_reverse'
     expression = '(T2O_K_forward * pressure_T2O_wet * Oxygen_concentration_wet * Oxygen_vacancy_concentration_wet - T2O_K_reverse * OT_concentration_wet^2)'
+    enable_jit = false
   []
   [flux_base_on_T2_wet] # T2 + 2 O -> 2 OT + 2 e
     type = DerivativeParsedMaterial
@@ -261,6 +271,7 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
     property_name = 'flux_base_on_T2_wet'
     material_property_names = 'T2_K_forward T2_K_reverse'
     expression = '(- T2_K_reverse * OT_concentration_wet^2 * electron_concentration_wet^2)'
+    enable_jit = false
   []
   #### Flux for wet
   [flux_on_e_wet] # electron
@@ -268,30 +279,35 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
     property_name = 'flux_on_e_wet'
     material_property_names = 'flux_base_on_T2_wet'
     expression = '2 * flux_base_on_T2_wet'
+    enable_jit = false
   []
   [flux_on_OT_wet] # OT
     type = DerivativeParsedMaterial
     property_name = 'flux_on_OT_wet'
     material_property_names = 'flux_base_on_T2O_wet'
     expression = '2 * flux_base_on_T2O_wet'
+    enable_jit = false
   []
   [flux_on_T2_wet] # T2
     type = DerivativeParsedMaterial
     property_name = 'flux_on_T2_wet'
     material_property_names = 'flux_base_on_T2_wet'
     expression = '-1 * flux_base_on_T2_wet'
+    enable_jit = false
   []
   [flux_on_V_O_wet] # V_O
     type = DerivativeParsedMaterial
     property_name = 'flux_on_V_O_wet'
     material_property_names = 'flux_base_on_T2O_wet'
     expression = '-1 * flux_base_on_T2O_wet'
+    enable_jit = false
   []
   [flux_on_T2O_wet] # T2O
     type = DerivativeParsedMaterial
     property_name = 'flux_on_T2O_wet'
     material_property_names = 'flux_base_on_T2O_wet'
     expression = '-1 * flux_base_on_T2O_wet'
+    enable_jit = false
   []
 []
 
