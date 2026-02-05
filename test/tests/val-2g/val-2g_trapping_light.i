@@ -2,7 +2,21 @@
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
 eV_to_J = '${units 1.602176634e-19 eV/J}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
 N_a = '${units 6.02214076e23 at/mol}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
-k_B = '${units 8.61733e-5 eV/K}' # Boltzmann constant in eV
+
+# Critical parameters
+electron_concentration_initial_expo = -5.4
+T2O_reaction_forward_value_expo = -33
+T2_reaction_forward_value_expo = -41
+diffusivity_OT_prefactor_m2s = 2e-9
+diffusivity_OT_energy_ev = 0.23
+diffusivity_V_O_prefactor_m2s = 1.021e-7
+diffusivity_V_O_energy = 89216.77
+diffusivity_e_prefactor_m2s = 2.05e-2
+diffusivity_e_energy = 103818.22
+delta_H_T2O = -79.5e3
+delta_S_T2O = -88.9
+delta_H_T2 = -79.5e3
+delta_S_T2 = -124.53
 
 # thermal parameters
 temperature_low = '${units 300 K}'
@@ -35,14 +49,6 @@ oxygen_vacancy_concentration_initial = '${units ${fparse hydration_limit_S / 2 *
 oxygen_concentration_initial = '${units ${fparse 3 * N - oxygen_vacancy_concentration_initial - OT_concentration_initial} at/mum^3}'
 electron_concentration_initial = '${units ${fparse 10 ^ electron_concentration_initial_expo * N} at/mum^3}' # 0.001
 
-# Traps parameters
-initial_concentration_trap_1 = 0 # (-)
-detrapping_energy_1 = '${fparse detrapping_energy_1_ev / k_B}'
-trapping_site_fraction_1 = ${fparse 3 * 10 ^ trapping_site_fraction_1_expo} # (-)
-trapping_rate_prefactor = '${units ${fparse 4.8 * 10 ^ trapping_rate_prefactor_expo} 1/s}'
-release_rate_profactor = '${units ${fparse 2.6 * 10 ^ release_rate_profactor_expo }1/s}'
-trapping_energy = '${fparse trapping_energy_ev / k_B}'
-trap_per_free_1 = 1e0 # (-)
 ##### Dry Pressure conditions
 pressure_T2_high = '${units 1.33e3 Pa}'
 pressure_T2_low = '${units 1e-5 Pa}'
@@ -83,11 +89,6 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
   [electron_concentration_dry]
     initial_condition = ${electron_concentration_initial}
   []
-  [trapped_1_dry]
-    order = FIRST
-    family = LAGRANGE
-    initial_condition = '${fparse initial_concentration_trap_1 * trapping_site_fraction_1 * N}'
-  []
 
   #### Wet variable
   [OT_concentration_wet] # (atoms/microns^3)
@@ -99,11 +100,6 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
   [electron_concentration_wet]
     initial_condition = ${electron_concentration_initial}
   []
-  [trapped_1_wet]
-    order = FIRST
-    family = LAGRANGE
-    initial_condition = '${fparse initial_concentration_trap_1 * trapping_site_fraction_1 * N}'
-  []
 []
 
 [Bounds]
@@ -114,24 +110,10 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
     bound_type = lower
     bound_value = ${bound_value_min}
   []
-  [trap1_dry_lower_bound]
-    type = ConstantBounds
-    variable = bounds_dummy
-    bounded_variable = trapped_1_dry
-    bound_type = lower
-    bound_value = ${bound_value_min}
-  []
   [concentration_wet_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy
     bounded_variable = OT_concentration_wet
-    bound_type = lower
-    bound_value = ${bound_value_min}
-  []
-  [trap1_wet_lower_bound]
-    type = ConstantBounds
-    variable = bounds_dummy
-    bounded_variable = trapped_1_wet
     bound_type = lower
     bound_value = ${bound_value_min}
   []
@@ -237,15 +219,6 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
     diffusivity = diffusivity_e
     extra_vector_tags = ref
   []
-  # trapping kernel
-  [coupled_time_trap_1_dry]
-    type = ADCoefCoupledTimeDerivative
-    variable = OT_concentration_dry
-    v = trapped_1_dry
-    coef = ${trap_per_free_1}
-    block = 0
-    extra_vector_tags = ref
-  []
 
   #### Wet kernels
   [time_OT_wet]
@@ -280,67 +253,6 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
     variable = electron_concentration_wet
     diffusivity = diffusivity_e
     extra_vector_tags = ref
-  []
-  # trapping kernel
-  [coupled_time_trap_1_wet]
-    type = ADCoefCoupledTimeDerivative
-    variable = OT_concentration_wet
-    v = trapped_1_wet
-    coef = ${trap_per_free_1}
-    block = 0
-    extra_vector_tags = ref
-  []
-[]
-
-[NodalKernels]
-  #### First traps under dry
-  [time_1_dry]
-    type = TimeDerivativeNodalKernel
-    variable = trapped_1_dry
-  []
-  [trapping_1_dry]
-    type = TrappingNodalKernel
-    variable = trapped_1_dry
-    mobile_concentration = OT_concentration_dry
-    alpha_t = '${trapping_rate_prefactor}'
-    trapping_energy = '${trapping_energy}'
-    N = '${N}'
-    Ct0 = '${trapping_site_fraction_1}'
-    temperature = 'temperature'
-    trap_per_free = '${trap_per_free_1}'
-    extra_vector_tags = ref
-  []
-  [release_1_dry]
-    type = ReleasingNodalKernel
-    variable = trapped_1_dry
-    alpha_r = '${release_rate_profactor}'
-    detrapping_energy = '${detrapping_energy_1}'
-    temperature = 'temperature'
-  []
-
-  #### First traps under wet
-  [time_1_wet]
-    type = TimeDerivativeNodalKernel
-    variable = trapped_1_wet
-  []
-  [trapping_1_wet]
-    type = TrappingNodalKernel
-    variable = trapped_1_wet
-    mobile_concentration = OT_concentration_wet
-    alpha_t = '${trapping_rate_prefactor}'
-    trapping_energy = '${trapping_energy}'
-    N = '${N}'
-    Ct0 = '${trapping_site_fraction_1}'
-    temperature = 'temperature'
-    trap_per_free = '${trap_per_free_1}'
-    extra_vector_tags = ref
-  []
-  [release_1_wet]
-    type = ReleasingNodalKernel
-    variable = trapped_1_wet
-    alpha_r = '${release_rate_profactor}'
-    detrapping_energy = '${detrapping_energy_1}'
-    temperature = 'temperature'
   []
 []
 
@@ -648,12 +560,6 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
     function = max_dt_size_function
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = none
-  []
-[]
-
-[Controls]
-  [stochastic]
-    type = SamplerReceiver
   []
 []
 
