@@ -10,14 +10,14 @@ delta_H_T2 = -79.5e3
 delta_S_T2 = -124.53
 
 # thermal parameters
-temperature_low = '${units 300 K}'
+temperature_low = '${units 1000 K}'
 temperature_initial = '${units 873 K}'
 temperature_high = '${units 1400 K}'
 temperature_rate = '${units 0.5 K/s}'
 
 # Model parameters
-dissolve_duration = '${units 60 s}'
-cooldown_duration = '${units 60 s}'
+dissolve_duration = '${units 1 s}'
+cooldown_duration = '${units 1 s}'
 desorption_duration = '${fparse (temperature_high - temperature_low) / temperature_rate}'
 endtime = '${units ${fparse dissolve_duration + cooldown_duration + desorption_duration} s}'
 dt_start_charging = '${units 1e-1 s}'
