@@ -4,14 +4,7 @@ eV_to_J = '${units 1.602176634e-19 eV/J}' # ideal gas constant based on number u
 N_a = '${units 6.02214076e23 at/mol}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
 
 # Critical parameters
-electron_concentration_initial_expo = -5.4
-T2O_reaction_forward_value_expo = -33
-T2_reaction_forward_value_expo = -41
-diffusivity_OT_prefactor_m2s = 2e-9
-diffusivity_OT_energy_ev = 0.23
-diffusivity_V_O_prefactor_m2s = 1.021e-7
 diffusivity_V_O_energy = 89216.77
-diffusivity_e_prefactor_m2s = 2.05e-2
 diffusivity_e_energy = 103818.22
 delta_H_T2O = -79.5e3
 delta_S_T2O = -88.9
@@ -26,7 +19,7 @@ temperature_rate = '${units 0.5 K/s}'
 
 # Model parameters
 dissolve_duration = '${units 1 h -> s}'
-cooldown_time_constant = '${units ${fparse 10*60} s}'
+cooldown_time_constant = '${units 600 s}'
 cooldown_duration = '${units 1 h -> s}'
 desorption_duration = '${fparse (temperature_high - temperature_low) / temperature_rate}'
 endtime = '${units ${fparse dissolve_duration + cooldown_duration + desorption_duration} s}'
@@ -38,16 +31,13 @@ length = '${units 0.5 mm -> mum}'
 num_nodes = 600
 
 # Material properties
-density_BZY20 = '${units 5.98 g/cm^3 -> g/m^3}'
-molar_mass_BZY20 = '${units 276.085 g/mol}'
-N = '${units ${fparse density_BZY20 / molar_mass_BZY20 * N_a} at/m^3 -> at/mum^3}' # 1.3043649601e10
+N = '${units 1.3043954487e28 at/m^3 -> at/mum^3}'
 
 # Initial concentrations
 OT_concentration_initial = 0
-hydration_limit_S = 0.1
-oxygen_vacancy_concentration_initial = '${units ${fparse hydration_limit_S / 2 * N} at/mum^3}'
-oxygen_concentration_initial = '${units ${fparse 3 * N - oxygen_vacancy_concentration_initial - OT_concentration_initial} at/mum^3}'
-electron_concentration_initial = '${units ${fparse 10 ^ electron_concentration_initial_expo * N} at/mum^3}' # 0.001
+oxygen_vacancy_concentration_initial = '${units ${fparse 0.05 * N} at/mum^3}'
+oxygen_concentration_initial = '${units ${fparse 2.95 * N} at/mum^3}'
+electron_concentration_initial = '${units ${fparse 1e-5 * N} at/mum^3}'
 
 ##### Dry Pressure conditions
 pressure_T2_high = '${units 1.33e3 Pa}'
@@ -59,14 +49,14 @@ pressure_T2O_low = '${units 1e-5 Pa}'
 pressure_T2_wet = '${units 0 Pa}' # We assume the pressure of T2O is 0
 
 # chemical_reaction
-T2O_reaction_forward_value = '${units ${fparse 2 * 10 ^ T2O_reaction_forward_value_expo} m^4/at/s -> mum^4/at/s}'
-T2_reaction_forward_value = '${units ${fparse 2 * 10 ^ T2_reaction_forward_value_expo} m^4/at/s -> mum^4/at/s}'
+T2O_reaction_forward_value = '${units 2e-33 m^4/at/s -> mum^4/at/s}'
+T2_reaction_forward_value = '${units 2e-41 m^4/at/s -> mum^4/at/s}'
 
-# Materials diffusivities (Deuterium: diffusivity and solubility data from Hossain 2020)
-diffusivity_OT_prefactor = '${units ${fparse diffusivity_OT_prefactor_m2s * sqrt(3/2)} m^2/s -> mum^2/s}'
-diffusivity_OT_energy = '${units ${fparse diffusivity_OT_energy_ev * eV_to_J * N_a} J/mol}'
-diffusivity_V_O_prefactor = '${units ${diffusivity_V_O_prefactor_m2s} m^2/s -> mum^2/s}'
-diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2/s}'
+# Materials diffusivities
+diffusivity_OT_prefactor = '${units 2e-9 m^2/s -> mum^2/s}'
+diffusivity_OT_energy = '${units ${fparse 0.23 * eV_to_J * N_a} J/mol}'
+diffusivity_V_O_prefactor = '${units 1.021e-7 m^2/s -> mum^2/s}'
+diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
 
 [Mesh]
   [cmg]
@@ -575,7 +565,6 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
   automatic_scaling = true
   compute_scaling_once = true
   line_search = none
-  error_on_dtmin = false
   nl_max_its = 10
   [TimeStepper]
     type = IterationAdaptiveDT
@@ -586,10 +575,6 @@ diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2
     cutback_factor_at_failure = 0.9
     timestep_limiting_postprocessor = max_time_step_size
   []
-[]
-
-[Debug]
-  show_var_residual_norms = true
 []
 
 [Outputs]
