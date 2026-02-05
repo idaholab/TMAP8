@@ -91,76 +91,88 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
   []
 []
 
+[Problem]
+  type = ReferenceResidualProblem
+  extra_tag_vectors = 'ref'
+  reference_vector = 'ref'
+[]
+
 [Kernels]
   #### Wet kernels
   [time_OT_wet]
-    type = ADTimeDerivative
+    type = TimeDerivative
     variable = OT_concentration_wet
+    extra_vector_tags = ref
   []
   [diffusion_OT_wet]
-    type = ADMatDiffusion
+    type = MatDiffusion
     variable = OT_concentration_wet
     diffusivity = diffusivity_OT
+    extra_vector_tags = ref
   []
   [time_V_O_wet]
-    type = ADTimeDerivative
+    type = TimeDerivative
     variable = Oxygen_vacancy_concentration_wet
+    extra_vector_tags = ref
   []
   [diffusion_V_O_wet]
-    type = ADMatDiffusion
+    type = MatDiffusion
     variable = Oxygen_vacancy_concentration_wet
     diffusivity = diffusivity_V_O
+    extra_vector_tags = ref
   []
   [time_e_wet]
-    type = ADTimeDerivative
+    type = TimeDerivative
     variable = electron_concentration_wet
+    extra_vector_tags = ref
   []
   [diffusion_e_wet]
-    type = ADMatDiffusion
+    type = MatDiffusion
     variable = electron_concentration_wet
     diffusivity = diffusivity_e
+    extra_vector_tags = ref
   []
 []
 
 [BCs]
   #### Wet BCs
   [left_OT_wet]
-    type = ADMatNeumannBC
+    type = MatNeumannBC
     variable = OT_concentration_wet
     boundary = left
     value = 1
     boundary_material = flux_on_OT_wet
   []
   [right_OT_wet]
-    type = ADMatNeumannBC
+    type = MatNeumannBC
     variable = OT_concentration_wet
     boundary = right
     value = 1
     boundary_material = flux_on_OT_wet
   []
   [left_V_O_wet]
-    type = ADMatNeumannBC
+    type = MatNeumannBC
     variable = Oxygen_vacancy_concentration_wet
     boundary = left
     value = 1
     boundary_material = flux_on_V_O_wet
   []
   [right_V_O_wet]
-    type = ADMatNeumannBC
+    type = MatNeumannBC
     variable = Oxygen_vacancy_concentration_wet
     boundary = right
     value = 1
     boundary_material = flux_on_V_O_wet
   []
   [left_e_wet]
-    type = ADMatNeumannBC
+    type = MatNeumannBC
     variable = electron_concentration_wet
     boundary = left
     value = 1
     boundary_material = flux_on_e_wet
   []
   [right_e_wet]
-    type = ADMatNeumannBC
+    type = MatNeumannBC
     variable = electron_concentration_wet
     boundary = right
     value = 1
@@ -184,67 +196,67 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
 
 [Materials]
   [diffusivity_OT]
-    type = ADParsedMaterial
+    type = ParsedMaterial
     property_name = 'diffusivity_OT'
     coupled_variables = 'temperature'
     expression = '${diffusivity_OT_prefactor} * exp(-${diffusivity_OT_energy} / ${R} / temperature)'
   []
   [diffusivity_V_O]
-    type = ADParsedMaterial
+    type = ParsedMaterial
     property_name = 'diffusivity_V_O'
     coupled_variables = 'temperature'
     expression = '${diffusivity_V_O_prefactor} * exp(-${diffusivity_V_O_energy} / ${R} / temperature)'
   []
   [diffusivity_e]
-    type = ADParsedMaterial
+    type = ParsedMaterial
     property_name = 'diffusivity_e'
     coupled_variables = 'temperature'
     expression = '${diffusivity_e_prefactor} * exp(-${diffusivity_e_energy} / ${R} / temperature)'
   []
   [reaction_equilibrium_constant_T2O]
-    type = ADParsedMaterial
+    type = ParsedMaterial
     property_name = 'T2O_K_eq'
     coupled_variables = 'temperature'
     expression = 'exp( (temperature * ${delta_S_T2O} - ${delta_H_T2O}) / ${R} / temperature )'
   []
   [reaction_forward_T2O]
-    type = ADParsedMaterial
+    type = ParsedMaterial
     property_name = 'T2O_K_forward'
     expression = '${T2O_reaction_forward_value}'
   []
   [reaction_reverse_T2O]
-    type = ADParsedMaterial
+    type = ParsedMaterial
     property_name = 'T2O_K_reverse'
     material_property_names = 'T2O_K_forward T2O_K_eq'
     expression = 'T2O_K_forward / T2O_K_eq'
   []
   [reaction_equilibrium_constant_T2]
-    type = ADParsedMaterial
+    type = ParsedMaterial
     property_name = 'T2_K_eq'
     coupled_variables = 'temperature'
     expression = 'exp( (temperature * ${delta_S_T2} - ${delta_H_T2}) / ${R} / temperature )'
   []
   [reaction_forward_T2]
-    type = ADParsedMaterial
+    type = ParsedMaterial
     property_name = 'T2_K_forward'
     expression = '${T2_reaction_forward_value}'
   []
   [reaction_reverse_T2]
-    type = ADParsedMaterial
+    type = ParsedMaterial
     property_name = 'T2_K_reverse'
     material_property_names = 'T2_K_forward T2_K_eq'
     expression = 'T2_K_forward / T2_K_eq'
   []
   #### Reaction for wet
   [flux_base_on_T2O_wet] # T2O + V_O + O -> 2 OT
-    type = ADDerivativeParsedMaterial
+    type = DerivativeParsedMaterial
     coupled_variables = 'OT_concentration_wet pressure_T2O_wet Oxygen_concentration_wet Oxygen_vacancy_concentration_wet'
     property_name = 'flux_base_on_T2O_wet'
     material_property_names = 'T2O_K_forward T2O_K_reverse'
     expression = '(T2O_K_forward * pressure_T2O_wet * Oxygen_concentration_wet * Oxygen_vacancy_concentration_wet - T2O_K_reverse * OT_concentration_wet^2)'
   []
   [flux_base_on_T2_wet] # T2 + 2 O -> 2 OT + 2 e
-    type = ADDerivativeParsedMaterial
+    type = DerivativeParsedMaterial
     coupled_variables = 'OT_concentration_wet Oxygen_concentration_wet electron_concentration_wet'
     property_name = 'flux_base_on_T2_wet'
     material_property_names = 'T2_K_forward T2_K_reverse'
@@ -252,31 +264,31 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
   []
   #### Flux for wet
   [flux_on_e_wet] # electron
-    type = ADDerivativeParsedMaterial
+    type = DerivativeParsedMaterial
     property_name = 'flux_on_e_wet'
     material_property_names = 'flux_base_on_T2_wet'
     expression = '2 * flux_base_on_T2_wet'
   []
   [flux_on_OT_wet] # OT
-    type = ADDerivativeParsedMaterial
+    type = DerivativeParsedMaterial
     property_name = 'flux_on_OT_wet'
     material_property_names = 'flux_base_on_T2O_wet'
     expression = '2 * flux_base_on_T2O_wet'
   []
   [flux_on_T2_wet] # T2
-    type = ADDerivativeParsedMaterial
+    type = DerivativeParsedMaterial
     property_name = 'flux_on_T2_wet'
     material_property_names = 'flux_base_on_T2_wet'
     expression = '-1 * flux_base_on_T2_wet'
   []
   [flux_on_V_O_wet] # V_O
-    type = ADDerivativeParsedMaterial
+    type = DerivativeParsedMaterial
     property_name = 'flux_on_V_O_wet'
     material_property_names = 'flux_base_on_T2O_wet'
     expression = '-1 * flux_base_on_T2O_wet'
   []
   [flux_on_T2O_wet] # T2O
-    type = ADDerivativeParsedMaterial
+    type = DerivativeParsedMaterial
     property_name = 'flux_on_T2O_wet'
     material_property_names = 'flux_base_on_T2O_wet'
     expression = '-1 * flux_base_on_T2O_wet'
@@ -286,12 +298,12 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
 [Postprocessors]
   #### Postprocessors for flux under wet
   [recombination_flux_T2O_wet_left]
-    type = ADSideAverageMaterialProperty
+    type = SideAverageMaterialProperty
     boundary = left
     property = flux_on_T2O_wet
   []
   [recombination_flux_T2_wet_left]
-    type = ADSideAverageMaterialProperty
+    type = SideAverageMaterialProperty
     boundary = left
     property = flux_on_T2_wet
   []
@@ -304,8 +316,11 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
   nl_rel_tol = 1e-7
-  nl_abs_tol = 1e-10
-  end_time = 3
+  nl_abs_tol = 1e-8
+  automatic_scaling = true
+  compute_scaling_once = true
+  line_search = none
+  num_steps = 3
   nl_max_its = 10
   dt=0.1
 []
