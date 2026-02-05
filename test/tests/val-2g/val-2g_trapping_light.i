@@ -7,13 +7,6 @@ temperature_initial = '${units 873 K}'
 temperature_high = '${units 1400 K}'
 temperature_rate = '${units 10 K/s}'
 
-# Model parameters
-dissolve_duration = '${units 1 s}'
-cooldown_duration = '${units 1 s}'
-desorption_duration = '${fparse (temperature_high - temperature_low) / temperature_rate}'
-# endtime = '${units ${fparse dissolve_duration + cooldown_duration + desorption_duration} s}'
-# dt_start_charging = '${units 1e-1 s}'
-
 # Geometry and mesh
 length = '${units 0.5 mm -> mum}'
 num_nodes = 30
@@ -26,7 +19,6 @@ electron_concentration_initial = '${units ${fparse 1e-5 * N} at/mum^3}'
 
 # Wet Pressure conditions
 pressure_T2O_high = '${units 2.8e3 Pa}'
-pressure_T2_wet = '${units 0 Pa}' # We assume the pressure of T2O is 0
 
 # chemical_reaction
 delta_H_T2O = '${units -79.5e3 J/mol}'
@@ -50,7 +42,6 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
     dim = 1
     dx = '${fparse length}'
     ix = '${fparse num_nodes}'
-    subdomain_id = '0'
   []
 []
 
@@ -100,46 +91,34 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
   []
 []
 
-[Problem]
-  type = ReferenceResidualProblem
-  extra_tag_vectors = 'ref'
-  reference_vector = 'ref'
-[]
-
 [Kernels]
   #### Wet kernels
   [time_OT_wet]
     type = ADTimeDerivative
     variable = OT_concentration_wet
-    extra_vector_tags = ref
   []
   [diffusion_OT_wet]
     type = ADMatDiffusion
     variable = OT_concentration_wet
     diffusivity = diffusivity_OT
-    extra_vector_tags = ref
   []
   [time_V_O_wet]
     type = ADTimeDerivative
     variable = Oxygen_vacancy_concentration_wet
-    extra_vector_tags = ref
   []
   [diffusion_V_O_wet]
     type = ADMatDiffusion
     variable = Oxygen_vacancy_concentration_wet
     diffusivity = diffusivity_V_O
-    extra_vector_tags = ref
   []
   [time_e_wet]
     type = ADTimeDerivative
     variable = electron_concentration_wet
-    extra_vector_tags = ref
   []
   [diffusion_e_wet]
     type = ADMatDiffusion
     variable = electron_concentration_wet
     diffusivity = diffusivity_e
-    extra_vector_tags = ref
   []
 []
 
@@ -192,15 +171,14 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
 [Functions]
   [Temperature_function]
     type = ParsedFunction
-    expression = 'if(t<${dissolve_duration} + ${cooldown_duration}, ${temperature_initial},
-                  if(t<${dissolve_duration} + ${cooldown_duration} + ${desorption_duration},
-                              ${temperature_low} + ${temperature_rate} * (t - ${dissolve_duration} - ${cooldown_duration}),
-                              ${temperature_high}))'
+    expression = 'if(t<2, ${temperature_initial},
+                  if(t<3, ${temperature_low} + ${temperature_rate} * (t - 2),
+                          ${temperature_high}))'
   []
   [Pressure_T2O_wet_function]
     type = ParsedFunction
-    expression = 'if(t<${dissolve_duration} + ${cooldown_duration} - 1000, ${pressure_T2O_high},
-                  if(t<${dissolve_duration} + ${cooldown_duration}, 1e-5, 1e-5))'
+    expression = 'if(t<1, ${pressure_T2O_high},
+                  if(t<2, 1e-5, 1e-5))'
   []
 []
 
@@ -270,7 +248,7 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
     coupled_variables = 'OT_concentration_wet Oxygen_concentration_wet electron_concentration_wet'
     property_name = 'flux_base_on_T2_wet'
     material_property_names = 'T2_K_forward T2_K_reverse'
-    expression = '(T2_K_forward * ${pressure_T2_wet} * Oxygen_concentration_wet^2 - T2_K_reverse * OT_concentration_wet^2 * electron_concentration_wet^2)'
+    expression = '(- T2_K_reverse * OT_concentration_wet^2 * electron_concentration_wet^2)'
   []
   #### Flux for wet
   [flux_on_e_wet] # electron
@@ -328,28 +306,11 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
   nl_rel_tol = 1e-7
   nl_abs_tol = 1e-10
   end_time = 3
-  automatic_scaling = true
-  compute_scaling_once = true
-  line_search = none
   nl_max_its = 10
   dt=0.1
-
-  # [TimeStepper]
-  #   type = IterationAdaptiveDT
-  #   dt = ${dt_start_charging}
-  #   optimal_iterations = 7
-  #   growth_factor = 1.1
-  #   cutback_factor = 0.9
-  #   cutback_factor_at_failure = 0.9
-  # []
 []
 
 [Outputs]
-  [csv]
-    type = CSV
-  []
-  [exodus]
-    type = Exodus
-    start_time = ${fparse dissolve_duration + cooldown_duration}
-  []
+  csv = true
+  exodus = true
 []
