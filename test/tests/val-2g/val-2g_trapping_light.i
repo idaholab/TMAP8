@@ -1,7 +1,5 @@
 # Physical constants
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
-eV_to_J = '${units 1.602176634e-19 eV/J}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
-N_a = '${units 6.02214076e23 at/mol}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
 
 # Critical parameters
 diffusivity_V_O_energy = 89216.77
@@ -18,12 +16,12 @@ temperature_high = '${units 1400 K}'
 temperature_rate = '${units 0.5 K/s}'
 
 # Model parameters
-dissolve_duration = '${units 1 h -> s}'
+dissolve_duration = '${units 60 s}'
 cooldown_time_constant = '${units 600 s}'
-cooldown_duration = '${units 1 h -> s}'
+cooldown_duration = '${units 60 s}'
 desorption_duration = '${fparse (temperature_high - temperature_low) / temperature_rate}'
 endtime = '${units ${fparse dissolve_duration + cooldown_duration + desorption_duration} s}'
-dt_start_charging = '${units 1e-4 s}'
+dt_start_charging = '${units 1e-1 s}'
 bound_value_min = '${units -1e-20 at/mum^3}'
 
 # Geometry and mesh
@@ -34,7 +32,6 @@ num_nodes = 600
 N = '${units 1.3043954487e28 at/m^3 -> at/mum^3}'
 
 # Initial concentrations
-OT_concentration_initial = 0
 oxygen_vacancy_concentration_initial = '${units ${fparse 0.05 * N} at/mum^3}'
 oxygen_concentration_initial = '${units ${fparse 2.95 * N} at/mum^3}'
 electron_concentration_initial = '${units ${fparse 1e-5 * N} at/mum^3}'
@@ -54,7 +51,7 @@ T2_reaction_forward_value = '${units 2e-41 m^4/at/s -> mum^4/at/s}'
 
 # Materials diffusivities
 diffusivity_OT_prefactor = '${units 2e-9 m^2/s -> mum^2/s}'
-diffusivity_OT_energy = '${units ${fparse 0.23 * eV_to_J * N_a} J/mol}'
+diffusivity_OT_energy = '${units 22191 J/mol}'
 diffusivity_V_O_prefactor = '${units 1.021e-7 m^2/s -> mum^2/s}'
 diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
 
@@ -71,7 +68,7 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
 [Variables]
   #### Dry variable
   [OT_concentration_dry] # (atoms/microns^3)
-    initial_condition = ${OT_concentration_initial}
+    initial_condition = 0
   []
   [Oxygen_vacancy_concentration_dry]
     initial_condition = ${oxygen_vacancy_concentration_initial}
@@ -82,7 +79,7 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
 
   #### Wet variable
   [OT_concentration_wet] # (atoms/microns^3)
-    initial_condition = ${OT_concentration_initial}
+    initial_condition = 0
   []
   [Oxygen_vacancy_concentration_wet]
     initial_condition = ${oxygen_vacancy_concentration_initial}
@@ -124,7 +121,6 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
   [Oxygen_concentration_dry]
     initial_condition = ${oxygen_concentration_initial}
   []
-
   #### Wet auxvariable
   [pressure_T2O_wet]
     initial_condition = ${pressure_T2O_high}
