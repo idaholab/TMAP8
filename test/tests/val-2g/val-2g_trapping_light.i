@@ -21,7 +21,6 @@ cooldown_duration = '${units 1 s}'
 desorption_duration = '${fparse (temperature_high - temperature_low) / temperature_rate}'
 endtime = '${units ${fparse dissolve_duration + cooldown_duration + desorption_duration} s}'
 dt_start_charging = '${units 1e-1 s}'
-bound_value_min = '${units -1e-20 at/mum^3}'
 
 # Geometry and mesh
 length = '${units 0.5 mm -> mum}'
@@ -74,21 +73,7 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
   []
 []
 
-[Bounds]
-  [concentration_wet_lower_bound]
-    type = ConstantBounds
-    variable = bounds_dummy
-    bounded_variable = OT_concentration_wet
-    bound_type = lower
-    bound_value = ${bound_value_min}
-  []
-[]
-
 [AuxVariables]
-  [bounds_dummy]
-    order = FIRST
-    family = LAGRANGE
-  []
   [temperature]
     initial_condition = ${temperature_initial}
   []
@@ -363,8 +348,8 @@ diffusivity_e_prefactor = '${units 2.05e-2 m^2/s -> mum^2/s}'
   type = Transient
   scheme = bdf2
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -snes_type'
-  petsc_options_value = 'lu vinewtonrsls'
+  petsc_options_iname = '-pc_type'
+  petsc_options_value = 'lu'
   nl_rel_tol = 1e-7
   nl_abs_tol = 1e-10
   end_time = ${endtime}
