@@ -10,18 +10,18 @@ This problem models permeation through a membrane with a constant source in whic
 
 \begin{equation}
     \label{eqn:diffusion_mobile}
-    \frac{dC_M}{dt} = \nabla D \nabla C_M - f_{T/M} \cdot \sum_{i=1}^{3} \frac{dC_{T_i}}{dt} ,
+    \frac{dC_M}{dt} = \nabla \cdot D \nabla C_M - \sum_{i=1}^{3} f_{T/M,i} \frac{dC_{T_i}}{dt} ,
 \end{equation}
 and, for $i=1$, $i=2$, and $i=3$:
 \begin{equation}
     \label{eqn:trapped_rate}
-    \frac{dC_{T_i}}{dt} = \alpha_t^i  \frac {C_{T_i}^{empty} C_M } {(N \cdot f_{T/M})} - \alpha_r^i C_{T_i},
+    \frac{dC_{T_i}}{dt} = \alpha_t^i  \frac {C_{T_i}^{empty} C_M } {(N f_{T/M,i})} - \alpha_r^i C_{T_i},
 \end{equation}
 and
 \begin{equation} \label{eqn:trapping_empty}
-    C_{T_i}^{empty} = C_{{T_i}0} \cdot N - f_{T/M} \cdot C_{T_i} ,
+    C_{T_i}^{empty} = C_{{T_i}0} N - f_{T/M,i} C_{T_i} ,
 \end{equation}
-where $C_M$ is the concentrations of the mobile, $C_{T_i}$ is the trapped species in trap $i$, $D$ is the diffusivity of the mobile species, $\alpha_t^i$ and $\alpha_r^i$ are the trapping and release rate coefficients for trap $i$, $f_{T/M}$ is a fixed numerical factor scaling $C_{T_i}$ to be closer to $C_M$ for better numerical convergence, $C_{{T_i}0}$ is the fraction of host sites $i$ that can contribute to trapping, $C_{T_i}^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density.
+where $C_M$ is the concentrations of the mobile, $C_{T_i}$ is the trapped species in trap $i$, $D$ is the diffusivity of the mobile species, $\alpha_t^i$ and $\alpha_r^i$ are the trapping and release rate coefficients for trap $i$, $f_{T/M,i}$ is a fixed numerical factor scaling $C_{T_i}$ to be closer to $C_M$ for better numerical convergence, $C_{{T_i}0}$ is the fraction of host sites $i$ that can contribute to trapping, $C_{T_i}^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density.
 
 The trapping parameter is defined by
 \begin{equation}

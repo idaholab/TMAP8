@@ -336,17 +336,17 @@ We solve the following equations:
 For mobile species:
 
 !equation
-\frac{\partial C_M}{\partial t} = \nabla \cdot (D \nabla C_M) - f_{T/M} \cdot \frac{\partial C_T}{\partial t}
+\frac{\partial C_M}{\partial t} = \nabla \cdot (D \nabla C_M) - f_{T/M} \frac{\partial C_T}{\partial t}
 
 For trapped species:
 
 !equation
-\frac{\partial C_T}{\partial t} = \alpha_t \frac{C_T^{empty} C_M}{N \cdot f_{T/M}} - \alpha_r C_T
+\frac{\partial C_T}{\partial t} = \alpha_t \frac{C_T^{empty} C_M}{N f_{T/M}} - \alpha_r C_T
 
 For empty trapping sites:
 
 !equation
-C_T^{empty} = C_{T0} \cdot N - f_{T/M} \cdot C_T
+C_T^{empty} = C_{T0} N - f_{T/M} C_T
 
 !col-end!
 
@@ -530,7 +530,7 @@ In this case, we'll be highlighting the main changes from Case 1, where we only 
 - [TrappingNodalKernel.md] is used for:
 
   !equation
-  -\alpha_t  \frac {C_T^{empty} C_M } {(N \cdot f_{T/M})}
+  -\alpha_t  \frac {C_T^{empty} C_M } {(N f_{T/M})}
 
 - Finally, [ReleasingNodalKernel.md] is used for:
 
@@ -590,7 +590,7 @@ For the deep trapping limit case, we'll cover the additions of objects to determ
 - Because the empty trapping concentration is not a differential equation, we can solve for it using the [AuxKernels/index.md]:
 
   !equation
-  C_T^{empty} = C_{T0} \cdot N - f_{T/M} \cdot C_T
+  C_T^{empty} = C_{T0} N - f_{T/M} C_T
 
 - AuxKernels are also used (in the case of `scaled_empty` and `trapped_sites`) to calculate the total concentration of trapping sites in the model.
 
@@ -688,15 +688,15 @@ This case is very similar to Case 2, except there are now three different types 
 Mobile species with three trap interactions:
 
 !equation
-\frac{\partial C_M}{\partial t} = \nabla \cdot (D \nabla C_M) - f_{T/M} \cdot \sum_{i=1}^{3} \frac{\partial C_{T_i}}{\partial t}
+\frac{\partial C_M}{\partial t} = \nabla \cdot (D \nabla C_M) - \sum_{i=1}^{3} f_{T/M,i} \frac{\partial C_{T_i}}{\partial t}
 
 !equation
-\frac{dC_{T_i}}{dt} = \alpha_t^i  \frac {C_{T_i}^{empty} C_M } {(N \cdot f_{T/M})} - \alpha_r^i C_{T_i}
+\frac{dC_{T_i}}{dt} = \alpha_t^i  \frac {C_{T_i}^{empty} C_M } {(N f_{T/M,i})} - \alpha_r^i C_{T_i}
 
 Each trap evolves independently (i = 1, 2, 3). Finally, for the empty trapping sites:
 
 !equation
-C_{T_i}^{empty} = (C_{{T_i}0} \cdot N - f_{T/M} \cdot C_{T_i}  )
+C_{T_i}^{empty} = (C_{{T_i}0} N - f_{T/M,i} C_{T_i}  )
 
 !---
 

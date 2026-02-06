@@ -36,23 +36,23 @@ The second is a uniform trap associated with dislocations and is assigned a trap
 Therefore, the diffusion of tritium in sample is described as:
 
 \begin{equation} \label{eq:diffusion}
-\frac{d C}{d t} = \nabla D \nabla C + S + f_{T/M} \cdot \sum_{i=1}^{3} \frac{dC_{T_i}}{dt} ,
+\frac{d C}{d t} = \nabla \cdot D \nabla C + S + \sum_{i=1}^{3} f_{T/M,i} \frac{dC_{T_i}}{dt} ,
 \end{equation}
 
 and, for $i=1$, $i=2$, and $i=3$:
 
 \begin{equation}
     \label{eqn:trapped_rate}
-    \frac{dC_{T_i}}{dt} = \alpha_t^i  \frac {C_{T_i}^{empty} C } {(N \cdot f_{T/M})} - \alpha_r^i C_{T_i},
+    \frac{dC_{T_i}}{dt} = \alpha_t^i \frac{C_{T_i}^{empty} C } {(N f_{T/M,i})} - \alpha_r^i C_{T_i},
 \end{equation}
 
 and
 
 \begin{equation}
-    C_{T_i}^{empty} = (C_{{T_i}0} \cdot N - f_{T/M} \cdot C_{T_i}  ) ,
+    C_{T_i}^{empty} = (C_{{T_i}0} N - f_{T/M,i} C_{T_i}  ) ,
 \end{equation}
 
-where $C$ is the concentration of tritium, $t$ is the time, $S$ is the source term in sample due to the tritium ion implantation, $C_{T_i}$ is the trapped species in trap $i$, $\alpha_t^i$ and $\alpha_r^i$ are the trapping and release rate coefficients for trap $i$, $f_{T/M}$ is a fixed numerical factor scaling $C_{T_i}$ to be closer to $C$ for better numerical convergence, $C_{{T_i}0}$ is the fraction of host sites $i$ that can contribute to trapping, $C_{T_i}^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density, and $D$ is the tritium diffusivity in tungsten, which is defined as:
+where $C$ is the concentration of tritium, $t$ is the time, $S$ is the source term in sample due to the tritium ion implantation, $C_{T_i}$ is the trapped species in trap $i$, $\alpha_t^i$ and $\alpha_r^i$ are the trapping and release rate coefficients for trap $i$, $f_{T/M,i}$ is a fixed numerical factor scaling $C_{T_i}$ to be closer to $C$ for better numerical convergence, $C_{{T_i}0}$ is the fraction of host sites $i$ that can contribute to trapping, $C_{T_i}^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density, and $D$ is the tritium diffusivity in tungsten, which is defined as:
 
 \begin{equation} \label{eq:diffusivity}
 D = D_{0} \exp \left( - \frac{E_{D}}{k_b T} \right),
@@ -77,7 +77,7 @@ where $\alpha_{t0}^i$ and $\alpha_{r0}^i$ are pre-exponential factors of trappin
 The thermal diffusion after 5000 s is governing by:
 
 \begin{equation} \label{eq:thermal}
-\rho C_P \frac{d T}{d t} = \nabla D_T \nabla T,
+\rho C_P \frac{d T}{d t} = \nabla \cdot D_T \nabla T,
 \end{equation}
 
 where $\rho$ is the density of Tungsten, $C_P$ is the specific heat, and $D_T$ is the thermal conductivity.
