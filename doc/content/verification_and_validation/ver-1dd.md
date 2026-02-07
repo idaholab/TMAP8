@@ -10,7 +10,7 @@ This problem models permeation through a membrane with a constant source in whic
 
 \begin{equation}
     \label{eqn:diffusion_mobile}
-    \frac{dC_M}{dt} = \nabla D \nabla C_M ,
+    \frac{dC_M}{dt} = \nabla \cdot D \nabla C_M ,
 \end{equation}
 where $C_M$ is the concentrations of the mobile, $D$ is the diffusivity of the mobile species, and $t$ is the time.
 
