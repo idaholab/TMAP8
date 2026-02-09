@@ -43,4 +43,10 @@ protected:
 
   /// Backward reaction rate coefficient
   const ADMaterialProperty<Real> & _kb;
+<<<<<<< HEAD
+=======
+
+  /// Flag to silence correlation out of bound warnings
+  const bool _silence_warnings;
+>>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
 };

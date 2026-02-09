@@ -5,6 +5,10 @@
 /*   Copyright 2021 - 2025 Battelle Energy Alliance, LLC    */
 /*                   ALL RIGHTS RESERVED                    */
 /************************************************************/
+<<<<<<< HEAD
+=======
+/*TEst*/
+>>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
 #include "ADMatInterfaceReactionZr2FeHxPCT.h"
 
 #include "PhysicalConstants.h"
@@ -13,6 +17,10 @@ registerMooseObject("TMAP8App", ADMatInterfaceReactionZr2FeHxPCT);
 
 InputParameters
 ADMatInterfaceReactionZr2FeHxPCT::validParams()
+<<<<<<< HEAD
+=======
+
+>>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
 {
   InputParameters params = ADInterfaceKernel::validParams();
   params.addClassDescription(
@@ -28,6 +36,11 @@ ADMatInterfaceReactionZr2FeHxPCT::validParams()
       "forward_rate", "kf", "Forward reaction rate coefficient (1/s).");
   params.addParam<MaterialPropertyName>(
       "backward_rate", "kb", "Backward reaction rate coefficient (1/s).");
+<<<<<<< HEAD
+=======
+  params.addParam<bool>(
+      "silence_warnings", false, "Whether to silence correlation out of bound warnings");
+>>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
   return params;
 }
 
@@ -37,13 +50,19 @@ ADMatInterfaceReactionZr2FeHxPCT::ADMatInterfaceReactionZr2FeHxPCT(
     _neighbor_temperature(this->template coupledGenericValue<true>("neighbor_temperature")),
     _density(getADMaterialProperty<Real>("density")),
     _kf(getADMaterialProperty<Real>("forward_rate")),
+<<<<<<< HEAD
     _kb(getNeighborADMaterialProperty<Real>("backward_rate"))
+=======
+    _kb(getNeighborADMaterialProperty<Real>("backward_rate")),
+    _silence_warnings(getParam<bool>("silence_warnings"))
+>>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
 {
 }
 
 ADReal
 ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 {
+<<<<<<< HEAD
   // Variables
   ADReal limit_pressure = 5.; // lower pressure limit of fit
   ADReal r = 0.;
@@ -58,6 +77,20 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 
   // Give a warning if the initial or computed neighbor pressure is out of the analytical model
   if (((neighbor_pressure < 7) || (neighbor_pressure > 5e5)))
+=======
+  ADReal r = 0;
+
+  // Calculate the equilibrium concentration value based on PCT curve
+  // (/2 because two atoms for a molecule) (pressure in Pa)
+  auto neighbor_pressure =
+      PhysicalConstants::ideal_gas_constant * _neighbor_temperature[_qp] * _neighbor_value[_qp] / 2;
+
+  // Calculate the value of the pressures-limiter
+  auto limit_pressure = exp(-4.1226 + 1.0288e-2 * _neighbor_temperature[_qp]);
+
+  // return warning if the PCT curves is used out of bounds (pressure in Pa)
+  if (!_silence_warnings && ((neighbor_pressure < limit_pressure) || (neighbor_pressure > 1.e6)))
+>>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
     mooseDoOnce(mooseWarning("In Zr2FeHxPCT: pressure ",
                              neighbor_pressure,
                              "Pa and temperature ",
@@ -66,10 +99,18 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
                              "documentation for Zr2FeHxPCT material."));
 
   // Calculate the atomic fraction based on the PCT curve
+<<<<<<< HEAD
   auto atomic_fraction =
       5.0 - 8.32e-03 / (1.e-03 + exp(-2.49 - 7.62e-03 * _neighbor_temperature[_qp] +
                                      (5.63e-02 + 1.72e-04 * _neighbor_temperature[_qp]) *
                                          log(max(neighbor_pressure - limit_pressure, 1.e-10))));
+=======
+
+  auto atomic_fraction =
+      4.30 - 1.8103 / (0.5 + exp(5.4074 - 1.3571e-02 * _neighbor_temperature[_qp] +
+                                 (2.3190e-01 + 1.5078e-04 * _neighbor_temperature[_qp]) *
+                                     log(max(neighbor_pressure - limit_pressure, 1e-10))));
+>>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
 
   // Convert to concentration
   auto _surface_equilibrium_concentration = atomic_fraction * _density[_qp];
@@ -90,6 +131,9 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
           (_kf[_qp] * _u[_qp] - _kb[_qp] * _surface_equilibrium_concentration);
       break;
   }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
   return r;
 }
