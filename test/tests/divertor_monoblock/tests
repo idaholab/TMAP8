@@ -6,7 +6,7 @@
     input = 'divertor_monoblock.i'
     requirement = 'The system shall maintain a working input file to model heat and tritium transport in a divertor monoblock during pulsed operation.'
     check_input = True
-    method = opt
+    capabilities = 'method=opt'
   []
   [Shimada2024_run]
     type = Exodiff
