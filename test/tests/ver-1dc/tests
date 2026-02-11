@@ -42,15 +42,11 @@
     required_python_packages = 'matplotlib numpy pandas os'
   []
   [ver-1dc-mms]
-    type = PythonUnitTest
+    type = MMSTest
     input = test.py
     test_case = TestMMS
     heavy = true
     requirement = 'The system shall show second order spatial convergence for a diffusion-trapping-release test case.'
-    capabilities = 'method!=dbg'
-    required_python_packages = 'pandas matplotlib'
-    # skip test if test is being run out-of-tree. Issue Ref: idaholab/moose#25279
-    installation_type = in_tree
   []
 
   [ver-1dc_limited-components]
