@@ -43,7 +43,7 @@ with $P_{lim}$ being the hydrogen partial pressure limit in Pa and $T$ being the
        caption= Pressure-limiter fit as a function of temperature.
 
 
-The [!param](/InterfaceKernels/ADMatInterfaceReactionZr2FeHxPCT/silence_warnings) option can be used to dictate how TMAP8 reacts when the pressure gets out of bounds.
+The [!param](/InterfaceKernels/ADMatInterfaceReactionZr2FeHxPCT/silence_warnings) option can be used to dictate how TMAP8 reacts when the pressure gets out of the bounds.
 If `silence_warnings = false`, which is the default behavior, then TMAP8 will print a warning stating that the pressure and temperature are outside the bounds of the atomic fraction correlation.
 If `silence_warnings = true`, then TMAP8 will let the simulation continue without issuing any warnings.
 
