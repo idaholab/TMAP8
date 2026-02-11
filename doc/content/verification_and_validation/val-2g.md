@@ -4,16 +4,16 @@
 
 ## Case Description
 
-This case reproduces the analysis published in [!cite](yang2026elucidating), which proposed a new model that accurately reproduces deuterium transport in a proton-conducting ceramics in both dry and wet environment. 
+This case reproduces the analysis published in [!cite](yang2026elucidating), which proposed a new model that accurately reproduces deuterium transport in a proton-conducting ceramics in both dry and wet environment.
 This validation effort involves deuterium gas (D$_2$) and heavy water (D$_2$O) transport in proton-conducting ceramics (PCC), specifically yttrium-doped barium zirconate (BaZr$_{0.9}$Y$_{0.1}$O$_{2.95}$, also known as BZY10). The experimental data used for validation comes from thermal desorption spectroscopy (TDS) measurements performed by Hossain et al. [!citep](hossain2022comparative). The primary objective is to understand and model the mechanisms of hydrogen isotope transport in PCC materials, which are of interest for tritium extraction systems in fusion energy applications.
 
 In proton-conducting ceramics, hydrogen isotopes are transported as protonic defects (OD$^{\bullet}$) through a hopping mechanism between oxygen sites in the crystal lattice. Unlike metals where hydrogen diffuses as interstitial atoms, hydrogen in PCC is incorporated into the oxygen sublattice. This case models the TDS experiment where a BZY10 sample (0.5 mm thick, 7.7 mm $\times$ 2.2 mm surface area) is exposed to either D$_2$ gas (dry condition) or D$_2$O vapor (wet condition), followed by thermal desorption analysis.
 
 The TDS simulation consists of three phases:
 
-1. **Dissolution phase** (1 hour at 873 K): The sample is exposed to D$_2$ at 1.33 kPa (dry condition) or D$_2$O at 2.8 kPa (wet condition), allowing deuterium to dissolve into the material.
-2. **Cooldown phase** (1 hour): The sample temperature decreases exponentially from 873 K to approximately 300 K while the gas pressure is reduced to vacuum levels.
-3. **Desorption phase**: The sample is heated from 300 K to 1400 K at a constant rate of 0.5 K/s, causing trapped deuterium to be released.
+1. Dissolution phase (1 hour at 873 K): The sample is exposed to D$_2$ at 1.33 kPa (dry condition) or D$_2$O at 2.8 kPa (wet condition), allowing deuterium to dissolve into the material.
+2. Cooldown phase (1 hour): The sample temperature decreases exponentially from 873 K to approximately 300 K while the gas pressure is reduced to vacuum levels.
+3. Desorption phase: The sample is heated from 300 K to 1400 K at a constant rate of 0.5 K/s, causing trapped deuterium to be released.
 
 The temperature and pressure histories are shown in [val-2g_environment_history].
 
@@ -34,19 +34,19 @@ In BZY10, three mobile species are considered: protonic defects (OD$^{\bullet}$)
     id=val-2g_transport_schematic
     caption=Schematic of the hydrogen isotope transport in PCCs.
 
-The transport of each species follows Fick's law:
+The governing equations for OD$^{\bullet}$ in PCC materials is described as
 
 \begin{equation}
-\frac{\partial C_i}{\partial t} = \nabla \cdot (D_i \nabla C_i)
+\frac{\partial C_M}{\partial t} = \nabla D \nabla C_M - \frac{\partial C_T}{\partial t},
 \end{equation}
 
-where $C_i$ is the concentration of species $i$, and $D_i$ is the diffusivity. The diffusivity follows an Arrhenius relationship:
+where $C_M$ is the concentration of mobile OD$^{\bullet}$, $D$ is the diffusivity, $C_T$ is the concentration of trapped OD$^{\bullet}$ in the material. The diffusivity follows an Arrhenius relationship:
 
 \begin{equation}
-D_i = D_{0,i} \exp\left(-\frac{E_{a,i}}{RT}\right)
+D = D_{0} \exp\left(-\frac{E_{a}}{RT}\right)
 \end{equation}
 
-where $D_{0,i}$ is the pre-exponential factor, $E_{a,i}$ is the activation energy, $R$ is the gas constant, and $T$ is temperature.
+where $D_{0}$ is the pre-exponential factor, $E_{a}$ is the activation energy, $R$ is the gas constant, and $T$ is temperature. The governing equations for the diffusion of the other mobile species, V$_{\text{O}}^{\bullet\bullet}$ and e$'$, are the same as those for OD$^{\bullet}$, except that no trapping effects are considered.
 
 ### Trapping and Detrapping
 
@@ -56,7 +56,7 @@ The model includes a single trapping site to capture deuterium retention effects
 \frac{\partial C_T}{\partial t} = \alpha_t \frac{C_T^{\text{empty}} C_M}{N} - \alpha_r C_T
 \end{equation}
 
-where $C_M$ is the mobile OD$^{\bullet}$ concentration, $N$ is the lattice site density, and $C_T^{\text{empty}} = \chi N - C_T$ is the empty trap concentration with $\chi$ being the trap site fraction.
+where $N$ is the lattice site density, and $C_T^{\text{empty}} = \chi N - C_T$ is the empty trap concentration with $\chi$ being the trap site fraction.
 
 The trapping and release rate coefficients follow Arrhenius relationships:
 
@@ -162,7 +162,10 @@ This model description is a simplified version of the Method section in [!cite](
 
 Initial simulations were performed without the trapping model using diffusivity and surface reaction parameters from literature. [val-2g_dry_no_trapping_flux_comparison] shows the comparison between TMAP8 predictions and experimental data for the dry condition (D$_2$ exposure), while [val-2g_wet_no_trapping_flux_comparison] shows results for the wet condition (D$_2$O exposure).
 
-Without trapping, the model significantly overpredicts the flux magnitude and fails to capture the peak positions in the TDS spectra. The root mean square percentage error (RMSPE) values exceed 100% for most cases, indicating that trapping effects are essential for accurate modeling.
+As shown in [val-2g_dry_trapping_flux_comparison] and [val-2g_wet_trapping_flux_comparison], the model does not capture the experimental data from Hossain et al [!citep](hossain2022comparative).
+The fluxes of D$_2$ and D$_2$O under both dry and wet environments exhibit significant discrepancies between the simulations and experimental results, except for the D$_2$O flux under wet environment. The temperature at which the deuterium flux peak occurs for D$_2$ under dry condition is drastically lower than that of the experimental peak, and the predicted peak is a lot wider than experimentally observed.
+Furthermore, the deuterium flux from D$_2$O under dry environment and from D$_2$ under wet environment remains close to 0 and far from the experimental results.
+The root mean square percentage error (RMSPE) values exceed 100% for most cases, indicating that trapping effects are essential for accurate modeling.
 
 !media comparison_val-2g.py
     image_name=val-2g_dry_no_trapping_flux_comparison.png
@@ -194,23 +197,29 @@ Adding the trapping model with parameters from literature improves the predictio
 
 ### Results With Trapping Using Calibrated Parameters
 
-To improve the agreement with experimental data, the model parameters were calibrated using the [Parallel Subset Simulation](samplers/ParallelSubsetSimulation.md) (PSS) approach in [MOOSE's stochastic tools module](modules/stochastic_tools/index.md). The PSS method systematically explores the parameter space to minimize the difference between simulation predictions and experimental measurements. A detailed explanation of this method is provided in [!cite](yang2026elucidating). In this validation case, a simplified PSS optimization process is used with initial parameters close to the calibrated values to reduce computational cost. The evolution of the objective function (log inverse error) is shown below:
+To improve the agreement with experimental data, the model parameters were calibrated using the [Parallel Subset Simulation](samplers/ParallelSubsetSimulation.md) (PSS) approach in [MOOSE's stochastic tools module](modules/stochastic_tools/index.md). The PSS method systematically explores the parameter space to minimize the difference between simulation predictions and experimental measurements. A detailed explanation of this method is provided in [!cite](yang2026elucidating). In this PSS optimization process, an optimization function using RMSPEs is calculated from the four flux results: D$_2$O and D$_2$ fluxes under both dry and wet environments. We calculate the difference from the four fluxes during desorption simultaneously, since the experiments used the same BZY sample. The multi-objective optimization function (log inverse error) is described as:
+
+\begin{equation}
+f(x) = \log\left( \frac{1}{\text{RMSPE}^{D_2O}_\text{wet}(x) + \text{RMSPE}^{D_2}_\text{wet}(x) + \text{RMSPE}^{D_2O}_\text{dry}(x) + \text{RMSPE}^{D_2}_\text{dry}(x)} \right),
+\end{equation}
+
+where $\text{RMSPE}^{i}_{j}$ is the RMSPE for $D_2O$ or $D_2$ fluxes under dry or wet environment, and $x$ is the results from simulations or experiments. A high $f(x)$ means a better accuracy of the simulation results. [val-2g_trapping_optimization_PSS_iterations] shows the evolution of optimization function at the final optimization.
 
 !media comparison_val-2g.py
     image_name=val-2g_trapping_optimization_PSS_iterations.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2g_trapping_optimization_PSS_iterations
-    caption=The evolution of the objective function (log inverse error) during PSS optimization.
+    caption=The evolution of the objective function (log inverse error) at the final optimization during PSS optimization. The colors indicate how each core identifies improved values of the objective function.
 
-[val-2g_trapping_optimization_inputs_PSS] shows the deviation of all calibrated parameters from the initial parameters. All deviations are within two standard deviations of their corresponding normal distribution ranges.
+[val-2g_trapping_optimization_inputs_PSS] shows the deviation of all calibrated parameters from the input parameters at the final optimization. All deviations are within two standard deviations of their corresponding normal distribution ranges.
 
 !media comparison_val-2g.py
     image_name=val-2g_trapping_optimization_inputs_PSS.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2g_trapping_optimization_inputs_PSS
-    caption=Deviation of calibrated material parameters from initial values, expressed in standard deviations of their respective normal distribution ranges.
+    caption=Deviation of calibrated material parameters from initial values at the final optimization, expressed in standard deviations of their respective normal distribution ranges.
 
-The calibrated parameters are listed in [val-2g_calibrated_diffusivity_parameters], [val-2g_calibrated_trapping_parameters], and [val-2g_calibrated_thermodynamic_parameters]. These calibrated parameters are taken directly from [!cite](yang2026elucidating), since the optimization performed in this validation case is a simplified version intended to verify that the optimization framework functions correctly.
+The calibrated parameters are listed in [val-2g_calibrated_diffusivity_parameters], [val-2g_calibrated_trapping_parameters], and [val-2g_calibrated_thermodynamic_parameters]. These calibrated parameters are taken directly from [!cite](yang2026elucidating).
 
 !table id=val-2g_calibrated_diffusivity_parameters caption=Calibrated diffusivity parameters.
 | Parameter | Description | Value | Units | Reference |
@@ -268,9 +277,9 @@ This validation demonstrates TMAP8's capability to model hydrogen isotope transp
 !style halign=left
 The input files for this validation case are:
 
-- [/val-2g_trapping_initial_parameters.i]: Simulates deuterium transport with and without trapping effects using corresponding parameters. [/parameters_no_trapping_initial_validation.params] includes the initial parameters for simulation without trapping, [/parameters_trapping_initial_validation.params] includes the initial parameters for simulation with trapping, and [/parameters_trapping_calibrated_validation.params] includes the calibrated parameters for simulation with trapping.
+- [/val-2g_trapping.i]: Simulates deuterium transport with and without trapping effects using corresponding parameters. [/parameters_no_trapping_initial_validation.params] includes the initial parameters for simulation without trapping, [/parameters_trapping_initial_validation.params] includes the initial parameters for simulation with trapping, and [/parameters_trapping_calibrated_validation.params] includes the calibrated parameters for simulation with trapping.
 - [/val-2g_trapping_light.i]: Simulates a version of the file with a coarser mesh, fewer time steps, no trapping effects, and wet environment to limit the computational costs for testing purposes.
-- [/val-2g_main_PSS_trapping.i]: Performs the Parallel Subset Simulation optimization study to calibrate model parameters.
+- [/val-2g_main_PSS_trapping.i]: Performs a simplified Parallel Subset Simulation optimization study with initial parameters close to the calibrated values to reduce computational cost.
 
 More information about these tests can be found in the test specification file for this case, namely [/val-2g/tests].
 

@@ -1,3 +1,7 @@
+# Light Case of Validation Problem #2g for TMAP8
+# Deuterium Transport in Proton-Conducting Ceramics
+# Diffusion, Surface Reaction under Wet Considered, No Trapping, Soret effects
+
 # Physical constants
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
 

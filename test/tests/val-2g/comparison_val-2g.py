@@ -122,6 +122,37 @@ experiment4_input = (experiment_results4[experiment_parameter_names.index('Time'
 experiment4_output = experiment_results4[experiment_parameter_names.index('Flux')]
 
 ################################################################################
+####################### Temperature and pressure history #######################
+################################################################################
+
+fig = plt.figure(figsize=[6.5, 5.5])
+gs = gridspec.GridSpec(1, 1)
+ax1 = fig.add_subplot(gs[0])
+ax1.plot(simulation_results2[parameter_names.index('time')],
+        simulation_results2[parameter_names.index('pressure_T2_average')], '-', label=rf"D$_2$ pressure", c='C0')
+ax1.plot(simulation_results2[parameter_names.index('time')],
+        simulation_results2[parameter_names.index('pressure_T2O_average')], '--', label=rf"D$_2$O pressure", c='C0')
+ax1.set_xlabel(u'Time (s)',fontsize=14)
+ax1.set_ylabel(u"Pressure (Pa)", color='C0',fontsize=14)
+ax1.set_yscale("log")
+ax1.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
+ax1.minorticks_on()
+ax1.tick_params(axis='y', labelcolor='C0')
+
+ax2 = ax1.twinx()
+ax2.plot(simulation_results2[parameter_names.index('time')],
+        simulation_results2[parameter_names.index('temperature_average')], label=rf"temperature", c='C1')
+ax2.set_ylabel(u"Temperature (K)", color='C1',fontsize=14)
+ax2.tick_params(axis='y', labelcolor='C1')
+lines_1, labels_1 = ax1.get_legend_handles_labels()
+lines_2, labels_2 = ax2.get_legend_handles_labels()
+ax1.legend(lines_1 + lines_2, labels_1 + labels_2, loc='best',fontsize=14)
+ax1.set_xlim([0,np.max(simulation_results2[parameter_names.index('time')])])
+
+plt.savefig('./val-2g_environment_history.png', bbox_inches='tight', dpi=300)
+plt.close(fig)
+
+################################################################################
 ######################## Plot dry case from no trapping ########################
 ################################################################################
 fig = plt.figure(figsize=[6.5, 5.5])
@@ -315,7 +346,6 @@ ax1.set_xlabel(u'Temperature (K)',fontsize=14)
 ax1.set_ylabel(u"Deuterium flux (mol/s)",fontsize=14)
 ax1.set_xlim([300,1400])
 ax1.set_ylim(bottom=0)
-# ax1.set_yscale("log")
 ax1.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 ax1.minorticks_on()
 ax1.tick_params(axis='y')
@@ -393,11 +423,11 @@ plt.close(fig)
 ######################### Extract json file information ########################
 ################################################################################
 if "/TMAP8/doc/" in script_folder:     # if in documentation folder
-    file = f"../../../../test/tests/val-2g/gold/val-2g_PSS/both_cases_trapping.json"
+    file = f"../../../../test/tests/val-2g/gold/val-2g_PSS/both_cases_trapping_long_PSS_results.json"
 else:                                  # if in test folder
-    file = f"./gold/val-2g_PSS/both_cases_trapping.json"
-num_iter = 10
-parallel_props = 1
+    file = f"./gold/val-2g_PSS/both_cases_trapping_long_PSS_results.json"
+num_iter = 76
+parallel_props = 80
 dim = 18
 num_cases = num_iter * parallel_props
 
@@ -412,20 +442,16 @@ for ii in np.arange(1,num_iter+1,1):
 index_max = np.argmax(obj_values[:,:]) # max index in 1D
 index_max_2d = np.unravel_index(index_max, obj_values.shape) # max index in 2D
 input_optimized = inputs[index_max_2d[0],:,index_max_2d[1]] # input in max index
-# print('Optimized input values: '+str(input_optimized))
-# print(f'Optimized objective (log inv error): {obj_values[index_max_2d]} at {index_max_2d}')
 plt.plot(np.maximum.accumulate(obj_values))
 plt.xlabel('Iteration',fontsize=14)
 plt.ylabel('Log inverse error',fontsize=14)
 plt.xlim([0, num_iter-1])
-plt.ylim([-0.24, -0.2])
 plt.savefig("./val-2g_trapping_optimization_PSS_iterations", bbox_inches='tight', dpi=300)
 plt.close()
 
 # ======================== plot parameter distribution ======================= #
-
-corresponding_ave = [1.244, -2.557, 8.91, 17.898, 4.670e-01, -1.61, -30.403, -44.027, 1.902e-9, 0.1216, 1.237e-7, 1.003e5, 2.063e-2, 9.535e4, -1.564e5, -1.374e2, -1.122e5, -3.699e1]
-corresponding_std = [0.001 , 0.001  , 0.01  , 0.001 , 0.001, 0.01,  0.001 ,   0.001, 0.001e-9, 0.0001, 0.001e-7, 0.001e5, 0.001e-2, 0.001e4, 0.001e5,  0.001e2, 0.001e5 ,  0.001e1]
+corresponding_ave = [1.257, -2.654, 9.02, 17.713, 0.4551, -1.6119, -30.525, -44.013, 1.925e-9, 0.1171, 1.2683e-7, 1.003e5, 2.0662e-2, 9.6544e4, -1.556e5, -1.3818e2, -1.143e5, -3.8441e1]
+corresponding_std = [0.06 , 0.14  , 0.2  , 0.2  , 0.01, 0.080,  0.10 ,   0.10, 0.1e-9,          0.005, 0.05e-7  , 5.00e3, 0.01e-2, 1.00e3,    7e3 ,       6,    6e3 ,       2]
 label_names = [r"$\epsilon_r$", r"$\chi$", r"$\tau_{t0}$", r"$\tau_{r0}$", r"$\epsilon_t$",r"$C_{e^\prime0}$",r"$K_1^{D_2O}$",r"$K_1^{D_2}$",r"$D_0^{OD^{\cdot}}$",r"$E^{OD^{\cdot}}$",r"$D_0^{V_O^{\cdot\cdot}}$","$E^{V_O^{\cdot\cdot}}$","$D_0^{e^\prime}$","$E^{e^\prime}$",r"$\Delta H_{D_2O}^0$",r"$\Delta S_{D_2O}^0$",r"$\Delta H_{D_2}^0$",r"$\Delta S_{D_2}^0$"]
 
 fig = plt.figure(figsize=[6.5, 5.5])

@@ -1,3 +1,6 @@
+# This is the parallel subset simulation file for val-2g
+
+# Necessary input parameters
 !include parameters_trapping_initial_distribution_PSS.params
 
 [StochasticTools]
@@ -99,7 +102,24 @@
 [Samplers]
   [sample]
     type = ParallelSubsetSimulation
-    distributions = 'detrapping_energy_1_ev trapping_site_fraction_1_expo trapping_rate_prefactor_expo release_rate_profactor_expo trapping_energy_ev electron_concentration_initial_expo T2O_reaction_forward_value_expo T2_reaction_forward_value_expo diffusivity_OT_prefactor_m2s diffusivity_OT_energy_ev diffusivity_V_O_prefactor_m2s diffusivity_V_O_energy diffusivity_e_prefactor_m2s diffusivity_e_energy delta_H_T2O delta_S_T2O delta_H_T2 delta_S_T2'
+    distributions = 'detrapping_energy_1_ev
+                    trapping_site_fraction_1_expo
+                    trapping_rate_prefactor_expo
+                    release_rate_profactor_expo
+                    trapping_energy_ev
+                    electron_concentration_initial_expo
+                    T2O_reaction_forward_value_expo
+                    T2_reaction_forward_value_expo
+                    diffusivity_OT_prefactor_m2s
+                    diffusivity_OT_energy_ev
+                    diffusivity_V_O_prefactor_m2s
+                    diffusivity_V_O_energy
+                    diffusivity_e_prefactor_m2s
+                    diffusivity_e_energy
+                    delta_H_T2O
+                    delta_S_T2O
+                    delta_H_T2
+                    delta_S_T2'
     execute_on = PRE_MULTIAPP_SETUP
     subset_probability = 0.1
     num_samplessub = 10
@@ -113,7 +133,7 @@
 [MultiApps]
   [sub]
     type = SamplerFullSolveMultiApp
-    input_files = 'val-2g_trapping_initial_parameters.i'
+    input_files = 'val-2g_trapping.i'
     sampler = sample
     ignore_solve_not_converge = true
   []
@@ -134,7 +154,24 @@
     type = MultiAppSamplerControl
     multi_app = sub
     sampler = sample
-    param_names = 'detrapping_energy_1_ev trapping_site_fraction_1_expo trapping_rate_prefactor_expo release_rate_profactor_expo trapping_energy_ev electron_concentration_initial_expo T2O_reaction_forward_value_expo T2_reaction_forward_value_expo diffusivity_OT_prefactor_m2s diffusivity_OT_energy_ev diffusivity_V_O_prefactor_m2s diffusivity_V_O_energy diffusivity_e_prefactor_m2s diffusivity_e_energy delta_H_T2O delta_S_T2O delta_H_T2 delta_S_T2'
+    param_names = 'detrapping_energy_1_ev
+                  trapping_site_fraction_1_expo
+                  trapping_rate_prefactor_expo
+                  release_rate_profactor_expo
+                  trapping_energy_ev
+                  electron_concentration_initial_expo
+                  T2O_reaction_forward_value_expo
+                  T2_reaction_forward_value_expo
+                  diffusivity_OT_prefactor_m2s
+                  diffusivity_OT_energy_ev
+                  diffusivity_V_O_prefactor_m2s
+                  diffusivity_V_O_energy
+                  diffusivity_e_prefactor_m2s
+                  diffusivity_e_energy
+                  delta_H_T2O
+                  delta_S_T2O
+                  delta_H_T2
+                  delta_S_T2'
   []
 []
 
