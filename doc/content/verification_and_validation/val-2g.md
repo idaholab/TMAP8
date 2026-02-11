@@ -4,7 +4,8 @@
 
 ## Case Description
 
-This validation case involves deuterium gas (D$_2$) and heavy water (D$_2$O) transport in proton-conducting ceramics (PCC), specifically yttrium-doped barium zirconate (BaZr$_{0.9}$Y$_{0.1}$O$_{2.95}$, also known as BZY10). The experimental data used for validation comes from thermal desorption spectroscopy (TDS) measurements performed by Hossain et al. as reported in [!cite](yang2026elucidating) and [!cite](hossain2022comparative). The primary objective is to understand and model the mechanisms of hydrogen isotope transport in PCC materials, which are of interest for tritium extraction systems in fusion energy applications.
+This case reproduces the analysis published in [!cite](yang2026elucidating), which proposed a new model that accurately reproduces deuterium transport in a proton-conducting ceramics in both dry and wet environment. 
+This validation effort involves deuterium gas (D$_2$) and heavy water (D$_2$O) transport in proton-conducting ceramics (PCC), specifically yttrium-doped barium zirconate (BaZr$_{0.9}$Y$_{0.1}$O$_{2.95}$, also known as BZY10). The experimental data used for validation comes from thermal desorption spectroscopy (TDS) measurements performed by Hossain et al. [!citep](hossain2022comparative). The primary objective is to understand and model the mechanisms of hydrogen isotope transport in PCC materials, which are of interest for tritium extraction systems in fusion energy applications.
 
 In proton-conducting ceramics, hydrogen isotopes are transported as protonic defects (OD$^{\bullet}$) through a hopping mechanism between oxygen sites in the crystal lattice. Unlike metals where hydrogen diffuses as interstitial atoms, hydrogen in PCC is incorporated into the oxygen sublattice. This case models the TDS experiment where a BZY10 sample (0.5 mm thick, 7.7 mm $\times$ 2.2 mm surface area) is exposed to either D$_2$ gas (dry condition) or D$_2$O vapor (wet condition), followed by thermal desorption analysis.
 
@@ -116,9 +117,9 @@ This model description is a simplified version of the Method section in [!cite](
 
 ## Case and Model Parameters
 
-[val-2g_critical_parameters] summarize the detail of sample and experimental conditions from Hossain et al. \cite{hossain2022comparative}, as well as the model parameters from Hossain et al. \cite{hossain2022comparative}, Kreuer \cite{kreuer2003proton}, and estimated from validation cases in TMAP8. [val-2g_trapping_parameters] includes the trapping parameters from Karmonik et al. \cite{karmonik1995proton} and estimated based on existing validation cases in TMAP8.
+[val-2g_critical_parameters] summarizes the detail of sample and experimental conditions from Hossain et al. [!citep](hossain2022comparative), as well as the model parameters from Hossain et al. [!citep](hossain2022comparative), Kreuer [!citep](kreuer2003proton), and estimated from validation cases in TMAP8. [val-2g_trapping_parameters] includes the trapping parameters from Karmonik et al. [!citep](karmonik1995proton) and estimated based on existing validation cases in TMAP8.
 
-!table id=val-2g_critical_parameters caption=Experimental set up from Hossain et al. \cite{hossain2022comparative} and modeling parameters for deuterium transport in a BZY membrane at 873 K from Hossain et al. \cite{hossain2022comparative} and from Kreuer et al. \cite{kreuer1999aspects,kreuer2003proton}.
+!table id=val-2g_critical_parameters caption=Experimental set up from Hossain et al. [!citep](hossain2022comparative) and modeling parameters for deuterium transport in a BZY membrane at 873 K from Hossain et al. [!citep](hossain2022comparative) and from Kreuer et al. [!citep](kreuer1999aspects,kreuer2003proton).
 | Parameter | Description | Value | Units | Reference |
 | --------- | ----------- | ----- | ----- | --------- |
 | $T_{\text{initial}}$ | Initial/dissolution temperature | 873 | K | [!cite](hossain2022comparative) |
@@ -146,7 +147,7 @@ This model description is a simplified version of the Method section in [!cite](
 | $D_0^{e^\prime}$ | Diffusivity coefficient for e$^\prime$ | $2.05 \times 10^{-2}$ | m$^2$/s | [!cite](kreuer1999aspects) |
 | $E^{e^\prime}$ | Diffusivity energy for e$^\prime$ | 103818.22 | J/mol | [!cite](kreuer1999aspects) |
 
-!table id=val-2g_trapping_parameters caption=Trapping parameters for deuterium transport in BZY membrane from Karmonik et al.~\cite{karmonik1995proton} and estimated from TMAP8.
+!table id=val-2g_trapping_parameters caption=Trapping parameters for deuterium transport in BZY membrane from Karmonik et al. [!citep](karmonik1995proton) and estimated from TMAP8.
 | Parameter | Description | Value | Units | Reference |
 | --------- | ----------- | ----- | ----- | --------- |
 | $\tau_{t0}$ | Trapping rate coefficient | $4.8 \times 10^{11}$ | 1/s | [!cite](karmonik1995proton) |
@@ -260,7 +261,7 @@ The calibrated model successfully reproduces the key features of the TDS spectra
 - The relative magnitudes of the desorption peaks
 - The peak shapes and widths
 
-This validation demonstrates TMAP8's capability to model hydrogen isotope transport in proton-conducting ceramics, including the complex interplay between diffusion, trapping, and surface reactions.
+This validation demonstrates TMAP8's capability to model hydrogen isotope transport in proton-conducting ceramics in both dry and wet environments, including the complex interplay between diffusion, trapping, and surface reactions.
 
 ## Input files
 
@@ -268,7 +269,7 @@ This validation demonstrates TMAP8's capability to model hydrogen isotope transp
 The input files for this validation case are:
 
 - [/val-2g_trapping_initial_parameters.i]: Simulates deuterium transport with and without trapping effects using corresponding parameters. [/parameters_no_trapping_initial_validation.params] includes the initial parameters for simulation without trapping, [/parameters_trapping_initial_validation.params] includes the initial parameters for simulation with trapping, and [/parameters_trapping_calibrated_validation.params] includes the calibrated parameters for simulation with trapping.
-- [/val-2g_trapping_light.i]: Simulates a version of the file with a coarser mesh, fewer time steps, no trapping effects, and wet environment to limit the computational costs.
+- [/val-2g_trapping_light.i]: Simulates a version of the file with a coarser mesh, fewer time steps, no trapping effects, and wet environment to limit the computational costs for testing purposes.
 - [/val-2g_main_PSS_trapping.i]: Performs the Parallel Subset Simulation optimization study to calibrate model parameters.
 
 More information about these tests can be found in the test specification file for this case, namely [/val-2g/tests].

@@ -41,15 +41,10 @@ electron_concentration_initial = '${units ${fparse 10 ^ electron_concentration_i
 
 # Traps parameters
 initial_concentration_trap_1 = 0 # (-)
-# detrapping_energy_1_ev = '${units 1.60 eV}'
 detrapping_energy_1 = '${fparse detrapping_energy_1_ev / k_B}'
-# trapping_site_fraction_1_expo = -5
 trapping_site_fraction_1 = ${fparse 3 * 10 ^ trapping_site_fraction_1_expo} # (-)
-# trapping_rate_prefactor_expo = 11
 trapping_rate_prefactor = '${units ${fparse 4.8 * 10 ^ trapping_rate_prefactor_expo} 1/s}' # 9.1316e12
-# release_rate_profactor_expo = 14
 release_rate_profactor = '${units ${fparse 2.6 * 10 ^ release_rate_profactor_expo }1/s}' # 8.4e12
-# trapping_energy_ev = '${units 0.38 eV}'
 trapping_energy = '${fparse trapping_energy_ev / k_B}'
 trap_per_free_1 = 1e0 # (-)
 ##### Dry Pressure conditions
@@ -72,16 +67,10 @@ T2O_reaction_forward_value = '${units ${fparse 2 * 10 ^ T2O_reaction_forward_val
 T2_reaction_forward_value = '${units ${fparse 2 * 10 ^ T2_reaction_forward_value_expo} m^4/at/s -> mum^4/at/s}'
 
 # Materials diffusivities (Deuterium: diffusivity and solubility data from Hossain 2020)
-# diffusivity_OT_prefactor_m2s = '${units 2e-9 m^2/s}'
 diffusivity_OT_prefactor = '${units ${fparse diffusivity_OT_prefactor_m2s * sqrt(3/2)} m^2/s -> mum^2/s}'
-# diffusivity_OT_energy_ev = '${units 0.23 eV}'
 diffusivity_OT_energy = '${units ${fparse diffusivity_OT_energy_ev * eV_to_J * N_a} J/mol}'
-# diffusivity_V_O_prefactor_m2s = '${units 1.021e-7 m^2/s}'
 diffusivity_V_O_prefactor = '${units ${diffusivity_V_O_prefactor_m2s} m^2/s -> mum^2/s}'
-# diffusivity_V_O_energy = '${units 89216.77 J/mol}'
-# diffusivity_e_prefactor_m2s = '${units 2.05e-2 m^2/s}'
 diffusivity_e_prefactor = '${units ${diffusivity_e_prefactor_m2s} m^2/s -> mum^2/s}'
-# diffusivity_e_energy = '${units 103818.22 J/mol}'
 
 [Mesh]
   active = 'cmg_edge'

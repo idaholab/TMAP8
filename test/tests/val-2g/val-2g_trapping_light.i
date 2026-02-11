@@ -338,7 +338,7 @@ diffusivity_e_energy = '${units 103818.22 J/mol}'
   line_search = none
   num_steps = 3
   nl_max_its = 10
-  dt=0.1
+  dt = 0.1
 []
 
 [Outputs]
