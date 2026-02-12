@@ -31,7 +31,7 @@
   [binary_reaction_diff_concentrations_csv_diff_TMAP4]
     type = CSVDiff
     input = 'ver-1g.i diff_conc_TMAP4.i'
-    should_execute = False # this test relies on the output files from binary_reaction_equal_concentrations, so it shouldn't be run twice
+    should_execute = False # this test relies on the output files from binary_reaction_diff_concentrations_TMAP4, so it shouldn't be run twice
     csvdiff = diff_conc_TMAP4_out.csv
     requirement = 'The system shall be able to model a chemical reaction between two species with different concentrations using the initial conditions from the TMAP4 case and calculate the concentrations of reactants and product as a function of time to generate CSV data for use in comparisons with the analytic solution over time.'
     prereq = binary_reaction_diff_concentrations_TMAP4
@@ -39,7 +39,7 @@
   [binary_reaction_diff_concentrations_csv_diff_TMAP7]
     type = CSVDiff
     input = 'ver-1g.i diff_conc_TMAP7.i'
-    should_execute = False # this test relies on the output files from binary_reaction_equal_concentrations, so it shouldn't be run twice
+    should_execute = False # this test relies on the output files from binary_reaction_diff_concentrations_TMAP7, so it shouldn't be run twice
     csvdiff = diff_conc_TMAP7_out.csv
     requirement = 'The system shall be able to model a chemical reaction between two species with different concentrations using the initial conditions from the TMAP7 case and calculate the concentrations of reactants and product as a function of time to generate CSV data for use in comparisons with the analytic solution over time.'
     prereq = binary_reaction_diff_concentrations_TMAP7

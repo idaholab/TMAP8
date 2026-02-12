@@ -46,7 +46,6 @@ P2_D = '${units 1.0 Pa}'
     [enclosure1_T_outflux]
         type = ADMatReaction
         variable = P1_T
-        v = P1_T
         reaction_rate = -${Q_by_V}
     []
     [enclosure1_T_influx]
@@ -64,7 +63,6 @@ P2_D = '${units 1.0 Pa}'
     [enclosure2_T_outflux]
         type = ADMatReaction
         variable = P2_T
-        v = P2_T
         reaction_rate = -${Q_by_V}
     []
     [enclosure2_T_influx]
@@ -82,7 +80,6 @@ P2_D = '${units 1.0 Pa}'
     [enclosure1_D_outflux]
         type = ADMatReaction
         variable = P1_D
-        v = P1_D
         reaction_rate = -${Q_by_V}
     []
     [enclosure1_D_influx]
@@ -100,7 +97,6 @@ P2_D = '${units 1.0 Pa}'
     [enclosure2_D_outflux]
         type = ADMatReaction
         variable = P2_D
-        v = P2_D
         reaction_rate = -${Q_by_V}
     []
     [enclosure2_D_influx]
