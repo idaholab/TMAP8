@@ -45,7 +45,6 @@ Q_by_V3 = '${fparse Q / V3}'
     [MatReaction_P2_P3_outflux]
         type = ADMatReaction
         variable = P2
-        v = 'P2'
         reaction_rate = -${Q_by_V2}
     []
 
@@ -63,7 +62,6 @@ Q_by_V3 = '${fparse Q / V3}'
     [MatReaction_P3_P3_outflux]
         type = ADMatReaction
         variable = P3
-        v = 'P3'
         reaction_rate = -${Q_by_V3}
     []
 []
