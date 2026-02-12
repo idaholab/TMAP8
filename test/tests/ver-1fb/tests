@@ -15,7 +15,6 @@
     prereq = ver-1fb
     should_execute = False  # this test relies on the output files from ver-1fb, so it shouldn't be run twice
     requirement = 'The system shall be able to model thermal transient in a slab that has temperatures fixed at both the ends to generate CSV data at time of 0.1 s for use in comparison with analytical solution.'
-    prereq = ver-1fb
   []
   [ver-1fb_csvdiff_0pt5sec]
     type = CSVDiff
@@ -24,7 +23,6 @@
     prereq = ver-1fb
     should_execute = False  # this test relies on the output files from ver-1fb, so it shouldn't be run twice
     requirement = 'The system shall be able to model thermal transient in a slab that has temperatures fixed at both the ends to generate CSV data at time of 0.5 s for use in comparison with analytical solution.'
-    prereq = ver-1fb
   []
   [ver-1fb_csvdiff_1pt0sec]
     type = CSVDiff
@@ -33,7 +31,6 @@
     prereq = ver-1fb
     should_execute = False  # this test relies on the output files from ver-1fb, so it shouldn't be run twice
     requirement = 'The system shall be able to model thermal transient in a slab that has temperatures fixed at both the ends to generate CSV data at time of 1.0 s for use in comparison with analytical solution.'
-    prereq = ver-1fb
   []
   [ver-1fb_csvdiff_5pt0sec]
     type = CSVDiff
@@ -42,7 +39,6 @@
     prereq = ver-1fb
     should_execute = False  # this test relies on the output files from ver-1fb, so it shouldn't be run twice
     requirement = 'The system shall be able to model thermal transient in a slab that has temperatures fixed at both the ends to generate CSV data at time of 5.0 s for use in comparison with analytical solution.'
-    prereq = ver-1fb
   []
   [ver-1fb_comparison]
     type = RunCommand
@@ -64,6 +60,5 @@
     prereq = thermal_transient_physics
     should_execute = False  # this test relies on the output files from thermal_transient_physics, so it shouldn't be run twice
     requirement = 'The system shall be able to model thermal transient in a slab that has temperatures fixed at both the ends using the component and physics syntax to generate CSV data at time of 0.1 s for use in comparison with analytical solution.'
-    prereq = thermal_transient_physics
   []
 []
