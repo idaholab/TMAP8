@@ -37,7 +37,7 @@ In BZY10, three mobile species are considered: protonic defects (OD$^{\bullet}$)
 The governing equations for OD$^{\bullet}$ in PCC materials is described as
 
 \begin{equation}
-\frac{\partial C_M}{\partial t} = \nabla D \nabla C_M - \frac{\partial C_T}{\partial t},
+\frac{\partial C_M}{\partial t} = \nabla \cdot D \nabla C_M - \frac{\partial C_T}{\partial t},
 \end{equation}
 
 where $C_M$ is the concentration of mobile OD$^{\bullet}$, $D$ is the diffusivity, $C_T$ is the concentration of trapped OD$^{\bullet}$ in the material. The diffusivity follows an Arrhenius relationship:
@@ -165,7 +165,7 @@ Initial simulations were performed without the trapping model using diffusivity 
 As shown in [val-2g_dry_trapping_flux_comparison] and [val-2g_wet_trapping_flux_comparison], the model does not capture the experimental data from Hossain et al [!citep](hossain2022comparative).
 The fluxes of D$_2$ and D$_2$O under both dry and wet environments exhibit significant discrepancies between the simulations and experimental results, except for the D$_2$O flux under wet environment. The temperature at which the deuterium flux peak occurs for D$_2$ under dry condition is drastically lower than that of the experimental peak, and the predicted peak is a lot wider than experimentally observed.
 Furthermore, the deuterium flux from D$_2$O under dry environment and from D$_2$ under wet environment remains close to 0 and far from the experimental results.
-The root mean square percentage error (RMSPE) values exceed 100% for most cases, indicating that trapping effects are essential for accurate modeling.
+The root mean square percentage error (RMSPE) values exceed 100% for most cases, indicating that this model without traps does not accurately reproduce the experimental results.
 
 !media comparison_val-2g.py
     image_name=val-2g_dry_no_trapping_flux_comparison.png
