@@ -28,7 +28,7 @@
   [ver-1c_TMAP4_csvdiff]
     type = CSVDiff
     input = ver-1c.i
-    should_execute = False # this test relies on the output files from ver-1c, so it shouldn't be run twice
+    should_execute = False # this test relies on the output files from ver-1c_TMAP4, so it shouldn't be run twice
     csvdiff = ver-1c_tmap4.csv
     requirement = 'The system shall be able to model species permeation into an unloaded portion of a slab from a pre-loaded portion to generate CSV data for use in comparisons with the analytic solution over time for the TMAP4 verification case.'
     prereq = ver-1c_TMAP4
@@ -36,7 +36,7 @@
   [ver-1c_TMAP7_csvdiff]
     type = CSVDiff
     input = ver-1c.i
-    should_execute = False # this test relies on the output files from ver-1c, so it shouldn't be run twice
+    should_execute = False # this test relies on the output files from ver-1c_TMAP7, so it shouldn't be run twice
     csvdiff = ver-1c_tmap7.csv
     requirement = 'The system shall be able to model species permeation into an unloaded portion of a slab from a pre-loaded portion to generate CSV data for use in comparisons with the analytic solution over time for the TMAP7 verification case.'
     prereq = ver-1c_TMAP7
@@ -44,7 +44,7 @@
   [ver-1c-components_csvdiff]
     type = CSVDiff
     input = 'ver-1c-component.i'
-    should_execute = False # this test relies on the output files from ver-1c, so it shouldn't be run twice
+    should_execute = False # this test relies on the output files from ver-1c-components, so it shouldn't be run twice
     csvdiff = ver-1c-component_csv.csv
     requirement = 'The system shall be able to model species permeation into an unloaded portion of a slab from a pre-loaded portion using a Physics and Components syntax to generate CSV data for use in comparisons with the analytic solution over time for the TMAP7 verification case.'
     prereq = ver-1c-components
