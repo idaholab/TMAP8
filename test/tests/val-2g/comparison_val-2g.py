@@ -13,11 +13,10 @@ script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
 
 #===============================================================================
-# Constants and history (see input file val-2b.i)
+# Constants and history (see input file val-2g.i)
 
 N_A = 6.02214076e23 # at/mol
 q = 1.602176634e-19 # C/at
-# A = np.pi * (7.5e-3 / 2) ** 2 # m
 A = 7.7e-3 * 2.2e-3 # m
 
 #===============================================================================
@@ -391,7 +390,6 @@ ax1.set_xlabel(u'Temperature (K)',fontsize=14)
 ax1.set_ylabel(u"Deuterium flux (mol/s)",fontsize=14)
 ax1.set_xlim([300,1400])
 ax1.set_ylim([0,2.4e-9])
-# ax1.set_yscale("log")
 ax1.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
 ax1.minorticks_on()
 ax1.tick_params(axis='y')
@@ -426,8 +424,8 @@ if "/TMAP8/doc/" in script_folder:     # if in documentation folder
     file = f"../../../../test/tests/val-2g/gold/val-2g_PSS/both_cases_trapping_long_PSS_results.json"
 else:                                  # if in test folder
     file = f"./gold/val-2g_PSS/both_cases_trapping_long_PSS_results.json"
-num_iter = 76
-parallel_props = 80
+num_iter = 20
+parallel_props = 1
 dim = 18
 num_cases = num_iter * parallel_props
 
@@ -450,8 +448,10 @@ plt.savefig("./val-2g_trapping_optimization_PSS_iterations", bbox_inches='tight'
 plt.close()
 
 # ======================== plot parameter distribution ======================= #
-corresponding_ave = [1.257, -2.654, 9.02, 17.713, 0.4551, -1.6119, -30.525, -44.013, 1.925e-9, 0.1171, 1.2683e-7, 1.003e5, 2.0662e-2, 9.6544e4, -1.556e5, -1.3818e2, -1.143e5, -3.8441e1]
-corresponding_std = [0.06 , 0.14  , 0.2  , 0.2  , 0.01, 0.080,  0.10 ,   0.10, 0.1e-9,          0.005, 0.05e-7  , 5.00e3, 0.01e-2, 1.00e3,    7e3 ,       6,    6e3 ,       2]
+
+
+corresponding_ave = [1.244, -2.557, 8.91, 17.898, 4.670e-01, -1.61, -30.403, -44.027, 1.902e-9, 0.1216, 1.237e-7, 1.003e5, 2.063e-2, 9.535e4, -1.564e5, -1.374e2, -1.122e5, -3.699e1]
+corresponding_std = [0.001 , 0.001  , 0.01  , 0.001 , 0.001, 0.01,  0.001 ,   0.001, 0.001e-9, 0.0001, 0.001e-7, 0.001e5, 0.001e-2, 0.001e4, 0.001e5,  0.001e2, 0.001e5 ,  0.001e1]
 label_names = [r"$\epsilon_r$", r"$\chi$", r"$\tau_{t0}$", r"$\tau_{r0}$", r"$\epsilon_t$",r"$C_{e^\prime0}$",r"$K_1^{D_2O}$",r"$K_1^{D_2}$",r"$D_0^{OD^{\cdot}}$",r"$E^{OD^{\cdot}}$",r"$D_0^{V_O^{\cdot\cdot}}$","$E^{V_O^{\cdot\cdot}}$","$D_0^{e^\prime}$","$E^{e^\prime}$",r"$\Delta H_{D_2O}^0$",r"$\Delta S_{D_2O}^0$",r"$\Delta H_{D_2}^0$",r"$\Delta S_{D_2}^0$"]
 
 fig = plt.figure(figsize=[6.5, 5.5])

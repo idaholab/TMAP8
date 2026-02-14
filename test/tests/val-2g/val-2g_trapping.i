@@ -4,8 +4,8 @@
 
 # Physical constants
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
-eV_to_J = '${units 1.602176634e-19 eV/J}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
-N_a = '${units 6.02214076e23 at/mol}' # ideal gas constant based on number used in include/utils/PhysicalConstants.h
+eV_to_J = '${units 1.602176634e-19 eV/J}' # eV to J conversion factor based on number used in include/utils/PhysicalConstants.h
+N_a = '${units 6.02214076e23 at/mol}' # Avogadro's number based on number used in include/utils/PhysicalConstants.h
 k_B = '${units 8.61733e-5 eV/K}' # Boltzmann constant in eV
 
 # thermal parameters
@@ -40,7 +40,6 @@ OT_concentration_initial = 0
 hydration_limit_S = 0.1
 oxygen_vacancy_concentration_initial = '${units ${fparse hydration_limit_S / 2 * N} at/mum^3}'
 oxygen_concentration_initial = '${units ${fparse 3 * N - oxygen_vacancy_concentration_initial - OT_concentration_initial} at/mum^3}'
-# electron_concentration_initial_expo = -5.4
 electron_concentration_initial = '${units ${fparse 10 ^ electron_concentration_initial_expo * N} at/mum^3}' # 0.001
 
 # Traps parameters
@@ -61,13 +60,7 @@ pressure_T2O_low = '${units 1e-5 Pa}'
 pressure_T2_wet = '${units 0 Pa}' # We assume the pressure of T2 is 0
 
 # chemical_reaction
-# delta_H_T2O = '${units -79.5e3 J/mol}'
-# delta_S_T2O = '${units -88.9 J/mol/K}'
-# delta_H_T2 = '${units -79.5e3 J/mol}'
-# delta_S_T2 = '${units -124.53 J/mol/K}' # ${fparse -88.9 + R * np.log(0.01)}
-# T2O_reaction_forward_value_expo = -33
 T2O_reaction_forward_value = '${units ${fparse 2 * 10 ^ T2O_reaction_forward_value_expo} m^4/at/s -> mum^4/at/s}'
-# T2_reaction_forward_value_expo = -41
 T2_reaction_forward_value = '${units ${fparse 2 * 10 ^ T2_reaction_forward_value_expo} m^4/at/s -> mum^4/at/s}'
 
 # Materials diffusivities (Deuterium: diffusivity and solubility data from Hossain 2020)

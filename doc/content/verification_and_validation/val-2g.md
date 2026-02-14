@@ -203,21 +203,21 @@ To improve the agreement with experimental data, the model parameters were calib
 f(x) = \log\left( \frac{1}{\text{RMSPE}^{D_2O}_\text{wet}(x) + \text{RMSPE}^{D_2}_\text{wet}(x) + \text{RMSPE}^{D_2O}_\text{dry}(x) + \text{RMSPE}^{D_2}_\text{dry}(x)} \right),
 \end{equation}
 
-where $\text{RMSPE}^{i}_{j}$ is the RMSPE for $D_2O$ or $D_2$ fluxes under dry or wet environment, and $x$ is the results from simulations or experiments. A high $f(x)$ means a better accuracy of the simulation results. [val-2g_trapping_optimization_PSS_iterations] shows the evolution of optimization function at the final optimization.
+where $\text{RMSPE}^{i}_{j}$ is the RMSPE for $D_2O$ or $D_2$ fluxes under dry or wet environment, and $x$ is the results from simulations or experiments. A high $f(x)$ means a better accuracy of the simulation results. [val-2g_trapping_optimization_PSS_iterations] shows the evolution of optimization function from a simplified PSS optimization process using initial parameters close to the calibrated values.
 
 !media comparison_val-2g.py
     image_name=val-2g_trapping_optimization_PSS_iterations.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2g_trapping_optimization_PSS_iterations
-    caption=The evolution of the objective function (log inverse error) at the final optimization during PSS optimization. The colors indicate how each core identifies improved values of the objective function.
+    caption=The evolution of the objective function (log inverse error) during a simplified PSS optimization.
 
-[val-2g_trapping_optimization_inputs_PSS] shows the deviation of all calibrated parameters from the input parameters at the final optimization. All deviations are within two standard deviations of their corresponding normal distribution ranges.
+[val-2g_trapping_optimization_inputs_PSS] shows the deviation of all calibrated parameters from the input parameters. All deviations are within three standard deviations of their corresponding normal distribution ranges.
 
 !media comparison_val-2g.py
     image_name=val-2g_trapping_optimization_inputs_PSS.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2g_trapping_optimization_inputs_PSS
-    caption=Deviation of calibrated material parameters from initial values at the final optimization, expressed in standard deviations of their respective normal distribution ranges.
+    caption=Deviation of calibrated material parameters from initial values, expressed in standard deviations of their respective normal distribution ranges.
 
 The calibrated parameters are listed in [val-2g_calibrated_diffusivity_parameters], [val-2g_calibrated_trapping_parameters], and [val-2g_calibrated_thermodynamic_parameters]. These calibrated parameters are taken directly from [!cite](yang2026elucidating).
 
@@ -279,7 +279,7 @@ The input files for this validation case are:
 
 - [/val-2g_trapping.i]: Simulates deuterium transport with and without trapping effects using corresponding parameters. [/parameters_no_trapping_initial_validation.params] includes the initial parameters for simulation without trapping, [/parameters_trapping_initial_validation.params] includes the initial parameters for simulation with trapping, and [/parameters_trapping_calibrated_validation.params] includes the calibrated parameters for simulation with trapping.
 - [/val-2g_trapping_light.i]: Simulates a version of the file with a coarser mesh, fewer time steps, no trapping effects, and wet environment to limit the computational costs for testing purposes.
-- [/val-2g_main_PSS_trapping.i]: Performs a simplified Parallel Subset Simulation optimization study with initial parameters close to the calibrated values to reduce computational cost.
+- [/val-2g_main_PSS_trapping.i]: Performs a simplified Parallel Subset Simulation optimization with only one step to demonstrate the integrity of input file and a simplified Parallel Subset Simulation optimization study with initial parameters close to the calibrated values to reduce computational cost.
 
 More information about these tests can be found in the test specification file for this case, namely [/val-2g/tests].
 

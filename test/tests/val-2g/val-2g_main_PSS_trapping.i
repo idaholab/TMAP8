@@ -123,7 +123,7 @@
     execute_on = PRE_MULTIAPP_SETUP
     subset_probability = 0.1
     num_samplessub = 10
-    num_subsets = 1
+    num_subsets = 2
     output_reporter = 'constant/reporter_transfer:log_inverse_error:value'
     inputs_reporter = 'PSS_reporter/inputs'
     seed = 1012
