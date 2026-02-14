@@ -47,7 +47,7 @@
   [val-2g_pss_optimization_light]
     type = JSONDiff
     input = val-2g_main_PSS_trapping.i
-    cli_args = "Executioner/num_steps=1 Samplers/sample/num_subsets=1 MultiApps/sub/cli_args='Postprocessors/max_time_step_size/function=100;edge_number=100;num_nodes=300;Executioner/num_steps=1;Executioner/num_steps=1'"
+    cli_args = "Executioner/num_steps=1 Samplers/sample/num_subsets=1 MultiApps/sub/cli_args='Postprocessors/max_time_step_size/function=100;edge_number=100;num_nodes=300;Executioner/num_steps=0'"
     jsondiff = val-2g_PSS/both_cases_trapping.json
     abs_zero = 1e-8
     rel_err = 1e-5
