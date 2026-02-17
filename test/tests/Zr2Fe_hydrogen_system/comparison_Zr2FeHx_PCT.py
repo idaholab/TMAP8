@@ -11,10 +11,13 @@ from mpl_toolkits.mplot3d import Axes3D
 import os
 script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
+<<<<<<< HEAD
 >>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+=======
+>>>>>>> 4b97c708 (Fixing python file for test)
 
 <<<<<<< HEAD
 # ------------------------------------------------------------------------------
@@ -337,13 +340,15 @@ temperature_list = [325, 350, 375]  # Celsius
 
 colors = ['blue', 'green', 'red', 'purple']
 
-
+#NEED TO FIX THIS
 # Extract data from experiments
 if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     folderPath = "../../../../../test/tests/Zr2Fe_hydrogen_system/"
 else:                                  # if in test folder
     folderPath = ""
-folderNameExpData = 'PCT_data'
+folderNameExpData = 'PCT_data/'
+
+
 
 # ============================================================================== #
 # Load and process data
