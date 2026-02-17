@@ -1,4 +1,26 @@
 
+# Materials properties
+diffusivity_fixed = 5.01e-24   # (3.01604928)/(6.02e23)/[gram(T)/m^2]
+# diffusivity_fixed = 5.508e-19   # (1.0e3)*(1.0e3)/(6.02e23)/(3.01604928) [gram(T)/m^2] alternative
+
+N_W = ${units 1.0e0 m^-3}       # = ${tungsten_atomic_density} #/m^3 (W lattice density)
+Ct0_W = ${units 5.0e-5 m^-3}  # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
+trap_per_free_W = 1.0e0
+
+N_Cu = ${units 1.0e0 m^-3}     # = ${tungsten_atomic_density} #/m^3 (W lattice density)
+Ct0_Cu = ${units 1.0e-4 m^-3}    # E.A. Hodille et al 2021 Nucl. Fusion 61 1260033, trap 2
+# Ct0 = ${units 1.0e-4 m^-3}   # E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 1
+trap_per_free_Cu = 1.0e0
+
+N_CuCrZr = ${units 1.0e0 m^-3}     # = ${tungsten_atomic_density} #/m^3 (W lattice density)
+Ct0_CuCrZr = ${units 5.0e-5 m^-3}  # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
+# Ct0 = ${units 4.0e-2 m^-3} # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 5
+trap_per_free_CuCrZr = 1.0e0
+
+scaling_factor = 3.491e10    # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+scaling_factor_2 = 3.44e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+
+
 [Outputs]
     [exodus]
         type = Exodus
@@ -144,10 +166,9 @@
   [empty_sites_W]
       variable = S_empty_W
       type = EmptySitesAux
-      N = ${units 1.0e0 m^-3}       # = ${tungsten_atomic_density} #/m^3 (W lattice density)
-      # Ct0 = ${units 1.0e-4 m^-3}   # E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 1
-      Ct0 = ${units 1.0e-4 m^-3}    # E.A. Hodille et al 2021 Nucl. Fusion 61 1260033, trap 2
-      trap_per_free = 1.0e0         # 1.0e1
+      N = ${N_W}
+      Ct0 = ${Ct0_W}
+      trap_per_free = ${trap_per_free_W}
       trapped_concentration_variables = C_trapped
   []
   [scaled_empty_W]
@@ -208,9 +229,9 @@
   [empty_sites_Cu]
       variable = S_empty_Cu
       type = EmptySitesAux
-      N = ${units 1.0e0 m^-3}     # = ${tungsten_atomic_density} #/m^3 (W lattice density)
-      Ct0 = ${units 5.0e-5 m^-3}  # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
-      trap_per_free = 1.0e0       # 1.0e1
+      N = ${N_Cu}
+      Ct0 = ${Ct0_Cu}
+      trap_per_free = ${trap_per_free_Cu}
       trapped_concentration_variables = C_trapped
   []
   [scaled_empty_Cu]
@@ -271,10 +292,9 @@
   [empty_sites_CuCrZr]
       variable = S_empty_CuCrZr
       type = EmptySitesAux
-      N = ${units 1.0e0 m^-3}     # = ${tungsten_atomic_density} #/m^3 (W lattice density)
-      Ct0 = ${units 5.0e-5 m^-3}  # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
-      # Ct0 = ${units 4.0e-2 m^-3} # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 5
-      trap_per_free = 1.0e0       # 1.0e1
+      N = ${N_CuCrZr}
+      Ct0 = ${Ct0_CuCrZr}
+      trap_per_free = ${trap_per_free_CuCrZr}
       trapped_concentration_variables = C_trapped
   []
   [scaled_empty_CuCrZr]
@@ -339,15 +359,13 @@
   [F_recombination]
       type = SideDiffusiveFluxAverage
       boundary = 'top'
-      diffusivity = 5.01e-24   # (3.01604928)/(6.02e23)/[gram(T)/m^2]
-      # diffusivity = 5.508e-19   # (1.0e3)*(1.0e3)/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      diffusivity = ${diffusivity_fixed}
       variable = Sc_C_total_W
   []
   [F_permeation]
       type = SideDiffusiveFluxAverage
       boundary = '2to1'
-      diffusivity = 5.01e-24   # (3.01604928)/(6.02e23)/[gram(T)/m^2]
-      # diffusivity = 5.508e-19   # (1.0e3)*(1.0e3)/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      diffusivity = ${diffusivity_fixed}
       variable = Sc_C_total_CuCrZr
   []
 
@@ -359,7 +377,7 @@
   [ScInt_C_mobile_W]
       type = ScalePostprocessor
       value =  Int_C_mobile_W
-      scaling_factor = 3.491e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor}
   []
   [Int_C_trapped_W]
       type = ElementIntegralVariablePostprocessor
@@ -369,7 +387,7 @@
   [ScInt_C_trapped_W]
       type = ScalePostprocessor
       value = Int_C_trapped_W
-      scaling_factor = 3.491e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor}
   []
   [Int_C_total_W]
       type = ElementIntegralVariablePostprocessor
@@ -379,7 +397,7 @@
   [ScInt_C_total_W]
       type = ScalePostprocessor
       value = Int_C_total_W
-      scaling_factor = 3.491e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor}
   []
   # ############################################################ Postprocessors for Cu (block = 3)
   [Int_C_mobile_Cu]
@@ -390,7 +408,7 @@
   [ScInt_C_mobile_Cu]
       type = ScalePostprocessor
       value =  Int_C_mobile_Cu
-      scaling_factor = 3.491e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor}
   []
   [Int_C_trapped_Cu]
       type = ElementIntegralVariablePostprocessor
@@ -400,7 +418,7 @@
   [ScInt_C_trapped_Cu]
       type = ScalePostprocessor
       value = Int_C_trapped_Cu
-      scaling_factor = 3.44e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor_2}
   []
   [Int_C_total_Cu]
       type = ElementIntegralVariablePostprocessor
@@ -410,7 +428,7 @@
   [ScInt_C_total_Cu]
       type = ScalePostprocessor
       value = Int_C_total_Cu
-      scaling_factor = 3.491e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor}
   []
   # ############################################################ Postprocessors for CuCrZr (block = 2)
   [Int_C_mobile_CuCrZr]
@@ -421,7 +439,7 @@
   [ScInt_C_mobile_CuCrZr]
       type = ScalePostprocessor
       value =  Int_C_mobile_CuCrZr
-      scaling_factor = 3.491e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor}
   []
   [Int_C_trapped_CuCrZr]
       type = ElementIntegralVariablePostprocessor
@@ -431,7 +449,7 @@
   [ScInt_C_trapped_CuCrZr]
       type = ScalePostprocessor
       value = Int_C_trapped_CuCrZr
-      scaling_factor = 3.44e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor_2}
   []
   [Int_C_total_CuCrZr]
       type = ElementIntegralVariablePostprocessor
@@ -441,7 +459,7 @@
   [ScInt_C_total_CuCrZr]
       type = ScalePostprocessor
       value = Int_C_total_CuCrZr
-      scaling_factor = 3.491e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor}
   []
   ############################################################ Postprocessors for others
   [dt]
