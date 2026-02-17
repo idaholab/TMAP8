@@ -21,6 +21,7 @@ radius_Cu = ${units 8.5 mm -> m}
 
 # operation conditions
 temperature_initial = ${units 300.0 K}
+temperature_coolant_max = ${units 552.0 K}
 C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18
 
 # material properties
@@ -32,7 +33,7 @@ specific_heat_CuCrZr = 390.0     # [ W/m-K], [J/kg-K]
 
 plasma_ramp_time = 100.0 #s
 plasma_ss_duration = 400.0 #s
-plasma_cycle_time = 1600.0 #s
+plasma_cycle_time = 1600.0 #s (3.0e4 s plasma, 2.0e4 SSP)
 
 plasma_ss_end = ${fparse plasma_ramp_time + plasma_ss_duration} #s
 plasma_ramp_down_end = ${fparse plasma_ramp_time + plasma_ss_duration + plasma_ramp_time} #s

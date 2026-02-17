@@ -13,7 +13,7 @@
     petsc_options_value = 'lu NONZERO'
     nl_rel_tol  = 1e-6 # 1e-8 works for 1 cycle
     nl_abs_tol  = 1e-7 # 1e-11 works for 1 cycle
-    end_time = 8.0e4   # 50 ITER shots (3.0e4 s plasma, 2.0e4 SSP)
+    end_time = ${fparse 50 * plasma_cycle_time} # 50 ITER shots
     automatic_scaling = true
     line_search = 'none'
     dtmin = 1e-4
