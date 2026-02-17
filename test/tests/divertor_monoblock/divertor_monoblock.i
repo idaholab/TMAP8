@@ -50,6 +50,7 @@ plasma_min_flux = 0.0
 !include divertor_monoblock_mesh_base.i
 !include divertor_monoblock_functions_plasma_exposure.i
 !include divertor_monoblock_outputs_base.i
+!include divertor_monoblock_executioner.i
 
 [Problem]
     type = ReferenceResidualProblem
@@ -487,36 +488,5 @@ plasma_min_flux = 0.0
         boundary = '3to2'
         concentration_primary = C_mobile_Cu
         concentration_secondary = C_mobile_CuCrZr
-    []
-[]
-
-[Preconditioning]
-    [smp]
-        type = SMP
-        full = true
-    []
-[]
-
-[Executioner]
-    type = Transient
-    scheme = bdf2
-    solve_type = NEWTON
-    petsc_options_iname = '-pc_type'
-    petsc_options_value = 'lu'
-    nl_rel_tol  = 1e-6 # 1e-8 works for 1 cycle
-    nl_abs_tol  = 1e-7 # 1e-11 works for 1 cycle
-    end_time = 8.0e4   # 50 ITER shots (3.0e4 s plasma, 2.0e4 SSP)
-    automatic_scaling = true
-    line_search = 'none'
-    dtmin = 1e-4
-    nl_max_its = 18
-    [TimeStepper]
-        type = IterationAdaptiveDT
-        dt = 20
-        optimal_iterations = 15
-        iteration_window = 1
-        growth_factor = 1.2
-        cutback_factor = 0.8
-        timestep_limiting_postprocessor = timestep_max_pp
     []
 []
