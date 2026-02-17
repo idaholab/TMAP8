@@ -37,7 +37,7 @@ plasma_cycle_time = 1600.0 #s (3.0e4 s plasma, 2.0e4 SSP)
 plasma_ss_end = ${fparse plasma_ramp_time + plasma_ss_duration} #s
 plasma_ramp_down_end = ${fparse plasma_ramp_time + plasma_ss_duration + plasma_ramp_time} #s
 
-plasma_max_heat = 1.0e7 #W/m^2
+plasma_max_heat = 1.0e7 #W/m^2 # Heat flux of 10MW/m^2 at steady state
 plasma_min_heat = 0.0 # W/m^2 # no flux while the pulse is off.
 
 ### Maximum mobile flux of 7.90e-13 at the top surface (1.0e-4 [m])
@@ -84,9 +84,9 @@ plasma_min_flux = 0.0
             specific_heat = 'specific_heat'
 
             heat_flux_boundaries = 'top'
-            boundary_heat_fluxes = 'temp_flux_bc_function'
+            boundary_heat_fluxes = 'temperature_flux_bc_function'
             fixed_temperature_boundaries = '2to1'
-            boundary_temperatures = 'temp_inner_func'
+            boundary_temperatures = 'temperature_inner_func'
         []
     []
     [Diffusion]

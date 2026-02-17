@@ -39,7 +39,7 @@ plasma_cycle_time = 1600.0 #s (3.0e4 s plasma, 2.0e4 SSP)
 plasma_ss_end = ${fparse plasma_ramp_time + plasma_ss_duration} #s
 plasma_ramp_down_end = ${fparse plasma_ramp_time + plasma_ss_duration + plasma_ramp_time} #s
 
-plasma_max_heat = 1.0e7 #W/m^2
+plasma_max_heat = 1.0e7 #W/m^2 # Heat flux of 10MW/m^2 at steady state
 plasma_min_heat = 0.0 # W/m^2 # no flux while the pulse is off.
 
 ### Maximum mobile flux of 7.90e-13 at the top surface (1.0e-4 [m])
@@ -327,17 +327,17 @@ plasma_min_flux = 0.0
         value = ${C_mobile_CuCrZr_DirichletBC_Coolant}
         boundary = '2to1'
     []
-    [temp_top]
+    [temperature_top]
         type = FunctionNeumannBC
         variable = temperature
         boundary = 'top'
-        function = temp_flux_bc_function
+        function = temperature_flux_bc_function
     []
-    [temp_tube]
+    [temperature_tube]
         type = FunctionDirichletBC
         variable = temperature
         boundary = '2to1'
-        function = temp_inner_func
+        function = temperature_inner_func
     []
 []
 

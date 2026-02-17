@@ -3,6 +3,7 @@
         type = ParsedFunction
         expression = 't % ${plasma_cycle_time}'
     []
+    # pulse between 0 and 1 following the plasma operation
     [pulse_time_function]
         type = ParsedFunction
         symbol_values = 't_in_cycle'
@@ -17,15 +18,13 @@
         symbol_names = 'pulse_time_function'
         expression = '(${plasma_max_flux} - ${plasma_min_flux}) * pulse_time_function + ${plasma_min_flux}'
     []
-    ### Heat flux of 10MW/m^2 at steady state
-    [temp_flux_bc_function]
+    [temperature_flux_bc_function]
         type = ParsedFunction
         symbol_values = 'pulse_time_function'
         symbol_names = 'pulse_time_function'
         expression = '(${plasma_max_heat} - ${plasma_min_heat}) * pulse_time_function + ${plasma_min_heat}'
     []
-    ### Maximum coolant temperature of 552K at steady state
-    [temp_inner_func]
+    [temperature_inner_func]
         type = ParsedFunction
         symbol_values = 'pulse_time_function'
         symbol_names = 'pulse_time_function'
