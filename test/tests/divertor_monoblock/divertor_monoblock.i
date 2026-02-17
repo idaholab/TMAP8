@@ -14,8 +14,6 @@
 ### Int_            Integrated
 ### ScInt_          Scaled and integrated
 
-# physical constants
-
 # geometry and design
 radius_coolant = ${units 6.0 mm -> m}
 radius_CuCrZr = ${units 7.5 mm -> m}
@@ -49,8 +47,8 @@ plasma_max_flux = 7.90e-13
 plasma_min_flux = 0.0
 
 # include sections of the input file shared with other inputs
-!include outputs_base.i
-!include mesh_base.i
+!include divertor_monoblock_mesh_base.i
+!include divertor_monoblock_outputs_base.i
 
 [Problem]
     type = ReferenceResidualProblem
@@ -543,27 +541,6 @@ plasma_min_flux = 0.0
         concentration_secondary = C_mobile_CuCrZr
     []
 []
-
-[Postprocessors]
-    # limit timestep
-    [timestep_max_pp] # s
-    type = FunctionValuePostprocessor
-    function = timestep_function
-  []
-[]
-
-[VectorPostprocessors]
-    [line]
-        type = LineValueSampler
-        start_point = '0 14.0e-3 0'
-        end_point = '0 ${radius_coolant} 0'
-        num_points = 100
-        sort_by = 'y'
-        variable = 'C_total_W C_total_Cu C_total_CuCrZr C_mobile_W C_mobile_Cu C_mobile_CuCrZr C_trapped_W C_trapped_Cu C_trapped_CuCrZr flux_y temperature'
-        execute_on = timestep_end
-    []
-[]
-
 
 [Preconditioning]
     [smp]

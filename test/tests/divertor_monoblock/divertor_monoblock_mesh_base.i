@@ -5,7 +5,7 @@
       type = ConcentricCircleMeshGenerator
       num_sectors = 36
       rings = '1 30 20 110'
-      radii = '${radius_coolant} ${radius_CuCrZr} &{radius_Cu}'
+      radii = '${radius_coolant} ${radius_CuCrZr} ${radius_Cu}'
       has_outer_square = on
       pitch = ${units 28 mm -> m}
       portion = left_half

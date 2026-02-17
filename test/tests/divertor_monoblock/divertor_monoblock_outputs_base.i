@@ -457,6 +457,11 @@
       variable = temperature
       point = '0 ${radius_coolant} 0'
   []
+  # limit timestep
+  [timestep_max_pp] # s
+    type = FunctionValuePostprocessor
+    function = timestep_function
+  []
 []
 
 [VectorPostprocessors]

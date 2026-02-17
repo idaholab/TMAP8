@@ -15,14 +15,19 @@
 ### ScInt_          Scaled and integrated
 
 # geometry and design
-radius_coolant = ${units 6 mm -> m}
+radius_coolant = ${units 6.0 mm -> m}
 radius_CuCrZr = ${units 7.5 mm -> m}
 radius_Cu = ${units 8.5 mm -> m}
 
-tungsten_atomic_density = ${units 6.338e28 m^-3}
+# operation conditions
+temperature_initial = ${units 300.0 K}
 
-!include mesh_base.i
-!include outputs_base_single_var.i
+# material properties
+tungsten_atomic_density = ${units 6.338e28 m^-3}
+density_W = 19300                # [g/m^3]
+density_Cu = 8960.0               # [g/m^3]
+density_CuCrZr = 8900.0 # [g/m^3]
+specific_heat_CuCrZr = 390.0     # [ W/m-K], [J/kg-K]
 
 plasma_ramp_time = 100.0 #s
 plasma_ss_duration = 400.0 #s
@@ -39,6 +44,9 @@ plasma_min_heat = 0.0 # W/m^2 # no flux while the pulse is off.
 plasma_max_flux = 7.90e-13
 plasma_min_flux = 0.0
 
+# include sections of the input file shared with other inputs
+!include divertor_monoblock_mesh_base.i
+!include divertor_monoblock_outputs_base_single_var.i
 
 [Problem]
     # TODO: add support for reference residual problem in Physics
@@ -178,9 +186,9 @@ plasma_min_flux = 0.0
         type = ParsedFunction
         symbol_values = 't_in_cycle'
         symbol_names = 't_in_cycle'
-        expression =   'if(t_in_cycle < 100.0, 300.0 + (552-300)*t_in_cycle/100,
+        expression =   'if(t_in_cycle < 100.0, ${temperature_initial} + (552-${temperature_initial})*t_in_cycle/100,
                         if(t_in_cycle < 500.0, 552,
-                        if(t_in_cycle < 600.0, 552.0 - (552-300)*(t_in_cycle-500)/100, 300)))'
+                        if(t_in_cycle < 600.0, 552.0 - (552-${temperature_initial})*(t_in_cycle-500)/100, ${temperature_initial})))'
     []
     [timestep_function]
         type = ParsedFunction
@@ -220,7 +228,7 @@ plasma_min_flux = 0.0
     [heat_transfer_W]
         type = ADGenericConstantMaterial
         prop_names = 'density'
-        prop_values = '19300'                # [g/m^3]
+        prop_values = '${density_W}'
         block = 4
     []
     [specific_heat_W]
@@ -260,7 +268,7 @@ plasma_min_flux = 0.0
     [heat_transfer_Cu]
         type = ADGenericConstantMaterial
         prop_names = 'density'
-        prop_values = '8960.0'                # [g/m^3]
+        prop_values = '${density_Cu}'
         block = 3
     []
     [specific_heat_Cu]
@@ -300,7 +308,7 @@ plasma_min_flux = 0.0
     [heat_transfer_CuCrZr]
         type = ADGenericConstantMaterial
         prop_names = 'density specific_heat'
-        prop_values = '8900.0 390.0'            # [g/m^3], [ W/m-K], [J/kg-K]
+        prop_values = '${density_CuCrZr} ${specific_heat_CuCrZr}'
         block = 2
     []
     [thermal_conductivity_CuCrZr]
@@ -360,12 +368,4 @@ plasma_min_flux = 0.0
         cutback_factor = 0.8
         timestep_limiting_postprocessor = timestep_max_pp
     []
-[]
-
-[Postprocessors]
-  # limit timestep
-  [timestep_max_pp] # s
-    type = FunctionValuePostprocessor
-    function = timestep_function
-  []
 []
