@@ -279,7 +279,7 @@ The input files for this validation case are:
 
 - [/val-2g_trapping.i]: Simulates deuterium transport with and without trapping effects using corresponding parameters. [/parameters_no_trapping_initial_validation.params] includes the initial parameters for simulation without trapping, [/parameters_trapping_initial_validation.params] includes the initial parameters for simulation with trapping, and [/parameters_trapping_calibrated_validation.params] includes the calibrated parameters for simulation with trapping.
 - [/val-2g_trapping_light.i]: Simulates a version of the file with a coarser mesh, fewer time steps, no trapping effects, and wet environment to limit the computational costs for testing purposes.
-- [/val-2g_main_PSS_trapping.i]: Performs a simplified Parallel Subset Simulation optimization with only one step to demonstrate the integrity of input file and a simplified Parallel Subset Simulation optimization study with initial parameters close to the calibrated values to reduce computational cost.
+- [/val-2g_main_PSS_trapping.i]: Performs a simplified Parallel Subset Simulation (PSS) optimization study with initial parameters close to the calibrated values to reduce computational cost. However, the same input file can be adapted to perform the full PSS study presented in [!cite](yang2026elucidating). In the test, the PSS is performed with only one step to demonstrate the integrity of input file and an overly simplified PSS optimization study. 
 
 More information about these tests can be found in the test specification file for this case, namely [/val-2g/tests].
 
