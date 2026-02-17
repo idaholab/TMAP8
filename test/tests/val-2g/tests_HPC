@@ -1,0 +1,17 @@
+[Tests]
+  design = 'TrappingNodalKernel.md ReleasingNodalKernel.md'
+  issues = '#349'
+  validation = 'val-2g.md'
+  [val-2g_pss_optimization_HPC]
+    type = JSONDiff
+    input = val-2g_main_PSS_trapping.i
+    cli_args = "MultiApps/sub/cli_args='Postprocessors/max_time_step_size/function=100;edge_number=100;num_nodes=300' Outputs/file_base='val-2g_PSS/both_cases_trapping_long_PSS_results'"
+    jsondiff = val-2g_PSS/both_cases_trapping_long_PSS_results.json
+    abs_zero = 1e-8
+    rel_err = 1e-5
+    max_parallel = 1
+    recover = false
+    heavy = true
+    requirement = 'The system shall be able to perform a Parallel Subset Simulation optimization study under more optimization step for deuterium transport in proton-conducting ceramics.'
+  []
+[]
