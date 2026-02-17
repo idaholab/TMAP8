@@ -8,9 +8,6 @@ from mpl_toolkits.mplot3d import Axes3D
 import os
 script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
 
 # ================================================================================ #
 # Constants
@@ -23,13 +20,15 @@ temperature_list = [325, 350, 375]  # Celsius
 
 colors = ['blue', 'green', 'red', 'purple']
 
-
+#NEED TO FIX THIS
 # Extract data from experiments
 if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     folderPath = "../../../../../test/tests/Zr2Fe_hydrogen_system/"
 else:                                  # if in test folder
     folderPath = ""
-folderNameExpData = 'PCT_data'
+folderNameExpData = 'PCT_data/'
+
+
 
 # ============================================================================== #
 # Load and process data
