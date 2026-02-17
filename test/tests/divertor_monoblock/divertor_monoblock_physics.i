@@ -24,6 +24,7 @@ num_sectors = 36 # (-) defines mesh size
 # operation conditions
 temperature_initial = ${units 300.0 K}
 temperature_coolant_max = ${units 552.0 K}
+
 C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18
 
 # material properties

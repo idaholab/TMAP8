@@ -4,12 +4,12 @@ diffusivity_fixed = 5.01e-24   # (3.01604928)/(6.02e23)/[gram(T)/m^2]
 # diffusivity_fixed = 5.508e-19   # (1.0e3)*(1.0e3)/(6.02e23)/(3.01604928) [gram(T)/m^2] alternative
 
 N_W = ${units 1.0e0 m^-3}       # = ${tungsten_atomic_density} #/m^3 (W lattice density)
-Ct0_W = ${units 5.0e-5 m^-3}  # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
+Ct0_W = ${units 1.0e-4 m^-3}  # E.A. Hodille et al 2021 Nucl. Fusion 61 1260033, trap 2
+# Ct0 = ${units 1.0e-4 m^-3}   # E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 1
 trap_per_free_W = 1.0e0
 
 N_Cu = ${units 1.0e0 m^-3}     # = ${tungsten_atomic_density} #/m^3 (W lattice density)
-Ct0_Cu = ${units 1.0e-4 m^-3}    # E.A. Hodille et al 2021 Nucl. Fusion 61 1260033, trap 2
-# Ct0 = ${units 1.0e-4 m^-3}   # E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 1
+Ct0_Cu = ${units 5.0e-5 m^-3}    # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
 trap_per_free_Cu = 1.0e0
 
 N_CuCrZr = ${units 1.0e0 m^-3}     # = ${tungsten_atomic_density} #/m^3 (W lattice density)
