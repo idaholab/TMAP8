@@ -1,7 +1,10 @@
+### This input file is the complete input files for the divertor monoblock case using the physics
+### syntax with a single variable across materials.
+### This input uses the `!include` feature to incorporate other input files
+
 ### Nomenclatures
-### C_mobile        mobile H concentration in "j" material, where j = CuCrZr, Cu, W
-### C_trapped       trapped H concentration in "j" material, where j = CuCrZr, Cu, W
-### C_total_j       total H concentration in "j" material, where j = CuCrZr, Cu, W
+### C_mobile        mobile H concentration
+### C_trapped       trapped H concentration
 ###
 ### S_empty_j       empty site concentration in "j" material, where j = CuCrZr, Cu, W
 ### S_trapped_j     trapped site concentration in "j" material, where j = CuCrZr, Cu, W
@@ -14,20 +17,42 @@
 ### Int_            Integrated
 ### ScInt_          Scaled and integrated
 
+C_mobile_init = ${units 1.0e-20 m^-3}
+C_trapping_init = ${units 1.0e-15 m^-3}
+
+alpha_t = 2.75e11           # 1e15 # same for all materials
+trapping_energy = 0 # same for all materials
+alpha_r = 8.4e12            # 1.0e13  # same for all materials
+
+detrapping_energy_W = 11604.6 # = 1.00 eV    E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 2
+detrapping_energy_Cu = 5802.3  # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
+detrapping_energy_CuCrZr = 5802.3  # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
+
+# H diffusivity in W
+diffusivity_W_D0 = 2.4e-7
+diffusivity_W_Ea = ${units 4525.8 K}
+# H solubility in W = (1.87e24)/(${tungsten_atomic_density}) [#/m^3] // # H solubility in W = (1.87e24)/(${tungsten_atomic_density}) [#/m^3]
+solubility_W_1_D0 = 2.95e-5
+solubility_W_1_Ea = ${units 12069.0 K}
+solubility_W_2_D0 = 4.95e-8
+solubility_W_2_Ea = ${units 6614.6 K}
+# H diffusivity in Cu
+diffusivity_Cu_D0 = 6.60e-7
+diffusivity_Cu_Ea = ${units 4525.8 K}
+# H solubility in Cu = (3.14e24)/(${tungsten_atomic_density}) [#/m^3]
+solubility_Cu_D0 = 4.95e-5
+solubility_Cu_Ea = ${units 6614.6 K}
+# H diffusivity in CuCrZr
+diffusivity_CuCrZr_D0 = 3.90e-7
+diffusivity_CuCrZr_Ea = ${units 4873.9 K}
+#H solubility in CuCrZr = (4.28e23)/(${tungsten_atomic_density}) [#/m^3]
+solubility_CuCrZr_D0 = 6.75e-6
+solubility_CuCrZr_Ea = ${units 4525.8 K}
+
 # include sections of the input file shared with other inputs
 !include divertor_monoblock_common_base.i
 !include divertor_monoblock_mesh_base.i
 !include divertor_monoblock_outputs_base_single_var.i
-
-[Problem]
-    # TODO: add support for reference residual problem in Physics
-    # type = ReferenceResidualProblem
-    # extra_tag_vectors = 'ref'
-    # reference_vector = 'ref'
-
-    # Multi-system does not work with nodal kernels at the time
-    # nl_sys_names = 'nl0 energy'
-[]
 
 [GlobalParams]
     species_scaling_factors = '1'
@@ -46,7 +71,7 @@
     [HeatConduction]
         [all]
             temperature_name = 'temperature'
-            initial_temperature = ${units 300 K}
+            initial_temperature = ${temperature_initial}
 
             thermal_conductivity = 'thermal_conductivity'
             specific_heat = 'specific_heat'
@@ -61,67 +86,63 @@
         [all]
             variable_name = 'C_mobile'
             diffusivity_matprop = diffusivity
-            initial_condition = ${units 1.0e-20 m^-3}
+            initial_condition = ${C_mobile_init}
 
             neumann_boundaries = 'top'
             boundary_fluxes = 'mobile_flux_bc_function'
         []
     []
-    # TODO: modify the code to:
-    # - use material properties for all the parameters
-    # - use an element-based version of NodalKernels
-    # then we wont need 3 Physics for Trapping
     [SpeciesTrapping]
         [all]
             species = 'C_trapped'
             mobile = 'C_mobile'
             block = '4'
-            species_initial_concentrations = ${units 1.0e-15 m^-3}
+            species_initial_concentrations = ${C_trapping_init}
             separate_variables_per_component = false
 
             temperature = temperature
-            alpha_t = 2.75e11           # 1e15
-            N = 1.0e0                   # = (1e0) x (${tungsten_atomic_density} #/m^3)
-            Ct0 = 1.0e-4                # E.A. Hodille et al 2021 Nucl. Fusion 61 1260033, trap 2
-            trap_per_free = 1.0e0       # 1.0e1
-            trapping_energy = 0
+            alpha_t = ${alpha_t}
+            N = ${N_W}
+            Ct0 = ${Ct0_W}
+            trap_per_free = ${trap_per_free_W}
+            trapping_energy = ${trapping_energy}
 
-            alpha_r = 8.4e12            # 1.0e13
-            detrapping_energy = 11604.6 # = 1.00 eV    E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 2
+            alpha_r = ${alpha_r}
+            detrapping_energy = ${detrapping_energy_W}
         []
         [Cu]
             species = 'C_trapped'
             mobile = 'C_mobile'
             block = '3'
-            species_initial_concentrations = ${units 1.0e-15 m^-3}
+            species_initial_concentrations = ${C_trapping_init}
             separate_variables_per_component = false
             temperature = temperature
 
-            alpha_t = 2.75e11           # 1e15
-            N = 1.0e0                   # = ${tungsten_atomic_density} #/m^3 (W lattice density)
-            Ct0 = 5.0e-5                # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
-            trap_per_free = 1.0e0       # 1.0e1
-            trapping_energy = 0
+            alpha_t = ${alpha_t}
+            N = ${N_Cu}
+            Ct0 = ${Ct0_Cu}
+            trap_per_free = ${trap_per_free_Cu}
+            trapping_energy = ${trapping_energy}
 
-            alpha_r = 8.4e12            # 1.0e13
-            detrapping_energy = 5802.3  # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
+            alpha_r = ${alpha_r}
+            detrapping_energy = ${detrapping_energy_Cu}
         []
         [CuCrZr]
             species = 'C_trapped'
             mobile = 'C_mobile'
             block = '2'
-            species_initial_concentrations = ${units 1.0e-15 m^-3}
+            species_initial_concentrations = ${C_trapping_init}
             separate_variables_per_component = false
             temperature = temperature
 
-            alpha_t = 2.75e11           # 1e15
-            N = 1.0e0                   # = ${tungsten_atomic_density} #/m^3 (W lattice density)
-            Ct0 = 5.0e-5                # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
-            trap_per_free = 1.0e0       # 1.0e1
-            trapping_energy = 0
+            alpha_t = ${alpha_t}
+            N = ${N_CuCrZr}
+            Ct0 = ${Ct0_CuCrZr}
+            trap_per_free = ${trap_per_free_CuCrZr}
+            trapping_energy = ${trapping_energy}
 
-            alpha_r = 8.4e12            # 1.0e13
-            detrapping_energy = 5802.3  # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
+            alpha_r = ${alpha_r}
+            detrapping_energy = ${detrapping_energy_CuCrZr}
         []
     []
 []
@@ -133,7 +154,7 @@
         property_name = diffusivity
         coupled_variables = 'temperature'
         block = 4
-        expression = '2.4e-7*exp(-4525.8/temperature)'    # H diffusivity in W
+        expression = '${diffusivity_W_D0}*exp(-${diffusivity_W_Ea}/temperature)'
         outputs = all
     []
     [solubility_W]
@@ -141,8 +162,7 @@
         property_name = solubility_W
         coupled_variables = 'temperature'
         block = 4
-        # expression = '2.95e-5 *exp(-12069.0/temperature)'              # H solubility in W = (1.87e24)/(${tungsten_atomic_density}) [#/m^3]
-        expression = '2.95e-5 *exp(-12069.0/temperature) + 4.95e-8 * exp(-6614.6/temperature)'    # H solubility in W = (1.87e24)/(${tungsten_atomic_density}) [#/m^3]
+        expression = '${solubility_W_1_D0}*exp(-${solubility_W_1_Ea}/temperature) + ${solubility_W_2_D0}*exp(-${solubility_W_2_Ea}/temperature)'
         outputs = all
     []
     [heat_transfer_W]
@@ -174,7 +194,7 @@
         property_name = diffusivity
         coupled_variables = 'temperature'
         block = 3
-        expression = '6.60e-7*exp(-4525.8/temperature)'    # H diffusivity in Cu
+        expression = '${diffusivity_Cu_D0}*exp(-${diffusivity_Cu_Ea}/temperature)'
         outputs = all
     []
     [solubility_Cu]
@@ -182,7 +202,7 @@
         property_name = solubility_Cu
         coupled_variables = 'temperature'
         block = 3
-        expression = '4.95e-5*exp(-6614.6/temperature)'    # H solubility in Cu = (3.14e24)/(${tungsten_atomic_density}) [#/m^3]
+        expression = '${solubility_Cu_D0}*exp(-${solubility_Cu_Ea}/temperature)'
         outputs = all
     []
     [heat_transfer_Cu]
@@ -214,7 +234,7 @@
         property_name = diffusivity
         coupled_variables = 'temperature'
         block = 2
-        expression = '3.90e-7*exp(-4873.9/temperature)'    # H diffusivity in CuCrZr
+        expression = '${diffusivity_CuCrZr_D0}*exp(-${diffusivity_CuCrZr_Ea}/temperature)'
         outputs = all
     []
     [solubility_CuCrZr]
@@ -222,7 +242,7 @@
         property_name = solubility_CuCrZr
         coupled_variables = 'temperature'
         block = 2
-        expression = '6.75e-6*exp(-4525.8/temperature)'    # H solubility in CuCrZr = (4.28e23)/(${tungsten_atomic_density}) [#/m^3]
+        expression = '${solubility_CuCrZr_D0}*exp(-${solubility_CuCrZr_Ea}/temperature)'
         outputs = all
     []
     [heat_transfer_CuCrZr]

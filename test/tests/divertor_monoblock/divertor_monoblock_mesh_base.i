@@ -1,3 +1,9 @@
+# This input file contains the geometry and mesh for the divertor monoblock case.
+# It creates the geometry and mesh based on input parameters and generates the relevant interfaces between materials.
+# It cannot be run on its own and is included in the main input file for this case, namely:
+# - divertor_monoblock.i
+# - divertor_monoblock_physics.i
+# - divertor_monoblock_physics-single-variable.i
 
 [Mesh]
   [ccmg]
