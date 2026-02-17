@@ -15,11 +15,9 @@
 ### ScInt_          Scaled and integrated
 
 # include sections of the input file shared with other inputs
-!include divertor_monoblock_params.i
+!include divertor_monoblock_common_base.i
 !include divertor_monoblock_mesh_base.i
-!include divertor_monoblock_functions_plasma_exposure.i
 !include divertor_monoblock_outputs_base_single_var.i
-!include divertor_monoblock_executioner.i
 
 [Problem]
     # TODO: add support for reference residual problem in Physics

@@ -17,11 +17,9 @@
 C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18
 
 # include sections of the input file shared with other inputs
-!include divertor_monoblock_params.i
+!include divertor_monoblock_common_base.i
 !include divertor_monoblock_mesh_base.i
-!include divertor_monoblock_functions_plasma_exposure.i
 !include divertor_monoblock_outputs_base.i
-!include divertor_monoblock_executioner.i
 
 [Problem]
     type = ReferenceResidualProblem
