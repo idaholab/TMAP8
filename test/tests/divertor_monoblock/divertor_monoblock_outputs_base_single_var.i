@@ -4,7 +4,7 @@
         type = Exodus
         sync_only = false
         # output at key moments in the first two cycles, and then at the end of the simulation
-        sync_times = '110.0 480.0 590.0 1600.0 1710.0 2080.0 2190.0 3400.0 8.0e4'
+        sync_times = '${fparse 1.1 * plasma_ramp_time} ${fparse plasma_ss_end - 20} ${fparse plasma_ramp_down_end - 10} ${plasma_cycle_time} ${fparse plasma_cycle_time + 1.1 * plasma_ramp_time} ${fparse plasma_cycle_time + plasma_ss_end - 20} ${fparse plasma_cycle_time + plasma_ramp_down_end - 10} ${fparse 2 * plasma_cycle_time} ${fparse 50 * plasma_cycle_time}'
     []
     csv = true
     hide = 'dt
@@ -450,7 +450,7 @@
   [temperature_top]
       type = PointValue
       variable = temperature
-      point = '0 14.0e-3 0'
+      point = '0 ${fparse block_size / 2} 0'
   []
   [temperature_tube]
       type = PointValue
@@ -467,7 +467,7 @@
 [VectorPostprocessors]
   [line]
       type = LineValueSampler
-      start_point = '0 14.0e-3 0'
+      start_point = '0 ${fparse block_size / 2} 0'
       end_point = '0 ${radius_coolant} 0'
       num_points = 100
       sort_by = 'y'

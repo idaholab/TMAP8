@@ -18,6 +18,8 @@
 radius_coolant = ${units 6.0 mm -> m}
 radius_CuCrZr = ${units 7.5 mm -> m}
 radius_Cu = ${units 8.5 mm -> m}
+block_size = ${units 28 mm -> m}
+num_sectors = 36 # (-) defines mesh size
 
 # operation conditions
 temperature_initial = ${units 300.0 K}
