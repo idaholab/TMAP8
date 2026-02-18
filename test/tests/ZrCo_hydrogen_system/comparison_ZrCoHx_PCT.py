@@ -48,7 +48,6 @@ def p0_lim_func(T):
     return np.exp(12.427 - 4.8366e-2 * T + 7.1464e-5 * T**2)
 
 
-
 def atom_ratio_eq_lower_func(T, P):
     p0 = p0_lim_func(T)
     arg = np.maximum(p0 - P, 1e-10)
@@ -56,7 +55,6 @@ def atom_ratio_eq_lower_func(T, P):
         0.01
         + np.exp(-4.2856 + 1.9812e-02 * T + (-1.0656 + 5.6857e-04 * T) * np.log(arg))
     ) ** (-1)
-
 
 
 def atom_ratio_eq_upper_func(T, P):
@@ -68,10 +66,8 @@ def atom_ratio_eq_upper_func(T, P):
     ) ** (-1)
 
 
-
 def rmse(y_true, y_pred):
     return np.sqrt(np.mean((y_true - y_pred) ** 2))
-
 
 # ------------------------------------------------------------------------------
 # Load experimental data
@@ -217,6 +213,7 @@ def overlay_tmap(dfp):
         s=90,
         label=f"{int(T_pred)}.15 K, {P_pred:.2e} Pa (err {err_pct:.2f}%)",
     )
+
 
 # Apply overlays
 for dfp in tmap_low.values():
