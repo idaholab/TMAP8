@@ -79,9 +79,12 @@ In the input file, the mesh is defined as:
 | $\alpha_{r0}$ | Pre-exponential factor, $8.40 \times 10^{12}$ | s$^{−1}$ |
 | $E_{dt}$ | Detrapping energy | eV |
 | $N$ | Atomic number density | m$^{−3}$ |
-| $\rho$ | Density | g m$^{-3}$ |
+| $\rho$ | Density | kg m$^{-3}$ |
 | $c_p$ | Specific heat | J kg$^{-1}$ K$^{-1}$ |
 | $k_T$ | Thermal conductivity | W m$^{-1}$ K$^{-1}$ |
+
+!alert warning title=Typo in [!cite](Shimada2024114438)
+The equivalent table in [!cite](ambrosek2008verification) has a typographical error: It lists the density in g m$^{-3}$ when the correct unit, used in [tab:variables], is kg m$^{-3}$. This does not, however, change the results since the density numbers were correct and used the proper unit.
 
 
 ### Variables and governing equations
