@@ -18,10 +18,10 @@
 ### Int_            Integrated
 ### ScInt_          Scaled and integrated
 
-C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18 ## units
-C_mobile_W_init = ${units 1.0e-20 m^-3}
-C_mobile_Cu_init = ${units 5.0e-17 m^-3}
-C_mobile_CuCrZr_init = ${units 1.0e-15 m^-3}
+C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18 # at.fraction
+C_mobile_W_init = 1.0e-20  # at.fraction
+C_mobile_Cu_init = 5.0e-17  # at.fraction
+C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
 
 # include sections of the input file shared with other inputs
 !include divertor_monoblock_common_base.i

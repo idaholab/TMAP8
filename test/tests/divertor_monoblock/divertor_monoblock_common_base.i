@@ -5,94 +5,97 @@
 # - divertor_monoblock_physics.i
 # - divertor_monoblock_physics-single-variable.i
 
-# geometry and design
+# Geometry and design
 radius_coolant = ${units 6.0 mm -> m}
 radius_CuCrZr = ${units 7.5 mm -> m}
 radius_Cu = ${units 8.5 mm -> m}
 block_size = ${units 28 mm -> m}
 num_sectors = 36 # (-) defines mesh size
+rings_H2O = 1 # (-)
+rings_CuCrZr = 30 # (-)
+rings_Cu = 20 # (-)
+rings_W = 110 # (-)
 
-# operation conditions
+# Operation conditions
+plasma_ramp_time = ${units 100.0 s}
+plasma_ss_duration = ${units 400.0 s}
+plasma_cycle_time = ${units 1600.0 s}
+plasma_ss_end = ${fparse plasma_ramp_time + plasma_ss_duration}
+plasma_ramp_down_end = ${fparse plasma_ramp_time + plasma_ss_duration + plasma_ramp_time}
+
 temperature_initial = ${units 300.0 K}
 temperature_coolant_max = ${units 552.0 K}
 
+plasma_max_heat = ${units 1.0e7 W/m^2} # Heat flux of 10 MW/m^2 at steady state
+plasma_min_heat = ${units 0.0 W/m^2} # no flux while the pulse is off.
 
+# maximum mobile flux of 7.90e-13 at the top surface (1.0e-4 [m])
+# 10e24 at/m^3/s plasma flux at steady state
+# 50% of it corresponds to tritium in a DT plasma
+# Assuming 0.1% of incident plasma is retained in the divertor, this results in a flux of
+# 5e20 at/m^3/s for tritium
+# This is then normalized by the tungsten_atomic_density and leads to a flux of ~7.90e-9 m/s
+# This is then distributed in the first mesh layer, which has a thickness of 1e-4 m
+plasma_max_flux = ${units 7.90e-13 1/s} # at.fraction / s
+plasma_min_flux = ${units 0.0 1/s}
 
-plasma_ramp_time = 100.0 #s
-plasma_ss_duration = 400.0 #s
-plasma_cycle_time = 1600.0 #s (3.0e4 s plasma, 2.0e4 SSP)
+# Initial conditions
+C_trapping_init = 1.0e-15 # at.fraction
 
-plasma_ss_end = ${fparse plasma_ramp_time + plasma_ss_duration} #s
-plasma_ramp_down_end = ${fparse plasma_ramp_time + plasma_ss_duration + plasma_ramp_time} #s
-
-plasma_max_heat = 1.0e7 #W/m^2 # Heat flux of 10MW/m^2 at steady state
-plasma_min_heat = 0.0 # W/m^2 # no flux while the pulse is off.
-
-### Maximum mobile flux of 7.90e-13 at the top surface (1.0e-4 [m])
-### 1.80e23/m^2-s = (5.0e23/m^2-s) *(1-0.999) = (7.90e-13)*(${tungsten_atomic_density})/(1.0e-4)  at steady state
-plasma_max_flux = 7.90e-13
-plasma_min_flux = 0.0
-
-# Materials properties
-tungsten_atomic_density = ${units 6.338e28 m^-3}
-density_W = 19300                # [g/m^3]
-density_Cu = 8960.0               # [g/m^3]
-density_CuCrZr = 8900.0 # [g/m^3]
-specific_heat_CuCrZr = 390.0     # [ W/m-K], [J/kg-K]
-
-diffusivity_fixed = 5.01e-24   # (3.01604928)/(6.02e23)/[gram(T)/m^2]
-# diffusivity_fixed = 5.508e-19   # (1.0e3)*(1.0e3)/(6.02e23)/(3.01604928) [gram(T)/m^2] alternative
-
-N_W = ${units 1.0e0 m^-3}       # = ${tungsten_atomic_density} #/m^3 (W lattice density)
-Ct0_W = ${units 1.0e-4 m^-3}  # E.A. Hodille et al 2021 Nucl. Fusion 61 1260033, trap 2
-# Ct0 = ${units 1.0e-4 m^-3}   # E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 1
-trap_per_free_W = 1.0e0
-
-N_Cu = ${units 1.0e0 m^-3}     # = ${tungsten_atomic_density} #/m^3 (W lattice density)
-Ct0_Cu = ${units 5.0e-5 m^-3}    # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
-trap_per_free_Cu = 1.0e0
-
-N_CuCrZr = ${units 1.0e0 m^-3}     # = ${tungsten_atomic_density} #/m^3 (W lattice density)
-Ct0_CuCrZr = ${units 5.0e-5 m^-3}  # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
-# Ct0_CuCrZr = ${units 4.0e-2 m^-3} # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 5
-trap_per_free_CuCrZr = 1.0e0
-
-scaling_factor = 3.491e10    # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
-scaling_factor_2 = 3.44e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
-
-C_trapping_init = ${units 1.0e-15 m^-3}
-
-alpha_t = 2.75e11           # 1e15 # same for all materials
-trapping_energy = 0 # same for all materials
-alpha_r = 8.4e12            # 1.0e13  # same for all materials
-
-detrapping_energy_W = 11604.6 # = 1.00 eV    E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 2
-# detrapping_energy_W = 9863.9    # = 0.85 eV    E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 1
-detrapping_energy_Cu = 5802.3  # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
-detrapping_energy_CuCrZr = 5802.3  # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
-# detrapping_energy_CuCrZr = 9631.8   # = 0.83 eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 5
-
+# Materials properties - W
+tungsten_atomic_density = ${units 6.338e28 atoms/m^3}
+density_W = ${units 19300 kg/m^3}
+N_W = ${fparse tungsten_atomic_density / tungsten_atomic_density} # usually in atoms/m^3, but here normalized by tungsten_atomic_density
+Ct0_W = 1.0e-4 # at.fraction - E.A. Hodille et al 2021 Nucl. Fusion 61 1260033, trap 2 (same as trap 1)
+trap_per_free_W = 1.0e0 # (-)
+alpha_t = ${units 2.75e11 s} # same for all materials
+trapping_energy = ${units 0 K} # same for all materials
+alpha_r = ${units 8.4e12 s} # same for all materials
+detrapping_energy_W = ${units 11604.6 K} # = 1.00 eV    E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 2
+# detrapping_energy_W = ${units 9863.9 K} # = 0.85 eV    E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 1
 # H diffusivity in W
-diffusivity_W_D0 = 2.4e-7
+diffusivity_W_D0 = ${units 2.4e-7 m^2/s}
 diffusivity_W_Ea = ${units 4525.8 K}
-# H solubility in W = (1.87e24)/(${tungsten_atomic_density}) [#/m^3] // # H solubility in W = (1.87e24)/(${tungsten_atomic_density}) [#/m^3]
-solubility_W_1_D0 = 2.95e-5
+# H solubility in W
+solubility_W_1_D0 = 2.95e-5 # (1.87e24)/(tungsten_atomic_density) 1/m^3/Pa^(1/2) / (1/m^3) = 1/Pa^(1/2)
 solubility_W_1_Ea = ${units 12069.0 K}
-solubility_W_2_D0 = 4.95e-8
+solubility_W_2_D0 = 4.95e-8 # (3.14e20)/(tungsten_atomic_density) 1/m^3/Pa^(1/2) / (1/m^3) = 1/Pa^(1/2)
 solubility_W_2_Ea = ${units 6614.6 K}
+
+# Materials properties - Cu
+density_Cu = ${units 8960.0 kg/m^3}
+N_Cu = 1.0e0 # usually in atoms/m^3, but here normalized by material's atomic density
+Ct0_Cu = 5.0e-5 # at.fraction - R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
+trap_per_free_Cu = 1.0e0 # (-)
+detrapping_energy_Cu = ${units 5802.3 K} # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
 # H diffusivity in Cu
-diffusivity_Cu_D0 = 6.60e-7
+diffusivity_Cu_D0 = ${units 6.60e-7 m^2/s}
 diffusivity_Cu_Ea = ${units 4525.8 K}
-# H solubility in Cu = (3.14e24)/(${tungsten_atomic_density}) [#/m^3]
-solubility_Cu_D0 = 4.95e-5
+# H solubility in Cu
+solubility_Cu_D0 = 4.95e-5 # ${fparse 3.14e24 / tungsten_atomic_density} 1/m^3/Pa^(1/2) / (1/m^3) = 1/Pa^(1/2)
 solubility_Cu_Ea = ${units 6614.6 K}
+
+# Materials properties - CuCrZr
+density_CuCrZr = ${units 8900.0 kg/m^3}
+specific_heat_CuCrZr = ${units 390.0 J/kg/K}
+N_CuCrZr = 1.0e0 # usually in atoms/m^3, but here normalized by material's atomic density
+Ct0_CuCrZr = 5.0e-5 # at.fraction - R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
+# Ct0_CuCrZr = 4.0e-2 # at.fraction - R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 5
+trap_per_free_CuCrZr = 1.0e0 # (-)
+detrapping_energy_CuCrZr = ${units 5802.3 K} # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
+# detrapping_energy_CuCrZr = ${units 9631.8 K} # = 0.83 eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 5
 # H diffusivity in CuCrZr
-diffusivity_CuCrZr_D0 = 3.90e-7
+diffusivity_CuCrZr_D0 = ${units 3.90e-7 m^2/s}
 diffusivity_CuCrZr_Ea = ${units 4873.9 K}
-#H solubility in CuCrZr = (4.28e23)/(${tungsten_atomic_density}) [#/m^3]
-solubility_CuCrZr_D0 = 6.75e-6
+#H solubility in CuCrZr
+solubility_CuCrZr_D0 = 6.75e-6 # ${fparse 4.28e23 / tungsten_atomic_density} 1/m^3/Pa^(1/2) / (1/m^3) = 1/Pa^(1/2)
 solubility_CuCrZr_Ea = ${units 4525.8 K}
 
+# for postprocessor scaling
+diffusivity_fixed = 5.01e-24 # (3.01604928)/(6.02e23)/[gram(T)/m^2]
+# diffusivity_fixed = 5.508e-19 # (1.0e3)*(1.0e3)/(6.02e23)/(3.01604928) [gram(T)/m^2] alternative
+scaling_factor = 3.491e10 # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+scaling_factor_2 = 3.44e10 # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
 
 [Functions]
     [t_in_cycle]

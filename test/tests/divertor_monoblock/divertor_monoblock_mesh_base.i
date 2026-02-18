@@ -9,6 +9,7 @@
   [ccmg]
       type = ConcentricCircleMeshGenerator
       num_sectors = ${num_sectors}
+      rings = '${rings_H2O} ${rings_CuCrZr} ${rings_Cu} ${rings_W}'
       radii = '${radius_coolant} ${radius_CuCrZr} ${radius_Cu}'
       has_outer_square = on
       pitch = ${fparse block_size}
