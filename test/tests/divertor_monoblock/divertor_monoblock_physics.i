@@ -1,4 +1,4 @@
-### This input file is the complete input files for the divertor monoblock case using the physics
+### This input file is the complete input file for the divertor monoblock case using the physics
 ### syntax with several variable.
 ### This input uses the `!include` feature to incorporate other input files
 
@@ -26,7 +26,7 @@ C_mobile_CuCrZr_init = ${units 1.0e-15 m^-3}
 # include sections of the input file shared with other inputs
 !include divertor_monoblock_common_base.i
 !include divertor_monoblock_mesh_base.i
-!include divertor_monoblock_outputs_base.i
+!include divertor_monoblock_multi_variable_base.i
 
 [GlobalParams]
     species_scaling_factors = '1'

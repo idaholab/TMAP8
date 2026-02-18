@@ -1,3 +1,11 @@
+### This input file is the complete input file for the divertor monoblock case.
+### This case was published in:
+### M. Shimada, P.-C. A. Simon, C. T. Icenhour, and G. Singh, “Toward a high-fidelity
+### tritium transport modeling for retention and permeation experiments,” Fusion
+### Engineering and Design, Volume 203, 2024, 114438, ISSN 0920-3796,
+### https://doi.org/10.1016/j.fusengdes.2024.114438.
+
+### This input uses the `!include` feature to incorporate other input files
 ### Nomenclatures
 ### C_mobile_j      mobile H concentration in "j" material, where j = CuCrZr, Cu, W
 ### C_trapped_j     trapped H concentration in "j" material, where j = CuCrZr, Cu, W
@@ -22,7 +30,7 @@ C_mobile_CuCrZr_init = ${units 1.0e-15 m^-3}
 # include sections of the input file shared with other inputs
 !include divertor_monoblock_common_base.i
 !include divertor_monoblock_mesh_base.i
-!include divertor_monoblock_outputs_base.i
+!include divertor_monoblock_multi_variable_base.i
 
 [Problem]
     type = ReferenceResidualProblem
