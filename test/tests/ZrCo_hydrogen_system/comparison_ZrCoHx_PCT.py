@@ -69,6 +69,7 @@ def atom_ratio_eq_upper_func(T, P):
 def rmse(y_true, y_pred):
     return np.sqrt(np.mean((y_true - y_pred) ** 2))
 
+
 # ------------------------------------------------------------------------------
 # Load experimental data
 # ------------------------------------------------------------------------------
@@ -176,7 +177,6 @@ for T in TEMPERATURES_K:
             P_lo, fit_lo, "--", label=f"{T}.15 K Fit RMSE {rmse(AR_lo, fit_lo):.3f}"
         )
 
-
     # High branch
     idx_hi = AR > ATOM_RATIO_HIGH
     if np.any(idx_hi):
@@ -189,7 +189,6 @@ for T in TEMPERATURES_K:
             plt.plot(
                 P_hi, fit_hi, "-", label=f"{T}.15 K Fit RMSE {rmse(AR_hi, fit_hi):.3f}"
             )
-
 
 
 # TMAP8 overlays with different markers
