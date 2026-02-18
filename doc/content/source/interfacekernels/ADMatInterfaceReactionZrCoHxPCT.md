@@ -47,7 +47,7 @@ The low pressure is captured as:
 f_{at}(T,P) = 0.5-\left[0.001+\exp(-4.2856 + 0.019812 T + (-1.0656 + 5.6857 \times 10^{-4} T) (\log\left(P_{lim}(T) - P\right)))\right]^{-1},
 \end{equation}
 
-[ZrCoHx_PCT_fit_2D_LowPressure] hows the fitting and TMAP8 results used in this interface kernel at low pressure regions.
+[ZrCoHx_PCT_fit_2D_LowPressure] shows the fitting and TMAP8 results used in this interface kernel at low pressure regions.
 
 !media comparison_ZrCoHx_PCT.py
        image_name=ZrCoHx_PCT_fit_2D_LowPressure.png
@@ -80,7 +80,7 @@ To model the interface, the input file employs the [InterfaceDiffusion.md] objec
 \end{equation}
 where $\rho$ is the zirconium-cobalt atomic density.
 
-The results of the high pressure test for ($T$, $P$) = (433.15 K, $3 \times 10^{4}$ Pa), (433.15 K, $1 \times 10^{4}$ Pa), (573.15 K, $1 \times 10^{4}$ Pa), and(604.15 K, $5 \times 10^{4}$ Pa) are shown in [ZrCoHx_PCT_fit_2D_HighPressure].The results of the low pressure test for ($T$, $P$) = (433.15 K, $1 \times 10^{2}$ Pa), (573.15 K, $1 \times 10^{3}$ Pa), (604.15 K, $1 \times 10^{4}$ Pa), and(604.15 K, $3 \times 10^{3}$ Pa) are shown in [ZrCoHx_PCT_fit_2D_HighPressure] and [ZrCoHx_PCT_fit_2D_LowPressure]. Both show good agreement.
+The results of the high pressure test for ($T$, $P$) = (433.15 K, $3 \times 10^{4}$ Pa), (433.15 K, $1 \times 10^{4}$ Pa), (573.15 K, $1 \times 10^{4}$ Pa), and (604.15 K, $5 \times 10^{4}$ Pa) are shown in [ZrCoHx_PCT_fit_2D_HighPressure]. The results of the low pressure test for ($T$, $P$) = (433.15 K, $1 \times 10^{2}$ Pa), (573.15 K, $1 \times 10^{3}$ Pa), (604.15 K, $1 \times 10^{4}$ Pa), and (604.15 K, $3 \times 10^{3}$ Pa) are shown in [ZrCoHx_PCT_fit_2D_HighPressure] and [ZrCoHx_PCT_fit_2D_LowPressure]. Both show good agreement.
 
 ## Example Input File Syntax
 
