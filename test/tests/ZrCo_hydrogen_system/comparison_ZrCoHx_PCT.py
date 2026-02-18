@@ -43,22 +43,35 @@ gold_dir = os.path.join(folderPath, folderNameGold)
 # Models
 # ------------------------------------------------------------------------------
 
+
 def p0_lim_func(T):
-    return np.exp(12.427 - 4.8366e-2 * T + 7.1464e-5 * T ** 2)
+    return np.exp(12.427 - 4.8366e-2 * T + 7.1464e-5 * T**2)
+
 
 
 def atom_ratio_eq_lower_func(T, P):
     p0 = p0_lim_func(T)
     arg = np.maximum(p0 - P, 1e-10)
-    return 0.5 - (0.01 + np.exp(-4.2856 + 1.9812e-02 * T + (-1.0656 + 5.6857e-04 * T ) * np.log(arg))) ** (-1)
+    return 0.5 - (
+        0.01
+        + np.exp(-4.2856 + 1.9812e-02 * T + (-1.0656 + 5.6857e-04 * T) * np.log(arg))
+    ) ** (-1)
+
+
 
 def atom_ratio_eq_upper_func(T, P):
     p0 = p0_lim_func(T)
     arg = np.maximum(P - p0, 1e-10)
-    return 2.5 - 3.4249 * (1.4 + np.exp(7.9727 - 0.019856 * T + (-1.6938e-01 + 1.1876e-03 * T ) * np.log(arg))) ** (-1)
+    return 2.5 - 3.4249 * (
+        1.4
+        + np.exp(7.9727 - 0.019856 * T + (-1.6938e-01 + 1.1876e-03 * T) * np.log(arg))
+    ) ** (-1)
+
+
 
 def rmse(y_true, y_pred):
     return np.sqrt(np.mean((y_true - y_pred) ** 2))
+
 
 # ------------------------------------------------------------------------------
 # Load experimental data
@@ -163,7 +176,10 @@ for T in TEMPERATURES_K:
         P_lo, AR_lo = P[idx_low], AR[idx_low]
         fit_lo = atom_ratio_eq_lower_func(T, P_lo)
         plt.scatter(P_lo, AR_lo, label=f"{T}.15 K Data")
-        plt.plot(P_lo, fit_lo, "--", label=f"{T}.15 K Fit RMSE {rmse(AR_lo, fit_lo):.3f}")
+        plt.plot(
+            P_lo, fit_lo, "--", label=f"{T}.15 K Fit RMSE {rmse(AR_lo, fit_lo):.3f}"
+        )
+
 
     # High branch
     idx_hi = AR > ATOM_RATIO_HIGH
@@ -173,8 +189,12 @@ for T in TEMPERATURES_K:
         valid = np.isfinite(fit_hi)
         P_hi, AR_hi, fit_hi = P_hi[valid], AR_hi[valid], fit_hi[valid]
         if len(fit_hi) > 0:
-            plt.scatter(P_hi, AR_hi, label=f'{T}.15 K Data')
-            plt.plot(P_hi, fit_hi, '-', label=f'{T}.15 K Fit RMSE {rmse(AR_hi, fit_hi):.3f}')
+            plt.scatter(P_hi, AR_hi, label=f"{T}.15 K Data")
+            plt.plot(
+                P_hi, fit_hi, "-", label=f"{T}.15 K Fit RMSE {rmse(AR_hi, fit_hi):.3f}"
+            )
+
+
 
 # TMAP8 overlays with different markers
 def overlay_tmap(dfp):
@@ -188,9 +208,15 @@ def overlay_tmap(dfp):
     else:
         AF_model = atom_ratio_eq_upper_func(T_pred, np.array([P_pred]))[0]
         marker_style = "x"  # X for high-pressure
-    err_pct = abs(AF_pred - AF_model)/AF_model*100 if AF_model != 0 else np.nan
-    plt.scatter(P_pred, AF_pred, marker=marker_style, color="k", s=90,
-                label=f"{int(T_pred)}.15 K, {P_pred:.2e} Pa (err {err_pct:.2f}%)")
+    err_pct = abs(AF_pred - AF_model) / AF_model * 100 if AF_model != 0 else np.nan
+    plt.scatter(
+        P_pred,
+        AF_pred,
+        marker=marker_style,
+        color="k",
+        s=90,
+        label=f"{int(T_pred)}.15 K, {P_pred:.2e} Pa (err {err_pct:.2f}%)",
+    )
 
 # Apply overlays
 for dfp in tmap_low.values():
