@@ -184,7 +184,7 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
         property_name = specific_heat
         coupled_variables = 'temperature'
         block = 4
-        expression = '1.16e2 + 7.11e-2 * temperature - 6.58e-5 * temperature^2 + 3.24e-8 * temperature^3 -5.45e-12 * temperature^4'    # ~ 132[J/kg-K]
+        expression = '1.16e2 + 7.11e-2 * temperature - 6.58e-5 * temperature^2 + 3.24e-8 * temperature^3 -5.45e-12 * temperature^4' # [J/kg-K]
         outputs = all
     []
     [thermal_conductivity_W]
@@ -192,8 +192,7 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
         property_name = thermal_conductivity
         coupled_variables = 'temperature'
         block = 4
-        # expression = '-7.8e-9 * temperature^3 + 5.0e-5 * temperature^2 - 1.1e-1 * temperature + 1.8e2'    # ~ 173.0 [ W/m-K]   from R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038,
-        expression = '2.41e2 - 2.90e-1 * temperature + 2.54e-4 * temperature^2 - 1.03e-7 * temperature^3 + 1.52e-11 * temperature^4'    # ~ 173.0 [ W/m-K]
+        expression = '2.41e2 - 2.90e-1 * temperature + 2.54e-4 * temperature^2 - 1.03e-7 * temperature^3 + 1.52e-11 * temperature^4' # [W/m-K]
         outputs = all
     []
     ############################## Materials for Cu (block = 3)
@@ -224,7 +223,7 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
         property_name = specific_heat
         coupled_variables = 'temperature'
         block = 3
-        expression = '3.16e2 + 3.18e-1 * temperature - 3.49e-4 * temperature^2 + 1.66e-7 * temperature^3'    # ~ 384 [J/kg-K]
+        expression = '3.16e2 + 3.18e-1 * temperature - 3.49e-4 * temperature^2 + 1.66e-7 * temperature^3' # [J/kg-K]
         outputs = all
     []
     [thermal_conductivity_Cu]
@@ -233,7 +232,7 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
         coupled_variables = 'temperature'
         block = 3
         # expression = '-3.9e-8 * temperature^3 + 3.8e-5 * temperature^2 - 7.9e-2 * temperature + 4.0e2'    # ~ 401.0  [ W/m-K] from R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038,
-        expression = '4.21e2 - 6.85e-2 * temperature'    # ~ 400.0 [ W/m-K]
+        expression = '4.21e2 - 6.85e-2 * temperature' # [W/m-K]
         outputs = all
     []
     ############################## Materials for CuCrZr (block = 2)
@@ -264,8 +263,7 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
         property_name = thermal_conductivity
         coupled_variables = 'temperature'
         block = 2
-        # expression = '5.3e-7 * temperature^3 - 6.5e-4 * temperature^2 + 2.6e-1 * temperature + 3.1e2'    # ~ 320.0  [ W/m-K] from R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038,
-        expression = '3.87e2 - 1.28e-1 * temperature'    # ~ 349 [ W/m-K]
+        expression = '3.87e2 - 1.28e-1 * temperature' # [W/m-K]
         outputs = all
     []
     ############################## Materials for others
