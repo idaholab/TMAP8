@@ -298,7 +298,22 @@ The input file [/divertor_monoblock.i] returns the outputs that were used in [!c
 
 ## Complete input file
 
-Below is the complete input file, which can be run reliably with approximately 4 processor cores. Note that this input file has not been optimized for computational costs.
+This case is reproduced three times:
+
+- Once with the usual TMAP8 syntax for input files, which is done in [/divertor_monoblock.i].
+- Another time using the [Physics Syntax](syntax/Physics/index.md) to reproduce the same exact case, but with a soimpler input file, which is [/divertor_monoblock_physics.i]
+- The last one is a simpler model utilizing only two variables (mobile and trapped) for tritium concentration across the different materials instead of having different variables in each block. The input file also uses the [Physics Syntax](syntax/Physics/index.md) and is [/divertor_monoblock_physics-single-variable.i]
+
+Note that since these input files have a lot of sections in common, then we utilize the `!include` feature available in MOOSE/TMAP8 to template common parts of the input files. In this case:
+
+- [/divertor_monoblock_common_base.i] contains all the parts of the input files common to all three cases.
+- [/divertor_monoblock_mesh_base.i] contains parts related to the geometry and mesh for all three cases.
+- [/divertor_monoblock_multi_variable_base.i] contains the parts shared by both the [/divertor_monoblock.i] and [/divertor_monoblock_physics.i] cases.
+- [/divertor_monoblock_physics-single-variable.i] contains the parts equivalent to the ones in [/divertor_monoblock_multi_variable_base.i], but for the case in [/divertor_monoblock_physics-single-variable.i].
+
+Below is the input file [/divertor_monoblock.i], which includes several of the base input files described above.
+This case can be run reliably with approximately 4 processor cores.
+Note that this input file has not been optimized for computational costs.
 
 !listing test/tests/divertor_monoblock/divertor_monoblock.i
 
