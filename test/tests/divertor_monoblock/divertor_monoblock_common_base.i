@@ -1,3 +1,10 @@
+# This input file contains key pieces for the divertor monoblock case.
+# It cannot be run on its own and is included in the main input files for all divertor monoblock
+# cases, namely:
+# - divertor_monoblock.i
+# - divertor_monoblock_physics.i
+# - divertor_monoblock_physics-single-variable.i
+
 # geometry and design
 radius_coolant = ${units 6.0 mm -> m}
 radius_CuCrZr = ${units 7.5 mm -> m}

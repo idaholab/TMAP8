@@ -1,3 +1,7 @@
+# This input file contains key pieces for the divertor monoblock case that includes a single
+# variable.
+# It cannot be run on its own and is included in the main input file for this case, namely:
+# - divertor_monoblock_physics-single-variable.i
 
 [AuxKernels]
   ############################## AuxKernels for W (block = 4)
