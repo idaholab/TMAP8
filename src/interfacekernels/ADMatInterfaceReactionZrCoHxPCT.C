@@ -57,40 +57,46 @@ ADMatInterfaceReactionZrCoHxPCT::computeQpResidual(Moose::DGResidualType type)
                             7.1464e-5 * Utility::pow<2>(_neighbor_temperature[_qp]));
 
   // Give first estimate to atomic fraction
-  auto atomic_fraction =  2.5 - 3.4249 / (1.40 + exp(7.9727 - 1.9856e-02 * _neighbor_temperature[_qp] +
-                                     (-1.6938e-01 + 1.1876e-03 * _neighbor_temperature[_qp]) *
-                                         log(max(neighbor_pressure - limit_pressure, 1e-10))));
+  auto atomic_fraction =
+      2.5 - 3.4249 / (1.40 + exp(7.9727 - 1.9856e-02 * _neighbor_temperature[_qp] +
+                                 (-1.6938e-01 + 1.1876e-03 * _neighbor_temperature[_qp]) *
+                                     log(max(neighbor_pressure - limit_pressure, 1e-10))));
 
   // Give a warning if the initial or computed neighbor pressure is out of the analytical model
   if (((neighbor_pressure > 9e06) || (neighbor_pressure < 0.011)))
-      mooseDoOnce(mooseWarning("In ZrCoHxPCT: pressure ",
-                              neighbor_pressure,
-                              "Pa and temperature ",
-                              _neighbor_temperature[_qp],
-                              "K are outside the bounds of the atomic fraction correlation. See "
-                              "documentation for ZrCoHxPCT material."));
+    mooseDoOnce(mooseWarning("In ZrCoHxPCT: pressure ",
+                             neighbor_pressure,
+                             "Pa and temperature ",
+                             _neighbor_temperature[_qp],
+                             "K are outside the bounds of the atomic fraction correlation. See "
+                             "documentation for ZrCoHxPCT material."));
 
-  if (neighbor_pressure > limit_pressure && abs(neighbor_pressure - limit_pressure) < tolerance) {
-      // High pressure region, near limit
-      atomic_fraction = 0.50;
+  if (neighbor_pressure > limit_pressure && abs(neighbor_pressure - limit_pressure) < tolerance)
+  {
+    // High pressure region, near limit
+    atomic_fraction = 0.50;
   }
-  else if (neighbor_pressure > limit_pressure) {
-      // High pressure region
-      atomic_fraction =
-          2.5 - 3.4249 / (1.40 + exp(7.9727 - 1.9856e-02 * _neighbor_temperature[_qp] +
-                                     (-1.6938e-01 + 1.1876e-03 * _neighbor_temperature[_qp]) *
-                                         log(max(neighbor_pressure - limit_pressure, 1e-10))));
+  else if (neighbor_pressure > limit_pressure)
+  {
+    // High pressure region
+    atomic_fraction =
+        2.5 - 3.4249 / (1.40 + exp(7.9727 - 1.9856e-02 * _neighbor_temperature[_qp] +
+                                   (-1.6938e-01 + 1.1876e-03 * _neighbor_temperature[_qp]) *
+                                       log(max(neighbor_pressure - limit_pressure, 1e-10))));
   }
-  else if (neighbor_pressure < limit_pressure && abs(neighbor_pressure - limit_pressure) < tolerance) {
-      // Low pressure region, near limit
-      atomic_fraction = 1.4;
+  else if (neighbor_pressure < limit_pressure &&
+           abs(neighbor_pressure - limit_pressure) < tolerance)
+  {
+    // Low pressure region, near limit
+    atomic_fraction = 1.4;
   }
-  else if (neighbor_pressure < limit_pressure) {
-      // Low pressure region
-      atomic_fraction =
-          0.5 - 1 / (0.001 + exp(-4.2856 + 1.9812e-02 * _neighbor_temperature[_qp] +
-                                 (-1.0656 + 5.6857e-04 * _neighbor_temperature[_qp]) *
-                                     log(max(limit_pressure - neighbor_pressure, 1e-10))));
+  else if (neighbor_pressure < limit_pressure)
+  {
+    // Low pressure region
+    atomic_fraction =
+        0.5 - 1 / (0.001 + exp(-4.2856 + 1.9812e-02 * _neighbor_temperature[_qp] +
+                               (-1.0656 + 5.6857e-04 * _neighbor_temperature[_qp]) *
+                                   log(max(limit_pressure - neighbor_pressure, 1e-10))));
   }
 
   // Convert to concentration
