@@ -43,10 +43,10 @@
     max_time = 1000
     custom_cmp = 'physics_comp.cmp'
   []
-  [Shimada2024_run-physics_single-var]
+  [Shimada2024_run-physics_single-variable]
     type = CSVDiff
-    input = 'divertor_monoblock_physics-single-var.i'
-    csvdiff = 'divertor_monoblock_physics-single-var_out.csv'
+    input = 'divertor_monoblock_physics-single-variable.i'
+    csvdiff = 'divertor_monoblock_physics-single-variable_out.csv'
     cli_args = 'Outputs/exodus/sync_only=true
                 Executioner/end_time=100
                 rings_CuCrZr=10
