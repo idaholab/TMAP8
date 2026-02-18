@@ -5,7 +5,7 @@
 /*   Copyright 2021 - 2025 Battelle Energy Alliance, LLC    */
 /*                   ALL RIGHTS RESERVED                    */
 /************************************************************/
-
+/*TEst*/
 #include "ADMatInterfaceReactionZrCoHxPCT.h"
 
 #include "PhysicalConstants.h"
@@ -56,45 +56,41 @@ ADMatInterfaceReactionZrCoHxPCT::computeQpResidual(Moose::DGResidualType type)
   auto limit_pressure = exp(12.427 - 4.8366e-2 * _neighbor_temperature[_qp] +
                             7.1464e-5 * Utility::pow<2>(_neighbor_temperature[_qp]));
 
-  // define atomic fraction variable
-  auto atomic_fraction = 0.0;
+  // Give first estimate to atomic fraction
+  auto atomic_fraction =  2.5 - 3.4249 / (1.40 + exp(7.9727 - 1.9856e-02 * _neighbor_temperature[_qp] +
+                                     (-1.6938e-01 + 1.1876e-03 * _neighbor_temperature[_qp]) *
+                                         log(max(neighbor_pressure - limit_pressure, 1e-10))));
 
-  if (neighbor_pressure - limit_pressure > 0)
-  {
-    // we are in the High pressure region
-    if (abs(neighbor_pressure - limit_pressure) < tolerance)
-    {
-      // Low Pressure Maximum
-      atomic_fraction = 0.5;
-    }
-    else
-    {
-      // High Pressure
-      // Calculate the atomic fraction based on the PCT curve
+  // Give a warning if the initial or computed neighbor pressure is out of the analytical model
+  if (((neighbor_pressure > 9e06) || (neighbor_pressure < 0.011)))
+      mooseDoOnce(mooseWarning("In ZrCoHxPCT: pressure ",
+                              neighbor_pressure,
+                              "Pa and temperature ",
+                              _neighbor_temperature[_qp],
+                              "K are outside the bounds of the atomic fraction correlation. See "
+                              "documentation for ZrCoHxPCT material."));
+
+  if (neighbor_pressure > limit_pressure && abs(neighbor_pressure - limit_pressure) < tolerance) {
+      // High pressure region, near limit
+      atomic_fraction = 0.50;
+  }
+  else if (neighbor_pressure > limit_pressure) {
+      // High pressure region
       atomic_fraction =
           2.5 - 3.4249 / (1.40 + exp(7.9727 - 1.9856e-02 * _neighbor_temperature[_qp] +
                                      (-1.6938e-01 + 1.1876e-03 * _neighbor_temperature[_qp]) *
                                          log(max(neighbor_pressure - limit_pressure, 1e-10))));
-    }
   }
-
-  else if (neighbor_pressure - limit_pressure < 0)
-  {
-    // we are in the Low pressure region
-    if (abs(neighbor_pressure - limit_pressure) < tolerance)
-    {
-      // High Pressure minimum
+  else if (neighbor_pressure < limit_pressure && abs(neighbor_pressure - limit_pressure) < tolerance) {
+      // Low pressure region, near limit
       atomic_fraction = 1.4;
-    }
-    else
-    {
-      // Low Pressure
-      // Calculate the atomic fraction based on the PCT curve
+  }
+  else if (neighbor_pressure < limit_pressure) {
+      // Low pressure region
       atomic_fraction =
           0.5 - 1 / (0.001 + exp(-4.2856 + 1.9812e-02 * _neighbor_temperature[_qp] +
                                  (-1.0656 + 5.6857e-04 * _neighbor_temperature[_qp]) *
                                      log(max(limit_pressure - neighbor_pressure, 1e-10))));
-    }
   }
 
   // Convert to concentration
