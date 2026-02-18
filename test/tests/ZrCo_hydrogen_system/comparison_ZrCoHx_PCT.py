@@ -1,7 +1,6 @@
 # Import Required Libraries
 # Import the necessary libraries, including pandas.
 import os
-from pathlib import Path
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -25,28 +24,19 @@ COL_TMAP_T = "temperature"
 COL_TMAP_P = "pressure_H2_enclosure_1_at_interface"
 COL_TMAP_AF = "atomic_fraction_H_enclosure_2_at_interface"
 
-
-
 # ============================================================================ #
 # Paths
 if "/tmap8/doc/" in str(script_folder).lower():
     root = "../../../../../test/tests/ZrCo_hydrogen_system/"
 else:
     root = ""
-exp_data_folder = "PCT_data"
-gold_folder =  "gold"
-
-
 
 folderPath = root
 folderNameExpData = "PCT_data"
 folderNameGold = "gold"
 
-
-exp_data_dir = Path(folderPath + folderNameExpData + '/')
-gold_dir = Path(folderPath + folderNameGold + '/')
-
-
+exp_data_dir = os.path.join(folderPath, folderNameExpData)
+gold_dir = os.path.join(folderPath, folderNameGold)
 
 # ------------------------------------------------------------------------------
 # Models
@@ -72,7 +62,7 @@ def rmse(y_true, y_pred):
 # ------------------------------------------------------------------------------
 data_by_temp = {}
 for T in TEMPERATURES_K:
-    f = exp_data_dir /f"{T}.csv"
+    f = os.path.join(exp_data_dir, f"{T}.csv")
     df = pd.read_csv(f)
     df[COL_PRESSURE_PA] = 10**df[COL_PRESSURE_EXP_LOG]
     df = df[[COL_PRESSURE_PA, COL_ATOM_RATIO]].dropna().sort_values(COL_PRESSURE_PA)
@@ -84,7 +74,8 @@ for T in TEMPERATURES_K:
 fig = plt.figure(figsize=(10, 6))
 for T in TEMPERATURES_K:
     df = data_by_temp.get(T)
-    if df is None: continue
+    if df is None:
+        continue
     plt.scatter(df[COL_ATOM_RATIO], df[COL_PRESSURE_PA], s=28, label=f'{T}.15 K')
     plt.plot(df[COL_ATOM_RATIO], df[COL_PRESSURE_PA])
 plt.yscale('log')
@@ -103,14 +94,16 @@ p0_vals = p0_lim_func(np.array(TEMPERATURES_K))
 sel_T, sel_P = [], []
 for T in TEMPERATURES_K:
     df = data_by_temp.get(T)
-    if df is None: continue
+    if df is None:
+        continue
     AR, P = df[COL_ATOM_RATIO].values, df[COL_PRESSURE_PA].values
     idx = np.where(AR > ATOM_RATIO_LOW)[0]
     sel_T.append(T)
     sel_P.append(P[idx[0]])
 fig = plt.figure(figsize=(5, 5))
 plt.plot(TEMPERATURES_K, p0_vals, '--', label='Fit')
-if sel_T: plt.scatter(sel_T, sel_P, color='red', label='Plateau Pressures')
+if sel_T:
+    plt.scatter(sel_T, sel_P, color='red', label='Plateau Pressures')
 plt.yscale('log')
 plt.xlabel('Temperature (K)')
 plt.ylabel('Pressure (Pa)')
@@ -135,19 +128,29 @@ high_files = {
     "ZrCoHx_PCT_T573_1E4P_out.csv",
     "ZrCoHx_PCT_T604_5E4P_out.csv",
 }
-tmap_low = {f: pd.read_csv(gold_dir/f) for f in low_files if (gold_dir/f).exists()}
-tmap_high = {f: pd.read_csv(gold_dir/f) for f in high_files if (gold_dir/f).exists()}
+
+tmap_low = {}
+for f in low_files:
+    path = os.path.join(gold_dir, f)
+    if os.path.exists(path):
+        tmap_low[f] = pd.read_csv(path)
+
+tmap_high = {}
+for f in high_files:
+    path = os.path.join(gold_dir, f)
+    if os.path.exists(path):
+        tmap_high[f] = pd.read_csv(path)
 
 # ------------------------------------------------------------------------------
 # Combined figure: low + high + TMAP8 overlay
 # ------------------------------------------------------------------------------
-
 fig = plt.figure(figsize=(12, 8))
 
 # Experimental data and fits
 for T in TEMPERATURES_K:
     df = data_by_temp.get(T)
-    if df is None: continue
+    if df is None:
+        continue
     P, AR = df[COL_PRESSURE_PA].values, df[COL_ATOM_RATIO].values
 
     # Low branch
@@ -176,18 +179,20 @@ def overlay_tmap(dfp):
     AF_pred = dfp[COL_TMAP_AF].iat[-1]
     p0 = p0_lim_func(T_pred)
     if P_pred < p0:
-        AF_model = atom_ratio_eq_lower_func(T_pred, [P_pred])[0]
-        marker_style = '*'  # circle for low-pressure
+        AF_model = atom_ratio_eq_lower_func(T_pred, np.array([P_pred]))[0]
+        marker_style = '*'  # star for low-pressure
     else:
-        AF_model = atom_ratio_eq_upper_func(T_pred, [P_pred])[0]
+        AF_model = atom_ratio_eq_upper_func(T_pred, np.array([P_pred]))[0]
         marker_style = 'x'  # X for high-pressure
     err_pct = abs(AF_pred - AF_model)/AF_model*100 if AF_model != 0 else np.nan
     plt.scatter(P_pred, AF_pred, marker=marker_style, color='k', s=90,
                 label=f'{int(T_pred)}.15 K, {P_pred:.2e} Pa (err {err_pct:.2f}%)')
 
 # Apply overlays
-for dfp in tmap_low.values(): overlay_tmap(dfp)
-for dfp in tmap_high.values(): overlay_tmap(dfp)
+for dfp in tmap_low.values():
+    overlay_tmap(dfp)
+for dfp in tmap_high.values():
+    overlay_tmap(dfp)
 
 plt.xscale('log')
 plt.xlabel('Partial Pressure (Pa)')
