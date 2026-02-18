@@ -4,13 +4,13 @@ N_a = '${units 6.02214076e23 1/mol}' # Avogadro's number from PhysicalConstants.
 boltzmann_constant = '${units 1.380649e-23 J/K}' # Boltzmann constant from PhysicalConstants.h
 
 ## Simulation conditions and material properties
-temperature = '${units 604.15 K}'
+temperature = '${units 433.15 K}'
 density_ZrCo = '${units 51579.35 mol/m^3}'
 
 
-initial_pressure_H2_enclosure_1 = '${units 5e04 Pa}'
+initial_pressure_H2_enclosure_1 = '${units 1e4 Pa}'
 initial_concentration_H_enclosure_1 = '${units ${fparse 2*initial_pressure_H2_enclosure_1 / (R*temperature)} mol/m^3}'
-initial_atomic_fraction =  1 # (-)
+initial_atomic_fraction =  2.5 # (-)
 initial_concentration_H_enclosure_2 = '${units ${fparse initial_atomic_fraction*density_ZrCo} mol/m^3}'
 
 # diffusivity from:
