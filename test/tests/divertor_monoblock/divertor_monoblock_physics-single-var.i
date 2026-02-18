@@ -18,36 +18,6 @@
 ### ScInt_          Scaled and integrated
 
 C_mobile_init = ${units 1.0e-20 m^-3}
-C_trapping_init = ${units 1.0e-15 m^-3}
-
-alpha_t = 2.75e11           # 1e15 # same for all materials
-trapping_energy = 0 # same for all materials
-alpha_r = 8.4e12            # 1.0e13  # same for all materials
-
-detrapping_energy_W = 11604.6 # = 1.00 eV    E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 2
-detrapping_energy_Cu = 5802.3  # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
-detrapping_energy_CuCrZr = 5802.3  # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
-
-# H diffusivity in W
-diffusivity_W_D0 = 2.4e-7
-diffusivity_W_Ea = ${units 4525.8 K}
-# H solubility in W = (1.87e24)/(${tungsten_atomic_density}) [#/m^3] // # H solubility in W = (1.87e24)/(${tungsten_atomic_density}) [#/m^3]
-solubility_W_1_D0 = 2.95e-5
-solubility_W_1_Ea = ${units 12069.0 K}
-solubility_W_2_D0 = 4.95e-8
-solubility_W_2_Ea = ${units 6614.6 K}
-# H diffusivity in Cu
-diffusivity_Cu_D0 = 6.60e-7
-diffusivity_Cu_Ea = ${units 4525.8 K}
-# H solubility in Cu = (3.14e24)/(${tungsten_atomic_density}) [#/m^3]
-solubility_Cu_D0 = 4.95e-5
-solubility_Cu_Ea = ${units 6614.6 K}
-# H diffusivity in CuCrZr
-diffusivity_CuCrZr_D0 = 3.90e-7
-diffusivity_CuCrZr_Ea = ${units 4873.9 K}
-#H solubility in CuCrZr = (4.28e23)/(${tungsten_atomic_density}) [#/m^3]
-solubility_CuCrZr_D0 = 6.75e-6
-solubility_CuCrZr_Ea = ${units 4525.8 K}
 
 # include sections of the input file shared with other inputs
 !include divertor_monoblock_common_base.i

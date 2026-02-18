@@ -47,11 +47,44 @@ trap_per_free_Cu = 1.0e0
 
 N_CuCrZr = ${units 1.0e0 m^-3}     # = ${tungsten_atomic_density} #/m^3 (W lattice density)
 Ct0_CuCrZr = ${units 5.0e-5 m^-3}  # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
-# Ct0 = ${units 4.0e-2 m^-3} # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 5
+# Ct0_CuCrZr = ${units 4.0e-2 m^-3} # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 5
 trap_per_free_CuCrZr = 1.0e0
 
 scaling_factor = 3.491e10    # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
 scaling_factor_2 = 3.44e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+
+C_trapping_init = ${units 1.0e-15 m^-3}
+
+alpha_t = 2.75e11           # 1e15 # same for all materials
+trapping_energy = 0 # same for all materials
+alpha_r = 8.4e12            # 1.0e13  # same for all materials
+
+detrapping_energy_W = 11604.6 # = 1.00 eV    E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 2
+# detrapping_energy_W = 9863.9    # = 0.85 eV    E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 1
+detrapping_energy_Cu = 5802.3  # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
+detrapping_energy_CuCrZr = 5802.3  # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
+# detrapping_energy_CuCrZr = 9631.8   # = 0.83 eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 5
+
+# H diffusivity in W
+diffusivity_W_D0 = 2.4e-7
+diffusivity_W_Ea = ${units 4525.8 K}
+# H solubility in W = (1.87e24)/(${tungsten_atomic_density}) [#/m^3] // # H solubility in W = (1.87e24)/(${tungsten_atomic_density}) [#/m^3]
+solubility_W_1_D0 = 2.95e-5
+solubility_W_1_Ea = ${units 12069.0 K}
+solubility_W_2_D0 = 4.95e-8
+solubility_W_2_Ea = ${units 6614.6 K}
+# H diffusivity in Cu
+diffusivity_Cu_D0 = 6.60e-7
+diffusivity_Cu_Ea = ${units 4525.8 K}
+# H solubility in Cu = (3.14e24)/(${tungsten_atomic_density}) [#/m^3]
+solubility_Cu_D0 = 4.95e-5
+solubility_Cu_Ea = ${units 6614.6 K}
+# H diffusivity in CuCrZr
+diffusivity_CuCrZr_D0 = 3.90e-7
+diffusivity_CuCrZr_Ea = ${units 4873.9 K}
+#H solubility in CuCrZr = (4.28e23)/(${tungsten_atomic_density}) [#/m^3]
+solubility_CuCrZr_D0 = 6.75e-6
+solubility_CuCrZr_Ea = ${units 4525.8 K}
 
 
 [Functions]

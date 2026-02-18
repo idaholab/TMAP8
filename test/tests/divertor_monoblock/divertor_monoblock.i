@@ -14,7 +14,10 @@
 ### Int_            Integrated
 ### ScInt_          Scaled and integrated
 
-C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18
+C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18 ## units
+C_mobile_W_init = ${units 1.0e-20 m^-3}
+C_mobile_Cu_init = ${units 5.0e-17 m^-3}
+C_mobile_CuCrZr_init = ${units 1.0e-15 m^-3}
 
 # include sections of the input file shared with other inputs
 !include divertor_monoblock_common_base.i
@@ -37,39 +40,39 @@ C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18
     [C_mobile_W]
         order = FIRST
         family = LAGRANGE
-        initial_condition = ${units 1.0e-20 m^-3}
+        initial_condition = ${C_mobile_W_init}
         block = 4
     []
     [C_trapped_W]
         order = FIRST
         family = LAGRANGE
-        initial_condition = ${units 1.0e-15 m^-3}
+        initial_condition = ${C_trapping_init}
         block = 4
     []
     ######################### Variables for Cu (block = 3)
     [C_mobile_Cu]
         order = FIRST
         family = LAGRANGE
-        initial_condition = ${units 5.0e-17 m^-3}
+        initial_condition = ${C_mobile_Cu_init}
         block = 3
     []
     [C_trapped_Cu]
         order = FIRST
         family = LAGRANGE
-        initial_condition = ${units 1.0e-15 m^-3}
+        initial_condition = ${C_trapping_init}
         block = 3
     []
     ######################### Variables for CuCrZr (block = 2)
     [C_mobile_CuCrZr]
         order = FIRST
         family = LAGRANGE
-        initial_condition = ${units 1.0e-15 m^-3}
+        initial_condition = ${C_mobile_CuCrZr_init}
         block = 2
     []
     [C_trapped_CuCrZr]
         order = FIRST
         family = LAGRANGE
-        initial_condition = ${units 1.0e-15 m^-3}
+        initial_condition = ${C_trapping_init}
         block = 2
     []
 []
@@ -216,20 +219,19 @@ C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18
         type = TrappingNodalKernel
         variable = C_trapped_W
         temperature = temperature
-        alpha_t = 2.75e11      # 1e15
-        N = 1.0e0  # = (1e0) x (${tungsten_atomic_density} #/m^3)
-        # Ct0 = 1.0e-4                # E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 1
-        Ct0 = 1.0e-4                # E.A. Hodille et al 2021 Nucl. Fusion 61 1260033, trap 2
-        trap_per_free = 1.0e0       # 1.0e1
+        alpha_t = ${alpha_t}
+        N = ${N_W}
+        Ct0 = ${Ct0_W}
+        trapping_energy = ${trapping_energy}
+        trap_per_free = ${trap_per_free_W}
         mobile_concentration = 'C_mobile_W'
         extra_vector_tags = ref
     []
     [release_W]
         type = ReleasingNodalKernel
-        alpha_r = 8.4e12    # 1.0e13
+        alpha_r = ${alpha_r}
         temperature = temperature
-        # detrapping_energy = 9863.9    # = 0.85 eV    E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 1
-        detrapping_energy = 11604.6   # = 1.00 eV    E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 2
+        detrapping_energy = ${detrapping_energy_W}
         variable = C_trapped_W
     []
     ############################## NodalKernels for Cu (block = 3)
@@ -241,18 +243,19 @@ C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18
         type = TrappingNodalKernel
         variable = C_trapped_Cu
         temperature = temperature
-        alpha_t = 2.75e11      # 1e15
-        N = 1.0e0  # = ${tungsten_atomic_density} #/m^3 (W lattice density)
-        Ct0 = 5.0e-5                # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
-        trap_per_free = 1.0e0       # 1.0e1
+        alpha_t = ${alpha_t}
+        N = ${N_Cu}
+        Ct0 = ${Ct0_Cu}
+        trapping_energy = ${trapping_energy}
+        trap_per_free = ${trap_per_free_Cu}
         mobile_concentration = 'C_mobile_Cu'
         extra_vector_tags = ref
     []
     [release_Cu]
         type = ReleasingNodalKernel
-        alpha_r = 8.4e12    # 1.0e13
+        alpha_r = ${alpha_r}
         temperature = temperature
-        detrapping_energy = 5802.3    # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
+        detrapping_energy = ${detrapping_energy_Cu}
         variable = C_trapped_Cu
     []
     ############################## NodalKernels for CuCrZr (block = 2)
@@ -264,20 +267,19 @@ C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18
         type = TrappingNodalKernel
         variable = C_trapped_CuCrZr
         temperature = temperature
-        alpha_t = 2.75e11      # 1e15
-        N = 1.0e0  # = ${tungsten_atomic_density} #/m^3 (W lattice density)
-        Ct0 = 5.0e-5                # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
-        # Ct0 = 4.0e-2                # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 5
-        trap_per_free = 1.0e0       # 1.0e1
+        alpha_t = ${alpha_t}
+        N = ${N_CuCrZr}
+        Ct0 = ${Ct0_CuCrZr}
+        trapping_energy = ${trapping_energy}
+        trap_per_free = ${trap_per_free_CuCrZr}
         mobile_concentration = 'C_mobile_CuCrZr'
         extra_vector_tags = ref
     []
     [release_CuCrZr]
         type = ReleasingNodalKernel
-        alpha_r = 8.4e12    # 1.0e13
+        alpha_r = ${alpha_r}
         temperature = temperature
-        detrapping_energy = 5802.3    # = 0.50eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
-        # detrapping_energy = 9631.8   # = 0.83 eV  R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 5
+        detrapping_energy = ${detrapping_energy_CuCrZr}
         variable = C_trapped_CuCrZr
     []
 []
@@ -316,7 +318,7 @@ C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18
         property_name = diffusivity_W
         coupled_variables = 'temperature'
         block = 4
-        expression = '2.4e-7*exp(-4525.8/temperature)'    # H diffusivity in W
+        expression = '${diffusivity_W_D0}*exp(-${diffusivity_W_Ea}/temperature)'
         outputs = all
     []
     [solubility_W]
@@ -324,8 +326,7 @@ C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18
         property_name = solubility_W
         coupled_variables = 'temperature'
         block = 4
-        # expression = '2.95e-5 *exp(-12069.0/temperature)'              # H solubility in W = (1.87e24)/(${tungsten_atomic_density}) [#/m^3]
-        expression = '2.95e-5 *exp(-12069.0/temperature) + 4.95e-8 * exp(-6614.6/temperature)'    # H solubility in W = (1.87e24)/(${tungsten_atomic_density}) [#/m^3]
+        expression = '${solubility_W_1_D0}*exp(-${solubility_W_1_Ea}/temperature) + ${solubility_W_2_D0}*exp(-${solubility_W_2_Ea}/temperature)'
         outputs = all
     []
     [converter_to_regular_W]
@@ -363,7 +364,7 @@ C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18
         property_name = diffusivity_Cu
         coupled_variables = 'temperature'
         block = 3
-        expression = '6.60e-7*exp(-4525.8/temperature)'    # H diffusivity in Cu
+        expression = '${diffusivity_Cu_D0}*exp(-${diffusivity_Cu_Ea}/temperature)'
         outputs = all
     []
     [solubility_Cu]
@@ -371,7 +372,7 @@ C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18
         property_name = solubility_Cu
         coupled_variables = 'temperature'
         block = 3
-        expression = '4.95e-5*exp(-6614.6/temperature)'    # H solubility in Cu = (3.14e24)/(${tungsten_atomic_density}) [#/m^3]
+        expression = '${solubility_Cu_D0}*exp(-${solubility_Cu_Ea}/temperature)'
         outputs = all
     []
     [converter_to_regular_Cu]
@@ -409,7 +410,7 @@ C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18
         property_name = diffusivity_CuCrZr
         coupled_variables = 'temperature'
         block = 2
-        expression = '3.90e-7*exp(-4873.9/temperature)'    # H diffusivity in CuCrZr
+        expression = '${diffusivity_CuCrZr_D0}*exp(-${diffusivity_CuCrZr_Ea}/temperature)'
         outputs = all
     []
     [solubility_CuCrZr]
@@ -417,7 +418,7 @@ C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18
         property_name = solubility_CuCrZr
         coupled_variables = 'temperature'
         block = 2
-        expression = '6.75e-6*exp(-4525.8/temperature)'    # H solubility in CuCrZr = (4.28e23)/(${tungsten_atomic_density}) [#/m^3]
+        expression = '${solubility_CuCrZr_D0}*exp(-${solubility_CuCrZr_Ea}/temperature)'
         outputs = all
     []
     [converter_to_regular_CuCrZr]
