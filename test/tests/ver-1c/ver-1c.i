@@ -12,6 +12,7 @@ thickness = '${units 100 m}'
 pre_load_thickness = '${units 10 m}'
 pre_load_concentration = '${units 1 atom/m^3}'
 end_time = '${units 100 s}'
+diffusivity = '${units 1.0 m^2/s}'
 
 [Mesh]
   type = GeneratedMesh
@@ -46,8 +47,9 @@ end_time = '${units 100 s}'
 
 [Kernels]
   [diff]
-    type = Diffusion
+    type = MatDiffusion
     variable = u
+    diffusivity = ${diffusivity}
   []
   [time]
     type = TimeDerivative
