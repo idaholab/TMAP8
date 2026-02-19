@@ -12,6 +12,6 @@
     max_parallel = 1
     recover = false
     heavy = true
-    requirement = 'The system shall be able to perform a Parallel Subset Simulation optimization study under more optimization step for deuterium transport in proton-conducting ceramics.'
+    requirement = 'The system shall be able to perform a Parallel Subset Simulation optimization study under more optimization steps for deuterium transport in proton-conducting ceramics.'
   []
 []
