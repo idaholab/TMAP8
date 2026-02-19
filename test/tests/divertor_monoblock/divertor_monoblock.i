@@ -217,7 +217,7 @@ C_mobile_CuCrZr_init = 1.0e-15 # at.fraction
     []
 []
 
-[NodalKernels] ######################000000000000000 To be cleaned up
+[NodalKernels]
     ############################## NodalKernels for W (block = 4)
     [time_W]
         type = TimeDerivativeNodalKernel

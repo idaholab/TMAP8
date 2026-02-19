@@ -57,9 +57,9 @@ detrapping_energy_W = ${units 11604.6 K} # = 1.00 eV    E.A. Hodille et al 2021 
 diffusivity_W_D0 = ${units 2.4e-7 m^2/s}
 diffusivity_W_Ea = ${units 4525.8 K}
 # H solubility in W
-solubility_W_1_D0 = 2.95e-5 # (1.87e24)/(tungsten_atomic_density) 1/m^3/Pa^(1/2) / (1/m^3) = 1/Pa^(1/2)
+solubility_W_1_D0 = ${units 2.95e-5 1/Pa^0.5} # (1.87e24)/(tungsten_atomic_density) 1/m^3/Pa^(1/2) / (1/m^3) = 1/Pa^(1/2)
 solubility_W_1_Ea = ${units 12069.0 K}
-solubility_W_2_D0 = 4.95e-8 # (3.14e20)/(tungsten_atomic_density) 1/m^3/Pa^(1/2) / (1/m^3) = 1/Pa^(1/2)
+solubility_W_2_D0 = ${units 4.95e-8 1/Pa^0.5} # (3.14e20)/(tungsten_atomic_density) 1/m^3/Pa^(1/2) / (1/m^3) = 1/Pa^(1/2)
 solubility_W_2_Ea = ${units 6614.6 K}
 
 # Materials properties - Cu
@@ -72,7 +72,7 @@ detrapping_energy_Cu = ${units 5802.3 K} # = 0.50eV  R. Delaporte-Mathurin et al
 diffusivity_Cu_D0 = ${units 6.60e-7 m^2/s}
 diffusivity_Cu_Ea = ${units 4525.8 K}
 # H solubility in Cu
-solubility_Cu_D0 = 4.95e-5 # ${fparse 3.14e24 / tungsten_atomic_density} 1/m^3/Pa^(1/2) / (1/m^3) = 1/Pa^(1/2)
+solubility_Cu_D0 = ${units 4.95e-5 1/Pa^0.5} # ${fparse 3.14e24 / tungsten_atomic_density} 1/m^3/Pa^(1/2) / (1/m^3) = 1/Pa^(1/2)
 solubility_Cu_Ea = ${units 6614.6 K}
 
 # Materials properties - CuCrZr
@@ -87,15 +87,15 @@ detrapping_energy_CuCrZr = ${units 5802.3 K} # = 0.50eV  R. Delaporte-Mathurin e
 # H diffusivity in CuCrZr
 diffusivity_CuCrZr_D0 = ${units 3.90e-7 m^2/s}
 diffusivity_CuCrZr_Ea = ${units 4873.9 K}
-#H solubility in CuCrZr
-solubility_CuCrZr_D0 = 6.75e-6 # ${fparse 4.28e23 / tungsten_atomic_density} 1/m^3/Pa^(1/2) / (1/m^3) = 1/Pa^(1/2)
+# H solubility in CuCrZr
+solubility_CuCrZr_D0 = ${units 6.75e-6 1/Pa^0.5} # ${fparse 4.28e23 / tungsten_atomic_density} 1/m^3/Pa^(1/2) / (1/m^3) = 1/Pa^(1/2)
 solubility_CuCrZr_Ea = ${units 4525.8 K}
 
 # for postprocessor scaling
-diffusivity_fixed = 5.01e-24 # (3.01604928)/(6.02e23)/[gram(T)/m^2]
-# diffusivity_fixed = 5.508e-19 # (1.0e3)*(1.0e3)/(6.02e23)/(3.01604928) [gram(T)/m^2] alternative
-scaling_factor = 3.491e10 # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
-scaling_factor_2 = 3.44e10 # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+diffusivity_fixed = ${units 5.01e-24 g/m^2} # (3.01604928)/(6.02e23)/[gram(T)/m^2]
+# diffusivity_fixed = ${units 5.508e-19 g/m^2}  # (1.0e3)*(1.0e3)/(6.02e23)/(3.01604928) [gram(T)/m^2] alternative
+scaling_factor = ${units 3.491e10 g/m^2} # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+scaling_factor_2 = ${units 3.44e10 g/m^2} # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
 
 [Functions]
     [t_in_cycle]
