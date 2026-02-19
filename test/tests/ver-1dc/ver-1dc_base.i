@@ -40,8 +40,9 @@ diffusivity = ${units 1 m^2/s}
 
 [Kernels]
   [diff]
-    type = Diffusion
+    type = MatDiffusion
     variable = mobile
+    diffusivity = ${diffusivity}
     extra_vector_tags = ref
   []
   [time]

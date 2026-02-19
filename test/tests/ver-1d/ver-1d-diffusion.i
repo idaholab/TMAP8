@@ -42,8 +42,9 @@ trapping_fraction = 0.1 # -
 [Kernels]
   # kernel for mobile tritium
   [diff]
-    type = Diffusion
+    type = MatDiffusion
     variable = mobile
+    diffusivity = ${diffusivity}
     extra_vector_tags = ref
   []
   [time]
