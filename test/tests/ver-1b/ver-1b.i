@@ -5,7 +5,7 @@
 # Modeling parameters
 node_num = 5000
 end_time = '${units 50 s}'
-thickness = '${units 200 m}' # 200 m
+thickness = '${units 200 m}'
 diffusivity = '${units 1.0 m^2/s}'
 concentration_left = '${units 1 atom/m^3}'
 
@@ -32,8 +32,9 @@ concentration_left = '${units 1 atom/m^3}'
 
 [Kernels]
   [diff]
-    type = Diffusion
+    type = MatDiffusion
     variable = u
+    diffusivity = ${diffusivity}
   []
   [time]
     type = TimeDerivative
