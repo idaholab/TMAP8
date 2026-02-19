@@ -19,7 +19,7 @@
 
 C_mobile_init = 1.0e-20 # at.fraction
 
-# include sections of the input file shared with other inputs
+# Include sections of the input file shared with other inputs
 !include divertor_monoblock_common_base.i
 !include divertor_monoblock_mesh_base.i
 !include divertor_monoblock_single_variable_base.i

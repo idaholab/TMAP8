@@ -29,7 +29,7 @@ temperature_coolant_max = ${units 552.0 K}
 plasma_max_heat = ${units 1.0e7 W/m^2} # Heat flux of 10 MW/m^2 at steady state
 plasma_min_heat = ${units 0.0 W/m^2} # no flux while the pulse is off.
 
-# maximum mobile flux of 7.90e-13 at the top surface (1.0e-4 [m])
+# Maximum mobile flux of 7.90e-13 at the top surface (1.0e-4 [m])
 # 10e24 at/m^3/s plasma flux at steady state
 # 50% of it corresponds to tritium in a DT plasma
 # Assuming 0.1% of incident plasma is retained in the divertor, this results in a flux of
@@ -91,7 +91,7 @@ diffusivity_CuCrZr_Ea = ${units 4873.9 K}
 solubility_CuCrZr_D0 = ${units 6.75e-6 1/Pa^0.5} # ${fparse 4.28e23 / tungsten_atomic_density} 1/m^3/Pa^(1/2) / (1/m^3) = 1/Pa^(1/2)
 solubility_CuCrZr_Ea = ${units 4525.8 K}
 
-# for postprocessor scaling
+# For postprocessor scaling
 diffusivity_fixed = ${units 5.01e-24 g/m^2} # (3.01604928)/(6.02e23)/[gram(T)/m^2]
 # diffusivity_fixed = ${units 5.508e-19 g/m^2}  # (1.0e3)*(1.0e3)/(6.02e23)/(3.01604928) [gram(T)/m^2] alternative
 scaling_factor = ${units 3.491e10 g/m^2} # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
@@ -280,7 +280,7 @@ scaling_factor_2 = ${units 3.44e10 g/m^2} # (1.0e3)*(1.0e3)*(${tungsten_atomic_d
     [exodus]
         type = Exodus
         sync_only = false
-        # output at key moments in the first two cycles, and then at the end of the simulation
+        # Output at key moments in the first two cycles, and then at the end of the simulation
         sync_times = '${fparse 1.1 * plasma_ramp_time} ${fparse plasma_ss_end - 20} ${fparse plasma_ramp_down_end - 10} ${plasma_cycle_time} ${fparse plasma_cycle_time + 1.1 * plasma_ramp_time} ${fparse plasma_cycle_time + plasma_ss_end - 20} ${fparse plasma_cycle_time + plasma_ramp_down_end - 10} ${fparse 2 * plasma_cycle_time} ${fparse 50 * plasma_cycle_time}'
     []
     csv = true
