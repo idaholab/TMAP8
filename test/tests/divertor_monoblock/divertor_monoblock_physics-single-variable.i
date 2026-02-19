@@ -1,11 +1,10 @@
 ### This input file is the complete input file for the divertor monoblock case using the physics
-### syntax with several variable.
+### syntax with a single variable across materials.
 ### This input uses the `!include` feature to incorporate other input files
 
 ### Nomenclatures
-### C_mobile_j      mobile H concentration in "j" material, where j = CuCrZr, Cu, W
-### C_trapped_j     trapped H concentration in "j" material, where j = CuCrZr, Cu, W
-### C_total_j       total H concentration in "j" material, where j = CuCrZr, Cu, W
+### C_mobile        mobile H concentration
+### C_trapped       trapped H concentration
 ###
 ### S_empty_j       empty site concentration in "j" material, where j = CuCrZr, Cu, W
 ### S_trapped_j     trapped site concentration in "j" material, where j = CuCrZr, Cu, W
@@ -18,15 +17,12 @@
 ### Int_            Integrated
 ### ScInt_          Scaled and integrated
 
-C_mobile_CuCrZr_DirichletBC_Coolant = 1.0e-18 # at.fraction
-C_mobile_W_init = 1.0e-20  # at.fraction
-C_mobile_Cu_init = 5.0e-17  # at.fraction
-C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
+C_mobile_init = 1.0e-20 # at.fraction
 
-# include sections of the input file shared with other inputs
+# Include sections of the input file shared with other inputs
 !include divertor_monoblock_common_base.i
 !include divertor_monoblock_mesh_base.i
-!include divertor_monoblock_multi_variable_base.i
+!include divertor_monoblock_single_variable_base.i
 
 [GlobalParams]
     species_scaling_factors = '1'
@@ -34,14 +30,18 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
     preconditioning = 'defer'
 []
 
+# Define the variable outside of the Physics to prevent the Physics from defining it
+# with a block restriction
+[Variables]
+    [C_trapped]
+    []
+[]
+
 [Physics]
     [HeatConduction]
         [all]
             temperature_name = 'temperature'
             initial_temperature = ${temperature_initial}
-            # if using AD, increase the size of the factorization space in petsc options
-            # using -mat_mumps_icntl_14 300 or use superlu_dist over mumps
-            use_automatic_differentiation = false
 
             thermal_conductivity = 'thermal_conductivity'
             specific_heat = 'specific_heat'
@@ -53,35 +53,19 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
         []
     []
     [Diffusion]
-        [W]
-            variable_name = 'C_mobile_W'
-            block = '4'
-            diffusivity_matprop = diffusivity_W
-            initial_condition = ${C_mobile_W_init}
+        [all]
+            variable_name = 'C_mobile'
+            diffusivity_matprop = diffusivity
+            initial_condition = ${C_mobile_init}
 
             neumann_boundaries = 'top'
             boundary_fluxes = 'mobile_flux_bc_function'
         []
-        [Cu]
-            variable_name = 'C_mobile_Cu'
-            block = '3'
-            diffusivity_matprop = diffusivity_Cu
-            initial_condition = ${C_mobile_Cu_init}
-        []
-        [CuCrZr]
-            variable_name = 'C_mobile_CuCrZr'
-            block = '2'
-            diffusivity_matprop = diffusivity_CuCrZr
-            initial_condition = ${C_mobile_CuCrZr_init}
-
-            dirichlet_boundaries ='2to1'
-            boundary_values = '${C_mobile_CuCrZr_DirichletBC_Coolant}'
-        []
     []
     [SpeciesTrapping]
-        [W]
-            species = 'C_trapped_W'
-            mobile = 'C_mobile_W'
+        [all]
+            species = 'C_trapped'
+            mobile = 'C_mobile'
             block = '4'
             species_initial_concentrations = ${C_trapping_init}
             separate_variables_per_component = false
@@ -97,8 +81,8 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
             detrapping_energy = ${detrapping_energy_W}
         []
         [Cu]
-            species = 'C_trapped_Cu'
-            mobile = 'C_mobile_Cu'
+            species = 'C_trapped'
+            mobile = 'C_mobile'
             block = '3'
             species_initial_concentrations = ${C_trapping_init}
             separate_variables_per_component = false
@@ -114,8 +98,8 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
             detrapping_energy = ${detrapping_energy_Cu}
         []
         [CuCrZr]
-            species = 'C_trapped_CuCrZr'
-            mobile = 'C_mobile_CuCrZr'
+            species = 'C_trapped'
+            mobile = 'C_mobile'
             block = '2'
             species_initial_concentrations = ${C_trapping_init}
             separate_variables_per_component = false
@@ -133,33 +117,11 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
     []
 []
 
-[InterfaceKernels]
-    [tied_4to3]
-        type = ADPenaltyInterfaceDiffusion
-        variable = C_mobile_W
-        neighbor_var = C_mobile_Cu
-        penalty = 0.05            #  it will not converge with > 0.1, but it creates negative C_mobile _Cu with << 0.1
-        # jump_prop_name = solubility_ratio_4to3
-        jump_prop_name = solubility_ratio
-        boundary = '4to3'
-    []
-    [tied_3to2]
-        type = ADPenaltyInterfaceDiffusion
-        variable = C_mobile_Cu
-        neighbor_var = C_mobile_CuCrZr
-        penalty = 0.05            #  it will not converge with > 0.1, but it creates negative C_mobile _Cu with << 0.1
-        # jump_prop_name = solubility_ratio_3to2
-        jump_prop_name = solubility_ratio
-        boundary = '3to2'
-    []
-[]
-
-
 [Materials]
     ############################## Materials for W (block = 4)
     [diffusivity_W]
         type = ADParsedMaterial
-        property_name = diffusivity_W
+        property_name = diffusivity
         coupled_variables = 'temperature'
         block = 4
         expression = '${diffusivity_W_D0}*exp(-${diffusivity_W_Ea}/temperature)'
@@ -174,13 +136,13 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
         outputs = all
     []
     [heat_transfer_W]
-        type = GenericConstantMaterial
+        type = ADGenericConstantMaterial
         prop_names = 'density'
         prop_values = '${density_W}'
         block = 4
     []
     [specific_heat_W]
-        type = ParsedMaterial
+        type = ADParsedMaterial
         property_name = specific_heat
         coupled_variables = 'temperature'
         block = 4
@@ -188,7 +150,7 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
         outputs = all
     []
     [thermal_conductivity_W]
-        type = ParsedMaterial
+        type = ADParsedMaterial
         property_name = thermal_conductivity
         coupled_variables = 'temperature'
         block = 4
@@ -198,7 +160,7 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
     ############################## Materials for Cu (block = 3)
     [diffusivity_Cu]
         type = ADParsedMaterial
-        property_name = diffusivity_Cu
+        property_name = diffusivity
         coupled_variables = 'temperature'
         block = 3
         expression = '${diffusivity_Cu_D0}*exp(-${diffusivity_Cu_Ea}/temperature)'
@@ -213,13 +175,13 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
         outputs = all
     []
     [heat_transfer_Cu]
-        type = GenericConstantMaterial
+        type = ADGenericConstantMaterial
         prop_names = 'density'
         prop_values = '${density_Cu}'
         block = 3
     []
     [specific_heat_Cu]
-        type = ParsedMaterial
+        type = ADParsedMaterial
         property_name = specific_heat
         coupled_variables = 'temperature'
         block = 3
@@ -227,7 +189,7 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
         outputs = all
     []
     [thermal_conductivity_Cu]
-        type = ParsedMaterial
+        type = ADParsedMaterial
         property_name = thermal_conductivity
         coupled_variables = 'temperature'
         block = 3
@@ -238,7 +200,7 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
     ############################## Materials for CuCrZr (block = 2)
     [diffusivity_CuCrZr]
         type = ADParsedMaterial
-        property_name = diffusivity_CuCrZr
+        property_name = diffusivity
         coupled_variables = 'temperature'
         block = 2
         expression = '${diffusivity_CuCrZr_D0}*exp(-${diffusivity_CuCrZr_Ea}/temperature)'
@@ -253,13 +215,13 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
         outputs = all
     []
     [heat_transfer_CuCrZr]
-        type = GenericConstantMaterial
+        type = ADGenericConstantMaterial
         prop_names = 'density specific_heat'
         prop_values = '${density_CuCrZr} ${specific_heat_CuCrZr}'
         block = 2
     []
     [thermal_conductivity_CuCrZr]
-        type = ParsedMaterial
+        type = ADParsedMaterial
         property_name = thermal_conductivity
         coupled_variables = 'temperature'
         block = 2
@@ -272,15 +234,15 @@ C_mobile_CuCrZr_init = 1.0e-15  # at.fraction
         solubility_primary = solubility_W
         solubility_secondary = solubility_Cu
         boundary = '4to3'
-        concentration_primary = C_mobile_W
-        concentration_secondary = C_mobile_Cu
+        concentration_primary = C_mobile
+        concentration_secondary = C_mobile
     []
     [interface_jump_3to2]
         type = SolubilityRatioMaterial
         solubility_primary = solubility_Cu
         solubility_secondary = solubility_CuCrZr
         boundary = '3to2'
-        concentration_primary = C_mobile_Cu
-        concentration_secondary = C_mobile_CuCrZr
+        concentration_primary = C_mobile
+        concentration_secondary = C_mobile
     []
 []
