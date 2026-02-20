@@ -36,23 +36,23 @@ The second is a uniform trap associated with dislocations and is assigned a trap
 Therefore, the diffusion of tritium in sample is described as:
 
 \begin{equation} \label{eq:diffusion}
-\frac{d C}{d t} = \nabla D \nabla C + S + \text{trap\_per\_free} \cdot \sum_{i=1}^{3} \frac{dC_{T_i}}{dt} ,
+\frac{d C_M}{d t} = \nabla \cdot D \nabla C_M + S + \sum_{i=1}^{3} f_{T/M,i} \frac{dC_{T_i}}{dt} ,
 \end{equation}
 
 and, for $i=1$, $i=2$, and $i=3$:
 
 \begin{equation}
     \label{eqn:trapped_rate}
-    \frac{dC_{T_i}}{dt} = \alpha_t^i  \frac {C_{T_i}^{empty} C } {(N \cdot \text{trap\_per\_free})} - \alpha_r^i C_{T_i},
+    \frac{dC_{T_i}}{dt} = \alpha_t^i \frac{C_{T_i}^{empty} C_M } {(N f_{T/M,i})} - \alpha_r^i C_{T_i},
 \end{equation}
 
 and
 
 \begin{equation}
-    C_{T_i}^{empty} = (C_{{T_i}0} \cdot N - \text{trap\_per\_free} \cdot C_{T_i}  ) ,
+    C_{T_i}^{empty} = (C_{{T_i}0} N - f_{T/M,i} C_{T_i}  ) ,
 \end{equation}
 
-where $C$ is the concentration of tritium, $t$ is the time, $S$ is the source term in sample due to the tritium ion implantation, $C_{T_i}$ is the trapped species in trap $i$, $\alpha_t^i$ and $\alpha_r^i$ are the trapping and release rate coefficients for trap $i$, $\text{trap\_per\_free}$ is a factor scaling $C_{T_i}$ to be closer to $C$ for better numerical convergence, $C_{{T_i}0}$ is the fraction of host sites $i$ that can contribute to trapping, $C_{T_i}^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density, and $D$ is the tritium diffusivity in tungsten, which is defined as:
+where $C_M$ is the concentration of mobile tritium, $t$ is the time, $S$ is the source term in sample due to the tritium ion implantation, $C_{T_i}$ is the trapped species in trap $i$, $\alpha_t^i$ and $\alpha_r^i$ are the trapping and release rate coefficients for trap $i$, $f_{T/M,i}$ is a user-defined numerical factor scaling $C_{T_i}$ to be closer to $C_M$ for better numerical convergence, $C_{{T_i}0}$ is the fraction of host sites $i$ that can contribute to trapping, $C_{T_i}^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density, and $D$ is the tritium diffusivity in tungsten, which is defined as:
 
 \begin{equation} \label{eq:diffusivity}
 D = D_{0} \exp \left( - \frac{E_{D}}{k_b T} \right),
@@ -77,7 +77,7 @@ where $\alpha_{t0}^i$ and $\alpha_{r0}^i$ are pre-exponential factors of trappin
 The thermal diffusion after 5000 s is governing by:
 
 \begin{equation} \label{eq:thermal}
-\rho C_P \frac{d T}{d t} = \nabla D_T \nabla T,
+\rho C_P \frac{d T}{d t} = \nabla \cdot D_T \nabla T,
 \end{equation}
 
 where $\rho$ is the density of Tungsten, $C_P$ is the specific heat, and $D_T$ is the thermal conductivity.
@@ -99,7 +99,7 @@ where $F$ is the implantation flux provided in [val-2d_set_up_values], $\sigma =
 The pressures on the upstream and downstream sides are close to vacuum pressures, and do not have a significant impact on tritium desorption. Thus, TMAP8 ignores the pressure in these enclosures for simplification. Also, because both surfdep and Dirichlet boundary conditions have similar desorption performance in the near vacuum environment, we use Dirichlet boundary condition to improve the model efficiency. The concentrations on upstream and downstream sides are defined as:
 
 \begin{equation} \label{eq:boundary_condition}
-C = 0.
+C_M = 0.
 \end{equation}
 
 Due to the high thermal conductivity in Tungsten, the model simplifies the thermal diffusion as an instantaneous process to increase the model efficiency. That is, the temperature inside the Tungsten sample is consistent with the temperature on the surface of Tungsten sample. The temperature is set to 300 K during implantation, and the temperature after implantation on the upstream and downstream sides are defined as:
@@ -130,7 +130,7 @@ All the model parameters are listed in [val-2d_set_up_values]:
 | $D_{0,l}$ | maximum diffusivity coefficient when $x < 15 \times 10 ^ {-9}$ m | 4.1 $\times 10^{-7}$            | m$^2$/2               | [!cite](frauenfelder1969solution) |
 | $D_{0,r}$ | maximum diffusivity coefficient when $x > 15 \times 10 ^ {-9}$ m | 4.1 $\times 10^{-6}$            | m$^2$/2               | [!cite](ambrosek2008verification) |
 | $E_D$     | activity energy for diffusion        | 0.39                                                        | eV                    | [!cite](frauenfelder1969solution) |
-| $C_0$     | initial concentration of tritium     | 1 $\times 10^{-10}$                                         | at/m$^3$              | [!cite](ambrosek2008verification) |
+| $C_{M,0}$ | initial concentration of mobile tritium     | 1 $\times 10^{-10}$                                         | at/m$^3$              | [!cite](ambrosek2008verification) |
 | $N$       | host density                         | 6.25 $\times 10^{28}$                                       | at/m$^3$              | [!cite](ambrosek2008verification) |
 | $\chi^1_0$ | initial atom fraction in trap 1     | 0                                                           | -                     | [!cite](ambrosek2008verification) |
 | $\chi^2_0$ | initial atom fraction in trap 2     | 4.4 $\times 10^{-10}$                                       | -                     | [!cite](ambrosek2008verification) |

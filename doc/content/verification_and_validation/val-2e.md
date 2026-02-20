@@ -59,7 +59,7 @@ This model considers the diffusion of deuterium on both sides of the Pd membrane
 First, the diffusion of deuterium in the membrane is described as:
 
 \begin{equation} \label{eq:diffusion}
-\frac{d C_i}{d t} = \nabla D_i \nabla C_i,
+\frac{d C_i}{d t} = \nabla \cdot D_i \nabla C_i,
 \end{equation}
 
 where $C_i$ is the concentration of hydrogen isotope $i$ in membrane,
