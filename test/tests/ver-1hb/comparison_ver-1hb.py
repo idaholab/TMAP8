@@ -6,7 +6,6 @@ from scipy import special
 import os
 import math
 
-
 script_folder = os.path.dirname(__file__)
 # Changes working directory to script directory (for consistent MooseDocs usage)
 os.chdir(os.path.dirname(__file__))
