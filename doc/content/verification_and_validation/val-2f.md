@@ -104,7 +104,7 @@ and
     C_{T_i}^{empty} = C_{{T_i}0} N - f_{T/M,i} C_{T_i}
 \end{equation}
 
-where $C_M$ is the concentration of mobile tritium, $t$ is the time, $S$ is the source term in sample due to the deuterium implantation ([eq:source_term]), $C_{T_i}$ is the trapped species in trap $i$, $\alpha_t^i$ and $\alpha_r^i$ are the trapping and release rate coefficients for trap $i$, $f_{T/M,i}$ is a fixed numerical factor scaling $C_{T_i}$ to be closer to $C_M$ for better numerical convergence, $C_{{T_i}0}$ is the fraction of host sites $i$ that can contribute to trapping, $C_{T_i}^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density, and $D$ is the deuterium diffusivity in tungsten, which is defined as:
+where $C_M$ is the concentration of mobile tritium, $t$ is the time, $S$ is the source term in sample due to the deuterium implantation ([eq:source_term]), $C_{T_i}$ is the trapped species in trap $i$, $\alpha_t^i$ and $\alpha_r^i$ are the trapping and release rate coefficients for trap $i$, $f_{T/M,i}$ is a user-defined numerical factor scaling $C_{T_i}$ to be closer to $C_M$ for better numerical convergence, $C_{{T_i}0}$ is the fraction of host sites $i$ that can contribute to trapping, $C_{T_i}^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density, and $D$ is the deuterium diffusivity in tungsten, which is defined as:
 
 \begin{equation} \label{eq:diffusivity}
 D = D_{0} \exp \left( - \frac{E_{D}}{k_b T} \right)

@@ -18,7 +18,7 @@ and
 \begin{equation}
     C_T^{empty} = C_{T0} N - f_{T/M} C_T ,
 \end{equation}
-where $C_M$ and $C_T$ are the concentrations of the mobile and trapped species respectively, $D$ is the diffusivity of the mobile species, $\alpha_t$ and $\alpha_r$ are the trapping and release rate coefficients, $f_{T/M}$ is a fixed numerical factor converting the magnitude of $C_T$ to be closer to $C_M$ for better numerical convergence, $C_{T0}$ is the fraction of host sites that can contribute to trapping, $C_T^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density.
+where $C_M$ and $C_T$ are the concentrations of the mobile and trapped species respectively, $D$ is the diffusivity of the mobile species, $\alpha_t$ and $\alpha_r$ are the trapping and release rate coefficients, $f_{T/M}$ is a user-defined numerical factor converting the magnitude of $C_T$ to be closer to $C_M$ for better numerical convergence, $C_{T0}$ is the fraction of host sites that can contribute to trapping, $C_T^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density.
 
 The breakthrough time may have one of two limiting values depending on whether the trapping is in the effective diffusivity or strong-trapping regime. A trapping parameter is defined by:
 
