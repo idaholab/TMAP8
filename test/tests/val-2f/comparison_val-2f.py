@@ -194,7 +194,7 @@ for key, fname in [
     ("default", "val-2f_deuterium_desorption"),
     ("inf", "val-2f_deuterium_desorption_inf_recombination"),
 ]:
-    (time, temp, _, _, flux_total, _, trapped, mobile, t1, t2, t3, t4, t5, t_intr) = (
+    time, temp, _, _, flux_total, _, trapped, mobile, t1, t2, t3, t4, t5, t_intr = (
         extract_tmap_data_desorption(tmap_data[key])
     )
 
