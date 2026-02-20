@@ -105,7 +105,7 @@ A comparison of the concentration of AB as a function of time is plotted in [ver
        image_name=ver-1ia_comparison_pressure.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1ia_comparison_pressure
-       caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the solution in the `ratedep` condition when A and B have equal pressures [!citep](ambrosek2008verification).
+       caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the solution in the `ratedep` condition when A and B have equal pressures [!citep](ambrosek2008verification). As expected, the partial pressures for $A_2$ and $B_2$ overlap.
 
 ## Input files
 
