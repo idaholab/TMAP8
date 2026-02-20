@@ -130,7 +130,7 @@ All the model parameters are listed in [val-2d_set_up_values]:
 | $D_{0,l}$ | maximum diffusivity coefficient when $x < 15 \times 10 ^ {-9}$ m | 4.1 $\times 10^{-7}$            | m$^2$/2               | [!cite](frauenfelder1969solution) |
 | $D_{0,r}$ | maximum diffusivity coefficient when $x > 15 \times 10 ^ {-9}$ m | 4.1 $\times 10^{-6}$            | m$^2$/2               | [!cite](ambrosek2008verification) |
 | $E_D$     | activity energy for diffusion        | 0.39                                                        | eV                    | [!cite](frauenfelder1969solution) |
-| $C_{M,0}$ | initial concentration of tritium     | 1 $\times 10^{-10}$                                         | at/m$^3$              | [!cite](ambrosek2008verification) |
+| $C_{M,0}$ | initial concentration of mobile tritium     | 1 $\times 10^{-10}$                                         | at/m$^3$              | [!cite](ambrosek2008verification) |
 | $N$       | host density                         | 6.25 $\times 10^{28}$                                       | at/m$^3$              | [!cite](ambrosek2008verification) |
 | $\chi^1_0$ | initial atom fraction in trap 1     | 0                                                           | -                     | [!cite](ambrosek2008verification) |
 | $\chi^2_0$ | initial atom fraction in trap 2     | 4.4 $\times 10^{-10}$                                       | -                     | [!cite](ambrosek2008verification) |
