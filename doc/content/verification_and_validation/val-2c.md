@@ -66,7 +66,7 @@ In the paint, TMAP8 captures species diffusion through
 \frac{d c_{\text{T}_2}}{dt} = \nabla \cdot D^e \nabla c_{\text{T}_2},
 \end{equation}
 \begin{equation} \label{eq:paint:HT}
-\frac{d c_{\text{HT}}}{dt} = \nabla \cdotD^e \nabla c_{\text{HT}},
+\frac{d c_{\text{HT}}}{dt} = \nabla \cdot D^e \nabla c_{\text{HT}},
 \end{equation}
 \begin{equation} \label{eq:paint:HTO}
 \frac{d c_{\text{HTO}}}{dt} = \nabla \cdot D^w \nabla c_{\text{HTO}},
