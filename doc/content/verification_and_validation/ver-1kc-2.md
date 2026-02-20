@@ -57,11 +57,11 @@ Similarly to TMAP7, the equilibrium constant $\eta$ has been set to a fixed valu
 The diffusion process for each species in the two enclosures can be expressed by
 
 \begin{equation}
-\frac{\partial C_1}{\partial t} = \nabla D \nabla C_1,
+\frac{\partial C_1}{\partial t} = \nabla \cdot D \nabla C_1,
 \end{equation}
 and
 \begin{equation}
-\frac{\partial C_2}{\partial t} = \nabla D \nabla C_2,
+\frac{\partial C_2}{\partial t} = \nabla \cdot D \nabla C_2,
 \end{equation}
 
 where $C_1$ and $C_2$ represent the concentration fields in enclosures 1 and 2 respectively, $t$ is the time, and $D$ denotes the diffusivity.
