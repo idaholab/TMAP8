@@ -23,12 +23,12 @@ TMAP8 also contains [example cases](examples/tmap_index.md), which showcase how 
 | ver-1gc   | [Series Chemical Reactions](ver-1gc.md)                                                             |
 | ver-1ha   | [Convective Gas Outflow Problem in Three Enclosures](ver-1ha.md)                                    |
 | ver-1hb   | [Convective Gas Outflow Problem in Equilibrating Enclosures](ver-1hb.md)                            |
-| ver-1ia   | [Species Equilibration Problem in Ratedep Condition with Equal Starting Pressures](ver-1ia.md)      |
-| ver-1ib   | [Species Equilibration Problem in Ratedep Condition with Unequal Starting Pressures](ver-1ib.md)    |
+| ver-1ia   | [Species Equilibration Problem in Ratedep Conditions with Equal Starting Pressures](ver-1ia.md)     |
+| ver-1ib   | [Species Equilibration Problem in Ratedep Conditions with Unequal Starting Pressures](ver-1ib.md)   |
 | ver-1ic   | [Species Equilibration Problem in Surfdep Conditions with Low Barrier Energy](ver-1ic.md)           |
 | ver-1id   | [Species Equilibration Problem in Surfdep Conditions with High Barrier Energy](ver-1id.md)          |
-| ver-1ie   | [Species Equilibration Problem in Lawdep Condition with Equal Starting Pressures](ver-1ie.md)       |
-| ver-1if   | [Species Equilibration Problem in Lawdep Condition with Unequal Starting Pressures](ver-1if.md)     |
+| ver-1ie   | [Species Equilibration Problem in Lawdep Conditions with Equal Starting Pressures](ver-1ie.md)      |
+| ver-1if   | [Species Equilibration Problem in Lawdep Conditions with Unequal Starting Pressures](ver-1if.md)    |
 | ver-1ja   | [Radioactive Decay of Mobile Tritium in a Slab](ver-1ja.md)                                         |
 | ver-1jb   | [Radioactive Decay of Mobile Tritium in a Slab with a Distributed Trap Concentration](ver-1jb.md)   |
 | ver-1ka   | [Simple Volumetric Source](ver-1ka.md)                                                              |

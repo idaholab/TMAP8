@@ -10,15 +10,15 @@ Two enclosures are separated by a membrane that allows diffusion according to Si
 
 This verification problem is taken from [!cite](ambrosek2008verification).
 
-Unlike the [ver-1kc-1](ver-1kc-1.md) case, which only considers tritium T$_2$, this setup describes a diffusion system in which tritium T$_2$, dihydrogen H$_2$ and HT are modeled across a one-dimensional domain split into two enclosures. The total system length is $2.5 \times 10^{-4}$ m, divided into 100 segments. The system operates at a constant temperature of 500 Kelvin. Initial tritium T$_2$ and dihydrogen H$_2$ pressures are specified as $10^{5}$ Pa for Enclosure 1 and $10^{-10}$ Pa for Enclosure 2. Initially, there is no HT in either enclosure.
+Unlike the [ver-1kc-1](ver-1kc-1.md) case, which only considers tritium T$_2$, this setup describes a diffusion system in which T$_2$, H$_2$, and HT are modeled across a one-dimensional domain split into two enclosures. The total system length is $2.5 \times 10^{-4}$ m, divided into 100 segments. The system operates at a constant temperature of 500 K. Initial tritium T$_2$ and dihydrogen H$_2$ pressures are specified as $10^{5}$ Pa for Enclosure 1 and $10^{-10}$ Pa for Enclosure 2. Initially, there is no HT in either enclosure.
 
-The reaction between the species is described as follows
+The reaction between the species is described as
 
 \begin{equation}
 \text{H}_2 + \text{T}_2 \leftrightarrow 2\text{HT}
 \end{equation}
 
-The kinematic evolutions of the species are given by the following equations
+The kinematic evolutions of the species are given by
 
 \begin{equation}
 \frac{d C_{\text{HT}}}{dt} = 2K_1 C_{\text{H}_2} C_{\text{T}_2} - K_2 C_{\text{HT}}^2
@@ -64,7 +64,7 @@ and
 \frac{\partial C_2}{\partial t} = \nabla \cdot D \nabla C_2,
 \end{equation}
 
-where $C_1$ and $C_2$ represent the concentration fields in enclosures 1 and 2 respectively, $t$ is the time, and $D$ denotes the diffusivity.
+where $C_1$ and $C_2$ represent the concentration fields in Enclosures 1 and 2, respectively, $t$ is the time, and $D$ denotes the diffusivity.
 Note that the diffusivity may vary across different species and enclosures. However, in this case, it is assumed to be identical for all.
 
 The concentration in Enclosure 1 is related to the partial pressure and concentration in Enclosure 2 via the interface sorption law:
@@ -80,12 +80,12 @@ where $R$ is the ideal gas constant in J/mol/K, $T$ is the temperature in K, $K$
 We assume that $K = 10/\sqrt{RT}$, which is expected to result in $C_1 = 10 \sqrt{C_2}$ at equilibrium.
 As illustrated in [ver-1kc-2_comparison_time_k10], similarly to ver-1kc-1, T$_2$ and H$_2$ pressures reach equilibrium in both enclosures. What is new, however, is that HT is produced in both enclosures following the sorption law.
 
-Thus, it is crucial to ensure that the chemical equilibrium between HT, T$_2$ and H$_2$ is achieved. This can be verified in both enclosures by examining the ratio between $P_{\text{HT}}$ and $\sqrt{P_{\text{H}_2} P_{\text{T}_2}}$, which must equal $\eta=2$.
-As shown in [ver-1kc-2_equilibrium_constant_k10], this ratio approaches $\eta=2$ for both enclosures, as observed in TMAP7. However, achieving this balance involves a compromise to reproduce TMAP7's results. The ratio of $K_1$ and $K_2$ must respect [eq:eta]. The values of $K_1$ and $K_2$ must also be large enough to ensure that the kinetics of chemical reactions are faster than diffusion or surface permeation to be closer to the equilibrium assumption used in TMAP7. Here, the equilibrium in enclosure 1 is achieved rapidly. Increasing $K_1$ and $K_2$ would also enable a quicker attainment of equilibrium in enclosure 2. However, using very high values for $K_1$ and $K_2$ would lead to an unnecessary increase in computational costs.
+Thus, it is crucial to ensure that the chemical equilibrium between HT, T$_2$, and H$_2$ is achieved. This can be verified in both enclosures by examining the ratio between $P_{\text{HT}}$ and $\sqrt{P_{\text{H}_2} P_{\text{T}_2}}$, which must equal $\eta=2$.
+As shown in [ver-1kc-2_equilibrium_constant_k10], this ratio approaches $\eta=2$ for both enclosures, as observed in TMAP7. However, achieving this balance involves a compromise to reproduce TMAP7's results. The ratio of $K_1$ and $K_2$ must respect [eq:eta]. The values of $K_1$ and $K_2$ must also be large enough to ensure that the kinetics of chemical reactions are faster than diffusion or surface permeation to be closer to the equilibrium assumption used in TMAP7. Here, the equilibrium in Enclosure 1 is achieved rapidly. Increasing $K_1$ and $K_2$ would also enable a quicker attainment of equilibrium in Enclosure 2. However, using very high values for $K_1$ and $K_2$ would lead to an unnecessary increase in computational costs.
 
-The concentration ratios for T$_2$, H$_2$, and HT between enclosures 1 and 2, shown in [ver-1kc-2_concentration_ratio_T2_k10], [ver-1kc-2_concentration_ratio_H2_k10], and [ver-1kc-2_concentration_ratio_HT_k10], demonstrate that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K \sqrt{RT} = 10$.
+The concentration ratios for T$_2$, H$_2$, and HT between Enclosures 1 and 2, shown in [ver-1kc-2_concentration_ratio_T2_k10], [ver-1kc-2_concentration_ratio_H2_k10], and [ver-1kc-2_concentration_ratio_HT_k10], demonstrate that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K \sqrt{RT} = 10$.
 
-As shown in [ver-1kc-2_mass_conservation_k10], mass is conserved between the two enclosures over time. The variation in mass is only $0.6$ %. This variation in mass can be further minimized by refining the mesh, i.e., increasing the number of segments in the domain.
+As shown in [ver-1kc-2_mass_conservation_k10], mass is conserved between the two enclosures over time. The variation in mass is only $0.6$ %. This variation in mass can be further minimized by refining the mesh (i.e., increasing the number of segments in the domain).
 
 !media comparison_ver-1kc-2.py
        image_name=ver-1kc-2_comparison_time_k10.png
@@ -103,19 +103,19 @@ As shown in [ver-1kc-2_mass_conservation_k10], mass is conserved between the two
        image_name=ver-1kc-2_concentration_ratio_T2_k10.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1kc-2_concentration_ratio_T2_k10
-       caption=T$_2$ concentration ratio between enclosures 1 and 2 at the interface for $K = 10/\sqrt{RT}$ and $\eta = \sqrt{2K_1/K_2}$. This verifies TMAP8's ability to apply Sieverts' law across the interface.
+       caption=T$_2$ concentration ratio between Enclosures 1 and 2 at the interface for $K = 10/\sqrt{RT}$ and $\eta = \sqrt{2K_1/K_2}$. This verifies TMAP8's ability to apply Sieverts' law across the interface.
 
 !media comparison_ver-1kc-2.py
        image_name=ver-1kc-2_concentration_ratio_H2_k10.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1kc-2_concentration_ratio_H2_k10
-       caption=H$_2$ concentration ratio between enclosures 1 and 2 at the interface for $K = 10/\sqrt{RT}$ and $\eta = \sqrt{2K_1/K_2}$. This verifies TMAP8's ability to apply Sieverts' law across the interface.
+       caption=H$_2$ concentration ratio between Enclosures 1 and 2 at the interface for $K = 10/\sqrt{RT}$ and $\eta = \sqrt{2K_1/K_2}$. This verifies TMAP8's ability to apply Sieverts' law across the interface.
 
 !media comparison_ver-1kc-2.py
        image_name=ver-1kc-2_concentration_ratio_HT_k10.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1kc-2_concentration_ratio_HT_k10
-       caption=HT concentration ratio between enclosures 1 and 2 at the interface for $K = 10/\sqrt{RT}$ and $\eta = \sqrt{2K_1/K_2}$. This verifies TMAP8's ability to apply Sieverts' law across the interface.
+       caption=HT concentration ratio between Enclosures 1 and 2 at the interface for $K = 10/\sqrt{RT}$ and $\eta = \sqrt{2K_1/K_2}$. This verifies TMAP8's ability to apply Sieverts' law across the interface.
 
 !media comparison_ver-1kc-2.py
        image_name=ver-1kc-2_mass_conservation_k10.png

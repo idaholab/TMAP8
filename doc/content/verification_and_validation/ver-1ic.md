@@ -8,16 +8,16 @@ The [theory_manual.md] page describes the `surfdep` model and other surface mode
 
 ## General Case Description
 
-This verification problem is taken from [!cite](ambrosek2008verification) and builds on [ver-1ia](ver-1ia.md). The configuration and modeling parameters are similar to [ver-1ia](ver-1ia.md), except that, in the current case, the reaction is in surfdep condition. The case is simulated in [/ver-1ic.i].
+This verification problem is taken from [!cite](ambrosek2008verification) and builds on [ver-1ia](ver-1ia.md). The configuration and modeling parameters are similar to [ver-1ia](ver-1ia.md), except that, in the current case, the reaction is in surfdep conditions. The case is simulated in [/ver-1ic.i].
 
-The problem considers the reaction between two isotopic species, A$_2$ and B$_2$, on a surface in surfdep condition. The reaction between AB, A$_2$, and B$_2$ is the same as in [ver-1ia](ver-1ia.md). Therefore, the partial pressure of AB in equilibrium is a constant value depends on the initial partial pressures of A$_2$ and B$_2$:
+The problem considers the reaction between two isotopic species, A$_2$ and B$_2$, on a surface in surfdep conditions. The reaction between AB, A$_2$, and B$_2$ is the same as in [ver-1ia](ver-1ia.md). Therefore, the partial pressure of AB in equilibrium is depends on the initial partial pressures of A$_2$ and B$_2$:
 
 \begin{equation}
 \label{eq:surfdep:p_AB_equilibrium}
 P_{AB}^{eq} = \frac{2 P_{A_2}^0 P_{B_2}^0}{P_{A_2}^0 + P_{B_2}^0}.
 \end{equation}
 
-Under surfdep condition, there are again no assumptions about equilibrium except in the steady state. Then, the surface concentration of molecules is directly proportional to the gas over-pressure. We define the deposition, release, and dissociation coefficients on the surface by
+Under surfdep conditions, there are again no assumptions about equilibrium except in the steady state. Then, the surface concentration of molecules is directly proportional to the gas overpressure. We define the deposition, release, and dissociation coefficients on the surface by
 
 \begin{equation}
 \label{eq:surfdep:k_d_equation}
@@ -38,7 +38,7 @@ and
 
 where $M$ is the mass of species molecules, $\nu_0$ is the Debye frequency, $E_x$ is the adsorption barrier energy, $E_c$ is the surface binding energy, $E_b$ is the dissociation activation energy, $k_B$ is the Boltzmann constant, and $T$ is the temperature.
 
-At steady-state, the flux to the surface will be balanced by the flux from the surface, and surface concentration will be related to the gas over-pressure by
+At steady state, the flux to the surface will be balanced by the flux from the surface, and surface concentration will be related to the gas overpressure by
 
 \begin{equation}
 \label{eq:surfdep:Harry_equation}
@@ -47,7 +47,7 @@ C_m = P_m \frac{\hat{K_d}}{\hat{K_r}},
 
 where $C_m$ and $P_m$ are the surface concentration and enclosure pressure of gas $m$, respectively.
 
-The conversion of A$_2$ and B$_2$ molecules to AB molecules requires several steps. First, homonuclear molecules in the gas must get to the surface. Next, they must dissociate. Then the individual surface atoms must migrate to sites where they encounter their conjugates. Here we assume there is a probability of unity of their combination once they find each other. Finally, the AB molecule must leave the surface and return to the gas. These behaviors are described as
+The conversion of A$_2$ and B$_2$ molecules to AB molecules requires several steps. First, homonuclear molecules in the gas must get to the surface. Next, they must dissociate. Then, the individual surface atoms must migrate to sites where they encounter their conjugates and combine. Finally, the AB molecule must leave the surface and return to the gas. These behaviors are described as
 
 \begin{equation}
 \label{eq:surfdep:surface_equation_1}
@@ -76,7 +76,7 @@ C_B (C_A + C_B) 2 D_s \lambda = (C_{AB} + 2 C_{B_2}) \hat{K_b},
 
 where $D_s$ is the surface diffusivity or mobility of the atomic species and $\lambda$ is the lattice constant.
 
-For the recombination step and dissociation step, we solve
+For the recombination and dissociation steps, we solve
 
 \begin{equation}
 \label{eq:surfdep:equation_p_ab}
@@ -111,13 +111,13 @@ where $\tau$ is defined as
 
 ## Results
 
-A comparison of the concentration of AB as a function of time is plotted in [ver-1ic_comparison_pressure]. The TMAP8 calculations are found to be in good agreement with the analytical solution, with a root mean square percentage error (RMSPE) of RMSPE =  0.93%. The concentrations of A$_2$ and B$_2$ as a function of time are also plotted in [ver-1ic_comparison_pressure].
+A comparison of the AB concentration as a function of time is plotted in [ver-1ic_comparison_pressure]. The TMAP8 calculations are found to be in good agreement with the analytical solution, with a root mean square percentage error (RMSPE) of RMSPE =  0.93%. The concentrations of A$_2$ and B$_2$ as a function of time are also plotted in [ver-1ic_comparison_pressure].
 
 !media comparison_ver-1ic.py
        image_name=ver-1ic_comparison_pressure.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1ic_comparison_pressure
-       caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the solution in surfdep condition with low barrier energy [!citep](ambrosek2008verification).
+       caption=Comparison of AB concentration as a function of time calculated through TMAP8 and analytically for the solution in surfdep conditions with low barrier energy [!citep](ambrosek2008verification).
 
 ## Input files
 

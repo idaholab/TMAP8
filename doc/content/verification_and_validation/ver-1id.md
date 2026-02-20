@@ -28,13 +28,13 @@ where $\tau$ is defined as
 
 ## Results
 
-A comparison of the concentration of AB as a function of time is plotted in [ver-1id_comparison_pressure]. The TMAP8 calculations are found to be in good agreement with the analytical solution, with a root mean square percentage error (RMSPE) of RMSPE =  0.19%. The concentrations of A$_2$ and B$_2$ as a function of time are also plotted in [ver-1id_comparison_pressure].
+A comparison of the AB concentration as a function of time is plotted in [ver-1id_comparison_pressure]. The TMAP8 calculations are found to be in good agreement with the analytical solution, with a root mean square percentage error (RMSPE) of RMSPE =  0.19%. The concentrations of A$_2$ and B$_2$ as a function of time are also plotted in [ver-1id_comparison_pressure].
 
 !media comparison_ver-1id.py
        image_name=ver-1id_comparison_pressure.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1id_comparison_pressure
-       caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the solution in surfdep condition with high barrier energy [!citep](ambrosek2008verification).
+       caption=Comparison of AB concentration as a function of time calculated through TMAP8 and analytically for the solution in surfdep conditions with high barrier energy [!citep](ambrosek2008verification).
 
 ## Input files
 

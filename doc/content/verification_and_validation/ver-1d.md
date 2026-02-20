@@ -54,7 +54,7 @@ The discriminant for which regime is dominant is the ratio of $\zeta$ to c/$\rho
     D_{eff} = \frac{D}{1 + \frac{1}{\zeta}}
 \end{equation}
 
-to account for the fact that trapping leads to slower transport.
+to account for the fact that trapping leads to slower transport, with $D$ the diffusivity of the mobile species through the material.
 
 ## Analytical solution
 
@@ -65,7 +65,7 @@ In [!cite](longhurst1992verification), the breakthrough time, defined as the int
     \tau_{b_e} = \frac{l^2}{2 \; \pi^2 \; D_{eff}}
 \end{equation}
 
-where $l$ is the thickness of the slab and D is the diffusivity of the gas through the material. The permeation transient is then given by
+where $l$ is the thickness of the slab. The permeation transient is then given by
 
 \begin{equation}
 \label{eqn:Jp}

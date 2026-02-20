@@ -24,16 +24,16 @@ and the partial pressure of A$_2$, B$_2$, and AB in equilibrium of the reaction 
 \frac{P_{AB}}{\sqrt{P_{A_2}} \sqrt{P_{B_2}}} = K_{eq},
 \end{equation}
 
-where $P_i$ is the partial pressure of corresponding gas $i$, $K_{eq}$ is the equilibrium constant.
+where $P_i$ is the partial pressure of corresponding gas $i$ and $K_{eq}$ is the equilibrium constant.
 
-Assuming that the molecular species have the same mass and chemical properties such that there is no enthalpy change associated with this reaction and only configurational entropy $s_f$ is driving the reaction. Then
+Assuming that the molecular species have the same mass and chemical properties such that there is no enthalpy change associated with this reaction and only configurational entropy $s_f$ is driving the reaction, then
 
 \begin{equation}
 \label{eq:ratedep:reaction_rate}
 K_{eq} = \exp\left( - \frac{\Delta G_f}{RT} \right) = \exp\left( - \frac{-T \Delta s_f}{RT} \right) = \exp\left( - \frac{-RT \ln(2)}{RT} \right) = 2,
 \end{equation}
 
-where $G_f$ is the Gibbs free energy, $R$ is the ideal gas constant, $T$ is the temperature.
+where $G_f$ is the Gibbs free energy, $R$ is the ideal gas constant, and $T$ is the temperature.
 
 Therefore, the partial pressure of AB in equilibrium depends on initial partial pressure of A$_2$ and B$_2$:
 
@@ -70,8 +70,8 @@ where $K_d$ is the dissociation coefficient and $K_r$ is the recombination coeff
 K_d = K_s^2 K_r,
 \end{equation}
 
-Under the `ratedep` condition, equilibrium is not assumed, but the relationships between the coefficients are maintained. In particular, the recombination and dissociation coefficients are assumed to be independent of the surface species concentrations and gas partial pressures, respectively. If the species molecular masses and solubilities are assumed equal, the dissociation
-coefficients for AB, A$_2$, and B$_2$ molecules should be identical. Because two different microscopic processes can produce AB (A jumping to find B and B jumping to find A) and only one (A finding A) can form A$_2$, and similarly for B$_2$, the recombination coefficient for AB should be twice of the coefficient for homonuclear molecules. We solve the net current of AB molecules from the surface to the enclosure by
+Under `ratedep` conditions, equilibrium is not assumed, but the relationships between the coefficients are maintained. In particular, the recombination and dissociation coefficients are assumed to be independent of the surface species concentrations and gas partial pressures, respectively. If the species molecular masses and solubilities are assumed equal, the dissociation
+coefficients for AB, A$_2$, and B$_2$ molecules should be identical. Because two different microscopic processes can produce AB (A jumping to find B and B jumping to find A) and only one (A finding A) can form A$_2$, and similarly for B$_2$, the recombination coefficient for AB should be twice the coefficient for homonuclear molecules. We solve the net current of AB molecules from the surface to the enclosure by
 
 \begin{equation}
 \label{eq:ratedep:equation_p_ab}
@@ -85,7 +85,7 @@ where $t$ is the time, $S$ is the surface area, $k_B$ is the Boltzmann’s const
 C_A C_B = \frac{K_d}{2 K_r} P_{AB}^{eq}.
 \end{equation}
 
-This case uses equal starting pressures of $1 \times 10^{4}$ Pa of A$_2$ and B$_2$ and no AB. $K_d$ is specified to be $1.858 \times 10^{24}/\sqrt{T}$ atom/m$^2$/s/Pa. $K_r$ is specified to be $5.88 \times 10^{-26}$ m$^4$/atom/s, the temperature is 1000 K, the surface area for reaction is 0.05 m $\times$ 0.05 m square, and the enclosure volume is 1 m$^3$.
+This case uses equal starting pressures of $1 \times 10^{4}$ Pa of A$_2$ and B$_2$ and no AB. $K_d$ is specified to be $1.858 \times 10^{24}/\sqrt{T}$ atom/m$^2$/s/Pa, $K_r$ is specified to be $5.88 \times 10^{-26}$ m$^4$/atom/s, the temperature is 1000 K, the surface area for reaction is 0.05 m $\times$ 0.05 m square, and the enclosure volume is 1 m$^3$.
 
 
 ## Analytical solution
