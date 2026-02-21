@@ -57,3 +57,4 @@ TMAP8 also contains [example cases](examples/tmap_index.md), which showcase how 
 | val-2d | [Thermal Desorption Spectroscopy on Tungsten](val-2d.md) |
 | val-2e | [Co-permeation of H$_2$ and D$_2$ through Pd](val-2e.md) |
 | val-2f | [Modelling self-damaged tungsten effects on deuterium transport](val-2f.md) |
+| val-2g | [Deuterium Transport in Proton-Conducting Ceramics](val-2g.md) |
