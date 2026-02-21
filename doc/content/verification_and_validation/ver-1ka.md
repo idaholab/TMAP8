@@ -28,7 +28,7 @@ P_{T_2}(t) = \frac{S}{V} kT t.
 
 ## Results
 
-Comparison of the TMAP8 results and the analytical solution is shown in
+A comparison of the TMAP8 results and the analytical solution is shown in
 [ver-1ka_comparison_time] as a function of time. The TMAP8 code predictions match very well with the analytical solution with a root mean squared percentage error of RMSPE $= 0.00$ %.
 
 !media comparison_ver-1ka.py

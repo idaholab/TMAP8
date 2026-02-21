@@ -22,7 +22,7 @@ and
 \frac{\partial C_2}{\partial t} = \nabla \cdot D \nabla C_2,
 \end{equation}
 
-where $C_1$ and $C_2$ represent the concentration fields in enclosures 1 and 2 respectively, $t$ is the time, and $D$ denotes the diffusivity.
+where $C_1$ and $C_2$ represent the concentration fields in Enclosures 1 and 2 respectively, $t$ is the time, and $D$ denotes the diffusivity.
 
 This case is similar to the [ver-1kb](ver-1kb.md) case, with the key difference being that sorption here follows Sieverts' law instead of Henry's law.
 The concentration in Enclosure 1 is related to the partial pressure and concentration in Enclosure 2 via the interface sorption law:
@@ -36,7 +36,7 @@ where $R$ is the ideal gas constant in J/mol/K, $T$ is the temperature in K, $K$
 ## Results
 
 We assume that $K = \frac{10}{\sqrt{RT}}$, which is expected to lead to $C_1 = 10 \sqrt{C_2}$ at equilibrium.
-As illustrated in [ver-1kc-1_comparison_time_k10], the pressure jump maintains a ratio of $\frac{C_1}{\sqrt{C_2}} \approx 10$, which is consistent with the relationship $C_1 = K (RT C_2)^n$ for $K = \frac{10}{\sqrt{RT}}$ and $n=0.5$ The concentration ratio between enclosures 1 and 2 in [ver-1kc-1_concentration_ratio_k10] shows that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K \sqrt{RT}=10$. As shown in [ver-1kc-1_mass_conservation_k10], mass is conserved between the two enclosures over time, with a variation in mass of only $0.4$ %. This variation in mass can be further minimized by refining the mesh, i.e., increasing the number of segments in the domain.
+As illustrated in [ver-1kc-1_comparison_time_k10], the pressure jump maintains a ratio of $\frac{C_1}{\sqrt{C_2}} \approx 10$, which is consistent with the relationship $C_1 = K (RT C_2)^n$ for $K = \frac{10}{\sqrt{RT}}$ and $n=0.5$. The concentration ratio between Enclosures 1 and 2 in [ver-1kc-1_concentration_ratio_k10] shows that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K \sqrt{RT}=10$. As shown in [ver-1kc-1_mass_conservation_k10], mass is conserved between the two enclosures over time, with a variation in mass of only $0.4$ %. This variation in mass can be further minimized by refining the mesh (i.e., increasing the number of segments in the domain).
 
 !media comparison_ver-1kc-1.py
        image_name=ver-1kc-1_comparison_time_k10.png
@@ -48,7 +48,7 @@ As illustrated in [ver-1kc-1_comparison_time_k10], the pressure jump maintains a
        image_name=ver-1kc-1_concentration_ratio_k10.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1kc-1_concentration_ratio_k10
-       caption=Concentrations ratio between enclosures 1 and 2 at the interface for $K = \frac{10}{\sqrt{RT}}$. This verifies TMAP8's ability to apply Sieverts' law across the interface.
+       caption=Concentrations ratio between Enclosures 1 and 2 at the interface for $K = \frac{10}{\sqrt{RT}}$. This verifies TMAP8's ability to apply Sieverts' law across the interface.
 
 !media comparison_ver-1kc-1.py
        image_name=ver-1kc-1_mass_conservation_k10.png

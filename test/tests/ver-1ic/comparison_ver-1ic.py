@@ -69,14 +69,14 @@ ax.plot(
     tmap8_solution_time,
     tmap8_solution_A2,
     label=r"$A_2$ TMAP8",
-    c="tab:brown",
+    c="tab:pink",
     alpha=alpha,
 )
 ax.plot(
     tmap8_solution_time,
     tmap8_solution_B2,
     label=r"$B_2$ TMAP8",
-    c="tab:cyan",
+    c="tab:blue",
     alpha=alpha,
     linestyle="--",
 )
