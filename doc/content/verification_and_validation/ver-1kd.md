@@ -13,13 +13,13 @@ This verification problem is taken from [!cite](ambrosek2008verification).
 This setup describes a diffusion system in which tritium T$_2$, dihydrogen H$_2$ and HT are modeled across a one-dimensional domain split into two enclosures. Compared to the [ver-1kc-2](ver-1kc-2.md) case, we now incorporate a T$_2$ tritium volumetric source in Enclosure 1. The volumetric source rate is set to $S_{\text{T}_2} = 10^{23}/N_A$ mol/m$^3$/s with $N_A = 6.02214076 \times 10^{23}$ 1/mol.
 The total system length is $2.5 \times 10^{-4}$ m, divided into 100 segments. The system operates at a constant temperature of 500 Kelvin. Initial tritium T$_2$ and dihydrogen H$_2$ pressures are specified as $10^{5}$ Pa for Enclosure 1 and $10^{-10}$ Pa for Enclosure 2. Initially, there is no HT in either enclosure.
 
-The reaction between the species is described as follows
+The reaction between the species is described as
 
 \begin{equation}
 \text{H}_2 + \text{T}_2 \leftrightarrow 2\text{HT}
 \end{equation}
 
-The kinematic evolutions of the species are given by the following equations
+The kinematic evolutions of the species are given by
 
 \begin{equation}
 \frac{d C_{\text{HT}}}{dt} = 2K_1 C_{\text{H}_2} C_{\text{T}_2} - K_2 C_{\text{HT}}^2
@@ -65,8 +65,8 @@ and
 \frac{\partial C_2}{\partial t} = \nabla \cdot D \nabla C_2,
 \end{equation}
 
-where $C_1$ and $C_2$ represent the concentration fields in enclosures 1 and 2 respectively, $t$ is the time, $D$ denotes the diffusivity, $S$ the volumetric source rate, $V_1$ the volume of enclosure 1, $k$ the Boltzmann constant and $T$ the temperature.
-Note that the diffusivity may vary across different species and enclosures. However, in this case, it is assumed to be identical for all.
+where $C_1$ and $C_2$ represent the concentration fields in Enclosures 1 and 2, respectively, $t$ is the time, $D$ denotes the diffusivity, $S$ is the volumetric source rate, $V_1$ is the volume of Enclosure 1, $k$ is the Boltzmann constant, and $T$ is the temperature.
+Note that the diffusivity may vary across different species and enclosures. However, in this case, it is assumed to be identical for all mobile species and enclosures.
 
 The concentration in Enclosure 1 is related to the partial pressure and concentration in Enclosure 2 via the interface sorption law:
 
@@ -86,8 +86,8 @@ The pressures of T$_2$ and H$_2$ in Enclosure 1 decrease due to diffusion into E
 
 Similarly, in Enclosure 2, the pressures of T$_2$ and H$_2$ increase, with the rise being more pronounced for T$_2$ due to the continuous supply from the source. As a result, more H$_2$ reacts with T$_2$, further contributing to the increase in HT pressure.
 
-For verification purposes, it is crucial to ensure that the chemical equilibrium between HT, T$_2$ and H$_2$ is achieved. This can be verified in both enclosures by examining the ratio between $P_{\text{HT}}$ and $\sqrt{P_{\text{H}_2} P_{\text{T}_2}}$, which must equal $\eta=2$.
-As shown in [ver-1kd_equilibrium_constant_k10], this ratio approaches $\eta=2$ for both enclosures at equilibrium. To reach this equilibrium, the ratio of $K_1$ and $K_2$ must respect [eq:eta]. The values of $K_1$ and $K_2$ must also be large enough to ensure that the kinetics of chemical reactions are faster than diffusion or surface permeation to be closer to the equilibrium assumption imposed in TMAP7. Here, the equilibrium in enclosure 1 is achieved rapidly. Increasing $K_1$ and $K_2$ would also enable a quicker attainment of equilibrium in enclosure 2. However, using very high values for $K_1$ and $K_2$ would lead to an unnecessary increase in computational costs.
+For verification purposes, it is crucial to ensure that the chemical equilibrium between HT, T$_2$, and H$_2$ is achieved. This can be verified in both enclosures by examining the ratio between $P_{\text{HT}}$ and $\sqrt{P_{\text{H}_2} P_{\text{T}_2}}$, which must equal $\eta=2$.
+As shown in [ver-1kd_equilibrium_constant_k10], this ratio approaches $\eta=2$ for both enclosures at equilibrium. To reach this equilibrium, the ratio of $K_1$ and $K_2$ must respect [eq:eta]. The values of $K_1$ and $K_2$ must also be large enough to ensure that the kinetics of chemical reactions are faster than diffusion or surface permeation to be closer to the equilibrium assumption imposed in TMAP7. Here, the equilibrium in Enclosure 1 is achieved rapidly. Increasing $K_1$ and $K_2$ would also enable a quicker attainment of equilibrium in Enclosure 2. However, using very high values for $K_1$ and $K_2$ would lead to an unnecessary increase in computational costs.
 
 The concentration ratios for T$_2$, H$_2$, and HT between enclosures 1 and 2, shown in [ver-1kd_concentration_ratio_T2_k10], [ver-1kd_concentration_ratio_H2_k10], and [ver-1kd_concentration_ratio_HT_k10], demonstrate that the results obtained with TMAP8 are consistent with the analytical results derived from the sorption law for $K \sqrt{RT} = 10$.
 
@@ -107,19 +107,19 @@ The concentration ratios for T$_2$, H$_2$, and HT between enclosures 1 and 2, sh
        image_name=ver-1kd_concentration_ratio_T2_k10.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1kd_concentration_ratio_T2_k10
-       caption=T$_2$ concentration ratio between enclosures 1 and 2 at the interface for $K = 10/\sqrt{RT}$ and $\eta = \sqrt{2K_1/K_2}$. This verifies TMAP8's ability to apply Sieverts' law across the interface.
+       caption=T$_2$ concentration ratio between Enclosures 1 and 2 at the interface for $K = 10/\sqrt{RT}$ and $\eta = \sqrt{2K_1/K_2}$. This verifies TMAP8's ability to apply Sieverts' law across the interface.
 
 !media comparison_ver-1kd.py
        image_name=ver-1kd_concentration_ratio_H2_k10.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1kd_concentration_ratio_H2_k10
-       caption=H$_2$ concentration ratio between enclosures 1 and 2 at the interface for $K = 10/\sqrt{RT}$ and $\eta = \sqrt{2K_1/K_2}$. This verifies TMAP8's ability to apply Sieverts' law across the interface.
+       caption=H$_2$ concentration ratio between Enclosures 1 and 2 at the interface for $K = 10/\sqrt{RT}$ and $\eta = \sqrt{2K_1/K_2}$. This verifies TMAP8's ability to apply Sieverts' law across the interface.
 
 !media comparison_ver-1kd.py
        image_name=ver-1kd_concentration_ratio_HT_k10.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1kd_concentration_ratio_HT_k10
-       caption=HT concentration ratio between enclosures 1 and 2 at the interface for $K = 10/\sqrt{RT}$ and $\eta = \sqrt{2K_1/K_2}$. This verifies TMAP8's ability to apply Sieverts' law across the interface.
+       caption=HT concentration ratio between Enclosures 1 and 2 at the interface for $K = 10/\sqrt{RT}$ and $\eta = \sqrt{2K_1/K_2}$. This verifies TMAP8's ability to apply Sieverts' law across the interface.
 
 ## Input files
 

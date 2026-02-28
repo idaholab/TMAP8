@@ -62,7 +62,7 @@ Three traps that are relatively weak are assumed to be active in a slab. The tra
 \label{eqn:Jp}
     J_p = \frac{C_0 D}{l} \left\{ 1 + 2 \sum_{m=1}^{\infty} \left[ (-1)^m \exp \left( -m^2 \frac{t}{2 \; \tau_{b_e}} \right) \right] \right\},
 \end{equation}
-where $C_0$ is the steady dissolved gas concentration at the upstream ($x = 0$) side, $l$ is the thickness of the slab, $D$ is the diffusivity of the gas through the material, and $\tau_{b_e}$, the breakthrough time, is defined as
+where $C_0$ is the steady dissolved gas concentration at the upstream ($x = 0$) side, $l$ is the thickness of the slab, $D$ is the diffusivity of the mobile species through the material, and $\tau_{b_e}$ is the breakthrough time, defined as
 
 \begin{equation}
 \label{eqn:tau_be}
@@ -78,11 +78,11 @@ where $\zeta_i$ is the trapping parameter of trap $i$.
 The trapping parameters, $\zeta_i$, calculated from [eqn:zeta] for the three traps are 91.47930 $c/\rho$, 61.65009 $c/\rho$, 45.93069 $c/\rho$.
 
 !alert warning title=Typo in [!cite](ambrosek2008verification)
-The $\zeta_i$ values of the three traps from [!cite](ambrosek2008verification) have a typographical error: They are three orders of magnitude lower than the correct values. However, it does not impact the final analytical solution.
+The $\zeta_i$ values of the three traps from [!cite](ambrosek2008verification) have a typographical error; they are three orders of magnitude lower than the correct values. However, it does not impact the final analytical solution.
 
 ## Results and comparison against analytical solution
 
-The analytical solution for the permeation transient is compared with TMAP8 results in [ver-1dc_comparison_diffusion]. The graphs for the theoretical flux and the calculated flux are in good agreement, with root mean square percentage errors (RMSPE) of RMSPE = 0.41 % for $t \geq 3$ s. The breakthrough time calculated from [eqn:tau_be] in analytical solution is 4.04 s, and the breakthrough time from TMAP8 is 4.12 s.
+The analytical solution for the permeation transient is compared with TMAP8 results in [ver-1dc_comparison_diffusion]. The graphs for the theoretical flux and the calculated flux are in good agreement, with a root mean square percentage error (RMSPE) of RMSPE = 0.41 % for $t \geq 3$ s. The breakthrough time calculated from [eqn:tau_be] in analytical solution is 4.04 s, and the breakthrough time from TMAP8 is 4.12 s.
 
 !media comparison_ver-1dc.py
        image_name=ver-1dc_comparison_diffusion.png

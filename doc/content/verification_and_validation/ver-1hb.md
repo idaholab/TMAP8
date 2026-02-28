@@ -4,23 +4,23 @@
 
 ## Problem set up
 
-This verification problem models two species 'T$_2$' (gaseous tritium) and 'D$_2$' (gaseous deuterium) equilibrating in pressure between two enclosures. It recreates the ver-1hb case in [!cite](ambrosek2008verification). Enclosure 1 is pre-charged with tritium and enclosure 2 is pre-charged with deuterium. The gases flow between the two enclosures until the T$_2$ and D$_2$ partial pressures in the two enclosures equilibrate. The pressure change rates for this system for gas T$_2$ are given by
+This verification problem models two species 'T$_2$' (gaseous tritium) and 'D$_2$' (gaseous deuterium) equilibrating in pressure between two enclosures. It recreates the ver-1hb case in [!cite](ambrosek2008verification). Enclosure 1 is pre-charged with tritium and Enclosure 2 is pre-charged with deuterium. The gases flow between the two enclosures until the T$_2$ and D$_2$ partial pressures in the two enclosures equilibrate. The pressure change rates for this system for T$_2$ gas are given by
 \begin{equation} \label{eq:dt_P1_T}
 \frac{dP^1_{T_2}}{dt} = \frac{Q}{V} (P^2_{T_2} - P^1_{T_2}),
 \end{equation}
 \begin{equation} \label{eq:dt_P2_T}
 \frac{dP^2_{T_2}}{dt} = - \frac{Q}{V} (P^2_{T_2} - P^1_{T_2}),
 \end{equation}
-and for gas $D_2$ are given by
+and for $D_2$ gas are given by
 \begin{equation} \label{eq:dt_P1_D}
 \frac{dP^1_{D_2}}{dt} = \frac{Q}{V} (P^2_{D_2} - P^1_{D_2}),
 \end{equation}
 \begin{equation} \label{eq:dt_P2_D}
 \frac{dP^2_{D_2}}{dt} = - \frac{Q}{V} (P^2_{D_2} - P^1_{D_2}),
 \end{equation}
-where $Q$ is the volumetric flow rate (m$^3 \cdot$s$^{-1}$), $V$ is the volume (m$^3$), $P^i_j$ is the pressure in enclosure $i$ of gas species $j$ ($j$ = $T_2$ or $D_2$).
+where $Q$ is the volumetric flow rate (m$^3 \cdot$s$^{-1}$), $V$ is the volume (m$^3$), and $P^i_j$ is the pressure in enclosure $i$ of gas species $j$ ($j$ = $T_2$ or $D_2$).
 
-We solve these time evolution equations for the T$_2$ and D$_2$ pressures in the two enclosures using TMAP8 with $t$ the time and with the initial condition set to $P^1_{T_2} = P^2_{D_2} = 1$ Pa, and $P^2_{T_2} = P^1_{D_2} = 0$ Pa. We use $V = 1$ m$^3$ and $Q = 0.1$ m$^3\cdot $s$^{-1}$.
+We solve these time evolution equations for the T$_2$ and D$_2$ pressures in the two enclosures using TMAP8 with $t$ as the time and the initial condition set to $P^1_{T_2} = P^2_{D_2} = 1$ Pa and $P^2_{T_2} = P^1_{D_2} = 0$ Pa. We use $V = 1$ m$^3$ and $Q = 0.1$ m$^3\cdot $s$^{-1}$.
 
 ## Analytical solution
 
@@ -28,17 +28,17 @@ Mass balance between the two enclosures gives the following relationship between
 \begin{equation} \label{eq:mass_balance}
 P^1_j (t) + P^2_j (t) = P^1_i (t=0) + P^2_i (t=0),
 \end{equation}
-where $t$ is time, and $P^i_j (t=0)$ is the initial pressure of the gas $j$ in enclosure $i$. By substituting [eq:mass_balance] into [eq:dt_P1_T] and [eq:dt_P2_T] based on [!cite](ambrosek2008verification), we get
+where $t$ is time and $P^i_j (t=0)$ is the initial pressure of the gas $j$ in enclosure $i$. By substituting [eq:mass_balance] into [eq:dt_P1_T] and [eq:dt_P2_T] based on [!cite](ambrosek2008verification), we get
 \begin{equation} \label{eq:T2_analytical_soln}
 P^i_{T_2} = P^S_{T_2} + \left(P^i_{T_2}-P^S_{T_2}\right) \exp\left(-\frac{2Q}{V} t \right),
 \end{equation}
-where $P^S_{T_2} = \left(P^1_{T_2} (t=0) + P^2_{T_2} (t=0)\right)/2$. Similarly for D$_2$ we get
+where $P^S_{T_2} = \left(P^1_{T_2} (t=0) + P^2_{T_2} (t=0)\right)/2$. Similarly, for D$_2$ we get
 \begin{equation} \label{eq:D2_analytical_soln}
 P^i_{D_2} = P^S_{D_2} + \left(P^i_{D_2}-P^S_{D_2}\right) \exp\left(-\frac{2Q}{V} t \right),
 \end{equation}
 where $P^S_{D_2} = \left(P^1_{D_2} (t=0) + P^2_{D_2} (t=0)\right)/2$.
 
-Note that the TMAP7 verification case in [!cite](ambrosek2008verification) provides the initial values of gas pressures, and compares plots of gas pressure, but the analytical solutions use concentration variables. We used pressure variables throughout the derivation here to keep consistent units, but the pressure can be converted to concentration if needed using the ideal gas law as discussed in [ver-1ha.md].
+Note that the TMAP7 verification case in [!cite](ambrosek2008verification) provides the initial values of gas pressures and compares plots of gas pressure, but the analytical solutions use concentration variables. We used pressure variables throughout the derivation here to keep consistent units, but the pressure can be converted to concentration if needed using the ideal gas law as discussed in [ver-1ha.md].
 
 ## Results and comparison against analytical solution
 
