@@ -16,7 +16,7 @@ The reactions that were modeled are
 \begin{equation} \label{eq:chemical_reaction}
 A \xrightarrow{\mathit{k_1}} B \xrightarrow{\mathit{k_2}} C,
 \end{equation}
-with $k_1$ and $k_2$ the reaction rates.
+with $k_1$ and $k_2$ as the reaction rates.
 
 The concentration of each species is therefore described as
 \begin{equation} \label{eq:chemical_reaction_reaction_A}
@@ -28,7 +28,7 @@ The concentration of each species is therefore described as
 \begin{equation} \label{eq:chemical_reaction_reaction_C}
 \frac{dc_C}{dt} = k_2 c_B,
 \end{equation}
-with $c_i$ the concentration of species $i$.
+with $c_i$ as the concentration of species $i$.
 
 
 ## Analytical solution
@@ -45,7 +45,7 @@ where $t$ is the time in s, $c_{A0} = 2.415 \times 10^{14}$ atoms/m$^3$ is the i
 
 
 The concentration of $C$ was found by applying a mass balance over the system in [!cite](ambrosek2008verification). From the
-stoichiometry of this reaction, it was found that
+stoichiometry of this reaction,
 \begin{equation} \label{eq:chemical_reaction_solution_C}
 c_C(t) = c_{A0} - c_A(t) - c_B(t).
 \end{equation}
