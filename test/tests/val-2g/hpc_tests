@@ -10,6 +10,7 @@
     abs_zero = 1e-8
     rel_err = 1e-5
     max_parallel = 1
+    max_time = 600
     requirement = 'The system shall be able to perform a Parallel Subset Simulation optimization study under more optimization steps for deuterium transport in proton-conducting ceramics.'
   []
 []
