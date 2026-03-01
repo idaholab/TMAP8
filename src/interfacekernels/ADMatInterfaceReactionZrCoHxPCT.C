@@ -5,7 +5,7 @@
 /*   Copyright 2021 - 2025 Battelle Energy Alliance, LLC    */
 /*                   ALL RIGHTS RESERVED                    */
 /************************************************************/
-/*TEst*/
+
 #include "ADMatInterfaceReactionZrCoHxPCT.h"
 
 #include "PhysicalConstants.h"

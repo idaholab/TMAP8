@@ -1,6 +1,6 @@
 [Tests]
   design = 'InterfaceDiffusion.md ADMatInterfaceReactionZrCoHxPCT.md MatDiffusion.md TimeDerivative.md'
-  issues = '#261'
+  issues = '#366'
   [ZrCoHx_PCT_csv]
     type = CSVDiff
     input = ZrCoHx_PCT.i
@@ -10,7 +10,7 @@
   []
   [ZrCoHx_PCT_exodus]
     type = Exodiff
-    input =ZrCoHx_PCT.i
+    input = ZrCoHx_PCT.i
     exodiff = ZrCoHx_PCT_out.e
     prereq = ZrCoHx_PCT_csv
     should_execute = false # this test relies on the output files from ZrCoHx_PCT_csv, so it shouldn't be run twice
@@ -26,7 +26,7 @@
                 initial_atomic_fraction=2.5
                 Executioner/num_steps=200'
     csvdiff = ZrCoHx_PCT_T433_1E4P_out.csv
-    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e4 Pa and T=1173.15 K.'
+    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e4 Pa and T=433.15 K.'
   []
   [ZrCoHx_PCT_T433_3E4P_csv]
     type = CSVDiff
@@ -37,7 +37,7 @@
                 initial_atomic_fraction=2
                 Executioner/num_steps=200'
     csvdiff = ZrCoHx_PCT_T433_3E4P_out.csv
-    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=5e4 Pa and T=1173.15 K.'
+    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=3e4 Pa and T=433.15 K.'
   []
   [ZrCoHx_PCT_T604_5E4P_csv]
     type = CSVDiff
@@ -49,7 +49,7 @@
                 Executioner/num_steps=200'
     csvdiff = ZrCoHx_PCT_T604_5E4P_out.csv
     max_parallel = 1 # see #200
-    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=3e3 Pa and T=1273.15 K.'
+    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e3 Pa and T=573.15 K.'
   []
     [ZrCoHx_PCT_T573_1E4P_csv]
     type = CSVDiff
@@ -61,7 +61,7 @@
                 Executioner/num_steps=200'
     csvdiff = ZrCoHx_PCT_T573_1E4P_out.csv
     max_parallel = 1 # see #200
-    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=3e3 Pa and T=1273.15 K.'
+    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e4 Pa and T=573.15 K.'
   []
     ##  LOW PRESSURE TESTING #####################
    [ZrCoHx_PCT_T573_1E3P_csv]
@@ -74,7 +74,7 @@
                 Executioner/num_steps=200'
     csvdiff = ZrCoHx_PCT_T573_1E3P_out.csv
     max_parallel = 1 # see #200
-    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=3e3 Pa and T=1273.15 K.'
+    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e3 Pa and T=573.15 K.'
   []
    [ZrCoHx_PCT_T604_1E4P_csv]
     type = CSVDiff
@@ -86,7 +86,7 @@
                 Executioner/num_steps=300'
     csvdiff = ZrCoHx_PCT_T604_1E4P_out.csv
     max_parallel = 1 # see #200
-    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=3e3 Pa and T=1273.15 K.'
+    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e4 Pa and T=604.15 K.'
   []
    [ZrCoHx_PCT_T604_6E3P_csv]
     type = CSVDiff
@@ -98,7 +98,7 @@
                 Executioner/num_steps=200'
     csvdiff = ZrCoHx_PCT_T604_6E3P_out.csv
     max_parallel = 1 # see #200
-    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=3e3 Pa and T=1273.15 K.'
+    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=6e3 Pa and T=604.15 K.'
   []
    [ZrCoHx_PCT_T433_1E2P_csv]
     type = CSVDiff
@@ -110,13 +110,13 @@
                 Executioner/num_steps=200'
     csvdiff = ZrCoHx_PCT_T433_1E2P_out.csv
     max_parallel = 1 # see #200
-    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=3e3 Pa and T=1273.15 K.'
+    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e2 Pa and T=433.15 K.'
   []
   ############## END OF LOW PRESSURE TESTING
   [ZrCoHx_PCT_comparison]
     type = RunCommand
     command = 'python3 comparison_ZrCoHx_PCT.py'
-    requirement = 'The system shall be able to generate comparison plots between experimental PCT curves, the model used in TMAP8, and TMAP8 predictions.'
+    requirement = 'The system shall be able to generate comparison plots between experimental PCT curves of ZrCoHx, the model used in TMAP8, and TMAP8 predictions.'
     required_python_packages = 'matplotlib numpy pandas os git'
   []
   [ZrCoHx_PCT_error_low_pressure]
