@@ -50,8 +50,8 @@ ADMatInterfaceReactionZrCoHxPCT::computeQpResidual(Moose::DGResidualType type)
   using std::max;
   using std::pow;
   ADReal r = 0;
-  //tolerance for the pressure being closed to the plateau region
-  const Real tolerance = 10; //Pa
+  // tolerance for the pressure being closed to the plateau region
+  const Real tolerance = 10; // Pa
   // Calculate the equilibrium concentration value based on PCT curve
   // (/2 because two atoms for a molecule) (pressure in Pa)V3_projects/TMAP8/src/bcs
   auto neighbor_pressure =
