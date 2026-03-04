@@ -49,7 +49,7 @@
                 Executioner/num_steps=200'
     csvdiff = ZrCoHx_PCT_T604_5E4P_out.csv
     max_parallel = 1 # see #200
-    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e3 Pa and T=573.15 K.'
+    requirement = 'The system shall be able to model the PCT curves of ZrCoHx to determine the surface atomic fraction as a function of pressure and temperature for P=5e4 Pa and T=604.15 K.'
   []
     [ZrCoHx_PCT_T573_1E4P_csv]
     type = CSVDiff
