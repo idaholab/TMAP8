@@ -50,16 +50,16 @@ ADMatInterfaceReactionZrCoHxPCT::computeQpResidual(Moose::DGResidualType type)
   using std::max;
   using std::pow;
   ADReal r = 0;
-  # tolerance for the pressure being closed to the plateau region
-  const Real tolerance = 10; # Pa
+  //tolerance for the pressure being closed to the plateau region
+  const Real tolerance = 10; //Pa
   // Calculate the equilibrium concentration value based on PCT curve
   // (/2 because two atoms for a molecule) (pressure in Pa)V3_projects/TMAP8/src/bcs
   auto neighbor_pressure =
       PhysicalConstants::ideal_gas_constant * _neighbor_temperature[_qp] * _neighbor_value[_qp] / 2;
 
   // Calculate the value of the pressures for the phase transition plateau (pressure in Pa)
-  auto limit_pressure = exp(12.427 - 4.8366e-2 * _neighbor_temperature[_qp] +
-                            7.1464e-5 * Utility::pow<2>(_neighbor_temperature[_qp]));
+  auto limit_pressure = exp(12.43 - 4.84e-2 * _neighbor_temperature[_qp] +
+                            7.15e-5 * Utility::pow<2>(_neighbor_temperature[_qp]));
 
   // define atomic fraction variable
   ADReal atomic_fraction = 0.0;
@@ -82,8 +82,8 @@ ADMatInterfaceReactionZrCoHxPCT::computeQpResidual(Moose::DGResidualType type)
   {
     // High pressure region
     atomic_fraction =
-        2.5 - 3.4249 / (1.40 + exp(7.9727 - 1.9856e-02 * _neighbor_temperature[_qp] +
-                                   (-1.6938e-01 + 1.1876e-03 * _neighbor_temperature[_qp]) *
+        2.5 - 3.4249 / (1.40 + exp(7.97 - 1.99e-02 * _neighbor_temperature[_qp] +
+                                   (-1.69e-01 + 1.19e-03 * _neighbor_temperature[_qp]) *
                                        log(max(neighbor_pressure - limit_pressure, 1.e-10))));
   }
   else if (neighbor_pressure < limit_pressure &&
@@ -96,9 +96,9 @@ ADMatInterfaceReactionZrCoHxPCT::computeQpResidual(Moose::DGResidualType type)
   {
     // Low pressure region
     atomic_fraction =
-        0.5 - 1. / (0.001 + exp(-4.2856 + 1.9812e-02 * _neighbor_temperature[_qp] +
-                               (-1.0656 + 5.6857e-04 * _neighbor_temperature[_qp]) *
-                                   log(max(limit_pressure - neighbor_pressure, 1.e-10))));
+        0.5 - 1. / (0.001 + exp(-4.29 + 1.98e-02 * _neighbor_temperature[_qp] +
+                                (-1.07 + 5.69e-04 * _neighbor_temperature[_qp]) *
+                                    log(max(limit_pressure - neighbor_pressure, 1.e-10))));
   }
 
   // Convert to concentration
