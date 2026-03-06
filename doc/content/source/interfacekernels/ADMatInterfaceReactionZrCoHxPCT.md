@@ -47,7 +47,7 @@ f_{at}(T,P) = 2.5-3.42\left[1.4+\exp(7.97 - 0.012 T + (-0.17 + 1.19 \times 10^{-
 
 The plateau representing phase transition is captured as:
 \begin{equation} \label{eq:pressure_plateau}
-P_{lim} = \exp\left(12.43-4.84 \times 10^{-2} T +7.14 \times 10^{-5} T^2 \right),
+P_{lim} = \exp\left(12.43-4.84 \times 10^{-2} T +7.15 \times 10^{-5} T^2 \right),
 \end{equation}
 with $P_{lim}$ being the hydrogen partial pressure limit delineating the plateau in Pa and $T$ being the temperature in K.
 This fit is shown in [ZrCoHx_PCT_plateau_pressure_fit].
