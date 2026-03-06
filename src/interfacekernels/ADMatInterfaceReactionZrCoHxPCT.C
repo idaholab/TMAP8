@@ -82,7 +82,7 @@ ADMatInterfaceReactionZrCoHxPCT::computeQpResidual(Moose::DGResidualType type)
   {
     // High pressure region
     atomic_fraction =
-        2.5 - 3.4249 / (1.40 + exp(7.97 - 1.99e-02 * _neighbor_temperature[_qp] +
+        2.5 - 3.42 / (1.40 + exp(7.97 - 1.99e-02 * _neighbor_temperature[_qp] +
                                    (-1.69e-01 + 1.19e-03 * _neighbor_temperature[_qp]) *
                                        log(max(neighbor_pressure - limit_pressure, 1.e-10))));
   }
