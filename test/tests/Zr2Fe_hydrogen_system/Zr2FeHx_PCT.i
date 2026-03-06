@@ -4,13 +4,13 @@ N_a = '${units 6.02214076e23 1/mol}' # Avogadro's number from PhysicalConstants.
 boltzmann_constant = '${units 1.380649e-23 J/K}' # Boltzmann constant from PhysicalConstants.h
 
 # Simulation conditions and material properties
-temperature = '${units 648.15 K}'
+temperature = '${units 598.15 K}'
 density_Zr2Fe = '${units 29590 mol/m^3}'
 
 
-initial_pressure_H2_enclosure_1 = '${units 1e05 Pa}'
+initial_pressure_H2_enclosure_1 = '${units 1e3 Pa}'
 initial_concentration_H_enclosure_1 = '${units ${fparse 2*initial_pressure_H2_enclosure_1 / (R*temperature)} mol/m^3}'
-initial_atomic_fraction =  2 # (-)
+initial_atomic_fraction =  3.0 # (-)
 initial_concentration_H_enclosure_2 = '${units ${fparse initial_atomic_fraction*density_Zr2Fe} mol/m^3}'
 
 # diffusivity from:
@@ -316,7 +316,7 @@ output_file_base ='Zr2FeHx_PCT_out'
   nl_max_its = 16
   l_max_its = 30
   nl_rel_tol = 1e-2
-  nl_abs_tol = 4e-12
+  nl_abs_tol = 4e-15
   scheme = 'bdf2'
   solve_type = 'Newton'
   petsc_options_iname = '-pc_type -sub_pc_type -snes_type'
