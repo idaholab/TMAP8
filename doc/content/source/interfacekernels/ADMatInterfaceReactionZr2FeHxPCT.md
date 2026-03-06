@@ -19,7 +19,7 @@ and $\rho$ is the zirconium-iron atomic density in mol/m$^3$.
 
 [Zr2FeHx_PCT_fit_2D] shows the fitting and TMAP8 results used in this interface kernel, along with the experimental data from [!cite](yang2025potential).The  pressure isotherm is captured as:
 \begin{equation} \label{eq:atomic_fraction}
-f_{at}(T,P) = 4.3-1.8103\left[0.5+\exp(5.4074 - 0.013571 T + (-0.23190 + 1.5078 \times 10^{-4} T) (\log\left(P - P_{lim}(T)\right)))\right]^{-1},
+f_{at}(T,P) = 4.30-1.81\left[0.5+\exp(5.41 - 0.013571 T + (-0.23+ 1.51 \times 10^{-4} T) (\log\left(P - P_{lim}(T)\right)))\right]^{-1},
 \end{equation}
 
 
@@ -32,7 +32,7 @@ f_{at}(T,P) = 4.3-1.8103\left[0.5+\exp(5.4074 - 0.013571 T + (-0.23190 + 1.5078 
 
 The pressure limit seen in [eq:atomic_fraction] is captured as:
 \begin{equation} \label{eq:pressure_plateau}
-P_{lim} = \exp\left(-4.1226+1.0288 \times 10^{-2} T\right),
+P_{lim} = \exp\left(-4.12+1.03 \times 10^{-2} T\right),
 \end{equation}
 with $P_{lim}$ being the hydrogen partial pressure limit in Pa and $T$ being the temperature in K. Unlike YHx and ZrCoHx, which use the plateau pressure fit as a limiting factor in [eq:atomic_fraction],this Zr₂FeHx model derives its pressure-limiting curve from the initial pressure and atomic fraction at a respective temperatue in the experimental data. This is because in Ref [!cite](yang2025potential) the plateau region occurs at approximately 1 wt% and is non-constant. The curve shown in [Zr2FeHx_PCT_pressure_limiter_fit] represents the fitted pressure-limiting relationship.
 
