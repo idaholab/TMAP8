@@ -8,6 +8,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 /*TEst*/
 >>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
@@ -16,6 +17,11 @@
 >>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
 =======
 >>>>>>> 01afd064 (Zr2Fe Hydride PCT Modelling Files)
+=======
+=======
+
+>>>>>>> b4a96a35 (Formatting modification and simplifiying python codes)
+>>>>>>> 97a609b1 (Formatting modification and simplifiying python codes)
 #include "ADMatInterfaceReactionZr2FeHxPCT.h"
 
 #include "PhysicalConstants.h"
@@ -162,6 +168,7 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
@@ -170,5 +177,8 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 >>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
 =======
 >>>>>>> 01afd064 (Zr2Fe Hydride PCT Modelling Files)
+=======
+
+>>>>>>> 97a609b1 (Formatting modification and simplifiying python codes)
   return r;
 }
