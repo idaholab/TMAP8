@@ -62,7 +62,7 @@
     cli_args = 'output_file_base=Zr2FeHx_PCT_T648_P1e05_out
                 temperature=648.15
                 initial_pressure_H2_enclosure_1=1e5
-                initial_atomic_fraction=2.0
+                initial_atomic_fraction=3.7
                 Executioner/num_steps=200
                 InterfaceKernels/interface_reaction_Zr2FeHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
     csvdiff = Zr2FeHx_PCT_T648_P1e05_out.csv
