@@ -15,6 +15,7 @@ boltzmann_constant = '${units 1.380649e-23 J/K}' # Boltzmann constant from Physi
 
 # Simulation conditions and material properties
 <<<<<<< HEAD
+<<<<<<< HEAD
 temperature = '${units 598.15 K}'
 density_Zr2Fe = '${units 29375.60 mol/m^3}'
 
@@ -24,13 +25,20 @@ initial_concentration_H_enclosure_1 = '${units ${fparse 2*initial_pressure_H2_en
 initial_atomic_fraction= '${fparse 5.0 - 8.320e-03  / ( 1e-03 + exp(-2.4851 - 7.6091e-03 * temperature + (5.6264e-02 + 1.7197e-04 * temperature) * log(max(initial_pressure_H2_enclosure_1 - 5, 1e-10))))}'
 =======
 temperature = '${units 648.15 K}'
+=======
+temperature = '${units 598.15 K}'
+>>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
 density_Zr2Fe = '${units 29590 mol/m^3}'
 
 
-initial_pressure_H2_enclosure_1 = '${units 1e05 Pa}'
+initial_pressure_H2_enclosure_1 = '${units 1e3 Pa}'
 initial_concentration_H_enclosure_1 = '${units ${fparse 2*initial_pressure_H2_enclosure_1 / (R*temperature)} mol/m^3}'
+<<<<<<< HEAD
 initial_atomic_fraction =  2 # (-)
 >>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
+=======
+initial_atomic_fraction =  3.0 # (-)
+>>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
 initial_concentration_H_enclosure_2 = '${units ${fparse initial_atomic_fraction*density_Zr2Fe} mol/m^3}'
 
 # diffusivity from:
@@ -344,10 +352,14 @@ output_file_base ='Zr2FeHx_PCT_out'
   l_max_its = 30
   nl_rel_tol = 1e-2
 <<<<<<< HEAD
+<<<<<<< HEAD
   nl_abs_tol = 4e-15
 =======
   nl_abs_tol = 4e-12
 >>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
+=======
+  nl_abs_tol = 4e-15
+>>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
   scheme = 'bdf2'
   solve_type = 'Newton'
   petsc_options_iname = '-pc_type -sub_pc_type -snes_type'
