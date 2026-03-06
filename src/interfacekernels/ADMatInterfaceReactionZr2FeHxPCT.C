@@ -5,7 +5,7 @@
 /*   Copyright 2021 - 2025 Battelle Energy Alliance, LLC    */
 /*                   ALL RIGHTS RESERVED                    */
 /************************************************************/
-/*TEst*/
+
 #include "ADMatInterfaceReactionZr2FeHxPCT.h"
 
 #include "PhysicalConstants.h"
@@ -14,7 +14,6 @@ registerMooseObject("TMAP8App", ADMatInterfaceReactionZr2FeHxPCT);
 
 InputParameters
 ADMatInterfaceReactionZr2FeHxPCT::validParams()
-
 {
   InputParameters params = ADInterfaceKernel::validParams();
   params.addClassDescription(
@@ -49,6 +48,10 @@ ADMatInterfaceReactionZr2FeHxPCT::ADMatInterfaceReactionZr2FeHxPCT(
 ADReal
 ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 {
+  using std::exp;
+  using std::log;
+  using std::max;
+
   ADReal r = 0;
 
   // Calculate the equilibrium concentration value based on PCT curve
@@ -57,10 +60,10 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
       PhysicalConstants::ideal_gas_constant * _neighbor_temperature[_qp] * _neighbor_value[_qp] / 2;
 
   // Calculate the value of the pressures-limiter
-  auto limit_pressure = exp(-4.1226 + 1.0288e-2 * _neighbor_temperature[_qp]);
+  auto limit_pressure = exp(-4.12 + 1.03e-2 * _neighbor_temperature[_qp]);
 
-  // return warning if the PCT curves is used out of bounds (pressure in Pa)
-  if (!_silence_warnings && ((neighbor_pressure < limit_pressure) || (neighbor_pressure > 1.e6)))
+  // Give a warning if the initial or computed neighbor pressure is out of the analytical model
+  if ((neighbor_pressure > 9.e06) || (neighbor_pressure < 0.011))
     mooseDoOnce(mooseWarning("In Zr2FeHxPCT: pressure ",
                              neighbor_pressure,
                              "Pa and temperature ",
@@ -69,11 +72,10 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
                              "documentation for Zr2FeHxPCT material."));
 
   // Calculate the atomic fraction based on the PCT curve
-
   auto atomic_fraction =
-      4.30 - 1.8103 / (0.5 + exp(5.4074 - 1.3571e-02 * _neighbor_temperature[_qp] +
-                                 (2.3190e-01 + 1.5078e-04 * _neighbor_temperature[_qp]) *
-                                     log(max(neighbor_pressure - limit_pressure, 1e-10))));
+      4.30 - 1.81 / (0.5 + exp(5.41 - 1.36e-02 * _neighbor_temperature[_qp] +
+                                 (2.32e-01 + 1.51e-04 * _neighbor_temperature[_qp]) *
+                                     log(max(neighbor_pressure - limit_pressure, 1.e-10))));
 
   // Convert to concentration
   auto _surface_equilibrium_concentration = atomic_fraction * _density[_qp];
@@ -94,5 +96,6 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
           (_kf[_qp] * _u[_qp] - _kb[_qp] * _surface_equilibrium_concentration);
       break;
   }
+
   return r;
 }
