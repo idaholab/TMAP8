@@ -13,7 +13,7 @@ script_folder = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_folder)
 
 # ------------------------------------------------------------------------------
-# Constants
+# Constant
 # ------------------------------------------------------------------------------
 # Temperatures in Celsius for filenames; converted to Kelvin internally
 TEMPERATURES_C = [325, 350, 375]
