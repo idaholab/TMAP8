@@ -58,6 +58,7 @@ MOLAR_MASS_ZR2FE = 2 * 91.22 + 55.85  # 238.29 g/mol
 MOLAR_MASS_H = 1.008  # g/mol
 
 # ------------------------------------------------------------------------------
+<<<<<<< HEAD
 # Paths
 # ------------------------------------------------------------------------------
 if "/tmap8/doc/" in script_folder.lower():
@@ -343,6 +344,9 @@ plt.savefig("PCT_all_temperatures_experimental_vs_TMAP8_Zr2Fe.png", dpi=FIG_DPI)
 # ------------------------------------------------------------------------------
 >>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
 # Constants
+=======
+# Constant
+>>>>>>> 4dbdecd3 (Ref #365)
 # ------------------------------------------------------------------------------
 # Temperatures in Celsius for filenames; converted to Kelvin internally
 TEMPERATURES_C = [325, 350, 375]
