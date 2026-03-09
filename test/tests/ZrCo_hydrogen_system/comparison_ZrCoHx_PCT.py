@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 script_folder = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_folder)
 
-TEMPERATURES_K = [433, 573, 604] # K
+TEMPERATURES_K = [433, 573, 604]  # K
 ATOM_RATIO_LOW = 0.55
 ATOM_RATIO_HIGH = 1.4
 FIG_DPI = 300
@@ -53,8 +53,7 @@ def atom_ratio_eq_lower_func(T, P):
     p0 = p0_lim_func(T)
     arg = np.maximum(p0 - P, 1e-10)
     return 0.5 - (
-        0.001
-        + np.exp(-4.29 + 1.98e-02 * T + (-1.07 + 5.69e-04 * T) * np.log(arg))
+        0.001 + np.exp(-4.29 + 1.98e-02 * T + (-1.07 + 5.69e-04 * T) * np.log(arg))
     ) ** (-1)
 
 
@@ -62,8 +61,7 @@ def atom_ratio_eq_upper_func(T, P):
     p0 = p0_lim_func(T)
     arg = np.maximum(P - p0, 1e-10)
     return 2.5 - 3.42 * (
-        1.4
-        + np.exp(7.97 - 1.99e-02 * T + (-1.69e-01 + 1.19e-03 * T) * np.log(arg))
+        1.4 + np.exp(7.97 - 1.99e-02 * T + (-1.69e-01 + 1.19e-03 * T) * np.log(arg))
     ) ** (-1)
 
 
@@ -191,14 +189,22 @@ for T in TEMPERATURES_K:
         if P_lo_max > P_lo_min:
             P_lo_smooth = np.geomspace(P_lo_min, P_lo_max, N_SMOOTH)
             fit_lo_smooth = atom_ratio_eq_lower_func(T, P_lo_smooth)
-            plt.plot(P_lo_smooth, fit_lo_smooth, "--",
-                     label=f"{T}.15 K Fit RMSE {rmse(AR_lo, fit_lo):.3f}",
-                     color=color_T)
+            plt.plot(
+                P_lo_smooth,
+                fit_lo_smooth,
+                "--",
+                label=f"{T}.15 K Fit RMSE {rmse(AR_lo, fit_lo):.3f}",
+                color=color_T,
+            )
         else:
             # fallback to original points if range collapses
-            plt.plot(P_lo, fit_lo, "--",
-                     label=f"{T}.15 K Fit RMSE {rmse(AR_lo, fit_lo):.3f}",
-                     color=color_T)
+            plt.plot(
+                P_lo,
+                fit_lo,
+                "--",
+                label=f"{T}.15 K Fit RMSE {rmse(AR_lo, fit_lo):.3f}",
+                color=color_T,
+            )
 
     # High branch
     idx_hi = AR > ATOM_RATIO_HIGH
@@ -216,14 +222,22 @@ for T in TEMPERATURES_K:
             if P_hi_max > P_hi_min:
                 P_hi_smooth = np.geomspace(P_hi_min, P_hi_max, N_SMOOTH)
                 fit_hi_smooth = atom_ratio_eq_upper_func(T, P_hi_smooth)
-                plt.plot(P_hi_smooth, fit_hi_smooth, "-",
-                         label=f"{T}.15 K Fit RMSE {rmse(AR_hi, fit_hi):.3f}",
-                         color=color_T)
+                plt.plot(
+                    P_hi_smooth,
+                    fit_hi_smooth,
+                    "-",
+                    label=f"{T}.15 K Fit RMSE {rmse(AR_hi, fit_hi):.3f}",
+                    color=color_T,
+                )
             else:
                 # fallback to original points if range collapses
-                plt.plot(P_hi, fit_hi, "-",
-                         label=f"{T}.15 K Fit RMSE {rmse(AR_hi, fit_hi):.3f}",
-                         color=color_T)
+                plt.plot(
+                    P_hi,
+                    fit_hi,
+                    "-",
+                    label=f"{T}.15 K Fit RMSE {rmse(AR_hi, fit_hi):.3f}",
+                    color=color_T,
+                )
 
 
 # TMAP8 overlays with different markers
