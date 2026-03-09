@@ -77,8 +77,8 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
   // Calculate the atomic fraction based on the PCT curve
   auto atomic_fraction =
       4.30 - 1.81 / (0.5 + exp(5.41 - 1.36e-02 * _neighbor_temperature[_qp] +
-                                 (2.32e-01 + 1.51e-04 * _neighbor_temperature[_qp]) *
-                                     log(max(neighbor_pressure - limit_pressure, 1.e-10))));
+                               (2.32e-01 + 1.51e-04 * _neighbor_temperature[_qp]) *
+                                   log(max(neighbor_pressure - limit_pressure, 1.e-10))));
 
   // Convert to concentration
   auto _surface_equilibrium_concentration = atomic_fraction * _density[_qp];
