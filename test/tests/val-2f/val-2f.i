@@ -1,3 +1,9 @@
+# Validation Problem #2f
+# Self-damaged Tungsten Effects on Deuterium Transport extended from an original model from
+# Dark, J., Delaporte-Mathurin, R., Schwarz-Selinger, T., Hodille, E. A., Mougenot, J.,
+# Charles, Y., & Grisolia, C. (2024). Modelling neutron damage effects on tritium transport
+# in tungsten. Nuclear Fusion, 64(8), 086026.
+
 !include parameters_val-2f.params
 !include val-2f_trapping_intrinsic.i
 !include val-2f_trapping_5.i
@@ -70,6 +76,7 @@
 
 [BCs]
   active = 'left_recombination_flux right_recombination_flux'
+  # Kinetic boundary conditions
   [left_recombination_flux]
     type = ADMatNeumannBC
     variable = deuterium_concentration_W
@@ -84,6 +91,7 @@
     value = 1
     boundary_material = flux_recombination_surface
   []
+  # Sieverts boundary conditions
   [left_concentration_sieverts]
     type = ADDirichletBC
     value = '${fparse 1e-10}'

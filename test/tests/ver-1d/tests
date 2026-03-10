@@ -6,8 +6,17 @@
     type = Exodiff
     input = ver-1d-diffusion.i
     exodiff = ver-1d_diffusion_limited_test_exodus.e
-    cli_args = "Mesh/nx=20 Executioner/num_steps=300 Outputs/file_base=ver-1d_diffusion_limited_test_exodus"
+    cli_args = "node_num=20 Executioner/num_steps=300 Outputs/file_base=ver-1d_diffusion_limited_test_exodus"
     requirement = 'The system shall be able to model a breakthrough problem where diffusion is the rate limiting process.'
+  []
+  [ver-1d_diffusion_limited_csvdiff]
+    type = CSVDiff
+    input = ver-1d-diffusion.i
+    should_execute = false
+    csvdiff = ver-1d_diffusion_limited_test_exodus.csv
+    cli_args = "node_num=20 Executioner/num_steps=300 Outputs/file_base=ver-1d_diffusion_limited_test_exodus"
+    requirement = 'The system shall be able to model a breakthrough problem where diffusion is the rate limiting process to generate CSV data for use in comparisons with the analytic solution.'
+    prereq = ver-1d_diffusion_limited
   []
   [ver-1d_diffusion_limited_heavy]
     type = Exodiff
@@ -30,9 +39,22 @@
     type = Exodiff
     input = ver-1d-diffusion-component.i
     exodiff = ver-1d-diffusion-component_out.e
-    cli_args = "ActionComponents/structure/nx=20 Executioner/num_steps=300"
+    cli_args = "node_num=20 Executioner/num_steps=300"
     requirement = 'The system shall be able to model a breakthrough problem where diffusion is the rate limiting process using the Physics and Components syntax.'
     verification = 'ver-1d.md'
+    # Physics does not use reference residual syntax
+    rel_err = 1e-5
+    abs_zero = 1e-8
+  []
+  [diffusion_limited_components_csvdiff]
+    type = CSVDiff
+    input = ver-1d-diffusion-component.i
+    should_execute = false
+    csvdiff = ver-1d-diffusion-component_out.csv
+    cli_args = "node_num=20 Executioner/num_steps=300"
+    requirement = 'The system shall be able to model a breakthrough problem where diffusion is the rate limiting process using the Physics and Components syntax to generate CSV data for use in comparisons with the analytic solution.'
+    verification = 'ver-1d.md'
+    prereq = diffusion_limited_components
     # Physics does not use reference residual syntax
     rel_err = 1e-5
     abs_zero = 1e-8
@@ -42,7 +64,16 @@
     input = ver-1d-trapping.i
     exodiff = ver-1d_trapping_limited_test_exodus.e
     requirement = 'The system shall be able to model a breakthrough problem where trapping is the rate limiting process.'
-    cli_args = "Mesh/nx=20 Executioner/num_steps=300 Outputs/file_base=ver-1d_trapping_limited_test_exodus"
+    cli_args = "node_num=20 Executioner/num_steps=300 Outputs/file_base=ver-1d_trapping_limited_test_exodus"
+  []
+  [ver-1d_trapping_limited_csvdiff]
+    type = CSVDiff
+    input = ver-1d-trapping.i
+    should_execute = false
+    csvdiff = ver-1d_trapping_limited_test_exodus.csv
+    requirement = 'The system shall be able to model a breakthrough problem where trapping is the rate limiting process to generate CSV data for use in comparisons with the analytic solution.'
+    cli_args = "node_num=20 Executioner/num_steps=300 Outputs/file_base=ver-1d_trapping_limited_test_exodus"
+    prereq = ver-1d_trapping_limited
   []
   [ver-1d_trapping_limited_heavy]
     type = Exodiff

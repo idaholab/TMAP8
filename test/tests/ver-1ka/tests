@@ -6,7 +6,7 @@
     type = CSVDiff
     input = ver-1ka.i
     csvdiff = ver-1ka_out.csv
-    requirement = 'The system shall be able to model a tritium volumetric source in one enclosure'
+    requirement = 'The system shall be able to model a tritium volumetric source in one enclosure and to generate CSV data for use in comparisons with the analytic solution.'
   []
   [ver-1ka_comparison]
     type = RunCommand

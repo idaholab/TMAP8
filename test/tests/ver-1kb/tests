@@ -24,7 +24,7 @@
                 Outputs/file_base=ver-1kb_out_k10"
     prereq = ver-1kb_csv_concentration_jump
     should_execute = false # this test relies on the output files from ver-1kb_csv_concentration_jump, so it shouldn't be run twice
-    requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Henry’s law with a concentration jump at the interface'
+    requirement = 'The system shall be able to model the diffusion of T2 across a membrane separating two enclosures in accordance with Henry’s law with a concentration jump at the interface to generate csv for use in comparisons with the analytic solution.'
   []
   [ver-1kb_comparison]
     type = RunCommand

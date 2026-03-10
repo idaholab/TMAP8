@@ -10,18 +10,18 @@ This problem models permeation through a membrane with a constant source in whic
 
 \begin{equation}
     \label{eqn:diffusion_mobile}
-    \frac{dC_M}{dt} = \nabla D \nabla C_M - \text{trap\_per\_free} \cdot \sum_{i=1}^{3} \frac{dC_{T_i}}{dt} ,
+    \frac{dC_M}{dt} = \nabla \cdot D \nabla C_M - \sum_{i=1}^{3} f_{T/M,i} \frac{dC_{T_i}}{dt} ,
 \end{equation}
 and, for $i=1$, $i=2$, and $i=3$:
 \begin{equation}
     \label{eqn:trapped_rate}
-    \frac{dC_{T_i}}{dt} = \alpha_t^i  \frac {C_{T_i}^{empty} C_M } {(N \cdot \text{trap\_per\_free})} - \alpha_r^i C_{T_i},
+    \frac{dC_{T_i}}{dt} = \alpha_t^i  \frac {C_{T_i}^{empty} C_M } {(N f_{T/M,i})} - \alpha_r^i C_{T_i},
 \end{equation}
 and
 \begin{equation} \label{eqn:trapping_empty}
-    C_{T_i}^{empty} = (C_{{T_i}0} \cdot N - \text{trap\_per\_free} \cdot C_{T_i}  ) ,
+    C_{T_i}^{empty} = C_{{T_i}0} N - f_{T/M,i} C_{T_i} ,
 \end{equation}
-where $C_M$ is the concentrations of the mobile, $C_{T_i}$ is the trapped species in trap $i$, $D$ is the diffusivity of the mobile species, $\alpha_t^i$ and $\alpha_r^i$ are the trapping and release rate coefficients for trap $i$, $\text{trap\_per\_free}$ is a factor scaling $C_{T_i}$ to be closer to $C_M$ for better numerical convergence, $C_{{T_i}0}$ is the fraction of host sites $i$ that can contribute to trapping, $C_{T_i}^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density.
+where $C_M$ is the concentrations of the mobile, $C_{T_i}$ is the trapped species in trap $i$, $D$ is the diffusivity of the mobile species, $\alpha_t^i$ and $\alpha_r^i$ are the trapping and release rate coefficients for trap $i$, $f_{T/M,i}$ is a user-defined numerical factor scaling $C_{T_i}$ to be closer to $C_M$ for better numerical convergence, $C_{{T_i}0}$ is the fraction of host sites $i$ that can contribute to trapping, $C_{T_i}^{empty}$ is the concentration of empty trapping sites, and $N$ is the host density.
 
 The trapping parameter is defined by
 \begin{equation}
@@ -33,7 +33,7 @@ where
 
 $\lambda$ = lattice parameter
 
-$\nu$ = Debye frequency ($\approx$ $10^{13} \; s^{-1}$)
+$\nu$ = Debye frequency ($\approx$ $10^{13}$; s$^{-1}$)
 
 $\rho$ = trapping site fraction
 
@@ -62,7 +62,7 @@ Three traps that are relatively weak are assumed to be active in a slab. The tra
 \label{eqn:Jp}
     J_p = \frac{C_0 D}{l} \left\{ 1 + 2 \sum_{m=1}^{\infty} \left[ (-1)^m \exp \left( -m^2 \frac{t}{2 \; \tau_{b_e}} \right) \right] \right\},
 \end{equation}
-where $C_0$ is the steady dissolved gas concentration at the upstream (x = 0) side, $l$ is the thickness of the slab, $D$ is the diffusivity of the gas through the material, and $\tau_{b_e}$, the breakthrough time, is defined as
+where $C_0$ is the steady dissolved gas concentration at the upstream ($x = 0$) side, $l$ is the thickness of the slab, $D$ is the diffusivity of the mobile species through the material, and $\tau_{b_e}$ is the breakthrough time, defined as
 
 \begin{equation}
 \label{eqn:tau_be}
@@ -78,11 +78,11 @@ where $\zeta_i$ is the trapping parameter of trap $i$.
 The trapping parameters, $\zeta_i$, calculated from [eqn:zeta] for the three traps are 91.47930 $c/\rho$, 61.65009 $c/\rho$, 45.93069 $c/\rho$.
 
 !alert warning title=Typo in [!cite](ambrosek2008verification)
-The $\zeta_i$ values of the three traps from [!cite](ambrosek2008verification) have a typographical error: They are three orders of magnitude lower than the correct values. However, it does not impact the final analytical solution.
+The $\zeta_i$ values of the three traps from [!cite](ambrosek2008verification) have a typographical error; they are three orders of magnitude lower than the correct values. However, it does not impact the final analytical solution.
 
 ## Results and comparison against analytical solution
 
-The analytical solution for the permeation transient is compared with TMAP8 results in [ver-1dc_comparison_diffusion]. The graphs for the theoretical flux and the calculated flux are in good agreement, with root mean square percentage errors (RMSPE) of RMSPE = 0.41 % for $t \geq 3$ s. The breakthrough time calculated from [eqn:tau_be] in analytical solution is 4.04 s, and the breakthrough time from TMAP8 is 4.12 s.
+The analytical solution for the permeation transient is compared with TMAP8 results in [ver-1dc_comparison_diffusion]. The graphs for the theoretical flux and the calculated flux are in good agreement, with a root mean square percentage error (RMSPE) of RMSPE = 0.41 % for $t \geq 3$ s. The breakthrough time calculated from [eqn:tau_be] in analytical solution is 4.04 s, and the breakthrough time from TMAP8 is 4.12 s.
 
 !media comparison_ver-1dc.py
        image_name=ver-1dc_comparison_diffusion.png
@@ -118,7 +118,7 @@ u_i(x,t) = \frac{ N u_{i,0}}{2} (t\cos(x) + 1)
 
 with $u_{i,0}$ the equivalent of $C_{{T_i}0}$ in [eqn:trapping_empty].
 
-With the manufactured solutions selected, we generate forcing functions $f$ and $f_i$ by substituting the exact solutions into the strong-form PDEs, [eqn:diffusion_mobile] and [eqn:trapped_rate], leading to (assuming $\text{trap\_per\_free}=1$):
+With the manufactured solutions selected, we generate forcing functions $f$ and $f_i$ by substituting the exact solutions into the strong-form PDEs, [eqn:diffusion_mobile] and [eqn:trapped_rate], leading to (assuming $f_{T/M}=1$):
 
 \begin{equation} \label{eqn:diffusion_mobile_mms}
     \frac{\partial u}{\partial t} - \nabla \cdot \left( D \nabla u \right) + \sum_{i=1}^{3} \frac{\partial u_i}{\partial t} - f = 0,

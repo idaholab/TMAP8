@@ -1,9 +1,18 @@
-# This is the input file to apply the method of manufactured solutions to the ver-1dc case.
+# Verification Problem #1dc from TMAP7 V&V document
+# Permeation Problem with Three Trapping sites by applying the method of manufactured solutions
+# No Soret effect or solubility included.
 # It leverages ver-1dc_base.i and functions.i to form a complete input file.
 
+# Modeling parameters
+nx_num = 2 # (-)
+simulation_time = ${units 1 s}
+time_interval_max = ${units 1 s}
+time_step = ${units 0.1 s}
+scheme = implicit-euler
+
+# Trapping parameters
 cl = ${units 1 atom/m^3}
 N = ${units 2 atom/m^3}
-nx_num = 2 # (-)
 trapping_rate_coefficient = ${units 2 1/s}
 release_rate_coefficient = ${units 2 1/s}
 alphar = ${release_rate_coefficient}
@@ -11,20 +20,17 @@ alphat = ${trapping_rate_coefficient}
 frac1 = ${trapping_site_fraction_1}
 frac2 = ${trapping_site_fraction_2}
 frac3 = ${trapping_site_fraction_3}
-simulation_time = ${units 1 s}
-time_interval_max = ${units 1 s}
-time_step = ${units 0.1 s}
-
-scheme = implicit-euler
 
 !include ver-1dc_base.i
 
 [ICs]
+  # mobile tritium
   [mobile]
     type = FunctionIC
     variable = mobile
     function = exact_u
   []
+  # trapped tritium
   [t1]
     type = FunctionIC
     variable = trapped_1
@@ -43,7 +49,6 @@ scheme = implicit-euler
 []
 
 [Kernels]
-
   [forcing]
     type = BodyForce
     variable = mobile

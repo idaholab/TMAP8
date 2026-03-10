@@ -336,17 +336,17 @@ We solve the following equations:
 For mobile species:
 
 !equation
-\frac{\partial C_M}{\partial t} = \nabla \cdot (D \nabla C_M) - \text{trap\_per\_free} \cdot \frac{\partial C_T}{\partial t}
+\frac{\partial C_M}{\partial t} = \nabla \cdot (D \nabla C_M) - f_{T/M} \frac{\partial C_T}{\partial t}
 
 For trapped species:
 
 !equation
-\frac{\partial C_T}{\partial t} = \alpha_t \frac{C_T^{empty} C_M}{N \cdot \text{trap\_per\_free}} - \alpha_r C_T
+\frac{\partial C_T}{\partial t} = \alpha_t \frac{C_T^{empty} C_M}{N f_{T/M}} - \alpha_r C_T
 
 For empty trapping sites:
 
 !equation
-C_T^{empty} = C_{T0} \cdot N - \text{trap\_per\_free} \cdot C_T
+C_T^{empty} = C_{T0} N - f_{T/M} C_T
 
 !col-end!
 
@@ -357,7 +357,7 @@ where:
 - $C_M$ and $C_T$ are the concentrations of the mobile and trapped species respectively
 - $D$ is the diffusivity of the mobile species
 - $\alpha_t$ and $\alpha_r$ are the trapping and release rate coefficients
-- $\text{trap\_per\_free}$ is a factor converting the magnitude of $C_T$ to be closer to $C_M$ for better numerical convergence
+- $f_{T/M}$ is a user-defined numerical factor converting the magnitude of $C_T$ to be closer to $C_M$ for better numerical convergence
 - $C_{T0}$ is the fraction of host sites that can contribute to trapping
 - $C_T^{empty}$ is the concentration of empty trapping sites
 - $N$ is the host density.
@@ -445,7 +445,7 @@ This is the same domain configuration as in Case 1.
 !col! width=50%
 
 - Lattice parameter: $\lambda^2 = 10^{-15}$ m$^2$
-- $\text{trap\_per\_free} = 1$ (Diffusion), $10^3$ (Trapping)
+- $f_{T/M} = 1$ (Diffusion), $10^3$ (Trapping)
 - Trapping rate coefficient: $\alpha_t = 10^{15}$ 1/s
 - Release rate coefficient: $\alpha_r = 10^{13}$ 1/s
 - Host density: $N = 3.1622 \times 10^{22}$ atoms / m$^3$
@@ -530,7 +530,7 @@ In this case, we'll be highlighting the main changes from Case 1, where we only 
 - [TrappingNodalKernel.md] is used for:
 
   !equation
-  -\alpha_t  \frac {C_T^{empty} C_M } {(N \cdot \text{trap\_per\_free})}
+  -\alpha_t  \frac {C_T^{empty} C_M } {(N f_{T/M})}
 
 - Finally, [ReleasingNodalKernel.md] is used for:
 
@@ -590,7 +590,7 @@ For the deep trapping limit case, we'll cover the additions of objects to determ
 - Because the empty trapping concentration is not a differential equation, we can solve for it using the [AuxKernels/index.md]:
 
   !equation
-  C_T^{empty} = C_{T0} \cdot N - \text{trap\_per\_free} \cdot C_T
+  C_T^{empty} = C_{T0} N - f_{T/M} C_T
 
 - AuxKernels are also used (in the case of `scaled_empty` and `trapped_sites`) to calculate the total concentration of trapping sites in the model.
 
@@ -688,15 +688,15 @@ This case is very similar to Case 2, except there are now three different types 
 Mobile species with three trap interactions:
 
 !equation
-\frac{\partial C_M}{\partial t} = \nabla \cdot (D \nabla C_M) - \text{trap\_per\_free} \cdot \sum_{i=1}^{3} \frac{\partial C_{T_i}}{\partial t}
+\frac{\partial C_M}{\partial t} = \nabla \cdot (D \nabla C_M) - \sum_{i=1}^{3} f_{T/M,i} \frac{\partial C_{T_i}}{\partial t}
 
 !equation
-\frac{dC_{T_i}}{dt} = \alpha_t^i  \frac {C_{T_i}^{empty} C_M } {(N \cdot \text{trap\_per\_free})} - \alpha_r^i C_{T_i}
+\frac{dC_{T_i}}{dt} = \alpha_t^i  \frac {C_{T_i}^{empty} C_M } {(N f_{T/M,i})} - \alpha_r^i C_{T_i}
 
 Each trap evolves independently (i = 1, 2, 3). Finally, for the empty trapping sites:
 
 !equation
-C_{T_i}^{empty} = (C_{{T_i}0} \cdot N - \text{trap\_per\_free} \cdot C_{T_i}  )
+C_{T_i}^{empty} = (C_{{T_i}0} N - f_{T/M,i} C_{T_i}  )
 
 !---
 

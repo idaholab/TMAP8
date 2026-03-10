@@ -26,3 +26,9 @@ For all publications that use TMAP8, please cite the following.
 
 Because TMAP8 is based on MOOSE and several MOOSE-based systems and physics modules,
 please refer to [citing.md] for all MOOSE-specific citations.
+
+# TMAP8 logos
+
+If you want to use the TMAP8 logo in figures, presentations, website, or other media,
+you can find the TMAP8 logos in `.png` and `.eps` formats in `~/projects/tmap8/doc/content/figures`.
+These logos include horizontal and vertical alignments, and are available in black, white, and blue.

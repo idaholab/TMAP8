@@ -28,6 +28,15 @@
     # To make it run at the end
     prereq = 'ver-1d_comparison'
     csvdiff = 'ver-1dd-components_out.csv'
+    requirement = 'The system shall be able to model a breakthrough problem without traps using the Physics and Components shorthand syntax to generate CSV data for use in comparisons with the analytic solution.'
+  []
+  [ver-1dd-components]
+    type = Exodiff
+    input = ver-1dd-components.i
+    should_execute = false
+    # To make it run at the end
+    prereq = 'ver-1dd_csvdiff-components'
+    exodiff = 'ver-1dd-components_out.e'
     requirement = 'The system shall be able to model a breakthrough problem without traps using the Physics and Components shorthand syntax.'
   []
 []

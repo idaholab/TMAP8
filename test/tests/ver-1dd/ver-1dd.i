@@ -1,9 +1,14 @@
-cl = 3.1622e18 # atom/m^3
+# Verification Problem #1dd from TMAP7 V&V document
+# Permeation Problem without Trapping sites
+# No Soret effect or solubility included.
+
+# modeling parameters
 nx_num = 200 # (-)
-diffusivity = 1 # m^2/s
-simulation_time = 3 # s
-interval_time_min = 0.01 # s
-interval_time = 0.01 # s
+diffusivity = ${units 1 m^2/s}
+simulation_time = ${units 3 s}
+interval_time_min = ${units 0.01 s}
+interval_time = ${units 0.01 s}
+cl = '${units 3.1622e18 atom/m^3}'
 
 [Mesh]
   type = GeneratedMesh
@@ -19,8 +24,9 @@ interval_time = 0.01 # s
 
 [Kernels]
   [diff]
-    type = Diffusion
+    type = MatDiffusion
     variable = mobile
+    diffusivity = ${diffusivity}
   []
   [time]
     type = TimeDerivative

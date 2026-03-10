@@ -212,7 +212,6 @@ diffusivity_energy_H = '${units ${fparse 1315.8 * R} J/mol}'
   [MatReaction_upstream_H2_outflux_4]
     type = ADMatReaction
     variable = H2_pressure_upstream
-    v = 'H2_pressure_upstream'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
@@ -239,7 +238,6 @@ diffusivity_energy_H = '${units ${fparse 1315.8 * R} J/mol}'
   [MatReaction_upstream_HD_outflux_4]
     type = ADMatReaction
     variable = HD_pressure_upstream
-    v = 'HD_pressure_upstream'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
@@ -261,7 +259,6 @@ diffusivity_energy_H = '${units ${fparse 1315.8 * R} J/mol}'
   [MatReaction_downstream_H2_outflux_4]
     type = ADMatReaction
     variable = H2_pressure_downstream
-    v = 'H2_pressure_downstream'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
@@ -281,7 +278,6 @@ diffusivity_energy_H = '${units ${fparse 1315.8 * R} J/mol}'
   [MatReaction_downstream_HD_outflux_4]
     type = ADMatReaction
     variable = HD_pressure_downstream
-    v = 'HD_pressure_downstream'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []

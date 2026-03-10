@@ -60,7 +60,6 @@ concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} 
   [MatReaction_upstream_D2_outflux_4]
     type = ADMatReaction
     variable = D2_pressure_upstream
-    v = 'D2_pressure_upstream'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []
@@ -80,7 +79,6 @@ concentration_to_pressure_conversion_factor = '${units ${fparse kb*temperature} 
   [MatReaction_downstream_D2_outflux_4]
     type = ADMatReaction
     variable = D2_pressure_downstream
-    v = 'D2_pressure_downstream'
     reaction_rate = -${flow_rate_by_V}
     extra_vector_tags = 'ref'
   []

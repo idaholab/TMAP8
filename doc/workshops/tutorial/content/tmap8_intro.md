@@ -1,6 +1,6 @@
 # Introduction to TMAP8
 
-!media figures/TMAP8_logo_blue.png style=display:block;box-shadow:none;margin-left:auto;margin-right:auto;width:30%;
+!media figures/TMAP8_logo/TMAP8_vertical_blue.png style=display:block;box-shadow:none;margin-left:auto;margin-right:auto;width:30%;
 
 !---
 

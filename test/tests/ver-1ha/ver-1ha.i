@@ -1,3 +1,8 @@
+# Verification Problem #1ha from TMAP4/TMAP7 V&V document
+# A Convective Gas Outflow Problem with Three Enclosures
+
+# Modeling parameters
+simulation_time = '${units 40 s}'
 P1 = '${units 1 Pa}'
 R = '${units 8.31446261815324 J/K/mol}' # from PhysicalConstants
 T = '${units 303 K}'
@@ -40,7 +45,6 @@ Q_by_V3 = '${fparse Q / V3}'
     [MatReaction_P2_P3_outflux]
         type = ADMatReaction
         variable = P2
-        v = 'P2'
         reaction_rate = -${Q_by_V2}
     []
 
@@ -58,7 +62,6 @@ Q_by_V3 = '${fparse Q / V3}'
     [MatReaction_P3_P3_outflux]
         type = ADMatReaction
         variable = P3
-        v = 'P3'
         reaction_rate = -${Q_by_V3}
     []
 []
@@ -108,7 +111,7 @@ Q_by_V3 = '${fparse Q / V3}'
     petsc_options_iname = '-pc_type'
     petsc_options_value = 'lu'
     automatic_scaling = true
-    end_time = '${units 40 s}'
+    end_time = '${simulation_time}'
     dt = 0.1
 []
 

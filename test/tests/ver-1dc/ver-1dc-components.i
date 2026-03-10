@@ -1,24 +1,28 @@
-# This input shows the Component-Physics syntax for the ver-1dc case.
+# Verification Problem #1dc from TMAP7 V&V document
+# Permeation Problem with Three Trapping sites using Component-Physics syntax
 # The ver-1dc case is formed without this syntax by combining ver-1dc_base.i and ver-1dc.i
 
-epsilon_1 = ${units 100 K}
-epsilon_2 = ${units 500 K}
-epsilon_3 = ${units 800 K}
-temperature = ${units 1000 K}
-trapping_site_fraction_1 = 0.10 # (-)
-trapping_site_fraction_2 = 0.15 # (-)
-trapping_site_fraction_3 = 0.20 # (-)
-diffusivity = 1 # m^2/s
-
-cl = ${units 3.1622e18 atom/m^3}
-N = ${units 3.1622e22 atom/m^3}
+# modeling parameters
 nx_num = 1000 # (-)
-trapping_rate_coefficient = ${units 1e15 1/s}
-release_rate_coefficient = ${units 1e13 1/s}
+temperature = ${units 1000 K}
+diffusivity = ${units 1 m^2/s}
 simulation_time = ${units 60 s}
 time_interval_max = ${units 0.3 s}
 time_step = ${units 1e-6 s}
 scheme = BDF2
+
+
+# Trapping parameters
+epsilon_1 = ${units 100 K}
+epsilon_2 = ${units 500 K}
+epsilon_3 = ${units 800 K}
+trapping_site_fraction_1 = 0.10 # (-)
+trapping_site_fraction_2 = 0.15 # (-)
+trapping_site_fraction_3 = 0.20 # (-)
+cl = ${units 3.1622e18 atom/m^3}
+N = ${units 3.1622e22 atom/m^3}
+trapping_rate_coefficient = ${units 1e15 1/s}
+release_rate_coefficient = ${units 1e13 1/s}
 
 
 [ActionComponents]

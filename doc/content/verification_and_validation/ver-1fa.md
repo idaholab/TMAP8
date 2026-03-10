@@ -9,7 +9,7 @@ This heat transfer verification problem is taken from [!cite](longhurst1992verif
 This case models a heat conduction problem through a slab with a heat source. The heat conduction in the one-dimensional model is described as:
 
 \begin{equation} \label{eq:thermal_equation}
-\rho C_P \frac{d T}{d t} = \nabla k \nabla T + Q,
+\rho C_P \frac{d T}{d t} = \nabla \cdot k \nabla T + Q,
 \end{equation}
 
 where $T$ is the temperature, $\rho$ is the density, $C_P$ is the specific heat, $k$ is the thermal conductivity, and $Q$ is the internal volumetric heat generation rate.

@@ -1,0 +1,178 @@
+{
+    "reporters": {
+        "PSS_reporter": {
+            "type": "AdaptiveMonteCarloDecision",
+            "values": {
+                "inputs": {
+                    "type": "std::vector<std::vector<double>>"
+                },
+                "output_required": {
+                    "type": "std::vector<double>"
+                }
+            }
+        },
+        "constant": {
+            "type": "StochasticReporter",
+            "values": {
+                "reporter_transfer:converged": {
+                    "row_begin": 0,
+                    "row_end": 1,
+                    "type": "std::vector<bool>"
+                },
+                "reporter_transfer:log_inverse_error:value": {
+                    "row_begin": 0,
+                    "row_end": 1,
+                    "type": "std::vector<double>"
+                }
+            }
+        }
+    },
+    "time_steps": [
+        {
+            "PSS_reporter": {
+                "inputs": [
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ],
+                    [
+                        0.0
+                    ]
+                ],
+                "output_required": [
+                    0.0
+                ]
+            },
+            "constant": {
+                "reporter_transfer:converged": [
+                    false
+                ],
+                "reporter_transfer:log_inverse_error:value": [
+                    0.0
+                ]
+            },
+            "time": 0.0,
+            "time_step": 0
+        },
+        {
+            "PSS_reporter": {
+                "inputs": [
+                    [
+                        1.242326109584627
+                    ],
+                    [
+                        -2.558012721777025
+                    ],
+                    [
+                        8.919738988837175
+                    ],
+                    [
+                        17.897752434642726
+                    ],
+                    [
+                        0.4676597565145669
+                    ],
+                    [
+                        -1.5980716172727538
+                    ],
+                    [
+                        -30.403017071476185
+                    ],
+                    [
+                        -44.02911647794534
+                    ],
+                    [
+                        1.902665207216683e-09
+                    ],
+                    [
+                        0.12155708602285523
+                    ],
+                    [
+                        1.2376416113079644e-07
+                    ],
+                    [
+                        100301.43390675637
+                    ],
+                    [
+                        0.02064887620748781
+                    ],
+                    [
+                        95340.57213660821
+                    ],
+                    [
+                        -156437.80302774606
+                    ],
+                    [
+                        -137.37486898346825
+                    ],
+                    [
+                        -112284.03342606199
+                    ],
+                    [
+                        -36.990487258536874
+                    ]
+                ],
+                "output_required": [
+                    -20.0
+                ]
+            },
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:log_inverse_error:value": [
+                    -20.0
+                ]
+            },
+            "time": 1.0,
+            "time_step": 1
+        }
+    ]
+}

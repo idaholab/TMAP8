@@ -39,6 +39,7 @@ Content:
 
 Renderer:
     type: MooseDocs.base.MaterializeRenderer
+    favicon: figures/TMAP8_logo/TMAP8.ico
 Extensions:
     MooseDocs.extensions.navigation:
         name: TMAP8

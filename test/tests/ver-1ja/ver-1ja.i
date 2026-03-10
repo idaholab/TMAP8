@@ -34,7 +34,6 @@ dt_start = ${fparse end_time/250} # s
   [decay_tritium]
     type = MatReaction
     variable = tritium_concentration
-    v = tritium_concentration
     reaction_rate = '${fparse -decay_rate_constant}'
   []
   # kernels for the helium concentration equation

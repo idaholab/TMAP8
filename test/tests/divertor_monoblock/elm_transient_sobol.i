@@ -1,6 +1,8 @@
-[StochasticTools] # Designate as the Controller/Main Input
+[StochasticTools]
+  # Designate as the Controller/Main Input
 []
-[MultiApps] # Designate a subapp to control later
+[MultiApps]
+  # Designate a subapp to control later
   [runner]
     type = SamplerFullSolveMultiApp
     sampler = sobol
@@ -9,31 +11,33 @@
     keep_full_output_history = True
   []
 []
-[Controls] # Control inputs from Main->Subapp
+[Controls]
+  # Control inputs from Main->Subapp
   [cmdline]
     type = MultiAppSamplerControl
     multi_app = runner
     sampler = sobol
-    param_names = """elm_value
+    param_names = "elm_value
                      elm_duration
                      coolant_temp
-                     W_cond_factor"""
+                     W_cond_factor"
   []
 []
-[Distributions] # Define probability distributions of parameters for sampling
+[Distributions]
+  # Define probability distributions of parameters for sampling
   [P_val]
     type = Normal
-    mean =  1147e6
+    mean = 1147e6
     standard_deviation = 57.35e6
   []
   [P_dur]
     type = Normal
-    mean =  1.32e-3
+    mean = 1.32e-3
     standard_deviation = 0.066e-3
   []
   [C_tem]
     type = Normal
-    mean =  552
+    mean = 552
     standard_deviation = 27.6
   []
   [W_cond]
@@ -42,7 +46,8 @@
     upper_bound = 1.0
   []
 []
-[Samplers] # Sampling methodology using the probability distributions above
+[Samplers]
+  # Sampling methodology using the probability distributions above
   [hypercube_1]
     type = LatinHypercube
     distributions = 'P_val P_dur C_tem W_cond'
@@ -64,14 +69,15 @@
     execute_on = 'PRE_MULTIAPP_SETUP'
   []
 []
-[Transfers] # Define values to extract from subapp
+[Transfers]
+  # Define values to extract from subapp
   [results]
     type = SamplerReporterTransfer
     from_multi_app = runner
     sampler = sobol
     stochastic_reporter = results
     #execute_on = 'MULTIAPP_FIXED_POINT_END'
-    from_reporter = """F_permeation/value
+    from_reporter = "F_permeation/value
                        Scaled_Tritium_Flux/value
                        total_retention/value
                        coolant_heat_flux/value
@@ -80,14 +86,14 @@
                        max_temperature_CuCrZr/value
                        time_max_T_W/value
                        time_max_T_Cu/value
-                       time_max_T_CuCrZr/value"""
+                       time_max_T_CuCrZr/value"
   []
   [matrix_results]
     type = SamplerReporterTransfer
     from_multi_app = runner
     sampler = sobol
     stochastic_reporter = matrix
-    from_reporter = """F_permeation/value
+    from_reporter = "F_permeation/value
                        Scaled_Tritium_Flux/value
                        total_retention/value
                        coolant_heat_flux/value
@@ -96,7 +102,7 @@
                        max_temperature_CuCrZr/value
                        time_max_T_W/value
                        time_max_T_Cu/value
-                       time_max_T_CuCrZr/value"""
+                       time_max_T_CuCrZr/value"
   []
 []
 [Reporters]
@@ -106,7 +112,7 @@
   []
   [stats]
     type = StatisticsReporter
-    reporters = """results/results:F_permeation:value
+    reporters = "results/results:F_permeation:value
                    results/results:Scaled_Tritium_Flux:value
                    results/results:total_retention:value
                    results/results:coolant_heat_flux:value
@@ -115,17 +121,17 @@
                    results/results:max_temperature_CuCrZr:value
                    results/results:time_max_T_W:value
                    results/results:time_max_T_Cu:value
-                   results/results:time_max_T_CuCrZr:value"""
+                   results/results:time_max_T_CuCrZr:value"
     compute = 'mean stddev'
     ci_method = 'percentile'
-    ci_levels = """0.05 0.10 0.15 0.20 0.25 0.30 0.35 0.40 0.45 0.50
-                   0.55 0.60 0.65 0.70 0.75 0.80 0.85 0.90 0.95"""
+    ci_levels = "0.05 0.10 0.15 0.20 0.25 0.30 0.35 0.40 0.45 0.50
+                   0.55 0.60 0.65 0.70 0.75 0.80 0.85 0.90 0.95"
     execute_on = 'FINAL'
   []
   [sobol]
     type = SobolReporter
     sampler = sobol
-    reporters = """results/results:F_permeation:value
+    reporters = "results/results:F_permeation:value
                    results/results:Scaled_Tritium_Flux:value
                    results/results:total_retention:value
                    results/results:coolant_heat_flux:value
@@ -134,18 +140,18 @@
                    results/results:max_temperature_CuCrZr:value
                    results/results:time_max_T_W:value
                    results/results:time_max_T_Cu:value
-                   results/results:time_max_T_CuCrZr:value"""
-    ci_levels = """0.05 0.10 0.15 0.20 0.25 0.30 0.35 0.40 0.45 0.50
-                   0.55 0.60 0.65 0.70 0.75 0.80 0.85 0.90 0.95"""
+                   results/results:time_max_T_CuCrZr:value"
+    ci_levels = "0.05 0.10 0.15 0.20 0.25 0.30 0.35 0.40 0.45 0.50
+                   0.55 0.60 0.65 0.70 0.75 0.80 0.85 0.90 0.95"
     execute_on = 'FINAL'
   []
   [matrix]
     type = StochasticMatrix
     sampler = sobol
-    sampler_column_names = """peak_value
+    sampler_column_names = "peak_value
                               peak_duration
                               coolant_temp
-                              W_cond_factor"""
+                              W_cond_factor"
     execute_on = 'FINAL'
     parallel_type = ROOT
   []
