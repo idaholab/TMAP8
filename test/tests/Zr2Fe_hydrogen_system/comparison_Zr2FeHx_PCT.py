@@ -12,15 +12,11 @@ import matplotlib.pyplot as plt
 script_folder = os.path.dirname(os.path.abspath(__file__))
 os.chdir(script_folder)
 
-# ------------------------------------------------------------------------------
-# Constant
-# ------------------------------------------------------------------------------
-# Temperatures in Celsius for filenames; converted to Kelvin internally
 TEMPERATURES_C = [325, 350, 375]
 TEMPERATURES_K = [t + 273.15 for t in TEMPERATURES_C]
-
 FIG_DPI = 300
 ATOM_RATIO_THRESHOLD = 0.5  # threshold to select upper-branch / plateau-side data
+N_SMOOTH = 400  # number of points for smoother analytical curves
 
 # Column names (experimental CSVs)
 COL_PRESSURE_BAR = "Partial Pressure"  # in bar
@@ -159,7 +155,7 @@ for Tk in TEMPERATURES_K:
         sel_P.append(P[idx[0]])
 
 fig = plt.figure(figsize=(5, 5))
-plt.plot(TEMPERATURES_K, p0_vals, "--", label="Fit p0(T)")
+plt.plot(TEMPERATURES_K, p0_vals, "--", label="Fit")
 if sel_T:
     plt.scatter(sel_T, sel_P, color="red", label="Selected Pressures")
 
@@ -219,6 +215,7 @@ for Tk in TEMPERATURES_K:
             plt.scatter(P_hi, AR_hi, label=f"{Tk:.2f} K Data")
             # Compute RMSE on original points (unchanged)
             r = rmse(AR_hi, fit_hi)
+            rmse_by_temp[Tk] = float(r)
 
             # ---- Smooth analytical curve: densify pressure grid (ONLY CHANGE) ----
             P_min = np.min(P_hi)
@@ -226,8 +223,8 @@ for Tk in TEMPERATURES_K:
             p0_T = float(p0_lim_func(Tk))
             # Start slightly above p0 to keep log argument positive
             P_start = max(P_min, p0_T * 1.001)
-            # 400 points for smooth curve; adjust if needed
-            P_grid = np.logspace(np.log10(P_start), np.log10(P_max), 400)
+            # Use configured number of points for smooth curve
+            P_grid = np.logspace(np.log10(P_start), np.log10(P_max), N_SMOOTH)
             fit_grid = atom_ratio_eq_upper_func(Tk, P_grid)
 
             # Plot smooth analytical/model curve with the same RMSE label
