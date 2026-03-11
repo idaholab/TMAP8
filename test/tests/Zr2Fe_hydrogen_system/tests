@@ -42,6 +42,7 @@
                 Executioner/num_steps=200
                 InterfaceKernels/interface_reaction_Zr2FeHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
     csvdiff = Zr2FeHx_PCT_T623_P1e04_out.csv
+    max_parallel = 1 # see #200
     requirement = 'The system shall be able to model the PCT curves of Zr2FeHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e4 Pa and T=1173.15 K.'
   []
   [Zr2FeHx_PCT_T648_P1e02_csv]
@@ -54,6 +55,7 @@
                 Executioner/num_steps=200
                 InterfaceKernels/interface_reaction_Zr2FeHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
     csvdiff = Zr2FeHx_PCT_T648_P1e02_out.csv
+    max_parallel = 1 # see #200
     requirement = 'The system shall be able to model the PCT curves of Zr2FeHx to determine the surface atomic fraction as a function of pressure and temperature for P=5e4 Pa and T=1173.15 K.'
   []
   [Zr2FeHx_PCT_T648_P1e05_csv]
@@ -72,7 +74,7 @@
   [Zr2FeHx_PCT_comparison]
     type = RunCommand
     command = 'python3 comparison_Zr2FeHx_PCT.py'
-    requirement = 'The system shall be able to generate comparison plots between experimental PCT curves, the model used in TMAP8, and TMAP8 predictions.'
+    requirement = 'The system shall be able to generate comparison plots between experimental PCT curves, the model used in TMAP8, and TMAP8 predictions for Zr2Fe.'
     required_python_packages = 'matplotlib numpy pandas os git'
   []
   [Zr2FeHx_PCT_error_low_pressure]
