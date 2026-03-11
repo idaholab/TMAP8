@@ -9,6 +9,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 /*TEst*/
 >>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
@@ -22,6 +23,8 @@
 
 >>>>>>> b4a96a35 (Formatting modification and simplifiying python codes)
 >>>>>>> 97a609b1 (Formatting modification and simplifiying python codes)
+=======
+>>>>>>> dba0bff8 (Adding test files, adding data, applying recommende changes)
 #include "ADMatInterfaceReactionZr2FeHxPCT.h"
 
 #include "PhysicalConstants.h"
