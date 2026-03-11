@@ -5,10 +5,6 @@
 /*   Copyright 2021 - 2025 Battelle Energy Alliance, LLC    */
 /*                   ALL RIGHTS RESERVED                    */
 /************************************************************/
-<<<<<<< HEAD
-=======
-
->>>>>>> b4a96a35 (Formatting modification and simplifiying python codes)
 #include "ADMatInterfaceReactionZr2FeHxPCT.h"
 
 #include "PhysicalConstants.h"
