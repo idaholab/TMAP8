@@ -23,7 +23,10 @@ The  pressure isotherm is captured as:
 f_{at}(T,P) = 4.30-1.81\left[0.5+\exp(5.41 - 1.36 \times 10^{-2} T + (0.232+ 1.51 \times 10^{-4} T) (\log\left(P - P_{lim}(T)\right)))\right]^{-1}.
 \end{equation}
 
-
+Equation [eq:atomic_fraction] is valid for:
+\begin{equation} \label{eq:bounds}
+0.011 < P [Pa] < 9.e06
+\end{equation}
 
 !media comparison_Zr2FeHx_PCT.py
        image_name=Zr2FeHx_PCT_fit_2D.png
@@ -35,9 +38,8 @@ The pressure limit seen in [eq:atomic_fraction] is captured as:
 \begin{equation} \label{eq:pressure_plateau}
 P_{lim} = \exp\left(-4.12+1.03 \times 10^{-2} T\right),
 \end{equation}
-with $P_{lim}$ being the hydrogen partial pressure limit in Pa and $T$ being the temperature in K. 
-Unlike YHx and ZrCoHx, which use the plateau pressure fit as a limiting factor in [eq:atomic_fraction], this Zr₂FeHx model derives its pressure-limiting curve from the initial pressure and atomic fraction at a respective temperature in the experimental data. 
-This is because in [!cite](yang2025potential), the plateau region occurs at approximately 1 wt% and is non-constant. The curve shown in [Zr2FeHx_PCT_pressure_limiter_fit] represents the fitted pressure-limiting relationship.
+with $P_{lim}$ being the hydrogen partial pressure limit in Pa and $T$ being the temperature in K.
+Unlike YHx and ZrCoHx, which use the plateau pressure fit as a limiting factor in [eq:atomic_fraction], the Zr₂FeHx model derives its pressure‑limit curve from the pressure corresponding to 1wt% metal–hydrogen at each temperature in the experimental dataset. This is because, as shown in the data, Zr₂FeHx does not exhibit a true plateau; instead, its isotherms display an approximately linear slope with an onset near 1wt%. The curve shown in [Zr2FeHx_PCT_pressure_limiter_fit] represents the fitted pressure-limiting relationship.
 
 !media comparison_Zr2FeHx_PCT.py
        image_name=Zr2FeHx_PCT_pressure_limiter_fit.png
