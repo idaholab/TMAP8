@@ -17,9 +17,10 @@ $f_{at}(T,P)$ is the composition in atomic fraction of H in Zr2FeHx given a gas 
 and $\rho$ is the zirconium-iron atomic density in mol/m$^3$.
 
 
-[Zr2FeHx_PCT_fit_2D] shows the fitting and TMAP8 results used in this interface kernel, along with the experimental data from [!cite](yang2025potential).The  pressure isotherm is captured as:
+[Zr2FeHx_PCT_fit_2D] shows the fitting and TMAP8 results used in this interface kernel, along with the experimental data from [!cite](yang2025potential).
+The  pressure isotherm is captured as:
 \begin{equation} \label{eq:atomic_fraction}
-f_{at}(T,P) = 4.30-1.81\left[0.5+\exp(5.41 - 0.013571 T + (-0.23+ 1.51 \times 10^{-4} T) (\log\left(P - P_{lim}(T)\right)))\right]^{-1},
+f_{at}(T,P) = 4.30-1.81\left[0.5+\exp(5.41 - 1.36 \times 10^{-2} T + (0.232+ 1.51 \times 10^{-4} T) (\log\left(P - P_{lim}(T)\right)))\right]^{-1}.
 \end{equation}
 
 
@@ -34,7 +35,9 @@ The pressure limit seen in [eq:atomic_fraction] is captured as:
 \begin{equation} \label{eq:pressure_plateau}
 P_{lim} = \exp\left(-4.12+1.03 \times 10^{-2} T\right),
 \end{equation}
-with $P_{lim}$ being the hydrogen partial pressure limit in Pa and $T$ being the temperature in K. Unlike YHx and ZrCoHx, which use the plateau pressure fit as a limiting factor in [eq:atomic_fraction],this Zr₂FeHx model derives its pressure-limiting curve from the initial pressure and atomic fraction at a respective temperatue in the experimental data. This is because in Ref [!cite](yang2025potential) the plateau region occurs at approximately 1 wt% and is non-constant. The curve shown in [Zr2FeHx_PCT_pressure_limiter_fit] represents the fitted pressure-limiting relationship.
+with $P_{lim}$ being the hydrogen partial pressure limit in Pa and $T$ being the temperature in K. 
+Unlike YHx and ZrCoHx, which use the plateau pressure fit as a limiting factor in [eq:atomic_fraction], this Zr₂FeHx model derives its pressure-limiting curve from the initial pressure and atomic fraction at a respective temperature in the experimental data. 
+This is because in [!cite](yang2025potential), the plateau region occurs at approximately 1 wt% and is non-constant. The curve shown in [Zr2FeHx_PCT_pressure_limiter_fit] represents the fitted pressure-limiting relationship.
 
 !media comparison_Zr2FeHx_PCT.py
        image_name=Zr2FeHx_PCT_pressure_limiter_fit.png
@@ -51,7 +54,7 @@ If `silence_warnings = true`, then TMAP8 will let the simulation continue withou
 
 [/Zr2FeHx_PCT.i] tests the implantation of the Zr2FeHx PCT curves in TMAP8.
 The domain contains two blocks: gas (left) and Zr2FeHx (right) with an interface between the two blocks.
-The diffusion is given by [!citep](yu2024hydrogen) and the surface reaction rate $K$ is taken from [!citep](yang2025potential) ($K_f=K_b=K$). Note that the diffusion is for ZrH1.8 because no diffusion data exist for Zr2FeHx.
+The diffusion is given by [!cite](yu2024hydrogen) and the surface reaction rate $K$ is taken from [!cite](yang2025potential) ($K_f=K_b=K$). Note that the diffusion is for ZrH1.8 because no diffusion data exist for Zr2FeHx.
 To model the interface, the input file employs the [InterfaceDiffusion.md] object to model the flux of hydrogen at the surface, and `ADMatInterfaceReactionZr2FeHxPCT` to model the steady-state condition for the hydrogen concentration at the surface $C_s$ defined by:
 \begin{equation} \label{eq:test_interfacereaction}
 \frac{d C_s}{dt} = 0 = K (f_{at}(T,P) \rho - C_s),
