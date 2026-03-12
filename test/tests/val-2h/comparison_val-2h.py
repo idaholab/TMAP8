@@ -13,7 +13,7 @@ os.chdir(script_folder)
 # Load experimental data
 
 if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
-    data_folder = "../../../../test/tests/val-2g/gold/"
+    data_folder = "../../../../test/tests/val-2h/gold/"
 else:                                       # if in test folder
     data_folder = "./gold/"
 data_by_temperature = {}
@@ -34,7 +34,7 @@ gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
 for filename in os.listdir(data_folder):
-    if filename.endswith(".csv") and filename.startswith("val-2g_1D_"):
+    if filename.endswith(".csv") and filename.startswith("val-2h_1D_"):
         parts = filename.replace(".csv", "").split("_")
         try:
             T = int(parts[2][:-1])  # Remove 'K'
@@ -97,7 +97,7 @@ ax.set_xlabel(r"$T_2$ partial pressure (Pa)")
 ax.set_ylabel(r"Tritium molar flux (mol/m$^2$/s)")
 ax.legend(loc="best")
 ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
-fig.savefig('val-2g_tritium_flux_1D.png', bbox_inches='tight', dpi=300)
+fig.savefig('val-2h_tritium_flux_1D.png', bbox_inches='tight', dpi=300)
 
 #===============================================================================
 # 2D case with a Ni layer: Tritium permeation flux as a function of tritium partial pressure
@@ -112,7 +112,7 @@ ax = fig.add_subplot(gs[0])
 
 # Loop through files
 for filename in os.listdir(data_folder):
-    if filename.endswith(".csv") and filename.startswith("val-2g_"):
+    if filename.endswith(".csv") and filename.startswith("val-2h_"):
         try:
             parts = filename.replace(".csv", "").split("_")
 
@@ -199,7 +199,7 @@ ax.set_xlabel(r"$T_2$ partial pressure (Pa)")
 ax.set_ylabel(r"Tritium molar flux (mol/m$^2$/s)")
 ax.legend(loc="best")
 ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
-fig.savefig('val-2g_tritium_flux_2D.png', bbox_inches='tight', dpi=300)
+fig.savefig('val-2h_tritium_flux_2D.png', bbox_inches='tight', dpi=300)
 
 #===============================================================================
 # 2D case without FLiBe: Tritium permeation flux as a function of tritium partial pressure
@@ -210,7 +210,7 @@ gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 data_by_temperature_no_FLiBe = {}
 for filename in os.listdir(data_folder):
-    if filename.endswith(".csv") and "no_FLiBe" in filename and filename.startswith("val-2g_"):
+    if filename.endswith(".csv") and "no_FLiBe" in filename and filename.startswith("val-2h_"):
         parts = filename.replace(".csv", "").split("_")
         try:
             # Extract temperature and pressure from parts ending with 'K' and 'Pa'
@@ -276,15 +276,15 @@ ax.set_xlabel(r"$T_2$ partial pressure (Pa)")
 ax.set_ylabel(r"Tritium molar flux (mol/m$^2$/s)")
 ax.legend(loc="best")
 ax.grid(which='major', color='0.65', linestyle='--', alpha=0.3)
-fig.savefig('val-2g_tritium_flux_2D_no_FLiBe.png', bbox_inches='tight', dpi=300)
+fig.savefig('val-2h_tritium_flux_2D_no_FLiBe.png', bbox_inches='tight', dpi=300)
 
 #===============================================================================
 # Mass conservation check
 
 if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
-    data_folder = "../../../../test/tests/val-2g/gold/val-2g_823K_1210Pa_out.csv"
+    data_folder = "../../../../test/tests/val-2h/gold/val-2h_823K_1210Pa_out.csv"
 else:                                       # if in test folder
-    data_folder = "./gold/val-2g_823K_1210Pa_out.csv"
+    data_folder = "./gold/val-2h_823K_1210Pa_out.csv"
 data_by_temperature = {}
 # Load data
 df = pd.read_csv(data_folder)
@@ -345,4 +345,4 @@ ax.text(0.95, 0.5, f'RMSPE = {rmspe:.2f} %', transform=ax.transAxes,
         fontsize=10, verticalalignment='center', horizontalalignment='right', fontweight='bold')
 
 plt.tight_layout()
-plt.savefig("val-2g_mass_conservation_2D_with_layer.png", dpi=300)
+plt.savefig("val-2h_mass_conservation_2D_with_layer.png", dpi=300)

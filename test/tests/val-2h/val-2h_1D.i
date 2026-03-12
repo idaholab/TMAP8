@@ -1,4 +1,4 @@
-!include val-2g_parameters.params
+!include val-2h_parameters.params
 
 # Materials properties
 ## diffusivity of tritium in FLiBe
@@ -237,7 +237,7 @@ width_inner = '${units 25 mm -> m}'
 []
 
 [Outputs]
-  file_base = 'val-2g_1D_823K_1210Pa'
+  file_base = 'val-2h_1D_823K_1210Pa'
   [csv]
     type = CSV
   []

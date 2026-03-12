@@ -1,4 +1,4 @@
-!include val-2g_parameters.params
+!include val-2h_parameters.params
 
 # Materials properties
 ## diffusivity of tritium in air
@@ -210,7 +210,7 @@ num_nodes_air = 50
 []
 
 [Outputs]
-  file_base = 'val-2g_823K_1210Pa_out'
+  file_base = 'val-2h_823K_1210Pa_out'
   [csv]
     type = CSV
   []
