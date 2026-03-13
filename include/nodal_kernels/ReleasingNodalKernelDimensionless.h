@@ -9,12 +9,23 @@
 #pragma once
 
 #include "NodalKernel.h"
-#include "TMAPScaling.h"
 
-class ReleasingNodalKernel : public NodalKernel
+/**
+ * Releasing NodalKernel for a dimensionless trapped-species variable
+ * Ĉ_t = C_t / C_t_ref.
+ *
+ * The residual is:
+ *   R = +k_r_hat · exp(-E_r / T) · Ĉ_t
+ *
+ * where k_r_hat = t_ref · α_r.
+ *
+ * This is trivially dimensionless (O(k_r_hat)) because Ĉ_t is O(1).
+ * No TMAPScaling / scaleResidual is used.
+ */
+class ReleasingNodalKernelDimensionless : public NodalKernel
 {
 public:
-  ReleasingNodalKernel(const InputParameters & parameters);
+  ReleasingNodalKernelDimensionless(const InputParameters & parameters);
 
   static InputParameters validParams();
 
@@ -22,8 +33,7 @@ protected:
   Real computeQpResidual() override;
   Real computeQpJacobian() override;
 
-  const Real _alpha_r;
+  const Real _dimensionless_release_rate;
   const Real _detrapping_energy;
   const VariableValue & _temperature;
-  const TMAP::Scaling::TrappingEquationScaling _equation_scaling;
 };

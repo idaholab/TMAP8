@@ -35,6 +35,7 @@ TrappingNodalKernel::validParams()
   params.addCoupledVar("other_trapped_concentration_variables",
                        "Other variables representing trapped particle concentrations.");
   params.addRequiredCoupledVar("temperature", "The temperature (K)");
+  TMAP::Scaling::addTrappingEquationScaleParams(params);
   return params;
 }
 
@@ -47,7 +48,8 @@ TrappingNodalKernel::TrappingNodalKernel(const InputParameters & parameters)
     _mobile_concentration(coupledValue("mobile_concentration")),
     _last_node(nullptr),
     _trap_per_free(getParam<Real>("trap_per_free")),
-    _temperature(coupledValue("temperature"))
+    _temperature(coupledValue("temperature")),
+    _equation_scaling(parameters)
 {
   _n_other_concs = coupledComponents("other_trapped_concentration_variables");
 
@@ -74,8 +76,10 @@ TrappingNodalKernel::computeQpResidual()
   for (const auto & trap_conc : _trapped_concentrations)
     empty_trapping_sites -= (*trap_conc)[_qp] * _trap_per_free;
 
-  return -_alpha_t * std::exp(-_trapping_energy / _temperature[_qp]) * empty_trapping_sites *
-         _mobile_concentration[_qp] / (_N * _trap_per_free);
+  const Real residual = -_alpha_t * std::exp(-_trapping_energy / _temperature[_qp]) *
+                        empty_trapping_sites * _mobile_concentration[_qp] / (_N * _trap_per_free);
+
+  return _equation_scaling.scaleResidual(residual);
 }
 
 void
@@ -108,7 +112,7 @@ TrappingNodalKernel::computeQpJacobian()
 {
   ADHelper();
 
-  return _jacobian.derivatives()[_var.number()];
+  return _equation_scaling.scaleResidual(_jacobian.derivatives()[_var.number()]);
 }
 
 Real
@@ -118,7 +122,7 @@ TrappingNodalKernel::computeQpOffDiagJacobian(unsigned int jvar)
   {
     ADHelper();
 
-    return _jacobian.derivatives()[jvar];
+    return _equation_scaling.scaleResidual(_jacobian.derivatives()[jvar]);
   }
   else
     return 0;

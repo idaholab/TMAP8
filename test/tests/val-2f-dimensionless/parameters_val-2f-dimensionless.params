@@ -1,0 +1,188 @@
+# This input files provides the model parameter values for validation case val-2f.
+# It is included in val-2f.i
+
+# Physical constants
+kb = '${units 1.380649e-23 J/K}' # Boltzmann constant J/K - from PhysicalConstants.h
+eV_to_J = '${units 1.602176634e-19 J/eV}' # Conversion coefficient from eV to Joules - from PhysicalConstants.h
+kb_eV = '${units ${fparse kb / eV_to_J} eV/K}' # Boltzmann constant eV/K
+
+tungsten_density = '${units 6.3222e28 at/m^3 -> at/mum^3}'
+
+# Temperature conditions
+temperature_initial = '${units 370 K}'
+temperature_cooldown = '${units 295 K}'
+temperature_desorption_min = '${units 300 K}'
+temperature_desorption_max = '${units 1000 K}'
+desorption_heating_rate = '${units ${fparse 3/60} K/s}'
+
+# Important times
+# charge_time and cooldown_duration are defined by the calling input file (or CLI override)
+# so that light-test and full-scale runs share this params file.
+desorption_duration = '${fparse (temperature_desorption_max-temperature_desorption_min)/desorption_heating_rate}'
+
+# Materials properties
+diffusion_W_preexponential = '${units 1.6e-7 m^2/s -> mum^2/s}'
+diffusion_W_energy = '${units 0.28 eV}'
+recombination_coefficient = '${units ${fparse 3.8e-16} m^4/at/s -> mum^4/at/s}'
+recombination_energy = '${units 0.34 eV}'
+trapping_energy = '${fparse ${units ${diffusion_W_energy} eV -> J} / kb}'
+trapping_prefactor = '${units ${fparse ${units ${diffusion_W_preexponential} mum^2/s -> m^2/s} / (1.1e-10^2 * 6) } 1/s}'
+detrapping_prefactor = '${units 1e13 1/s}'
+
+# Source term parameters
+sigma = '${units 0.5e-9 m -> mum}'
+R_p = '${units 0.7e-9 m -> mum}'
+flux = '${units ${fparse 5.79e19} at/m^2/s -> at/mum^2/s}'
+
+# Fermi-Dirac trap density distribution
+depth_center = '${units 2.5e-6 m -> mum}'
+depth_width = '${units 5e-7 m -> mum}'
+
+# sample_thickness and ix1-ix5 are defined by the calling input file (or CLI override).
+dx1 = '${fparse 6*sigma}'
+dx2 = '${units 3e-6 m -> mum}'
+dx3 = '${units 7.997e-6 m -> mum}'
+dx4 = '${units 7.2e-5 m -> mum}'
+
+# Damaged-induced traps parameters
+A0 = '${units 6.18e-3 1/s}'
+# dpa stand for displacements per atom
+phi = '${units 8.9e-5 dpa/s}'
+temperature_damage = '${units 800 K}'
+damage = '${units 0.1 dpa}'
+damage_duration = '${units ${fparse damage/phi} s}'
+
+# Trap 1 parameters
+trapping_energy_1 = '${fparse trapping_energy}'
+trapping_prefactor_1 = '${fparse trapping_prefactor}'
+detrapping_energy_1 = '${fparse ${units 1.15 eV -> J} / ${kb}}'
+detrapping_prefactor_1 = '${fparse detrapping_prefactor}'
+K_1 = '${units 9.0e26 traps/m^3/dpa}'
+nmax_1 = '${units 6.9e25 1/m^3}'
+Ea_1 = '${units 0.24 eV}'
+A_1 = '${fparse A0 * exp(-Ea_1/(kb_eV*temperature_damage))}'
+S_1 = '${fparse phi*K_1}'
+r_1 = '${fparse phi*K_1/nmax_1 + A_1}'
+trap_density_01dpa_1 = '${units ${fparse -S_1/r_1 * exp(-r_1*damage_duration) + S_1/r_1} at/m^3 -> at/mum^3}'
+trapping_site_fraction_1 = '${fparse trap_density_01dpa_1 / tungsten_density}'
+trap_concentration_reference_1 = '${fparse tungsten_density * 1e-15}'
+
+# Trap 2 parameters
+trapping_energy_2 = '${fparse trapping_energy}'
+trapping_prefactor_2 = '${fparse trapping_prefactor}'
+detrapping_energy_2 = '${fparse ${units 1.35 eV -> J} / kb}'
+detrapping_prefactor_2 = '${fparse detrapping_prefactor}'
+K_2 = '${units 4.2e26 traps/m^3/dpa}'
+nmax_2 = '${units 7.0e25 1/m^3}'
+Ea_2 = '${units 0.24 eV}'
+A_2 = '${fparse A0 * exp(-Ea_2/(kb_eV*temperature_damage))}'
+S_2 = '${fparse phi*K_2}'
+r_2 = '${fparse phi*K_2/nmax_2 + A_2}'
+trap_density_01dpa_2 = '${units ${fparse -S_2/r_2 * exp(-r_2*damage_duration) + S_2/r_2} at/m^3 -> at/mum^3}'
+trapping_site_fraction_2 = '${fparse trap_density_01dpa_2 / tungsten_density}'
+trap_concentration_reference_2 = '${fparse tungsten_density * 1e-15}'
+
+# Trap 3 parameters
+trapping_energy_3 = '${fparse trapping_energy}'
+trapping_prefactor_3 = '${fparse trapping_prefactor}'
+detrapping_energy_3 = '${fparse ${units 1.65 eV -> J} / kb}'
+detrapping_prefactor_3 = '${fparse detrapping_prefactor}'
+K_3 = '${units 2.5e26 traps/m^3/dpa}'
+nmax_3 = '${units 6.0e25 1/m^3}'
+Ea_3 = '${units 0.30 eV}'
+A_3 = '${fparse A0 * exp(-Ea_3/(kb_eV*temperature_damage))}'
+S_3 = '${fparse phi*K_3}'
+r_3 = '${fparse phi*K_3/nmax_3 + A_3}'
+trap_density_01dpa_3 = '${units ${fparse -S_3/r_3 * exp(-r_3*damage_duration) + S_3/r_3} at/m^3 -> at/mum^3}'
+trapping_site_fraction_3 = '${fparse trap_density_01dpa_3 / tungsten_density}'
+trap_concentration_reference_3 = '${fparse tungsten_density * 1e-13}'
+
+# Trap 4 parameters
+trapping_energy_4 = '${fparse trapping_energy}'
+trapping_prefactor_4 = '${fparse trapping_prefactor}'
+detrapping_energy_4 = '${fparse ${units 1.85 eV -> J} / kb}'
+detrapping_prefactor_4 = '${fparse detrapping_prefactor}'
+K_4 = '${units 5.0e26 traps/m^3/dpa}'
+nmax_4 = '${units 4.7e25 1/m^3}'
+Ea_4 = '${units 0.30 eV}'
+A_4 = '${fparse A0 * exp(-Ea_4/(kb_eV*temperature_damage))}'
+S_4 = '${fparse phi*K_4}'
+r_4 = '${fparse phi*K_4/nmax_4 + A_4}'
+trap_density_01dpa_4 = '${units ${fparse -S_4/r_4 * exp(-r_4*damage_duration) + S_4/r_4} at/m^3 -> at/mum^3}'
+trapping_site_fraction_4 = '${fparse trap_density_01dpa_4 / tungsten_density}'
+trap_concentration_reference_4 = '${fparse tungsten_density * 1e-12}'
+
+# Trap 5 parameters
+trapping_energy_5 = '${fparse trapping_energy}'
+trapping_prefactor_5 = '${fparse trapping_prefactor}'
+detrapping_energy_5 = '${fparse ${units 2.05 eV -> J} / kb}'
+detrapping_prefactor_5 = '${fparse detrapping_prefactor}'
+K_5 = '${units 1.0e26 traps/m^3/dpa}'
+nmax_5 = '${units 2.0e25 1/m^3}'
+S_5 = '${fparse phi*K_5}'
+r_5 = '${fparse phi*K_5/nmax_5}'
+trap_density_01dpa_5 = '${units ${fparse -S_5/r_5 * exp(-r_5*damage_duration) + S_5/r_5} at/m^3 -> at/mum^3}'
+trapping_site_fraction_5 = '${fparse trap_density_01dpa_5 / tungsten_density}'
+trap_concentration_reference_5 = '${fparse tungsten_density * 1e-12}'
+
+# Trap intrinsic parameters
+trapping_energy_intrinsic = '${fparse trapping_energy}'
+trapping_prefactor_intrinsic = '${fparse trapping_prefactor}'
+detrapping_energy_intrinsic = '${fparse ${units 1.04 eV -> J} / kb}'
+detrapping_prefactor_intrinsic = '${fparse detrapping_prefactor}'
+trap_density_01dpa_intrinsic = '${units 2.4e22 at/m^3 -> at/mum^3}'
+trapping_site_fraction_intrinsic = '${fparse trap_density_01dpa_intrinsic / tungsten_density}'
+trap_concentration_reference_intrinsic = '${fparse tungsten_density * 1e-18}'
+
+# Concentration references chosen so dimensionless variables are O(1):
+# - mobile variable stores Ĉ_m = C_m / C_m_ref, with C_m_ref ~ peak mobile concentration
+# - each trapped variable stores Ĉ_t_i = C_t_i / trap_density_01dpa_i (max occupancy)
+mobile_concentration_reference = '${fparse 1e-15 * tungsten_density}'
+
+# Explicit reference quantities for the fully nondimensional val-2f example.
+# `time_reference` is generated from `scripts/compute_val_2f_dimensionless_reference.py`
+# by taking the faster of:
+# - diffusion time L_ref^2 / D(T_ref)
+# - first-order reaction times 1 / k(T_ref) for release processes
+# For the current val-2f constants, diffusion is faster than the release kinetics at 370 K.
+length_reference = 1
+time_reference = 0.04071610368608602
+
+# Dimensionless trap rate groups: k_t_hat = alpha_t * C_m_ref / N * t_ref
+# (from nondimensionalizing ∂C_t/∂t = alpha_t/N * C_m * (N*Ct0 - C_t))
+dimensionless_trapping_rate_intrinsic = '${fparse trapping_prefactor_intrinsic * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_1 = '${fparse trapping_prefactor_1 * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_2 = '${fparse trapping_prefactor_2 * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_3 = '${fparse trapping_prefactor_3 * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_4 = '${fparse trapping_prefactor_4 * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_5 = '${fparse trapping_prefactor_5 * time_reference * mobile_concentration_reference / tungsten_density}'
+
+dimensionless_release_rate_intrinsic = '${fparse detrapping_prefactor_intrinsic * time_reference}'
+dimensionless_release_rate_1 = '${fparse detrapping_prefactor_1 * time_reference}'
+dimensionless_release_rate_2 = '${fparse detrapping_prefactor_2 * time_reference}'
+dimensionless_release_rate_3 = '${fparse detrapping_prefactor_3 * time_reference}'
+dimensionless_release_rate_4 = '${fparse detrapping_prefactor_4 * time_reference}'
+dimensionless_release_rate_5 = '${fparse detrapping_prefactor_5 * time_reference}'
+
+# Dimensionless geometry and time quantities used by val-2f-dimensionless.
+sigma_hat = '${fparse sigma / length_reference}'
+R_p_hat = '${fparse R_p / length_reference}'
+depth_center_hat = '${fparse depth_center / length_reference}'
+depth_width_hat = '${fparse depth_width / length_reference}'
+sample_thickness_hat = '${fparse sample_thickness / length_reference}'
+dx1_hat = '${fparse dx1 / length_reference}'
+dx2_hat = '${fparse dx2 / length_reference}'
+dx3_hat = '${fparse dx3 / length_reference}'
+dx4_hat = '${fparse dx4 / length_reference}'
+dx5_hat = '${fparse sample_thickness_hat - dx1_hat - dx2_hat - dx3_hat - dx4_hat}'
+charge_time_hat = '${fparse charge_time / time_reference}'
+cooldown_duration_hat = '${fparse cooldown_duration / time_reference}'
+desorption_duration_hat = '${fparse desorption_duration / time_reference}'
+endtime_hat = '${fparse charge_time_hat + cooldown_duration_hat + desorption_duration_hat}'
+desorption_heating_rate_hat = '${fparse desorption_heating_rate * time_reference}'
+
+# Dimensionless mobile transport quantities.
+diffusion_W_preexponential_hat = '${fparse diffusion_W_preexponential * time_reference / (length_reference^2)}'
+surface_flux_hat = '${fparse flux * time_reference / (mobile_concentration_reference * length_reference)}'
+recombination_coefficient_hat = '${fparse recombination_coefficient * mobile_concentration_reference * time_reference / length_reference}'
+sieverts_boundary_hat = '${fparse 1e-10 / mobile_concentration_reference}'
