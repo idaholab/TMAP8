@@ -33,7 +33,13 @@ ReleasingNodalKernel::ReleasingNodalKernel(const InputParameters & parameters)
 Real
 ReleasingNodalKernel::computeQpResidual()
 {
-  return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]) * _u[_qp];
+  const Real residual = _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]) * _u[_qp];
+
+  mooseAssert(residual >= 0,
+              "ReleasingNodalKernel returned a negative residual, which is not physically "
+              "expected for a release source.");
+
+  return residual;
 }
 
 Real

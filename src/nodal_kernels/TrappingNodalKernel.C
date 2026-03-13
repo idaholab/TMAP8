@@ -74,8 +74,14 @@ TrappingNodalKernel::computeQpResidual()
   for (const auto & trap_conc : _trapped_concentrations)
     empty_trapping_sites -= (*trap_conc)[_qp] * _trap_per_free;
 
-  return -_alpha_t * std::exp(-_trapping_energy / _temperature[_qp]) * empty_trapping_sites *
-         _mobile_concentration[_qp] / (_N * _trap_per_free);
+  const Real residual = -_alpha_t * std::exp(-_trapping_energy / _temperature[_qp]) *
+                        empty_trapping_sites * _mobile_concentration[_qp] / (_N * _trap_per_free);
+
+  mooseAssert(residual <= 0,
+              "TrappingNodalKernel returned a positive residual, which is not physically "
+              "expected for a trapping sink.");
+
+  return residual;
 }
 
 void
