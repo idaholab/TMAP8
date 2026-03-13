@@ -8,6 +8,16 @@
   []
 []
 
+[Bounds]
+  [trapped_5_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = trapped_5
+    bound_type = lower
+    bound_value = 0
+  []
+[]
+
 [Kernels]
   # trapping 5 kernel
   [coupled_time_trap_5]
