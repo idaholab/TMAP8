@@ -8,6 +8,7 @@
 
 #include "TrappingNodalKernel.h"
 #include "Function.h"
+#include "TMAPRegularization.h"
 
 registerMooseObject("TMAP8App", TrappingNodalKernel);
 
@@ -72,10 +73,12 @@ TrappingNodalKernel::computeQpResidual()
 {
   auto empty_trapping_sites = _Ct0.value(_t, (*_current_node)) * _N;
   for (const auto & trap_conc : _trapped_concentrations)
-    empty_trapping_sites -= (*trap_conc)[_qp] * _trap_per_free;
+    empty_trapping_sites -= TMAP::regularizedConcentration((*trap_conc)[_qp]) * _trap_per_free;
+
+  const auto mobile_concentration = TMAP::regularizedConcentration(_mobile_concentration[_qp]);
 
   return -_alpha_t * std::exp(-_trapping_energy / _temperature[_qp]) * empty_trapping_sites *
-         _mobile_concentration[_qp] / (_N * _trap_per_free);
+         mobile_concentration / (_N * _trap_per_free);
 }
 
 void
@@ -92,12 +95,13 @@ TrappingNodalKernel::ADHelper()
   {
     LocalDN trap_conc_dn = (*trap_conc)[_qp];
     trap_conc_dn.derivatives().insert(_var_numbers[i]) = 1.;
-    empty_trapping_sites -= trap_conc_dn * _trap_per_free;
+    empty_trapping_sites -= TMAP::regularizedConcentration(trap_conc_dn) * _trap_per_free;
     ++i;
   }
   LocalDN mobile_concentration = _mobile_concentration[_qp];
 
   mobile_concentration.derivatives().insert(_var_numbers.back()) = 1.;
+  mobile_concentration = TMAP::regularizedConcentration(mobile_concentration);
 
   _jacobian = -_alpha_t * std::exp(-_trapping_energy / _temperature[_qp]) * empty_trapping_sites *
               mobile_concentration / (_N * _trap_per_free);

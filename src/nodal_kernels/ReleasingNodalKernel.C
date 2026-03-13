@@ -7,6 +7,7 @@
 /************************************************************/
 
 #include "ReleasingNodalKernel.h"
+#include "TMAPRegularization.h"
 
 registerMooseObject("TMAP8App", ReleasingNodalKernel);
 
@@ -33,11 +34,17 @@ ReleasingNodalKernel::ReleasingNodalKernel(const InputParameters & parameters)
 Real
 ReleasingNodalKernel::computeQpResidual()
 {
-  return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]) * _u[_qp];
+  return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]) *
+         TMAP::regularizedConcentration(_u[_qp]);
 }
 
 Real
 ReleasingNodalKernel::computeQpJacobian()
 {
-  return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]);
+  const auto concentration = _u[_qp];
+  const Real epsilon = libMesh::TOLERANCE * libMesh::TOLERANCE;
+  const auto derivative =
+      0.5 * (1. + concentration / std::sqrt(concentration * concentration + epsilon * epsilon));
+
+  return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]) * derivative;
 }

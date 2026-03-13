@@ -190,7 +190,7 @@
     coupled_variables = 'deuterium_concentration_W'
     property_name = 'flux_recombination_surface'
     material_property_names = 'Kr'
-    expression = '- 2 * Kr * deuterium_concentration_W ^ 2'
+    expression = '- 2 * Kr * (0.5 * (deuterium_concentration_W + sqrt(deuterium_concentration_W ^ 2 + 1e-12))) ^ 2'
   []
 []
 
