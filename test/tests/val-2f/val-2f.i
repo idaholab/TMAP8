@@ -44,7 +44,7 @@
     variable = bounds_dummy
     bounded_variable = deuterium_concentration_W
     bound_type = lower
-    bound_value = '${fparse -1e-20}'
+    bound_value = 0
   []
 []
 

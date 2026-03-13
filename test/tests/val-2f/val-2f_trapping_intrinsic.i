@@ -14,7 +14,7 @@
     variable = bounds_dummy
     bounded_variable = trapped_intrinsic
     bound_type = lower
-    bound_value = '${fparse -1e-20}'
+    bound_value = 0
   []
 []
 
