@@ -405,9 +405,19 @@ SpeciesTrappingPhysics::addFEKernels()
       // Time derivative
       if (isTransient())
       {
-        const std::string kernel_type = "TimeDerivativeNodalKernel";
+        const std::string kernel_type =
+            _automatic_trapping_scaling ? "ScaledTimeDerivativeNodalKernel"
+                                        : "TimeDerivativeNodalKernel";
         InputParameters params = getFactory().getValidParams(kernel_type);
         params.set<NonlinearVariableName>("variable") = species_name;
+        if (_automatic_trapping_scaling)
+        {
+          params.set<Real>("trap_concentration_reference") = trappedConcentrationReference(c_i);
+          params.set<Real>("mobile_concentration_reference") = mobileConcentrationReference(c_i);
+          params.set<Real>("site_density_reference") = siteDensityReference(c_i);
+          params.set<Real>("time_reference") = timeReference(c_i);
+          params.set<Real>("temperature_reference") = temperatureReference(c_i);
+        }
         assignBlocks(params, blocks);
         getProblem().addNodalKernel(kernel_type, prefix() + species_name + "_time", params);
       }
