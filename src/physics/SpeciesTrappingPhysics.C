@@ -60,6 +60,11 @@ SpeciesTrappingPhysics::validParams()
   params.addParam<bool>("different_traps_for_each_species",
                         false,
                         "Wheter the traps are shared by each species or not");
+  params.addParam<bool>(
+      "automatic_trapping_scaling",
+      false,
+      "Whether to automatically derive trapped-variable and trapping-equation scaling "
+      "from trap_per_free. This is an opt-in pilot for physics-aware scaling.");
 
   params.addParam<std::vector<Real>>(
       "alpha_r",
@@ -76,6 +81,7 @@ SpeciesTrappingPhysics::validParams()
   params.addParamNamesToGroup(
       "alpha_t trapping_energy N Ct0 trap_per_free different_traps_for_each_species", "Trapping");
   params.addParamNamesToGroup("alpha_r temperature detrapping_energy", "Releasing");
+  params.addParamNamesToGroup("automatic_trapping_scaling", "Scaling");
 
   return params;
 }
@@ -93,7 +99,8 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
                         : std::vector<Real>()),
     _alpha_rs({getParam<std::vector<Real>>("alpha_r")}),
     _detrapping_energies({getParam<std::vector<Real>>("detrapping_energy")}),
-    _single_variable_set(!getParam<bool>("separate_variables_per_component"))
+    _single_variable_set(!getParam<bool>("separate_variables_per_component")),
+    _automatic_trapping_scaling(getParam<bool>("automatic_trapping_scaling"))
 {
   // We allow overlaps between mobile species names because two trapped species could release to the
   // same mobile species and adding the two time derivative kernels is correct
@@ -122,6 +129,46 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "alpha_r", true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>(
       "species", "detrapping_energy", true);
+}
+
+Real
+SpeciesTrappingPhysics::mobileConcentrationReference(unsigned int /*c_i*/) const
+{
+  return 1.0;
+}
+
+Real
+SpeciesTrappingPhysics::trappedConcentrationReference(unsigned int c_i) const
+{
+  return _automatic_trapping_scaling ? 1.0 / _trap_per_frees[c_i] : 1.0;
+}
+
+Real
+SpeciesTrappingPhysics::variableScalingFromReference(Real reference) const
+{
+  return 1.0 / reference;
+}
+
+Real
+SpeciesTrappingPhysics::siteDensityReference(unsigned int c_i) const
+{
+  return _automatic_trapping_scaling ? _Ns[c_i] : 1.0;
+}
+
+Real
+SpeciesTrappingPhysics::timeReference(unsigned int /*c_i*/) const
+{
+  return 1.0;
+}
+
+Real
+SpeciesTrappingPhysics::temperatureReference(unsigned int c_i) const
+{
+  if (!_automatic_trapping_scaling)
+    return 1.0;
+
+  const auto & temp = _component_temperatures[c_i];
+  return MooseUtils::parsesToReal(temp) ? MooseUtils::convert<Real>(temp) : 1.0;
 }
 
 void
@@ -259,11 +306,13 @@ SpeciesTrappingPhysics::addSolverVariables()
     for (const auto s_j : index_range(_species[c_i]))
     {
       const auto species_name = getSpeciesVariableName(c_i, s_j);
-      if (isParamSetByUser("species_scaling_factor") || !_single_variable_set)
-        params.set<std::vector<Real>>("scaling") = {
-            (_scaling_factors.size() > 1)
-                ? _scaling_factors[c_i][s_j]
-                : ((_scaling_factors.size() == 1) ? _scaling_factors[0][s_j] : 1)};
+      Real scaling = (_scaling_factors.size() > 1)
+                         ? _scaling_factors[c_i][s_j]
+                         : ((_scaling_factors.size() == 1) ? _scaling_factors[0][s_j] : 1);
+      if (_automatic_trapping_scaling)
+        scaling *= variableScalingFromReference(trappedConcentrationReference(c_i));
+      if (scaling != 1 || !_single_variable_set)
+        params.set<std::vector<Real>>("scaling") = {scaling};
       params.set<SolverSystemName>("solver_sys") = getSolverSystem(species_name);
       getProblem().addVariable(variable_type, species_name, params);
 
@@ -339,6 +388,20 @@ SpeciesTrappingPhysics::addFEKernels()
       const auto species_name = getSpeciesVariableName(c_i, s_j);
       const auto mobile_species_name = _mobile_species_names[c_i][s_j];
 
+      if (_automatic_trapping_scaling && _verbose && s_j == 0)
+        mooseInfo("Automatic trapping scaling on component '",
+                  _components[c_i],
+                  "': trap_per_free=",
+                  _trap_per_frees[c_i],
+                  ", trap concentration reference=",
+                  trappedConcentrationReference(c_i),
+                  ", mobile concentration reference=",
+                  mobileConcentrationReference(c_i),
+                  ", site density reference=",
+                  siteDensityReference(c_i),
+                  ", time reference=",
+                  timeReference(c_i));
+
       // Time derivative
       if (isTransient())
       {
@@ -377,6 +440,11 @@ SpeciesTrappingPhysics::addFEKernels()
         params.set<Real>("N") = _Ns[c_i];
         params.set<FunctionName>("Ct0") = _Ct0s[c_i][s_j];
         params.set<Real>("trap_per_free") = _trap_per_frees[c_i];
+        params.set<Real>("trap_concentration_reference") = trappedConcentrationReference(c_i);
+        params.set<Real>("mobile_concentration_reference") = mobileConcentrationReference(c_i);
+        params.set<Real>("site_density_reference") = siteDensityReference(c_i);
+        params.set<Real>("time_reference") = timeReference(c_i);
+        params.set<Real>("temperature_reference") = temperatureReference(c_i);
 
         // Add the other species as occupying traps
         std::vector<VariableName> copy_species;
@@ -398,6 +466,11 @@ SpeciesTrappingPhysics::addFEKernels()
         params.set<NonlinearVariableName>("variable") = species_name;
         params.set<Real>("alpha_r") = _alpha_rs[c_i][s_j];
         params.set<Real>("detrapping_energy") = _detrapping_energies[c_i][s_j];
+        params.set<Real>("trap_concentration_reference") = trappedConcentrationReference(c_i);
+        params.set<Real>("mobile_concentration_reference") = mobileConcentrationReference(c_i);
+        params.set<Real>("site_density_reference") = siteDensityReference(c_i);
+        params.set<Real>("time_reference") = timeReference(c_i);
+        params.set<Real>("temperature_reference") = temperatureReference(c_i);
         // The default coupled value will not have been created by the Builder since we created
         // the parameter as a MooseFunctorName in the Physics
         if (MooseUtils::parsesToReal(_component_temperatures[c_i]))
@@ -425,6 +498,9 @@ SpeciesTrappingPhysics::addFEKernels()
         params.set<NonlinearVariableName>("variable") = mobile_species_name;
         params.set<std::vector<VariableName>>("v") = {species_name};
         params.set<Real>("factor") = _trap_per_frees[c_i];
+        params.set<Real>("primary_concentration_reference") = mobileConcentrationReference(c_i);
+        params.set<Real>("coupled_concentration_reference") = trappedConcentrationReference(c_i);
+        params.set<Real>("time_reference") = timeReference(c_i);
 
         getProblem().addKernel(
             kernel_type, prefix() + mobile_species_name + "_from_" + species_name, params);

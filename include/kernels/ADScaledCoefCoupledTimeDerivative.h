@@ -8,20 +8,19 @@
 
 #pragma once
 
-#include "CoupledTimeDerivative.h"
+#include "ADCoupledTimeDerivative.h"
 #include "TMAPScaling.h"
 
-class ScaledCoupledTimeDerivative : public CoupledTimeDerivative
+class ADScaledCoefCoupledTimeDerivative : public ADCoupledTimeDerivative
 {
 public:
-  ScaledCoupledTimeDerivative(const InputParameters & parameters);
+  ADScaledCoefCoupledTimeDerivative(const InputParameters & parameters);
 
   static InputParameters validParams();
 
 protected:
-  virtual Real computeQpResidual() override;
-  virtual Real computeQpOffDiagJacobian(unsigned int jvar) override;
+  ADReal precomputeQpResidual() override;
 
-  const Real _factor;
+  const Real _coef;
   const TMAP::Scaling::MobileEquationScaling _equation_scaling;
 };
