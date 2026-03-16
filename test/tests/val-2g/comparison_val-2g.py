@@ -708,7 +708,7 @@ plt.close(fig)
 ################################################################################
 ######################### Extract json file information ########################
 ################################################################################
-if "/TMAP8/doc/" in script_folder:  # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
     file = f"../../../../test/tests/val-2g/gold/val-2g_PSS/both_cases_trapping_long_PSS_results.json"
 else:  # if in test folder
     file = f"./gold/val-2g_PSS/both_cases_trapping_long_PSS_results.json"
