@@ -21,13 +21,9 @@
 [Kernels]
   # trapping 5 kernel
   [coupled_time_trap_5]
-    type = ADScaledCoefCoupledTimeDerivative
+    type = ADCoupledTimeDerivative
     variable = deuterium_concentration_W
     v = trapped_5
-    coef = ${trap_per_free_5}
-    primary_concentration_reference = 1
-    coupled_concentration_reference = '${trap_concentration_reference_5}'
-    time_reference = 1
   []
 []
 
@@ -36,7 +32,7 @@
     type = ScaledTimeDerivativeNodalKernel
     variable = trapped_5
     trap_concentration_reference = '${trap_concentration_reference_5}'
-    mobile_concentration_reference = 1
+    mobile_concentration_reference = '${mobile_concentration_reference}'
     site_density_reference = '${tungsten_density}'
     time_reference = 1
     temperature_reference = '${temperature_initial}'
@@ -50,9 +46,8 @@
     N = '${tungsten_density}'
     Ct0 = 'trap_distribution_function_5'
     temperature = 'temperature'
-    trap_per_free = ${trap_per_free_5}
     trap_concentration_reference = '${trap_concentration_reference_5}'
-    mobile_concentration_reference = 1
+    mobile_concentration_reference = '${mobile_concentration_reference}'
     site_density_reference = '${tungsten_density}'
     time_reference = 1
     temperature_reference = '${temperature_initial}'
@@ -64,7 +59,7 @@
     detrapping_energy = '${detrapping_energy_5}'
     temperature = 'temperature'
     trap_concentration_reference = '${trap_concentration_reference_5}'
-    mobile_concentration_reference = 1
+    mobile_concentration_reference = '${mobile_concentration_reference}'
     site_density_reference = '${tungsten_density}'
     time_reference = 1
     temperature_reference = '${temperature_initial}'
@@ -98,7 +93,7 @@
   []
   [scaled_trapped_deuterium_5]
     type = ScalePostprocessor
-    scaling_factor = '${fparse ${trap_per_free_5} * ${units 1 m^2 -> mum^2}}'
+    scaling_factor = '${fparse ${units 1 m^2 -> mum^2}}'
     value = integral_trapped_concentration_5
   []
 []
