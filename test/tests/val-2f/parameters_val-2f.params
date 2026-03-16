@@ -149,4 +149,4 @@ detrapping_energy_intrinsic = '${fparse ${units 1.04 eV -> J} / kb}'
 detrapping_prefactor_intrinsic = '${fparse detrapping_prefactor}'
 trap_density_01dpa_intrinsic = '${units 2.4e22 at/m^3 -> at/mum^3}'
 trapping_site_fraction_intrinsic = '${fparse trap_density_01dpa_intrinsic / tungsten_density}'
-trap_per_free_intrinsic = 1e12 # (-)
+trap_per_free_intrinsic = 1e11 # (-)
