@@ -205,10 +205,12 @@ reference. This is the wrong formula — the correct per-species reference is
 
 ### Resolution
 
-Set `trap_per_free = 1` in the kernel physics (i.e., store `C_t` in physical units).
-The equations become exactly the standard McNabb-Foster form. Non-dimensionalization is
-handled entirely by the scaling infrastructure using `C_t_ref_i = N · Ct0_ref_i`, which
-the Physics action computes automatically from existing parameters.
+Eliminate `trap_per_free` entirely. Stored variables become dimensionless concentrations
+`Ĉ_t_i = C_t_i / C_t_ref_i` (O(1) when the trap is near saturation). The kernel
+equations are written in terms of Damköhler numbers and dimensionless quantities —
+no physical units appear inside the residual computation. The coupling coefficient
+`C_t_ref_i / C_m_ref` replaces `trap_per_free` and is derived automatically from
+the reference quantities.
 
 This is **not** a change to the physical model — it is a change in the choice of
 internal variable representation. The physical solution is identical.
@@ -232,23 +234,27 @@ The intrinsic trap operates ~1000–2000× lower than the damage traps. Using
 `1/trap_per_free = 1e-7` uniformly leaves the intrinsic-trap rows ~1000× less
 well-conditioned.
 
-### Target formulation (with `trap_per_free = 1`, physical units)
+### Target formulation (dimensionless variables)
 
-| Trap | C_t_ref_i = N · Ct0_ref_i |
-|------|--------------------------|
-| 1 (damage) | ~4.8e7 at/μm³ |
-| 2 (damage) | ~3.8e7 at/μm³ |
-| 3 (damage) | ~2.6e7 at/μm³ |
-| 4 (damage) | ~3.6e7 at/μm³ |
-| 5 (damage) | ~1.1e7 at/μm³ |
-| intrinsic  | ~2.4e4 at/μm³ |
+| Trap | C_t_ref_i = N · Ct0_ref_i | C_t_ref_i / C_m_ref (coupling coef) |
+|------|--------------------------|--------------------------------------|
+| 1 (damage) | ~4.8e7 at/μm³ | ~3.7e6 |
+| 2 (damage) | ~3.8e7 at/μm³ | ~2.9e6 |
+| 3 (damage) | ~2.6e7 at/μm³ | ~2.0e6 |
+| 4 (damage) | ~3.6e7 at/μm³ | ~2.8e6 |
+| 5 (damage) | ~1.1e7 at/μm³ | ~8.5e5 |
+| intrinsic  | ~2.4e4 at/μm³ | ~1.8e3 |
 
-Mobile reference (weakest trap = intrinsic at T = 370 K):
+Mobile reference (`C_m_ref` from weakest-trap equilibrium at T = 370 K):
 
 ```
 C_m_ref  =  (1e13 / 2.2e12) · exp(−(1.04 − 0.28) eV / (8.617e-5 eV/K · 370 K)) · N
-         ≈  4.5 · exp(−23.8) · 6.3e10  ≈  13 at/μm³
+         ≈  13 at/μm³
 ```
+
+Note: `C_m_ref ≈ 13 at/μm³` is derived from trapping equilibrium and is appropriate
+for the charging phase. See the discussion in the `mobile_concentration_reference`
+derivation section for the limitations of this estimate and the fallback strategies.
 
 ---
 
@@ -266,149 +272,195 @@ dC_m/dt = [diffusion + source] − Σ_i trap_per_free · du_i/dt
 
 where `u_i = C_t_i / trap_per_free`.
 
-### Target form (`trap_per_free = 1`, physical units)
+### Target form — truly dimensionless kernel equations
 
+Define:
+- `Ĉ_t_i = C_t_i / C_t_ref_i`     (O(1) stored variable, max ~1 when trap is full)
+- `Ĉ_m   = C_m   / C_m_ref`        (O(1) stored variable)
+- `t̂    = t     / t_ref`
+- `Ŝ_i  = N · Ct0_i / C_t_ref_i`  (dimensionless trap capacity; = 1 when C_t_ref = N·Ct0_max)
+
+Dimensionless Damköhler numbers (computed once at setup from known parameters):
 ```
-dC_t_i/dt =   α_t_i · exp(−E_t_i/T) · (N·Ct0_i − Σ_j C_t_j) · C_m / N
-            − α_r_i · exp(−E_r_i/T) · C_t_i
-
-dC_m/dt = [diffusion + source] − Σ_i dC_t_i/dt
+Da_t_i  =  α_t_i · t_ref · C_m_ref / N          (trapping Damköhler, ~1 when refs are correct)
+Da_r_i  =  α_r_i · t_ref                         (release  Damköhler)
 ```
 
-Standard McNabb-Foster form. No free scaling parameters.
+Dimensionless trapped-species equation:
+```
+dĈ_t_i/dt̂  =  Da_t_i · exp(−E_t_i/T) · (Ŝ_i − Ĉ_t_i) · Ĉ_m
+             −  Da_r_i · exp(−E_r_i/T) · Ĉ_t_i
+```
+
+Dimensionless mobile equation:
+```
+dĈ_m/dt̂  =  [dimensionless diffusion + source]
+           − Σ_i  (C_t_ref_i / C_m_ref) · dĈ_t_i/dt̂
+```
+
+The coupling coefficient `C_t_ref_i / C_m_ref` is the **physics-derived, per-species
+replacement for `trap_per_free`**. It is not a user input.
+
+**Why this is the right target:**
+
+Every intermediate quantity in the kernel residual computation is dimensionless and O(1)
+when references are chosen correctly. The residual itself is O(1) _by construction_ —
+no `scaleResidual` call is needed, and the entire `TMAPScaling` /
+`TrappingEquationScaling` / `MobileEquationScaling` infrastructure becomes obsolete.
+The Jacobian is automatically well-conditioned without any post-hoc row scaling.
+
+The `mobile_concentration_reference` (previously stored but unused in the residual)
+becomes a first-class input: it enters both `Da_t_i` and the mobile coupling coefficient.
+
+---
+
+## Fundamental Success Criterion
+
+**Serial and parallel runs must produce identical results** (within floating-point
+reordering tolerance) for all TMAP8 validation and verification cases. This is the
+primary metric of this design effort. "Poor-man's" row scaling (post-hoc `scaleResidual`
+applied to physical-unit residuals) cannot guarantee this because it leaves the Jacobian
+condition number sensitive to floating-point evaluation order, which differs between
+serial and parallel partitionings.
+
+Only a Jacobian whose entries are O(1) by construction — achieved through genuinely
+dimensionless variables and kernel equations — provides the conditioning necessary to
+make serial-parallel differences fall below solver tolerance.
 
 ---
 
 ## Implementation Roadmap
 
-### Phase 1 — Val-2f explicit-input fix (complete)
+### Backward-compatibility strategy
 
-Per-trap `trap_concentration_reference_i` computed in `parameters_val-2f.params` as:
+Existing TMAP8 inputs and tests must not be broken during this feature addition.
+The approach is to introduce **new dimensionless kernel classes** that live alongside
+the existing dimensional kernels rather than modifying them in place:
 
-```
-trap_concentration_reference_i  =  trap_density_i_sat / trap_per_free_i
-                                 =  N · Ct0_ref_i / trap_per_free_i
-```
+- `TrappingNodalKernelDimensionless` alongside `TrappingNodalKernel`
+- `ReleasingNodalKernelDimensionless` alongside `ReleasingNodalKernel`
+- (existing `ScaledTimeDerivativeNodalKernel` is replaced by plain `TimeDerivativeNodalKernel`
+  since a dimensionless stored variable needs no explicit time-derivative scaling)
 
-This is behavior-preserving (kernel physics unchanged), corrects the intrinsic-trap
-mis-scaling, and requires no kernel or Physics action code changes.
+The new `SpeciesTrappingPhysics` mode selects the dimensionless kernel classes and
+computes all Damköhler numbers automatically. Users never specify `Da_t`, `Da_r`,
+or any other dimensionless parameter by hand — the Physics action derives them from the
+physical parameters already required.
 
-**Success criterion**: serial-parallel differences for the intrinsic trap decrease to
-be comparable with damage traps. All 7 variable residual norms within an order of
-magnitude (`show_var_residual_norms = true` in `[Debug]`).
+A new test directory `test/tests/val-2f-dimensionless/` demonstrates the full approach:
+val-2f physics via `SpeciesTrappingPhysics` in dimensionless mode, SI-unit parameters
+only, no scaling hints, serial = parallel.
 
-### Phase 2 — Per-species automatic scaling in `SpeciesTrappingPhysics` (near-term)
+### Phase 1 — Dimensionless kernel classes and Physics integration
 
-Make `SpeciesTrappingPhysics` compute all scaling references automatically when
-`automatic_trapping_scaling = true`, with no user specification of scaling parameters.
+**New kernel classes** (live alongside existing, do not modify existing):
 
-**Changes to `SpeciesTrappingPhysics`**:
-
-1. Add `Ct0_reference` as an optional `vector<Real>` parameter (one per species). If
-   not provided, auto-compute from the registered `Ct0` function during `addFEKernels`:
-   - Parse as constant if possible.
-   - Else `dynamic_cast` to `ParsedFunction`, check for `\bt\b` time dependence,
-     then evaluate spatial max over mesh nodes at `t = 0`.
-   - Emit `paramError` for non-ParsedFunction or time-dependent cases.
-2. Change `trappedConcentrationReference(c_i)` → `trappedConcentrationReference(c_i, s_j)`
-   returning `N[c_i] * Ct0_ref[c_i][s_j] / trap_per_free[c_i]`.
-   Update all call sites in `addFEKernels` and `addSolverVariables`.
-3. Add `mobileConcentrationReference(c_i)` computed as:
-   ```
-   C_m_ref = max(C_m_BC, C_m_IC, C_m_trap)
-   ```
-   - `C_m_BC`: maximum Dirichlet BC value for the mobile species (constant or
-     ParsedFunction spatial max at `t=0`); provided by coordination with
-     `SpeciesDiffusionPhysics` or by querying the registered BCs for the mobile variable.
-   - `C_m_IC`: IC value/spatial max for the mobile species.
-   - `C_m_trap`: `max_j[(α_r_j/α_t_j) · exp(−(E_r_j − E_t_j)/T_ref) · N]` from the
-     weakest trap's equilibrium condition (zero if no traps).
-   - Emit `paramError` if all three are zero, requesting explicit
-     `mobile_concentration_reference`.
-4. Pass `C_m_ref` as `primary_concentration_reference` to
-   `ScaledCoupledTimeDerivative`, replacing the hardcoded `1`.
-
-**Result**: `automatic_trapping_scaling = true` fully determines all scaling from
-existing physics parameters. No `trap_concentration_reference`,
-`mobile_concentration_reference`, or `site_density_reference` parameters required in
-the input file.
-
-### Phase 3 — Eliminate `trap_per_free` from kernel physics (medium-term)
-
-Refactor trapping kernels to the standard McNabb-Foster form (`trap_per_free = 1`).
-Stored variables become physical concentrations.
-
-**Changes**:
-
-- `TrappingNodalKernel`: remove `trap_per_free` from `empty_sites` and residual.
-  New formula:
+- `TrappingNodalKernelDimensionless`: accepts `Da_t`, `Da_r`, `S_hat`; residual:
+  ```cpp
+  // u = Ĉ_t (dimensionless trapped, O(1)), v = Ĉ_m (dimensionless mobile, O(1))
+  residual = -Da_t * exp(-E_t / T) * (S_hat - u) * v
+           +  Da_r * exp(-E_r / T) * u;
+  // Residual is O(1) by construction. No scaleResidual.
   ```
-  empty_sites  =  N·Ct0 − Σ C_t_j
-  residual     =  −α_t · exp(−E_t/T) · empty_sites · C_m / N
-  ```
-- `ADScaledCoefCoupledTimeDerivative` / `ScaledCoupledTimeDerivative`: drop `coef`
-  (fixed at 1). Coupling is 1-to-1 in physical units.
-- `SpeciesTrappingPhysics`: remove `trap_per_free` from `addFEKernels`. Compute
-  `C_t_ref_i = N · Ct0_ref_i` directly (no division by `trap_per_free`). Update
-  `variableScalingFromReference` accordingly.
-- Deprecation warning in `TrappingNodalKernel::validParams` if `trap_per_free != 1`.
+- `ReleasingNodalKernelDimensionless`: `Da_r * exp(-E_r / T) * u`.
+  (Consider merging into `TrappingNodalKernelDimensionless` — the release term is
+  already present there and `ReleasingNodalKernel` would become trivial.)
 
-**Migration**: existing input files with explicit `trap_per_free != 1` must update
-initial conditions and coupling coefficients. Provide a migration guide.
+**`SpeciesTrappingPhysics` automatic reference computation**:
 
-### Phase 4 — Heat conduction non-dimensionalization (medium-term)
+When `automatic_trapping_scaling = true` (the new default), the Physics action
+computes all references without user input:
 
-Extend automatic scaling to `HeatConductionCG` (or the equivalent TMAP8 heat physics).
+1. **`C_t_ref_i = N · Ct0_ref_i`**: `Ct0_ref_i` obtained by:
+   - Parse `Ct0_i` as a `Real` constant. If successful, use directly.
+   - Else `dynamic_cast` to `ParsedFunction`; check for `\bt\b` time dependence
+     (emit `paramError` if found); evaluate spatial max over mesh nodes at `t = 0`.
+   - Emit `paramError` for non-`ParsedFunction` types.
 
-**References**:
-- `T_ref`: initial temperature, parsed from the temperature variable's initial condition
-  or taken from an existing `initial_temperature` parameter.
-- `L_ref`: characteristic length from the mesh bounding box (1D domain length,
-  or smallest dimension for 2D/3D).
-- `k_ref`: thermal conductivity evaluated at `T_ref` (available from the material
-  property at setup time if it is a constant or a ParsedFunction of T).
+2. **`C_m_ref = max(C_m_BC, C_m_IC, C_m_trap)`**:
+   - `C_m_BC`: max Dirichlet BC value for the mobile species (constant or
+     `ParsedFunction` spatial max at `t = 0`).
+   - `C_m_IC`: IC value or spatial max for the mobile species.
+   - `C_m_trap`: `max_i[(α_r_i / α_t_i) · exp(−(E_r_i − E_t_i) / T_ref) · N]`
+     from the weakest trap (zero if no traps).
+   - Emit `paramError` if all three are zero (source-driven Neumann-only problem
+     where the scale must be inferred from the flux — not yet automatic).
 
-**Row scale**:
-```
-heat_residual_reference  =  k_ref · T_ref / L_ref²
-```
+3. From the above, compute and pass to dimensionless kernels:
+   - `Da_t_i = α_t_i · t_ref · C_m_ref / N`
+   - `Da_r_i = α_r_i · t_ref`
+   - `S_hat_i = N · Ct0_i / C_t_ref_i`
+   - Coupling coefficient for mobile equation: `C_t_ref_i / C_m_ref`
+     (passed as `coef` to `CoupledTimeDerivative`)
 
-**Variable scale**: `1 / T_ref`
+**`test/tests/val-2f-dimensionless/`**: val-2f physics specified entirely through
+`SpeciesTrappingPhysics` with physical SI parameters. No `trap_per_free`,
+no `trap_concentration_reference`, no Damköhler numbers in the input file.
 
-**Coupling with trapping**: Arrhenius factors `exp(−E/T)` couple temperature to
-trapping rates. After scaling `T → T/T_ref`, these become `exp(−E / (T_ref · T̂))`.
-The kernel expressions are unchanged; only the preconditioner sees the scaled system.
-No cross-physics scaling coordination is needed in the kernels themselves.
+**Success criterion**: `val-2f-dimensionless` serial and parallel results match to
+within solver tolerance. `show_var_residual_norms = true` shows all 7 variable
+residuals O(1).
 
-### Phase 5 — Fully automatic, zero-parameter scaling (long-term)
+### Phase 2 — Heat conduction non-dimensionalization
 
-All Physics actions query the information they need from already-registered objects:
-- Temperature IC queried from the `FEProblemBase` IC warehouse.
-- Domain length queried from the mesh.
-- Material properties evaluated at reference conditions.
+Extend automatic dimensionless treatment to `HeatConductionCG`.
 
-No scaling-related parameters appear anywhere in user input files. The trapping,
-diffusion, and heat conduction physics collectively produce a well-conditioned Jacobian
-from physical parameters alone.
+**References** (all derived without user input):
+- `T_ref`: initial temperature from the temperature variable's IC or an existing
+  `initial_temperature` parameter.
+- `L_ref`: characteristic length from the mesh bounding box.
+- `k_ref`: thermal conductivity at `T_ref`.
+
+**Dimensionless heat equation**: `T̂ = T / T_ref`, residual O(1) when row-scaled by
+`k_ref · T_ref / L_ref²`. The Arrhenius factors in the trapping kernels become
+`exp(−E / (T_ref · T̂))` — no change to kernel expressions, only the preconditioner.
+
+### Phase 3 — Migrate existing kernels and delete `TMAPScaling` (long-term)
+
+Once dimensionless kernels are validated and all tests migrated to the Physics layer:
+
+- Deprecate then delete `TrappingNodalKernel`, `ReleasingNodalKernel`,
+  `ScaledTimeDerivativeNodalKernel`, `ScaledCoupledTimeDerivative`.
+- Delete `include/utils/TMAPScaling.h`, `src/utils/TMAPScaling.C`.
+- Remove all `trap_per_free`, `trap_concentration_reference`,
+  `mobile_concentration_reference`, `site_density_reference`, `time_reference`,
+  `temperature_reference` parameters from all input files.
+- `SpeciesTrappingPhysics` becomes the sole supported entry point for trapping physics.
+
+### Phase 4 — Migrate remaining repo to dimensionless Physics layer (long-term)
+
+`val-2f-dimensionless` achieves zero-parameter non-dimensionalization in Phase 1 by
+using `SpeciesTrappingPhysics`. Phase 4 extends this to the rest of the repository:
+all existing validation, verification, and example cases are migrated to the Physics
+layer so that no non-dimensionalization parameters appear anywhere in the codebase.
+This is when the old dimensional kernels and `TMAPScaling` infrastructure (Phase 3)
+can be safely deleted.
 
 ---
 
 ## Correctness Guarantees
 
-1. `scaleResidual(F) = F / residualReference` divides every residual term and every
-   Jacobian entry in that row by the same constant. Row-scaling does not change the
-   solution of the nonlinear system.
-2. MOOSE variable scaling applies only to the preconditioner, not the Newton iterate.
-3. Setting `trap_per_free = 1` (Phase 3) is a change of internal variable
-   representation. With consistent initial conditions and coupling coefficients, the
-   physical solution is identical.
-4. The automatic references (`C_t_ref_i`, `C_m_ref`, `T_ref`) are constants computed
-   once at setup. They do not vary between Newton iterations, ensuring a stable
-   preconditioner.
+1. Storing `Ĉ_t_i = C_t_i / C_t_ref_i` and `Ĉ_m = C_m / C_m_ref` is a change of
+   internal variable representation only. With consistent initial conditions and
+   coupling coefficients (`C_t_ref_i / C_m_ref`), the physical solution is identical
+   to the dimensional formulation.
+2. MOOSE variable scaling (the preconditioner column scaling) applies only to the
+   preconditioner, not the Newton iterate — it cannot corrupt the solution.
+3. The reference quantities (`C_t_ref_i`, `C_m_ref`, `T_ref`) are constants computed
+   once at setup from physical parameters. They do not vary between Newton iterations,
+   ensuring a stable, iteration-independent preconditioner.
+4. Because dimensionless residuals are O(1) by construction, the Jacobian condition
+   number is independent of the choice of physical units and of parallel partitioning.
+   This is the property that guarantees serial = parallel results.
 
 ---
 
 ## Anti-Patterns to Avoid
+
+- **Do not** compute residuals in physical units and apply `scaleResidual` at the end.
+  This is row scaling, not non-dimensionalization. Every intermediate quantity in the
+  kernel residual should be dimensionless. When done correctly, `scaleResidual` is
+  unnecessary — the residual is O(1) by construction.
 
 - **Do not** use MOOSE's `automatic_scaling = true` as a substitute. That heuristic
   ignores physics, varies between Newton iterations, and produces an inconsistent
