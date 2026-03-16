@@ -60,6 +60,7 @@
                 Executioner/TimeStepper/growth_factor=1.2
                 InterfaceKernels/interface_reaction_YHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
     csvdiff = YHx_PCT_T1173_P5e4_out.csv
+    max_parallel = 1 # see #200
     requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature for P=5e4 Pa and T=1173.15 K.'
   []
   [YHx_PCT_T1273_P3e3_csv]
