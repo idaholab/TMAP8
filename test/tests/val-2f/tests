@@ -5,7 +5,12 @@
   [val-2f_light_csv]
     type = CSVDiff
     input = val-2f.i
-    cli_args = "dt_init=0.5 Functions/max_dt_size_function_coarse/expression=100 ix1=10 ix2=10 ix3=10 ix4=10 ix5=10 charge_time='${units 1 s}' cooldown_duration='${units 1 s}' Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse Executioner/nl_rel_tol=1e-8 Executioner/nl_abs_tol=1e-11 Outputs/file_base=val-2f_light_out"
+    cli_args = "dt_init=0.5 ix1=1 ix2=1 ix3=1 ix4=1 ix5=1
+                charge_time='${units 1 s}' cooldown_duration='${units 0 s}'
+                Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse
+                Executioner/nl_rel_tol=1e-8
+                Executioner/nl_abs_tol=1e-11
+                Outputs/file_base=val-2f_light_out"
     csvdiff = val-2f_light_out.csv
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output with a short runtime and coarse mesh testing.'
     max_parallel = 1 # see #200
@@ -13,7 +18,12 @@
   [val-2f_light_exodus]
     type = Exodiff
     input = val-2f.i
-    cli_args = "dt_init=0.5 Functions/max_dt_size_function_coarse/expression=100 ix1=10 ix2=10 ix3=10 ix4=10 ix5=10 charge_time='${units 1 s}' cooldown_duration='${units 1 s}' Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse Executioner/nl_rel_tol=1e-8 Executioner/nl_abs_tol=1e-11 Outputs/file_base=val-2f_light_out"
+    cli_args = "dt_init=0.5 ix1=1 ix2=1 ix3=1 ix4=1 ix5=1
+                charge_time='${units 1 s}' cooldown_duration='${units 0 s}'
+                Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse
+                Executioner/nl_rel_tol=1e-8
+                Executioner/nl_abs_tol=1e-11
+                Outputs/file_base=val-2f_light_out"
     exodiff = val-2f_light_out.e
     prereq = val-2f_light_csv
     should_execute = false # this test relies on the output files from val-2f_light_csv, so it shouldn't be run twice
