@@ -14,25 +14,33 @@
     variable = bounds_dummy
     bounded_variable = trapped_1
     bound_type = lower
-    bound_value = '${fparse -1e-20}'
+    bound_value = 0
   []
 []
 
 [Kernels]
   # trapping 1 kernel
   [coupled_time_trap_1]
-    type = ADCoefCoupledTimeDerivative
+    type = ADScaledCoefCoupledTimeDerivative
     variable = deuterium_concentration_W
     v = trapped_1
     coef = ${trap_per_free_1}
+    primary_concentration_reference = 1
+    coupled_concentration_reference = '${trap_concentration_reference_1}'
+    time_reference = 1
   []
 []
 
 [NodalKernels]
   # First traps
   [time_1]
-    type = TimeDerivativeNodalKernel
+    type = ScaledTimeDerivativeNodalKernel
     variable = trapped_1
+    trap_concentration_reference = '${trap_concentration_reference_1}'
+    mobile_concentration_reference = 1
+    site_density_reference = '${tungsten_density}'
+    time_reference = 1
+    temperature_reference = '${temperature_initial}'
   []
   [trapping_1]
     type = TrappingNodalKernel
@@ -44,6 +52,11 @@
     Ct0 = 'trap_distribution_function_1'
     temperature = 'temperature'
     trap_per_free = ${trap_per_free_1}
+    trap_concentration_reference = '${trap_concentration_reference_1}'
+    mobile_concentration_reference = 1
+    site_density_reference = '${tungsten_density}'
+    time_reference = 1
+    temperature_reference = '${temperature_initial}'
   []
   [release_1]
     type = ReleasingNodalKernel
@@ -51,6 +64,11 @@
     alpha_r = '${detrapping_prefactor_1}'
     detrapping_energy = '${detrapping_energy_1}'
     temperature = 'temperature'
+    trap_concentration_reference = '${trap_concentration_reference_1}'
+    mobile_concentration_reference = 1
+    site_density_reference = '${tungsten_density}'
+    time_reference = 1
+    temperature_reference = '${temperature_initial}'
   []
 []
 

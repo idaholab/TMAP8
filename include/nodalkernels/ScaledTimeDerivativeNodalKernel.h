@@ -8,20 +8,19 @@
 
 #pragma once
 
-#include "CoupledTimeDerivative.h"
+#include "TimeDerivativeNodalKernel.h"
 #include "TMAPScaling.h"
 
-class ScaledCoupledTimeDerivative : public CoupledTimeDerivative
+class ScaledTimeDerivativeNodalKernel : public TimeDerivativeNodalKernel
 {
 public:
-  ScaledCoupledTimeDerivative(const InputParameters & parameters);
-
   static InputParameters validParams();
 
-protected:
-  virtual Real computeQpResidual() override;
-  virtual Real computeQpOffDiagJacobian(unsigned int jvar) override;
+  ScaledTimeDerivativeNodalKernel(const InputParameters & parameters);
 
-  const Real _factor;
-  const TMAP::Scaling::MobileEquationScaling _equation_scaling;
+protected:
+  Real computeQpResidual() override;
+  Real computeQpJacobian() override;
+
+  const TMAP::Scaling::TrappingEquationScaling _equation_scaling;
 };

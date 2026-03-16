@@ -44,7 +44,7 @@
     variable = bounds_dummy
     bounded_variable = deuterium_concentration_W
     bound_type = lower
-    bound_value = '${fparse -1e-20}'
+    bound_value = 0
   []
 []
 
@@ -307,11 +307,9 @@
   type = Transient
   scheme = bdf2
   solve_type = 'Newton'
-  petsc_options_iname = '-pc_type -sub_pc_type -snes_type'
-  petsc_options_value = 'asm lu vinewtonrsls' # This petsc option helps prevent negative concentrations with bounds'
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_type -snes_type'
+  petsc_options_value = 'lu       mumps                      vinewtonrsls' # This petsc option helps prevent negative concentrations with bounds'
   end_time = ${endtime}
-  automatic_scaling = true
-  compute_scaling_once = false
   line_search = 'none'
   nl_rel_tol = 5e-7
   nl_abs_tol = 1e-10

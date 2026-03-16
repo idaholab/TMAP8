@@ -75,6 +75,13 @@
     cli_args = "node_num=20 Executioner/num_steps=300 Outputs/file_base=ver-1d_trapping_limited_test_exodus"
     prereq = ver-1d_trapping_limited
   []
+  [ver-1d_trapping_limited_ad_scaled_coupled_time]
+    type = CSVDiff
+    input = ver-1d-trapping.i
+    csvdiff = ver-1d_trapping_limited_test_exodus.csv
+    requirement = 'The system shall preserve the trapping-limited verification solution when using the AD scaled coupled time derivative with physically named reference quantities.'
+    cli_args = "node_num=20 Executioner/num_steps=300 Outputs/file_base=ver-1d_trapping_limited_test_exodus Kernels/coupled_time/type=ADScaledCoefCoupledTimeDerivative Kernels/coupled_time/coef=${trap_per_free} Kernels/coupled_time/primary_concentration_reference=1 Kernels/coupled_time/coupled_concentration_reference='${fparse 1 / trap_per_free}' Kernels/coupled_time/time_reference=1"
+  []
   [ver-1d_trapping_limited_heavy]
     type = Exodiff
     heavy = true

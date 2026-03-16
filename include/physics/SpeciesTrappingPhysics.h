@@ -52,8 +52,16 @@ protected:
 
   /// Whether to define a single variable for each species for all components, or a different one for each component
   const bool _single_variable_set;
+  /// Whether to derive equation/variable scaling from trapping data
+  const bool _automatic_trapping_scaling;
 
 private:
+  Real mobileConcentrationReference(unsigned int c_i) const;
+  Real trappedConcentrationReference(unsigned int c_i) const;
+  Real variableScalingFromReference(Real reference) const;
+  Real siteDensityReference(unsigned int c_i) const;
+  Real timeReference(unsigned int c_i) const;
+  Real temperatureReference(unsigned int c_i) const;
   virtual void addSolverVariables() override;
   virtual void addInitialConditions() override;
   virtual void addFEKernels() override;
