@@ -26,7 +26,7 @@
     v = trapped_4
     coef = ${trap_per_free_4}
     primary_concentration_reference = 1
-    coupled_concentration_reference = '${fparse 1 / trap_per_free_4}'
+    coupled_concentration_reference = '${trap_concentration_reference_4}'
     time_reference = 1
   []
 []
@@ -35,7 +35,7 @@
   [time_4]
     type = ScaledTimeDerivativeNodalKernel
     variable = trapped_4
-    trap_concentration_reference = '${fparse 1 / trap_per_free_4}'
+    trap_concentration_reference = '${trap_concentration_reference_4}'
     mobile_concentration_reference = 1
     site_density_reference = '${tungsten_density}'
     time_reference = 1
@@ -51,7 +51,7 @@
     Ct0 = 'trap_distribution_function_4'
     temperature = 'temperature'
     trap_per_free = ${trap_per_free_4}
-    trap_concentration_reference = '${fparse 1 / trap_per_free_4}'
+    trap_concentration_reference = '${trap_concentration_reference_4}'
     mobile_concentration_reference = 1
     site_density_reference = '${tungsten_density}'
     time_reference = 1
@@ -63,7 +63,7 @@
     alpha_r = '${detrapping_prefactor_4}'
     detrapping_energy = '${detrapping_energy_4}'
     temperature = 'temperature'
-    trap_concentration_reference = '${fparse 1 / trap_per_free_4}'
+    trap_concentration_reference = '${trap_concentration_reference_4}'
     mobile_concentration_reference = 1
     site_density_reference = '${tungsten_density}'
     time_reference = 1

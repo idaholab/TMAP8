@@ -26,7 +26,7 @@
     v = trapped_intrinsic
     coef = ${trap_per_free_intrinsic}
     primary_concentration_reference = 1
-    coupled_concentration_reference = '${fparse 1 / trap_per_free_intrinsic}'
+    coupled_concentration_reference = '${trap_concentration_reference_intrinsic}'
     time_reference = 1
   []
 []
@@ -35,7 +35,7 @@
   [time_intrinsic]
     type = ScaledTimeDerivativeNodalKernel
     variable = trapped_intrinsic
-    trap_concentration_reference = '${fparse 1 / trap_per_free_intrinsic}'
+    trap_concentration_reference = '${trap_concentration_reference_intrinsic}'
     mobile_concentration_reference = 1
     site_density_reference = '${tungsten_density}'
     time_reference = 1
@@ -51,7 +51,7 @@
     Ct0 = '${trapping_site_fraction_intrinsic}'
     temperature = 'temperature'
     trap_per_free = ${trap_per_free_intrinsic}
-    trap_concentration_reference = '${fparse 1 / trap_per_free_intrinsic}'
+    trap_concentration_reference = '${trap_concentration_reference_intrinsic}'
     mobile_concentration_reference = 1
     site_density_reference = '${tungsten_density}'
     time_reference = 1
@@ -63,7 +63,7 @@
     alpha_r = '${detrapping_prefactor_intrinsic}'
     detrapping_energy = '${detrapping_energy_intrinsic}'
     temperature = 'temperature'
-    trap_concentration_reference = '${fparse 1 / trap_per_free_intrinsic}'
+    trap_concentration_reference = '${trap_concentration_reference_intrinsic}'
     mobile_concentration_reference = 1
     site_density_reference = '${tungsten_density}'
     time_reference = 1
