@@ -13,7 +13,7 @@ os.chdir(script_folder)
 if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/val-2i/val-2i_673_out.csv"
 else:                                  # if in test folder
-    csv_folder = "./val-2i_673_out.csv"
+    csv_folder = "./gold/val-2i_673_out.csv"
 simulation_673_data = pd.read_csv(csv_folder)
 simulation_time_673 = simulation_673_data['time']
 simulation_flux_left_673 = simulation_673_data['scaled_flux_surface_left']
@@ -21,7 +21,7 @@ simulation_flux_left_673 = simulation_673_data['scaled_flux_surface_left']
 if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/val-2i/val-2i_873_out.csv"
 else:                                  # if in test folder
-    csv_folder = "./val-2i_873_out.csv"
+    csv_folder = "./gold/val-2i_873_out.csv"
 simulation_873_data = pd.read_csv(csv_folder)
 simulation_time_873 = simulation_873_data['time']
 simulation_flux_left_873 = simulation_873_data['scaled_flux_surface_left']
@@ -29,7 +29,7 @@ simulation_flux_left_873 = simulation_873_data['scaled_flux_surface_left']
 if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
     csv_folder = "../../../../test/tests/val-2i/val-2i_973_out.csv"
 else:                                  # if in test folder
-    csv_folder = "./val-2i_973_out.csv"
+    csv_folder = "./gold/val-2i_973_out.csv"
 simulation_973_data = pd.read_csv(csv_folder)
 simulation_time_973 = simulation_973_data['time']
 simulation_flux_left_973 = simulation_973_data['scaled_flux_surface_left']
