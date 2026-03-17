@@ -68,7 +68,7 @@ S_1 = '${fparse phi*K_1}'
 r_1 = '${fparse phi*K_1/nmax_1 + A_1}'
 trap_density_01dpa_1 = '${units ${fparse -S_1/r_1 * exp(-r_1*damage_duration) + S_1/r_1} at/m^3 -> at/mum^3}'
 trapping_site_fraction_1 = '${fparse trap_density_01dpa_1 / tungsten_density}'
-trap_concentration_reference_1 = '${tungsten_density}'
+trap_concentration_reference_1 = '${fparse tungsten_density * 1e-7}'
 
 # Trap 2 parameters
 trapping_energy_2 = '${fparse trapping_energy}'
@@ -83,7 +83,7 @@ S_2 = '${fparse phi*K_2}'
 r_2 = '${fparse phi*K_2/nmax_2 + A_2}'
 trap_density_01dpa_2 = '${units ${fparse -S_2/r_2 * exp(-r_2*damage_duration) + S_2/r_2} at/m^3 -> at/mum^3}'
 trapping_site_fraction_2 = '${fparse trap_density_01dpa_2 / tungsten_density}'
-trap_concentration_reference_2 = '${tungsten_density}'
+trap_concentration_reference_2 = '${fparse tungsten_density * 1e-7}'
 
 # Trap 3 parameters
 trapping_energy_3 = '${fparse trapping_energy}'
@@ -98,7 +98,7 @@ S_3 = '${fparse phi*K_3}'
 r_3 = '${fparse phi*K_3/nmax_3 + A_3}'
 trap_density_01dpa_3 = '${units ${fparse -S_3/r_3 * exp(-r_3*damage_duration) + S_3/r_3} at/m^3 -> at/mum^3}'
 trapping_site_fraction_3 = '${fparse trap_density_01dpa_3 / tungsten_density}'
-trap_concentration_reference_3 = '${tungsten_density}'
+trap_concentration_reference_3 = '${fparse tungsten_density * 1e-7}'
 
 # Trap 4 parameters
 trapping_energy_4 = '${fparse trapping_energy}'
@@ -113,7 +113,7 @@ S_4 = '${fparse phi*K_4}'
 r_4 = '${fparse phi*K_4/nmax_4 + A_4}'
 trap_density_01dpa_4 = '${units ${fparse -S_4/r_4 * exp(-r_4*damage_duration) + S_4/r_4} at/m^3 -> at/mum^3}'
 trapping_site_fraction_4 = '${fparse trap_density_01dpa_4 / tungsten_density}'
-trap_concentration_reference_4 = '${tungsten_density}'
+trap_concentration_reference_4 = '${fparse tungsten_density * 1e-7}'
 
 # Trap 5 parameters
 trapping_energy_5 = '${fparse trapping_energy}'
@@ -126,7 +126,7 @@ S_5 = '${fparse phi*K_5}'
 r_5 = '${fparse phi*K_5/nmax_5}'
 trap_density_01dpa_5 = '${units ${fparse -S_5/r_5 * exp(-r_5*damage_duration) + S_5/r_5} at/m^3 -> at/mum^3}'
 trapping_site_fraction_5 = '${fparse trap_density_01dpa_5 / tungsten_density}'
-trap_concentration_reference_5 = '${tungsten_density}'
+trap_concentration_reference_5 = '${fparse tungsten_density * 1e-8}'
 
 # Trap intrinsic parameters
 trapping_energy_intrinsic = '${fparse trapping_energy}'
@@ -135,13 +135,13 @@ detrapping_energy_intrinsic = '${fparse ${units 1.04 eV -> J} / kb}'
 detrapping_prefactor_intrinsic = '${fparse detrapping_prefactor}'
 trap_density_01dpa_intrinsic = '${units 2.4e22 at/m^3 -> at/mum^3}'
 trapping_site_fraction_intrinsic = '${fparse trap_density_01dpa_intrinsic / tungsten_density}'
-trap_concentration_reference_intrinsic = '${tungsten_density}'
+trap_concentration_reference_intrinsic = '${fparse tungsten_density * 1e-10}'
 
 # Occupancy-based concentration references:
 # - mobile variable stores c_hat = C_m / N_host
 # - each trapped variable stores theta_i = C_t_i / N_host
 # This keeps the coupled mobile/trap time-derivative terms on the same scale.
-mobile_concentration_reference = '${tungsten_density}'
+mobile_concentration_reference = '${fparse 1e-11 * tungsten_density}'
 
 # Explicit reference quantities for the fully nondimensional val-2f example.
 # `time_reference` is generated from `scripts/compute_val_2f_dimensionless_reference.py`
