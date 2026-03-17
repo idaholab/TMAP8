@@ -1,12 +1,7 @@
-# Validation Problem #2f — Fully dimensionless formulation
-# Same physics as val-2f, but the mobile concentration, trapped concentrations, mesh
-# coordinates, and time variable are all expressed in an explicit user-specified reference
-# system. For this example, the concentration variables use an occupancy formulation:
-# - c_hat = C_m / N_host
-# - theta_i = C_t_i / N_host
-# For time, L_ref = 1 um and t_ref is chosen from the fastest of the candidate
-# diffusion/reaction time scales, so time-like inputs are numerically transformed.
-# Fundamental success criterion: serial result == parallel result.
+# Validation Problem #2f — Scheduled light replay for serial/parallel comparison
+# This is the light occupancy-based dimensionless case run on an explicit sequence of
+# accepted times extracted from the reference serial CSV. The purpose is to eliminate
+# divergence caused solely by adaptive time-step history when comparing serial and parallel.
 
 !include parameters_val-2f-dimensionless.params
 
@@ -280,72 +275,72 @@
   [mobile_integral_hat]
     type = ElementIntegralVariablePostprocessor
     variable = deuterium_concentration_W
-    outputs = none
   []
   [scaled_mobile_deuterium]
     type = ScalePostprocessor
     scaling_factor = '${fparse ${units 1 m^2 -> mum^2} * mobile_concentration_reference}'
     value = mobile_integral_hat
+    outputs = none
   []
   [trapped_intrinsic_integral]
     type = ElementIntegralVariablePostprocessor
     variable = trapped_intrinsic
-    outputs = none
   []
   [trapped_1_integral]
     type = ElementIntegralVariablePostprocessor
     variable = trapped_1
-    outputs = none
   []
   [trapped_2_integral]
     type = ElementIntegralVariablePostprocessor
     variable = trapped_2
-    outputs = none
   []
   [trapped_3_integral]
     type = ElementIntegralVariablePostprocessor
     variable = trapped_3
-    outputs = none
   []
   [trapped_4_integral]
     type = ElementIntegralVariablePostprocessor
     variable = trapped_4
-    outputs = none
   []
   [trapped_5_integral]
     type = ElementIntegralVariablePostprocessor
     variable = trapped_5
-    outputs = none
   []
   [scaled_trapped_deuterium_intrinsic]
     type = ScalePostprocessor
     scaling_factor = '${fparse ${units 1 m^2 -> mum^2} * trap_concentration_reference_intrinsic}'
     value = trapped_intrinsic_integral
+    outputs = none
   []
   [scaled_trapped_deuterium_1]
     type = ScalePostprocessor
     scaling_factor = '${fparse ${units 1 m^2 -> mum^2} * trap_concentration_reference_1}'
     value = trapped_1_integral
+    outputs = none
   []
   [scaled_trapped_deuterium_2]
     type = ScalePostprocessor
     scaling_factor = '${fparse ${units 1 m^2 -> mum^2} * trap_concentration_reference_2}'
     value = trapped_2_integral
+    outputs = none
   []
   [scaled_trapped_deuterium_3]
     type = ScalePostprocessor
     scaling_factor = '${fparse ${units 1 m^2 -> mum^2} * trap_concentration_reference_3}'
     value = trapped_3_integral
+    outputs = none
   []
   [scaled_trapped_deuterium_4]
     type = ScalePostprocessor
     scaling_factor = '${fparse ${units 1 m^2 -> mum^2} * trap_concentration_reference_4}'
     value = trapped_4_integral
+    outputs = none
   []
   [scaled_trapped_deuterium_5]
     type = ScalePostprocessor
     scaling_factor = '${fparse ${units 1 m^2 -> mum^2} * trap_concentration_reference_5}'
     value = trapped_5_integral
+    outputs = none
   []
   [temperature]
     type = ElementAverageValue
@@ -375,23 +370,20 @@
 
 [Executioner]
   type = Transient
+  start_time = 0
   scheme = bdf2
   solve_type = 'Newton'
+  abort_on_solve_fail = true
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_type -snes_type'
   petsc_options_value = 'lu       mumps                      vinewtonrsls'
   end_time = ${endtime_hat}
   line_search = 'none'
-  nl_rel_tol = 5e-7
-  nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-10
+  nl_abs_tol = 1e-14
   nl_max_its = 34
   [TimeStepper]
-    type = IterationAdaptiveDT
-    dt = ${dt_init_hat}
-    optimal_iterations = 25
-    growth_factor = 1.1
-    cutback_factor = 0.9
-    cutback_factor_at_failure = 0.9
-    timestep_limiting_postprocessor = max_time_step_size
+    type = CSVTimeSequenceStepper
+    file_name = val-2f-dimensionless_light_time_sequence.csv
   []
 []
 

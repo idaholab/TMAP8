@@ -63,7 +63,6 @@ protected:
   const bool _use_dimensionless_trapped_species;
   /// Whether the mobile concentration variable is also dimensionless
   const bool _dimensionless_mobile_species;
-
 private:
   Real trapConcentrationReference(unsigned int c_i, unsigned int s_j);
   Real dimensionlessTrappingRate(unsigned int c_i, unsigned int s_j);

@@ -19,7 +19,6 @@ desorption_heating_rate = '${units ${fparse 3/60} K/s}'
 charge_time = '${units 72 h -> s}'
 cooldown_duration = '${units 12 h -> s}'
 desorption_duration = '${fparse (temperature_desorption_max-temperature_desorption_min)/desorption_heating_rate}'
-dt_init = 1e-8
 
 # Materials properties
 diffusion_W_preexponential = '${units 1.6e-7 m^2/s -> mum^2/s}'
@@ -186,7 +185,6 @@ charge_time_hat = '${fparse charge_time / time_reference}'
 cooldown_duration_hat = '${fparse cooldown_duration / time_reference}'
 desorption_duration_hat = '${fparse desorption_duration / time_reference}'
 endtime_hat = '${fparse charge_time_hat + cooldown_duration_hat + desorption_duration_hat}'
-dt_init_hat = '${fparse dt_init / time_reference}'
 desorption_heating_rate_hat = '${fparse desorption_heating_rate * time_reference}'
 
 # Dimensionless mobile transport quantities.

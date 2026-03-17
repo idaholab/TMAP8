@@ -10,7 +10,7 @@ if [[ ! -x "${BINARY}" ]]; then
 fi
 
 exec "${BINARY}" \
-  -i test/tests/val-2f-dimensionless/val-2f-dimensionless.i \
+  -i test/tests/val-2f-dimensionless/val-2f-dimensionless_light_scheduled.i \
   'sample_thickness=${units 0.9e-4 m -> mum}' \
   ix1=1 \
   ix2=1 \
@@ -19,5 +19,4 @@ exec "${BINARY}" \
   ix5=1 \
   'charge_time=${units 1e-1 s}' \
   'cooldown_duration=${units 1e-1 s}' \
-  Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse \
-  Outputs/file_base=val-2f-dimensionless_light_out
+  Outputs/file_base=val-2f-dimensionless_light_scheduled_out
