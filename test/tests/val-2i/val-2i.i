@@ -29,7 +29,7 @@ depth_source = '${units 2.64e-9 m -> mum}'
 
 # Diffusion parameters
 diffusivity_coefficient = '${fparse ${units 4.1e-7 m^2/s -> mum^2/s} / sqrt(2)}'
-E_D = '${units 0.39 eV -> J}'
+E_a = '${units 0.39 eV -> J}'
 
 # Traps parameters
 N = '${units 6.323e28 at/m^3 -> at/mum^3}'
@@ -202,7 +202,7 @@ temperature_min = '${units 300 K}'
     property_name = 'diffusivity'
     functor_names = 'temperature_function'
     functor_symbols = 'temperature_function'
-    expression = '${diffusivity_coefficient} * exp(- ${E_D} / ${kB} / temperature_function)'
+    expression = '${diffusivity_coefficient} * exp(- ${E_a} / ${kB} / temperature_function)'
     output_properties = 'diffusivity'
   []
   [converter_to_regular]
