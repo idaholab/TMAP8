@@ -46,6 +46,9 @@ gold file with an escalated execution step in a single shell command.
 You may write temporary logs and other scratch files under `/tmp` without asking for extra
 permission solely because the path is `/tmp`.
 
+## Elevated Executables
+Running `./tmap8-*` binaries (with or without `mpiexec -n ...`) may require elevated permissions in this workspace. If you need to escalate, you may do so once per command and reuse that narrower approval later; just include the rationale alongside the escalated command.
+
 ## Architecture
 
 TMAP8 follows MOOSE's plugin architecture. The key concept: everything is registered to a central factory and instantiated from input (`.i`) files at runtime.
