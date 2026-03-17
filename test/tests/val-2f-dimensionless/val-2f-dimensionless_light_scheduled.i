@@ -371,7 +371,7 @@
 [Executioner]
   type = Transient
   start_time = 0
-  scheme = bdf2
+  scheme = implicit-euler
   solve_type = 'Newton'
   abort_on_solve_fail = true
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_type -snes_type'
