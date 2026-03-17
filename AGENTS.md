@@ -41,6 +41,11 @@ When a task involves both normal workspace file operations and an escalated buil
 split them into separate terminal commands. Do not combine a non-escalated step such as copying a
 gold file with an escalated execution step in a single shell command.
 
+## Scratch Files
+
+You may write temporary logs and other scratch files under `/tmp` without asking for extra
+permission solely because the path is `/tmp`.
+
 ## Architecture
 
 TMAP8 follows MOOSE's plugin architecture. The key concept: everything is registered to a central factory and instantiated from input (`.i`) files at runtime.
