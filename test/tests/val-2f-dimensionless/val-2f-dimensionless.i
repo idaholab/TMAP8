@@ -1,0 +1,351 @@
+# Validation Problem #2f — Dimensionless formulation
+# Same physics as val-2f, but trapped-species variables stored as Ĉ_t = C_t / C_t_ref
+# via SpeciesTrappingPhysics with automatic_trapping_scaling = true.
+# C_t_ref is auto-computed as N * Ct0(x=0, t=0) — no user non-dimensionalization params.
+# Fundamental success criterion: serial result == parallel result.
+
+!include ../val-2f/parameters_val-2f.params
+
+[Mesh]
+  [cartesian_mesh]
+    type = CartesianMeshGenerator
+    dim = 1
+    dx = '${dx1} ${dx2} ${dx3} ${dx4} ${dx5}'
+    ix = '${ix1} ${ix2} ${ix3} ${ix4} ${ix5}'
+    subdomain_id = '0 0 0 0 0'
+  []
+[]
+
+[Variables]
+  [deuterium_concentration_W]
+  []
+[]
+
+[AuxVariables]
+  active = 'bounds_dummy temperature'
+  [bounds_dummy]
+    order = FIRST
+    family = LAGRANGE
+  []
+  [temperature]
+    initial_condition = ${temperature_initial}
+  []
+[]
+
+[Bounds]
+  [deuterium_concentration_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = deuterium_concentration_W
+    bound_type = lower
+    bound_value = 0
+  []
+  [trapped_intrinsic_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = trapped_intrinsic
+    bound_type = lower
+    bound_value = 0
+  []
+  [trapped_1_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = trapped_1
+    bound_type = lower
+    bound_value = 0
+  []
+  [trapped_2_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = trapped_2
+    bound_type = lower
+    bound_value = 0
+  []
+  [trapped_3_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = trapped_3
+    bound_type = lower
+    bound_value = 0
+  []
+  [trapped_4_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = trapped_4
+    bound_type = lower
+    bound_value = 0
+  []
+  [trapped_5_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = trapped_5
+    bound_type = lower
+    bound_value = 0
+  []
+[]
+
+[Functions]
+  [temperature_bc_func]
+    type = ParsedFunction
+    expression = 'if(t<${charge_time}, ${temperature_initial},
+                  if(t<${fparse charge_time + cooldown_duration}, ${temperature_cooldown},
+                  ${temperature_desorption_min}+${desorption_heating_rate}*(t-${fparse charge_time + cooldown_duration})))'
+  []
+  [source_distribution]
+    type = ParsedFunction
+    expression = '1 / (${sigma} * sqrt(2 * pi)) * exp(-0.5 * ((x - ${R_p}) / ${sigma}) ^ 2)'
+  []
+  [surface_flux_func]
+    type = ParsedFunction
+    expression = 'if(t<${charge_time}, ${flux}, 0)'
+  []
+  [source_deuterium]
+    type = ParsedFunction
+    symbol_names = 'source_distribution surface_flux_func'
+    symbol_values = 'source_distribution surface_flux_func'
+    expression = 'source_distribution * surface_flux_func'
+  []
+  [max_dt_size_function]
+    type = ParsedFunction
+    expression = 'if(t<${fparse 5}, ${fparse 1e-2},
+                  if(t<${fparse 8}, ${fparse 1e2},
+                  if(t<${fparse 12}, ${fparse 1e-2},
+                  if(t<${fparse 20}, ${fparse 1e2},
+                  if(t<${fparse 35}, ${fparse 1e-2},
+                  if(t<${fparse 450}, ${fparse 1e2},
+                  if(t<${fparse 5000}, ${fparse 1e1},
+                  if(t<${fparse 11000}, ${fparse 1e2},
+                  if(t<${fparse 13000}, ${fparse 1e1},
+                  if(t<${fparse charge_time + cooldown_duration + 4500}, ${fparse 1e2},
+                  if(t<${fparse 313000}, ${fparse 1e2},
+                  if(t<${fparse 315000}, ${fparse 1e1}, ${fparse 1e3}))))))))))))'
+  []
+  [max_dt_size_function_coarse]
+    type = ParsedFunction
+    expression = 'if(t<${fparse 1e-1}, ${fparse 1e4}, ${fparse 1e5})'
+  []
+  # Trap distribution functions (Fermi-Dirac depth profiles for damage traps)
+  [trap_distribution_function_1]
+    type = ParsedFunction
+    expression = '${trapping_site_fraction_1} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
+  []
+  [trap_distribution_function_2]
+    type = ParsedFunction
+    expression = '${trapping_site_fraction_2} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
+  []
+  [trap_distribution_function_3]
+    type = ParsedFunction
+    expression = '${trapping_site_fraction_3} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
+  []
+  [trap_distribution_function_4]
+    type = ParsedFunction
+    expression = '${trapping_site_fraction_4} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
+  []
+  [trap_distribution_function_5]
+    type = ParsedFunction
+    expression = '${trapping_site_fraction_5} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
+  []
+[]
+
+[Physics]
+  [SpeciesTrapping]
+    [trapping]
+      species = 'trapped_intrinsic trapped_1 trapped_2 trapped_3 trapped_4 trapped_5'
+      # All 6 trapped species couple to the same mobile variable
+      mobile = 'deuterium_concentration_W deuterium_concentration_W deuterium_concentration_W
+                deuterium_concentration_W deuterium_concentration_W deuterium_concentration_W'
+      alpha_t = '${trapping_prefactor_intrinsic} ${trapping_prefactor_1} ${trapping_prefactor_2}
+                 ${trapping_prefactor_3} ${trapping_prefactor_4} ${trapping_prefactor_5}'
+      trapping_energy = '${trapping_energy_intrinsic} ${trapping_energy_1} ${trapping_energy_2}
+                         ${trapping_energy_3} ${trapping_energy_4} ${trapping_energy_5}'
+      N = ${tungsten_density}
+      # Intrinsic: constant Ct0 (parsed as Real); damage traps: spatially-varying functions
+      # autoTrapConcentrationReference evaluates each at (t=0, x=0) to get C_t_ref = N * Ct0_max
+      Ct0 = '${trapping_site_fraction_intrinsic} trap_distribution_function_1 trap_distribution_function_2
+             trap_distribution_function_3 trap_distribution_function_4 trap_distribution_function_5'
+      alpha_r = '${detrapping_prefactor_intrinsic} ${detrapping_prefactor_1} ${detrapping_prefactor_2}
+                 ${detrapping_prefactor_3} ${detrapping_prefactor_4} ${detrapping_prefactor_5}'
+      detrapping_energy = '${detrapping_energy_intrinsic} ${detrapping_energy_1} ${detrapping_energy_2}
+                           ${detrapping_energy_3} ${detrapping_energy_4} ${detrapping_energy_5}'
+      temperature = 'temperature'
+      automatic_trapping_scaling = true
+      # Each trap type occupies distinct defect sites — no cross-coupling between species
+      different_traps_for_each_species = true
+    []
+  []
+[]
+
+[Kernels]
+  [time_W]
+    type = TimeDerivative
+    variable = deuterium_concentration_W
+  []
+  [diffusion_W]
+    type = ADMatDiffusion
+    variable = deuterium_concentration_W
+    diffusivity = diffusivity_W
+  []
+  [source_deuterium]
+    type = BodyForce
+    variable = deuterium_concentration_W
+    function = source_deuterium
+  []
+[]
+
+[AuxKernels]
+  [temperature_aux]
+    type = FunctionAux
+    variable = temperature
+    function = temperature_bc_func
+    execute_on = 'INITIAL LINEAR'
+  []
+[]
+
+[BCs]
+  active = 'left_recombination_flux right_recombination_flux'
+  [left_recombination_flux]
+    type = ADMatNeumannBC
+    variable = deuterium_concentration_W
+    boundary = left
+    value = 1
+    boundary_material = flux_recombination_surface
+  []
+  [right_recombination_flux]
+    type = ADMatNeumannBC
+    variable = deuterium_concentration_W
+    boundary = right
+    value = 1
+    boundary_material = flux_recombination_surface
+  []
+  [left_concentration_sieverts]
+    type = ADDirichletBC
+    value = '${fparse 1e-10}'
+    boundary = left
+    variable = deuterium_concentration_W
+  []
+  [right_concentration_sieverts]
+    type = ADDirichletBC
+    value = '${fparse 1e-10}'
+    boundary = right
+    variable = deuterium_concentration_W
+  []
+[]
+
+[Materials]
+  active = 'diffusivity_W_func diffusivity_nonAD recombination_rate_surface flux_recombination_surface'
+  [diffusivity_W_func]
+    type = ADDerivativeParsedMaterial
+    property_name = 'diffusivity_W'
+    functor_names = 'temperature_bc_func'
+    functor_symbols = 'temperature'
+    expression = '${diffusion_W_preexponential} * exp(- ${diffusion_W_energy} / ${kb_eV} / temperature)'
+    output_properties = 'diffusivity_W'
+  []
+  [diffusivity_nonAD]
+    type = MaterialADConverter
+    ad_props_in = 'diffusivity_W'
+    reg_props_out = 'diffusivity_W_nonAD'
+  []
+  [recombination_rate_surface]
+    type = ADDerivativeParsedMaterial
+    property_name = 'Kr'
+    functor_names = 'temperature_bc_func'
+    functor_symbols = 'temperature'
+    expression = '${recombination_coefficient} * exp(- ${recombination_energy} / ${kb_eV} / temperature)'
+    output_properties = 'Kr'
+  []
+  [flux_recombination_surface]
+    type = ADDerivativeParsedMaterial
+    coupled_variables = 'deuterium_concentration_W'
+    property_name = 'flux_recombination_surface'
+    material_property_names = 'Kr'
+    expression = '- 2 * Kr * deuterium_concentration_W ^ 2'
+  []
+[]
+
+[Postprocessors]
+  [scaled_mobile_deuterium]
+    type = ElementIntegralVariablePostprocessor
+    variable = deuterium_concentration_W
+    # scaling to per-m² would need C_m_ref; report per-μm² for now
+  []
+  # Trapped species integrals are dimensionless (Ĉ_t * μm).
+  # To recover physical at/m², multiply offline by C_t_ref_i * (μm -> m)².
+  [trapped_intrinsic_integral]
+    type = ElementIntegralVariablePostprocessor
+    variable = trapped_intrinsic
+  []
+  [trapped_1_integral]
+    type = ElementIntegralVariablePostprocessor
+    variable = trapped_1
+  []
+  [trapped_2_integral]
+    type = ElementIntegralVariablePostprocessor
+    variable = trapped_2
+  []
+  [trapped_3_integral]
+    type = ElementIntegralVariablePostprocessor
+    variable = trapped_3
+  []
+  [trapped_4_integral]
+    type = ElementIntegralVariablePostprocessor
+    variable = trapped_4
+  []
+  [trapped_5_integral]
+    type = ElementIntegralVariablePostprocessor
+    variable = trapped_5
+  []
+  [temperature]
+    type = ElementAverageValue
+    variable = temperature
+    execute_on = 'initial timestep_end'
+  []
+  [max_time_step_size]
+    type = FunctionValuePostprocessor
+    function = max_dt_size_function
+    execute_on = 'initial nonlinear linear timestep_end'
+    outputs = none
+  []
+  [max_time_step_size_coarse]
+    type = FunctionValuePostprocessor
+    function = max_dt_size_function_coarse
+    execute_on = 'initial nonlinear linear timestep_end'
+    outputs = none
+  []
+[]
+
+[Preconditioning]
+  [SMP]
+    type = SMP
+    full = true
+  []
+[]
+
+[Executioner]
+  type = Transient
+  scheme = bdf2
+  solve_type = 'Newton'
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_type -snes_type'
+  petsc_options_value = 'lu       mumps                      vinewtonrsls'
+  end_time = ${endtime}
+  line_search = 'none'
+  nl_rel_tol = 5e-7
+  nl_abs_tol = 1e-10
+  nl_max_its = 34
+  [TimeStepper]
+    type = IterationAdaptiveDT
+    dt = ${dt_init}
+    optimal_iterations = 25
+    growth_factor = 1.1
+    cutback_factor = 0.9
+    cutback_factor_at_failure = 0.9
+    timestep_limiting_postprocessor = max_time_step_size
+  []
+[]
+
+[Outputs]
+  file_base = 'val-2f-dimensionless_out'
+  [csv]
+    type = CSV
+  []
+[]
