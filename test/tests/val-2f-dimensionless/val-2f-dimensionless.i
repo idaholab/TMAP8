@@ -1,8 +1,8 @@
 # Validation Problem #2f — Fully dimensionless formulation
 # Same physics as val-2f, but the mobile concentration, trapped concentrations, mesh
 # coordinates, and time variable are all expressed in an explicit user-specified reference
-# system. For this example, L_ref = 1 um and t_ref = 1 s, so those coordinates are
-# numerically unchanged from the dimensional input while still being explicit.
+# system. For this example, L_ref = 1 um and t_ref is chosen from the fastest of the
+# candidate diffusion/reaction time scales, so time-like inputs are numerically transformed.
 # Fundamental success criterion: serial result == parallel result.
 
 !include parameters_val-2f-dimensionless.params
@@ -90,7 +90,7 @@
     type = ParsedFunction
     expression = 'if(t<${charge_time_hat}, ${temperature_initial},
                   if(t<${fparse charge_time_hat + cooldown_duration_hat}, ${temperature_cooldown},
-                  ${temperature_desorption_min}+${desorption_heating_rate}*(t-${fparse charge_time_hat + cooldown_duration_hat})))'
+                  ${temperature_desorption_min}+${desorption_heating_rate_hat}*(t-${fparse charge_time_hat + cooldown_duration_hat})))'
   []
   [source_distribution]
     type = ParsedFunction
@@ -108,22 +108,22 @@
   []
   [max_dt_size_function]
     type = ParsedFunction
-    expression = 'if(t<${fparse 5}, ${fparse 1e-2},
-                  if(t<${fparse 8}, ${fparse 1e2},
-                  if(t<${fparse 12}, ${fparse 1e-2},
-                  if(t<${fparse 20}, ${fparse 1e2},
-                  if(t<${fparse 35}, ${fparse 1e-2},
-                  if(t<${fparse 450}, ${fparse 1e2},
-                  if(t<${fparse 5000}, ${fparse 1e1},
-                  if(t<${fparse 11000}, ${fparse 1e2},
-                  if(t<${fparse 13000}, ${fparse 1e1},
-                  if(t<${fparse charge_time + cooldown_duration + 4500}, ${fparse 1e2},
-                  if(t<${fparse 313000}, ${fparse 1e2},
-                  if(t<${fparse 315000}, ${fparse 1e1}, ${fparse 1e3}))))))))))))'
+    expression = 'if(t<${fparse 5 / time_reference}, ${fparse 1e-2 / time_reference},
+                  if(t<${fparse 8 / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 12 / time_reference}, ${fparse 1e-2 / time_reference},
+                  if(t<${fparse 20 / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 35 / time_reference}, ${fparse 1e-2 / time_reference},
+                  if(t<${fparse 450 / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 5000 / time_reference}, ${fparse 1e1 / time_reference},
+                  if(t<${fparse 11000 / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 13000 / time_reference}, ${fparse 1e1 / time_reference},
+                  if(t<${fparse (charge_time + cooldown_duration + 4500) / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 313000 / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 315000 / time_reference}, ${fparse 1e1 / time_reference}, ${fparse 1e3 / time_reference}))))))))))))'
   []
   [max_dt_size_function_coarse]
     type = ParsedFunction
-    expression = 'if(t<${fparse 1e-1}, ${fparse 1e4}, ${fparse 1e5})'
+    expression = 'if(t<${fparse 1e-1 / time_reference}, ${fparse 1e4 / time_reference}, ${fparse 1e5 / time_reference})'
   []
   # Trap distribution functions (Fermi-Dirac depth profiles for damage traps)
   [trap_distribution_function_1]
@@ -157,8 +157,12 @@
       # All 6 trapped species couple to the same mobile variable
       mobile = 'deuterium_concentration_W deuterium_concentration_W deuterium_concentration_W
                 deuterium_concentration_W deuterium_concentration_W deuterium_concentration_W'
-      alpha_t = '${trapping_prefactor_intrinsic} ${trapping_prefactor_1} ${trapping_prefactor_2}
-                 ${trapping_prefactor_3} ${trapping_prefactor_4} ${trapping_prefactor_5}'
+      dimensionless_trapping_rate = '${dimensionless_trapping_rate_intrinsic}
+                                     ${dimensionless_trapping_rate_1}
+                                     ${dimensionless_trapping_rate_2}
+                                     ${dimensionless_trapping_rate_3}
+                                     ${dimensionless_trapping_rate_4}
+                                     ${dimensionless_trapping_rate_5}'
       trapping_energy = '${trapping_energy_intrinsic} ${trapping_energy_1} ${trapping_energy_2}
                          ${trapping_energy_3} ${trapping_energy_4} ${trapping_energy_5}'
       N = ${tungsten_density}
@@ -171,8 +175,12 @@
                                       ${trap_concentration_reference_4}
                                       ${trap_concentration_reference_5}'
       mobile_concentration_reference = ${mobile_concentration_reference}
-      alpha_r = '${detrapping_prefactor_intrinsic} ${detrapping_prefactor_1} ${detrapping_prefactor_2}
-                 ${detrapping_prefactor_3} ${detrapping_prefactor_4} ${detrapping_prefactor_5}'
+      dimensionless_release_rate = '${dimensionless_release_rate_intrinsic}
+                                    ${dimensionless_release_rate_1}
+                                    ${dimensionless_release_rate_2}
+                                    ${dimensionless_release_rate_3}
+                                    ${dimensionless_release_rate_4}
+                                    ${dimensionless_release_rate_5}'
       detrapping_energy = '${detrapping_energy_intrinsic} ${detrapping_energy_1} ${detrapping_energy_2}
                            ${detrapping_energy_3} ${detrapping_energy_4} ${detrapping_energy_5}'
       temperature = 'temperature'

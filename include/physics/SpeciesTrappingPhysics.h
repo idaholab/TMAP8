@@ -43,6 +43,8 @@ protected:
   std::vector<Real> _Ns;
   /// Fraction of host sites that contribute to trapping for each component (outer indexing) and species (inner)
   std::vector<std::vector<FunctionName>> _Ct0s;
+  /// Dimensionless trapping rate k_t_hat for each component (outer indexing) and species (inner)
+  std::vector<std::vector<Real>> _dimensionless_trapping_rates;
   /// Reference trapped concentration for each component (outer indexing) and species (inner)
   std::vector<std::vector<Real>> _trap_concentration_references;
   /// Reference mobile concentration for each component
@@ -51,6 +53,8 @@ protected:
   std::vector<Real> _trap_per_frees;
   /// Releasing rate for each component (outer indexing) and species (inner)
   std::vector<std::vector<Real>> _alpha_rs;
+  /// Dimensionless release rate k_r_hat for each component (outer indexing) and species (inner)
+  std::vector<std::vector<Real>> _dimensionless_release_rates;
   /// Detrapping energies for each component (outer indexing) and species (inner)
   std::vector<std::vector<Real>> _detrapping_energies;
   /// Whether to define a single variable for each species for all components, or a different one for each component
@@ -62,7 +66,9 @@ protected:
 
 private:
   Real trapConcentrationReference(unsigned int c_i, unsigned int s_j);
+  Real dimensionlessTrappingRate(unsigned int c_i, unsigned int s_j);
   Real mobileConcentrationReference(unsigned int c_i) const;
+  Real dimensionlessReleaseRate(unsigned int c_i, unsigned int s_j);
   Real trappedConcentrationReference(unsigned int c_i) const;
   Real variableScalingFromReference(Real reference) const;
   Real siteDensityReference(unsigned int c_i) const;

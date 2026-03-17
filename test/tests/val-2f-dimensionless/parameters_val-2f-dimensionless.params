@@ -150,10 +150,28 @@ trap_concentration_reference_intrinsic = '${trap_density_01dpa_intrinsic}'
 mobile_concentration_reference = '${fparse (detrapping_prefactor_intrinsic / trapping_prefactor_intrinsic) * exp(-(detrapping_energy_intrinsic - trapping_energy) / temperature_initial) * tungsten_density}'
 
 # Explicit reference quantities for the fully nondimensional val-2f example.
-# The current val-2f inputs already use mum and s, so choosing 1 mum and 1 s keeps the
-# numerical values unchanged while still making the reference system explicit.
+# `time_reference` is generated from `scripts/compute_val_2f_dimensionless_reference.py`
+# by taking the faster of:
+# - diffusion time L_ref^2 / D(T_ref)
+# - first-order reaction times 1 / k(T_ref)
+# For the current val-2f constants, diffusion is faster than trapping/release at 370 K.
 length_reference = 1
-time_reference = 1
+time_reference = 0.04071610368608602
+
+# Dimensionless trap rate groups derived using the selected time reference.
+dimensionless_trapping_rate_intrinsic = '${fparse trapping_prefactor_intrinsic * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_1 = '${fparse trapping_prefactor_1 * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_2 = '${fparse trapping_prefactor_2 * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_3 = '${fparse trapping_prefactor_3 * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_4 = '${fparse trapping_prefactor_4 * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_5 = '${fparse trapping_prefactor_5 * time_reference * mobile_concentration_reference / tungsten_density}'
+
+dimensionless_release_rate_intrinsic = '${fparse detrapping_prefactor_intrinsic * time_reference}'
+dimensionless_release_rate_1 = '${fparse detrapping_prefactor_1 * time_reference}'
+dimensionless_release_rate_2 = '${fparse detrapping_prefactor_2 * time_reference}'
+dimensionless_release_rate_3 = '${fparse detrapping_prefactor_3 * time_reference}'
+dimensionless_release_rate_4 = '${fparse detrapping_prefactor_4 * time_reference}'
+dimensionless_release_rate_5 = '${fparse detrapping_prefactor_5 * time_reference}'
 
 # Dimensionless geometry and time quantities used by val-2f-dimensionless.
 sigma_hat = '${fparse sigma / length_reference}'
@@ -171,6 +189,7 @@ cooldown_duration_hat = '${fparse cooldown_duration / time_reference}'
 desorption_duration_hat = '${fparse desorption_duration / time_reference}'
 endtime_hat = '${fparse charge_time_hat + cooldown_duration_hat + desorption_duration_hat}'
 dt_init_hat = '${fparse dt_init / time_reference}'
+desorption_heating_rate_hat = '${fparse desorption_heating_rate * time_reference}'
 
 # Dimensionless mobile transport quantities.
 diffusion_W_preexponential_hat = '${fparse diffusion_W_preexponential * time_reference / (length_reference^2)}'

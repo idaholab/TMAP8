@@ -15,9 +15,11 @@
  * Ĉ_t = C_t / C_t_ref.
  *
  * The residual is:
- *   R = +α_r · exp(-E_r / T) · Ĉ_t
+ *   R = +k_r_hat · exp(-E_r / T) · Ĉ_t
  *
- * This is trivially dimensionless (O(α_r)) because Ĉ_t is O(1).
+ * where k_r_hat = t_ref · α_r.
+ *
+ * This is trivially dimensionless (O(k_r_hat)) because Ĉ_t is O(1).
  * No TMAPScaling / scaleResidual is used.
  */
 class ReleasingNodalKernelDimensionless : public NodalKernel
@@ -31,7 +33,7 @@ protected:
   Real computeQpResidual() override;
   Real computeQpJacobian() override;
 
-  const Real _alpha_r;
+  const Real _dimensionless_release_rate;
   const Real _detrapping_energy;
   const VariableValue & _temperature;
 };

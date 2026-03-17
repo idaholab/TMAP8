@@ -17,9 +17,10 @@ ReleasingNodalKernelDimensionless::validParams()
   params.addClassDescription(
       "Implements the release source term for a dimensionless trapped-species variable "
       "Ĉ_t = C_t / C_t_ref. "
-      "The residual R = +α_r · exp(-E_r / T) · Ĉ_t is naturally O(α_r) "
+      "The residual R = +k_r_hat · exp(-E_r / T) · Ĉ_t is naturally O(k_r_hat) "
       "because Ĉ_t is O(1). No equation scaling is applied.");
-  params.addRequiredParam<Real>("alpha_r", "The release rate coefficient (1/s)");
+  params.addRequiredParam<Real>("dimensionless_release_rate",
+                                "Dimensionless release rate k_r_hat = t_ref * alpha_r.");
   params.addParam<Real>("detrapping_energy", 0, "The detrapping activation energy (K)");
   params.addRequiredCoupledVar("temperature", "The temperature (K)");
   return params;
@@ -28,7 +29,7 @@ ReleasingNodalKernelDimensionless::validParams()
 ReleasingNodalKernelDimensionless::ReleasingNodalKernelDimensionless(
     const InputParameters & parameters)
   : NodalKernel(parameters),
-    _alpha_r(getParam<Real>("alpha_r")),
+    _dimensionless_release_rate(getParam<Real>("dimensionless_release_rate")),
     _detrapping_energy(getParam<Real>("detrapping_energy")),
     _temperature(coupledValue("temperature"))
 {
@@ -37,7 +38,8 @@ ReleasingNodalKernelDimensionless::ReleasingNodalKernelDimensionless(
 Real
 ReleasingNodalKernelDimensionless::computeQpResidual()
 {
-  const Real residual = _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]) * _u[_qp];
+  const Real residual =
+      _dimensionless_release_rate * std::exp(-_detrapping_energy / _temperature[_qp]) * _u[_qp];
 
   mooseAssert(residual >= 0,
               "ReleasingNodalKernelDimensionless returned a negative residual, which is not "
@@ -49,5 +51,5 @@ ReleasingNodalKernelDimensionless::computeQpResidual()
 Real
 ReleasingNodalKernelDimensionless::computeQpJacobian()
 {
-  return _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]);
+  return _dimensionless_release_rate * std::exp(-_detrapping_energy / _temperature[_qp]);
 }

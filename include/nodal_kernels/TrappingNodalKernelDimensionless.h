@@ -26,18 +26,17 @@ typedef DualNumber<Real, DynamicSparseNumberArray<Real, unsigned int>> LocalDN;
  * Ĉ_t = C_t / C_t_ref, where C_t_ref is the trap concentration reference scale.
  *
  * The residual is:
- *   R = -(α_t / N) · exp(-E_t / T) · (N·Ct0 - C_t_ref·Ĉ_t - Σ_j C_t_j) · C_m / C_t_ref
+ *   R = -k_t_hat · exp(-E_t / T) · ((N·Ct0 - C_t_ref·Ĉ_t - Σ_j C_t_j) / C_t_ref) · Ĉ_m
  *
  * where:
  *   - Ĉ_t  = dimensionless variable (this kernel's variable), O(1)
- *   - C_m  = physical mobile concentration. The coupled variable may be either physical
+ *   - Ĉ_m  = dimensionless mobile concentration. The coupled variable may be either physical
  *            or dimensionless, controlled by the mobile_variable_is_dimensionless flag.
  *   - C_t_j = physical concentrations of other trap types (physical units, optional)
  *   - C_t_ref = trap_concentration_reference parameter
+ *   - k_t_hat = t_ref · α_t · C_m_ref / N
  *
- * No TMAPScaling / scaleResidual is used. The residual is naturally O(α_t · C_m / N)
- * and is uniform across all trap types with different densities because the C_t_ref
- * factors cancel in the expression above.
+ * No TMAPScaling / scaleResidual is used. The residual is naturally O(k_t_hat).
  */
 class TrappingNodalKernelDimensionless : public NodalKernel
 {
@@ -51,10 +50,10 @@ protected:
   Real computeQpJacobian() override;
   Real computeQpOffDiagJacobian(unsigned int jvar) override;
 
-  const Real _alpha_t;
+  const Real _dimensionless_trapping_rate;
   const Real _trapping_energy;
-  const Real _N;
   const Function & _Ct0;
+  const Real _N;
   /// C_t_ref: reference concentration for THIS trap (used to convert Ĉ_t back to physical)
   const Real _trap_concentration_reference;
   /// C_m_ref: reference concentration for the mobile species when the coupled variable is dimensionless
