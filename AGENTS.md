@@ -4,30 +4,31 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What This Is
 
-TMAP8 (Tritium Migration Analysis Program, Version 8) is a MOOSE-based finite element application for tritium transport and fuel cycle modeling. It is built on top of the [MOOSE framework](https://mooseframework.inl.gov), which lives at `../cuda-mpich-moose` (referred to as `MOOSE_DIR`).
+TMAP8 (Tritium Migration Analysis Program, Version 8) is a MOOSE-based finite element application for tritium transport and fuel cycle modeling. It is built on top of the [MOOSE framework](https://mooseframework.inl.gov), which lives in the sub-directory `moose` (referred to as `MOOSE_DIR`).
 
 ## Build & Test Commands
 
 ```bash
 # Build (from repo root)
-make -j64               # optimized build → tmap8-opt
-make -j64 METHOD=devel  # debug build → tmap8-devel
+METHOD=opt make -j64   # optimized build → tmap8-opt
+METHOD=devel make -j64 # debug build → tmap8-devel
 
 # Run all tests
-./run_tests -j64
+METHOD=opt ./run_tests -j64
 
 # Run tests in a specific directory
-./run_tests -j64 --re test/tests/kernels/
+METHOD=opt ./run_tests -j64 --re test/tests/kernels/
 
 # Run a single input file manually
 ./tmap8-opt -i test/tests/kernels/some_test.i
 
 # Build and run unit tests
-make -C unit -j64
+METHOD=opt make -C unit -j64
 ./unit/run_tests
 ```
 
-The `METHOD` environment variable controls the build type: `opt` (default), `devel`, `oprof`, `dbg`.
+The `METHOD` environment variable controls the build type: `opt`, `devel`, `oprof`, `dbg`. The default
+build type for a developer should be `devel`, as it has optimizations (`-O2`), but also includes assertions.
 
 ## Architecture
 
