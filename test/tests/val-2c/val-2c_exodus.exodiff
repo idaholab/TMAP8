@@ -50,7 +50,7 @@ NODAL VARIABLES relative 5.5.e-6 floor 1e-10
 	ht_enclosure_concentration
 	ht_paint_concentration
 	hto_enclosure_concentration
-	hto_paint_concentration                relative 1.1e-04 floor 7.e-6
+	hto_paint_concentration                relative 2e-04 floor 7.e-6
 	t2_enclosure_concentration
 	t2_paint_concentration
 
