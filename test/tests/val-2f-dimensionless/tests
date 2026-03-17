@@ -6,7 +6,6 @@
     type = CSVDiff
     input = val-2f-dimensionless_light_charge.i
     csvdiff = val-2f-dimensionless_light_charge_out.csv
-    rel_err = 1e-3
     requirement = 'The first phase of the nondimensional val-2f charge-only replay must match between serial and parallel.'
     max_time = 600
   []
