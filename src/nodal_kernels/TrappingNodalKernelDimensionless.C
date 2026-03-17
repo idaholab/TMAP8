@@ -43,9 +43,14 @@ TrappingNodalKernelDimensionless::validParams()
                         "Reference concentration C_m_ref used to convert the mobile variable "
                         "back to physical units when mobile_variable_is_dimensionless = true.");
   params.addCoupledVar("other_trapped_concentration_variables",
-                       "Other variables representing trapped particle concentrations, "
-                       "in PHYSICAL units (not dimensionless). These subtract from "
-                       "available trapping sites.");
+                       "Dimensionless trapped-concentration variables (Ĉ_t_j = C_t_j / C_t_ref_j) "
+                       "for other trap species that compete for the same trapping sites.");
+  params.addParam<std::vector<Real>>(
+      "other_trap_concentration_references",
+      {},
+      "Reference concentrations C_t_ref_j for each variable listed in "
+      "other_trapped_concentration_variables, used to convert Ĉ_t_j back to physical C_t_j "
+      "when computing available trapping sites. Must match in length.");
   params.addRequiredCoupledVar("temperature", "The temperature (K)");
   return params;
 }
@@ -65,6 +70,21 @@ TrappingNodalKernelDimensionless::TrappingNodalKernelDimensionless(
     _temperature(coupledValue("temperature"))
 {
   _n_other_concs = coupledComponents("other_trapped_concentration_variables");
+  _other_trap_concentration_references =
+      getParam<std::vector<Real>>("other_trap_concentration_references");
+
+  if (!_other_trap_concentration_references.empty() &&
+      _other_trap_concentration_references.size() != _n_other_concs)
+    paramError("other_trap_concentration_references",
+               "Length (",
+               _other_trap_concentration_references.size(),
+               ") must match the number of other_trapped_concentration_variables (",
+               _n_other_concs,
+               ").");
+
+  // Default: treat each missing reference as 1.0 (physical units, backward compat)
+  if (_other_trap_concentration_references.empty() && _n_other_concs > 0)
+    _other_trap_concentration_references.assign(_n_other_concs, 1.0);
 
   // Resize to n_other_concs plus the concentration for this kernel's variable
   _other_trapped_concentrations.resize(_n_other_concs);
@@ -86,11 +106,12 @@ Real
 TrappingNodalKernelDimensionless::computeQpResidual()
 {
   // Physical empty trapping sites for this trap type:
-  //   N * Ct0(x) - C_t_ref * Ĉ_t - sum_j C_t_j_physical
+  //   N * Ct0(x) - C_t_ref * Ĉ_t - sum_j C_t_ref_j * Ĉ_t_j
   Real empty_trapping_sites = _Ct0.value(_t, (*_current_node)) * _N;
   empty_trapping_sites -= _u[_qp] * _trap_concentration_reference;
-  for (const auto & other_conc : _other_trapped_concentrations)
-    empty_trapping_sites -= (*other_conc)[_qp];
+  for (MooseIndex(_n_other_concs) j = 0; j < _n_other_concs; ++j)
+    empty_trapping_sites -=
+        (*_other_trapped_concentrations[j])[_qp] * _other_trap_concentration_references[j];
 
   const Real mobile_dimensionless = _mobile_variable_is_dimensionless
                                         ? _mobile_concentration[_qp]
@@ -115,12 +136,12 @@ TrappingNodalKernelDimensionless::ADHelper()
   // Compute empty trapping sites with dual-number tracking for AD Jacobian
   LocalDN empty_trapping_sites = _Ct0.value(_t, (*_current_node)) * _N;
 
-  // Other traps (physical concentrations, each with its own derivative seed)
+  // Other traps: dimensionless Ĉ_t_j, multiplied by C_t_ref_j to get physical units
   for (MooseIndex(_n_other_concs) i = 0; i < _n_other_concs; ++i)
   {
     LocalDN other_dn = (*_other_trapped_concentrations[i])[_qp];
     other_dn.derivatives().insert(_var_numbers[i]) = 1.;
-    empty_trapping_sites -= other_dn;
+    empty_trapping_sites -= other_dn * _other_trap_concentration_references[i];
   }
 
   // This trap: variable is dimensionless Ĉ_t, multiply by C_t_ref to get physical

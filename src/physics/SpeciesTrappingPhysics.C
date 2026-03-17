@@ -609,20 +609,31 @@ SpeciesTrappingPhysics::addFEKernels()
           params.set<Real>("temperature_reference") = temperatureReference(c_i);
         }
 
-        // Add the other species as occupying traps.
-        // For the dimensionless path, other trapped concentrations are expected to be in
-        // PHYSICAL units; since SpeciesTrappingPhysics creates all trapped variables as
-        // dimensionless, the cross-coupling is skipped here (different_traps_for_each_species
-        // semantics are always applied for the dimensionless path).
-        if (!_use_dimensionless_trapped_species)
+        // Add the other species as occupying traps (shared-site physics).
+        if (!getParam<bool>("different_traps_for_each_species"))
         {
           std::vector<VariableName> copy_species;
           for (const auto & sp_name : _species[c_i])
             if (sp_name != species_name)
               copy_species.push_back(sp_name);
-          if (copy_species.size() && !getParam<bool>("different_traps_for_each_species"))
+
+          if (copy_species.size())
+          {
             params.set<std::vector<VariableName>>("other_trapped_concentration_variables") =
                 copy_species;
+
+            if (_use_dimensionless_trapped_species)
+            {
+              // Collect the reference concentration for each other trap species so the
+              // dimensionless kernel can convert Ĉ_t_j → physical C_t_j.
+              std::vector<Real> other_refs;
+              other_refs.reserve(copy_species.size());
+              for (unsigned int k = 0; k < _species[c_i].size(); ++k)
+                if (_species[c_i][k] != species_name)
+                  other_refs.push_back(trapConcentrationReference(c_i, k));
+              params.set<std::vector<Real>>("other_trap_concentration_references") = other_refs;
+            }
+          }
         }
 
         getProblem().addNodalKernel(kernel_type, prefix() + species_name + "_enc_trapping", params);
@@ -657,21 +668,19 @@ SpeciesTrappingPhysics::addFEKernels()
 
       // Coupling of dC_t_i/dt into the mobile species conservation equation.
       {
-        const std::string kernel_type = "ScaledCoupledTimeDerivative";
+        const std::string kernel_type = _use_dimensionless_trapped_species
+                                            ? "FactoredCoupledTimeDerivative"
+                                            : "ScaledCoupledTimeDerivative";
         auto params = _factory.getValidParams(kernel_type);
         assignBlocks(params, blocks);
         params.set<NonlinearVariableName>("variable") = mobile_species_name;
         params.set<std::vector<VariableName>>("v") = {species_name};
         if (_use_dimensionless_trapped_species)
         {
-          // If the mobile variable is dimensionless, add (C_t_ref_i / C_m_ref) dĈ_t_i/dt.
-          // Otherwise add physical dC_t_i/dt.
+          // Dimensionless path: add (C_t_ref_i / C_m_ref) * dĈ_t_i/dt.
+          // FactoredCoupledTimeDerivative applies no equation-level scaling.
           params.set<Real>("factor") =
               trapConcentrationReference(c_i, s_j) / mobileConcentrationReference(c_i);
-          // Trivial scaling: residualReference = 1/1 = 1 (identity)
-          params.set<Real>("primary_concentration_reference") = 1.0;
-          params.set<Real>("coupled_concentration_reference") = 1.0;
-          params.set<Real>("time_reference") = 1.0;
         }
         else
         {

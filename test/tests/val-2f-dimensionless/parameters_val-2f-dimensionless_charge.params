@@ -153,13 +153,13 @@ length_reference = 1
 time_reference = 0.04071610368608602
 
 # Dimensionless trap rate groups for the occupancy formulation.
-# With c_hat = C_m / N_host, k_t_hat = t_ref * alpha_t.
-dimensionless_trapping_rate_intrinsic = '${fparse trapping_prefactor_intrinsic * time_reference}'
-dimensionless_trapping_rate_1 = '${fparse trapping_prefactor_1 * time_reference}'
-dimensionless_trapping_rate_2 = '${fparse trapping_prefactor_2 * time_reference}'
-dimensionless_trapping_rate_3 = '${fparse trapping_prefactor_3 * time_reference}'
-dimensionless_trapping_rate_4 = '${fparse trapping_prefactor_4 * time_reference}'
-dimensionless_trapping_rate_5 = '${fparse trapping_prefactor_5 * time_reference}'
+# k_t_hat = alpha_t * C_m_ref / N * t_ref  (from nondimensionalizing ∂C_t/∂t = alpha_t/N * C_m * (N*Ct0 - C_t))
+dimensionless_trapping_rate_intrinsic = '${fparse trapping_prefactor_intrinsic * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_1 = '${fparse trapping_prefactor_1 * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_2 = '${fparse trapping_prefactor_2 * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_3 = '${fparse trapping_prefactor_3 * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_4 = '${fparse trapping_prefactor_4 * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_5 = '${fparse trapping_prefactor_5 * time_reference * mobile_concentration_reference / tungsten_density}'
 
 dimensionless_release_rate_intrinsic = '${fparse detrapping_prefactor_intrinsic * time_reference}'
 dimensionless_release_rate_1 = '${fparse detrapping_prefactor_1 * time_reference}'
