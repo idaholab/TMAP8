@@ -86,7 +86,9 @@ fig5 = sns.PairGrid(
 fig5.map_upper(sns.scatterplot, size=0.1, alpha=0.2)
 fig5.map_lower(sns.kdeplot)
 fig5.map_diag(sns.kdeplot)
-fig5.figure.savefig("divertor_monoblock_sensitivity_figures/shutdown_pairplots.png", dpi=300)
+fig5.figure.savefig(
+    "divertor_monoblock_sensitivity_figures/shutdown_pairplots.png", dpi=300
+)
 
 fig6 = sns.PairGrid(
     a2df[
