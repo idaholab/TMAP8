@@ -35,27 +35,11 @@ def main() -> None:
         "4": 1.85,
         "5": 2.05,
     }
-    mobile_concentration_reference_um3 = (
-        (detrapping_prefactor_s / trapping_prefactor_s)
-        * math.exp(
-            -(detrapping_energies_ev["intrinsic"] - trapping_energies_ev["intrinsic"])
-            / (KB_EV * temperature_ref)
-        )
-        * tungsten_density_um3
-    )
+    mobile_concentration_reference_um3 = tungsten_density_um3
+    trap_concentration_reference_um3 = tungsten_density_um3
 
     diffusion_rate_ref = arrhenius(diffusion_prefactor_um2_s, diffusion_energy_ev, temperature_ref)
     diffusion_time_reference = length_reference_um ** 2 / diffusion_rate_ref
-
-    trapping_rates = {
-        name: trapping_prefactor_s * mobile_concentration_reference_um3 / tungsten_density_um3
-        for name in trapping_energies_ev
-    }
-    trapping_effective_rates = {
-        name: arrhenius(trapping_rates[name], trapping_energies_ev[name], temperature_ref)
-        for name in trapping_rates
-    }
-    trapping_time_scales = {name: 1.0 / rate for name, rate in trapping_effective_rates.items()}
 
     release_effective_rates = {
         name: arrhenius(detrapping_prefactor_s, detrapping_energies_ev[name], temperature_ref)
@@ -63,13 +47,11 @@ def main() -> None:
     }
     release_time_scales = {name: 1.0 / rate for name, rate in release_effective_rates.items()}
 
-    fastest_reaction_time = min(
-        min(trapping_time_scales.values()), min(release_time_scales.values())
-    )
+    fastest_reaction_time = min(release_time_scales.values())
     time_reference = min(diffusion_time_reference, fastest_reaction_time)
 
     dimensionless_trapping_rates = {
-        name: trapping_prefactor_s * time_reference * mobile_concentration_reference_um3 / tungsten_density_um3
+        name: trapping_prefactor_s * time_reference
         for name in trapping_energies_ev
     }
     dimensionless_release_rates = {
@@ -79,13 +61,15 @@ def main() -> None:
     payload = {
         "temperature_reference_K": temperature_ref,
         "length_reference_um": length_reference_um,
+        "concentration_formulation": "occupancy",
+        "host_density_reference_at_per_um3": tungsten_density_um3,
         "mobile_concentration_reference_at_per_um3": mobile_concentration_reference_um3,
+        "trap_concentration_reference_at_per_um3": trap_concentration_reference_um3,
         "diffusion_time_reference_s": diffusion_time_reference,
         "fastest_reaction_time_s": fastest_reaction_time,
         "selected_time_reference_s": time_reference,
         "dimensionless_trapping_rate": dimensionless_trapping_rates,
         "dimensionless_release_rate": dimensionless_release_rates,
-        "trapping_time_scales_s": trapping_time_scales,
         "release_time_scales_s": release_time_scales,
     }
 

@@ -35,6 +35,12 @@ build type for a developer should be `devel`, as it has optimizations (`-O2`), b
 When making a git commit in this repository, include a brief summary in the commit body of the
 user prompts or instructions that led to the change.
 
+## Command Separation
+
+When a task involves both normal workspace file operations and an escalated build/run/test command,
+split them into separate terminal commands. Do not combine a non-escalated step such as copying a
+gold file with an escalated execution step in a single shell command.
+
 ## Architecture
 
 TMAP8 follows MOOSE's plugin architecture. The key concept: everything is registered to a central factory and instantiated from input (`.i`) files at runtime.

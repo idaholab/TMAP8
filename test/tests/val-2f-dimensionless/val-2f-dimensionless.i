@@ -1,8 +1,11 @@
 # Validation Problem #2f — Fully dimensionless formulation
 # Same physics as val-2f, but the mobile concentration, trapped concentrations, mesh
 # coordinates, and time variable are all expressed in an explicit user-specified reference
-# system. For this example, L_ref = 1 um and t_ref is chosen from the fastest of the
-# candidate diffusion/reaction time scales, so time-like inputs are numerically transformed.
+# system. For this example, the concentration variables use an occupancy formulation:
+# - c_hat = C_m / N_host
+# - theta_i = C_t_i / N_host
+# For time, L_ref = 1 um and t_ref is chosen from the fastest of the candidate
+# diffusion/reaction time scales, so time-like inputs are numerically transformed.
 # Fundamental success criterion: serial result == parallel result.
 
 !include parameters_val-2f-dimensionless.params

@@ -164,6 +164,43 @@ may need to choose:
 The appropriate choices are problem-dependent and often depend on the specific operating
 regime the user wants to resolve accurately.
 
+## Occupancy-Based Concentration Formulation
+
+For trapping-dominated problems like `val-2f`, the preferred dimensionless concentration
+formulation is now an occupancy-based one.
+
+Specifically:
+- mobile concentration should be written as a host-site occupancy,
+  `c_hat = C_m / N_host`,
+- trapped concentrations should also be written against the same host-density scale,
+  `theta_i = C_t_i / N_host`.
+
+This is a deliberate change from using trap-specific concentration references for each
+trapped variable together with a separate mobile concentration reference.
+
+### Why occupancy is preferred
+
+When the mobile and trapped variables use very different concentration references, the
+mobile equation inherits coupling factors proportional to `C_t_ref / C_m_ref`. In `val-2f`,
+that produced very large row magnitudes and correspondingly poor Jacobian conditioning even
+after length and time were nondimensionalized.
+
+Using a common host-density scale for both the mobile and trapped variables avoids those
+large conversion factors in the coupled time-derivative terms. In practice, this produces a
+much better-scaled coupled system while keeping the formulation explicit at the input level.
+
+### Implication for dimensionless groups
+
+With the occupancy-based concentration scaling:
+- the mobile diffusion equation is expressed in terms of `c_hat`,
+- each trap equation is expressed in terms of `theta_i`,
+- the trapping rate group becomes `k_t_hat = t_ref * alpha_t`,
+- the release rate group remains `k_r_hat = t_ref * alpha_r`,
+- trap-capacity information enters through site fractions such as `Ct0 = N_i / N_host`.
+
+This is closer to the standard diffusion-plus-Damkohler form expected for diffusion-dominated
+or mixed diffusion/reaction systems.
+
 ## What This Means For Current Trapping Work
 
 The earlier draft assumed that TMAP8 would compute trap-specific concentration references,
@@ -204,6 +241,9 @@ Whether `trap_per_free` should eventually be removed, retained, or refactored ca
 handled as a separate physics/API question. It is no longer coupled to an automatic
 non-dimensionalization design.
 
+For the current `val-2f-dimensionless` direction, the concentration formulation should be
+occupancy-based rather than based on trap-specific concentration references.
+
 ## Validation Strategy
 
 The main validation target remains the same: improved numerical robustness, especially for
@@ -217,9 +257,20 @@ user-authored dimensionless formulation:
 - improves conditioning relative to the comparable dimensional formulation,
 - reduces serial-vs-parallel divergence.
 
+Recent `val-2f-dimensionless` results reinforce that this needs to be tested at the level of
+the full coupled Jacobian, not just by checking that variables and coefficients are formally
+dimensionless. A dimensionless formulation can still be poorly conditioned if the chosen
+concentration references introduce large coupling ratios between the mobile and trapped
+equations.
+
 A useful validation pattern is to maintain paired cases:
 - a dimensional reference input,
 - a manually nondimensionalized input representing the same physics.
+
+For trapping problems, that means validation should explicitly compare:
+- a concentration-reference-based dimensionless form, if one is considered,
+- the occupancy-based form,
+- the resulting Jacobian conditioning and serial/parallel agreement.
 
 ## Possible Helper Tooling
 
