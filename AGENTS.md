@@ -30,6 +30,11 @@ METHOD=opt make -C unit -j64
 The `METHOD` environment variable controls the build type: `opt`, `devel`, `oprof`, `dbg`. The default
 build type for a developer should be `devel`, as it has optimizations (`-O2`), but also includes assertions.
 
+## Commit Messages
+
+When making a git commit in this repository, include a brief summary in the commit body of the
+user prompts or instructions that led to the change.
+
 ## Architecture
 
 TMAP8 follows MOOSE's plugin architecture. The key concept: everything is registered to a central factory and instantiated from input (`.i`) files at runtime.
