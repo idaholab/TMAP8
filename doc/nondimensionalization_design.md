@@ -1,481 +1,299 @@
-# Physics-Based Non-Dimensionalization for Trapping Equations
+# User-Managed Non-Dimensionalization Design
 
 ## Problem Statement
 
-The val-2f validation case (self-damaged tungsten, 6 trap species) exhibits significant
-serial-vs-parallel solution differences. The root cause is inconsistent equation scaling
-across trap species, which produces an ill-conditioned Jacobian whose sensitivity to
-floating-point ordering (a function of parallel partitioning) is too high.
+The `val-2f` validation case (self-damaged tungsten, 6 trap species) exhibits significant
+serial-vs-parallel solution differences. The root cause is poor scaling across the coupled
+mobile and trapped-species equations, especially when a single scaling choice is reused for
+trap species that live on very different physical concentration ranges.
 
-The previous approach used a single `trap_per_free = 1e7` to derive all scaling
-references, giving every trapped species the same
-`trap_concentration_reference = 1/trap_per_free = 1e-7`. This is incorrect because the
-six trap species span very different physical concentration ranges.
+The earlier design for this effort proposed solver-managed non-dimensionalization: TMAP8
+would infer reference quantities, derive dimensionless groups, and solve an internally
+non-dimensional system while allowing users to keep writing fully dimensional inputs.
 
----
+That approach is no longer the target.
 
-## Long-Term Vision
+## Design Decision
 
-The ultimate goal is that a user specifies **only the physical parameters** of the
-problem (in SI or any consistent unit system) and the solver automatically
-non-dimensionalizes the equations to achieve a well-conditioned Jacobian. No scaling
-hints, no `trap_per_free`, no `trap_concentration_reference`, no
-`mobile_concentration_reference`.
+Non-dimensionalization should happen entirely at the user input level.
 
-All Physics actions that TMAP8 uses — `SpeciesTrappingPhysics`, `SpeciesDiffusionPhysics`
-(mobile), and `HeatConductionCG` — should participate in a coordinated
-non-dimensionalization derived entirely from parameters the user already provides.
+TMAP8 should not attempt to automatically:
+- infer the full set of reference quantities,
+- derive dimensionless numbers behind the scenes,
+- convert meshes from physical coordinates to dimensionless coordinates,
+- create a separate dimensionless `Executioner` or time integrator,
+- solve in an internal dimensionless space and then map the solution back for output.
 
----
+Instead, the user will prepare a self-consistent dimensionless problem definition in the
+input file. TMAP8 will then solve that problem as written.
 
-## Automatic Reference Quantity Derivation
+## Why The Design Changed
 
-### Trapped concentrations
+The original automation concept breaks down once the full problem is considered rather than
+just the trapping kernels.
 
-**Reference**: `C_t_ref_i = N · Ct0_ref_i`
+### Mesh coordinates are physical inputs
 
-`Ct0_ref_i` is the spatial maximum of the `Ct0_i` occupancy-fraction function evaluated
-over the mesh at `t = 0`. It is obtained automatically as follows:
+Length scales enter through the mesh itself. A truly solver-managed dimensionless
+formulation would require converting the mesh coordinates from physical units to
+non-dimensional coordinates in a consistent and reversible way. That is not a local kernel
+change; it is a global transformation of the problem definition.
 
-1. Attempt to parse the `Ct0_i` parameter string as a `Real` constant. If successful,
-   use it directly.
-2. Otherwise, `dynamic_cast` the registered MOOSE `Function` to `ParsedFunction`. If
-   the cast fails, raise a `paramError`: _"automatic_trapping_scaling with a
-   non-ParsedFunction Ct0 is not yet implemented"_.
-3. If the cast succeeds, scan the expression string for the token `\bt\b` (word-boundary
-   match for `t`). If found, raise a `paramError`: _"Ct0 appears to be time-dependent;
-   automatic scaling requires a time-independent Ct0 or an explicit Ct0_reference"_.
-4. Evaluate `ct0_func.value(0, node)` at every mesh node and take the maximum.
-   This gives `Ct0_ref_i`, and `C_t_ref_i = N · Ct0_ref_i`.
+### Time integration is also physical
 
-**Survey of existing tests**: every `Ct0` usage in the repository is either a parseable
-constant or a spatial-only `ParsedFunction` with no `t` dependence (Fermi-Dirac,
-Gaussian, step-function profiles). Steps 2–3 therefore cover 100% of current use cases
-with no user intervention.
+The `Executioner`, time stepping controls, end time, postprocessors, and output schedules all
+assume physical time units as provided by the user. A fully internal non-dimensional solve
+would require a parallel dimensionless time-management layer or equivalent translation at
+multiple interfaces.
 
-### Mobile concentration
+### Partial automation is inconsistent
 
-**Reference**: the maximum of all physical scale estimates available at setup time.
-Because mobile concentration physics can exist without traps, and because surface BCs
-often directly fix the concentration scale, the reference is:
+Automatically non-dimensionalizing only some equations while leaving the mesh, time
+integrator, and other physics in dimensional form produces a mixed formulation. That is
+worse than requiring the user to provide a fully dimensionless problem explicitly, because it
+hides assumptions and makes the resulting scales difficult to reason about.
 
-```
-C_m_ref  =  max(C_m_BC, C_m_IC, C_m_trap)
-```
+### The infrastructure cost is too high
 
-where each term is defined below. Any term that cannot be evaluated (e.g., no traps) is
-treated as zero and excluded from the maximum.
+Doing this correctly would likely require new behind-the-scenes representations of:
+- the mesh,
+- time-related execution objects,
+- selected physics objects,
+- output transformations back to physical units.
 
-#### C_m_BC — Dirichlet boundary condition values
+That level of indirection is too invasive for the expected benefit.
 
-If `SpeciesDiffusionPhysics` registers Dirichlet BCs on the mobile species (the common
-case for surface-concentration implantation problems), the BC values directly bound `C_m`
-at the boundaries. The reference contribution is:
+## Revised Goal
 
-```
-C_m_BC  =  max over all Dirichlet BCs { constant value or ParsedFunction max at t=0 }
-```
+The goal is now:
+- make it straightforward for a user to formulate a dimensionless TMAP8 problem,
+- keep the formulation explicit in the input file,
+- avoid hidden solver-side transformations,
+- preserve consistency across mesh, time, variables, material properties, sources, and
+  boundary conditions.
 
-For `FunctionDirichletBC`, evaluate the function at `t = 0` over all boundary nodes
-and take the maximum (same approach as for `Ct0` spatial functions above).
+This is a usability and formulation problem, not an internal automation problem.
 
-#### C_m_IC — Initial condition value
+## Scope
 
-If the IC for the mobile species is non-zero, it gives a direct lower bound:
+This design is specifically about how TMAP8 should support non-dimensionalization going
+forward.
 
-```
-C_m_IC  =  IC constant value, or ParsedFunction spatial max at t=0
-```
+In scope:
+- documenting the recommended input-level workflow,
+- defining what remains the user's responsibility,
+- identifying optional helper tooling that may improve usability,
+- aligning future examples and validation cases with the explicit dimensionless workflow.
 
-For most TMAP8 problems the mobile-species IC is 0, so this term is zero.
+Out of scope:
+- automatic derivation of reference quantities inside C++,
+- automatic computation of dimensionless groups inside Physics actions,
+- hidden runtime conversion between dimensional user inputs and dimensionless internal
+  solves,
+- automatic conversion between dimensional and non-dimensional meshes or time domains.
 
-#### C_m_trap — Trapping equilibrium estimate
+## Core Principle
 
-When traps are present, the steady-state mobile concentration is bounded by the
-McNabb-Foster equilibrium condition. Setting `dC_t_i/dt = 0` at half-occupancy
-(`C_t_i = N·Ct0_i/2`) in the target `trap_per_free = 1` formulation gives:
+If a problem is to be solved in dimensionless form, then the entire problem description
+should already be dimensionless when it reaches the solver.
 
-```
-C_m_eq_i  =  (α_r_i / α_t_i) · exp(−(E_r_i − E_t_i) / T_ref) · N
-```
+That includes:
+- mesh coordinates,
+- time domain and timestep controls,
+- primary variables,
+- coefficients and constitutive parameters,
+- source terms,
+- initial conditions,
+- boundary conditions,
+- postprocessing choices.
 
-The maximum across all trap species is driven by the **weakest trap** (smallest
-`E_r − E_t`), which constrains the mobile concentration from above during charging:
+TMAP8 should read and solve that system directly rather than trying to reinterpret a
+physical-unit problem as a dimensionless one internally.
 
-```
-C_m_trap  =  max_i [ (α_r_i / α_t_i) · exp(−(E_r_i − E_t_i) / T_ref) · N ]
-```
+## Implications For TMAP8
 
-**Why this is fully automatic**: `α_r_i`, `α_t_i`, `E_r_i`, `E_t_i`, `N`, and the
-initial temperature are all required parameters of `SpeciesTrappingPhysics`. No
-additional user input is needed for this term.
+### Keep kernel physics explicit
 
-#### Fallback
+The code should not hide dimensionless-group derivation behind existing dimensional
+parameter names in a way that suggests TMAP8 is doing a full automatic conversion. If a
+kernel expects a dimensionless coefficient, the input should provide that coefficient
+explicitly.
 
-If all three sources give zero (zero IC, all-Neumann BCs, no traps), the mobile
-concentration reference cannot be inferred from available parameters. In this case the
-Physics action emits a `paramError` requesting an explicit `mobile_concentration_reference`.
-This situation corresponds to a source-driven (Neumann-only) problem where the flux
-magnitude sets the scale; an automatic estimate would require knowledge of the source
-term and diffusion time, which are problem-specific.
+### Avoid mixed dimensional/dimensionless APIs
 
-**Robustness note**: references are computed once at setup using `T_ref = T_initial` and
-`t = 0` for all function evaluations. They are static preconditioner constants and do not
-change between Newton iterations. During desorption heating, the actual mobile
-concentration may rise above `C_m_ref` as traps empty, but static references that are
-appropriate for the charging phase (where trapping–mobile coupling is numerically
-dominant) provide good overall conditioning.
+We should avoid interfaces where the user provides some physical parameters and some
+already-nondimensional parameters unless the contract is extremely clear. Mixed modes are
+hard to validate and easy to misuse.
 
-### Temperature (heat conduction)
+### Prefer transparency over convenience
 
-**Reference**: `T_ref = T_initial` (the initial temperature, already required in the
-problem setup).
+A user-visible dimensionless input file is preferable to a more convenient but partially
+opaque automatic workflow. The input file should make the chosen reference scales and
+resulting dimensionless groups inspectable.
 
-For the heat equation:
+## Recommended User Workflow
 
-```
-ρ Cp dT/dt = ∇·(k ∇T) + Q
-```
+A user who wants a dimensionless solve should:
 
-the natural non-dimensionalization divides the equation by `k · T_ref / L_ref²`, where
-`L_ref` is a characteristic length. Both `T_ref` and `L_ref` are derivable without user
-input:
+1. Choose reference quantities outside TMAP8.
+2. Non-dimensionalize the governing equations consistently.
+3. Convert all geometry, times, variables, and coefficients into that dimensionless system.
+4. Build the mesh and execution settings using those dimensionless quantities.
+5. Supply only those dimensionless values to the TMAP8 input file.
+6. Convert outputs back to physical units externally if needed for interpretation or plots.
 
-- `T_ref`: taken from the initial condition of the temperature variable. For TMAP8
-  problems this is always a named constant (e.g., `temperature_initial`). The Physics
-  action can query the temperature variable's IC via `ParsedFunction` evaluation or
-  simply accept the initial temperature as its existing required parameter.
-- `L_ref`: derived from the mesh bounding box (available via `mesh().getInflatedProcessorBoundingBox()`
-  or `mesh().dimensionWidth()`). For 1D problems this is the domain length.
+This workflow makes the scaling assumptions explicit and keeps the model internally
+consistent.
 
-**Row scale for the heat equation**:
+## Reference Quantities Remain User Responsibilities
 
-```
-heat_residual_reference  =  k_ref · T_ref / L_ref²
-```
+TMAP8 should not attempt to decide these automatically. Depending on the problem, the user
+may need to choose:
+- reference length `L_ref`,
+- reference time `t_ref`,
+- reference mobile concentration `C_m_ref`,
+- reference trapped concentration for each trap or a consistent family of concentration
+  references,
+- reference temperature `T_ref`,
+- reference flux, source, or pressure scales as needed by the model.
 
-where `k_ref` is the thermal conductivity (already a parameter of `HeatConductionCG`
-or derivable from a material property at `T_ref`).
+The appropriate choices are problem-dependent and often depend on the specific operating
+regime the user wants to resolve accurately.
 
-**Variable scale for temperature**:
+## What This Means For Current Trapping Work
 
-```
-temperature_scaling  =  1 / T_ref
-```
+The earlier draft assumed that TMAP8 would compute trap-specific concentration references,
+mobile concentration references, and Damkohler-like coefficients internally. That is no
+longer the plan.
 
-This normalizes the temperature variable to O(1) (e.g., 370 K → ~1 in natural units).
+For trapping physics, the revised expectation is:
+- if the formulation uses dimensionless trapped and mobile variables, the input file should
+  provide the already-dimensionless coefficients needed by the kernels,
+- if the formulation stays dimensional, then any scaling support should be treated as
+  conventional solver scaling rather than full non-dimensionalization,
+- `trap_per_free` should not be presented as part of an automatic nondimensionalization
+  strategy.
 
-**Coupling to trapping**: when heat conduction and species trapping are coupled (as in
-val-2f where temperature drives Arrhenius rates), the two non-dimensionalizations must
-be consistent. The Arrhenius factors `exp(-E/T)` involve `T` directly; after scaling
-`T → T / T_ref`, these become `exp(-E / (T_ref · T̂))`. No change to the kernel
-expressions is needed — the scaling only appears in the preconditioner, not the computed
-residual.
+Dimensionless trapping kernels and Damkohler-number-based formulations can still be useful.
+The key constraint is that they should operate on an already-nondimensional problem
+definition rather than being used as part of a hidden conversion pipeline from dimensional
+inputs.
 
----
+That means the `val-2f-dimensionless` directory can still serve as the main development and
+validation path for this work, provided it is framed as a user-authored dimensionless case
+rather than an automatically transformed dimensional one.
 
-## Why `trap_per_free` Must Be Eliminated from Kernel Physics
-
-`trap_per_free` currently serves two conflated roles that must be separated:
-
-### Role 1 (physics): Variable normalization
-
-`TrappingNodalKernel` is written in terms of a **normalized** stored variable
-`u = C_t_physical / trap_per_free`. The kernel equations are:
-
-```
-empty_sites  =  N·Ct0 − Σ u_j · trap_per_free
-residual     =  −α_t · exp(−E_t/T) · empty_sites · C_m / (N · trap_per_free)
-```
-
-And the mobile coupling uses `coef = trap_per_free` to recover `d(C_t_physical)/dt`
-from `d(u)/dt`.
-
-This normalization was introduced to keep the stored variable numerically small, but it
-means the user must choose `trap_per_free` to match the expected concentration ratio —
-which requires physics intuition and varies per trap species. When a single value is used
-for all trap species, the normalization is wrong for any trap whose density differs
-significantly from the implicit assumption.
-
-### Role 2 (scaling): Scaling reference proxy
-
-`trap_concentration_reference = 1/trap_per_free` was used as the equation-scaling
-reference. This is the wrong formula — the correct per-species reference is
-`N · Ct0_ref_i` (target formulation), and it must be per-species.
-
-### Resolution
-
-Eliminate `trap_per_free` entirely. Stored variables become dimensionless concentrations
-`Ĉ_t_i = C_t_i / C_t_ref_i` (O(1) when the trap is near saturation). The kernel
-equations are written in terms of Damköhler numbers and dimensionless quantities —
-no physical units appear inside the residual computation. The coupling coefficient
-`C_t_ref_i / C_m_ref` replaces `trap_per_free` and is derived automatically from
-the reference quantities.
-
-This is **not** a change to the physical model — it is a change in the choice of
-internal variable representation. The physical solution is identical.
-
----
-
-## Physical Scales in val-2f
-
-### Current formulation (with `trap_per_free = 1e7`)
-
-| Trap | Ct0 reference | max stored concentration |
-|------|--------------|-------------------------|
-| 1 (damage) | ~7.6e-4 (sat.) | ~4.8 at/μm³ |
-| 2 (damage) | ~6.0e-4 (sat.) | ~3.8 at/μm³ |
-| 3 (damage) | ~4.1e-4 (sat.) | ~2.6 at/μm³ |
-| 4 (damage) | ~5.7e-4 (sat.) | ~3.6 at/μm³ |
-| 5 (damage) | ~1.7e-4 (sat.) | ~1.1 at/μm³ |
-| intrinsic  | 3.8e-7 (const) | **~2.4e-3 at/μm³** |
-
-The intrinsic trap operates ~1000–2000× lower than the damage traps. Using
-`1/trap_per_free = 1e-7` uniformly leaves the intrinsic-trap rows ~1000× less
-well-conditioned.
-
-### Target formulation (dimensionless variables)
-
-| Trap | C_t_ref_i = N · Ct0_ref_i | C_t_ref_i / C_m_ref (coupling coef) |
-|------|--------------------------|--------------------------------------|
-| 1 (damage) | ~4.8e7 at/μm³ | ~3.7e6 |
-| 2 (damage) | ~3.8e7 at/μm³ | ~2.9e6 |
-| 3 (damage) | ~2.6e7 at/μm³ | ~2.0e6 |
-| 4 (damage) | ~3.6e7 at/μm³ | ~2.8e6 |
-| 5 (damage) | ~1.1e7 at/μm³ | ~8.5e5 |
-| intrinsic  | ~2.4e4 at/μm³ | ~1.8e3 |
-
-Mobile reference (`C_m_ref` from weakest-trap equilibrium at T = 370 K):
-
-```
-C_m_ref  =  (1e13 / 2.2e12) · exp(−(1.04 − 0.28) eV / (8.617e-5 eV/K · 370 K)) · N
-         ≈  13 at/μm³
-```
-
-Note: `C_m_ref ≈ 13 at/μm³` is derived from trapping equilibrium and is appropriate
-for the charging phase. See the discussion in the `mobile_concentration_reference`
-derivation section for the limitations of this estimate and the fallback strategies.
-
----
-
-## Governing Equations
-
-### Current form (with `trap_per_free`)
-
-```
-du_i/dt =   α_t_i · exp(−E_t_i/T) · (N·Ct0_i − Σ_j u_j · trap_per_free) · C_m
-          / (N · trap_per_free)
-          − α_r_i · exp(−E_r_i/T) · u_i
-
-dC_m/dt = [diffusion + source] − Σ_i trap_per_free · du_i/dt
-```
-
-where `u_i = C_t_i / trap_per_free`.
-
-### Target form — truly dimensionless kernel equations
-
-Define:
-- `Ĉ_t_i = C_t_i / C_t_ref_i`     (O(1) stored variable, max ~1 when trap is full)
-- `Ĉ_m   = C_m   / C_m_ref`        (O(1) stored variable)
-- `t̂    = t     / t_ref`
-- `Ŝ_i  = N · Ct0_i / C_t_ref_i`  (dimensionless trap capacity; = 1 when C_t_ref = N·Ct0_max)
-
-Dimensionless Damköhler numbers (computed once at setup from known parameters):
-```
-Da_t_i  =  α_t_i · t_ref · C_m_ref / N          (trapping Damköhler, ~1 when refs are correct)
-Da_r_i  =  α_r_i · t_ref                         (release  Damköhler)
-```
-
-Dimensionless trapped-species equation:
-```
-dĈ_t_i/dt̂  =  Da_t_i · exp(−E_t_i/T) · (Ŝ_i − Ĉ_t_i) · Ĉ_m
-             −  Da_r_i · exp(−E_r_i/T) · Ĉ_t_i
-```
-
-Dimensionless mobile equation:
-```
-dĈ_m/dt̂  =  [dimensionless diffusion + source]
-           − Σ_i  (C_t_ref_i / C_m_ref) · dĈ_t_i/dt̂
-```
-
-The coupling coefficient `C_t_ref_i / C_m_ref` is the **physics-derived, per-species
-replacement for `trap_per_free`**. It is not a user input.
-
-**Why this is the right target:**
-
-Every intermediate quantity in the kernel residual computation is dimensionless and O(1)
-when references are chosen correctly. The residual itself is O(1) _by construction_ —
-no `scaleResidual` call is needed, and the entire `TMAPScaling` /
-`TrappingEquationScaling` / `MobileEquationScaling` infrastructure becomes obsolete.
-The Jacobian is automatically well-conditioned without any post-hoc row scaling.
-
-The `mobile_concentration_reference` (previously stored but unused in the residual)
-becomes a first-class input: it enters both `Da_t_i` and the mobile coupling coefficient.
-
----
-
-## Fundamental Success Criterion
-
-**Serial and parallel runs must produce identical results** (within floating-point
-reordering tolerance) for all TMAP8 validation and verification cases. This is the
-primary metric of this design effort. "Poor-man's" row scaling (post-hoc `scaleResidual`
-applied to physical-unit residuals) cannot guarantee this because it leaves the Jacobian
-condition number sensitive to floating-point evaluation order, which differs between
-serial and parallel partitionings.
-
-Only a Jacobian whose entries are O(1) by construction — achieved through genuinely
-dimensionless variables and kernel equations — provides the conditioning necessary to
-make serial-parallel differences fall below solver tolerance.
-
----
-
-## Implementation Roadmap
-
-### Backward-compatibility strategy
-
-Existing TMAP8 inputs and tests must not be broken during this feature addition.
-The approach is to introduce **new dimensionless kernel classes** that live alongside
-the existing dimensional kernels rather than modifying them in place:
-
-- `TrappingNodalKernelDimensionless` alongside `TrappingNodalKernel`
-- `ReleasingNodalKernelDimensionless` alongside `ReleasingNodalKernel`
-- (existing `ScaledTimeDerivativeNodalKernel` is replaced by plain `TimeDerivativeNodalKernel`
-  since a dimensionless stored variable needs no explicit time-derivative scaling)
-
-The new `SpeciesTrappingPhysics` mode selects the dimensionless kernel classes and
-computes all Damköhler numbers automatically. Users never specify `Da_t`, `Da_r`,
-or any other dimensionless parameter by hand — the Physics action derives them from the
-physical parameters already required.
-
-A new test directory `test/tests/val-2f-dimensionless/` demonstrates the full approach:
-val-2f physics via `SpeciesTrappingPhysics` in dimensionless mode, SI-unit parameters
-only, no scaling hints, serial = parallel.
-
-### Phase 1 — Dimensionless kernel classes and Physics integration
-
-**New kernel classes** (live alongside existing, do not modify existing):
-
-- `TrappingNodalKernelDimensionless`: accepts `Da_t`, `Da_r`, `S_hat`; residual:
-  ```cpp
-  // u = Ĉ_t (dimensionless trapped, O(1)), v = Ĉ_m (dimensionless mobile, O(1))
-  residual = -Da_t * exp(-E_t / T) * (S_hat - u) * v
-           +  Da_r * exp(-E_r / T) * u;
-  // Residual is O(1) by construction. No scaleResidual.
-  ```
-- `ReleasingNodalKernelDimensionless`: `Da_r * exp(-E_r / T) * u`.
-  (Consider merging into `TrappingNodalKernelDimensionless` — the release term is
-  already present there and `ReleasingNodalKernel` would become trivial.)
-
-**`SpeciesTrappingPhysics` automatic reference computation**:
-
-When `automatic_trapping_scaling = true` (the new default), the Physics action
-computes all references without user input:
-
-1. **`C_t_ref_i = N · Ct0_ref_i`**: `Ct0_ref_i` obtained by:
-   - Parse `Ct0_i` as a `Real` constant. If successful, use directly.
-   - Else `dynamic_cast` to `ParsedFunction`; check for `\bt\b` time dependence
-     (emit `paramError` if found); evaluate spatial max over mesh nodes at `t = 0`.
-   - Emit `paramError` for non-`ParsedFunction` types.
-
-2. **`C_m_ref = max(C_m_BC, C_m_IC, C_m_trap)`**:
-   - `C_m_BC`: max Dirichlet BC value for the mobile species (constant or
-     `ParsedFunction` spatial max at `t = 0`).
-   - `C_m_IC`: IC value or spatial max for the mobile species.
-   - `C_m_trap`: `max_i[(α_r_i / α_t_i) · exp(−(E_r_i − E_t_i) / T_ref) · N]`
-     from the weakest trap (zero if no traps).
-   - Emit `paramError` if all three are zero (source-driven Neumann-only problem
-     where the scale must be inferred from the flux — not yet automatic).
-
-3. From the above, compute and pass to dimensionless kernels:
-   - `Da_t_i = α_t_i · t_ref · C_m_ref / N`
-   - `Da_r_i = α_r_i · t_ref`
-   - `S_hat_i = N · Ct0_i / C_t_ref_i`
-   - Coupling coefficient for mobile equation: `C_t_ref_i / C_m_ref`
-     (passed as `coef` to `CoupledTimeDerivative`)
-
-**`test/tests/val-2f-dimensionless/`**: val-2f physics specified entirely through
-`SpeciesTrappingPhysics` with physical SI parameters. No `trap_per_free`,
-no `trap_concentration_reference`, no Damköhler numbers in the input file.
-
-**Success criterion**: `val-2f-dimensionless` serial and parallel results match to
-within solver tolerance. `show_var_residual_norms = true` shows all 7 variable
-residuals O(1).
-
-### Phase 2 — Heat conduction non-dimensionalization
-
-Extend automatic dimensionless treatment to `HeatConductionCG`.
-
-**References** (all derived without user input):
-- `T_ref`: initial temperature from the temperature variable's IC or an existing
-  `initial_temperature` parameter.
-- `L_ref`: characteristic length from the mesh bounding box.
-- `k_ref`: thermal conductivity at `T_ref`.
-
-**Dimensionless heat equation**: `T̂ = T / T_ref`, residual O(1) when row-scaled by
-`k_ref · T_ref / L_ref²`. The Arrhenius factors in the trapping kernels become
-`exp(−E / (T_ref · T̂))` — no change to kernel expressions, only the preconditioner.
-
-### Phase 3 — Migrate existing kernels and delete `TMAPScaling` (long-term)
-
-Once dimensionless kernels are validated and all tests migrated to the Physics layer:
-
-- Deprecate then delete `TrappingNodalKernel`, `ReleasingNodalKernel`,
-  `ScaledTimeDerivativeNodalKernel`, `ScaledCoupledTimeDerivative`.
-- Delete `include/utils/TMAPScaling.h`, `src/utils/TMAPScaling.C`.
-- Remove all `trap_per_free`, `trap_concentration_reference`,
-  `mobile_concentration_reference`, `site_density_reference`, `time_reference`,
-  `temperature_reference` parameters from all input files.
-- `SpeciesTrappingPhysics` becomes the sole supported entry point for trapping physics.
-
-### Phase 4 — Migrate remaining repo to dimensionless Physics layer (long-term)
-
-`val-2f-dimensionless` achieves zero-parameter non-dimensionalization in Phase 1 by
-using `SpeciesTrappingPhysics`. Phase 4 extends this to the rest of the repository:
-all existing validation, verification, and example cases are migrated to the Physics
-layer so that no non-dimensionalization parameters appear anywhere in the codebase.
-This is when the old dimensional kernels and `TMAPScaling` infrastructure (Phase 3)
-can be safely deleted.
-
----
-
-## Correctness Guarantees
-
-1. Storing `Ĉ_t_i = C_t_i / C_t_ref_i` and `Ĉ_m = C_m / C_m_ref` is a change of
-   internal variable representation only. With consistent initial conditions and
-   coupling coefficients (`C_t_ref_i / C_m_ref`), the physical solution is identical
-   to the dimensional formulation.
-2. MOOSE variable scaling (the preconditioner column scaling) applies only to the
-   preconditioner, not the Newton iterate — it cannot corrupt the solution.
-3. The reference quantities (`C_t_ref_i`, `C_m_ref`, `T_ref`) are constants computed
-   once at setup from physical parameters. They do not vary between Newton iterations,
-   ensuring a stable, iteration-independent preconditioner.
-4. Because dimensionless residuals are O(1) by construction, the Jacobian condition
-   number is independent of the choice of physical units and of parallel partitioning.
-   This is the property that guarantees serial = parallel results.
-
----
-
-## Anti-Patterns to Avoid
-
-- **Do not** compute residuals in physical units and apply `scaleResidual` at the end.
-  This is row scaling, not non-dimensionalization. Every intermediate quantity in the
-  kernel residual should be dimensionless. When done correctly, `scaleResidual` is
-  unnecessary — the residual is O(1) by construction.
-
-- **Do not** use MOOSE's `automatic_scaling = true` as a substitute. That heuristic
-  ignores physics, varies between Newton iterations, and produces an inconsistent
-  preconditioner. Static, physics-based references are superior.
-
-- **Do not** use a single `trap_concentration_reference` for all trap species unless
-  their trap densities are within an order of magnitude.
-
-- **Do not** derive references from the instantaneous solution value. This changes
-  every nonlinear iteration and is numerically unstable.
-
-- **Do not** change `trap_per_free` in Phases 1 or 2 to fix scaling — it still appears
-  in kernel physics and changing it changes the solution. Only in Phase 3, after kernels
-  are refactored to standard McNabb-Foster form, can it be cleanly removed.
-
-- **Do not** conflate equation (row) scaling with variable (column) scaling. Both must
-  be set consistently: `variable_scaling = 1 / C_t_ref_i` and
-  `residualReference = C_t_ref_i / t_ref`.
+In practice, the most useful approach is to let these pieces evolve together:
+- develop `val-2f-dimensionless` as the main concrete target,
+- add dimensionless kernels where they make that case cleaner or more robust,
+- add Python utilities where they reduce the manual burden of preparing the dimensionless
+  input.
+
+Those are not competing directions. The example case is the driver, and the kernels and
+utilities are supporting mechanisms that exist to make that workflow practical.
+
+Whether `trap_per_free` should eventually be removed, retained, or refactored can be
+handled as a separate physics/API question. It is no longer coupled to an automatic
+non-dimensionalization design.
+
+## Validation Strategy
+
+The main validation target remains the same: improved numerical robustness, especially for
+cases like `val-2f` that currently show serial-vs-parallel sensitivity.
+
+But the mechanism changes.
+
+Instead of testing whether TMAP8 correctly infers scales, we should test whether a fully
+user-authored dimensionless formulation:
+- reproduces the expected physical behavior once interpreted in the chosen reference system,
+- improves conditioning relative to the comparable dimensional formulation,
+- reduces serial-vs-parallel divergence.
+
+A useful validation pattern is to maintain paired cases:
+- a dimensional reference input,
+- a manually nondimensionalized input representing the same physics.
+
+## Possible Helper Tooling
+
+The main place to improve usability is likely outside the core solver.
+
+### Python helper library
+
+A Python utility library is a reasonable companion to the example and kernel work. It could
+help users:
+- define reference quantities,
+- transform dimensional parameters into dimensionless ones,
+- convert mesh extents and time horizons,
+- emit TMAP8-ready HIT snippets or complete input files,
+- convert selected outputs back to physical units for plotting or comparison.
+
+This keeps the solver implementation simple while still reducing user burden, and it gives
+us a practical way to support the same workflow that is exercised by
+`val-2f-dimensionless`.
+
+### Documentation and examples
+
+We should also provide:
+- a worked nondimensionalization example for a trapping problem, with
+  `val-2f-dimensionless` as the primary target,
+- guidance on choosing reference scales,
+- explicit examples showing how mesh length and executioner time settings must also be
+  transformed,
+- side-by-side dimensional and dimensionless versions of representative validation cases.
+
+### Optional lightweight input helpers
+
+If we want some in-repo convenience without taking on full automation, a limited helper
+layer could be considered, but it should remain explicit. For example, a preprocessing step
+that writes a final dimensionless input file is acceptable; hidden runtime conversion inside
+TMAP8 is not the target.
+
+## Non-Goals
+
+The following are explicitly not part of this design:
+- automatic scanning of `Ct0`, ICs, BCs, or material properties to infer scales,
+- automatic computation of dimensionless numbers inside `SpeciesTrappingPhysics`,
+- automatic nondimensionalization of heat conduction through derived `T_ref`, `L_ref`, or
+  `k_ref`,
+- runtime creation of alternate meshes or executioners,
+- transparent physical-to-dimensionless-to-physical round trips during solve and output.
+
+The non-goal is not "dimensionless kernels" in general. The non-goal is hidden automatic
+translation from a dimensional problem statement to those kernels.
+
+## Consequences For The Existing Design Draft
+
+The following parts of the previous proposal should be considered superseded:
+- automatic reference quantity derivation,
+- automatic Damkohler-number computation,
+- solver-side dimensionless kernel integration as a hidden transformation layer for
+  dimensional inputs,
+- full elimination of user-managed scaling inputs through internal automation,
+- heat-equation nondimensionalization derived internally from mesh and initial conditions.
+
+The retained idea is narrower: explicit non-dimensional formulations are still desirable,
+and dimensionless kernels may still be part of that implementation, but they should be
+driven by user-authored or externally preprocessed dimensionless inputs.
+
+## Proposed Next Steps
+
+1. Update repository documentation to describe input-level nondimensionalization as the
+   intended workflow.
+2. Reframe any open implementation tasks so they do not assume hidden automatic scale
+   derivation.
+3. Use `val-2f-dimensionless` as the primary proving ground for the design.
+4. Add dimensionless kernels where they directly support that explicit dimensionless
+   workflow.
+5. Add Python helper utilities where they reduce the manual work needed to prepare and
+   interpret those cases.
+6. Treat all three efforts as one coordinated path: the example drives requirements, the
+   kernels support the solve, and the Python tooling supports the user workflow.
+
+## Bottom Line
+
+Non-dimensionalization is still a good direction for robustness, but TMAP8 should not try
+to do it implicitly while the user continues to provide a fully dimensional problem.
+
+If we want a dimensionless solve, the problem definition itself should already be
+nondimensional before TMAP8 sees it. Any convenience features should help the user produce
+that input, not hide a partial or inconsistent conversion inside the solver.
