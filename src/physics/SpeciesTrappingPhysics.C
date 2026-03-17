@@ -8,6 +8,7 @@
 
 #include "SpeciesTrappingPhysics.h"
 #include "ActionComponent.h"
+#include "Function.h"
 #include "MooseUtils.h"
 #include "FEProblemBase.h"
 
@@ -175,7 +176,7 @@ SpeciesTrappingPhysics::temperatureReference(unsigned int c_i) const
 }
 
 Real
-SpeciesTrappingPhysics::autoTrapConcentrationReference(unsigned int c_i, unsigned int s_j) const
+SpeciesTrappingPhysics::autoTrapConcentrationReference(unsigned int c_i, unsigned int s_j)
 {
   const auto & ct0_name = _Ct0s[c_i][s_j];
   Real ct0_value;

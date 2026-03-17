@@ -58,7 +58,7 @@ private:
   /// Auto-compute trap concentration reference C_t_ref = N * Ct0_max for a given species.
   /// If Ct0 is a parseable constant, uses it directly; otherwise evaluates the Function at
   /// (t=0, x=0) as a representative near-surface maximum.
-  Real autoTrapConcentrationReference(unsigned int c_i, unsigned int s_j) const;
+  Real autoTrapConcentrationReference(unsigned int c_i, unsigned int s_j);
   Real mobileConcentrationReference(unsigned int c_i) const;
   Real trappedConcentrationReference(unsigned int c_i) const;
   Real variableScalingFromReference(Real reference) const;
