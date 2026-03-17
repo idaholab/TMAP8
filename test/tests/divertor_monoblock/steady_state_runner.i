@@ -874,7 +874,7 @@ tungsten_atomic_density = '${units 6.338e28 m^-3}'
 
 [Postprocessors]
   # Postprocessors compute single scalar values based on node results
-  #   ########################################################### Side Postprocessors !!! Added !!!
+  #   ########################################################### Side Postprocessors
   [F_recombination]
     type = SideDiffusiveFluxAverage # Calculating average flux (integrated) over the specificed boundary
     boundary = 'top'
@@ -1046,7 +1046,6 @@ tungsten_atomic_density = '${units 6.338e28 m^-3}'
     execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
   []
   [max_temperature_W]
-    # !!! ADDED !!!
     type = ElementExtremeValue
     block = 4
     variable = 'temperature'
@@ -1054,7 +1053,6 @@ tungsten_atomic_density = '${units 6.338e28 m^-3}'
     execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
   []
   [max_temperature_Cu]
-    # !!! ADDED !!!
     type = ElementExtremeValue
     block = 3
     variable = 'temperature'
@@ -1062,7 +1060,6 @@ tungsten_atomic_density = '${units 6.338e28 m^-3}'
     execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
   []
   [max_temperature_CuCrZr]
-    # !!! ADDED !!!
     type = ElementExtremeValue
     block = 2
     variable = 'temperature'
@@ -1070,28 +1067,24 @@ tungsten_atomic_density = '${units 6.338e28 m^-3}'
     execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
   []
   [avg_temperature_W]
-    # !!! ADDED !!!
     type = ElementAverageValue
     variable = temperature
     block = 4
     execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
   []
   [avg_temperature_Cu]
-    # !!! ADDED !!!
     type = ElementAverageValue
     variable = temperature
     block = 3
     execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
   []
   [avg_temperature_CuCrZr]
-    # !!! ADDED !!!
     type = ElementAverageValue
     variable = temperature
     block = 2
     execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
   []
   [max_concentration_W]
-    # !!! ADDED !!!
     type = ElementExtremeValue
     variable = 'C_total_W'
     value_type = max
@@ -1099,7 +1092,6 @@ tungsten_atomic_density = '${units 6.338e28 m^-3}'
     execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
   []
   [max_concentration_Cu]
-    # !!! ADDED !!!
     type = ElementExtremeValue
     variable = 'C_total_Cu'
     value_type = max
@@ -1107,7 +1099,6 @@ tungsten_atomic_density = '${units 6.338e28 m^-3}'
     execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
   []
   [max_concentration_CuCrZr]
-    # !!! ADDED !!!
     type = ElementExtremeValue
     variable = 'C_total_CuCrZr'
     value_type = max
@@ -1115,25 +1106,21 @@ tungsten_atomic_density = '${units 6.338e28 m^-3}'
     execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
   []
   [area_W]
-    # !!! ADDED !!!
     type = VolumePostprocessor
     block = 4
     execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
   []
   [area_Cu]
-    # !!! ADDED !!!
     type = VolumePostprocessor
     block = 3
     execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
   []
   [area_CuCrZr]
-    # !!! ADDED !!!
     type = VolumePostprocessor
     block = 2
     execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
   []
   [total_retention]
-    # !!! ADDED !!!
     type = SumPostprocessor
     values = 'ScInt_C_total_W ScInt_C_total_Cu ScInt_C_total_CuCrZr'
     execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'

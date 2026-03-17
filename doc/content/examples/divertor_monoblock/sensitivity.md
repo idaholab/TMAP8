@@ -9,7 +9,7 @@ This work consists of sensitivity studies of different operating conditions perf
 !style halign=left
 Many fusion components, especially those exposed to especially unique or extreme conditions, often lack sufficient operation data to evaluate their reliability, availability, maintainability, and inspectability (RAMI). As a proof-of-concept, we seek to  construct a Probabilistic Physics of Failure (PPoF) model of a tokomak divertor system to obtain failure rate metrics and lifetime metric relevant to the RAMI of a nuclear fusion reactor.
 
-To accomplish this, sensitivity studies on the [Divertor Monoblock](https://mooseframework.inl.gov/TMAP8/examples/divertor_monoblock/index.html) model described in [!cite](Shimada2024114438) will be performed for (1) steady state conditions based on ITER data [!cite](Hodille2021126003), (2) an inadvertant shutdown transient [!cite](ELMORSHEDY2024101616), and (3) an edge-localized mode transient [!cite](Kessel01092013). The sensitivity studies will be performed using the [MOOSE](https://mooseframework.inl.gov/) Stochastic Module and its Sobol Method according to [!cite](SALTELLI2002280). The results of the sensitivity studies will be evaluated for state limits associated with heat transfer and tritium migration physics included in the [Divertor Monoblock](https://mooseframework.inl.gov/TMAP8/examples/divertor_monoblock/index.html).
+To accomplish this, sensitivity studies on the [Divertor Monoblock](https://mooseframework.inl.gov/TMAP8/examples/divertor_monoblock/index.html) model described in [!cite](Shimada2024114438) will be performed for (1) steady state conditions based on ITER data [!cite](Hodille2021126003), (2) an inadvertent shutdown transient [!cite](ELMORSHEDY2024101616), and (3) an edge-localized mode transient [!cite](Kessel01092013). The sensitivity studies will be performed using the [MOOSE](https://mooseframework.inl.gov/) Stochastic Module and its Sobol Method according to [!cite](SALTELLI2002280). The results of the sensitivity studies will be evaluated for state limits associated with heat transfer and tritium migration physics included in the [Divertor Monoblock](https://mooseframework.inl.gov/TMAP8/examples/divertor_monoblock/index.html).
 
 First, the modifications made to the [Divertor Monoblock](https://mooseframework.inl.gov/TMAP8/examples/divertor_monoblock/index.html) model will be described. Second, the conditions the divertor monoblock was subjected to in the steady and transient scenarios will be described. Finally, the results of the sensitivities, namely the first and second order sensitivity indicies and example correlations and state frequencies will be presented.
 
@@ -17,75 +17,139 @@ First, the modifications made to the [Divertor Monoblock](https://mooseframework
 
 The pulsed operation of the divertor is computationally expensive, so as a first approximation, we replace the pulsed operation with a single steady pulse. We also add several postprocessors.
 
-%Show added postprocessors
+First, we add a postprocessor to track the flux across the CuCrZr boundary, and scale it to obtain a total flux
+
+!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/Tritium_SideFluxIntegral link=false
+
+!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/Scaled_Tritium_Flux link=false
+
+We also track the heat flux and maximum temperature in each material
+
+!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/coolant_heat_flux link=false
+
+!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/max_temperature_W link=false
+
+!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/max_temperature_Cu link=false
+
+!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/max_temperature_CuCrZr link=false
+
+Additionally the average temperature in each material
+
+!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/avg_temperature_W link=false
+
+!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/avg_temperature_Cu link=false
+
+!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/avg_temperature_CuCrZr link=false
+
+We also look at the maximum concentration of tritium in each material
+
+!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/max_concentration_W link=false
+
+!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/max_concentration_Cu link=false
+
+!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/max_concentration_CuCrZr link=false
+
+And the total area (2D volume) each material occupies
+
+!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/area_W link=false
+
+!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/area_Cu link=false
+
+!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/area_CuCrZr link=false
+
+!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/total_retention link=false
 
 ### Steady operation 
 
+The sensitivity studies must sample from a distribution of parameters to determine the net effects of those parameters
+on the model. Here, we vary the incident heat flux, tritium flux, coolant temperature and coolant tritium concentration, sampling from
+uniform distributions as shown in [tab:steady_case] and [fig:steady_inputs].
 
-% Varied parameters: boundary conditions,
-
-!table id=tab:steady_case
-caption=Steady case varied boundary conditions
-
+!table id=tab:steady_case caption=Steady case varied boundary conditions.
 | Parameter | Samples | Nominal Value | Distribution | Deviation |
 | --- | --- | --- | --- | --- |
-| Incident Heat Flux | 100 | 10$^{7}$ MW/M$^2$ | Uniform | $\pm$5% |
+| Incident Heat Flux | 100 | 10 MW/m$^2$ | Uniform | $\pm$5% |
 | Incident Tritium Flux | 100 | 7.90$\times$10$^{-13}$ (normalized) | Uniform | $\pm$5% |
 | Coolant Temperature | 100 | 552 K | Uniform | $\pm$5% |
 | Coolant Tritium Concentration | 100 | 1.0$\times$10$^{-18}$ (normalized) | Uniform | $\pm$1% |
 
-% parameter space figure
+!media divertor_monoblock_sensitivity.py divertor_monoblock_sensitivity_figures/steady_state_inputs.png id=fig:steady_inputs 
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       caption=Distribution of sampled steady-state parameter values.
 
-### Transient case: inadvertant shutdown 
+### Transient case: inadvertent shutdown 
 
 !style halign=left
 
-% Transient characteristics (modification to BCs), varied parameters and their ranges
-% Transient figure
+For a transient case of an inadvertent shutdown, we modify parameters as shown in [tab:inadvertent_shutdown_case] and [fig:shutdown_inputs]. This case is modified such that we assume constant operation for 5.5 hours before encountering a `Peak Heat` (and proportionally scaled tritium) `Flux` for the sampled `Peak Duration` before resuming at one-tenth the heat and tritium flux of the original steady-state.
 
-!table id=tab:inadvertant_shutdown_case
-caption=Inadvertant shutdown varied parameter space.
+!alert! note title=Input file time duration
+The input files as contained in the tests directory have an end_time parameter that prevents the entire scenario from being run. This parameter must be changed to some number higher than 2e4+`Peak Duration` in order to model these cases
+!alert-end!
 
+The top boundary tritium flux and temperature flux are both adjusted to be a function of time, with functions defined in the input file as follows.
+
+!listing test/tests/divertor_monoblock/shutdown_transient_runner.i block=Functions/mobile_flux_bc_func link=false
+
+!listing test/tests/divertor_monoblock/shutdown_transient_runner.i block=Functions/temp_flux_bc_func
+
+!table id=tab:inadvertent_shutdown_case caption=Inadvertent shutdown varied parameter space.
 | Parameter | Samples | Nominal Value | Distribution | Deviation |
 | --- | --- | --- | --- | --- |
 | Peak Duration | 1000 | 1s | Normal | $\sigma$=$\pm$5% |
-| Peak Heat Flux | 1000 | 2$\times$10$^{7}$ MW/M$^2$ | Normal | $\sigma$=$\pm$5% |
+| Peak Heat Flux | 1000 | 20 MW/m$^2$ | Normal | $\sigma$=$\pm$5% |
 | Coolant Temperature | 1000 | 552 K | Normal | $\sigma$=$\pm$5% |
-| Tungsten Conductivity Factor | 1000 | 1.0 | Uniform | $\sigma$=$\pm$5% |
+| Tungsten Conductivity Factor | 1000 | 0.95 W/m K | Uniform | $\pm$5% |
 
-% Parameter space figure
+!media divertor_monoblock_sensitivity.py divertor_monoblock_sensitivity_figures/transients_inputs.png id=fig:shutdown_inputs 
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       caption=Distribution of sampled transient shutdown characteristics.
+
+The results of the simulation are shown in [fig:shutdown_results]. As would be expected, the amount of permeation and the amount of tritium retention have an approximately inverse relationship, and the pairwise interactions across the board are shown. The time at which maximum temperatures occur are all correlated, as one might expect.
+
+!media divertor_monoblock_sensitivity.py shutdown_transient_outputs.png shutdown_transient_results.png id=fig:shutdown_results style=width:80%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       caption=Distribution of sampled postprocessor values in the inadvertent shutdown case
 
 ### Transient case: edge-localized mode disruption 
 
 !style halign=left
-% Transient characteristics (modification to BCs), varied parameters and their ranges
-% transient figure
-!table id=tab:elm_transient_case
-caption=Edge-localized mode transient case parameter space.
+To simulate an edge-localized mode (ELM) disruption, we simulate a set of input conditions as described in [tab:elm_transient_case]. The heat flux is much larger than the transient shutdown case, but over a shorter duration. Given that the parameters are uncertainties in physical behavior, we model most of these with a normal distribution. The results will be shown below in [fig:elm_correlation].
 
+
+
+!table id=tab:elm_transient_case caption=Edge-localized mode transient case parameter space.
 | Parameter | Samples | Nominal Value | Distribution | Deviation |
 | --- | --- | --- | --- | --- |
 | Peak Duration | 1000 | 1.32ms | Normal | $\sigma$=$\pm$5% |
-| Peak Heat Flux | 1000 | 1147$\times$10$^{7}$ MW/M$^2$ | Normal | $\sigma$=$\pm$5% |
+| Peak Heat Flux | 1000 | 1147 MW/m$^2$ | Normal | $\sigma$=$\pm$5% |
 | Coolant Temperature | 1000 | 552 K | Normal | $\sigma$=$\pm$5% |
 | Tungsten Conductivity Factor | 1000 | 1.0 | Uniform | $\sigma$=$\pm$5% |
-% Paramete space figure
+
 ## Results 
 
 ### Steady operation 
 
-% Sensitivity to inputs, pick two or three examples
-% Correlation between incident heat flux and: W max temp, F_permeation
+For purposes of comparison, we look at the maximum observed tungsten temperature and the scaled permeation flux with regards to the heat flux in [fig:ss_correlation]. For the steady-state case, the heat flux and tritium flux are not coupled, though we would expect to see some correlation due to increased diffusivity and trapping considerations. We would also expect increases in heat flux to lead to increased tungsten temperature. While we observe both, the effect of heat flux on tritium permeation rate is more attenuated.
 
-### Inadvertant shutdown 
+!media divertor_monoblock_sensitivity.py divertor_monoblock_sensitivity_figures/steady_comparison.png id=fig:ss_correlation
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       caption=Correlation betweeen the incident heat flux and the maximum temperature of the tungsten, as well as the total (scaled) permeation flux of tritium into the coolant.
 
-% Sensitivity to inputs, pick two or three examples
-% Correlation between incident heat flux and: W max temp, F_permeation
+### Inadvertent shutdown 
+
+For the inadvertent shutdown case, we can correlate the input parameters with several output parameters. Perhaps most interesting is the relationship between coolant temperature and the scaled tritium flux, where tritium does not permeate effectively for coolant temperatures below about 550 K. In [fig:shutdown_correlation], the upper plots are scatterplots, the lower are kernel density plots and the diagonal are histograms.
+
+!media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/shutdown_pairplots.png id=fig:shutdown_correlation
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       caption=Correlation betweeen the input parameters and several metrics of performance in an inadvertent shutdown scenario.
 
 ### Edge-localized mode disruption 
 
-% Sensitivity to inputs, pick two or three examples
-% Correlation between incident heat flux and: W max temp, F_permeation
+For the case of simulating an ELM disruption event, we show in [fig:elm_correlation] that though the operating conditions vary, the physics are substantially the same.
+
+!media divertor_monoblock_sensitivity.py divertor_monoblock_sensitivity_figures/elm_pairplots.png id=fig:elm_correlation
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       caption=Correlation betweeen the incident heat flu and the maximum temperature of the tungsten, as well as the total (scaled) permeation flux of tritium t
 
 ## Complete input files 
 
