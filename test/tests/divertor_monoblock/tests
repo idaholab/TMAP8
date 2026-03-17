@@ -21,7 +21,6 @@
 			rings_W=40
 			Executioner/nl_rel_tol=1e-9
 			Executioner/nl_abs_tol=1e-11'
-			requirement = 'The system shall model heat and tritium transport in a divertor monoblock during pulsed operation.'
 			detail = 'pulsed operation.'
 			rel_err = 8e-4 # increasing the relative error tolerance because the test is sensitive to the environment. This error is still small for physical problems.
 			heavy = true
@@ -31,6 +30,7 @@
 		[Shimada2024_run-physics]
 			type = Exodiff
 			input = 'divertor_monoblock_physics.i'
+			detail = 'pulsed operation with shorthand physics'
 			exodiff = 'divertor_monoblock_physics_exodus.e'
 			cli_args = 'Outputs/exodus/sync_only=true
 			Executioner/end_time=1600
@@ -39,7 +39,6 @@
 			rings_W=40
 			Executioner/nl_rel_tol=1e-9
 			Executioner/nl_abs_tol=1e-11'
-			requirement = 'The system shall model heat and tritium transport in a divertor monoblock during pulsed operation using a shorthand physics syntax'
 			rel_err = 8e-4 # increasing the relative error tolerance because the test is sensitive to the environment. This error is still small for physical problems.
 			heavy = true
 			min_parallel = 2
@@ -57,7 +56,7 @@
 			rings_W=40
 			Executioner/nl_rel_tol=1e-9
 			Executioner/nl_abs_tol=1e-11'
-			requirement = 'The system shall model heat and tritium transport in a divertor monoblock during pulsed operation using a shorthand physics syntax and using a single variable for tracking the tritium concentration.'
+			detail = 'pulsed operation with a single tritium variable and physics syntax'
 			rel_err = 8e-4 # increasing the relative error tolerance because the test is sensitive to the environment. This error is still small for physical problems.
 			abs_zero = 3e-9
 			heavy = true

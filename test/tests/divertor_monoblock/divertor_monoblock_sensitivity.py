@@ -65,7 +65,7 @@ ax[1].set_xlabel("Max Heat Flux [W/m$^2$]")
 ax[0].set_ylabel("Max W Temperature [K]")
 ax[1].set_ylabel("Tritium Permeation Flux (scaled)")
 fig4.tight_layout()
-fig4.savefig("divertor_monoblock_sensitivity/steady_comparison.png", dpi=300)
+fig4.savefig("divertor_monoblock_sensitivity_figures/steady_comparison.png", dpi=300)
 
 
 fig5 = sns.PairGrid(
@@ -86,7 +86,7 @@ fig5 = sns.PairGrid(
 fig5.map_upper(sns.scatterplot, size=0.1, alpha=0.2)
 fig5.map_lower(sns.kdeplot)
 fig5.map_diag(sns.kdeplot)
-fig5.figure.savefig("divertor_monoblock_sensitivity/shutdown_pairplots.png", dpi=300)
+fig5.figure.savefig("divertor_monoblock_sensitivity_figures/shutdown_pairplots.png", dpi=300)
 
 fig6 = sns.PairGrid(
     a2df[
@@ -106,4 +106,4 @@ fig6 = sns.PairGrid(
 fig6.map_upper(sns.scatterplot, size=0.1, alpha=0.2)
 fig6.map_lower(sns.kdeplot)
 fig6.map_diag(sns.kdeplot)
-fig6.figure.savefig("divertor_monoblock_sensitivity/elm_pairplots.png", dpi=300)
+fig6.figure.savefig("divertor_monoblock_sensitivity_figures/elm_pairplots.png", dpi=300)

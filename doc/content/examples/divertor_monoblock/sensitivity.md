@@ -73,7 +73,7 @@ uniform distributions as shown in [tab:steady_case] and [fig:steady_inputs].
 | Coolant Temperature | 100 | 552 K | Uniform | $\pm$5% |
 | Coolant Tritium Concentration | 100 | 1.0$\times$10$^{-18}$ (normalized) | Uniform | $\pm$1% |
 
-!media divertor_monoblock_sensitivity.py divertor_monoblock_sensitivity_figures/steady_state_inputs.png id=fig:steady_inputs 
+!media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/steady_state_inputs.png id=fig:steady_inputs 
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        caption=Distribution of sampled steady-state parameter values.
 
@@ -101,13 +101,13 @@ The top boundary tritium flux and temperature flux are both adjusted to be a fun
 | Coolant Temperature | 1000 | 552 K | Normal | $\sigma$=$\pm$5% |
 | Tungsten Conductivity Factor | 1000 | 0.95 W/m K | Uniform | $\pm$5% |
 
-!media divertor_monoblock_sensitivity.py divertor_monoblock_sensitivity_figures/transients_inputs.png id=fig:shutdown_inputs 
+!media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/transients_inputs.png id=fig:shutdown_inputs 
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        caption=Distribution of sampled transient shutdown characteristics.
 
 The results of the simulation are shown in [fig:shutdown_results]. As would be expected, the amount of permeation and the amount of tritium retention have an approximately inverse relationship, and the pairwise interactions across the board are shown. The time at which maximum temperatures occur are all correlated, as one might expect.
 
-!media divertor_monoblock_sensitivity.py shutdown_transient_outputs.png shutdown_transient_results.png id=fig:shutdown_results style=width:80%;margin-bottom:2%;margin-left:auto;margin-right:auto
+!media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/shutdown_transient_results.png id=fig:shutdown_results style=width:80%;margin-bottom:2%;margin-left:auto;margin-right:auto
        caption=Distribution of sampled postprocessor values in the inadvertent shutdown case
 
 ### Transient case: edge-localized mode disruption 
@@ -131,7 +131,7 @@ To simulate an edge-localized mode (ELM) disruption, we simulate a set of input 
 
 For purposes of comparison, we look at the maximum observed tungsten temperature and the scaled permeation flux with regards to the heat flux in [fig:ss_correlation]. For the steady-state case, the heat flux and tritium flux are not coupled, though we would expect to see some correlation due to increased diffusivity and trapping considerations. We would also expect increases in heat flux to lead to increased tungsten temperature. While we observe both, the effect of heat flux on tritium permeation rate is more attenuated.
 
-!media divertor_monoblock_sensitivity.py divertor_monoblock_sensitivity_figures/steady_comparison.png id=fig:ss_correlation
+!media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/steady_comparison.png id=fig:ss_correlation
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        caption=Correlation betweeen the incident heat flux and the maximum temperature of the tungsten, as well as the total (scaled) permeation flux of tritium into the coolant.
 
@@ -147,7 +147,7 @@ For the inadvertent shutdown case, we can correlate the input parameters with se
 
 For the case of simulating an ELM disruption event, we show in [fig:elm_correlation] that though the operating conditions vary, the physics are substantially the same.
 
-!media divertor_monoblock_sensitivity.py divertor_monoblock_sensitivity_figures/elm_pairplots.png id=fig:elm_correlation
+!media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/elm_pairplots.png id=fig:elm_correlation
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        caption=Correlation betweeen the incident heat flu and the maximum temperature of the tungsten, as well as the total (scaled) permeation flux of tritium t
 
