@@ -49,13 +49,16 @@ protected:
   std::vector<std::vector<Real>> _alpha_rs;
   /// Detrapping energies for each component (outer indexing) and species (inner)
   std::vector<std::vector<Real>> _detrapping_energies;
-
   /// Whether to define a single variable for each species for all components, or a different one for each component
   const bool _single_variable_set;
   /// Whether to derive equation/variable scaling from trapping data
   const bool _automatic_trapping_scaling;
 
 private:
+  /// Auto-compute trap concentration reference C_t_ref = N * Ct0_max for a given species.
+  /// If Ct0 is a parseable constant, uses it directly; otherwise evaluates the Function at
+  /// (t=0, x=0) as a representative near-surface maximum.
+  Real autoTrapConcentrationReference(unsigned int c_i, unsigned int s_j) const;
   Real mobileConcentrationReference(unsigned int c_i) const;
   Real trappedConcentrationReference(unsigned int c_i) const;
   Real variableScalingFromReference(Real reference) const;

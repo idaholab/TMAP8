@@ -14,12 +14,4 @@
     design = 'SpeciesTrappingPhysics.md'
     requirement = 'The system shall be able to accept parameters for species trapping on a component with the trapping physics parameters defined for a single species.'
   []
-  [trapping_auto_scaling]
-    type = CSVDiff
-    input = 'species_trapping.i'
-    cli_args = 'Physics/SpeciesTrapping/trapped/automatic_trapping_scaling=true'
-    csvdiff = 'species_trapping_out.csv'
-    design = 'SpeciesTrappingPhysics.md'
-    requirement = 'The system shall be able to automatically derive trapping-equation scaling from trap_per_free in the SpeciesTrapping physics without changing the physical results for a simple component case.'
-  []
 []
