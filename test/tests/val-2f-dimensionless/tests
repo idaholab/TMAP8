@@ -1,0 +1,19 @@
+[Tests]
+  design = 'nondimensionalization_design.md'
+  issues = '#12'
+  validation = 'val-2f.md'
+  [val-2f-dimensionless_input_check]
+    type = RunApp
+    input = val-2f-dimensionless.i
+    check_input = true
+    requirement = 'The system shall maintain a valid fully nondimensional input for validation case val-2f.'
+  []
+  [val-2f-dimensionless_light_run]
+    type = CSVDiff
+    input = val-2f-dimensionless.i
+    cli_args = "sample_thickness='${units 0.9e-4 m -> mum}' ix1=1 ix2=1 ix3=1 ix4=1 ix5=1 charge_time='${units 1e-1 s}' cooldown_duration='${units 1e-1 s}' Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse Outputs/file_base=val-2f-dimensionless_light_out"
+    csvdiff = val-2f-dimensionless_light_out.csv
+    requirement = 'The system shall execute a reduced fully nondimensional val-2f case.'
+    max_time = 1200
+  []
+[]

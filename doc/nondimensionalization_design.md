@@ -97,6 +97,10 @@ Out of scope:
 If a problem is to be solved in dimensionless form, then the entire problem description
 should already be dimensionless when it reaches the solver.
 
+This includes the mobile concentration equation as well as the trapped-species equations.
+The goal is a fully nondimensional coupled system, not a partially nondimensional trapping
+subsystem attached to a dimensional mobile transport equation.
+
 That includes:
 - mesh coordinates,
 - time domain and timestep controls,
@@ -178,6 +182,10 @@ Dimensionless trapping kernels and Damkohler-number-based formulations can still
 The key constraint is that they should operate on an already-nondimensional problem
 definition rather than being used as part of a hidden conversion pipeline from dimensional
 inputs.
+
+That requirement applies to the mobile equation too. A valid dimensionless trapping
+workflow for TMAP8 is one in which the mobile concentration, trapped concentrations, mesh
+coordinates, and time variable are all expressed in the user's chosen reference system.
 
 That means the `val-2f-dimensionless` directory can still serve as the main development and
 validation path for this work, provided it is framed as a user-authored dimensionless case

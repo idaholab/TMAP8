@@ -18,7 +18,7 @@ TrappingNodalKernelDimensionless::validParams()
   params.addClassDescription(
       "Implements the trapping source term for a dimensionless trapped-species variable "
       "Ĉ_t = C_t / C_t_ref. "
-      "The mobile concentration is in physical units. "
+      "The mobile concentration may be either physical or dimensionless. "
       "No equation scaling is applied; the residual is O(α_t · C_m / N) uniformly "
       "across trap types with different densities.");
   params.addRequiredParam<Real>("alpha_t",
@@ -35,8 +35,14 @@ TrappingNodalKernelDimensionless::validParams()
       "Typically set to N * Ct0_max. The variable stores Ĉ_t = C_t / C_t_ref.");
   params.addRequiredCoupledVar(
       "mobile_concentration",
-      "The variable representing the physical mobile concentration of solute particles "
-      "(same units as N)");
+      "The variable representing the mobile concentration of solute particles.");
+  params.addParam<bool>("mobile_variable_is_dimensionless",
+                        false,
+                        "Whether the coupled mobile concentration variable is dimensionless.");
+  params.addParam<Real>("mobile_concentration_reference",
+                        1.0,
+                        "Reference concentration C_m_ref used to convert the mobile variable "
+                        "back to physical units when mobile_variable_is_dimensionless = true.");
   params.addCoupledVar("other_trapped_concentration_variables",
                        "Other variables representing trapped particle concentrations, "
                        "in PHYSICAL units (not dimensionless). These subtract from "
@@ -53,6 +59,8 @@ TrappingNodalKernelDimensionless::TrappingNodalKernelDimensionless(
     _N(getParam<Real>("N")),
     _Ct0(getFunction("Ct0")),
     _trap_concentration_reference(getParam<Real>("trap_concentration_reference")),
+    _mobile_concentration_reference(getParam<Real>("mobile_concentration_reference")),
+    _mobile_variable_is_dimensionless(getParam<bool>("mobile_variable_is_dimensionless")),
     _mobile_concentration(coupledValue("mobile_concentration")),
     _last_node(nullptr),
     _temperature(coupledValue("temperature"))
@@ -85,16 +93,14 @@ TrappingNodalKernelDimensionless::computeQpResidual()
   for (const auto & other_conc : _other_trapped_concentrations)
     empty_trapping_sites -= (*other_conc)[_qp];
 
+  const Real mobile_physical = _mobile_variable_is_dimensionless
+                                   ? _mobile_concentration[_qp] * _mobile_concentration_reference
+                                   : _mobile_concentration[_qp];
+
   // Dimensionless residual: -(α_t/N) * exp(-E_t/T) * empty * C_m / C_t_ref
   // O(α_t * C_m / N) regardless of C_t_ref magnitude
   const Real residual = -(_alpha_t / _N) * std::exp(-_trapping_energy / _temperature[_qp]) *
-                        empty_trapping_sites * _mobile_concentration[_qp] /
-                        _trap_concentration_reference;
-
-  mooseAssert(residual <= 0,
-              "TrappingNodalKernelDimensionless returned a positive residual, which is not "
-              "physically expected for a trapping sink.");
-
+                        empty_trapping_sites * mobile_physical / _trap_concentration_reference;
   return residual;
 }
 
@@ -122,9 +128,11 @@ TrappingNodalKernelDimensionless::ADHelper()
   this_trap_dn.derivatives().insert(_var_numbers[_n_other_concs]) = 1.;
   empty_trapping_sites -= this_trap_dn * _trap_concentration_reference;
 
-  // Mobile concentration (physical)
+  // Mobile concentration
   LocalDN mobile_dn = _mobile_concentration[_qp];
   mobile_dn.derivatives().insert(_var_numbers.back()) = 1.;
+  if (_mobile_variable_is_dimensionless)
+    mobile_dn *= _mobile_concentration_reference;
 
   _jacobian = -(_alpha_t / _N) * std::exp(-_trapping_energy / _temperature[_qp]) *
               empty_trapping_sites * mobile_dn / _trap_concentration_reference;

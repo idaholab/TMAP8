@@ -30,7 +30,8 @@ typedef DualNumber<Real, DynamicSparseNumberArray<Real, unsigned int>> LocalDN;
  *
  * where:
  *   - Ĉ_t  = dimensionless variable (this kernel's variable), O(1)
- *   - C_m  = physical mobile concentration (coupled variable, in problem units)
+ *   - C_m  = physical mobile concentration. The coupled variable may be either physical
+ *            or dimensionless, controlled by the mobile_variable_is_dimensionless flag.
  *   - C_t_j = physical concentrations of other trap types (physical units, optional)
  *   - C_t_ref = trap_concentration_reference parameter
  *
@@ -56,6 +57,9 @@ protected:
   const Function & _Ct0;
   /// C_t_ref: reference concentration for THIS trap (used to convert Ĉ_t back to physical)
   const Real _trap_concentration_reference;
+  /// C_m_ref: reference concentration for the mobile species when the coupled variable is dimensionless
+  const Real _mobile_concentration_reference;
+  const bool _mobile_variable_is_dimensionless;
   const VariableValue & _mobile_concentration;
   unsigned int _n_other_concs;
   /// Physical concentrations of other trap types (NOT dimensionless)

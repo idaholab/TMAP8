@@ -62,12 +62,24 @@ SpeciesTrappingPhysics::validParams()
                         false,
                         "Wheter the traps are shared by each species or not");
   params.addParam<bool>(
-      "automatic_trapping_scaling",
+      "dimensionless_trapped_species",
       false,
       "Whether to use dimensionless trapped-species variables (Ĉ_t = C_t / C_t_ref) "
-      "with per-species reference concentrations. When true, trap_per_free is not required "
-      "and TrappingNodalKernelDimensionless / ReleasingNodalKernelDimensionless are used. "
-      "The mobile concentration variable remains in physical units.");
+      "with the dimensionless trapping kernels. When true, "
+      "trap_concentration_reference must be supplied explicitly for each trapped species.");
+  params.addParam<bool>(
+      "dimensionless_mobile_species",
+      false,
+      "Whether the mobile concentration variable is already dimensionless. When true, "
+      "mobile_concentration_reference must be supplied explicitly.");
+  params.addParam<std::vector<Real>>(
+      "trap_concentration_reference",
+      {},
+      "Reference concentration C_t_ref for each trapped species. Required when "
+      "dimensionless_trapped_species = true.");
+  params.addParam<Real>("mobile_concentration_reference",
+                        "Reference concentration C_m_ref for the mobile species. Required "
+                        "when dimensionless_mobile_species = true.");
 
   params.addParam<std::vector<Real>>(
       "alpha_r",
@@ -84,7 +96,10 @@ SpeciesTrappingPhysics::validParams()
   params.addParamNamesToGroup(
       "alpha_t trapping_energy N Ct0 trap_per_free different_traps_for_each_species", "Trapping");
   params.addParamNamesToGroup("alpha_r temperature detrapping_energy", "Releasing");
-  params.addParamNamesToGroup("automatic_trapping_scaling", "Scaling");
+  params.addParamNamesToGroup(
+      "dimensionless_trapped_species dimensionless_mobile_species "
+      "trap_concentration_reference mobile_concentration_reference",
+      "Scaling");
 
   return params;
 }
@@ -97,13 +112,22 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
     _trapping_energies({getParam<std::vector<Real>>("trapping_energy")}),
     _Ns(isParamValid("N") ? std::vector<Real>(1, getParam<Real>("N")) : std::vector<Real>()),
     _Ct0s({getParam<std::vector<FunctionName>>("Ct0")}),
+    _trap_concentration_references(isParamValid("trap_concentration_reference")
+                                       ? std::vector<std::vector<Real>>(
+                                             1, getParam<std::vector<Real>>("trap_concentration_reference"))
+                                       : std::vector<std::vector<Real>>()),
+    _mobile_concentration_references(
+        isParamValid("mobile_concentration_reference")
+            ? std::vector<Real>(1, getParam<Real>("mobile_concentration_reference"))
+            : std::vector<Real>()),
     _trap_per_frees(isParamValid("trap_per_free")
                         ? std::vector<Real>(1, getParam<Real>("trap_per_free"))
                         : std::vector<Real>()),
     _alpha_rs({getParam<std::vector<Real>>("alpha_r")}),
     _detrapping_energies({getParam<std::vector<Real>>("detrapping_energy")}),
     _single_variable_set(!getParam<bool>("separate_variables_per_component")),
-    _automatic_trapping_scaling(getParam<bool>("automatic_trapping_scaling"))
+    _use_dimensionless_trapped_species(getParam<bool>("dimensionless_trapped_species")),
+    _dimensionless_mobile_species(getParam<bool>("dimensionless_mobile_species"))
 {
   // We allow overlaps between mobile species names because two trapped species could release to the
   // same mobile species and adding the two time derivative kernels is correct
@@ -118,8 +142,12 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
   checkSecondParamSetOnlyIfFirstOneSet("species", "trapping_energy");
   checkSecondParamSetOnlyIfFirstOneSet("species", "N");
   checkSecondParamSetOnlyIfFirstOneSet("species", "Ct0");
-  if (!_automatic_trapping_scaling)
+  if (_use_dimensionless_trapped_species)
+    checkSecondParamSetOnlyIfFirstOneSet("species", "trap_concentration_reference");
+  if (!_use_dimensionless_trapped_species)
     checkSecondParamSetOnlyIfFirstOneSet("species", "trap_per_free");
+  if (_dimensionless_mobile_species)
+    checkSecondParamSetOnlyIfFirstOneSet("species", "mobile_concentration_reference");
   checkSecondParamSetOnlyIfFirstOneSet("species", "alpha_r");
   checkSecondParamSetOnlyIfFirstOneSet("species", "detrapping_energy");
 
@@ -130,21 +158,34 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "alpha_t", true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "trapping_energy", true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, FunctionName>("species", "Ct0", true);
+  if (_use_dimensionless_trapped_species)
+    checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>(
+        "species", "trap_concentration_reference", true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "alpha_r", true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>(
       "species", "detrapping_energy", true);
 }
 
 Real
-SpeciesTrappingPhysics::mobileConcentrationReference(unsigned int /*c_i*/) const
+SpeciesTrappingPhysics::mobileConcentrationReference(unsigned int c_i) const
 {
-  return 1.0;
+  return _dimensionless_mobile_species ? _mobile_concentration_references[c_i] : 1.0;
 }
 
 Real
 SpeciesTrappingPhysics::trappedConcentrationReference(unsigned int c_i) const
 {
-  return _automatic_trapping_scaling ? 1.0 / _trap_per_frees[c_i] : 1.0;
+  return 1.0 / _trap_per_frees[c_i];
+}
+
+Real
+SpeciesTrappingPhysics::trapConcentrationReference(unsigned int c_i, unsigned int s_j)
+{
+  mooseAssert(c_i < _trap_concentration_references.size(),
+              "component index higher than trap reference component count");
+  mooseAssert(s_j < _trap_concentration_references[c_i].size(),
+              "species index higher than trap reference species count");
+  return _trap_concentration_references[c_i][s_j];
 }
 
 Real
@@ -156,7 +197,7 @@ SpeciesTrappingPhysics::variableScalingFromReference(Real reference) const
 Real
 SpeciesTrappingPhysics::siteDensityReference(unsigned int c_i) const
 {
-  return _automatic_trapping_scaling ? _Ns[c_i] : 1.0;
+  return 1.0;
 }
 
 Real
@@ -168,46 +209,7 @@ SpeciesTrappingPhysics::timeReference(unsigned int /*c_i*/) const
 Real
 SpeciesTrappingPhysics::temperatureReference(unsigned int c_i) const
 {
-  if (!_automatic_trapping_scaling)
-    return 1.0;
-
-  const auto & temp = _component_temperatures[c_i];
-  return MooseUtils::parsesToReal(temp) ? MooseUtils::convert<Real>(temp) : 1.0;
-}
-
-Real
-SpeciesTrappingPhysics::autoTrapConcentrationReference(unsigned int c_i, unsigned int s_j)
-{
-  const auto & ct0_name = _Ct0s[c_i][s_j];
-  Real ct0_value;
-  if (MooseUtils::parsesToReal(ct0_name))
-    ct0_value = MooseUtils::convert<Real>(ct0_name);
-  else
-  {
-    // Evaluate the function at t=0, origin as a representative near-surface maximum.
-    // For functions that peak at the surface (e.g., damage-trap profiles), this is exact.
-    ct0_value = getProblem().getFunction(ct0_name).value(0, Point(0, 0, 0));
-    if (ct0_value <= 0)
-    {
-      mooseWarning("SpeciesTrappingPhysics: Ct0 function '",
-                   ct0_name,
-                   "' evaluated to ",
-                   ct0_value,
-                   " at (t=0, x=0). Using 1.0 as fallback for trap concentration reference.");
-      ct0_value = 1.0;
-    }
-  }
-  const Real reference = _Ns[c_i] * ct0_value;
-  if (_verbose)
-    mooseInfo("SpeciesTrappingPhysics: auto trap concentration reference for species '",
-              _Ct0s[c_i][s_j],
-              "': N=",
-              _Ns[c_i],
-              ", Ct0_representative=",
-              ct0_value,
-              ", C_t_ref=",
-              reference);
-  return reference;
+  return 1.0;
 }
 
 void
@@ -269,6 +271,16 @@ SpeciesTrappingPhysics::addComponent(const ActionComponent & component)
   processComponentMatprop<Real>("N", component, comp_index, _species.back(), _Ns);
   processComponentMatprop<std::vector<FunctionName>>(
       "Ct0", component, comp_index, _species.back(), _Ct0s);
+  processComponentMatprop<std::vector<Real>>("trap_concentration_reference",
+                                             component,
+                                             comp_index,
+                                             _species.back(),
+                                             _trap_concentration_references);
+  processComponentMatprop<Real>("mobile_concentration_reference",
+                                component,
+                                comp_index,
+                                _species.back(),
+                                _mobile_concentration_references);
   processComponentMatprop<Real>(
       "trap_per_free", component, comp_index, _species.back(), _trap_per_frees);
   processComponentMatprop<std::vector<Real>>(
@@ -317,8 +329,15 @@ SpeciesTrappingPhysics::addSolverVariables()
         paramError("N", "Should not be empty if not using Components");
       if (_Ct0s[0].empty())
         paramError("Ct0", "Should not be empty if not using Components");
-      if (!_automatic_trapping_scaling && _trap_per_frees.empty())
+      if (!_use_dimensionless_trapped_species && _trap_per_frees.empty())
         paramError("trap_per_free", "Should not be empty if not using Components");
+      if (_use_dimensionless_trapped_species &&
+          (_trap_concentration_references.empty() || _trap_concentration_references[0].empty()))
+        paramError("trap_concentration_reference",
+                   "Should not be empty when using dimensionless trapped species");
+      if (_dimensionless_mobile_species && _mobile_concentration_references.empty())
+        paramError("mobile_concentration_reference",
+                   "Should not be empty when using a dimensionless mobile species");
       if (_alpha_rs[0].empty())
         paramError("alpha_r", "Should not be empty if not using Components");
       if (_component_temperatures[0].empty())
@@ -351,7 +370,7 @@ SpeciesTrappingPhysics::addSolverVariables()
       // For dimensionless variables the stored value is already O(1), so no additional
       // variable scaling is applied. The old trap_per_free-based scaling is only used
       // on the legacy (non-dimensionless) path.
-      if (_automatic_trapping_scaling)
+      if (_use_dimensionless_trapped_species)
       {
         // dimensionless variable: scaling = 1 by design
       }
@@ -416,8 +435,14 @@ SpeciesTrappingPhysics::addFEKernels()
   checkSizeComponentSpeciesIndexedVectorOfVector(_trapping_energies, "trapping_energy", false);
   checkSizeComponentSpeciesIndexedVectorOfVector(_Ct0s, "Ct0", false);
   checkSizeComponentIndexedVector(_Ns, "N", false);
-  if (!_automatic_trapping_scaling)
+  if (!_use_dimensionless_trapped_species)
     checkSizeComponentIndexedVector(_trap_per_frees, "trap_per_free", false);
+  if (_use_dimensionless_trapped_species)
+    checkSizeComponentSpeciesIndexedVectorOfVector(
+        _trap_concentration_references, "trap_concentration_reference", false);
+  if (_dimensionless_mobile_species)
+    checkSizeComponentIndexedVector(
+        _mobile_concentration_references, "mobile_concentration_reference", false);
   checkSizeComponentSpeciesIndexedVectorOfVector(_alpha_rs, "alpha_r", false);
   checkSizeComponentSpeciesIndexedVectorOfVector(_detrapping_energies, "detrapping_energy", false);
   checkSizeComponentIndexedVector(_component_temperatures, "temperature", false);
@@ -468,7 +493,7 @@ SpeciesTrappingPhysics::addFEKernels()
 
       // Trapping term
       {
-        const std::string kernel_type = _automatic_trapping_scaling
+        const std::string kernel_type = _use_dimensionless_trapped_species
                                             ? "TrappingNodalKernelDimensionless"
                                             : "TrappingNodalKernel";
         auto params = _factory.getValidParams(kernel_type);
@@ -481,11 +506,12 @@ SpeciesTrappingPhysics::addFEKernels()
         params.set<Real>("N") = _Ns[c_i];
         params.set<FunctionName>("Ct0") = _Ct0s[c_i][s_j];
 
-        if (_automatic_trapping_scaling)
+        if (_use_dimensionless_trapped_species)
         {
-          // Dimensionless path: auto-compute C_t_ref = N * Ct0_representative; no trap_per_free
           params.set<Real>("trap_concentration_reference") =
-              autoTrapConcentrationReference(c_i, s_j);
+              trapConcentrationReference(c_i, s_j);
+          params.set<bool>("mobile_variable_is_dimensionless") = _dimensionless_mobile_species;
+          params.set<Real>("mobile_concentration_reference") = mobileConcentrationReference(c_i);
         }
         else
         {
@@ -503,7 +529,7 @@ SpeciesTrappingPhysics::addFEKernels()
         // PHYSICAL units; since SpeciesTrappingPhysics creates all trapped variables as
         // dimensionless, the cross-coupling is skipped here (different_traps_for_each_species
         // semantics are always applied for the dimensionless path).
-        if (!_automatic_trapping_scaling)
+        if (!_use_dimensionless_trapped_species)
         {
           std::vector<VariableName> copy_species;
           for (const auto & sp_name : _species[c_i])
@@ -519,7 +545,7 @@ SpeciesTrappingPhysics::addFEKernels()
 
       // Release term
       {
-        const std::string kernel_type = _automatic_trapping_scaling
+        const std::string kernel_type = _use_dimensionless_trapped_species
                                             ? "ReleasingNodalKernelDimensionless"
                                             : "ReleasingNodalKernel";
         auto params = _factory.getValidParams(kernel_type);
@@ -529,7 +555,7 @@ SpeciesTrappingPhysics::addFEKernels()
         params.set<Real>("detrapping_energy") = _detrapping_energies[c_i][s_j];
         setTemperature(params);
 
-        if (!_automatic_trapping_scaling)
+        if (!_use_dimensionless_trapped_species)
         {
           // Physical path: existing TMAPScaling parameters
           params.set<Real>("trap_concentration_reference") = trappedConcentrationReference(c_i);
@@ -543,21 +569,18 @@ SpeciesTrappingPhysics::addFEKernels()
       }
 
       // Coupling of dC_t_i/dt into the mobile species conservation equation.
-      // For the dimensionless path: the variable stores Ĉ_t_i = C_t_i / C_t_ref_i, so
-      //   d(C_t_i)/dt = C_t_ref_i · d(Ĉ_t_i)/dt.
-      // ScaledCoupledTimeDerivative with factor=C_t_ref_i and trivial (identity) equation
-      // scaling (primary_concentration_reference=1, time_reference=1) correctly adds
-      //   C_t_ref_i · d(Ĉ_t_i)/dt  to the mobile equation.
       {
         const std::string kernel_type = "ScaledCoupledTimeDerivative";
         auto params = _factory.getValidParams(kernel_type);
         assignBlocks(params, blocks);
         params.set<NonlinearVariableName>("variable") = mobile_species_name;
         params.set<std::vector<VariableName>>("v") = {species_name};
-        if (_automatic_trapping_scaling)
+        if (_use_dimensionless_trapped_species)
         {
-          // factor = C_t_ref_i converts dimensionless dĈ_t_i/dt back to physical dC_t_i/dt
-          params.set<Real>("factor") = autoTrapConcentrationReference(c_i, s_j);
+          // If the mobile variable is dimensionless, add (C_t_ref_i / C_m_ref) dĈ_t_i/dt.
+          // Otherwise add physical dC_t_i/dt.
+          params.set<Real>("factor") =
+              trapConcentrationReference(c_i, s_j) / mobileConcentrationReference(c_i);
           // Trivial scaling: residualReference = 1/1 = 1 (identity)
           params.set<Real>("primary_concentration_reference") = 1.0;
           params.set<Real>("coupled_concentration_reference") = 1.0;
