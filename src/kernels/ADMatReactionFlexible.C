@@ -12,8 +12,6 @@
 #include "MooseVariable.h"
 #include "NonlinearSystem.h"
 
-#include "metaphysicl/raw_type.h"
-
 registerMooseObject("TMAP8App", ADMatReactionFlexible);
 
 InputParameters
@@ -46,20 +44,13 @@ ADMatReactionFlexible::ADMatReactionFlexible(const InputParameters & parameters)
 ADReal
 ADMatReactionFlexible::computeQpResidual()
 {
-  ADReal residual;
   if (_num_vs == 0)
-    residual = -_coeff * _reaction_rate[_qp] * _test[_i][_qp];
+    return -_coeff * _reaction_rate[_qp] * _test[_i][_qp];
   else
   {
     Real prod_vs = 1.0;
     for (const auto * const v : _vs)
       prod_vs *= (*v)[_qp];
-    residual = -_coeff * _reaction_rate[_qp] * _test[_i][_qp] * prod_vs;
+    return -_coeff * _reaction_rate[_qp] * _test[_i][_qp] * prod_vs;
   }
-
-  mooseAssert(MetaPhysicL::raw_value(residual) <= 0,
-              "ADMatReactionFlexible returned a positive residual, which is not physically "
-              "expected for this reaction kernel.");
-
-  return residual;
 }

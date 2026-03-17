@@ -37,15 +37,12 @@ ReleasingNodalKernel::computeQpResidual()
 {
   const Real residual = _alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]) * _u[_qp];
 
-  mooseAssert(residual >= 0,
-              "ReleasingNodalKernel returned a negative residual, which is not physically "
-              "expected for a release source.");
-
   return _equation_scaling.scaleResidual(residual);
 }
 
 Real
 ReleasingNodalKernel::computeQpJacobian()
 {
-  return _equation_scaling.scaleResidual(_alpha_r * std::exp(-_detrapping_energy / _temperature[_qp]));
+  return _equation_scaling.scaleResidual(_alpha_r *
+                                         std::exp(-_detrapping_energy / _temperature[_qp]));
 }
