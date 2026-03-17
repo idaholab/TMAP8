@@ -43,7 +43,7 @@ TDS_end = 19038 # s
 final_temperature = 1173 # K
 temperature_ramp_rate = 10/60 # K/s
 
-file_base = 'val-2i_temperature'
+file_base = 'val-2i_temperature_history'
 
 time_series = []
 cooling_data = []

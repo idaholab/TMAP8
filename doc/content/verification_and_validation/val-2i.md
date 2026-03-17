@@ -29,8 +29,8 @@ Note that the HFIR irradiation dose was calculated to approximately 0.1 dpa, and
 
 To replicate the TPE exposure, cooldown period, and TDS conditions, the temperature history shown in [val-2i_temperature_history] was used in the TMAP8 model.
 
-!media val-2i_temperature.py
-    image_name=val-2i_temperature.png
+!media val-2i_temperature_history.py
+    image_name=val-2i_temperature_history.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2i_temperature_history
     caption=Temperature history used in the TMAP8 simulation for the 673 K exposure (specimen W53A), 873 K exposure (specimen W55A), and 973 K exposure (specimen W26A). This reproduces Figure 3 from [!cite](Shimada2018).
