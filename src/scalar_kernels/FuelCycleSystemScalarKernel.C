@@ -1,0 +1,184 @@
+/************************************************************/
+/*                DO NOT MODIFY THIS HEADER                 */
+/*   TMAP8: Tritium Migration Analysis Program, Version 8   */
+/*                                                          */
+/*   Copyright 2021 - 2025 Battelle Energy Alliance, LLC    */
+/*                   ALL RIGHTS RESERVED                    */
+/************************************************************/
+#include "FuelCycleSystemScalarKernel.h"
+
+// MOOSE includes
+#include "Assembly.h"
+#include "MooseVariableScalar.h"
+#include "FunctorInterface.h"
+#include "TMAP8PhysicalConstants.h"
+#include "ScalarCoupleable.h"
+
+registerMooseObject("TMAP8App", FuelCycleSystemScalarKernel);
+registerMooseObject("TMAP8App", ADFuelCycleSystemScalarKernel);
+
+template <bool is_ad>
+InputParameters
+FuelCycleSystemScalarKernelTempl<is_ad>::validParams()
+{
+  InputParameters params =
+      is_ad ? ADScalarTimeDerivative::validParams() : ODETimeDerivative::validParams();
+  params += FunctorInterface::validParams();
+  params.addClassDescription("Implements a generic system component.");
+  params.addCoupledVar(
+      "inputs", {}, "Variables which feed into this system. Takes a list of scalar variable names");
+  params.addParam<std::vector<MooseFunctorName>>(
+      "input_fractions",
+      std::vector<MooseFunctorName>({}),
+      "Fraction of upstream variable coming into this system. Must be the same length as 'inputs'");
+  params.addParam<MooseFunctorName>("decay_constant",
+                                    PhysicalConstants::tritium_decay_const,
+                                    "The decay constant of tritium (ln(2)/half-life)");
+  params.addParam<MooseFunctorName>(
+      "residence_time", 1, "The residence time for tritium in this system");
+  params.addParam<MooseFunctorName>(
+      "leakage_rate", 0, "The fractional loss rate for tritium in this system");
+  params.addParam<bool>("steady_state",
+                        false,
+                        "Whether to apply a psuedo steady-state approximation (ignore dt term)");
+  params.addParam<bool>(
+      "is_implicit",
+      false,
+      "Whether an explicit (previous value calculation) or implicit (current value) is used");
+  params.addParam<MooseFunctorName>("TBR", 0.0, "Tritium breeding ratio");
+  params.addParam<std::vector<MooseFunctorName>>(
+      "other_sources",
+      std::vector<MooseFunctorName>({}),
+      "Other tritium sources - terms not dependent on any scalar variables");
+  params.addParam<std::vector<MooseFunctorName>>(
+      "other_sinks",
+      std::vector<MooseFunctorName>({}),
+      "Other tritium sinks - terms not dependent on any scalar variables");
+  params.addParam<MooseFunctorName>("burn_rate", 0.0, "Burn rate of tritium within this system");
+  params.addParam<bool>("disable_residence_time",
+                        false,
+                        "Assume an infinite residence time. (no leakage from this system).");
+  return params;
+}
+
+template <bool is_ad>
+FuelCycleSystemScalarKernelTempl<is_ad>::FuelCycleSystemScalarKernelTempl(
+    const InputParameters & parameters)
+  : Base(parameters),
+    FunctorInterface(this),
+    _n_inputs(ScalarCoupleable::isCoupledScalar("inputs")
+                  ? ScalarCoupleable::coupledScalarComponents("inputs")
+                  : 0),
+    _n_other_sources(
+        this->template getParam<std::vector<MooseFunctorName>>("other_sources").size()),
+    _n_other_sinks(this->template getParam<std::vector<MooseFunctorName>>("other_sinks").size()),
+    _input_vals(_n_inputs),
+    _input_fractions(
+        this->template getParam<std::vector<MooseFunctorName>>("input_fractions").size()),
+    _decay_constant(this->template getFunctor<GenericReal<is_ad>>("decay_constant")),
+    _residence_time(this->template getFunctor<GenericReal<is_ad>>("residence_time")),
+    _leakage_rate(this->template getFunctor<GenericReal<is_ad>>("leakage_rate")),
+    _pseudo_steady_state(this->template getParam<bool>("steady_state")),
+    _disable_residence_time(this->template getParam<bool>("disable_residence_time")),
+    _is_implicit(this->template getParam<bool>("is_implicit")),
+    _TBR(this->template getFunctor<GenericReal<is_ad>>("TBR")),
+    _other_sources(this->template getParam<std::vector<MooseFunctorName>>("other_sources").size()),
+    _other_sinks(this->template getParam<std::vector<MooseFunctorName>>("other_sinks").size()),
+    _burn_rate(this->template getFunctor<GenericReal<is_ad>>("burn_rate"))
+{
+  if (_n_inputs != _input_fractions.size())
+  {
+    mooseError("\"input_fractions\" must be defined with the same length as \"inputs\".");
+  }
+  auto & input_functor_names =
+      MooseBase::getParam<std::vector<MooseFunctorName>>("input_fractions");
+  for (size_t i = 0; i < _n_inputs; ++i)
+  {
+    if ((ScalarCoupleable::coupledScalar("inputs", i)) == (Base::_var).number())
+    {
+      mooseError("Primary variable cannot be listed as a coupled variable.");
+    }
+    _input_vals[i] = &(ScalarCoupleable::coupledScalarValue("inputs", i));
+    _input_fractions[i] = &(this->template getFunctor<GenericReal<is_ad>>(input_functor_names[i]));
+  }
+  auto & other_source_names = MooseBase::getParam<std::vector<MooseFunctorName>>("other_sources");
+  for (size_t i = 0; i < _n_other_sources; ++i)
+  {
+    _other_sources[i] = &(this->template getFunctor<GenericReal<is_ad>>(other_source_names[i]));
+  }
+  auto & other_sink_names = MooseBase::getParam<std::vector<MooseFunctorName>>("other_sinks");
+  for (size_t i = 0; i < _n_other_sinks; ++i)
+  {
+    _other_sinks[i] = &(this->template getFunctor<GenericReal<is_ad>>(other_sink_names[i]));
+  }
+}
+
+template <bool is_ad>
+GenericReal<is_ad>
+FuelCycleSystemScalarKernelTempl<is_ad>::computeQpResidual()
+{
+  GenericReal<is_ad> partial_residual = 0;
+  const Moose::ElemArg _qp = Moose::ElemArg();
+  const int _i = 0;
+  const auto _state = _is_implicit ? Moose::currentState() : Moose::oldState();
+  for (unsigned int i = 0; i < _n_inputs; ++i)
+  {
+    partial_residual += -(*(_input_vals[i]))[_i] * (*(_input_fractions[i]))(_qp, _state);
+  }
+  for (unsigned int i = 0; i < _n_other_sources; ++i)
+  {
+    partial_residual += -(*(_other_sources[i]))(_qp, _state);
+  }
+  for (unsigned int i = 0; i < _n_other_sinks; ++i)
+  {
+    partial_residual += (*(_other_sinks[i]))(_qp, _state);
+  }
+  partial_residual += -_TBR(_qp, _state) * _burn_rate(_qp, _state);
+  if (!_disable_residence_time)
+  {
+    partial_residual += _leakage_rate(_qp, _state) / _residence_time(_qp, _state) * Base::_u[_i];
+    partial_residual += Base::_u[_i] / _residence_time(_qp, _state);
+  }
+  partial_residual += _decay_constant(_qp, _state) * Base::_u[_i];
+  if (!_pseudo_steady_state)
+    partial_residual += Base::_u_dot[_i];
+  return partial_residual;
+}
+
+template <bool is_ad>
+Real
+FuelCycleSystemScalarKernelTempl<is_ad>::computeQpJacobian()
+{
+  if constexpr (!is_ad)
+  {
+    Real partial_residual = 0;
+    const Moose::ElemArg _qp = Moose::ElemArg();
+    const int _i = 0;
+    const auto _state = _is_implicit ? Moose::currentState() : Moose::oldState();
+    if (!_disable_residence_time)
+    {
+      partial_residual += _leakage_rate(_qp, _state) / _residence_time(_qp, _state);
+      partial_residual += 1 / _residence_time(_qp, _state);
+    }
+    partial_residual += _decay_constant(_qp, _state);
+    if (!_pseudo_steady_state)
+      partial_residual += Base::_du_dot_du[_i];
+    return partial_residual;
+  }
+  else
+  {
+    mooseError("computeQpJacobian() should not be called in AD mode");
+    return 0;
+  }
+}
+
+template <>
+Real
+FuelCycleSystemScalarKernelTempl<true>::computeQpJacobian()
+{
+  mooseError("Internal error, calling computeQpJacobian in AD class.");
+  return 0.0;
+}
+
+template class FuelCycleSystemScalarKernelTempl<false>;
+template class FuelCycleSystemScalarKernelTempl<true>;
