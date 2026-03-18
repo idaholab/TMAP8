@@ -58,12 +58,6 @@ experiment_flux_673 = experiment_data['Exp - 400C (D m^-2 s^-1)']
 experiment_flux_873 = experiment_data['Exp - 600C (D m^-2 s^-1)']
 experiment_flux_973 = experiment_data['Exp - 700C (D m^-2 s^-1)']
 
-# Setup mask using a random sampling method to reduce density of scatter plot points in experimental
-# data (there is a lot of "noise").
-# These preserve 10% of the data points. (adjusted within the 'size' parameter).
-mask = np.random.choice(len(experiment_flux_673), size=int(len(experiment_flux_673) * 0.1), replace=False)
-
-
 file_base = 'val-2i_comparison'
 ############################ desorption flux atom/m$^2$/s ############################
 fig = plt.figure(figsize=[6.5, 5.5])
@@ -82,9 +76,9 @@ ax.semilogy(simulation_time_TMAP4, simulation_flux_TMAP4_973, linestyle='--', la
 
 # Experimental Data
 s = (3.0)**2
-ax.scatter(experiment_time[mask], experiment_flux_673[mask], marker='o', s=s, label=r"Exp - 673 K", c='blue')
-ax.scatter(experiment_time[mask], experiment_flux_873[mask], marker='o', s=s, label=r"Exp - 873 K", c='red')
-ax.scatter(experiment_time[mask], experiment_flux_973[mask], marker='o', s=s, label=r"Exp - 973 K", c='green')
+ax.scatter(experiment_time, experiment_flux_673, marker='o', s=s, label=r"Exp - 673 K", c='blue', alpha=0.3)
+ax.scatter(experiment_time, experiment_flux_873, marker='o', s=s, label=r"Exp - 873 K", c='red', alpha=0.3)
+ax.scatter(experiment_time, experiment_flux_973, marker='o', s=s, label=r"Exp - 973 K", c='green', alpha=0.3)
 
 
 # Font sizes for labels and axes
