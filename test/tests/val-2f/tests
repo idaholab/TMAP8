@@ -17,7 +17,7 @@
                 Executioner/compute_scaling_once=true
                 Outputs/file_base=val-2f_light_out"
     csvdiff = val-2f_light_out.csv
-    max_parallel = 1 # see #200
+    max_threads = 1 # see #200
     recover = false # see #196
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output with a short runtime and coarse mesh testing.'
   []
@@ -37,7 +37,7 @@
                 Outputs/file_base=val-2f_light_out"
     exodiff = val-2f_light_out.e
     prereq = val-2f_light_csv
-    max_parallel = 1 # see #200
+    max_threads = 1 # see #200
     recover = false # see #196
     should_execute = false # this test relies on the output files from val-2f_light_csv, so it shouldn't be run twice
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport with a short runtime and coarse mesh testing.'
