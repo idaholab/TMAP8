@@ -272,75 +272,33 @@
 []
 
 [Postprocessors]
-  [mobile_integral_hat]
-    type = ElementIntegralVariablePostprocessor
+  [mobile_average_hat]
+    type = ElementAverageValue
     variable = deuterium_concentration_W
   []
-  [scaled_mobile_deuterium]
-    type = ScalePostprocessor
-    scaling_factor = '${fparse ${units 1 m^2 -> mum^2} * mobile_concentration_reference}'
-    value = mobile_integral_hat
-    outputs = none
-  []
-  [trapped_intrinsic_integral]
-    type = ElementIntegralVariablePostprocessor
+  [trapped_intrinsic_average]
+    type = ElementAverageValue
     variable = trapped_intrinsic
   []
-  [trapped_1_integral]
-    type = ElementIntegralVariablePostprocessor
+  [trapped_1_average]
+    type = ElementAverageValue
     variable = trapped_1
   []
-  [trapped_2_integral]
-    type = ElementIntegralVariablePostprocessor
+  [trapped_2_average]
+    type = ElementAverageValue
     variable = trapped_2
   []
-  [trapped_3_integral]
-    type = ElementIntegralVariablePostprocessor
+  [trapped_3_average]
+    type = ElementAverageValue
     variable = trapped_3
   []
-  [trapped_4_integral]
-    type = ElementIntegralVariablePostprocessor
+  [trapped_4_average]
+    type = ElementAverageValue
     variable = trapped_4
   []
-  [trapped_5_integral]
-    type = ElementIntegralVariablePostprocessor
+  [trapped_5_average]
+    type = ElementAverageValue
     variable = trapped_5
-  []
-  [scaled_trapped_deuterium_intrinsic]
-    type = ScalePostprocessor
-    scaling_factor = '${fparse ${units 1 m^2 -> mum^2} * trap_concentration_reference_intrinsic}'
-    value = trapped_intrinsic_integral
-    outputs = none
-  []
-  [scaled_trapped_deuterium_1]
-    type = ScalePostprocessor
-    scaling_factor = '${fparse ${units 1 m^2 -> mum^2} * trap_concentration_reference_1}'
-    value = trapped_1_integral
-    outputs = none
-  []
-  [scaled_trapped_deuterium_2]
-    type = ScalePostprocessor
-    scaling_factor = '${fparse ${units 1 m^2 -> mum^2} * trap_concentration_reference_2}'
-    value = trapped_2_integral
-    outputs = none
-  []
-  [scaled_trapped_deuterium_3]
-    type = ScalePostprocessor
-    scaling_factor = '${fparse ${units 1 m^2 -> mum^2} * trap_concentration_reference_3}'
-    value = trapped_3_integral
-    outputs = none
-  []
-  [scaled_trapped_deuterium_4]
-    type = ScalePostprocessor
-    scaling_factor = '${fparse ${units 1 m^2 -> mum^2} * trap_concentration_reference_4}'
-    value = trapped_4_integral
-    outputs = none
-  []
-  [scaled_trapped_deuterium_5]
-    type = ScalePostprocessor
-    scaling_factor = '${fparse ${units 1 m^2 -> mum^2} * trap_concentration_reference_5}'
-    value = trapped_5_integral
-    outputs = none
   []
   [temperature]
     type = ElementAverageValue
