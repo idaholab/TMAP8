@@ -449,7 +449,7 @@ cooldown_duration = '${units 1e-1 s}' # Full scale: '${units 12 h -> s}'
   nl_max_its = 20
   [TimeStepper]
     type = CSVTimeSequenceStepper
-    file_name = val-2f-dimensionless_light_charge_time_sequence.csv
+    file_name = val-2f-dimensionless_light_time_sequence.csv
   []
 []
 

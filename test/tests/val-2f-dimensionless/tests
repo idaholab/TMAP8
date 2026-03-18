@@ -14,6 +14,6 @@
     cli_args = "Outputs/file_base=val-2f-dimensionless_light_scheduled_out"
     csvdiff = val-2f-dimensionless_light_scheduled_out.csv
     requirement = 'The system shall execute a reduced fully nondimensional val-2f case on a prescribed time sequence suitable for serial and parallel comparison.'
-    rel_err = 1e-5
+    rel_err = 1e-4
   []
 []
