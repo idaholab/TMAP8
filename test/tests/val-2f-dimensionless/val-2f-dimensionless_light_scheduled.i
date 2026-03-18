@@ -300,6 +300,55 @@
     type = ElementAverageValue
     variable = trapped_5
   []
+  [max_mobile_average_hat]
+    type = TimeExtremeValue
+    postprocessor = mobile_average_hat
+    value_type = max
+    output_type = extreme_value
+    outputs = console
+  []
+  [max_trapped_intrinsic_average]
+    type = TimeExtremeValue
+    postprocessor = trapped_intrinsic_average
+    value_type = max
+    output_type = extreme_value
+    outputs = console
+  []
+  [max_trapped_1_average]
+    type = TimeExtremeValue
+    postprocessor = trapped_1_average
+    value_type = max
+    output_type = extreme_value
+    outputs = console
+  []
+  [max_trapped_2_average]
+    type = TimeExtremeValue
+    postprocessor = trapped_2_average
+    value_type = max
+    output_type = extreme_value
+    outputs = console
+  []
+  [max_trapped_3_average]
+    type = TimeExtremeValue
+    postprocessor = trapped_3_average
+    value_type = max
+    output_type = extreme_value
+    outputs = console
+  []
+  [max_trapped_4_average]
+    type = TimeExtremeValue
+    postprocessor = trapped_4_average
+    value_type = max
+    output_type = extreme_value
+    outputs = console
+  []
+  [max_trapped_5_average]
+    type = TimeExtremeValue
+    postprocessor = trapped_5_average
+    value_type = max
+    output_type = extreme_value
+    outputs = console
+  []
   [temperature]
     type = ElementAverageValue
     variable = temperature
@@ -335,19 +384,18 @@
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_type -snes_type'
   petsc_options_value = 'lu       mumps                      vinewtonrsls'
   end_time = ${endtime_hat}
-  line_search = 'none'
-  nl_rel_tol = 1e-10
-  nl_abs_tol = 1e-14
-  nl_max_its = 34
+  line_search = 'bt'
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 3e-9
+  nl_max_its = 20
   [TimeStepper]
-    type = CSVTimeSequenceStepper
-    file_name = val-2f-dimensionless_light_time_sequence.csv
+    type = IterationAdaptiveDT
+    dt = 2.456030684345e-07
+    growth_factor = 1.1
+    optimal_iterations = 6
   []
 []
 
 [Outputs]
-  file_base = 'val-2f-dimensionless_out'
-  [csv]
-    type = CSV
-  []
+  exodus = true
 []
