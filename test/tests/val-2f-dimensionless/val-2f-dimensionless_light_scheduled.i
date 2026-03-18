@@ -386,7 +386,6 @@
   end_time = ${endtime_hat}
   line_search = 'bt'
   nl_rel_tol = 1e-8
-  nl_abs_tol = 3e-9
   nl_max_its = 20
   [TimeStepper]
     type = IterationAdaptiveDT
