@@ -159,7 +159,7 @@ Using the model described here and in [!cite](Shimada2018), the output from TMAP
     image_name=val-2i_comparison.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2i_comparison
-    caption=Comparison of TMAP8 calculations (with trapping) with TMAP4 results and experimental data during TDS process. RMSPE values are shown on the plot.
+    caption=Comparison of TMAP8 calculations (with trapping) with TMAP4 results and experimental data during TDS process. RMSPE values comparing TMAP4 and TMAP8 to the experimental data are shown on the plot.
 
 ## Input files
 
