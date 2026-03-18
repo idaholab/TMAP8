@@ -74,7 +74,7 @@ trap_density_01dpa_1 = '${units ${fparse -S_1/r_1 * exp(-r_1*damage_duration) + 
 trapping_site_fraction_1 = '${fparse trap_density_01dpa_1 / tungsten_density}'
 trap_density_01dpa_1_inf = '${units 4.8e25 at/m^3 -> at/mum^3}'
 trapping_site_fraction_1_inf = '${fparse trap_density_01dpa_1_inf / tungsten_density}'
-trap_per_free_1 = 1e2 # (-)
+trap_per_free_1 = 1e1 # (-)
 
 # Trap 2 parameters
 trapping_energy_2 = '${fparse trapping_energy}'
@@ -91,7 +91,7 @@ trap_density_01dpa_2 = '${units ${fparse -S_2/r_2 * exp(-r_2*damage_duration) + 
 trapping_site_fraction_2 = '${fparse trap_density_01dpa_2 / tungsten_density}'
 trap_density_01dpa_2_inf = '${units 3.8e25 at/m^3 -> at/mum^3}'
 trapping_site_fraction_2_inf = '${fparse trap_density_01dpa_2_inf / tungsten_density}'
-trap_per_free_2 = 1e2 # (-)
+trap_per_free_2 = 1e1 # (-)
 
 # Trap 3 parameters
 trapping_energy_3 = '${fparse trapping_energy}'
@@ -108,7 +108,7 @@ trap_density_01dpa_3 = '${units ${fparse -S_3/r_3 * exp(-r_3*damage_duration) + 
 trapping_site_fraction_3 = '${fparse trap_density_01dpa_3 / tungsten_density}'
 trap_density_01dpa_3_inf = '${units 2.6e25 at/m^3 -> at/mum^3}'
 trapping_site_fraction_3_inf = '${fparse trap_density_01dpa_3_inf / tungsten_density}'
-trap_per_free_3 = 1e2 # (-)
+trap_per_free_3 = 1e1 # (-)
 
 # Trap 4 parameters
 trapping_energy_4 = '${fparse trapping_energy}'
@@ -125,7 +125,7 @@ trap_density_01dpa_4 = '${units ${fparse -S_4/r_4 * exp(-r_4*damage_duration) + 
 trapping_site_fraction_4 = '${fparse trap_density_01dpa_4 / tungsten_density}'
 trap_density_01dpa_4_inf = '${units 3.6e25 at/m^3 -> at/mum^3}'
 trapping_site_fraction_4_inf = '${fparse trap_density_01dpa_4_inf / tungsten_density}'
-trap_per_free_4 = 1e2 # (-)
+trap_per_free_4 = 1e1 # (-)
 
 # Trap 5 parameters
 trapping_energy_5 = '${fparse trapping_energy}'
@@ -140,7 +140,7 @@ trap_density_01dpa_5 = '${units ${fparse -S_5/r_5 * exp(-r_5*damage_duration) + 
 trapping_site_fraction_5 = '${fparse trap_density_01dpa_5 / tungsten_density}'
 trap_density_01dpa_5_inf = '${units 1.1e25 at/m^3 -> at/mum^3}'
 trapping_site_fraction_5_inf = '${fparse trap_density_01dpa_5_inf / tungsten_density}'
-trap_per_free_5 = 1e2 # (-)
+trap_per_free_5 = 1e1 # (-)
 
 # Trap intrinsic parameters
 trapping_energy_intrinsic = '${fparse trapping_energy}'
@@ -149,4 +149,4 @@ detrapping_energy_intrinsic = '${fparse ${units 1.04 eV -> J} / kb}'
 detrapping_prefactor_intrinsic = '${fparse detrapping_prefactor}'
 trap_density_01dpa_intrinsic = '${units 2.4e22 at/m^3 -> at/mum^3}'
 trapping_site_fraction_intrinsic = '${fparse trap_density_01dpa_intrinsic / tungsten_density}'
-trap_per_free_intrinsic = 1e11 # (-)
+trap_per_free_intrinsic = 1e8 # (-)
