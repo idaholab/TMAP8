@@ -349,6 +349,55 @@
     output_type = extreme_value
     outputs = console
   []
+  [min_mobile_average_hat]
+    type = TimeExtremeValue
+    postprocessor = mobile_average_hat
+    value_type = min
+    output_type = extreme_value
+    outputs = console
+  []
+  [min_trapped_intrinsic_average]
+    type = TimeExtremeValue
+    postprocessor = trapped_intrinsic_average
+    value_type = min
+    output_type = extreme_value
+    outputs = console
+  []
+  [min_trapped_1_average]
+    type = TimeExtremeValue
+    postprocessor = trapped_1_average
+    value_type = min
+    output_type = extreme_value
+    outputs = console
+  []
+  [min_trapped_2_average]
+    type = TimeExtremeValue
+    postprocessor = trapped_2_average
+    value_type = min
+    output_type = extreme_value
+    outputs = console
+  []
+  [min_trapped_3_average]
+    type = TimeExtremeValue
+    postprocessor = trapped_3_average
+    value_type = min
+    output_type = extreme_value
+    outputs = console
+  []
+  [min_trapped_4_average]
+    type = TimeExtremeValue
+    postprocessor = trapped_4_average
+    value_type = min
+    output_type = extreme_value
+    outputs = console
+  []
+  [min_trapped_5_average]
+    type = TimeExtremeValue
+    postprocessor = trapped_5_average
+    value_type = min
+    output_type = extreme_value
+    outputs = console
+  []
   [temperature]
     type = ElementAverageValue
     variable = temperature
