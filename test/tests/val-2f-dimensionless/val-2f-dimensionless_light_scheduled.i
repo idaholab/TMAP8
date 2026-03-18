@@ -3,6 +3,17 @@
 # accepted times extracted from the reference serial CSV. The purpose is to eliminate
 # divergence caused solely by adaptive time-step history when comparing serial and parallel.
 
+# Light-test geometry and time overrides.
+# Full-scale values are shown in comments; override on the command line for production runs.
+sample_thickness = '${units 0.9e-4 m -> mum}' # Full scale: '${units 0.8e-3 m -> mum}'
+ix1 = 1   # Full scale: 100
+ix2 = 1   # Full scale: 100
+ix3 = 1   # Full scale: 100
+ix4 = 1   # Full scale: 100
+ix5 = 1   # Full scale: 100
+charge_time = '${units 1e-1 s}'       # Full scale: '${units 72 h -> s}'
+cooldown_duration = '${units 1e-1 s}' # Full scale: '${units 12 h -> s}'
+
 !include parameters_val-2f-dimensionless.params
 
 [Mesh]

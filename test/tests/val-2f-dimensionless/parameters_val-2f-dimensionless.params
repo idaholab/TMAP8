@@ -16,8 +16,8 @@ temperature_desorption_max = '${units 1000 K}'
 desorption_heating_rate = '${units ${fparse 3/60} K/s}'
 
 # Important times
-charge_time = '${units 72 h -> s}'
-cooldown_duration = '${units 12 h -> s}'
+# charge_time and cooldown_duration are defined by the calling input file (or CLI override)
+# so that light-test and full-scale runs share this params file.
 desorption_duration = '${fparse (temperature_desorption_max-temperature_desorption_min)/desorption_heating_rate}'
 
 # Materials properties
@@ -38,16 +38,11 @@ flux = '${units ${fparse 5.79e19} at/m^2/s -> at/mum^2/s}'
 depth_center = '${units 2.5e-6 m -> mum}'
 depth_width = '${units 5e-7 m -> mum}'
 
-sample_thickness = '${units 0.8e-3 m -> mum}'
+# sample_thickness and ix1-ix5 are defined by the calling input file (or CLI override).
 dx1 = '${fparse 6*sigma}'
 dx2 = '${units 3e-6 m -> mum}'
 dx3 = '${units 7.997e-6 m -> mum}'
 dx4 = '${units 7.2e-5 m -> mum}'
-ix1 = 100
-ix2 = 100
-ix3 = 100
-ix4 = 100
-ix5 = 100
 
 # Damaged-induced traps parameters
 A0 = '${units 6.18e-3 1/s}'

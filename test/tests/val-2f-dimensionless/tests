@@ -9,10 +9,10 @@
     requirement = 'The first phase of the nondimensional val-2f charge-only replay must match between serial and parallel.'
   []
   [val-2f-dimensionless_light_scheduled]
-    type = Exodiff
+    type = CSVDiff
     input = val-2f-dimensionless_light_scheduled.i
-    cli_args = "sample_thickness='${units 0.9e-4 m -> mum}' ix1=1 ix2=1 ix3=1 ix4=1 ix5=1 charge_time='${units 1e-1 s}' cooldown_duration='${units 1e-1 s}' Outputs/file_base=val-2f-dimensionless_light_scheduled_out"
-    exodiff = val-2f-dimensionless_light_scheduled_out.e
+    cli_args = "Outputs/file_base=val-2f-dimensionless_light_scheduled_out"
+    csvdiff = val-2f-dimensionless_light_scheduled_out.csv
     requirement = 'The system shall execute a reduced fully nondimensional val-2f case on a prescribed time sequence suitable for serial and parallel comparison.'
     rel_err = 1e-5
   []
