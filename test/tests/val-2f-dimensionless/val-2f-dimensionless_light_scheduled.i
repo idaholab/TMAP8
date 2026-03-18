@@ -433,17 +433,15 @@
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_type -snes_type'
   petsc_options_value = 'lu       mumps                      vinewtonrsls'
   end_time = ${endtime_hat}
-  line_search = 'bt'
+  line_search = 'none'
   nl_rel_tol = 1e-8
   nl_max_its = 20
   [TimeStepper]
-    type = IterationAdaptiveDT
-    dt = 2.456030684345e-07
-    growth_factor = 1.1
-    optimal_iterations = 6
+    type = CSVTimeSequenceStepper
+    file_name = val-2f-dimensionless_light_charge_time_sequence.csv
   []
 []
 
 [Outputs]
-  exodus = true
+  csv = true
 []
