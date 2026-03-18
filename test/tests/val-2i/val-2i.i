@@ -249,39 +249,39 @@ temperature_min = '${units 300 K}'
 []
 
 [Postprocessors]
-  [temperature]
+  [temperature] # (K)
     type = FunctionValuePostprocessor
     function = temperature_function
   []
-  [flux_surface_left]
+  [flux_surface_left] # (D / mum^2 / s)
     type = SideDiffusiveFluxIntegral
     variable = concentration
     diffusivity = 'diffusivity_nonAD'
     boundary = 'left'
     outputs = none
   []
-  [scaled_flux_surface_left]
+  [scaled_flux_surface_left] # (D / m^2 / s)
     type = ScalePostprocessor
     scaling_factor = '${units 1 m^2 -> mum^2}'
     value = flux_surface_left
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = 'console csv exodus'
   []
-  [flux_surface_right]
+  [flux_surface_right] # (D / mum^2 / s)
     type = SideDiffusiveFluxIntegral
     variable = concentration
     diffusivity = 'diffusivity_nonAD'
     boundary = 'right'
     outputs = none
   []
-  [scaled_flux_surface_right]
+  [scaled_flux_surface_right] # (D / m^2 / s)
     type = ScalePostprocessor
     scaling_factor = '${units 1 m^2 -> mum^2}'
     value = flux_surface_right
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = none
   []
-  [max_time_step_size]
+  [max_time_step_size] # (s)
     type = FunctionValuePostprocessor
     function = max_dt_size_function
     execute_on = 'initial nonlinear linear timestep_end'
