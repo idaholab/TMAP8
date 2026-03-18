@@ -32,50 +32,50 @@ script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
 
 # Necessary parameters
-initial_temperature = [673, 873, 973] # K
-hold_time = [7183, 6341, 5952] # s
-cooling_time_constant = 1200 # s
-temperature_room = 293 # K
-temperature_min = 300 # K
-TDS_start = 12000 # s
-TDS_ramp_end = 17238 # s
-TDS_end = 19038 # s
-final_temperature = 1173 # K
-temperature_ramp_rate = 10/60 # K/s
+initial_temperature = [673, 873, 973]  # K
+hold_time = [7183, 6341, 5952]  # s
+cooling_time_constant = 1200  # s
+temperature_room = 293  # K
+temperature_min = 300  # K
+TDS_start = 12000  # s
+TDS_ramp_end = 17238  # s
+TDS_end = 19038  # s
+final_temperature = 1173  # K
+temperature_ramp_rate = 10 / 60  # K/s
 
-file_base = 'val-2i_temperature_history'
+file_base = "val-2i_temperature_history"
 
 time_series = []
 cooling_data = []
 
 # Read TMAP8 simulation data
-if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
     csv_folder = "../../../../test/tests/val-2i/gold/val-2i_673_out.csv"
-else:                                  # if in test folder
+else:  # if in test folder
     csv_folder = "./gold/val-2i_673_out.csv"
 simulation_673_data = pd.read_csv(csv_folder)
-simulation_time_673 = simulation_673_data['time']
-simulation_temperature_673 = simulation_673_data['temperature']
+simulation_time_673 = simulation_673_data["time"]
+simulation_temperature_673 = simulation_673_data["temperature"]
 time_series.append(simulation_time_673)
 cooling_data.append(simulation_temperature_673)
 
-if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
     csv_folder = "../../../../test/tests/val-2i/gold/val-2i_873_out.csv"
-else:                                  # if in test folder
+else:  # if in test folder
     csv_folder = "./gold/val-2i_873_out.csv"
 simulation_873_data = pd.read_csv(csv_folder)
-simulation_time_873 = simulation_873_data['time']
-simulation_temperature_873 = simulation_873_data['temperature']
+simulation_time_873 = simulation_873_data["time"]
+simulation_temperature_873 = simulation_873_data["temperature"]
 time_series.append(simulation_time_873)
 cooling_data.append(simulation_temperature_873)
 
-if "/tmap8/doc/" in script_folder.lower():     # if in documentation folder
+if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
     csv_folder = "../../../../test/tests/val-2i/gold/val-2i_973_out.csv"
-else:                                  # if in test folder
+else:  # if in test folder
     csv_folder = "./gold/val-2i_973_out.csv"
 simulation_973_data = pd.read_csv(csv_folder)
-simulation_time_973 = simulation_973_data['time']
-simulation_temperature_973 = simulation_973_data['temperature']
+simulation_time_973 = simulation_973_data["time"]
+simulation_temperature_973 = simulation_973_data["temperature"]
 time_series.append(simulation_time_973)
 cooling_data.append(simulation_temperature_973)
 
@@ -84,24 +84,31 @@ gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
 for i in range(len(cooling_data)):
-  label = "TMAP8 - " + str(initial_temperature[i]) + " K"
-  ax.plot(time_series[i], cooling_data[i], linestyle='-', linewidth=4.0, label=label)
+    label = "TMAP8 - " + str(initial_temperature[i]) + " K"
+    ax.plot(time_series[i], cooling_data[i], linestyle="-", linewidth=4.0, label=label)
 
 # Font sizes for labels and axes
 SMALL_SIZE = 12
 MEDIUM_SIZE = 14
 BIGGER_SIZE = 16
 
-ax.set_xlabel(u'Time [s]', weight='bold', fontsize=BIGGER_SIZE)
-ax.set_ylabel(u'Temperature [K]', weight='bold', fontsize=BIGGER_SIZE)
+ax.set_xlabel("Time [s]", weight="bold", fontsize=BIGGER_SIZE)
+ax.set_ylabel("Temperature [K]", weight="bold", fontsize=BIGGER_SIZE)
 ax.legend(loc="best", fontsize=SMALL_SIZE)
 ax.set_xlim(left=0, right=20001)
 start, end = ax.get_xlim()
 ax.xaxis.set_ticks(np.arange(start, end, 5000))
 ax.set_ylim(bottom=290, top=1200)
 ax.minorticks_on()
-ax.tick_params(axis='both', which='both', direction='out', bottom=True, top=True, left=True,
-               right=True, labelsize=MEDIUM_SIZE)
-plt.savefig(f'{file_base}.png', bbox_inches='tight', dpi=300)
+ax.tick_params(
+    axis="both",
+    which="both",
+    direction="out",
+    bottom=True,
+    top=True,
+    left=True,
+    right=True,
+    labelsize=MEDIUM_SIZE,
+)
+plt.savefig(f"{file_base}.png", bbox_inches="tight", dpi=300)
 plt.close(fig)
-
