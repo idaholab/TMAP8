@@ -80,6 +80,8 @@ ax.scatter(experiment_time, experiment_flux_673, marker='o', s=s, label=r"Exp - 
 ax.scatter(experiment_time, experiment_flux_873, marker='o', s=s, label=r"Exp - 873 K", c='red', alpha=0.3)
 ax.scatter(experiment_time, experiment_flux_973, marker='o', s=s, label=r"Exp - 973 K", c='green', alpha=0.3)
 
+def numerical_solution_on_experiment_input(x_exp, x_sim, y_sim):
+    return np.interp(x_exp,x_sim,y_sim)
 
 # Font sizes for labels and axes
 SMALL_SIZE = 10
@@ -93,10 +95,43 @@ ax.set_ylim(bottom=6e15, top=4.0e18)
 ax.set_xlim(left=0,right=7200)
 ax.xaxis.set_ticks(np.arange(0, 7205, 1800))
 plt.grid(visible=True, which='major', color='0.65', linestyle='--', alpha=0.3)
-# tmap_flux_for_rmspe = numerical_solution_on_experiment_input(experiment_time, simulation_time_TMAP7, simulation_flux_left_TMAP7/2 + flux_environment)
-# RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe-experiment_flux)**2) )
-# RMSPE = RMSE*100/np.mean(experiment_flux)
-# ax.text(6000.0,0.85e18, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
+
+# RMSPE (TMAP4 - 673 K)
+tmap_flux_for_rmspe = numerical_solution_on_experiment_input(experiment_time, simulation_time_TMAP4, simulation_flux_TMAP4_673)
+RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe-experiment_flux_673)**2) )
+RMSPE = RMSE*100/np.mean(experiment_flux_673)
+ax.text(7500.0,0.85e18, 'RMSPE (TMAP4 - 673 K) = %.2f '%RMSPE+'%',fontweight='bold')
+
+# RMSPE (TMAP4 - 873 K)
+tmap_flux_for_rmspe = numerical_solution_on_experiment_input(experiment_time, simulation_time_TMAP4, simulation_flux_TMAP4_873)
+RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe-experiment_flux_873)**2) )
+RMSPE = RMSE*100/np.mean(experiment_flux_873)
+ax.text(7500.0,0.65e18, 'RMSPE (TMAP4 - 873 K) = %.2f '%RMSPE+'%',fontweight='bold')
+
+# RMSPE (TMAP4 - 973 K)
+tmap_flux_for_rmspe = numerical_solution_on_experiment_input(experiment_time, simulation_time_TMAP4, simulation_flux_TMAP4_973)
+RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe-experiment_flux_973)**2) )
+RMSPE = RMSE*100/np.mean(experiment_flux_973)
+ax.text(7500.0,0.5e18, 'RMSPE (TMAP4 - 973 K) = %.2f '%RMSPE+'%',fontweight='bold')
+
+# RMSPE (TMAP8 - 673 K)
+tmap_flux_for_rmspe = numerical_solution_on_experiment_input(experiment_time, simulation_time_673, simulation_flux_left_673)
+RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe-experiment_flux_673)**2) )
+RMSPE = RMSE*100/np.mean(experiment_flux_673)
+ax.text(7500.0,0.17e18, 'RMSPE (TMAP8 - 673 K) = %.2f '%RMSPE+'%',fontweight='bold')
+
+# RMSPE (TMAP8 - 873 K)
+tmap_flux_for_rmspe = numerical_solution_on_experiment_input(experiment_time, simulation_time_873, simulation_flux_left_873)
+RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe-experiment_flux_873)**2) )
+RMSPE = RMSE*100/np.mean(experiment_flux_873)
+ax.text(7500.0,0.13e18, 'RMSPE (TMAP8 - 873 K) = %.2f '%RMSPE+'%',fontweight='bold')
+
+# RMSPE (TMAP8 - 973 K)
+tmap_flux_for_rmspe = numerical_solution_on_experiment_input(experiment_time, simulation_time_973, simulation_flux_left_973)
+RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe-experiment_flux_973)**2) )
+RMSPE = RMSE*100/np.mean(experiment_flux_973)
+ax.text(7500.0,1e17, 'RMSPE (TMAP8 - 973 K) = %.2f '%RMSPE+'%',fontweight='bold')
+
 ax.tick_params(axis='both', which='both', direction='out', bottom=True, top=True, left=True,
                right=True, labelsize=MEDIUM_SIZE)
 ax.grid(True, which='minor', color='0.9', linestyle='--')
