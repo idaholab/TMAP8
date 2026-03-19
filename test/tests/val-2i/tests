@@ -15,7 +15,7 @@
     cli_args = "Outputs/exodus=false"
     csvdiff = val-2i_673_out.csv
     heavy = true
-    requirement = 'The system shall be able to model deuterium transport in neutron-irradiated single-crystal tungsten to generate CSV data for use in comparisons with the experimental data.'
+    requirement = 'The system shall be able to model deuterium transport in neutron-irradiated single-crystal tungsten at 673 K plasma exposure to generate CSV data for use in comparisons with the experimental data.'
   []
   [val-2i_873K]
     type = CSVDiff
@@ -23,7 +23,7 @@
     cli_args = "reflection_coefficient=0.99 binding_energy='${fparse ${units 1.91 eV -> J} / ${kB}}' trapping_site_fraction_1=0.0002 temperature_exposure='${units 873 K}' Outputs/exodus=false"
     csvdiff = val-2i_873_out.csv
     heavy = true
-    requirement = 'The system shall be able to model deuterium transport in neutron-irradiated single-crystal tungsten to generate CSV data for use in comparisons with the experimental data.'
+    requirement = 'The system shall be able to model deuterium transport in neutron-irradiated single-crystal tungsten at 873 K plasma exposure to generate CSV data for use in comparisons with the experimental data.'
   []
   [val-2i_973K]
     type = CSVDiff
@@ -31,7 +31,7 @@
     cli_args = "reflection_coefficient=0.99 binding_energy='${fparse ${units 2.21 eV -> J} / ${kB}}' trapping_site_fraction_1=0.0002 temperature_exposure='${units 973 K}' Outputs/exodus=false"
     csvdiff = val-2i_973_out.csv
     heavy = true
-    requirement = 'The system shall be able to model deuterium transport in neutron-irradiated single-crystal tungsten to generate CSV data for use in comparisons with the experimental data.'
+    requirement = 'The system shall be able to model deuterium transport in neutron-irradiated single-crystal tungsten at 973 K plasma exposure to generate CSV data for use in comparisons with the experimental data.'
   []
   # Comparison script test
   [val-2i_comparison]
