@@ -13,7 +13,6 @@ TPE_hold_time = '${units 7200 s}'
 TDS_initial_time = '${units 12000 s}'
 TDS_ramp_end = '${units 17238 s}'
 simulation_time = '${units 19200 s}'
-outputs_initial_time = '${units 0 s}'
 step_interval_max = 15 # (-)
 step_interval_min = 6 # (-)
 bound_value_min = '${units 1e-10 at/mum^3}'
@@ -203,7 +202,6 @@ temperature_min = '${units 300 K}'
     functor_names = 'temperature_function'
     functor_symbols = 'temperature_function'
     expression = '${diffusivity_coefficient} * exp(- ${E_a} / ${kB} / temperature_function)'
-    output_properties = 'diffusivity'
   []
   [converter_to_regular]
     type = MaterialADConverter
@@ -265,7 +263,6 @@ temperature_min = '${units 300 K}'
     scaling_factor = '${units 1 m^2 -> mum^2}'
     value = flux_surface_left
     execute_on = 'initial nonlinear linear timestep_end'
-    outputs = 'console csv exodus'
   []
   [flux_surface_right] # (D / mum^2 / s)
     type = SideDiffusiveFluxIntegral
@@ -321,14 +318,6 @@ temperature_min = '${units 300 K}'
 
 [Outputs]
   file_base = 'val-2i_${temperature_exposure}_out'
-  [csv]
-    type = CSV
-    start_time = ${outputs_initial_time}
-  []
-  [exodus]
-    type = Exodus
-    start_time = ${outputs_initial_time}
-    output_material_properties = true
-    time_step_interval = 20
-  []
+  csv = true
+  exodus = true
 []
