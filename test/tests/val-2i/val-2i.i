@@ -15,7 +15,7 @@ TDS_ramp_end = '${units 17238 s}'
 simulation_time = '${units 19200 s}'
 step_interval_max = 15 # (-)
 step_interval_min = 6 # (-)
-bound_value_min = '${units 1e-10 at/mum^3}'
+bound_value_min = 0
 
 # Implantation parameters
 flux_high = '${units 7.1e21 at/m^2/s -> at/mum^2/s}'
@@ -297,8 +297,8 @@ temperature_min = '${units 300 K}'
   type = Transient
   scheme = bdf2
   solve_type = NEWTON
-  petsc_options_iname = '-pc_type -snes_type'
-  petsc_options_value = 'lu vinewtonrsls'
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_type -snes_type'
+  petsc_options_value = 'lu mumps vinewtonrsls'
 
   end_time = ${simulation_time}
   line_search = 'none'
