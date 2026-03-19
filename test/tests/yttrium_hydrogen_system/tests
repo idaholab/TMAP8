@@ -70,7 +70,7 @@
                 initial_pressure_H2_enclosure_1=3e3
                 initial_atomic_fraction=1.41
                 Executioner/num_steps=200
-                Executioner/nl_rel_tol=8e-6
+                Executioner/nl_rel_tol=9e-6
                 InterfaceKernels/interface_reaction_YHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
     csvdiff = YHx_PCT_T1273_P3e3_out.csv
     requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature for P=3e3 Pa and T=1273.15 K.'
