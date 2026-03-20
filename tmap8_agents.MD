@@ -30,6 +30,7 @@
 
 ## Session log
 - Every session must be associated with a GitHub issue on `idaholab/TMAP8`; ask the user for the issue number at the start of the session if one is not provided, or create one if the user instructs you to
+- **SQA requirement:** When creating a GitHub issue with `gh`, you must use the appropriate template from `.github/ISSUE_TEMPLATE/`; read the available templates first, select the one that fits (e.g. `bug-report.md` for bugs, `feature-request.md` for new features or tasks), and populate all sections in the template body — passing a bare description without following the template structure is not acceptable
 - Before committing, copy the raw `.jsonl` session file for the current session into `doc/content/agent/<issue-number>/`; the session file is the most recently modified `.jsonl` under `~/.claude/projects/-Users-bhavcv-projects-TMAP8/`
 
 ## Committing
