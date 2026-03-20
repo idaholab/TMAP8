@@ -1,0 +1,61 @@
+# This file provides the shared model parameters for validation case val-2k.
+# Unit system:
+# - length: micrometers in the input file
+# - time: seconds
+# - concentration: atoms / micrometer^3
+# - flux: atoms / micrometer^2 / second
+
+# Physical constants
+kb = '${units 1.380649e-23 J/K}' # Boltzmann constant from PhysicalConstants.h
+eV_to_J = '${units 1.602176634e-19 J/eV}' # Electron-volt to Joule conversion from PhysicalConstants.h
+kb_eV = '${units ${fparse kb / eV_to_J} eV/K}'
+
+# Geometry
+sample_thickness = '${units 0.8e-3 m -> mum}'
+damage_depth = '${units 2.3e-6 m -> mum}'
+buffer_depth = '${units 20e-6 m -> mum}'
+bulk_depth = '${fparse sample_thickness - damage_depth - buffer_depth}'
+
+# Mesh settings
+ix_damage_fine = 120
+ix_buffer_fine = 120
+ix_bulk_fine = 180
+ix_damage_coarse = 40
+ix_buffer_coarse = 40
+ix_bulk_coarse = 60
+
+# Temperature history for the initial natural-oxide iteration
+temperature_initial = '${units 300 K}'
+temperature_final = '${units 1000 K}'
+temperature_rate = '${units ${fparse 3 / 60} K/s}'
+end_time = '${fparse (temperature_final - temperature_initial) / temperature_rate}'
+
+# Tungsten transport
+tungsten_density = '${units 6.3222e28 at/m^3 -> at/mum^3}'
+diffusion_W_preexponential = '${units 1.6e-7 m^2/s -> mum^2/s}'
+diffusion_W_energy = '${units 0.28 eV}'
+trapping_energy = '${fparse ${units ${diffusion_W_energy} eV -> J} / kb}'
+trapping_prefactor = '${units ${fparse ${units ${diffusion_W_preexponential} mum^2/s -> m^2/s} / (1.1e-10^2 * 6)} 1/s}'
+detrapping_prefactor = '${units 1e13 1/s}'
+
+# Surface recombination
+recombination_coefficient = '${units 3.8e-16 m^4/at/s -> mum^4/at/s}'
+recombination_energy = '${units 0.34 eV}'
+
+# Initial mobile concentration
+initial_mobile_concentration = '${units 1e-20 at/m^3 -> at/mum^3}'
+
+# Initial trapped inventory for the natural-oxide baseline
+# The two occupied trap populations correspond to an initial total areal inventory
+# of about 2.0e17 D/cm^2 in the damaged layer, matching the order of magnitude
+# reported for the natural-oxide reference sample in the paper.
+initial_trapped_fraction_1 = 0.010
+initial_trapped_fraction_2 = 0.006
+trap_site_fraction_1 = 0.020
+trap_site_fraction_2 = 0.015
+
+# Two-trap baseline used in the first implementation stage
+detrapping_energy_1 = '${fparse ${units 1.15 eV -> J} / kb}'
+detrapping_energy_2 = '${fparse ${units 1.65 eV -> J} / kb}'
+trap_per_free_1 = 1e7
+trap_per_free_2 = 1e7
