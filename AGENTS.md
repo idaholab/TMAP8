@@ -48,7 +48,8 @@ Co-Authored-By: <model name> <noreply@anthropic.com>
 ```
 
 ## Pull requests
-- PR description must include: physics/modeling assumptions made, AI reasoning log (decision points and alternatives considered), and tests added
+- If the linked issue already contains a complete Reason/Design/Impact description, the PR body should contain only the closing reference (e.g. `Closes #<issue-number>`) — do not duplicate the issue content or leave template sections empty
+- If the PR introduces physics/modeling decisions, non-obvious AI reasoning, or tests not described in the issue, add those as a short addendum below the issue reference
 - Never merge autonomously
 
 ## Never do

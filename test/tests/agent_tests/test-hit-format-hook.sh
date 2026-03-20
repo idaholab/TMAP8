@@ -43,39 +43,17 @@ git config user.name "Test"
 mkdir -p moose/framework/contrib/hit
 ln -s "$HIT" moose/framework/contrib/hit/hit
 
+# Symlink the base script so the hook can source it
+mkdir -p scripts
+ln -s "$REPO_DIR/scripts/hit-format-hook-base.sh" scripts/hit-format-hook-base.sh
+
 # Install the hit-format portion of the pre-commit hook directly
 mkdir -p .git/hooks
 cat > .git/hooks/pre-commit << 'HOOKEOF'
 #!/bin/bash
 REPO_DIR="$(git rev-parse --show-toplevel)"
-HIT="$REPO_DIR/moose/framework/contrib/hit/hit"
-
-if [[ ! -x "$HIT" ]]; then
-    echo "Warning: hit binary not found at $HIT, skipping .i file format check" >&2
-else
-    staged_i_files=$(git diff --staged --name-only -- '*.i')
-    if [[ -n "$staged_i_files" ]]; then
-        needs_format=false
-        while IFS= read -r f; do
-            [[ -f "$f" ]] || continue
-            tmpfile=$(mktemp)
-            git show ":$f" > "$tmpfile"
-            "$HIT" format "$tmpfile" 2>/dev/null
-            staged_content=$(git show ":$f")
-            formatted_content=$(cat "$tmpfile")
-            rm -f "$tmpfile"
-            if [[ "$staged_content" != "$formatted_content" ]]; then
-                echo "File '$f' needs hit formatting. Run: $HIT format $f" >&2
-                needs_format=true
-            fi
-        done <<< "$staged_i_files"
-        if $needs_format; then
-            echo "" >&2
-            echo "Run the above command(s) and re-stage the affected files." >&2
-            exit 1
-        fi
-    fi
-fi
+source "$REPO_DIR/scripts/hit-format-hook-base.sh"
+check_hit_format || exit 1
 HOOKEOF
 chmod +x .git/hooks/pre-commit
 
