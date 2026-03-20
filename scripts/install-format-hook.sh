@@ -8,7 +8,12 @@ if [[ -f $hookfile ]]; then
     exit 1
 fi
 
-echo '#!/bin/bash
+cat > $hookfile << 'HOOKEOF'
+#!/bin/bash
+
+REPO_DIR="$(git rev-parse --show-toplevel)"
+
+# Check C++ formatting with clang-format
 patch=$(git clang-format --diff -- $(git diff --staged --name-only -- src include tests unit))
 if [[ "$patch" =~ "no modified files to format" || "$patch" =~ "clang-format did not modify any files" ]]; then
     echo "" > /dev/null
@@ -20,7 +25,11 @@ else
     echo "$patch"
     exit 1
 fi
-' > $hookfile
+
+# Check MOOSE input files with hit format
+source "$REPO_DIR/scripts/hit-format-hook-base.sh"
+check_hit_format || exit 1
+HOOKEOF
 
 chmod a+x $hookfile
 
