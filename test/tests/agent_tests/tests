@@ -1,0 +1,8 @@
+[Tests]
+  issues = '#396'
+  [hit_format_hook]
+    type = RunCommand
+    command = 'bash test-hit-format-hook.sh'
+    requirement = 'The system shall enforce HIT formatting on staged MOOSE input files via the pre-commit hook, accepting well-formatted files and rejecting poorly-formatted ones.'
+  []
+[]

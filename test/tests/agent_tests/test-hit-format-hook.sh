@@ -25,8 +25,8 @@ run_test() {
     fi
 }
 
-if [[ ! -x "$HIT" ]]; then
-    echo "SKIP: hit binary not found at $HIT (build MOOSE first)"
+if [[ ! -x "$HIT" ]] || ! "$HIT" --help >/dev/null 2>&1; then
+    echo "SKIP: hit binary not found or not functional at $HIT (build MOOSE first or check MPI libraries)"
     exit 0
 fi
 
