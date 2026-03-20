@@ -1,6 +1,7 @@
 #!/bin/bash
 # Test the hit format pre-commit hook behavior.
-# Creates an isolated git repo, installs the hook logic directly, and verifies
+# Creates an isolated git repo, installs the hook logic directly, generates dummy input files
+# (well formatted and poorly formatted) and verifies
 # it accepts well-formatted .i files and rejects poorly-formatted ones.
 
 REPO_DIR="$(git rev-parse --show-toplevel)"

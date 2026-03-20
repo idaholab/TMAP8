@@ -14,11 +14,11 @@
 ## C++ code
 - Every new class requires a MOOSE test system test in `test/tests/` before committing
 - Every new class requires a MooseDocs page following existing TMAP8 doc structure
-- Never hardcode physical parameters — expose everything through `addParam`
+- Never hardcode physical parameters — first check if it is already defined in `doc/content/source/utils/TMAP8PhysicalConstants`, and if not available, expose everything through `addParam`
 - Code is unit-agnostic; units live in input files only
 
 ## Input files
-- Before writing an input file, look through existing MOOSE classes to confirm object names and parameter syntax
+- Before writing an input file, look through existing MOOSE and TMAP8 classes to confirm object names and parameter syntax
 - Use `moose/framework/contrib/hit/hit check <file>.i` to validate before committing
 - Use `./tmap8-opt -i <file>.i` to run input files
 - Write parameter values in the units the reference source used; convert explicitly using the MOOSE units system with the conversion documented in a comment
