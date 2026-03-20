@@ -143,7 +143,7 @@ unrelated changes all at once.
 
    for these files. Using `git status` again to check for changed files is helpful here.
 
-## Installing the pre-commit formatting hook
+## Consider installing the pre-commit formatting hook
 
 TMAP8 provides a pre-commit hook that automatically enforces formatting on every `git commit`, covering both C++ source files and MOOSE input files. Install it once after cloning:
 
