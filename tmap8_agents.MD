@@ -37,6 +37,7 @@
 - Commit at minimum after: every input file that successfully runs, every test that passes or fails, and every new class added
 - If a test or run failed, commit the failure state first (include the full error message in the commit body), then commit the fix separately
 - Every commit must reference the associated GitHub issue (e.g. `Refs #<issue-number>` or `Closes #<issue-number>` as appropriate) in the commit message
+- **Every commit must include an updated copy of the session `.jsonl`** — before staging, copy the current session file from `~/.claude/projects/-Users-bhavcv-projects-TMAP8/<session-id>.jsonl` to `doc/content/agent/<issue-number>/` and stage it; this is a critical SQA requirement
 - Every commit must include these trailers:
 ```
 Refs #<issue-number>
