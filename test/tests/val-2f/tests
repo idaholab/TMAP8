@@ -5,20 +5,42 @@
   [val-2f_light_csv]
     type = CSVDiff
     input = val-2f.i
-    cli_args = "sample_thickness='${units 0.9e-4 m -> mum}' ix1=1 ix2=1 ix3=1 ix4=1 ix5=1 charge_time='${units 1e-1 s}' cooldown_duration='${units 1e-1 s}' Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse Outputs/file_base=val-2f_light_out"
+    cli_args = "dt_init=0.5 ix1=1 ix2=1 ix3=1 ix4=1 ix5=1
+                charge_time='${units 1 s}' cooldown_duration='${units 0 s}'
+                trap_per_free_1=1e1 trap_per_free_2=1e1 trap_per_free_3=1e1 trap_per_free_4=1e1
+                trap_per_free_5=1e1 trap_per_free_intrinsic=1e8
+                Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse
+                Executioner/nl_rel_tol=1e-8
+                Executioner/nl_abs_tol=1e-11
+                Executioner/petsc_options_iname='-pc_type -pc_factor_mat_solver_type -snes_type'
+                Executioner/petsc_options_value='lu       mumps                      vinewtonrsls'
+                Executioner/compute_scaling_once=true
+                Outputs/file_base=val-2f_light_out"
     csvdiff = val-2f_light_out.csv
+    max_threads = 1 # see #200
+    recover = false # see #196
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output with a short runtime and coarse mesh testing.'
-    max_parallel = 1 # see #200
   []
   [val-2f_light_exodus]
     type = Exodiff
     input = val-2f.i
-    cli_args = "sample_thickness='${units 0.9e-4 m -> mum}' ix1=1 ix2=1 ix3=1 ix4=1 ix5=1 charge_time='${units 1e-1 s}' cooldown_duration='${units 1e-1 s}' Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse Outputs/file_base=val-2f_light_out"
+    cli_args = "dt_init=0.5 ix1=1 ix2=1 ix3=1 ix4=1 ix5=1
+                charge_time='${units 1 s}' cooldown_duration='${units 0 s}'
+                trap_per_free_1=1e1 trap_per_free_2=1e1 trap_per_free_3=1e1 trap_per_free_4=1e1
+                trap_per_free_5=1e1 trap_per_free_intrinsic=1e8
+                Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse
+                Executioner/nl_rel_tol=1e-8
+                Executioner/nl_abs_tol=1e-11
+                Executioner/petsc_options_iname='-pc_type -pc_factor_mat_solver_type -snes_type'
+                Executioner/petsc_options_value='lu       mumps                      vinewtonrsls'
+                Executioner/compute_scaling_once=true
+                Outputs/file_base=val-2f_light_out"
     exodiff = val-2f_light_out.e
     prereq = val-2f_light_csv
+    max_threads = 1 # see #200
+    recover = false # see #196
     should_execute = false # this test relies on the output files from val-2f_light_csv, so it shouldn't be run twice
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport with a short runtime and coarse mesh testing.'
-    max_parallel = 1 # see #200
   []
   [val-2f_heavy_csv]
     type = CSVDiff

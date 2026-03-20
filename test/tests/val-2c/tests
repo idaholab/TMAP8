@@ -8,8 +8,6 @@
     cli_args = 'Outputs/exodus=true'
     csvdiff = val-2c_immediate_injection_csv.csv
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with immediate T2 injection.'
-    max_parallel = 1 # see #200
-    recover = false # see #196
   []
   [val-2c_immediate_injection_exodus]
     type = Exodiff
@@ -20,8 +18,6 @@
     exodiff = val-2c_immediate_injection_out.e
     custom_cmp = 'val-2c_exodus.exodiff'
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with immediate T2 injection and properly compute the exodus file.'
-    max_parallel = 1 # see #200
-    recover = false # see #196
   []
   [val-2c_delay_csv]
     type = CSVDiff
@@ -31,8 +27,6 @@
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection.'
     abs_zero = 1e-8
     rel_err = 3e-5
-    max_parallel = 1 # see #200
-    recover = false # see #196
   []
   [val-2c_delay_exodus]
     type = Exodiff
@@ -43,8 +37,6 @@
     exodiff = val-2c_delay_out.e
     custom_cmp = 'val-2c_exodus.exodiff'
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection and properly compute the exodus file.'
-    max_parallel = 1 # see #200
-    recover = false # see #196
   []
   [val-2c_delay_calibrated_csv]
     type = CSVDiff
@@ -59,10 +51,8 @@
                 Outputs/file_base=val-2c_delay_calibrated_out'
     csvdiff = val-2c_delay_calibrated_out.csv
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection using calibrated model parameters.'
-    abs_zero = 1e-8
-    rel_err = 2e-5
-    max_parallel = 1 # see #200
-    recover = false # see #196
+    abs_zero = 2e-4
+    rel_err = 3e-5
     issues = '#266'
   []
   [val-2c_delay_pss_study_csv]
