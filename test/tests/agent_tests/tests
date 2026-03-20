@@ -1,4 +1,5 @@
 [Tests]
+  design = 'contributing.md'
   issues = '#396'
   [hit_format_hook]
     type = RunCommand

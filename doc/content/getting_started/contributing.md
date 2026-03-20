@@ -142,6 +142,28 @@ unrelated changes all at once.
    ```
 
    for these files. Using `git status` again to check for changed files is helpful here.
+
+## Installing the pre-commit formatting hook
+
+TMAP8 provides a pre-commit hook that automatically enforces formatting on every `git commit`, covering both C++ source files and MOOSE input files. Install it once after cloning:
+
+```
+bash scripts/install-format-hook.sh
+```
+
+The hook performs two checks on every commit:
+
+- **C++ formatting** — runs `git clang-format` on staged `.C` and `.h` files. If any file is not properly formatted, the commit is blocked and the diff is printed so you can run `git clang-format` to fix it.
+- **MOOSE input file formatting** — runs `hit format` on every staged `.i` file. If any file differs from the canonical `hit` output, the commit is blocked and the offending file(s) are listed. To fix, run:
+
+  ```
+  moose/framework/contrib/hit/hit format <file>.i
+  ```
+
+  then re-stage the file and commit again.
+
+!alert note title=Automated enforcement
+Because the hook checks the staged content (not the working-tree copy), you must re-stage the file after formatting. Do not invoke `clang-format` or `hit format` manually on uncommitted changes — stage first, then let the hook tell you what needs fixing, or format and re-stage.
 1. Now you’re ready to commit. Run
 
    ```
