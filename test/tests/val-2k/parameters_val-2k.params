@@ -23,6 +23,8 @@ ix_bulk_fine = 180
 ix_damage_coarse = 40
 ix_buffer_coarse = 40
 ix_bulk_coarse = 60
+profile_depth = '${units 3.1 mum}'
+profile_num_points = 163
 
 # Temperature history for the initial natural-oxide iteration
 temperature_initial = '${units 300 K}'

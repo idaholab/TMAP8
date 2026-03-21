@@ -147,6 +147,18 @@
   []
 []
 
+[VectorPostprocessors]
+  [line_profile]
+    type = LineValueSampler
+    start_point = '0 0 0'
+    end_point = '${profile_depth} 0 0'
+    num_points = ${profile_num_points}
+    sort_by = x
+    variable = 'deuterium_mobile deuterium_trapped_1 deuterium_trapped_2'
+    execute_on = INITIAL
+  []
+[]
+
 [Executioner]
   type = Transient
   end_time = ${end_time}
@@ -176,5 +188,13 @@
   exodus = true
   [csv]
     type = CSV
+  []
+  [profile_out]
+    type = CSV
+    sync_only = true
+    sync_times = '0'
+    execute_vector_postprocessors_on = 'INITIAL'
+    execute_postprocessors_on = NONE
+    file_base = val-2k_profile_initial_out
   []
 []
