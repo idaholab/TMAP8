@@ -1,0 +1,43 @@
+[Tests]
+  design = 'TrappingNodalKernel.md ReleasingNodalKernel.md'
+  issues = "#393"
+  validation = 'val-2i.md'
+  [val-2i_673K_light]
+    type = CSVDiff
+    input = 'val-2i.i'
+    cli_args = "simulation_time='${units 50 s}' Outputs/file_base=val-2i_673_light Outputs/exodus=false"
+    csvdiff = val-2i_673_light.csv
+    requirement = 'The system shall be able to model deuterium transport in neutron-irradiated single-crystal tungsten.'
+  []
+  [val-2i_673K]
+    type = CSVDiff
+    input = 'val-2i.i'
+    cli_args = "Outputs/exodus=false"
+    csvdiff = val-2i_673_out.csv
+    heavy = true
+    requirement = 'The system shall be able to model deuterium transport in neutron-irradiated single-crystal tungsten at 673 K plasma exposure to generate CSV data for use in comparisons with the experimental data.'
+  []
+  [val-2i_873K]
+    type = CSVDiff
+    input = 'val-2i.i'
+    cli_args = "reflection_coefficient=0.99 binding_energy='${fparse ${units 1.91 eV -> J} / ${kB}}' trapping_site_fraction_1=0.0002 temperature_exposure='${units 873 K}' Outputs/exodus=false"
+    csvdiff = val-2i_873_out.csv
+    heavy = true
+    requirement = 'The system shall be able to model deuterium transport in neutron-irradiated single-crystal tungsten at 873 K plasma exposure to generate CSV data for use in comparisons with the experimental data.'
+  []
+  [val-2i_973K]
+    type = CSVDiff
+    input = 'val-2i.i'
+    cli_args = "reflection_coefficient=0.99 binding_energy='${fparse ${units 2.21 eV -> J} / ${kB}}' trapping_site_fraction_1=0.0002 temperature_exposure='${units 973 K}' Outputs/exodus=false"
+    csvdiff = val-2i_973_out.csv
+    heavy = true
+    requirement = 'The system shall be able to model deuterium transport in neutron-irradiated single-crystal tungsten at 973 K plasma exposure to generate CSV data for use in comparisons with the experimental data.'
+  []
+  # Comparison script test
+  [val-2i_comparison]
+    type = RunCommand
+    command = 'python3 comparison_val-2i.py'
+    requirement = 'The system shall be able to generate comparison plots between simulated solutions and experimental data of validation case val-2i, modeling deuterium transport in neutron-irradiated single-crystal tungsten.'
+    required_python_packages = 'matplotlib numpy pandas scipy os'
+  []
+[]
