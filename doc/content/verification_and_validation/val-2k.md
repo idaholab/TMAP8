@@ -1,10 +1,10 @@
 # val-2k
 
-# Incremental modelling of oxide effects on deuterium release from self-damaged tungsten
+# Oxide effects on deuterium release from self-irradiated tungsten
 
 ## Case Description
 
-This validation case is based on the natural-oxide and thin-oxide experiments reported in [!cite](kremer2022oxide). The long-term goal of `val-2k` is to incrementally model deuterium release from self-damaged tungsten as progressively more oxide-related physics is introduced. The experimental study measured deuterium thermal desorption spectra from tungsten samples with a natural oxide layer and with electrochemically grown oxide layers between 5 nm and 100 nm.
+This validation case is based on the natural-oxide and thin-oxide experiments reported in [!cite](Kremer2022oxide). The long-term goal of `val-2k` is to incrementally model deuterium release from self-irradiated tungsten as progressively more oxide-related physics is introduced. The experimental study measured deuterium thermal desorption spectra from tungsten samples with a natural oxide layer and with electrochemically grown oxide layers between 5 nm and 100 nm.
 
 Unlike the existing one-shot validation cases, `val-2k` is intentionally developed in stages so that each additional piece of physics can be compared against experiment before the next one is introduced. The first implementation stage focuses only on the natural-oxide reference sample and only on deuterium in tungsten.
 
@@ -13,7 +13,7 @@ Unlike the existing one-shot validation cases, `val-2k` is intentionally develop
 The current implementation is the natural-oxide baseline for the staged `val-2k` workflow. It includes:
 
 - one-dimensional deuterium diffusion in tungsten
-- two trapped populations in the self-damaged near-surface region
+- two trapped populations in the self-irradiated near-surface region
 - deuterium recombination and release as D$_2$ on both free surfaces
 - the experimental TDS temperature ramp from 300 K to 1000 K at 3 K/min
 
@@ -28,7 +28,7 @@ Those additions are deferred to later iterations so their individual influence o
 
 ## Model Description
 
-The first iteration models only the tungsten response. A 0.8 mm tungsten slab is represented as a one-dimensional domain. The first 2.3 micrometers correspond to the self-damaged region that initially contains the trapped deuterium inventory. Two trapped populations are used as a simplified baseline representation of the defect-rich layer.
+The first iteration models only the tungsten response. A 0.8 mm tungsten slab is represented as a one-dimensional domain. The first 2.3 micrometers correspond to the self-irradiated region that initially contains the trapped deuterium inventory. Two trapped populations are used as a simplified baseline representation of the defect-rich layer.
 
 The mobile deuterium concentration $C_M$ is governed by:
 
@@ -69,11 +69,11 @@ The current baseline parameters are listed in [val-2k_parameters].
 !table id=val-2k_parameters caption=Parameters used in the first implementation stage of `val-2k`.
 | Parameter | Description | Value | Units | Reference |
 | --------- | ----------- | ----- | ----- | --------- |
-| $l_W$ | Tungsten thickness | 0.8 | mm | [!cite](kremer2022oxide) |
-| $l_d$ | Self-damaged depth | 2.3 | $\mu$m | [!cite](kremer2022oxide) |
-| $T_0$ | Initial temperature | 300 | K | [!cite](kremer2022oxide) |
-| $T_f$ | Final temperature | 1000 | K | [!cite](kremer2022oxide) |
-| $\beta$ | Heating rate | 3 | K/min | [!cite](kremer2022oxide) |
+| $l_W$ | Tungsten thickness | 0.8 | mm | [!cite](Kremer2022oxide) |
+| $l_d$ | Self-damaged depth | 2.3 | $\mu$m | [!cite](Kremer2022oxide) |
+| $T_0$ | Initial temperature | 300 | K | [!cite](Kremer2022oxide) |
+| $T_f$ | Final temperature | 1000 | K | [!cite](Kremer2022oxide) |
+| $\beta$ | Heating rate | 3 | K/min | [!cite](Kremer2022oxide) |
 | $D_0$ | Diffusivity prefactor | 1.6 $\times 10^{-7}$ | m$^2$/s | Adopted from [val-2f](val-2f.md exact=True) for the initial baseline |
 | $E_D$ | Diffusion activation energy | 0.28 | eV | Adopted from [val-2f](val-2f.md exact=True) for the initial baseline |
 | $K_r$ | Recombination prefactor | 3.8 $\times 10^{-16}$ | m$^4$/at/s | Adopted from [val-2f](val-2f.md exact=True) for the initial baseline |
@@ -81,7 +81,7 @@ The current baseline parameters are listed in [val-2k_parameters].
 
 ## Results
 
-The first result of `val-2k` is the initial natural-oxide baseline simulation. The comparison script is already structured to overlay digitized data from Fig. 6 of [!cite](kremer2022oxide). At this stage, the experimental CSV is only a placeholder, so the generated figure reports the simulation baseline and marks the pending data digitization step explicitly.
+The first result of `val-2k` is the initial natural-oxide baseline simulation. The comparison script is already structured to overlay digitized data from Fig. 6 of [!cite](Kremer2022oxide). At this stage, the experimental CSV is only a placeholder, so the generated figure reports the simulation baseline and marks the pending data digitization step explicitly.
 
 !media comparison_val-2k.py
     image_name=val-2k_natural_oxide_iteration_1_comparison.png
