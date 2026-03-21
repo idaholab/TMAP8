@@ -6,12 +6,12 @@
 # Light-test geometry and time overrides.
 # Full-scale values are shown in comments; override on the command line for production runs.
 sample_thickness = '${units 0.9e-4 m -> mum}' # Full scale: '${units 0.8e-3 m -> mum}'
-ix1 = 1   # Full scale: 100
-ix2 = 1   # Full scale: 100
-ix3 = 1   # Full scale: 100
-ix4 = 1   # Full scale: 100
-ix5 = 1   # Full scale: 100
-charge_time = '${units 1e-1 s}'       # Full scale: '${units 72 h -> s}'
+ix1 = 1 # Full scale: 100
+ix2 = 1 # Full scale: 100
+ix3 = 1 # Full scale: 100
+ix4 = 1 # Full scale: 100
+ix5 = 1 # Full scale: 100
+charge_time = '${units 1e-1 s}' # Full scale: '${units 72 h -> s}'
 cooldown_duration = '${units 1e-1 s}' # Full scale: '${units 12 h -> s}'
 
 !include parameters_val-2f-dimensionless.params
@@ -24,6 +24,7 @@ cooldown_duration = '${units 1e-1 s}' # Full scale: '${units 12 h -> s}'
     ix = '${ix1} ${ix2} ${ix3} ${ix4} ${ix5}'
     subdomain_id = '0 0 0 0 0'
   []
+  uniform_refine = 2
 []
 
 [Variables]
@@ -448,8 +449,9 @@ cooldown_duration = '${units 1e-1 s}' # Full scale: '${units 12 h -> s}'
   nl_rel_tol = 1e-8
   nl_max_its = 20
   [TimeStepper]
-    type = CSVTimeSequenceStepper
-    file_name = val-2f-dimensionless_light_time_sequence.csv
+    type = IterationAdaptiveDT
+    growth_factor = 1.05
+    dt = 2.456030684345e-07
   []
 []
 
