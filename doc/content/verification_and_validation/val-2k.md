@@ -76,6 +76,10 @@ The current baseline parameters are listed in [val-2k_parameters].
 | $\beta$ | Heating rate | 3 | K/min | [!cite](Kremer2022oxide) |
 | $D_0$ | Diffusivity prefactor | 1.6 $\times 10^{-7}$ | m$^2$/s | Adopted from [val-2f](val-2f.md exact=True) for the initial baseline |
 | $E_D$ | Diffusion activation energy | 0.28 | eV | Adopted from [val-2f](val-2f.md exact=True) for the initial baseline |
+| $E_{T,1}$ | Trap 1 detrapping energy | 1.15 | eV | Stage 1 baseline value |
+| $E_{T,2}$ | Trap 2 detrapping energy | 1.65 | eV | Stage 1 baseline value |
+| $C_{T_1,0}$ | Trap 1 site density | 1.264 $\times 10^{27}$ | at/m$^3$ | Stage 1 baseline value, equal to 0.020 $N_W$ |
+| $C_{T_2,0}$ | Trap 2 site density | 9.483 $\times 10^{26}$ | at/m$^3$ | Stage 1 baseline value, equal to 0.015 $N_W$ |
 | $K_r$ | Recombination prefactor | 3.8 $\times 10^{-16}$ | m$^4$/at/s | Adopted from [val-2f](val-2f.md exact=True) for the initial baseline |
 | $E_r$ | Recombination activation energy | 0.34 | eV | Adopted from [val-2f](val-2f.md exact=True) for the initial baseline |
 
