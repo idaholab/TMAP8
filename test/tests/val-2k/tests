@@ -7,7 +7,7 @@
     input = val-2k.i
     csvdiff = val-2k_out.csv
     heavy = true
-    requirement = 'The system shall be able to model the natural-oxide baseline of validation case val-2k using deuterium diffusion, trapping, and D2 surface recombination in self-damaged tungsten.'
+    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a natural oxide layer during a TDS experiment using deuterium diffusion, trapping, and D2 surface recombination.'
   []
   [val-2k_exodiff]
     type = Exodiff
@@ -16,12 +16,12 @@
     prereq = val-2k_csvdiff
     should_execute = false
     heavy = true
-    requirement = 'The system shall be able to produce the full field solution for the natural-oxide baseline of validation case val-2k.'
+    requirement = 'The system shall be able to produce the full field solution of a simulation of deuterium transport in self-irradiated tungsten with a natural oxide layer during a TDS experiment using deuterium diffusion, trapping, and D2 surface recombination..'
   []
   [val-2k_comparison]
     type = RunCommand
     command = 'python3 comparison_val-2k.py'
-    requirement = 'The system shall be able to generate comparison plots for the staged val-2k validation workflow as additional experimental datasets are connected to the model.'
+    requirement = 'The system shall be able to generate comparison plots for the val-2k validation, investigating oxide film impact on hydrogen isopoe release from self-irradiated tungsten.'
     required_python_packages = 'matplotlib numpy pandas os'
   []
 []
