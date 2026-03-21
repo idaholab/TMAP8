@@ -1,5 +1,5 @@
-# Validation Problem #2k
-# Incremental validation case for deuterium release from self-damaged tungsten with
+# Validation Problem #val-2k
+# Incremental validation case for deuterium release from self-irradiated tungsten with
 # natural and artificial oxide layers based on:
 # Kremer, K., Brucker, M., Jacob, W., Schwarz-Selinger, T. (2022)
 # "Influence of thin surface oxide films on hydrogen isotope release from ion-irradiated tungsten"
@@ -7,7 +7,7 @@
 # This first implementation stage only models the natural-oxide baseline.
 # Included physics:
 # - deuterium diffusion in tungsten
-# - two trapped populations in the self-damaged layer
+# - two trapped populations in the self-irradiated layer
 # - D2 surface recombination on both surfaces
 # Deferred to later stages:
 # - explicit hydrogen-containing species

@@ -2,12 +2,10 @@
   [trapped_1]
     order = FIRST
     family = LAGRANGE
-    outputs = none
   []
   [trapped_2]
     order = FIRST
     family = LAGRANGE
-    outputs = none
   []
 []
 
