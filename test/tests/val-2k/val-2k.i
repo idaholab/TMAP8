@@ -7,7 +7,7 @@
 # This first implementation stage only models the natural-oxide baseline.
 # Included physics:
 # - deuterium diffusion in tungsten
-# - two trapped populations in the self-irradiated layer
+# - six scaled val-2f trap families in the self-irradiated layer
 # - D2 surface recombination on both surfaces
 # Deferred to later stages:
 # - explicit hydrogen-containing species
@@ -154,7 +154,7 @@
     end_point = '${profile_depth} 0 0'
     num_points = ${profile_num_points}
     sort_by = x
-    variable = 'deuterium_mobile deuterium_trapped_1 deuterium_trapped_2'
+    variable = 'deuterium_mobile deuterium_trapped_intrinsic deuterium_trapped_1 deuterium_trapped_2 deuterium_trapped_3 deuterium_trapped_4 deuterium_trapped_5'
     execute_on = INITIAL
   []
 []
