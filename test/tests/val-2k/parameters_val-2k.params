@@ -40,9 +40,17 @@ trapping_energy = '${fparse ${units ${diffusion_W_energy} eV -> J} / kb}'
 trapping_prefactor = '${units ${fparse ${units ${diffusion_W_preexponential} mum^2/s -> m^2/s} / (1.1e-10^2 * 6)} 1/s}'
 detrapping_prefactor = '${units 1e13 1/s}'
 detrapping_energy_1 = '${fparse ${units 1.15 eV -> J} / kb}'
-detrapping_energy_2 = '${fparse ${units 1.65 eV -> J} / kb}'
+detrapping_energy_2 = '${fparse ${units 1.35 eV -> J} / kb}'
+detrapping_energy_3 = '${fparse ${units 1.65 eV -> J} / kb}'
+detrapping_energy_4 = '${fparse ${units 1.85 eV -> J} / kb}'
+detrapping_energy_5 = '${fparse ${units 2.05 eV -> J} / kb}'
+detrapping_energy_intrinsic = '${fparse ${units 1.04 eV -> J} / kb}'
 trap_per_free_1 = 1e7
 trap_per_free_2 = 1e7
+trap_per_free_3 = 1e7
+trap_per_free_4 = 1e7
+trap_per_free_5 = 1e7
+trap_per_free_intrinsic = 1e7
 
 # Surface recombination
 recombination_coefficient = '${units 3.8e-16 m^4/at/s -> mum^4/at/s}'
@@ -51,11 +59,13 @@ recombination_energy = '${units 0.34 eV}'
 # Initial mobile concentration
 initial_mobile_concentration = '${units 1e-20 at/m^3 -> at/mum^3}'
 
-# Initial trapped inventory for the natural-oxide baseline
-# The two occupied trap populations correspond to an initial total areal inventory
-# of about 2.0e17 D/cm^2 in the damaged layer, matching the order of magnitude
-# reported for the natural-oxide reference sample in the paper.
-initial_trapped_fraction_1 = 0.010
-initial_trapped_fraction_2 = 0.006
-trap_site_fraction_1 = 0.020
-trap_site_fraction_2 = 0.015
+# val-2f six-trap reference scaled to preserve the current val-2k initial areal inventory
+depth_center = '${units 2.5e-6 m -> mum}'
+depth_width = '${units 5e-7 m -> mum}'
+trap_density_scale = 6.6448483834798155
+trapping_site_fraction_intrinsic = '${fparse trap_density_scale * 3.796146910885451e-07}'
+trapping_site_fraction_1 = '${fparse trap_density_scale * 7.322741092695964e-04}'
+trapping_site_fraction_2 = '${fparse trap_density_scale * 4.5458706307839917e-04}'
+trapping_site_fraction_3 = '${fparse trap_density_scale * 3.103067322529255e-04}'
+trapping_site_fraction_4 = '${fparse trap_density_scale * 4.6932472533804296e-04}'
+trapping_site_fraction_5 = '${fparse trap_density_scale * 1.2447228505500194e-04}'
