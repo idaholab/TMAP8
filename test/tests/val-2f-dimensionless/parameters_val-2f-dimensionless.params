@@ -26,7 +26,9 @@ diffusion_W_energy = '${units 0.28 eV}'
 recombination_coefficient = '${units ${fparse 3.8e-16} m^4/at/s -> mum^4/at/s}'
 recombination_energy = '${units 0.34 eV}'
 trapping_energy = '${fparse ${units ${diffusion_W_energy} eV -> J} / kb}'
-trapping_prefactor = '${units ${fparse ${units ${diffusion_W_preexponential} mum^2/s -> m^2/s} / (1.1e-10^2 * 6) } 1/s}'
+jump_length = ${units 1.1e-10 m}
+three_d_random_walk_factor = 6
+trapping_prefactor = '${units ${fparse ${units ${diffusion_W_preexponential} mum^2/s -> m^2/s} / (jump_length^2 * three_d_random_walk_factor) } 1/s}'
 detrapping_prefactor = '${units 1e13 1/s}'
 
 # Source term parameters
