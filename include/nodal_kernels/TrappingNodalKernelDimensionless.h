@@ -56,9 +56,7 @@ protected:
   const Real _N;
   /// C_t_ref: reference concentration for THIS trap (used to convert Ĉ_t back to physical)
   const Real _trap_concentration_reference;
-  /// C_m_ref: reference concentration for the mobile species when the coupled variable is dimensionless
-  const Real _mobile_concentration_reference;
-  const bool _mobile_variable_is_dimensionless;
+  /// Dimensionless mobile concentration
   const VariableValue & _mobile_concentration;
   unsigned int _n_other_concs;
   /// Dimensionless concentrations of other trap types (Ĉ_t_j = C_t_j / C_t_ref_j)

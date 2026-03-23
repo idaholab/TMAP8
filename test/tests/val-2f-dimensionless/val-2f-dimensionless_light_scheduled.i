@@ -194,8 +194,7 @@ cooldown_duration = '${units 1e-1 s}' # Full scale: '${units 12 h -> s}'
       detrapping_energy = '${detrapping_energy_intrinsic} ${detrapping_energy_1} ${detrapping_energy_2}
                            ${detrapping_energy_3} ${detrapping_energy_4} ${detrapping_energy_5}'
       temperature = 'temperature'
-      dimensionless_trapped_species = true
-      dimensionless_mobile_species = true
+      dimensionless_species = true
       # Each trap type occupies distinct defect sites — no cross-coupling between species
       different_traps_for_each_species = true
     []

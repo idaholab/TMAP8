@@ -59,10 +59,8 @@ protected:
   std::vector<std::vector<Real>> _detrapping_energies;
   /// Whether to define a single variable for each species for all components, or a different one for each component
   const bool _single_variable_set;
-  /// Whether to use dimensionless trapped-species variables and dimensionless trapping kernels
-  const bool _use_dimensionless_trapped_species;
-  /// Whether the mobile concentration variable is also dimensionless
-  const bool _dimensionless_mobile_species;
+  /// Whether to use dimensionless mobile and trapped-species variables and their associated dimensionless trapping/release kernels
+  const bool _use_dimensionless_species;
 
 private:
   Real trapConcentrationReference(unsigned int c_i, unsigned int s_j);
