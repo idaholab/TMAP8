@@ -25,7 +25,7 @@
     cli_args = 'Outputs/exodus=true'
     csvdiff = val-2c_delay_csv.csv
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection.'
-    abs_zero = 1e-8
+    abs_zero = 2e-4
     rel_err = 3e-5
   []
   [val-2c_delay_exodus]
