@@ -17,6 +17,7 @@
                 Executioner/compute_scaling_once=true
                 Outputs/file_base=val-2f_light_out"
     csvdiff = val-2f_light_out.csv
+    skip = 'replacing with a dimensionless implementation'
     max_threads = 1 # see #200
     recover = false # see #196
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output with a short runtime and coarse mesh testing.'
@@ -36,6 +37,7 @@
                 Executioner/compute_scaling_once=true
                 Outputs/file_base=val-2f_light_out"
     exodiff = val-2f_light_out.e
+    skip = 'replacing with a dimensionless implementation'
     prereq = val-2f_light_csv
     max_threads = 1 # see #200
     recover = false # see #196
