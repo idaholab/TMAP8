@@ -126,7 +126,7 @@
       input = structure1D.i
       cli_args = "ActionComponents/structure/property_names='a b c d e f g diff' ActionComponents/structure/temperature=100"
       detail = "both not specified but necessary to define the equations."
-      expect_err = "alpha_t: This parameter should be specified, in the Physics 'trapped' \(applying to all components\) or in component 'structure' using the property_name 'alpha_t'"
+      expect_err = "(trapping_energy)|(alpha_t): This parameter should be specified, in the Physics 'trapped' \(applying to all components\) or in component 'structure' using the property_name 'alpha_t'"
     []
   []
 []
