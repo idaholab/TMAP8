@@ -34,6 +34,7 @@
     paired_block = '0' # paint
     new_boundary = 'interface_other'
   []
+  uniform_refine = 1
 []
 
 [Variables]
@@ -671,9 +672,9 @@
 [Executioner]
   type = Transient
   solve_type = NEWTON
-  scheme = 'bdf2'
-  petsc_options_iname = '-pc_type -snes_type'
-  petsc_options_value = 'lu       vinewtonrsls'
+  scheme = 'implicit-euler'
+  petsc_options_iname = '-pc_type -snes_type -pc_factor_mat_solver_type'
+  petsc_options_value = 'lu       vinewtonrsls mumps'
 
   nl_rel_tol = 1.e-10
   automatic_scaling = true
@@ -683,6 +684,7 @@
   dtmax = ${dtmax}
   dtmin = ${dtmin}
   nl_max_its = 16
+  abort_on_solve_fail = true
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = ${time_step}
@@ -694,7 +696,6 @@
 []
 
 [Outputs]
-  perf_graph = true
   exodus = true
   [csv]
     type = CSV
