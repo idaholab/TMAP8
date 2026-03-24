@@ -1,0 +1,25 @@
+[Tests]
+  design = 'TrappingNodalKernel.md ReleasingNodalKernel.md'
+  issues = '#12'
+  validation = 'val-2j.md'
+  [val-2j_csvdiff]
+    type = CSVDiff
+    input = 'val-2j.i'
+    csvdiff = val-2j_out.csv
+    requirement = 'The system shall be able to model tritium TDS from Li2TiO3 with fine mesh to compare with experimental desorption data from Kobayashi et al. (2015).'
+  []
+  [val-2j_exodiff]
+    type = Exodiff
+    input = 'val-2j.i'
+    exodiff = val-2j_out.e
+    prereq = val-2j_csvdiff
+    should_execute = false
+    requirement = 'The system shall be able to model tritium TDS from Li2TiO3 with fine mesh including full simulation outputs.'
+  []
+  [val-2j_comparison]
+    type = RunCommand
+    command = 'python3 comparison_val-2j.py'
+    requirement = 'The system shall generate comparison plots between TMAP8 simulation and experimental TDS data for Li2TiO3 Sample E.'
+    required_python_packages = 'matplotlib numpy pandas os'
+  []
+[]
