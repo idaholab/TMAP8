@@ -573,6 +573,7 @@
 
 [Outputs]
   perf_graph = true
+  exodus = true
   [csv]
     type = CSV
     execute_on = 'initial timestep_end'
