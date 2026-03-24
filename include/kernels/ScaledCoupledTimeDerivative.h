@@ -9,7 +9,6 @@
 #pragma once
 
 #include "CoupledTimeDerivative.h"
-#include "TMAPScaling.h"
 
 class ScaledCoupledTimeDerivative : public CoupledTimeDerivative
 {
@@ -23,5 +22,4 @@ protected:
   virtual Real computeQpOffDiagJacobian(unsigned int jvar) override;
 
   const Real _factor;
-  const TMAP::Scaling::MobileEquationScaling _equation_scaling;
 };

@@ -236,19 +236,7 @@ SpeciesTrappingPhysics::variableScalingFromReference(Real reference) const
 }
 
 Real
-SpeciesTrappingPhysics::siteDensityReference(unsigned int c_i) const
-{
-  return 1.0;
-}
-
-Real
 SpeciesTrappingPhysics::timeReference(unsigned int /*c_i*/) const
-{
-  return 1.0;
-}
-
-Real
-SpeciesTrappingPhysics::temperatureReference(unsigned int c_i) const
 {
   return 1.0;
 }
@@ -659,12 +647,7 @@ SpeciesTrappingPhysics::addFEKernels()
           params.set<Real>("factor") =
               trapConcentrationReference(c_i, s_j) / mobileConcentrationReference(c_i);
         else
-        {
           params.set<Real>("factor") = _trap_per_frees[c_i];
-          params.set<Real>("primary_concentration_reference") = mobileConcentrationReference(c_i);
-          params.set<Real>("coupled_concentration_reference") = trappedConcentrationReference(c_i);
-          params.set<Real>("time_reference") = timeReference(c_i);
-        }
 
         getProblem().addKernel(
             kernel_type, prefix() + mobile_species_name + "_from_" + species_name, params);

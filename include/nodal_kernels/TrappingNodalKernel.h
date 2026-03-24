@@ -9,7 +9,6 @@
 #pragma once
 
 #include "NodalKernel.h"
-#include "TMAPScaling.h"
 
 #include "metaphysicl/dualdynamicsparsenumberarray.h"
 
@@ -44,7 +43,6 @@ protected:
   const Node * _last_node;
   const Real _trap_per_free;
   const VariableValue & _temperature;
-  const TMAP::Scaling::TrappingEquationScaling _equation_scaling;
   LocalDN _jacobian;
 
 private:

@@ -9,7 +9,6 @@
 #pragma once
 
 #include "NodalKernel.h"
-#include "TMAPScaling.h"
 
 class ReleasingNodalKernel : public NodalKernel
 {
@@ -25,5 +24,4 @@ protected:
   const Real _alpha_r;
   const Real _detrapping_energy;
   const VariableValue & _temperature;
-  const TMAP::Scaling::TrappingEquationScaling _equation_scaling;
 };

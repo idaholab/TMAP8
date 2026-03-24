@@ -69,9 +69,7 @@ private:
   Real dimensionlessReleaseRate(unsigned int c_i, unsigned int s_j);
   Real trappedConcentrationReference(unsigned int c_i) const;
   Real variableScalingFromReference(Real reference) const;
-  Real siteDensityReference(unsigned int c_i) const;
   Real timeReference(unsigned int c_i) const;
-  Real temperatureReference(unsigned int c_i) const;
   virtual void addSolverVariables() override;
   virtual void addInitialConditions() override;
   virtual void addFEKernels() override;
