@@ -107,42 +107,42 @@
     variable = bounds_dummy_t2_paint_concentration
     bounded_variable = t2_paint_concentration
     bound_type = lower
-    bound_value = ${lower_value_threshold}
+    bound_value = 0
   []
   [t2_enclosure_concentration_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy_t2_enclosure_concentration
     bounded_variable = t2_enclosure_concentration
     bound_type = lower
-    bound_value = ${lower_value_threshold}
+    bound_value = 0
   []
   [hto_paint_concentration_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy_hto_paint_concentration
     bounded_variable = hto_paint_concentration
     bound_type = lower
-    bound_value = ${lower_value_threshold}
+    bound_value = 0
   []
   [hto_enclosure_concentration_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy_hto_enclosure_concentration
     bounded_variable = hto_enclosure_concentration
     bound_type = lower
-    bound_value = ${lower_value_threshold}
+    bound_value = 0
   []
   [h2o_paint_concentration_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy_h2o_paint_concentration
     bounded_variable = h2o_paint_concentration
     bound_type = lower
-    bound_value = -1e-4
+    bound_value = 0
   []
   [h2o_enclosure_concentration_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy_h2o_enclosure_concentration
     bounded_variable = h2o_enclosure_concentration
     bound_type = lower
-    bound_value = -1e-4
+    bound_value = 0
   []
 []
 
