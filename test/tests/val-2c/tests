@@ -67,9 +67,9 @@
     requirement = 'The system shall be able to perform a Parallel Subset Simulation study using a model of the Test Cell Release Experiment (val-2c) with delayed T2 injection.'
     abs_zero = 1e-8
     rel_err = 1e-5
-    max_parallel = 1 # see #200
-    recover = false # see #196
+    recover = false # moose#24460 and moose#32193
     issues = '#266'
+    skip_keys = 'number_of_parts part'
   []
   [val-2c_delay_comparison]
     type = RunCommand
