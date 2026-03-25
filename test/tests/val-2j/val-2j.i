@@ -43,7 +43,7 @@ end_time = '${fparse (900.0 - 300.0) / ${heating_rate}}'  # ramp duration (300 K
 # imbalance between trapping and detrapping rates.
 # Since TDS output is normalized, absolute concentrations don't matter.
 C0_trapped = 1.0   # initial trapped concentration (arb. units, uniform)
-C0_mobile = '${fparse 40 * alpha_r * exp(-E_dt / T_start) * C0_trapped / (alpha_t * exp(-E_t / T_start) * Ct0)}'
+C0_mobile = '${fparse alpha_r * exp(-E_dt / T_start) * C0_trapped / (alpha_t * exp(-E_t / T_start) * Ct0)}'
 
 [Mesh]
   type = GeneratedMesh
