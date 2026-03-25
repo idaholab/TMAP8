@@ -12,7 +12,7 @@
     lower_bound = 7.0
     upper_bound = 10.0
   []
-  [E_t_eV_dist]
+  [epsilon_t_eV_dist]
     type = Uniform
     lower_bound = 0.8
     upper_bound = 1.3
@@ -22,7 +22,7 @@
     lower_bound = 5.0
     upper_bound = 8.0
   []
-  [E_dt_eV_dist]
+  [epsilon_r_eV_dist]
     type = Uniform
     lower_bound = 0.9
     upper_bound = 1.5
@@ -48,7 +48,7 @@
 [Samplers]
   [sample]
     type = GenericActiveLearningSampler
-    distributions = 'log10_alpha_t_dist E_t_eV_dist log10_alpha_r_dist E_dt_eV_dist log10_D0_dist E_d_eV_dist'
+    distributions = 'log10_alpha_t_dist epsilon_t_eV_dist log10_alpha_r_dist epsilon_r_eV_dist log10_D0_dist E_d_eV_dist'
     sorted_indices = 'conditional/sorted_indices'
     num_parallel_proposals = 5
     num_tries = 5000
@@ -85,7 +85,7 @@
     type = MultiAppSamplerControl
     multi_app = sub
     sampler = sample
-    param_names = 'log10_alpha_t E_t_eV log10_alpha_r E_dt_eV log10_D0 E_d_eV'
+    param_names = 'log10_alpha_t epsilon_t_eV log10_alpha_r epsilon_r_eV log10_D0 E_d_eV'
   []
 []
 

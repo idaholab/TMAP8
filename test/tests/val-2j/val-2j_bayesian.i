@@ -6,17 +6,17 @@
 
 # ============ Optimizable Parameters (log-space for prefactors) ============
 log10_alpha_t = '${fparse log10(4.2e8)}'    # ~8.623
-E_t_eV = 1.04
+epsilon_t_eV = 1.04
 log10_alpha_r = '${fparse log10(4.1e6)}'    # ~6.613
-E_dt_eV = 1.19
+epsilon_r_eV = 1.19
 log10_D0 = '${fparse log10(6.9e-7)}'        # ~-6.161
 E_d_eV = 1.07
 
 # ============ Derived Physical Parameters ============
 alpha_t = '${fparse pow(10, log10_alpha_t)}'
-E_t = '${fparse E_t_eV * 1.602176634e-19 / 1.380649e-23}'
+epsilon_t = '${fparse epsilon_t_eV * 1.602176634e-19 / 1.380649e-23}'
 alpha_r = '${fparse pow(10, log10_alpha_r)}'
-E_dt = '${fparse E_dt_eV * 1.602176634e-19 / 1.380649e-23}'
+epsilon_r = '${fparse epsilon_r_eV * 1.602176634e-19 / 1.380649e-23}'
 D0_m2s = '${fparse pow(10, log10_D0)}'
 D0 = '${fparse D0_m2s * 1e12}'  # m^2/s -> um^2/s
 E_d = '${fparse E_d_eV * 1.602176634e-19 / 1.380649e-23}'
@@ -44,7 +44,7 @@ end_time = '${fparse (900.0 - 300.0) / ${heating_rate}}'
 
 # ============ Initial Conditions ============
 C0_trapped = 1.0
-C0_mobile = '${fparse alpha_r * exp(-E_dt / T_start) * C0_trapped / (alpha_t * exp(-E_t / T_start) * Ct0)}'
+C0_mobile = '${fparse alpha_r * exp(-epsilon_r / T_start) * C0_trapped / (alpha_t * exp(-epsilon_t / T_start) * Ct0)}'
 
 # ============ Pre-computed Normalized Experimental Values ============
 # From Kobayashi et al. (2015) Sample E, normalized by max release (7.123)
@@ -144,7 +144,7 @@ exp_norm_500 = 0.01
     variable = trapped
     mobile_concentration = mobile
     alpha_t = ${alpha_t}
-    trapping_energy = ${E_t}
+    trapping_energy = ${epsilon_t}
     N = ${N_lattice}
     Ct0 = 'Ct0_func'
     temperature = temperature
@@ -155,7 +155,7 @@ exp_norm_500 = 0.01
     type = ReleasingNodalKernel
     variable = trapped
     alpha_r = ${alpha_r}
-    detrapping_energy = ${E_dt}
+    detrapping_energy = ${epsilon_r}
     temperature = temperature
   []
   [time_defect_density]

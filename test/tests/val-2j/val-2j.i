@@ -18,9 +18,9 @@ E_d = '${fparse ${units 1.07 eV -> J} / ${kB_J}}'  # diffusion activation energy
 
 # ============ O--center (hydroxyl) Trapping Parameters (Eq. 13, 21) ============
 alpha_t = '${units 4.2e8 1/s}'   # trapping prefactor (Eq. 21)
-E_t = '${fparse ${units 1.04 eV -> J} / ${kB_J}}'  # trapping energy (K) (Eq. 21)
+epsilon_t = '${fparse ${units 1.04 eV -> J} / ${kB_J}}'  # trapping energy (K) (Eq. 21)
 alpha_r = '${units 4.1e6 1/s}'   # detrapping prefactor (Eq. 13)
-E_dt = '${fparse ${units 1.19 eV -> J} / ${kB_J}}'  # detrapping energy (K) (Eq. 13)
+epsilon_r = '${fparse ${units 1.19 eV -> J} / ${kB_J}}'  # detrapping energy (K) (Eq. 13)
 
 # ============ Defect Annihilation Parameters (Eqs. 16-18) ============
 alpha_anneal = '${units 1.0e2 1/s}'  # annihilation prefactor (Eq. 18)
@@ -43,7 +43,7 @@ end_time = '${fparse (900.0 - 300.0) / ${heating_rate}}'  # ramp duration (300 K
 # imbalance between trapping and detrapping rates.
 # Since TDS output is normalized, absolute concentrations don't matter.
 C0_trapped = 1.0   # initial trapped concentration (arb. units, uniform)
-C0_mobile = '${fparse alpha_r * exp(-E_dt / T_start) * C0_trapped / (alpha_t * exp(-E_t / T_start) * Ct0)}'
+C0_mobile = '${fparse alpha_r * exp(-epsilon_r / T_start) * C0_trapped / (alpha_t * exp(-epsilon_t / T_start) * Ct0)}'
 
 [Mesh]
   type = GeneratedMesh
@@ -117,7 +117,7 @@ C0_mobile = '${fparse alpha_r * exp(-E_dt / T_start) * C0_trapped / (alpha_t * e
     variable = trapped
     mobile_concentration = mobile
     alpha_t = ${alpha_t}
-    trapping_energy = ${E_t}
+    trapping_energy = ${epsilon_t}
     N = ${N_lattice}
     Ct0 = 'Ct0_func'
     temperature = temperature
@@ -128,7 +128,7 @@ C0_mobile = '${fparse alpha_r * exp(-E_dt / T_start) * C0_trapped / (alpha_t * e
     type = ReleasingNodalKernel
     variable = trapped
     alpha_r = ${alpha_r}
-    detrapping_energy = ${E_dt}
+    detrapping_energy = ${epsilon_r}
     temperature = temperature
   []
   # --- Defect annihilation ODE: dD_id/dt = -k_anneal * D_id ---
