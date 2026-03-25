@@ -1,75 +1,45 @@
 # This input file adds the trapping sites 2 for validation case val-2f.
 # It is included in val-2f.i
 
-[Variables]
-  [trapped_2]
-    order = FIRST
-    family = LAGRANGE
-  []
-[]
-
 [Bounds]
   [trapped_2_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy
     bounded_variable = trapped_2
     bound_type = lower
-    bound_value = '${fparse -1e-20}'
-  []
-[]
-
-[Kernels]
-  # trapping 2 kernel
-  [coupled_time_trap_2]
-    type = ADCoefCoupledTimeDerivative
-    variable = deuterium_concentration_W
-    v = trapped_2
-    coef = ${trap_per_free_2}
-  []
-[]
-
-[NodalKernels]
-  # Second traps
-  [time_2]
-    type = TimeDerivativeNodalKernel
-    variable = trapped_2
-  []
-  [trapping_2]
-    type = TrappingNodalKernel
-    variable = trapped_2
-    mobile_concentration = deuterium_concentration_W
-    alpha_t = '${trapping_prefactor_2}'
-    trapping_energy = '${trapping_energy_2}'
-    N = '${tungsten_density}'
-    Ct0 = 'trap_distribution_function_2'
-    temperature = 'temperature'
-    trap_per_free = ${trap_per_free_2}
-  []
-  [release_2]
-    type = ReleasingNodalKernel
-    variable = trapped_2
-    alpha_r = '${detrapping_prefactor_2}'
-    detrapping_energy = '${detrapping_energy_2}'
-    temperature = 'temperature'
+    bound_value = 0
   []
 []
 
 [Functions]
   [trap_distribution_function_2]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_2} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
+    expression = '${trapping_site_fraction_2} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
   []
   [trap_distribution_function_2_inf]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_2_inf} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
+    expression = '${trapping_site_fraction_2_inf} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
   []
 []
 
-[Materials]
-  [trap_distribution_function_2]
-    type = GenericFunctionMaterial
-    prop_names = trap_distribution_function_2
-    prop_values = trap_distribution_function_2
+[Physics]
+  [SpeciesTrapping]
+    [trapping_2]
+      species = 'trapped_2'
+      species_scaling_factors = '1'
+      species_initial_concentrations = '0'
+      mobile = 'deuterium_concentration_W'
+      dimensionless_trapping_rate = '${dimensionless_trapping_rate_2}'
+      trapping_energy = '${trapping_energy_2}'
+      N = ${tungsten_density}
+      Ct0 = 'trap_distribution_function_2'
+      trap_concentration_reference = '${trap_concentration_reference_2}'
+      mobile_concentration_reference = ${mobile_concentration_reference}
+      dimensionless_release_rate = '${dimensionless_release_rate_2}'
+      detrapping_energy = '${detrapping_energy_2}'
+      temperature = 'temperature'
+      dimensionless_species = true
+    []
   []
 []
 
@@ -81,7 +51,7 @@
   []
   [scaled_trapped_deuterium_2]
     type = ScalePostprocessor
-    scaling_factor = '${fparse ${trap_per_free_2} * ${units 1 m^2 -> mum^2}}'
+    scaling_factor = '${fparse trap_concentration_reference_2 * length_reference * ${units 1 m^2 -> mum^2}}'
     value = integral_trapped_concentration_2
   []
 []
