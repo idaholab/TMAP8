@@ -100,9 +100,33 @@ The mobile and trapped tritium concentrations are initialized at their local tra
        id=val-2j_comparison_e
        caption=Comparison of TMAP8 calculation with the experimental TDS data for Sample E (high defect density).
 
+## Parameter Optimization
+
+The agreement between the TMAP8 simulation and experimental data can be improved by optimizing the model parameters using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html). A batch Bayesian optimization approach [!citep](DHULIPALA2026102776) was applied to fit six key parameters — three Arrhenius pre-exponential factors (in log$_{10}$ space) and three activation energies — to the experimental TDS curve for Sample E. The optimization used Gaussian Process active learning with Expected Improvement acquisition, running 40 iterations with 5 parallel proposals per iteration.
+
+[val-2j_optimized_parameters] compares the reference values from [!cite](kobayashi2015developing) with the Bayesian-optimized parameters.
+
+!table id=val-2j_optimized_parameters caption=Reference and Bayesian-optimized parameter values.
+| Parameter | Reference | Optimized | Units |
+| --- | --- | --- | --- |
+| $D_0$ | 6.9 $\times 10^{-7}$ | 5.82 $\times 10^{-5}$ | m$^2$/s |
+| $E_d$ | 1.07 | 1.15 | eV |
+| $k_{t,0}$ | 4.2 $\times 10^{8}$ | 1.02 $\times 10^{8}$ | s$^{-1}$ |
+| $E_t$ | 1.04 | 0.99 | eV |
+| $k_{dt,0}$ | 4.1 $\times 10^{6}$ | 1.91 $\times 10^{5}$ | s$^{-1}$ |
+| $E_{dt}$ | 1.19 | 1.09 | eV |
+
+[val-2j_comparison_optimized] shows the comparison between TMAP8 with the optimized parameters and the experimental data. The optimized parameters significantly reduce the RMSPE compared to the reference parameters, demonstrating improved agreement with the experimental TDS spectrum. The optimized diffusivity pre-exponential ($D_0$) is approximately two orders of magnitude larger than the reference value, compensated by a slightly higher activation energy ($E_d$), which shifts the effective diffusion onset. The trapping and detrapping prefactors and energies are adjusted to better capture the shape and position of the high-temperature release peak.
+
+!media comparison_val-2j.py
+       image_name=val-2j_comparison_optimized.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2j_comparison_optimized
+       caption=Comparison of TMAP8 calculation with Bayesian-optimized parameters against the experimental TDS data for Sample E (high defect density).
+
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/val-2j.i], and the test specification is [/val-2j/tests].
+The input file for this case can be found at [/val-2j.i], the Bayesian optimization driver is [/bayesian_main_val2j.i], the Bayesian sub-app is [/val-2j_bayesian.i], and the test specification is [/val-2j/tests].
 
 !bibtex bibliography

@@ -15,27 +15,12 @@ else:
     gold_folder = "./gold"
 
 # ============================================================
-# Read simulation data
-# ============================================================
-
-# Sample E
-sim_e = pd.read_csv(os.path.join(gold_folder, "val-2j_out.csv"))
-sim_e_temp = sim_e["temperature_pp"]
-sim_e_release = np.abs(sim_e["release_rate"])
-
-# ============================================================
 # Read experimental data
 # ============================================================
 
 exp_e = pd.read_csv(os.path.join(gold_folder, "experiment_data_sample_e.csv"))
 exp_e_temp = exp_e["temperature (K)"].values
 exp_e_release = exp_e["release_rate (arb)"].values
-
-# ============================================================
-# Normalize curves by their respective max absolute value
-# ============================================================
-
-sim_e_norm = sim_e_release / sim_e_release.max()
 exp_e_norm = exp_e_release / np.max(np.abs(exp_e_release))
 
 
@@ -63,22 +48,23 @@ def compute_rmspe(sim_temp, sim_norm, exp_temp, exp_norm, threshold_frac=0.05):
 
 
 # ============================================================
-# RMSPE calculations
+# Figure 1: Reference parameters vs experiment
 # ============================================================
 
-rmspe_e = compute_rmspe(sim_e_temp, sim_e_norm, exp_e_temp, exp_e_norm)
+sim_ref = pd.read_csv(os.path.join(gold_folder, "val-2j_out.csv"))
+sim_ref_temp = sim_ref["temperature_pp"]
+sim_ref_release = np.abs(sim_ref["release_rate"])
+sim_ref_norm = sim_ref_release / sim_ref_release.max()
 
-# ============================================================
-# Plot – Sample E
-# ============================================================
+rmspe_ref = compute_rmspe(sim_ref_temp, sim_ref_norm, exp_e_temp, exp_e_norm)
 
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
 ax.plot(
-    sim_e_temp,
-    sim_e_norm,
+    sim_ref_temp,
+    sim_ref_norm,
     linestyle="-",
     label="TMAP8",
     color="tab:red",
@@ -102,7 +88,7 @@ ax.minorticks_on()
 ax.text(
     0.95,
     0.90,
-    f"RMSPE = {rmspe_e:.2f}%",
+    f"RMSPE = {rmspe_ref:.2f}%",
     fontweight="bold",
     transform=ax.transAxes,
     ha="right",
@@ -110,4 +96,58 @@ ax.text(
 plt.savefig("val-2j_comparison_sample_e.png", bbox_inches="tight", dpi=300)
 plt.close(fig)
 
-print(f"Sample E RMSPE = {rmspe_e:.2f}%")
+# ============================================================
+# Figure 2: Optimized parameters vs experiment
+# ============================================================
+
+sim_opt = pd.read_csv(os.path.join(gold_folder, "optimal_bayesian_params_out.csv"))
+sim_opt_temp = sim_opt["temperature_pp"]
+sim_opt_release = np.abs(sim_opt["release_rate"])
+sim_opt_norm = sim_opt_release / sim_opt_release.max()
+
+rmspe_opt = compute_rmspe(sim_opt_temp, sim_opt_norm, exp_e_temp, exp_e_norm)
+
+fig = plt.figure(figsize=[6.5, 5.5])
+gs = gridspec.GridSpec(1, 1)
+ax = fig.add_subplot(gs[0])
+
+ax.plot(
+    sim_opt_temp,
+    sim_opt_norm,
+    linestyle="-",
+    label="TMAP8 (optimized)",
+    color="tab:red",
+)
+ax.plot(
+    exp_e_temp,
+    exp_e_norm,
+    marker="o",
+    linestyle="None",
+    markerfacecolor="none",
+    markeredgecolor="k",
+    label="Experimental (Sample E)",
+)
+
+ax.set_xlabel("Temperature (K)")
+ax.set_ylabel("Normalized tritium release rate (-)")
+ax.set_xlim(300, 900)
+ax.legend(loc="best")
+ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
+ax.minorticks_on()
+ax.text(
+    0.95,
+    0.90,
+    f"RMSPE = {rmspe_opt:.2f}%",
+    fontweight="bold",
+    transform=ax.transAxes,
+    ha="right",
+)
+plt.savefig("val-2j_comparison_optimized.png", bbox_inches="tight", dpi=300)
+plt.close(fig)
+
+# ============================================================
+# Print RMSPE values
+# ============================================================
+
+print(f"Reference parameters RMSPE = {rmspe_ref:.2f}%")
+print(f"Optimized parameters RMSPE = {rmspe_opt:.2f}%")

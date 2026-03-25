@@ -1,0 +1,6 @@
+alpha_t = '${units 1.018252e+08 1/s}'
+E_t = '${fparse ${units 0.989543 eV -> J} / ${kB_J}}'
+alpha_r = '${units 1.912501e+05 1/s}'
+E_dt = '${fparse ${units 1.090004 eV -> J} / ${kB_J}}'
+D0 = '${units 5.819663e-05 m^2/s -> mum^2/s}'
+E_d = '${fparse ${units 1.151703 eV -> J} / ${kB_J}}'
