@@ -8,7 +8,6 @@
 
 #include "SpeciesTrappingPhysics.h"
 #include "ActionComponent.h"
-#include "Function.h"
 #include "MooseUtils.h"
 #include "FEProblemBase.h"
 
@@ -506,9 +505,7 @@ SpeciesTrappingPhysics::addFEKernels()
       const auto species_name = getSpeciesVariableName(c_i, s_j);
       const auto mobile_species_name = _mobile_species_names[c_i][s_j];
 
-      // Time derivative: plain TimeDerivativeNodalKernel suffices for both paths:
-      // - dimensionless path: variable is Ct_hat (O(1)), so dCt_hat/dt is correct as-is
-      // - physical path: variable is C_t, no per-row scaling is applied here
+      // Time derivative
       if (isTransient())
       {
         const std::string kernel_type = "TimeDerivativeNodalKernel";
