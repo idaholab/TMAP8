@@ -10,6 +10,9 @@
 
 #include "TrappingNodalKernelBase.h"
 
+/**
+ * Trapping NodalKernel for trapped-species concentrations in physical units.
+ */
 class TrappingNodalKernel : public TrappingNodalKernelBase
 {
 public:

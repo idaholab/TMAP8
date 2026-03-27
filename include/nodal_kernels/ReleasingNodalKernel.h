@@ -10,6 +10,9 @@
 
 #include "ReleasingNodalKernelBase.h"
 
+/**
+ * Releasing NodalKernel for trapped-species concentrations in physical units.
+ */
 class ReleasingNodalKernel : public ReleasingNodalKernelBase
 {
 public:
