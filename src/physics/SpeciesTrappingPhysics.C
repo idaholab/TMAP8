@@ -635,15 +635,13 @@ SpeciesTrappingPhysics::addFEKernels()
 
       // Coupling of dC_t_i/dt into the mobile species conservation equation.
       {
-        const std::string kernel_type = _use_dimensionless_species ? "FactoredCoupledTimeDerivative"
-                                                                   : "ScaledCoupledTimeDerivative";
+        const std::string kernel_type = "ScaledCoupledTimeDerivative";
         auto params = _factory.getValidParams(kernel_type);
         assignBlocks(params, blocks);
         params.set<NonlinearVariableName>("variable") = mobile_species_name;
         params.set<std::vector<VariableName>>("v") = {species_name};
         if (_use_dimensionless_species)
           // Dimensionless path: add (C_t_ref_i / C_m_ref) * dĈ_t_i/dt.
-          // FactoredCoupledTimeDerivative applies no equation-level scaling.
           params.set<Real>("factor") =
               trapConcentrationReference(c_i, s_j) / mobileConcentrationReference(c_i);
         else
