@@ -105,10 +105,8 @@ TrappingNodalKernelDimensionless::computeQpResidual()
     empty_trapping_sites -=
         (*_other_trapped_concentrations[j])[_qp] * _other_trap_concentration_references[j];
 
-  const Real residual =
-      -_dimensionless_trapping_rate * std::exp(-_trapping_energy / _temperature[_qp]) *
-      (empty_trapping_sites / _trap_concentration_reference) * _mobile_concentration[_qp];
-  return residual;
+  return -_dimensionless_trapping_rate * std::exp(-_trapping_energy / _temperature[_qp]) *
+         (empty_trapping_sites / _trap_concentration_reference) * _mobile_concentration[_qp];
 }
 
 void

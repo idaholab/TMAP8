@@ -38,14 +38,7 @@ ReleasingNodalKernelDimensionless::ReleasingNodalKernelDimensionless(
 Real
 ReleasingNodalKernelDimensionless::computeQpResidual()
 {
-  const Real residual =
-      _dimensionless_release_rate * std::exp(-_detrapping_energy / _temperature[_qp]) * _u[_qp];
-
-  mooseAssert(residual >= 0,
-              "ReleasingNodalKernelDimensionless returned a negative residual, which is not "
-              "physically expected for a release source.");
-
-  return residual;
+  return _dimensionless_release_rate * std::exp(-_detrapping_energy / _temperature[_qp]) * _u[_qp];
 }
 
 Real
