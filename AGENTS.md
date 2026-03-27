@@ -1,7 +1,7 @@
 # AGENTS.md
 
 ## Environment
-- Use the MOOSE conda environment (`conda activate moose`)
+- Ask the user if you need to load a MOOSE conda environment, and if so, what the name of the conda environment is
 - If `./tmap8-opt` or `run_tests` throws an error, stop and ask the user
 - Pre-commit hooks handle all formatting and input file validation on every `git commit` — do not invoke `clang-format`, `black`, or `hit format` manually
 - `moose/framework/contrib/hit/hit check <file>.i` is available to validate input files during development — use it before committing
