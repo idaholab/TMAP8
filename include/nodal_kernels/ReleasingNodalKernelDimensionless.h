@@ -20,7 +20,6 @@
  * where k_r_hat = t_ref * alpha_r.
  *
  * This is trivially dimensionless (O(k_r_hat)) because Ct_hat is O(1).
- * No TMAPScaling / scaleResidual is used.
  */
 class ReleasingNodalKernelDimensionless : public NodalKernel
 {

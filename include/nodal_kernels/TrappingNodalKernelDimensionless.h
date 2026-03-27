@@ -38,7 +38,7 @@ typedef DualNumber<Real, DynamicSparseNumberArray<Real, unsigned int>> LocalDN;
  *   - C_t_ref = trap_concentration_reference parameter
  *   - k_t_hat = t_ref * alpha_t * C_m_ref / N
  *
- * No TMAPScaling / scaleResidual is used. The residual is naturally O(k_t_hat).
+ * The residual is naturally O(k_t_hat).
  */
 class TrappingNodalKernelDimensionless : public NodalKernel
 {
