@@ -3,12 +3,6 @@
 # Dark, J., Delaporte-Mathurin, R., Schwarz-Selinger, T., Hodille, E. A., Mougenot, J.,
 # Charles, Y., & Grisolia, C. (2024). Modelling neutron damage effects on tritium transport
 # in tungsten. Nuclear Fusion, 64(8), 086026.
-#
-# Unit system:
-# - length: micrometers (mum)
-# - time: seconds (s)
-# - concentration: at/mum^3
-# - inventory/flux outputs are rescaled to at/m^2 and at/m^2/s
 
 !include parameters_val-2f.params
 !include val-2f_trapping_intrinsic.i
