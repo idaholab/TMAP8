@@ -19,7 +19,8 @@
  *
  * where k_r_hat = t_ref * alpha_r.
  *
- * This is trivially dimensionless (O(k_r_hat)) because Ct_hat is O(1).
+ * The quadrature point residual should be dimensionless and O(k_r_hat) because Ct_hat should be
+ * dimensionless and O(1).
  */
 class ReleasingNodalKernelDimensionless : public NodalKernel
 {
