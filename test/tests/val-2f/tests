@@ -59,36 +59,32 @@
     max_time = 3600
   []
   [val-2f_inventory_rmspe]
-    type = PythonUnitTest
-    input = test_val_2f_rmspe.py
-    test_case = TestVal2fRMSPE.test_inventory_rmspe
+    type = RecoverableRunCommand
+    command = 'python3 -m unittest -v test_val_2f_rmspe.TestVal2fRMSPE.test_inventory_rmspe'
     heavy = true
     prereq = val-2f_heavy_csv
     requirement = 'The system shall maintain total deuterium inventory during val-2f desorption with less than 0.02 percent RMSPE.'
     required_python_packages = 'numpy pandas os'
   []
   [val-2f_inventory_rmspe_inf_recombination]
-    type = PythonUnitTest
-    input = test_val_2f_rmspe.py
-    test_case = TestVal2fRMSPE.test_inventory_rmspe_inf_recombination
+    type = RecoverableRunCommand
+    command = 'python3 -m unittest -v test_val_2f_rmspe.TestVal2fRMSPE.test_inventory_rmspe_inf_recombination'
     heavy = true
     prereq = val-2f_heavy_csv_inf_recombination
     requirement = 'The system shall maintain total deuterium inventory during infinite recombination val-2f desorption with less than 0.02 percent RMSPE.'
     required_python_packages = 'numpy pandas os'
   []
   [val-2f_flux_rmspe]
-    type = PythonUnitTest
-    input = test_val_2f_rmspe.py
-    test_case = TestVal2fRMSPE.test_default_flux_rmspe
+    type = RecoverableRunCommand
+    command = 'python3 -m unittest -v test_val_2f_rmspe.TestVal2fRMSPE.test_default_flux_rmspe'
     heavy = true
     prereq = val-2f_heavy_csv
     requirement = 'The system shall reproduce the finite recombination val-2f deuterium desorption flux with less than 25 percent RMSPE against the experimental data.'
     required_python_packages = 'numpy pandas os'
   []
   [val-2f_flux_rmspe_inf_recombination]
-    type = PythonUnitTest
-    input = test_val_2f_rmspe.py
-    test_case = TestVal2fRMSPE.test_inf_recombination_flux_rmspe
+    type = RecoverableRunCommand
+    command = 'python3 -m unittest -v test_val_2f_rmspe.TestVal2fRMSPE.test_inf_recombination_flux_rmspe'
     heavy = true
     prereq = val-2f_heavy_csv_inf_recombination
     requirement = 'The system shall reproduce the infinite recombination val-2f deuterium desorption flux with less than 13 percent RMSPE against the experimental data.'
