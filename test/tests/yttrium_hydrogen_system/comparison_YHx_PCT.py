@@ -1,11 +1,15 @@
-# Import Required Libraries
-# Import the necessary libraries, including pandas.
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from mpl_toolkits.mplot3d import Axes3D
 import os
+
+from yhx_pct_metrics import (
+    atom_ratio_eq_upper_func,
+    compute_prediction_rmspe,
+    load_prediction_points,
+    p0_lim_func,
+)
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
 script_folder = os.path.dirname(__file__)
@@ -114,15 +118,6 @@ average_plateau_pressures = [
 ]
 
 
-# Define fitting function
-def p0_lim_func(temperature):
-    return np.exp(
-        -26.1
-        + 3.88 * 10 ** (-2) * np.array(temperature)
-        - 9.7 * 10 ** (-6) * np.square(temperature)
-    )
-
-
 p0_lim = p0_lim_func(temperature_list)
 
 # Plot the fit along with the data from the plateau pressure as a function of temperature
@@ -156,19 +151,6 @@ plt.close(fig)
 
 
 # ============================================================================ #
-# Fit the high pressures as a function of temperature
-def atom_ratio_eq_upper_func(temperature, pressure):
-    return 2 - (
-        1
-        + np.exp(
-            21.6
-            - 0.0225 * temperature
-            + (-0.0445 + 7.18 * 10 ** (-4) * temperature)
-            * (np.log(pressure - p0_lim_func(temperature)))
-        )
-    ) ** (-1)
-
-
 # Create a meshgrid for the fit surface
 pressure_range = np.linspace(
     (min(list_expData[0].iloc[:, 1])), (max(list_expData[0].iloc[:, 1])), 100
@@ -186,62 +168,8 @@ if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
 else:  # if in test folder
     csv_folder = "./gold/"
 
-TMAP8_prediction_T1273_P3e3 = pd.read_csv(csv_folder + "YHx_PCT_T1273_P3e3_out.csv")
-TMAP8_prediction_T1173_P1e3 = pd.read_csv(csv_folder + "YHx_PCT_T1173_P1e3_out.csv")
-TMAP8_prediction_T1173_P1e4 = pd.read_csv(csv_folder + "YHx_PCT_T1173_P1e4_out.csv")
-TMAP8_prediction_T1173_P5e4 = pd.read_csv(csv_folder + "YHx_PCT_T1173_P5e4_out.csv")
-
-TMAP8_prediction_T1273_P3e3_temperature = TMAP8_prediction_T1273_P3e3[
-    "temperature"
-].iat[-1]
-TMAP8_prediction_T1273_P3e3_pressure = TMAP8_prediction_T1273_P3e3[
-    "pressure_H2_enclosure_1_at_interface"
-].iat[-1]
-TMAP8_prediction_T1273_P3e3_atomic_fraction = TMAP8_prediction_T1273_P3e3[
-    "atomic_fraction_H_enclosure_2_at_interface"
-].iat[-1]
-analytical_equation_T1273_P3e3_atomic_fraction = atom_ratio_eq_upper_func(
-    TMAP8_prediction_T1273_P3e3_temperature, TMAP8_prediction_T1273_P3e3_pressure
-)
-
-TMAP8_prediction_T1173_P1e3_temperature = TMAP8_prediction_T1173_P1e3[
-    "temperature"
-].iat[-1]
-TMAP8_prediction_T1173_P1e3_pressure = TMAP8_prediction_T1173_P1e3[
-    "pressure_H2_enclosure_1_at_interface"
-].iat[-1]
-TMAP8_prediction_T1173_P1e3_atomic_fraction = TMAP8_prediction_T1173_P1e3[
-    "atomic_fraction_H_enclosure_2_at_interface"
-].iat[-1]
-analytical_equation_T1173_P1e3_atomic_fraction = atom_ratio_eq_upper_func(
-    TMAP8_prediction_T1173_P1e3_temperature, TMAP8_prediction_T1173_P1e3_pressure
-)
-
-TMAP8_prediction_T1173_P1e4_temperature = TMAP8_prediction_T1173_P1e4[
-    "temperature"
-].iat[-1]
-TMAP8_prediction_T1173_P1e4_pressure = TMAP8_prediction_T1173_P1e4[
-    "pressure_H2_enclosure_1_at_interface"
-].iat[-1]
-TMAP8_prediction_T1173_P1e4_atomic_fraction = TMAP8_prediction_T1173_P1e4[
-    "atomic_fraction_H_enclosure_2_at_interface"
-].iat[-1]
-analytical_equation_T1173_P1e4_atomic_fraction = atom_ratio_eq_upper_func(
-    TMAP8_prediction_T1173_P1e4_temperature, TMAP8_prediction_T1173_P1e4_pressure
-)
-
-TMAP8_prediction_T1173_P5e4_temperature = TMAP8_prediction_T1173_P5e4[
-    "temperature"
-].iat[-1]
-TMAP8_prediction_T1173_P5e4_pressure = TMAP8_prediction_T1173_P5e4[
-    "pressure_H2_enclosure_1_at_interface"
-].iat[-1]
-TMAP8_prediction_T1173_P5e4_atomic_fraction = TMAP8_prediction_T1173_P5e4[
-    "atomic_fraction_H_enclosure_2_at_interface"
-].iat[-1]
-analytical_equation_T1173_P5e4_atomic_fraction = atom_ratio_eq_upper_func(
-    TMAP8_prediction_T1173_P5e4_temperature, TMAP8_prediction_T1173_P5e4_pressure
-)
+prediction_points = load_prediction_points(csv_folder)
+prediction_rmspe = compute_prediction_rmspe(csv_folder)
 
 
 # ============================================================================ #
@@ -334,74 +262,31 @@ for i, temperature in enumerate(temperature_list):
         )
 
 # plot the TMAP8 predictions
-error = (
-    abs(
-        TMAP8_prediction_T1273_P3e3_atomic_fraction
-        - analytical_equation_T1273_P3e3_atomic_fraction
+for point in prediction_points:
+    error = abs(point["prediction"] - point["reference"]) / point["reference"] * 100
+    plt.scatter(
+        point["pressure"],
+        point["prediction"],
+        label=(
+            f'{point["temperature"]} K and {point["pressure"]:.2f} Pa prediction '
+            f"(error: {error:.2f} %)"
+        ),
+        marker="x",
+        color="k",
+        s=90,
     )
-    / analytical_equation_T1273_P3e3_atomic_fraction
-    * 100
-)
-plt.scatter(
-    TMAP8_prediction_T1273_P3e3_pressure,
-    TMAP8_prediction_T1273_P3e3_atomic_fraction,
-    label=f"{TMAP8_prediction_T1273_P3e3_temperature} K and {TMAP8_prediction_T1273_P3e3_pressure:.2f} Pa prediction (error: {error:.2f} %)",
-    marker="x",
-    color="k",
-    s=90,
-)
-error = (
-    abs(
-        TMAP8_prediction_T1173_P1e3_atomic_fraction
-        - analytical_equation_T1173_P1e3_atomic_fraction
-    )
-    / analytical_equation_T1173_P1e3_atomic_fraction
-    * 100
-)
-plt.scatter(
-    TMAP8_prediction_T1173_P1e3_pressure,
-    TMAP8_prediction_T1173_P1e3_atomic_fraction,
-    label=f"{TMAP8_prediction_T1173_P1e3_temperature} K and {TMAP8_prediction_T1173_P1e3_pressure:.2f} Pa prediction (error: {error:.2f} %)",
-    marker="x",
-    color="k",
-    s=90,
-)
-error = (
-    abs(
-        TMAP8_prediction_T1173_P1e4_atomic_fraction
-        - analytical_equation_T1173_P1e4_atomic_fraction
-    )
-    / analytical_equation_T1173_P1e4_atomic_fraction
-    * 100
-)
-plt.scatter(
-    TMAP8_prediction_T1173_P1e4_pressure,
-    TMAP8_prediction_T1173_P1e4_atomic_fraction,
-    label=f"{TMAP8_prediction_T1173_P1e4_temperature} K and {TMAP8_prediction_T1173_P1e4_pressure:.2f} Pa prediction (error: {error:.2f} %)",
-    marker="x",
-    color="k",
-    s=90,
-)
-error = (
-    abs(
-        TMAP8_prediction_T1173_P5e4_atomic_fraction
-        - analytical_equation_T1173_P5e4_atomic_fraction
-    )
-    / analytical_equation_T1173_P5e4_atomic_fraction
-    * 100
-)
-plt.scatter(
-    TMAP8_prediction_T1173_P5e4_pressure,
-    TMAP8_prediction_T1173_P5e4_atomic_fraction,
-    label=f"{TMAP8_prediction_T1173_P5e4_temperature} K and {TMAP8_prediction_T1173_P5e4_pressure:.2f} Pa prediction (error: {error:.2f} %)",
-    marker="x",
-    color="k",
-    s=90,
-)
 
 plt.xlabel("Partial Pressure (Pa)")
 plt.ylabel("Atom Ratio (-)")
 plt.xscale("log")
+plt.text(
+    0.02,
+    0.98,
+    f"TMAP8 prediction RMSPE = {prediction_rmspe:.3f} %",
+    transform=plt.gca().transAxes,
+    va="top",
+    bbox={"facecolor": "white", "alpha": 0.8, "edgecolor": "none"},
+)
 plt.legend(bbox_to_anchor=(1.1, 1.05))
 plt.grid(True)
 plt.tight_layout()
@@ -414,3 +299,4 @@ print("temperatures (K) and RMSE values: ", RMSE_values)
 # print the average RMSE value
 average_rmse = np.mean(list(RMSE_values.values()))
 print(f"Average RMSE: {average_rmse:.2f}")
+print(f"TMAP8 prediction RMSPE: {prediction_rmspe:.6f} %")
