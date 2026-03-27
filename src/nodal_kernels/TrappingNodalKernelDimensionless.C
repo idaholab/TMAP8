@@ -84,7 +84,7 @@ TrappingNodalKernelDimensionless::TrappingNodalKernelDimensionless(
   // var_numbers: [other_trap_0, ..., other_trap_{n-1}, this_trap, mobile]
   _var_numbers.resize(2 + _n_other_concs);
 
-  for (MooseIndex(_n_other_concs) i = 0; i < _n_other_concs; ++i)
+  for (const auto i : make_range(_n_other_concs))
   {
     _other_trapped_concentrations[i] =
         &coupledValue("other_trapped_concentration_variables", /*comp=*/i);
@@ -101,7 +101,7 @@ TrappingNodalKernelDimensionless::computeQpResidual()
   //   N * Ct0(x) - C_t_ref * Ct_hat - sum_j C_t_ref_j * Ct_hat_j
   Real empty_trapping_sites = _Ct0.value(_t, (*_current_node)) * _N;
   empty_trapping_sites -= _u[_qp] * _trap_concentration_reference;
-  for (MooseIndex(_n_other_concs) j = 0; j < _n_other_concs; ++j)
+  for (const auto j : make_range(_n_other_concs))
     empty_trapping_sites -=
         (*_other_trapped_concentrations[j])[_qp] * _other_trap_concentration_references[j];
 
@@ -121,7 +121,7 @@ TrappingNodalKernelDimensionless::ADHelper()
   LocalDN empty_trapping_sites = _Ct0.value(_t, (*_current_node)) * _N;
 
   // Other traps: dimensionless Ct_hat_j, multiplied by C_t_ref_j to get physical units
-  for (MooseIndex(_n_other_concs) i = 0; i < _n_other_concs; ++i)
+  for (const auto i : make_range(_n_other_concs))
   {
     LocalDN other_dn = (*_other_trapped_concentrations[i])[_qp];
     other_dn.derivatives().insert(_var_numbers[i]) = 1.;

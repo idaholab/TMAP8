@@ -57,7 +57,7 @@ TrappingNodalKernel::TrappingNodalKernel(const InputParameters & parameters)
   // One size bigger than trapped_concentrations because we have to include the mobile concentration
   _var_numbers.resize(2 + _n_other_concs);
 
-  for (MooseIndex(_n_other_concs) i = 0; i < _n_other_concs; ++i)
+  for (const auto i : make_range(_n_other_concs))
   {
     _trapped_concentrations[i] = &coupledValue("other_trapped_concentration_variables", /*comp=*/i);
     _var_numbers[i] = coupled("other_trapped_concentration_variables", i);
