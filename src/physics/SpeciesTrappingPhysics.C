@@ -224,12 +224,6 @@ SpeciesTrappingPhysics::dimensionlessTrappingRate(unsigned int c_i, unsigned int
 }
 
 Real
-SpeciesTrappingPhysics::timeReference(unsigned int /*c_i*/) const
-{
-  return 1.0;
-}
-
-Real
 SpeciesTrappingPhysics::dimensionlessReleaseRate(unsigned int c_i, unsigned int s_j)
 {
   mooseAssert(c_i < _dimensionless_release_rates.size(),
