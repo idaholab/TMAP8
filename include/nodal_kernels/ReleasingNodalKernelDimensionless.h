@@ -12,14 +12,14 @@
 
 /**
  * Releasing NodalKernel for a dimensionless trapped-species variable
- * Ĉ_t = C_t / C_t_ref.
+ * Ct_hat = C_t / C_t_ref.
  *
  * The residual is:
- *   R = +k_r_hat · exp(-E_r / T) · Ĉ_t
+ *   R = +k_r_hat * exp(-E_r / T) * Ct_hat
  *
- * where k_r_hat = t_ref · α_r.
+ * where k_r_hat = t_ref * alpha_r.
  *
- * This is trivially dimensionless (O(k_r_hat)) because Ĉ_t is O(1).
+ * This is trivially dimensionless (O(k_r_hat)) because Ct_hat is O(1).
  * No TMAPScaling / scaleResidual is used.
  */
 class ReleasingNodalKernelDimensionless : public NodalKernel

@@ -16,9 +16,9 @@ ReleasingNodalKernelDimensionless::validParams()
   InputParameters params = NodalKernel::validParams();
   params.addClassDescription(
       "Implements the release source term for a dimensionless trapped-species variable "
-      "Ĉ_t = C_t / C_t_ref. "
-      "The residual R = +k_r_hat · exp(-E_r / T) · Ĉ_t is naturally O(k_r_hat) "
-      "because Ĉ_t is O(1). No equation scaling is applied.");
+      "Ct_hat = C_t / C_t_ref. "
+      "The residual R = +k_r_hat * exp(-E_r / T) * Ct_hat is naturally O(k_r_hat) "
+      "because Ct_hat is O(1). No equation scaling is applied.");
   params.addRequiredParam<Real>("dimensionless_release_rate",
                                 "Dimensionless release rate k_r_hat = t_ref * alpha_r.");
   params.addParam<Real>("detrapping_energy", 0, "The detrapping activation energy (K)");

@@ -17,7 +17,7 @@ TrappingNodalKernelDimensionless::validParams()
   InputParameters params = NodalKernel::validParams();
   params.addClassDescription(
       "Implements the trapping source term for a dimensionless trapped-species variable "
-      "Ĉ_t = C_t / C_t_ref. "
+      "Ct_hat = C_t / C_t_ref. "
       "The mobile concentration may be either physical or dimensionless. "
       "No equation scaling is applied; the residual is O(k_t_hat).");
   params.addRequiredParam<Real>(
@@ -31,18 +31,19 @@ TrappingNodalKernelDimensionless::validParams()
   params.addRequiredParam<Real>(
       "trap_concentration_reference",
       "Reference concentration C_t_ref for this trap species (same units as N). "
-      "Typically set to N * Ct0_max. The variable stores Ĉ_t = C_t / C_t_ref.");
+      "Typically set to N * Ct0_max. The variable stores Ct_hat = C_t / C_t_ref.");
   params.addRequiredCoupledVar(
       "mobile_concentration",
       "The variable representing the dimensionless mobile concentration of solute particles.");
   params.addCoupledVar("other_trapped_concentration_variables",
-                       "Dimensionless trapped-concentration variables (Ĉ_t_j = C_t_j / C_t_ref_j) "
+                       "Dimensionless trapped-concentration variables (Ct_hat_j = C_t_j / "
+                       "C_t_ref_j) "
                        "for other trap species that compete for the same trapping sites.");
   params.addParam<std::vector<Real>>(
       "other_trap_concentration_references",
       {},
       "Reference concentrations C_t_ref_j for each variable listed in "
-      "other_trapped_concentration_variables, used to convert Ĉ_t_j back to physical C_t_j "
+      "other_trapped_concentration_variables, used to convert Ct_hat_j back to physical C_t_j "
       "when computing available trapping sites. Must match in length.");
   params.addRequiredCoupledVar("temperature", "The temperature (K)");
   return params;
@@ -97,7 +98,7 @@ Real
 TrappingNodalKernelDimensionless::computeQpResidual()
 {
   // Physical empty trapping sites for this trap type:
-  //   N * Ct0(x) - C_t_ref * Ĉ_t - sum_j C_t_ref_j * Ĉ_t_j
+  //   N * Ct0(x) - C_t_ref * Ct_hat - sum_j C_t_ref_j * Ct_hat_j
   Real empty_trapping_sites = _Ct0.value(_t, (*_current_node)) * _N;
   empty_trapping_sites -= _u[_qp] * _trap_concentration_reference;
   for (MooseIndex(_n_other_concs) j = 0; j < _n_other_concs; ++j)
@@ -121,7 +122,7 @@ TrappingNodalKernelDimensionless::ADHelper()
   // Compute empty trapping sites with dual-number tracking for AD Jacobian
   LocalDN empty_trapping_sites = _Ct0.value(_t, (*_current_node)) * _N;
 
-  // Other traps: dimensionless Ĉ_t_j, multiplied by C_t_ref_j to get physical units
+  // Other traps: dimensionless Ct_hat_j, multiplied by C_t_ref_j to get physical units
   for (MooseIndex(_n_other_concs) i = 0; i < _n_other_concs; ++i)
   {
     LocalDN other_dn = (*_other_trapped_concentrations[i])[_qp];
@@ -129,12 +130,12 @@ TrappingNodalKernelDimensionless::ADHelper()
     empty_trapping_sites -= other_dn * _other_trap_concentration_references[i];
   }
 
-  // This trap: variable is dimensionless Ĉ_t, multiply by C_t_ref to get physical
+  // This trap: variable is dimensionless Ct_hat, multiply by C_t_ref to get physical
   LocalDN this_trap_dn = _u[_qp];
   this_trap_dn.derivatives().insert(_var_numbers[_n_other_concs]) = 1.;
   empty_trapping_sites -= this_trap_dn * _trap_concentration_reference;
 
-  // Mobile concentration in dimensionless form Ĉ_m
+  // Mobile concentration in dimensionless form Cm_hat
   LocalDN mobile_dn = _mobile_concentration[_qp];
   mobile_dn.derivatives().insert(_var_numbers.back()) = 1.;
 

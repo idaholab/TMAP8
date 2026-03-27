@@ -533,9 +533,9 @@ SpeciesTrappingPhysics::addFEKernels()
       const auto species_name = getSpeciesVariableName(c_i, s_j);
       const auto mobile_species_name = _mobile_species_names[c_i][s_j];
 
-      // Time derivative — plain TimeDerivativeNodalKernel suffices for both paths:
-      // • dimensionless path: variable IS Ĉ_t (O(1)), so dĈ_t/dt is correct as-is
-      // • physical path: variable IS C_t, no per-row scaling is applied here
+      // Time derivative: plain TimeDerivativeNodalKernel suffices for both paths:
+      // - dimensionless path: variable is Ct_hat (O(1)), so dCt_hat/dt is correct as-is
+      // - physical path: variable is C_t, no per-row scaling is applied here
       if (isTransient())
       {
         const std::string kernel_type = "TimeDerivativeNodalKernel";
@@ -600,7 +600,7 @@ SpeciesTrappingPhysics::addFEKernels()
             if (_use_dimensionless_species)
             {
               // Collect the reference concentration for each other trap species so the
-              // dimensionless kernel can convert Ĉ_t_j → physical C_t_j.
+              // dimensionless kernel can convert Ct_hat_j -> physical C_t_j.
               std::vector<Real> other_refs;
               other_refs.reserve(copy_species.size());
               for (unsigned int k = 0; k < _species[c_i].size(); ++k)
@@ -641,7 +641,7 @@ SpeciesTrappingPhysics::addFEKernels()
         params.set<NonlinearVariableName>("variable") = mobile_species_name;
         params.set<std::vector<VariableName>>("v") = {species_name};
         if (_use_dimensionless_species)
-          // Dimensionless path: add (C_t_ref_i / C_m_ref) * dĈ_t_i/dt.
+          // Dimensionless path: add (C_t_ref_i / C_m_ref) * dCt_hat_i/dt.
           params.set<Real>("factor") =
               trapConcentrationReference(c_i, s_j) / mobileConcentrationReference(c_i);
         else
