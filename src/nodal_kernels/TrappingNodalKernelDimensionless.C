@@ -7,14 +7,13 @@
 /************************************************************/
 
 #include "TrappingNodalKernelDimensionless.h"
-#include "Function.h"
 
 registerMooseObject("TMAP8App", TrappingNodalKernelDimensionless);
 
 InputParameters
 TrappingNodalKernelDimensionless::validParams()
 {
-  InputParameters params = NodalKernel::validParams();
+  InputParameters params = TrappingNodalKernelBase::validParams();
   params.addClassDescription(
       "Implements the trapping source term for a dimensionless trapped-species variable "
       "Ct_hat = C_t / C_t_ref. "
@@ -23,18 +22,10 @@ TrappingNodalKernelDimensionless::validParams()
   params.addRequiredParam<Real>(
       "dimensionless_trapping_rate",
       "Dimensionless trapping rate k_t_hat = t_ref * alpha_t * C_m_ref / N.");
-  params.addParam<Real>("trapping_energy", 0, "The trapping activation energy (K)");
-  params.addRequiredParam<Real>("N", "The atomic number density of the host material (1/m^3)");
-  params.addRequiredParam<FunctionName>(
-      "Ct0",
-      "The fraction of host sites that can contribute to trapping as a function of position (-)");
   params.addRequiredParam<Real>(
       "trap_concentration_reference",
       "Reference concentration C_t_ref for this trap species (same units as N). "
       "Typically set to N * Ct0_max. The variable stores Ct_hat = C_t / C_t_ref.");
-  params.addRequiredCoupledVar(
-      "mobile_concentration",
-      "The variable representing the dimensionless mobile concentration of solute particles.");
   params.addCoupledVar("other_trapped_concentration_variables",
                        "Dimensionless trapped-concentration variables (Ct_hat_j = C_t_j / "
                        "C_t_ref_j) "
@@ -45,117 +36,31 @@ TrappingNodalKernelDimensionless::validParams()
       "Reference concentrations C_t_ref_j for each variable listed in "
       "other_trapped_concentration_variables, used to convert Ct_hat_j back to physical C_t_j "
       "when computing available trapping sites. Must match in length.");
-  params.addRequiredCoupledVar("temperature", "The temperature (K)");
   return params;
 }
 
 TrappingNodalKernelDimensionless::TrappingNodalKernelDimensionless(
     const InputParameters & parameters)
-  : NodalKernel(parameters),
-    _dimensionless_trapping_rate(getParam<Real>("dimensionless_trapping_rate")),
-    _trapping_energy(getParam<Real>("trapping_energy")),
-    _Ct0(getFunction("Ct0")),
-    _N(getParam<Real>("N")),
-    _trap_concentration_reference(getParam<Real>("trap_concentration_reference")),
-    _mobile_concentration(coupledValue("mobile_concentration")),
-    _last_node(nullptr),
-    _temperature(coupledValue("temperature"))
+  : TrappingNodalKernelBase(parameters,
+                            parameters.get<Real>("dimensionless_trapping_rate"),
+                            parameters.get<Real>("trap_concentration_reference"))
 {
-  _n_other_concs = coupledComponents("other_trapped_concentration_variables");
-  _other_trap_concentration_references =
+  std::vector<Real> other_trap_concentration_references =
       getParam<std::vector<Real>>("other_trap_concentration_references");
 
-  if (!_other_trap_concentration_references.empty() &&
-      _other_trap_concentration_references.size() != _n_other_concs)
+  if (!other_trap_concentration_references.empty() &&
+      other_trap_concentration_references.size() != _n_other_concs)
     paramError("other_trap_concentration_references",
                "Length (",
-               _other_trap_concentration_references.size(),
+               other_trap_concentration_references.size(),
                ") must match the number of other_trapped_concentration_variables (",
                _n_other_concs,
                ").");
 
   // Default: treat each missing reference as 1.0 (physical units, backward compat)
-  if (_other_trap_concentration_references.empty() && _n_other_concs > 0)
-    _other_trap_concentration_references.assign(_n_other_concs, 1.0);
+  if (other_trap_concentration_references.empty() && _n_other_concs > 0)
+    other_trap_concentration_references.assign(_n_other_concs, 1.0);
 
-  // Resize to n_other_concs plus the concentration for this kernel's variable
-  _other_trapped_concentrations.resize(_n_other_concs);
-
-  // var_numbers: [other_trap_0, ..., other_trap_{n-1}, this_trap, mobile]
-  _var_numbers.resize(2 + _n_other_concs);
-
-  for (const auto i : make_range(_n_other_concs))
-  {
-    _other_trapped_concentrations[i] =
-        &coupledValue("other_trapped_concentration_variables", /*comp=*/i);
-    _var_numbers[i] = coupled("other_trapped_concentration_variables", i);
-  }
-  _var_numbers[_n_other_concs] = _var.number();
-  _var_numbers[_n_other_concs + 1] = coupled("mobile_concentration");
-}
-
-Real
-TrappingNodalKernelDimensionless::computeQpResidual()
-{
-  // Physical empty trapping sites for this trap type:
-  //   N * Ct0(x) - C_t_ref * Ct_hat - sum_j C_t_ref_j * Ct_hat_j
-  Real empty_trapping_sites = _Ct0.value(_t, (*_current_node)) * _N;
-  empty_trapping_sites -= _u[_qp] * _trap_concentration_reference;
-  for (const auto j : make_range(_n_other_concs))
-    empty_trapping_sites -=
-        (*_other_trapped_concentrations[j])[_qp] * _other_trap_concentration_references[j];
-
-  return -_dimensionless_trapping_rate * std::exp(-_trapping_energy / _temperature[_qp]) *
-         (empty_trapping_sites / _trap_concentration_reference) * _mobile_concentration[_qp];
-}
-
-void
-TrappingNodalKernelDimensionless::ADHelper()
-{
-  if (_current_node == _last_node)
-    return;
-
-  _last_node = _current_node;
-
-  // Compute empty trapping sites with dual-number tracking for AD Jacobian
-  LocalDN empty_trapping_sites = _Ct0.value(_t, (*_current_node)) * _N;
-
-  // Other traps: dimensionless Ct_hat_j, multiplied by C_t_ref_j to get physical units
-  for (const auto i : make_range(_n_other_concs))
-  {
-    LocalDN other_dn = (*_other_trapped_concentrations[i])[_qp];
-    other_dn.derivatives().insert(_var_numbers[i]) = 1.;
-    empty_trapping_sites -= other_dn * _other_trap_concentration_references[i];
-  }
-
-  // This trap: variable is dimensionless Ct_hat, multiply by C_t_ref to get physical
-  LocalDN this_trap_dn = _u[_qp];
-  this_trap_dn.derivatives().insert(_var_numbers[_n_other_concs]) = 1.;
-  empty_trapping_sites -= this_trap_dn * _trap_concentration_reference;
-
-  // Mobile concentration in dimensionless form Cm_hat
-  LocalDN mobile_dn = _mobile_concentration[_qp];
-  mobile_dn.derivatives().insert(_var_numbers.back()) = 1.;
-
-  _jacobian = -_dimensionless_trapping_rate * std::exp(-_trapping_energy / _temperature[_qp]) *
-              (empty_trapping_sites / _trap_concentration_reference) * mobile_dn;
-}
-
-Real
-TrappingNodalKernelDimensionless::computeQpJacobian()
-{
-  ADHelper();
-  return _jacobian.derivatives()[_var.number()];
-}
-
-Real
-TrappingNodalKernelDimensionless::computeQpOffDiagJacobian(unsigned int jvar)
-{
-  if (std::find(_var_numbers.begin(), _var_numbers.end(), jvar) != _var_numbers.end())
-  {
-    ADHelper();
-    return _jacobian.derivatives()[jvar];
-  }
-  else
-    return 0;
+  initializeOccupancyTracking(other_trap_concentration_references,
+                              getParam<Real>("trap_concentration_reference"));
 }

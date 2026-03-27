@@ -1,0 +1,39 @@
+/************************************************************/
+/*                DO NOT MODIFY THIS HEADER                 */
+/*   TMAP8: Tritium Migration Analysis Program, Version 8   */
+/*                                                          */
+/*   Copyright 2021 - 2025 Battelle Energy Alliance, LLC    */
+/*                   ALL RIGHTS RESERVED                    */
+/************************************************************/
+
+#include "ReleasingNodalKernelBase.h"
+
+InputParameters
+ReleasingNodalKernelBase::validParams()
+{
+  InputParameters params = NodalKernel::validParams();
+  params.addParam<Real>("detrapping_energy", 0, "The detrapping energy (K)");
+  params.addRequiredCoupledVar("temperature", "The temperature (K)");
+  return params;
+}
+
+ReleasingNodalKernelBase::ReleasingNodalKernelBase(const InputParameters & parameters,
+                                                   Real release_rate)
+  : NodalKernel(parameters),
+    _release_rate(release_rate),
+    _detrapping_energy(getParam<Real>("detrapping_energy")),
+    _temperature(coupledValue("temperature"))
+{
+}
+
+Real
+ReleasingNodalKernelBase::computeQpResidual()
+{
+  return _release_rate * std::exp(-_detrapping_energy / _temperature[_qp]) * _u[_qp];
+}
+
+Real
+ReleasingNodalKernelBase::computeQpJacobian()
+{
+  return _release_rate * std::exp(-_detrapping_energy / _temperature[_qp]);
+}

@@ -8,12 +8,20 @@
 
 #pragma once
 
-#include "TrappingNodalKernelBase.h"
+#include "NodalKernel.h"
 
-class TrappingNodalKernel : public TrappingNodalKernelBase
+class ReleasingNodalKernelBase : public NodalKernel
 {
 public:
-  TrappingNodalKernel(const InputParameters & parameters);
-
   static InputParameters validParams();
+
+protected:
+  ReleasingNodalKernelBase(const InputParameters & parameters, Real release_rate);
+
+  Real computeQpResidual() override;
+  Real computeQpJacobian() override;
+
+  const Real _release_rate;
+  const Real _detrapping_energy;
+  const VariableValue & _temperature;
 };

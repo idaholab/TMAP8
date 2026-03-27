@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "NodalKernel.h"
+#include "ReleasingNodalKernelBase.h"
 
 /**
  * Releasing NodalKernel for a dimensionless trapped-species variable
@@ -22,18 +22,10 @@
  * The quadrature point residual should be dimensionless and O(k_r_hat) because Ct_hat should be
  * dimensionless and O(1).
  */
-class ReleasingNodalKernelDimensionless : public NodalKernel
+class ReleasingNodalKernelDimensionless : public ReleasingNodalKernelBase
 {
 public:
   ReleasingNodalKernelDimensionless(const InputParameters & parameters);
 
   static InputParameters validParams();
-
-protected:
-  Real computeQpResidual() override;
-  Real computeQpJacobian() override;
-
-  const Real _dimensionless_release_rate;
-  const Real _detrapping_energy;
-  const VariableValue & _temperature;
 };
