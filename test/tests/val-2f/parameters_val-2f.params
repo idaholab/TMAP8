@@ -150,18 +150,11 @@ trapping_site_fraction_intrinsic = '${fparse trap_density_01dpa_intrinsic / tung
 trap_concentration_reference_intrinsic = '${fparse tungsten_density * 1e-11}'
 
 mobile_concentration_reference = '${fparse tungsten_density * 1e-12}'
-# `time_reference` is computed by taking the faster of:
-# - diffusion time L_ref^2 / D(T_ref)
-# - first-order reaction times 1 / k(T_ref) for release processes
-# For the current val-2f constants, diffusion is faster than the release kinetics at 370 K.
-# Based on the results, it's likely that the trapping characteristic time during implantation
-# is the fastest time scale since during that time we do not witness any non-trival concentrations
-# in the right of the domain
 length_reference = ${units 1 mum}
 time_reference = ${units 1 s}
 
 # Dimensionless trap rate groups: k_t_hat = alpha_t * C_m_ref / N * t_ref
-# (from nondimensionalizing ∂C_t/∂t = alpha_t/N * C_m * (N*Ct0 - C_t))
+# (from nondimensionalizing dC_t/dt = alpha_t/N * C_m * (N*Ct0 - C_t))
 dimensionless_trapping_rate_intrinsic = '${fparse trapping_prefactor_intrinsic * time_reference * mobile_concentration_reference / tungsten_density}'
 dimensionless_trapping_rate_1 = '${fparse trapping_prefactor_1 * time_reference * mobile_concentration_reference / tungsten_density}'
 dimensionless_trapping_rate_2 = '${fparse trapping_prefactor_2 * time_reference * mobile_concentration_reference / tungsten_density}'
