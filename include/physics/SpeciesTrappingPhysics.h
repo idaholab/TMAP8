@@ -67,8 +67,6 @@ private:
   Real dimensionlessTrappingRate(unsigned int c_i, unsigned int s_j);
   Real mobileConcentrationReference(unsigned int c_i) const;
   Real dimensionlessReleaseRate(unsigned int c_i, unsigned int s_j);
-  Real trappedConcentrationReference(unsigned int c_i) const;
-  Real variableScalingFromReference(Real reference) const;
   Real timeReference(unsigned int c_i) const;
   virtual void addSolverVariables() override;
   virtual void addInitialConditions() override;

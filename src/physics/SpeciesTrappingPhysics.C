@@ -204,12 +204,6 @@ SpeciesTrappingPhysics::mobileConcentrationReference(unsigned int c_i) const
 }
 
 Real
-SpeciesTrappingPhysics::trappedConcentrationReference(unsigned int c_i) const
-{
-  return 1.0 / _trap_per_frees[c_i];
-}
-
-Real
 SpeciesTrappingPhysics::trapConcentrationReference(unsigned int c_i, unsigned int s_j)
 {
   mooseAssert(c_i < _trap_concentration_references.size(),
@@ -227,12 +221,6 @@ SpeciesTrappingPhysics::dimensionlessTrappingRate(unsigned int c_i, unsigned int
   mooseAssert(s_j < _dimensionless_trapping_rates[c_i].size(),
               "species index higher than dimensionless trapping-rate species count");
   return _dimensionless_trapping_rates[c_i][s_j];
-}
-
-Real
-SpeciesTrappingPhysics::variableScalingFromReference(Real reference) const
-{
-  return 1.0 / reference;
 }
 
 Real
@@ -430,20 +418,11 @@ SpeciesTrappingPhysics::addSolverVariables()
     for (const auto s_j : index_range(_species[c_i]))
     {
       const auto species_name = getSpeciesVariableName(c_i, s_j);
-      Real scaling = (_scaling_factors.size() > 1)
-                         ? _scaling_factors[c_i][s_j]
-                         : ((_scaling_factors.size() == 1) ? _scaling_factors[0][s_j] : 1);
-      // For dimensionless variables the stored value is already O(1), so no additional
-      // variable scaling is applied. The old trap_per_free-based scaling is only used
-      // on the legacy (non-dimensionless) path.
-      if (_use_dimensionless_species)
-      {
-        // dimensionless variable: scaling = 1 by design
-      }
-      else if (isParamValid("trap_per_free"))
-        scaling *= variableScalingFromReference(trappedConcentrationReference(c_i));
-      if (scaling != 1 || !_single_variable_set)
-        params.set<std::vector<Real>>("scaling") = {scaling};
+      if (isParamSetByUser("species_scaling_factor") || !_single_variable_set)
+        params.set<std::vector<Real>>("scaling") = {
+            (_scaling_factors.size() > 1)
+                ? _scaling_factors[c_i][s_j]
+                : ((_scaling_factors.size() == 1) ? _scaling_factors[0][s_j] : 1)};
       params.set<SolverSystemName>("solver_sys") = getSolverSystem(species_name);
       getProblem().addVariable(variable_type, species_name, params);
 
