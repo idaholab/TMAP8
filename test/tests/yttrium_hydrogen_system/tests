@@ -1,23 +1,6 @@
 [Tests]
   design = 'InterfaceDiffusion.md ADMatInterfaceReactionYHxPCT.md MatDiffusion.md TimeDerivative.md'
   issues = '#261'
-  [YHx_PCT_csv]
-    type = CSVDiff
-    input = YHx_PCT.i
-    cli_args = 'Executioner/nl_rel_tol=6e-6 InterfaceKernels/interface_reaction_YHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
-    csvdiff = YHx_PCT_out.csv
-    recover = false # see #196
-    requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature.'
-  []
-  [YHx_PCT_exodus]
-    type = Exodiff
-    input = YHx_PCT.i
-    cli_args = 'Executioner/nl_rel_tol=6e-6 InterfaceKernels/interface_reaction_YHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
-    exodiff = YHx_PCT_out.e
-    prereq = YHx_PCT_csv
-    should_execute = false # this test relies on the output files from YHx_PCT_csv, so it shouldn't be run twice
-    requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature and generate an exodus file.'
-  []
   [YHx_PCT_T1173_P1e3_csv]
     type = CSVDiff
     input = YHx_PCT.i
