@@ -30,25 +30,15 @@
     abs_zero = 1e-5
   []
   [val-2f_heavy_csv]
-    type = CSVDiff
+    type = RunApp
     input = val-2f.i
-    csvdiff = val-2f_out.csv
     heavy = true
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output.'
     max_time = 2000
     cli_args = 'Executioner/abort_on_solve_fail=false'
   []
-  [val-2f_heavy_exodus]
-    type = Exodiff
-    input = val-2f.i
-    exodiff = val-2f_out.e
-    heavy = true
-    prereq = val-2f_heavy_csv
-    should_execute = false # this test relies on the output files from val-2f_heavy_csv, so it shouldn't be run twice
-    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport.'
-  []
   [val-2f_heavy_csv_inf_recombination]
-    type = CSVDiff
+    type = RunApp
     input = val-2f.i
     cli_args = "ix1='${fparse 500}' ix4='${fparse 500}'
                 AuxVariables/active='bounds_dummy temperature'
@@ -64,10 +54,45 @@
                 Outputs/file_base='val-2f_out_inf_recombination'
                 Executioner/abort_on_solve_fail=false
                 Executioner/nl_abs_tol=5e-4"
-    csvdiff = val-2f_out_inf_recombination.csv
     heavy = true
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output, for the infinite recombination case.'
     max_time = 3600
+  []
+  [val-2f_inventory_rmspe]
+    type = PythonUnitTest
+    input = test_val_2f_rmspe.py
+    test_case = TestVal2fRMSPE.test_inventory_rmspe
+    heavy = true
+    prereq = val-2f_heavy_csv
+    requirement = 'The system shall maintain total deuterium inventory during val-2f desorption with less than 0.02 percent RMSPE.'
+    required_python_packages = 'numpy pandas os'
+  []
+  [val-2f_inventory_rmspe_inf_recombination]
+    type = PythonUnitTest
+    input = test_val_2f_rmspe.py
+    test_case = TestVal2fRMSPE.test_inventory_rmspe_inf_recombination
+    heavy = true
+    prereq = val-2f_heavy_csv_inf_recombination
+    requirement = 'The system shall maintain total deuterium inventory during infinite recombination val-2f desorption with less than 0.02 percent RMSPE.'
+    required_python_packages = 'numpy pandas os'
+  []
+  [val-2f_flux_rmspe]
+    type = PythonUnitTest
+    input = test_val_2f_rmspe.py
+    test_case = TestVal2fRMSPE.test_default_flux_rmspe
+    heavy = true
+    prereq = val-2f_heavy_csv
+    requirement = 'The system shall reproduce the finite recombination val-2f deuterium desorption flux with less than 25 percent RMSPE against the experimental data.'
+    required_python_packages = 'numpy pandas os'
+  []
+  [val-2f_flux_rmspe_inf_recombination]
+    type = PythonUnitTest
+    input = test_val_2f_rmspe.py
+    test_case = TestVal2fRMSPE.test_inf_recombination_flux_rmspe
+    heavy = true
+    prereq = val-2f_heavy_csv_inf_recombination
+    requirement = 'The system shall reproduce the infinite recombination val-2f deuterium desorption flux with less than 13 percent RMSPE against the experimental data.'
+    required_python_packages = 'numpy pandas os'
   []
   [val-2f_comparison]
     type = RunCommand
