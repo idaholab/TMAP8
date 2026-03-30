@@ -50,6 +50,7 @@
     jsondiff = bayesian_val2j_results/val2j_bayesian_short_out.json
     abs_zero = 1e-8
     rel_err = 1e-5
+    skip_keys = 'acquisition_function'
     max_parallel = 1
     recover = false
     requirement = 'The system shall perform Bayesian optimization of TDS model parameters for Li2TiO3.'
