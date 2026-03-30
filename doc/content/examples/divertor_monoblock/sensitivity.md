@@ -1,6 +1,6 @@
 # Divertor Monoblock Sensitivities 
 
-This work consists of sensitivity studies of different operating conditions performed on the [Divertor Monoblock](https://mooseframework.inl.gov/TMAP8/examples/divertor_monoblock/index.html). The original pulsed operation of the divertor monoblock model was modified according to [!cite](Hodille2021126003) towards a single-long tritium and heat flux pulse of an approximate equivalent total fluence. An initial sensitivity study on was performed on the divertor monoblock's boundary conditions under the steady pulse condition using the [Sobol Method](https://mooseframework.inl.gov/modules/stochastic_tools/examples/sobol.html) and other tools within the [Stochastic Tools Module](https://mooseframework.inl.gov/modules/stochastic_tools/). Two additional sensitivity studies were performed on select transients obtained from [!cite](ELMORSHEDY2024101616) and [!cite](Kessel01092013).
+This page documents sensitivity studies of different operating conditions performed on the [Divertor Monoblock](examples/divertor_monoblock/index.md). The original pulsed operation of the divertor monoblock model was modified according to [!cite](Hodille2021126003) towards a single-long tritium and heat flux pulse of an approximate equivalent total fluence. An initial sensitivity study on was performed on the divertor monoblock's boundary conditions under the steady pulse condition using the [Sobol Method](https://mooseframework.inl.gov/modules/stochastic_tools/examples/sobol.html) and other tools within the [Stochastic Tools Module](https://mooseframework.inl.gov/modules/stochastic_tools/). Two additional sensitivity studies were performed on select transients obtained from [!cite](ELMORSHEDY2024101616) and [!cite](Kessel01092013).
 
 ## General description of the sensitivity studies and the modified cases 
 
@@ -9,9 +9,9 @@ This work consists of sensitivity studies of different operating conditions perf
 !style halign=left
 Many fusion components, especially those exposed to especially unique or extreme conditions, often lack sufficient operation data to evaluate their reliability, availability, maintainability, and inspectability (RAMI). As a proof-of-concept, we seek to  construct a Probabilistic Physics of Failure (PPoF) model of a tokomak divertor system to obtain failure rate metrics and lifetime metric relevant to the RAMI of a nuclear fusion reactor.
 
-To accomplish this, sensitivity studies on the [Divertor Monoblock](https://mooseframework.inl.gov/TMAP8/examples/divertor_monoblock/index.html) model described in [!cite](Shimada2024114438) will be performed for (1) steady state conditions based on ITER data [!cite](Hodille2021126003), (2) an inadvertent shutdown transient [!cite](ELMORSHEDY2024101616), and (3) an edge-localized mode transient [!cite](Kessel01092013). The sensitivity studies will be performed using the [MOOSE](https://mooseframework.inl.gov/) Stochastic Module and its Sobol Method according to [!cite](SALTELLI2002280). The results of the sensitivity studies will be evaluated for state limits associated with heat transfer and tritium migration physics included in the [Divertor Monoblock](https://mooseframework.inl.gov/TMAP8/examples/divertor_monoblock/index.html).
+To accomplish this, sensitivity studies on the [Divertor Monoblock](examples/divertor_monoblock/index.md) model described in [!cite](Shimada2024114438) will be performed for (1) steady state conditions based on ITER data [!cite](Hodille2021126003), (2) an inadvertent shutdown transient [!cite](ELMORSHEDY2024101616), and (3) an edge-localized mode transient [!cite](Kessel01092013). The sensitivity studies will be performed using the [MOOSE](https://mooseframework.inl.gov/) Stochastic Module and its Sobol Method according to [!cite](SALTELLI2002280). The results of the sensitivity studies will be evaluated for state limits associated with heat transfer and tritium migration physics included in the [Divertor Monoblock](examples/divertor_monoblock/index.md).
 
-First, the modifications made to the [Divertor Monoblock](https://mooseframework.inl.gov/TMAP8/examples/divertor_monoblock/index.html) model will be described. Second, the conditions the divertor monoblock was subjected to in the steady and transient scenarios will be described. Finally, the results of the sensitivities, namely the first and second order sensitivity indicies and example correlations and state frequencies will be presented.
+First, the modifications made to the [Divertor Monoblock](examples/divertor_monoblock/index.md) model will be described. Second, the conditions the divertor monoblock was subjected to in the steady and transient scenarios will be described. Finally, the results of the sensitivities, namely the first and second order sensitivity indices, example correlations and state frequencies will be presented.
 
 ### Divertor Monoblock modifications 
 
@@ -63,14 +63,15 @@ And the total area (2D volume) each material occupies
 
 The sensitivity studies must sample from a distribution of parameters to determine the net effects of those parameters
 on the model. Here, we vary the incident heat flux, tritium flux, coolant temperature and coolant tritium concentration, sampling from
-uniform distributions as shown in [tab:steady_case] and [fig:steady_inputs].
+uniform distributions as shown in [tab:steady_case] and [fig:steady_inputs]. It should be noted that the coolant temperature is unusually high
+in this case, as the ITER divertor is designed to have coolant run at 100&deg;C with a 50&deg;C temperature increase at the outlet [!cite](hirai2010iter).
 
 !table id=tab:steady_case caption=Steady case varied boundary conditions.
 | Parameter | Samples | Nominal Value | Distribution | Deviation |
 | --- | --- | --- | --- | --- |
-| Incident Heat Flux | 100 | 10 MW/m$^2$ | Uniform | $\pm$5% |
+| Incident Heat Flux | 100 | 10 MW/m$^2$ [!cite](pitts2009iter)| Uniform | $\pm$5% |
 | Incident Tritium Flux | 100 | 7.90$\times$10$^{-13}$ (normalized) | Uniform | $\pm$5% |
-| Coolant Temperature | 100 | 552 K | Uniform | $\pm$5% |
+| Coolant Temperature | 100 | 552 K [!cite](hirai2010iter)| Uniform | $\pm$5% |
 | Coolant Tritium Concentration | 100 | 1.0$\times$10$^{-18}$ (normalized) | Uniform | $\pm$1% |
 
 !media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/steady_state_inputs.png id=fig:steady_inputs 
@@ -113,17 +114,16 @@ The results of the simulation are shown in [fig:shutdown_results]. As would be e
 ### Transient case: edge-localized mode disruption 
 
 !style halign=left
-To simulate an edge-localized mode (ELM) disruption, we simulate a set of input conditions as described in [tab:elm_transient_case]. The heat flux is much larger than the transient shutdown case, but over a shorter duration. Given that the parameters are uncertainties in physical behavior, we model most of these with a normal distribution. The results will be shown below in [fig:elm_correlation].
-
-
+To simulate an edge-localized mode (ELM) disruption, we simulate a set of input conditions as described in [tab:elm_transient_case]. The heat flux is much larger than the transient shutdown case, but over a shorter duration. Given that the parameters are uncertainties in physical behavior, we model most of these with a normal distribution. The results will be shown below in [fig:elm_correlation]. We use the same tungsten conductivy as in [!cite](Shimada2024114438), but vary the conductivity by a constant factor in the range of $\pm$5%. 
 
 !table id=tab:elm_transient_case caption=Edge-localized mode transient case parameter space.
 | Parameter | Samples | Nominal Value | Distribution | Deviation |
 | --- | --- | --- | --- | --- |
 | Peak Duration | 1000 | 1.32ms | Normal | $\sigma$=$\pm$5% |
-| Peak Heat Flux | 1000 | 1147 MW/m$^2$ | Normal | $\sigma$=$\pm$5% |
+| Peak Heat Flux | 1000 | 1147 MW/m$^2$ [!cite](loarte2017elms) | Normal | $\sigma$=$\pm$5% |
 | Coolant Temperature | 1000 | 552 K | Normal | $\sigma$=$\pm$5% |
 | Tungsten Conductivity Factor | 1000 | 1.0 | Uniform | $\sigma$=$\pm$5% |
+
 
 ## Results 
 

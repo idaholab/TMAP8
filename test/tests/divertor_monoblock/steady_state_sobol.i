@@ -17,9 +17,9 @@
     type = MultiAppSamplerControl
     multi_app = runner
     sampler = sobol
-    param_names = "BCs/temp_top/value
-                     BCs/C_mob_W_top_flux/value
-                     BCs/temp_tube/value"
+    param_names = "temperature_top_val
+                   C_mob_W_top_flux_val
+                   temperature_tube_val"
   []
 []
 [Distributions]
@@ -130,9 +130,9 @@
   [matrix]
     type = StochasticMatrix
     sampler = sobol
-    sampler_column_names = "BCs/temp_top/value
+    sampler_column_names = "BCs/temperature_top/value
                               BCs/C_mob_W_top_flux/value
-                              BCs/temp_tube/value"
+                              BCs/temperature_tube/value"
     execute_on = 'FINAL'
     parallel_type = ROOT
   []

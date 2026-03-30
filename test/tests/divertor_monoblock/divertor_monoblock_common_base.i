@@ -6,10 +6,10 @@
 # - divertor_monoblock_physics-single-variable.i
 
 # Geometry and design
-radius_coolant = '${units 6.0 mm -> m}'
-radius_CuCrZr = '${units 7.5 mm -> m}'
-radius_Cu = '${units 8.5 mm -> m}'
-block_size = '${units 28 mm -> m}'
+radius_coolant = 0.006 # depends on MOOSE PR 32524  '${units 6.0 mm -> m}'
+radius_CuCrZr = 0.0075 #'${units 7.5 mm -> m}'
+radius_Cu = 0.0085 # '${units 8.5 mm -> m}'
+block_size = 0.028 # depends on MOOSE PR 32524 '${units 28.0 mm -> m}'
 num_sectors = 36 # (-) defines mesh size
 rings_H2O = 1 # (-)
 rings_CuCrZr = 30 # (-)
@@ -274,19 +274,4 @@ scaling_factor_2 = '${units 3.44e10 g/m^2}' # (1.0e3)*(1.0e3)*(${tungsten_atomic
     cutback_factor = 0.8
     timestep_limiting_postprocessor = timestep_max_pp
   []
-[]
-
-[Outputs]
-  [exodus]
-    type = Exodus
-    sync_only = false
-    # Output at key moments in the first two cycles, and then at the end of the simulation
-    sync_times = '${fparse 1.1 * plasma_ramp_time} ${fparse plasma_ss_end - 20} ${fparse plasma_ramp_down_end - 10} ${plasma_cycle_time} ${fparse plasma_cycle_time + 1.1 * plasma_ramp_time} ${fparse plasma_cycle_time + plasma_ss_end - 20} ${fparse plasma_cycle_time + plasma_ramp_down_end - 10} ${fparse 2 * plasma_cycle_time} ${fparse 50 * plasma_cycle_time}'
-  []
-  csv = true
-  hide = 'dt
-            Int_C_mobile_W Int_C_trapped_W Int_C_total_W
-            Int_C_mobile_Cu Int_C_trapped_Cu Int_C_total_Cu
-            Int_C_mobile_CuCrZr Int_C_trapped_CuCrZr Int_C_total_CuCrZr'
-  perf_graph = true
 []

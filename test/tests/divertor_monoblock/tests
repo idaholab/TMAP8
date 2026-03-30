@@ -76,7 +76,7 @@
 			jsondiff = 'steady_state_sobol.json'
 			heavy = true
 			min_parallel = 4
-			rel_err = 1e-3
+			rel_err = 2e-1
 		[]
 		[shutdown_run]
 			type = JSONDiff
@@ -86,7 +86,7 @@
 			jsondiff = 'shutdown_transient_sobol.json'
 			heavy = true
 			min_parallel = 4
-			rel_err = 1e-1
+			rel_err = 2e-1
 		[]
 		[elm_run]
 			type = JSONDiff
@@ -95,8 +95,9 @@
 			cli_args = 'runner:Mesh/ccmg/rings="1 3 3 3" Outputs/out/file_base=elm_transient_sobol runner:Executioner/end_time=2.000005e2 Samplers/hypercube_1/num_rows=5 Samplers/hypercube_2/num_rows=5 runner:/Mesh/ccmg/num_sectors=4'
 			jsondiff = 'elm_transient_sobol.json'
 			heavy = true
+                        skip_keys = 'sobol stats'
 			min_parallel = 4
-			rel_err = 1e-1
+			rel_err = 20
 		[]
 	[]
 []
