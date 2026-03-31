@@ -104,7 +104,8 @@
         [python_comparison]
 		type = RunCommand
 		command = 'python3 divertor_monoblock_sensitivity.py'
+		design = 'divertor_monoblock/sensitivity.md'
 		requirement = 'The system shall be able to generate documentation plots from intensive stochastic runs'
-		required_python_packages = 'numpy pandas scipy matplotlib os sys'
+		required_python_packages = 'numpy pandas scipy matplotlib os sys tables'
 	[]
 []
