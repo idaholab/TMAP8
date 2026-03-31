@@ -8,19 +8,73 @@ import sys
 script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
 os.makedirs("divertor_monoblock_sensitivity_figures", exist_ok=True)
-hdf5_file = ""
+npz_file = ""
 if "TMAP8_DIR" in os.environ.keys():
-    hdf5_file = os.path.join(
+    npz_file = os.path.join(
         os.environ["TMAP8_DIR"],
-        "test/tests/divertor_monoblock/gold/divertor_monoblock_sensitivity/sensitivity_stats.hdf5",
+        "test/tests/divertor_monoblock/gold/divertor_monoblock_sensitivity/sensitivity_stats.npz",
     )
 elif "/tmap8/doc" in script_folder.lower():
-    hdf5_file = "../../../../test/tests/divertor_monoblock/gold/divertor_monoblock_sensitivity/sensitivity_stats.hdf5"
+    npz_file = "../../../../test/tests/divertor_monoblock/gold/divertor_monoblock_sensitivity/sensitivity_stats.npz"
 else:
-    hdf5_file = "./test/tests/divertor_monoblock/gold/divertor_monoblock_sensitivity/sensitivity_stats.hdf5"
-ssdf = pd.read_hdf(hdf5_file, key="steady")
-a1df = pd.read_hdf(hdf5_file, key="transient_shutdown")
-a2df = pd.read_hdf(hdf5_file, key="elms")
+    npz_file = "./test/tests/divertor_monoblock/gold/divertor_monoblock_sensitivity/sensitivity_stats.npz"
+ssdf_keys = [
+    "BCs/C_mob_W_top_flux",
+    "BCs/mobile_tube",
+    "BCs/temp_top",
+    "BCs/temp_tube",
+    "F_permeation",
+    "Scaled_Tritium_Flux",
+    "coolant_heat_flux",
+    "max_temperature_Cu",
+    "max_temperature_CuCrZr",
+    "max_temperature_W",
+    "total_retention",
+]
+a1df_keys = [
+    "W_cond_factor",
+    "coolant_temp",
+    "peak_duration",
+    "peak_value",
+    "F_permeation",
+    "Scaled_Tritium_Flux",
+    "coolant_heat_flux",
+    "max_temperature_Cu",
+    "max_temperature_CuCrZr",
+    "max_temperature_W",
+    "time_max_T_Cu",
+    "time_max_T_CuCrZr",
+    "time_max_T_W",
+    "total_retention",
+]
+a2df_keys = [
+    "W_cond_factor",
+    "coolant_temp",
+    "peak_duration",
+    "peak_value",
+    "F_permeation",
+    "Scaled_Tritium_Flux",
+    "coolant_heat_flux",
+    "max_temperature_Cu",
+    "max_temperature_CuCrZr",
+    "max_temperature_W",
+    "time_max_T_Cu",
+    "time_max_T_CuCrZr",
+    "time_max_T_W",
+    "total_retention",
+]
+## Procedure to generate npz file:
+## 1. Read JSON output from full (exhaustive) version of test
+## 2. All relevant information is in the ['time_steps'][0] object
+##    load into a pandas dataframe. Note that the inputs are at the top level and the
+##    relevant results are under 'results', so some massaging into a proper format is 
+##    likely to be necessary
+## 3. save as an npz file with np.savez_compressed(FNAME,steady=ssdf.to_numpy(),etc.)
+
+nparrs = np.load(npz_file)
+ssdf = pd.DataFrame(nparrs["steady"], columns=ssdf_keys)
+a1df = pd.DataFrame(nparrs["a1df"], columns=a1df_keys)  # transient shutdown
+a2df = pd.DataFrame(nparrs["a2df"], columns=a2df_keys)  # ELMs
 
 
 def pairplot(
