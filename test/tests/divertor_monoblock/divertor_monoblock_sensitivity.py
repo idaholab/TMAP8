@@ -67,7 +67,7 @@ a2df_keys = [
 ## 1. Read JSON output from full (exhaustive) version of test
 ## 2. All relevant information is in the ['time_steps'][0] object
 ##    load into a pandas dataframe. Note that the inputs are at the top level and the
-##    relevant results are under 'results', so some massaging into a proper format is 
+##    relevant results are under 'results', so some massaging into a proper format is
 ##    likely to be necessary
 ## 3. save as an npz file with np.savez_compressed(FNAME,steady=ssdf.to_numpy(),etc.)
 
