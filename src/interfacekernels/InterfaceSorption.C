@@ -80,8 +80,8 @@ InterfaceSorptionTempl<is_ad>::InterfaceSorptionTempl(const InputParameters & pa
             : nullptr)
 {
   if (!_use_flux_penalty && parameters.isParamSetByUser("flux_penalty"))
-    this->template paramError(
-        "flux_penalty", "The flux penalty should be specified only when use_flux_penalty = true");
+    this->paramError("flux_penalty",
+                     "The flux penalty should be specified only when use_flux_penalty = true");
 }
 
 template <bool is_ad>

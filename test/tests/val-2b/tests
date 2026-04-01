@@ -37,6 +37,24 @@
     abs_zero = 1e-8
     requirement = 'The system shall be able to model diffusion of deuterium in beryllium sample with a short runtime suitable for regular regression testing.'
   []
+  [val-2b_exodus_csv]
+    type = CSVDiff
+    input = val-2b.i
+    should_execute = false # this test relies on the output files from val-2b_exodus, so it shouldn't be run twice
+    prereq = val-2b_exodus
+    cli_args = "Outputs/file_base=val-2b_out
+                Executioner/nl_abs_tol=1e-11
+                charge_time='${units 10 h -> s}'
+                cooldown_duration=$'{units 1 h -> s}'
+                dt_max_large=$'{units 500 s}'
+                dt_max_small=$'{units 200 s}'
+                dt_start_charging=$'{units 300 s}'
+                dt_start_cooldown=$'{units 100 s}'
+                dt_start_desorption=$'{units 10 s}'"
+    csvdiff = val-2b_out.csv
+    abs_zero = 1e-8
+    requirement = 'The system shall be able to model diffusion of deuterium in beryllium sample with a short runtime suitable for regular regression testing and generate CSV data output for comparison to experimental results.'
+  []
   [val-2b_comparison]
     type = RunCommand
     command = 'python3 comparison_val-2b.py'

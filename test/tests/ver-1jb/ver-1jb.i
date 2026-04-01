@@ -171,7 +171,6 @@ dt_max = ${fparse end_time/100} # s
   [decay_tritium]
     type = MatReaction
     variable = tritium_mobile_concentration_scaled
-    v = tritium_mobile_concentration_scaled
     reaction_rate = '${fparse -decay_rate_constant}'
   []
   [coupled_time_tritium]

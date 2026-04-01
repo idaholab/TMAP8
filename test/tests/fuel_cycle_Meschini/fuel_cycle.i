@@ -11,7 +11,7 @@
 
 pulse_time = '${units 1800 s}'
 initial_inventory = '${units 1.14 kg}'
-accuracy_time = '${units ${fparse 3600 * 24 * 20} s}' # 20 days
+initial_refinement_time = '${units ${fparse 3600 * 24 * 20} s}' # 20 days
 time_interval_middle = '${units 1e6 s}'
 simulation_time = '${units ${fparse 3600 * 24 * 365.25 * 3} s}' # 3 years
 
@@ -223,21 +223,21 @@ tritium_burn_rate_value = 8.99e-7 # -
     type = ParsedFunction
     symbol_names = 'AF tritium_burn_rate TBR'
     symbol_values = 'AF tritium_burn_rate TBR'
-    expression = 'if(t > ${accuracy_time}, AF * tritium_burn_rate * TBR,
+    expression = 'if(t > ${initial_refinement_time}, AF * tritium_burn_rate * TBR,
                   if(t % ${pulse_time} < AF * ${pulse_time}, tritium_burn_rate * TBR, 0))'
   []
   [burn_pulse_function]
     type = ParsedFunction
     symbol_names = 'AF tritium_burn_rate TBE'
     symbol_values = 'AF tritium_burn_rate TBE'
-    expression = 'if(t > ${accuracy_time}, AF * tritium_burn_rate / TBE,
+    expression = 'if(t > ${initial_refinement_time}, AF * tritium_burn_rate / TBE,
                   if(t % ${pulse_time} < AF * ${pulse_time}, tritium_burn_rate / TBE, 0))'
   []
   [dt_function]
     type = ParsedFunction
     symbol_names = 'AF'
     symbol_values = 'AF'
-    expression = 'if(t > ${accuracy_time}, ${time_interval_middle},
+    expression = 'if(t > ${initial_refinement_time}, ${time_interval_middle},
                   if(t % ${pulse_time} < AF * ${pulse_time}, AF * ${pulse_time} - t % ${pulse_time} + 0.01,
                   if(t % ${pulse_time} < ${pulse_time}, ${pulse_time} - t % ${pulse_time} + 0.01, 2)))'
   []

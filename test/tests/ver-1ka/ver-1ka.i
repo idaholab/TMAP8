@@ -1,18 +1,26 @@
-initial_pressure = ${units 0 Pa} # initial internal pressure
+# Verification Problem #1ka from TMAP7 V&V document
+# A diffusion on two connected enclosures by a membrane with a volumetric source using Sieverts' law
+
+# Physical Constants
 kb = ${units 1.380649e-23 J/K} # Boltzmann constant J/K - from PhysicalConstants.h
+
+# Modeling parameters
+length = '${units 1 m}'
+width = '${units 1 m}'
+end_time = ${units 10000 s}
+time_step = ${units 500 s}
+initial_pressure = ${units 0 Pa} # initial internal pressure
 T = ${units 500 K} # Temperature
 S = ${units 1e20 1/m^3/s} # Source term
 V = ${units 1 m^3} # Volume
-end_time = ${units 10000 s}
-time_step = ${units 500 s}
 
 [Mesh]
   type = GeneratedMesh
   dim = 2
   nx = 10
   ny = 10
-  xmax = 1
-  ymax = 1
+  xmax = '${length}'
+  ymax = '${width}'
 []
 
 [Variables]
@@ -45,4 +53,5 @@ time_step = ${units 500 s}
 [Outputs]
   file_base = 'ver-1ka_out'
   csv = true
+  exodus = true
 []

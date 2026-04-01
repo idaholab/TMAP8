@@ -1,119 +1,7 @@
-
-[Outputs]
-    [exodus]
-        type = Exodus
-        sync_only = false
-        # output at key moment in the first two cycles, and then at the end of the simulation
-        sync_times = '110.0 480.0 590.0 1600.0 1710.0 2080.0 2190.0 3400.0 8.0e4'
-    []
-    csv = true
-    hide = 'dt
-            Int_C_mobile_W Int_C_trapped_W Int_C_total_W
-            Int_C_mobile_Cu Int_C_trapped_Cu Int_C_total_Cu
-            Int_C_mobile_CuCrZr Int_C_trapped_CuCrZr Int_C_total_CuCrZr'
-    perf_graph = true
-[]
-
-[AuxVariables]
-  [flux_y]
-      order = FIRST
-      family = MONOMIAL
-  []
-  ############################## AuxVariables for W (block = 4)
-  [Sc_C_mobile_W]
-      block = 4
-  []
-  [Sc_C_trapped_W]
-      block = 4
-  []
-  [C_total_W]
-      block = 4
-  []
-  [Sc_C_total_W]
-      block = 4
-  []
-  [S_empty_W]
-      block = 4
-  []
-  [Sc_S_empty_W]
-      block = 4
-  []
-  [S_trapped_W]
-      block = 4
-  []
-  [Sc_S_trapped_W]
-      block = 4
-  []
-  [S_total_W]
-      block = 4
-  []
-  [Sc_S_total_W]
-      block = 4
-  []
-  ############################## AuxVariables for Cu (block = 3)
-  [Sc_C_mobile_Cu]
-      block = 3
-  []
-  [Sc_C_trapped_Cu]
-      block = 3
-  []
-  [C_total_Cu]
-      block = 3
-  []
-  [Sc_C_total_Cu]
-      block = 3
-  []
-  [S_empty_Cu]
-      block = 3
-  []
-  [Sc_S_empty_Cu]
-      block = 3
-  []
-  [S_trapped_Cu]
-      block = 3
-  []
-  [Sc_S_trapped_Cu]
-      block = 3
-  []
-  [S_total_Cu]
-      block = 3
-  []
-  [Sc_S_total_Cu]
-      block = 3
-  []
-  ############################## AuxVariables for CuCrZr (block = 2)
-  [Sc_C_mobile_CuCrZr]
-      block = 2
-  []
-  [Sc_C_trapped_CuCrZr]
-      block = 2
-  []
-  [C_total_CuCrZr]
-      block = 2
-  []
-  [Sc_C_total_CuCrZr]
-      block = 2
-  []
-  [S_empty_CuCrZr]
-      block = 2
-  []
-  [Sc_S_empty_CuCrZr]
-      block = 2
-  []
-  [S_trapped_CuCrZr]
-      block = 2
-  []
-  [Sc_S_trapped_CuCrZr]
-      block = 2
-  []
-  [S_total_CuCrZr]
-      block = 2
-  []
-  [Sc_S_total_CuCrZr]
-      block = 2
-  []
-[]
-
+# This input file contains key pieces for the divertor monoblock case that includes a single
+# variable.
+# It cannot be run on its own and is included in the main input file for this case, namely:
+# - divertor_monoblock_physics-single-variable.i
 
 [AuxKernels]
   ############################## AuxKernels for W (block = 4)
@@ -144,10 +32,9 @@
   [empty_sites_W]
       variable = S_empty_W
       type = EmptySitesAux
-      N = ${units 1.0e0 m^-3}       # = ${tungsten_atomic_density} #/m^3 (W lattice density)
-      # Ct0 = ${units 1.0e-4 m^-3}   # E.A. Hodille et al 2021 Nucl. Fusion 61 126003, trap 1
-      Ct0 = ${units 1.0e-4 m^-3}    # E.A. Hodille et al 2021 Nucl. Fusion 61 1260033, trap 2
-      trap_per_free = 1.0e0         # 1.0e1
+      N = ${N_W}
+      Ct0 = ${Ct0_W}
+      trap_per_free = ${trap_per_free_W}
       trapped_concentration_variables = C_trapped
   []
   [scaled_empty_W]
@@ -208,9 +95,9 @@
   [empty_sites_Cu]
       variable = S_empty_Cu
       type = EmptySitesAux
-      N = ${units 1.0e0 m^-3}     # = ${tungsten_atomic_density} #/m^3 (W lattice density)
-      Ct0 = ${units 5.0e-5 m^-3}  # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 3
-      trap_per_free = 1.0e0       # 1.0e1
+      N = ${N_Cu}
+      Ct0 = ${Ct0_Cu}
+      trap_per_free = ${trap_per_free_Cu}
       trapped_concentration_variables = C_trapped
   []
   [scaled_empty_Cu]
@@ -271,10 +158,9 @@
   [empty_sites_CuCrZr]
       variable = S_empty_CuCrZr
       type = EmptySitesAux
-      N = ${units 1.0e0 m^-3}     # = ${tungsten_atomic_density} #/m^3 (W lattice density)
-      Ct0 = ${units 5.0e-5 m^-3}  # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 4
-      # Ct0 = ${units 4.0e-2 m^-3} # R. Delaporte-Mathurin et al 2021 Nucl. Fusion 61 036038, trap 5
-      trap_per_free = 1.0e0       # 1.0e1
+      N = ${N_CuCrZr}
+      Ct0 = ${Ct0_CuCrZr}
+      trap_per_free = ${trap_per_free_CuCrZr}
       trapped_concentration_variables = C_trapped
   []
   [scaled_empty_CuCrZr]
@@ -339,15 +225,13 @@
   [F_recombination]
       type = SideDiffusiveFluxAverage
       boundary = 'top'
-      diffusivity = 5.01e-24   # (3.01604928)/(6.02e23)/[gram(T)/m^2]
-      # diffusivity = 5.508e-19   # (1.0e3)*(1.0e3)/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      diffusivity = ${diffusivity_fixed}
       variable = Sc_C_total_W
   []
   [F_permeation]
       type = SideDiffusiveFluxAverage
       boundary = '2to1'
-      diffusivity = 5.01e-24   # (3.01604928)/(6.02e23)/[gram(T)/m^2]
-      # diffusivity = 5.508e-19   # (1.0e3)*(1.0e3)/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      diffusivity = ${diffusivity_fixed}
       variable = Sc_C_total_CuCrZr
   []
 
@@ -359,7 +243,7 @@
   [ScInt_C_mobile_W]
       type = ScalePostprocessor
       value =  Int_C_mobile_W
-      scaling_factor = 3.491e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor}
   []
   [Int_C_trapped_W]
       type = ElementIntegralVariablePostprocessor
@@ -369,7 +253,7 @@
   [ScInt_C_trapped_W]
       type = ScalePostprocessor
       value = Int_C_trapped_W
-      scaling_factor = 3.491e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor}
   []
   [Int_C_total_W]
       type = ElementIntegralVariablePostprocessor
@@ -379,7 +263,7 @@
   [ScInt_C_total_W]
       type = ScalePostprocessor
       value = Int_C_total_W
-      scaling_factor = 3.491e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor}
   []
   # ############################################################ Postprocessors for Cu (block = 3)
   [Int_C_mobile_Cu]
@@ -390,7 +274,7 @@
   [ScInt_C_mobile_Cu]
       type = ScalePostprocessor
       value =  Int_C_mobile_Cu
-      scaling_factor = 3.491e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor}
   []
   [Int_C_trapped_Cu]
       type = ElementIntegralVariablePostprocessor
@@ -400,7 +284,7 @@
   [ScInt_C_trapped_Cu]
       type = ScalePostprocessor
       value = Int_C_trapped_Cu
-      scaling_factor = 3.44e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor_2}
   []
   [Int_C_total_Cu]
       type = ElementIntegralVariablePostprocessor
@@ -410,7 +294,7 @@
   [ScInt_C_total_Cu]
       type = ScalePostprocessor
       value = Int_C_total_Cu
-      scaling_factor = 3.491e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor}
   []
   # ############################################################ Postprocessors for CuCrZr (block = 2)
   [Int_C_mobile_CuCrZr]
@@ -421,17 +305,17 @@
   [ScInt_C_mobile_CuCrZr]
       type = ScalePostprocessor
       value =  Int_C_mobile_CuCrZr
-      scaling_factor = 3.491e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor}
   []
   [Int_C_trapped_CuCrZr]
       type = ElementIntegralVariablePostprocessor
-      variable =C_trapped
+      variable = C_trapped
       block = 2
   []
   [ScInt_C_trapped_CuCrZr]
       type = ScalePostprocessor
       value = Int_C_trapped_CuCrZr
-      scaling_factor = 3.44e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor_2}
   []
   [Int_C_total_CuCrZr]
       type = ElementIntegralVariablePostprocessor
@@ -441,7 +325,7 @@
   [ScInt_C_total_CuCrZr]
       type = ScalePostprocessor
       value = Int_C_total_CuCrZr
-      scaling_factor = 3.491e10   # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
+      scaling_factor = ${scaling_factor}
   []
   ############################################################ Postprocessors for others
   [dt]
@@ -450,20 +334,25 @@
   [temperature_top]
       type = PointValue
       variable = temperature
-      point = '0 14.0e-3 0'
+      point = '0 ${fparse block_size / 2} 0'
   []
   [temperature_tube]
       type = PointValue
       variable = temperature
-      point = '0 6.0e-3 0'
+      point = '0 ${radius_coolant} 0'
+  []
+  # limit timestep
+  [timestep_max_pp] # s
+    type = FunctionValuePostprocessor
+    function = timestep_function
   []
 []
 
 [VectorPostprocessors]
   [line]
       type = LineValueSampler
-      start_point = '0 14.0e-3 0'
-      end_point = '0 6.0e-3 0'
+      start_point = '0 ${fparse block_size / 2} 0'
+      end_point = '0 ${radius_coolant} 0'
       num_points = 100
       sort_by = 'y'
       variable = 'C_total_W C_total_Cu C_total_CuCrZr C_mobile C_trapped flux_y temperature'

@@ -2,6 +2,8 @@
 
 # A Simple Forward Chemical Reaction
 
+## Test Description
+
 This verification problem is taken from [!cite](longhurst1992verification,ambrosek2008verification), and it has been updated and extended in [!cite](Simon2025). A simple time-dependent chemical reaction given by
 
 \begin{equation}
@@ -20,7 +22,11 @@ where $C_A$ and $C_B$ are the concentrations of A and B, respectively. The react
 R = -\frac{d[C_A]}{dt} = -\frac{d[C_B]}{dt} = \frac{d[C_{AB}]}{dt} = K C_A C_B
 \end{equation}
 
-where $C_{AB}$ is the concentration of species AB. The analytical solution for the concentration of species AB as a function of time ($t$) is given as:
+where $C_{AB}$ is the concentration of species AB.
+
+## Analytical solution
+
+In [!cite](longhurst1992verification), the analytical solution for the concentration of species AB as a function of time ($t$) is given as:
 
 \begin{equation}
 C_{AB} = C_{B_0} \frac{1 - exp{[K t (C_{B_0} - C_{A_0})]}}{1 - \frac{C_{B_0}}{C_{A_0}}exp{[K t (C_{B_0} - C_{A_0})]}}
@@ -41,6 +47,8 @@ C_{i_0} = 10^{-18} \frac{P_{i_0} N_a}{R T},
 \end{equation}
 
 where $P_{i_0}$ is the initial pressure, $N_a$ is Avogardro's constant, $R$ is the gas constant (from  [PhysicalConstants](source/utils/TMAP8PhysicalConstants.md)), and $T$ = 298.15 K (25$\deg$C) is the temperature. The factor $10^{-18}$ converts the concentration from atoms/m$^3$ to atoms/$\mu$m$^3$.
+
+## Results and comparison against analytical solution
 
 A comparison of the concentration of AB as a function of time is plotted in [ver-1g_comparison_equal_conc] for case (a), and [ver-1g_comparison_diff_conc] for the cases (b) and (c), respectively. The TMAP8 calculations are found to be in good agreement with the analytical solution with the root mean square percentage errors of (a) RMSPE = 0.27 %, (b) RMSPE = 0.22 %, and (c) RMSPE = 0.24 %.
 

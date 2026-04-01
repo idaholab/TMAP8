@@ -2,17 +2,27 @@
 
 # Diffusion Problem with Constant Source Boundary Condition
 
+## Test Description
+
 This verification problem is taken from [!cite](longhurst1992verification), and it has been updated and extended in [!cite](Simon2025). Diffusion of tritium through a semi-infinite SiC layer is modeled with a constant
-source located on one boundary. No solubility or trapping is included. The
-concentration as a function of time and position is given by
+source located on one boundary. No solubility or trapping is included.
+
+The SiC layer is modeled with a large thickness of 200 m to approximate a semi-infinite assumption.
+The diffusivity of SiC layer is set to 1 m$^2$/s, and the concentration at the boundary in contact with the source is set to 1 atom/m$^3$.
+
+## Analytical solution
+
+In [!cite](longhurst1992verification), the analytical equation of concentration as a function of time and position is given by
 \begin{equation}
 C = C_0 \; erfc \left(\frac{x}{2\sqrt{Dt}}\right),
 \end{equation}
 where $C_0$ the constant source concentration, erfc is the error function, $x$ is the distance from the boundary, $D$ is the diffusion coefficient, and $t$ is the time.
 
+## Results and comparison against analytical solution
+
 Comparison of the TMAP8 results and the analytical solution is shown in
 [ver-1b_comparison_time] as a function of time at
-$x = 0.2$ mm. For simplicity, both the diffusion coefficient and the initial
+$x = 0.2$ m. For simplicity, both the diffusion coefficient and the initial
 concentration were set to unity. The TMAP8 code predictions match
 the analytical solution very well.
 

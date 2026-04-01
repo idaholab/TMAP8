@@ -1,6 +1,19 @@
+# Verification Problem #1e from TMAP4/TMAP7 V&V document
+# Permeation problem in a composite layer using a Physics and Components syntax
+# No Soret effect, trapping, or solubility included.
+
+# Numerical parameters
+nx_num = 1000 # -
+simulation_time = ${units 5000 s}
+
+# Data used in TMAP4/TMAP7 case
 T_PyC = ${units 33 mum -> m}
 T_SiC = ${units 66 mum -> m}
 D_ver = ${units 15.75 mum -> m}
+Diffusivity_PyC = ${units 1.274e-7 m^2/s}
+Diffusivity_SiC = ${units 2.622e-11 m^2/s}
+length_PyC = ${units 33 mum -> m}
+initial_concentration = ${units 50.7079 mol/m^3}
 
 [ActionComponents]
   [structure]
@@ -10,7 +23,7 @@ D_ver = ${units 15.75 mum -> m}
     physics = 'diff'
 
     # Geometry
-    nx = 1000
+    nx = ${nx_num}
     xmax = ${fparse ${T_PyC} + ${T_SiC} }
     length_unit_scaling = 1
   []
@@ -23,7 +36,7 @@ D_ver = ${units 15.75 mum -> m}
       diffusivity_matprop = diffusivity_value
 
       dirichlet_boundaries = 'structure_left structure_right'
-      boundary_values = '50.7079 0' # moles/m^3
+      boundary_values = '${initial_concentration} 0' # moles/m^3
 
       # Test differences are too large with default preconditioning
       preconditioning = 'defer'
@@ -42,7 +55,7 @@ D_ver = ${units 15.75 mum -> m}
 [Functions]
   [diffusivity_value]
     type = ParsedFunction
-    expression = 'if(x< ${units 33 mum -> m}, 1.274e-7, 2.622e-11)'
+    expression = 'if(x< ${length_PyC}, ${Diffusivity_PyC}, ${Diffusivity_SiC})'
   []
 []
 
@@ -75,7 +88,7 @@ D_ver = ${units 15.75 mum -> m}
 
 [Executioner]
   type = Transient
-  end_time = 5000
+  end_time = ${simulation_time}
   dtmax = 10
   solve_type = NEWTON
   petsc_options_iname = '-pc_type'
@@ -103,7 +116,7 @@ D_ver = ${units 15.75 mum -> m}
   []
   [vector_postproc]
     type = CSV
-    sync_times = 5000
+    sync_times = ${simulation_time}
     sync_only = true
   []
 []

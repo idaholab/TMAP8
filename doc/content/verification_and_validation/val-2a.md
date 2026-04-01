@@ -9,7 +9,7 @@ This validation problem is taken from [!cite](anderl1985tritium). This paper des
 This model considers the diffusion in PCA and the recombination of deuterium on both sides. First, the diffusion of deuterium in PCA is described as:
 
 \begin{equation} \label{eq:diffusion}
-\frac{d C}{d t} = \nabla D \nabla C + S,
+\frac{d C}{d t} = \nabla \cdot D \nabla C + S,
 \end{equation}
 
 where $C$ is the concentration of deuterium in PCA, $t$ is the time, $D$ is the diffusivity of deuterium in PCA, and $S$ is the source term in PCA due to the deuterium ion implantation.

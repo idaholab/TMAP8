@@ -1,3 +1,6 @@
+# Validation Problem #2d from TMAP7 V&V document
+# Thermal Desorption Spectroscopy on Tungsten
+
 # General parameters
 kB = '${units 1.380649e-23 J/K}' # Boltzmann constant (from PhysicalConstants.h - https://physics.nist.gov/cgi-bin/cuu/Value?r)
 
@@ -47,6 +50,7 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
 
 [Mesh]
   active = 'cartesian_mesh'
+  # finer mesh for heavy simulations
   [cartesian_mesh]
     nx_scale = 2
     type = CartesianMeshGenerator
@@ -59,7 +63,7 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
           ${fparse 50 * ${nx_scale}}   ${fparse 2}                 ${fparse 1}'
     subdomain_id = '0 1 1 1 1 1 1'
   []
-
+  # coarse mesh for tests
   [cartesian_mesh_coarse]
     nx_scale = 1
     type = CartesianMeshGenerator
@@ -81,6 +85,7 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
 []
 
 [Bounds]
+  # Bounds to limit the maximum and minimum values for variables
   [concentration_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy
@@ -126,11 +131,13 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
 []
 
 [Variables]
+  # Mobile concentration variable
   [concentration]
     order = FIRST
     family = LAGRANGE
     initial_condition = ${initial_concentration}
   []
+  # Three trapped concentration variables
   [trapped_1]
     order = FIRST
     family = LAGRANGE
@@ -154,6 +161,7 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
 [AuxVariables]
   [temperature]
   []
+  # necessary dummy variable for bounds
   [bounds_dummy]
     order = FIRST
     family = LAGRANGE
@@ -170,6 +178,7 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
 []
 
 [Kernels]
+  # mobile concentration kernel
   [diffusion_implantation]
     type = ADMatDiffusion
     variable = concentration
@@ -290,6 +299,7 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
 []
 
 [BCs]
+  # Constant concentration on both boundary
   [left]
     type = ADDirichletBC
     variable = concentration
@@ -332,6 +342,7 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
 []
 
 [Functions]
+  # Function for temperature and input flux
   [Temperature_function]
     type = ParsedFunction
     expression = 'if(t<${TDS_initial_time},   ${temperature_low},
@@ -339,34 +350,29 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
                         ${temperature_rate},  ${temperature_low} + ${temperature_rate} * (t - ${TDS_initial_time}),
                                               ${temperature_high}))'
   []
-
   [surface_flux_function]
     type = ParsedFunction
     expression = 'if(t<${TDS_initial_time}, ${flux_high}, ${flux_low})'
   []
-
   [source_distribution_function]
     type = ParsedFunction
     expression = '1 / ( ${width_source} * sqrt(2 * pi) ) * exp(-0.5 * ((x - ${depth_source}) / ${width_source} ) ^ 2)'
   []
-
   [trap_1_distribution_function]
     type = ParsedFunction
     expression = ' ${trapping_site_fraction_1} / ( ${width_trap1} * sqrt(2 * pi) ) * exp(-0.5 * ((x - ${depth_source}) / ${width_trap1}) ^ 2)'
   []
-
   [concentration_source_norm_function]
     type = ParsedFunction
     symbol_names = 'source_distribution_function surface_flux_function'
     symbol_values = 'source_distribution_function surface_flux_function'
     expression = 'source_distribution_function * surface_flux_function'
   []
-
+  # maximum time size during simulations
   [max_dt_size_function]
     type = ParsedFunction
     expression = 'if(t<${TDS_initial_time}  , ${step_interval_mid}, ${step_interval_min})'
   []
-
   [max_dt_size_function_coarse]
     type = ParsedFunction
     expression = 'if(t<${TDS_initial_time}  , ${step_interval_mid},
@@ -376,6 +382,7 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
 []
 
 [Postprocessors]
+  # left flux
   [flux_surface_left]
     type = SideDiffusiveFluxIntegral
     variable = concentration
@@ -390,6 +397,7 @@ temperature_rate = '${units ${fparse 50 / 60} K/s}'
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = 'console csv exodus'
   []
+  # right flux
   [flux_surface_right]
     type = SideDiffusiveFluxIntegral
     variable = concentration

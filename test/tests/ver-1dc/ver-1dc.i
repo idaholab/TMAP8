@@ -1,15 +1,20 @@
-# This is the input file for case ver-1dc.i.
+# Verification Problem #1dc from TMAP7 V&V document
+# Permeation Problem with Three Trapping sites
+# No Soret effect or solubility included.
 # It leverages ver-1dc_base.i to form a complete input file.
 
-cl = ${units 3.1622e18 atom/m^3}
-N = ${units 3.1622e22 atom/m^3}
+# Modeling parameters
 nx_num = 1000 # (-)
-trapping_rate_coefficient = ${units 1e15 1/s}
-release_rate_coefficient = ${units 1e13 1/s}
 simulation_time = ${units 60 s}
 time_interval_max = ${units 0.3 s}
 time_step = ${units 1e-6 s}
 scheme = BDF2
+
+# Trapping parameters
+cl = ${units 3.1622e18 atom/m^3}
+N = ${units 3.1622e22 atom/m^3}
+trapping_rate_coefficient = ${units 1e15 1/s}
+release_rate_coefficient = ${units 1e13 1/s}
 
 !include ver-1dc_base.i
 

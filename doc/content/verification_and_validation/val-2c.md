@@ -63,17 +63,17 @@ where $c_{\text{H}_2\text{O}}^0$ is the concentration of H$_2$O in the incoming 
 
 In the paint, TMAP8 captures species diffusion through
 \begin{equation} \label{eq:paint:T2}
-\frac{d c_{\text{T}_2}}{dt} = \nabla D^e \nabla c_{\text{T}_2},
+\frac{d c_{\text{T}_2}}{dt} = \nabla \cdot D^e \nabla c_{\text{T}_2},
 \end{equation}
 \begin{equation} \label{eq:paint:HT}
-\frac{d c_{\text{HT}}}{dt} = \nabla D^e \nabla c_{\text{HT}},
+\frac{d c_{\text{HT}}}{dt} = \nabla \cdot D^e \nabla c_{\text{HT}},
 \end{equation}
 \begin{equation} \label{eq:paint:HTO}
-\frac{d c_{\text{HTO}}}{dt} = \nabla D^w \nabla c_{\text{HTO}},
+\frac{d c_{\text{HTO}}}{dt} = \nabla \cdot D^w \nabla c_{\text{HTO}},
 \end{equation}
 and
 \begin{equation} \label{eq:paint:H2O}
-\frac{d c_{\text{H}_2\text{O}}}{dt} = \nabla D^w \nabla  c_{\text{H}_2\text{O}}.
+\frac{d c_{\text{H}_2\text{O}}}{dt} = \nabla \cdot D^w \nabla  c_{\text{H}_2\text{O}}.
 \end{equation}
 
 At the interface between the enclosure air and the paint, sorption is captured in TMAP8 with Henry's law thanks to the  [InterfaceSorption.md] object:

@@ -9,7 +9,7 @@ This heat transfer verification problem is taken from [!cite](longhurst1992verif
 The heat conduction in the one-dimensional model is described as:
 
 \begin{equation} \label{eq:thermal_equation}
-\rho C_P \frac{d T}{d t} = \nabla k \nabla T,
+\rho C_P \frac{d T}{d t} = \nabla \cdot k \nabla T,
 \end{equation}
 
 where $T$ is the temperature, $\rho$ is the density, $C_P$ is the specific heat, and $k$ is the thermal conductivity.

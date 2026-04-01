@@ -1,6 +1,6 @@
 # ver-1ib
 
-# Species Equilibration Problem in Ratedep Condition with Unequal Starting Pressures
+# Species Equilibration Problem in Ratedep Conditions with Unequal Starting Pressures
 
 !alert tip title=TMAP8 supports different surface reaction models
 The current case uses what TMAP7 called the `ratedep` model.
@@ -8,7 +8,7 @@ The [theory_manual.md] page describes the `ratedep` model and other surface mode
 
 ## General Case Description
 
-This verification problem is taken from [!cite](ambrosek2008verification) and builds on [ver-1ia](ver-1ia.md). The configuration and modeling parameters are the same as in [ver-1ia](ver-1ia.md), except that, in the current case, the starting pressures for A$_2$ and B$_2$ are not equal. The case is simulated in [/ver-1ia.i], but the starting pressures of A$_2$ and B$_2$ are $1 \times 10^4$ Pa and $1 \times 10^5$, respectively, and there is no AB initially present.
+This verification problem is taken from [!cite](ambrosek2008verification) and builds on [ver-1ia](ver-1ia.md). The configuration and modeling parameters are the same as in [ver-1ia](ver-1ia.md), except that, in the current case, the starting pressures for A$_2$ and B$_2$ are not equal. The case is simulated in [/ver-1ia.i], but the starting pressures of A$_2$ and B$_2$ are $1 \times 10^4$ Pa and $1 \times 10^5$ Pa, respectively, and there is no AB initially present.
 
 ## Analytical solution
 
@@ -27,7 +27,7 @@ A comparison of the concentration of AB as a function of time is plotted in [ver
        image_name=ver-1ib_comparison_pressure.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=ver-1ib_comparison_pressure
-       caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the solution in ratedep condition when A$_2$ and B$_2$ have unequal pressures [!citep](ambrosek2008verification).
+       caption=Comparison of concentration of AB as a function of time calculated through TMAP8 and analytically for the solution in ratedep conditions when A$_2$ and B$_2$ have unequal pressures [!citep](ambrosek2008verification).
 
 ## Input files
 

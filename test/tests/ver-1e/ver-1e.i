@@ -1,3 +1,7 @@
+# Verification Problem #1e from TMAP4/TMAP7 V&V document
+# Permeation problem in a composite layer
+# No Soret effect, trapping, or solubility included.
+
 # Numerical parameters
 nx_num = 1000 # -
 simulation_time = ${units 5000 s}
@@ -26,6 +30,7 @@ initial_concentration = ${units 50.7079 mol/m^3}
 []
 
 [Functions]
+  # Diffusivity assign based on different material domains
   [diffusivity_value]
     type = ParsedFunction
     expression = 'if(x < ${length_PyC}, ${Diffusivity_PyC}, ${Diffusivity_SiC} )'

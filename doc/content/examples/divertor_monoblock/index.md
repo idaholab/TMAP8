@@ -2,6 +2,8 @@
 
 TMAP8 is used to model tritium transport in a divertor monoblock to elucidate the effects of pulsed operation (up to fifty 1600-second plasma discharge and cool-down cycles) on the tritium in-vessel inventory source term and ex-vessel release term (i.e., tritium retention and permeation) for safety analysis. This example reproduces the results presented in [!cite](Shimada2024114438).
 
+This case is also available on the [Virtual Test Bed (VTB)](https://mooseframework.inl.gov/virtual_test_bed/) [!citep](Charlot2025VTB).
+
 ## General description of the simulation case and corresponding input file
 
 ### Introduction
@@ -77,9 +79,12 @@ In the input file, the mesh is defined as:
 | $\alpha_{r0}$ | Pre-exponential factor, $8.40 \times 10^{12}$ | s$^{−1}$ |
 | $E_{dt}$ | Detrapping energy | eV |
 | $N$ | Atomic number density | m$^{−3}$ |
-| $\rho$ | Density | g m$^{-3}$ |
+| $\rho$ | Density | kg m$^{-3}$ |
 | $c_p$ | Specific heat | J kg$^{-1}$ K$^{-1}$ |
 | $k_T$ | Thermal conductivity | W m$^{-1}$ K$^{-1}$ |
+
+!alert warning title=Typo in [!cite](Shimada2024114438)
+The equivalent table in [!cite](ambrosek2008verification) has a typographical error: It lists the density in g m$^{-3}$ when the correct unit, used in [tab:variables], is kg m$^{-3}$. This does not, however, change the results since the value used for the density was correct and used the proper unit.
 
 
 ### Variables and governing equations
@@ -193,6 +198,9 @@ solute T atom concentration at the exposed surface ($y = 14.0$ mm)
 as a simplification of the complex plasma implantation and recombination phenomena,
 which would require a very fine mesh and increase computational costs.
 
+!alert warning title=Small typo fixed for the heat flux from [!cite](Shimada2024114438)
+Since publication, the input file has been updated to fix a small typo that has a minor, almost insignificant effect on the results. The typo set the heat flux to be equal to 300 W/m$^2$ while the pulse was off, as opposed to being equal to 0 W/m$^2$. This was likely due to a mistake in using the off-pulse temperature of the cooling channel (300 K) rather than the zero flux. The change from 300 W/m$^2$ to 0 W/m$^2$ was observed to be negligible, which is attributed to the fact that 300 W/m$^2$ is a small value in this scenario. For context, the maximum heat flux value is 1 $\times 10^{7}$ W/m$^2$. The current version of the input file uses 0 W/m$^2$.
+
 !listing test/tests/divertor_monoblock/divertor_monoblock.i link=false block=BCs
 
 
@@ -293,7 +301,22 @@ The input file [/divertor_monoblock.i] returns the outputs that were used in [!c
 
 ## Complete input file
 
-Below is the complete input file, which can be run reliably with approximately 4 processor cores. Note that this input file has not been optimized for computational costs.
+This case is reproduced three times:
+
+- Once with the usual TMAP8 syntax for input files, which is done in [/divertor_monoblock.i],
+- Another time using the [Physics Syntax](syntax/Physics/index.md) to reproduce the same exact case, but with a simpler input file, which is shown in [/divertor_monoblock_physics.i], and
+- Last with a simpler model utilizing only two variables (mobile and trapped) for tritium concentration across the different materials instead of having different variables in each block. The input file also uses the [Physics Syntax](syntax/Physics/index.md) and is shown in [/divertor_monoblock_physics-single-variable.i].
+
+Note that since these input files have a lot of sections in common, we utilize the `!include` feature available in MOOSE/TMAP8 to template common parts of the input files. In this case:
+
+- [/divertor_monoblock_common_base.i] contains all the parts of the input files common to all three cases.
+- [/divertor_monoblock_mesh_base.i] contains parts related to the geometry and mesh for all three cases.
+- [/divertor_monoblock_multi_variable_base.i] contains the parts shared by both the [/divertor_monoblock.i] and [/divertor_monoblock_physics.i] cases.
+- [/divertor_monoblock_physics-single-variable.i] contains the parts equivalent to the ones in [/divertor_monoblock_multi_variable_base.i], but for the case in [/divertor_monoblock_physics-single-variable.i].
+
+Below is the input file [/divertor_monoblock.i], which includes several of the base input files described above.
+This case can be run reliably with approximately 4 processor cores.
+Note that this input file has been optimized for showcasing capability rather than computational cost.
 
 !listing test/tests/divertor_monoblock/divertor_monoblock.i
 

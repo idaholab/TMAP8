@@ -65,7 +65,6 @@ file_name = 'val-2ee_out'
   [MatReaction_upstream_HD_re_reaction]
     type = ADMatReaction
     variable = HD_pressure_upstream
-    v = 'HD_pressure_upstream'
     reaction_rate = '${fparse - K_d_HD * kb * temperature * surface_area / volume_enclosure}'
     extra_vector_tags = 'ref'
   []
@@ -133,7 +132,6 @@ file_name = 'val-2ee_out'
   [MatReaction_downstream_HD_re_reaction]
     type = ADMatReaction
     variable = HD_pressure_downstream
-    v = 'HD_pressure_downstream'
     reaction_rate = '${fparse - K_d_HD * kb * temperature * surface_area / volume_enclosure}'
     extra_vector_tags = 'ref'
   []

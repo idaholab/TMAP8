@@ -58,7 +58,6 @@ file_name = 'val-2ed_out'
   [MatReaction_upstream_HD_re_reaction]
     type = ADMatReaction
     variable = HD_pressure_upstream
-    v = 'HD_pressure_upstream'
     reaction_rate = -1
     extra_vector_tags = 'ref'
   []
@@ -117,7 +116,6 @@ file_name = 'val-2ed_out'
   [MatReaction_downstream_HD_re_reaction]
     type = ADMatReaction
     variable = HD_pressure_downstream
-    v = 'HD_pressure_downstream'
     reaction_rate = -1
     extra_vector_tags = 'ref'
   []

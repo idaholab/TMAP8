@@ -6,15 +6,33 @@
       type = Exodiff
       input = ver-1b.i
       exodiff = ver-1b_test_out.e
-      cli_args = 'Executioner/dt=10 Mesh/nx=100 Outputs/exodus/file_base=ver-1b_test_out'
+      cli_args = 'Executioner/dt=10 node_num=100 Outputs/exodus/file_base=ver-1b_test_out Outputs/csv/file_base=ver-1b_test_out'
       requirement = 'The system shall be able to model transient diffusion through a slab with a constant concentration boundary condition as the species source.'
+    []
+    [ver-1b_csvdiff]
+      type = CSVDiff
+      input = ver-1b.i
+      should_execute = False
+      csvdiff = ver-1b_test_out.csv
+      cli_args = 'Executioner/dt=10 node_num=100 Outputs/exodus/file_base=ver-1b_test_out Outputs/csv/file_base=ver-1b_test_out'
+      requirement = 'The system shall be able to model transient diffusion through a slab with a constant concentration boundary condition as the species source to generate CSV data for use in comparisons with the analytic solution over time.'
+      prereq = ver-1b
     []
     [ver-1b-components]
       type = Exodiff
       input = ver-1b-component.i
       exodiff = ver-1b-component_out.e
-      cli_args = 'Executioner/dt=10 ActionComponents/structure/nx=100 Outputs/exodus/file_base=ver-1b-component_out'
+      cli_args = 'Executioner/dt=10 node_num=100 Outputs/exodus/file_base=ver-1b-component_out Outputs/csv/file_base=ver-1b-component_out'
       requirement = 'The system shall be able to model transient diffusion through a slab with a constant concentration boundary condition as the species source using a Physics and Components syntax.'
+    []
+    [ver-1b-components_csvdiff]
+      type = CSVDiff
+      input = ver-1b-component.i
+      should_execute = False
+      csvdiff = ver-1b-component_out.csv
+      cli_args = 'Executioner/dt=10 node_num=100 Outputs/exodus/file_base=ver-1b-component_out Outputs/csv/file_base=ver-1b-component_out'
+      requirement = 'The system shall be able to model transient diffusion through a slab with a constant concentration boundary condition as the species source using a Physics and Components syntax to generate CSV data for use in comparisons with the analytic solution over time.'
+      prereq = ver-1b-components
     []
     [ver-1b_heavy]
       type = Exodiff

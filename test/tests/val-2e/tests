@@ -11,6 +11,7 @@
   [val-2ea]
     type = Exodiff
     input = val-2ea.i
+    prereq = val-2ea_csvdiff
     should_execute = False  # this test relies on the output files from val-2ea_csvdiff, so it shouldn't be run twice
     exodiff = val-2ea_out.e
     requirement = 'The system shall be able to model permeation of Deuterium from a 0.05 mm thick membrane at 825 K.'
@@ -25,6 +26,7 @@
   [val-2eb]
     type = Exodiff
     input = val-2ea.i
+    prereq = val-2eb_csvdiff
     should_execute = False  # this test relies on the output files from val-2eb_csvdiff, so it shouldn't be run twice
     exodiff = val-2eb_out.e
     cli_args = 'slab_thickness="${units 2.5e-5 m -> mum}" file_name="val-2eb_out"'
@@ -40,6 +42,7 @@
   [val-2ec]
     type = Exodiff
     input = val-2ea.i
+    prereq = val-2ec_csvdiff
     should_execute = False  # this test relies on the output files from val-2ec_csvdiff, so it shouldn't be run twice
     exodiff = val-2ec_out.e
     cli_args = 'temperature="${units 865 K}" slab_thickness="${units 2.5e-5 m -> mum}" file_name="val-2ec_out"'
@@ -54,6 +57,7 @@
   [val-2ed]
     type = Exodiff
     input = val-2ed.i
+    prereq = val-2ed_csvdiff
     should_execute = False  # this test relies on the output files from val-2ed_csvdiff, so it shouldn't be run twice
     exodiff = val-2ed_out.e
     requirement = 'The system shall be able to model permeation of mixture gas with chemical reaction from a  0.025 mm thin membrane at 870 K using lawdep boundary conditions and generate an exodus file.'
@@ -67,6 +71,7 @@
   [val-2ee]
     type = Exodiff
     input = val-2ee.i
+    prereq = val-2ee_csvdiff
     should_execute = False  # this test relies on the output files from val-2ee_csvdiff, so it shouldn't be run twice
     exodiff = val-2ee_out.e
     requirement = 'The system shall be able to model permeation of mixture gas with chemical reaction from a 0.025 mm thin membrane at 870 K using ratedep boundary conditions and generate an exodus file.'
