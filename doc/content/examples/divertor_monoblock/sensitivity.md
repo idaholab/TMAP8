@@ -90,9 +90,9 @@ The input files as contained in the tests directory have an end_time parameter t
 
 The top boundary tritium flux and temperature flux are both adjusted to be a function of time, with functions defined in the input file as follows.
 
-!listing test/tests/divertor_monoblock/shutdown_transient_runner.i block=Functions/mobile_flux_bc_func link=false
+!listing test/tests/divertor_monoblock/shutdown_transient_runner.i block=Functions/mobile_flux_bc_function link=false
 
-!listing test/tests/divertor_monoblock/shutdown_transient_runner.i block=Functions/temp_flux_bc_func
+!listing test/tests/divertor_monoblock/shutdown_transient_runner.i block=Functions/temperature_flux_bc_function
 
 !table id=tab:inadvertent_shutdown_case caption=Inadvertent shutdown varied parameter space.
 | Parameter | Samples | Nominal Value | Distribution | Deviation |
