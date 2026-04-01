@@ -6,11 +6,11 @@
 
 # ============ Optimizable Parameters (log-space for prefactors) ============
 log10_alpha_t = '${fparse log10(4.2e8)}'    # ~8.623
-epsilon_t_eV = 1.04
+epsilon_t_eV = 1.04 eV
 log10_alpha_r = '${fparse log10(4.1e6)}'    # ~6.613
-epsilon_r_eV = 1.19
+epsilon_r_eV = 1.19 eV
 log10_D0 = '${fparse log10(6.9e-7)}'        # ~-6.161
-E_d_eV = 1.07
+E_d_eV = 1.07 eV
 
 # ============ Derived Physical Parameters ============
 alpha_t = '${fparse pow(10, log10_alpha_t)}'

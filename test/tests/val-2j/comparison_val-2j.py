@@ -19,28 +19,28 @@ else:
 # ============================================================
 
 exp_e = pd.read_csv(os.path.join(gold_folder, "experiment_data_sample_e.csv"))
-exp_e_temp = exp_e["temperature (K)"].values
+exp_e_temperature = exp_e["temperature (K)"].values
 exp_e_release = exp_e["release_rate (arb)"].values
 exp_e_norm = exp_e_release / np.max(np.abs(exp_e_release))
 
 
-def compute_rmspe(sim_temp, sim_norm, exp_temp, exp_norm, threshold_frac=0.05):
+def compute_rmspe(sim_temperature, sim_norm, exp_temperature, exp_norm, threshold_frac=0.05):
     """Compute RMSPE between interpolated simulation and experimental data.
 
     Only points where the experimental value exceeds threshold_frac of the
     experimental maximum are included.
 
     Args:
-        sim_temp: simulation temperature array
+        sim_temperature: simulation temperature array
         sim_norm: normalized simulation release rate
-        exp_temp: experimental temperature array
+        exp_temperature: experimental temperature array
         exp_norm: normalized experimental release rate
         threshold_frac: fraction of max experimental value used as filter
 
     Returns:
         float: RMSPE value in percent
     """
-    sim_interp = np.interp(exp_temp, sim_temp, sim_norm)
+    sim_interp = np.interp(exp_temperature, sim_temperature, sim_norm)
     mask = exp_norm > threshold_frac * np.max(np.abs(exp_norm))
     rmse = np.sqrt(np.mean((sim_interp[mask] - exp_norm[mask]) ** 2))
     rmspe = rmse * 100.0 / np.mean(np.abs(exp_norm[mask]))
@@ -52,25 +52,25 @@ def compute_rmspe(sim_temp, sim_norm, exp_temp, exp_norm, threshold_frac=0.05):
 # ============================================================
 
 sim_ref = pd.read_csv(os.path.join(gold_folder, "val-2j_out.csv"))
-sim_ref_temp = sim_ref["temperature_pp"]
+sim_ref_temperature = sim_ref["temperature_pp"]
 sim_ref_release = np.abs(sim_ref["release_rate"])
 sim_ref_norm = sim_ref_release / sim_ref_release.max()
 
-rmspe_ref = compute_rmspe(sim_ref_temp, sim_ref_norm, exp_e_temp, exp_e_norm)
+rmspe_ref = compute_rmspe(sim_ref_temperature, sim_ref_norm, exp_e_temperature, exp_e_norm)
 
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
 ax.plot(
-    sim_ref_temp,
+    sim_ref_temperature,
     sim_ref_norm,
     linestyle="-",
     label="TMAP8",
     color="tab:red",
 )
 ax.plot(
-    exp_e_temp,
+    exp_e_temperature,
     exp_e_norm,
     marker="o",
     linestyle="None",
@@ -101,25 +101,25 @@ plt.close(fig)
 # ============================================================
 
 sim_opt = pd.read_csv(os.path.join(gold_folder, "optimal_bayesian_params_out.csv"))
-sim_opt_temp = sim_opt["temperature_pp"]
+sim_opt_temperature = sim_opt["temperature_pp"]
 sim_opt_release = np.abs(sim_opt["release_rate"])
 sim_opt_norm = sim_opt_release / sim_opt_release.max()
 
-rmspe_opt = compute_rmspe(sim_opt_temp, sim_opt_norm, exp_e_temp, exp_e_norm)
+rmspe_opt = compute_rmspe(sim_opt_temperature, sim_opt_norm, exp_e_temperature, exp_e_norm)
 
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
 ax.plot(
-    sim_opt_temp,
+    sim_opt_temperature,
     sim_opt_norm,
     linestyle="-",
     label="TMAP8 (optimized)",
     color="tab:red",
 )
 ax.plot(
-    exp_e_temp,
+    exp_e_temperature,
     exp_e_norm,
     marker="o",
     linestyle="None",

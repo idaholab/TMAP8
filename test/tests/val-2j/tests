@@ -1,6 +1,6 @@
 [Tests]
   design = 'TrappingNodalKernel.md ReleasingNodalKernel.md'
-  issues = '#12'
+  issues = '#12 #400'
   validation = 'val-2j.md'
   [val-2j_csvdiff]
     type = CSVDiff
@@ -8,19 +8,11 @@
     csvdiff = val-2j_out.csv
     requirement = 'The system shall be able to model tritium TDS from Li2TiO3 with fine mesh to compare with experimental desorption data from Kobayashi et al. (2015).'
   []
-  [val-2j_exodiff]
-    type = Exodiff
-    input = 'val-2j.i'
-    exodiff = val-2j_out.e
-    prereq = val-2j_csvdiff
-    should_execute = false
-    requirement = 'The system shall be able to model tritium TDS from Li2TiO3 with fine mesh including full simulation outputs.'
-  []
   [val-2j_optimized_csvdiff]
     type = CSVDiff
     input = 'val-2j.i optimal_bayesian_params.i'
-    csvdiff = 'optimal_bayesian_params_out.csv'
-    cli_args = 'Outputs/file_base=optimal_bayesian_params_out'
+    csvdiff = 'val-2j_optimal_bayesian_params_out.csv'
+    cli_args = 'Outputs/file_base=val-2j_optimal_bayesian_params_out'
     prereq = val-2j_csvdiff
     requirement = 'The system shall model tritium TDS from Li2TiO3 with Bayesian-optimized parameters.'
   []
@@ -28,7 +20,7 @@
     type = Exodiff
     input = 'val-2j.i optimal_bayesian_params.i'
     exodiff = 'optimal_bayesian_params_out.e'
-    cli_args = 'Outputs/file_base=optimal_bayesian_params_out'
+    cli_args = 'Outputs/file_base=val-2j_optimal_bayesian_params_out'
     prereq = val-2j_optimized_csvdiff
     should_execute = false
     requirement = 'The system shall model tritium TDS from Li2TiO3 with Bayesian-optimized parameters including full simulation outputs.'

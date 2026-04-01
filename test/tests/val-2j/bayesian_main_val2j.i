@@ -7,32 +7,32 @@
 []
 
 [Distributions]
-  [log10_alpha_t_dist]
+  [log10_alpha_t_distribution]
     type = Uniform
     lower_bound = 7.0
     upper_bound = 10.0
   []
-  [epsilon_t_eV_dist]
+  [epsilon_t_eV_distribution]
     type = Uniform
     lower_bound = 0.8
     upper_bound = 1.3
   []
-  [log10_alpha_r_dist]
+  [log10_alpha_r_distribution]
     type = Uniform
     lower_bound = 5.0
     upper_bound = 8.0
   []
-  [epsilon_r_eV_dist]
+  [epsilon_r_eV_distribution]
     type = Uniform
     lower_bound = 0.9
     upper_bound = 1.5
   []
-  [log10_D0_dist]
+  [log10_D0_distribution]
     type = Uniform
     lower_bound = -8.0
     upper_bound = -4.0
   []
-  [E_d_eV_dist]
+  [E_d_eV_distribution]
     type = Uniform
     lower_bound = 0.8
     upper_bound = 1.4
@@ -48,7 +48,7 @@
 [Samplers]
   [sample]
     type = GenericActiveLearningSampler
-    distributions = 'log10_alpha_t_dist epsilon_t_eV_dist log10_alpha_r_dist epsilon_r_eV_dist log10_D0_dist E_d_eV_dist'
+    distributions = 'log10_alpha_t_distribution epsilon_t_eV_distribution log10_alpha_r_distribution epsilon_r_eV_distribution log10_D0_distribution E_d_eV_distribution'
     sorted_indices = 'conditional/sorted_indices'
     num_parallel_proposals = 5
     num_tries = 5000

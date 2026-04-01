@@ -9,7 +9,7 @@
 kB_J = '${units 1.380649e-23 J/K}'   # Boltzmann constant in J/K
 
 # ============ Geometry ============
-grain_radius = '${units 1.5e-6 m -> mum}'  # average grain radius (Section 3)
+grain_radius = '${units 1.5e-6 m -> mum}'  # average grain radius
 num_elems = 100  # number of radial elements
 
 # ============ Diffusion Parameters (Eq. 11) ============

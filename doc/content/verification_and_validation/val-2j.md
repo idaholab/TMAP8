@@ -6,7 +6,7 @@
 
 This validation case models tritium thermal desorption spectroscopy (TDS) from neutron-irradiated Li$_2$TiO$_3$ (lithium titanate) crystalline grains, a candidate solid tritium breeding material for Deuterium-Tritium (D-T) fusion reactors. The experimental data and model are from [!cite](kobayashi2015developing).
 
-Li$_2$TiO$_3$ samples were irradiated at the Kyoto University Reactor (KUR) at various neutron fluences. After irradiation, the tritium release behavior was measured by TDS with a heating rate of 5 K/min using pure helium as the purge gas. The average grain radius was 1.5 $\mu$m.
+Li$_2$TiO$_3$ samples were irradiated at the Kyoto University Reactor (KUR) at various neutron fluences. After irradiation, the tritium release behavior was measured by TDS with a heating rate of 5 K/min starting from 300 K using pure helium as the purge gas. The average grain radius was 1.5 $\mu$m.
 
 Sample E (high defect density, $D_{id}$ = 0.018 defect/Li$_2$TiO$_3$) is modeled, where tritium release is significantly influenced by trapping at O$^{-}$-centers and defect annihilation.
 
@@ -26,16 +26,16 @@ where $C_T$ is the concentration of trapped tritium in O$^{-}$-centers, $D$ is t
 D = D_0 \exp \left( -\frac{E_d}{k_B T} \right),
 \end{equation}
 
-where $D_0$ is the pre-exponential factor, $E_d$ is the activation energy, $k_B$ is the Boltzmann constant, and $T$ is temperature.
+where $D_0$ is the pre-exponential factor, $E_d$ is the activation energy, $k_B$ is the Boltzmann constant, and $T$ is the temperature.
 
 ### Trapping and Detrapping
 
-Only O$^{-}$-center (hydroxyl group) trapping is included in this model. As noted by [!cite](kobayashi2015developing) (p. 26), tritium release controlled by detrapping from F$^+$-centers (oxygen vacancies) occurs near 580 K, which corresponds to the release temperature controlled by the diffusion process itself. Because F$^+$-center detrapping is not rate-limiting relative to diffusion, it does not produce a distinct feature in the TDS spectrum, and is therefore excluded from the model.
+Only O$^{-}$-center (hydroxyl group) trapping is included in this model. As noted by [!cite](kobayashi2015developing) (p. 26), tritium release controlled by detrapping from F$^+$-centers (oxygen vacancies) occurs near 580 K, which corresponds to the release temperature controlled by the diffusion process itself. Because F$^+$-center detrapping is not rate-limiting relative to diffusion, it does not produce a distinct feature (i.e., peak) in the TDS spectrum, and is therefore excluded from the model.
 
 The trapped concentration $C_T$ evolves according to:
 
 \begin{equation}  \label{eq:trapping}
-\frac{\partial C_T}{\partial t} = \alpha_t \frac{C_T^{\text{empty}} C_M}{N} - \alpha_r C_T
+\frac{\partial C_T}{\partial t} = \alpha_t \frac{C_T^{\text{empty}} C_M}{N} - \alpha_r C_T,
 \end{equation}
 
 where $N$ is the lattice site density, and $C_T^{\text{empty}} = \chi N - C_T$ is the empty trap concentration with $\chi$ being the trap site fraction.
@@ -43,14 +43,14 @@ where $N$ is the lattice site density, and $C_T^{\text{empty}} = \chi N - C_T$ i
 The trapping and detrapping rate coefficients follow Arrhenius relationships:
 
 \begin{equation} \label{eq:trapping_rate}
-\alpha_t = \alpha_{t0} \exp\left(-\frac{\epsilon_t}{k_B T}\right)
+\alpha_t = \alpha_{t0} \exp\left(-\frac{\epsilon_t}{k_B T}\right),
 \end{equation}
 
 \begin{equation} \label{eq:detrapping_rate}
-\alpha_r = \alpha_{r0} \exp\left(-\frac{\epsilon_r}{k_B T}\right)
+\alpha_r = \alpha_{r0} \exp\left(-\frac{\epsilon_r}{k_B T}\right),
 \end{equation}
 
-where $\alpha_{t0}$ and $\alpha_{r0}$ are pre-factors of trapping and release rate coefficients, $\epsilon_t$ and $\epsilon_r$ are trapping and release energies, and $k_B$ is the Boltzmann constant.
+where $\alpha_{t0}$ and $\alpha_{r0}$ are pre-factors of trapping and release rate coefficients, $\epsilon_t$ and $\epsilon_r$ are the trapping and release energies, and $k_B$ is the Boltzmann constant.
 
 ### Defect annihilation
 
@@ -60,9 +60,9 @@ During TDS heating, radiation-induced defect sites undergo first-order annihilat
 \frac{d D_{id}}{dt} = -k_{dp-da} \, D_{id},
 \end{equation}
 
-where $D_{id}$ is defect density. The trap site fraction $\chi$ is related to radiation defect density $D_{id}$. However, the exact relationship haven't been indicated in [!citep](kobayashi2015developing). Therefore, the initial trap site fraction is assumed to equal the defect density with $\chi(0) = D_{id}$.
+where $D_{id}$ is the defect density. The trap site fraction $\chi$ is related to radiation defect density $D_{id}$. However, the exact relationship is not clearly indicated in [!citep](kobayashi2015developing). Therefore, the initial trap site density is assumed to equal the defect density with $\chi(0)N = D_{id}$.
 
-The annihilation rate coefficient, k_{dp-da}, is described as:
+The annihilation rate coefficient, $k_{dp-da}$, is described as:
 
 \begin{equation} \label{eq:annihilation_rate}
 k_{dp-da} = k_{dp-da,0} \exp \left( -\frac{E_{dp-da}}{k_B T} \right).
@@ -75,7 +75,8 @@ The raising temperature reduces the available trap sites: the trap site fraction
 - $\partial C / \partial r = 0$ at $r = 0$ (symmetry at grain center)
 - $C = 0$ at $r = r_g$ (fast surface release, [!cite](kobayashi2015developing))
 
-The mobile and trapped tritium concentrations are initialized at their local trapping/detrapping equilibrium values at the starting temperature $T_{\text{start}}$ = 300 K. The equilibrium mobile concentration is computed from the balance of trapping and detrapping rates. This avoids an initial transient from any imbalance between trapping and detrapping. Since TDS output is normalized to arbitrary units, only the shape of the release curve matters, not the absolute concentrations. The temperature increases linearly at 5 K/min from 300 K.
+The mobile and trapped tritium concentrations are initialized at their local trapping/detrapping equilibrium values at the starting temperature $T_{\text{start}}$ = 300 K. The equilibrium mobile concentration is computed from the balance of trapping and detrapping rates. This avoids an initial transient from any imbalance between trapping and detrapping. 
+Since the TDS output is normalized to arbitrary units, only the shape of the release curve matters, not the absolute concentrations.
 
 ## Case and Model Parameters
 
@@ -109,7 +110,7 @@ The mobile and trapped tritium concentrations are initialized at their local tra
 
 ### Results after optimization
 
-The agreement between the TMAP8 simulation and experimental data can be improved by optimizing the model parameters using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html). A Bayesian optimization approach [!citep](DHULIPALA2026102776) was applied to optimize six key parameters, three Arrhenius pre-exponential factors (in log$_{10}$ space) and three activation energies, to the experimental TDS curve for Sample E. The optimization used Gaussian Process active learning with Expected Improvement acquisition, running 40 iterations with 5 parallel proposals per iteration.
+The agreement between the TMAP8 simulation and experimental data can be improved by optimizing the model parameters using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html). A Bayesian optimization approach [!citep](DHULIPALA2026102776) was applied to optimize six key parameters (i.e., three Arrhenius pre-exponential factors (in log$_{10}$ space) and three activation energies) to better match the experimental TDS curve for Sample E. The optimization used Gaussian Process active learning with Expected Improvement acquisition, running 40 iterations with 5 parallel proposals per iteration.
 
 [val-2j_optimized_parameters] compares the reference values from [!cite](kobayashi2015developing) with the Bayesian-optimized parameters.
 
