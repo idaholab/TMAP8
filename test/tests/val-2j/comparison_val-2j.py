@@ -105,7 +105,9 @@ plt.close(fig)
 # Figure 2: Optimized parameters vs experiment
 # ============================================================
 
-sim_opt = pd.read_csv(os.path.join(gold_folder, "val-2j_optimal_bayesian_params_out.csv"))
+sim_opt = pd.read_csv(
+    os.path.join(gold_folder, "val-2j_optimal_bayesian_params_out.csv")
+)
 sim_opt_temperature = sim_opt["temperature_pp"]
 sim_opt_release = np.abs(sim_opt["release_rate"])
 sim_opt_norm = sim_opt_release / sim_opt_release.max()
