@@ -1,104 +1,98 @@
-# Validation problem to address hydrogen permeation through SRNL 304 stainless steel mini canisters.
-# Reports:
-# https://inldigitallibrary.inl.gov/sites/sti/sti/Sort_129733.pdf
-# https://www.osti.gov/biblio/2477665
+# Author: Evan Butterworth
+# Contact: Evan.Butterworth@inl.gov
 
-# Geometry
+# This input file simulates the hydrogen permeation through only the steel wall
+# within aluminum-clad used nuclear fuel (AUNF) mini-canister storage device at Savannah River National Laboratory (SRNL).
+
+# Sources:
+# INL Report: https://inldigitallibrary.inl.gov/sites/sti/sti/Sort_129733.pdf
+# SRNL Report: https://www.osti.gov/biblio/2477665
+# Ronnebro association/disassociation paper: https://pubmed.ncbi.nlm.nih.gov/36235066/​​
+# Sandia Reports:
+# https://www.sandia.gov/app/uploads/sites/158/2021/12/1500TechRef_ferriticSS.pdf​
+# https://www.sandia.gov/app/uploads/sites/158/2021/12/2101TechRef_304SS.pdf​
+
+### GEOMETRY ###
 inner_radius = '${units 1.415 in -> mm}' # Radius of canister containing gases
 steel_thickness = '${units 0.085 in -> mm}' # Thickness of steel enclosure
 total_radius = '${units ${fparse inner_radius + steel_thickness} mm}'
-height = '${units 7.06 in -> mm}'
-# gas_volume_meters = '${units ${fparse pi*inner_radius^2*height} mm^3 -> m^3}' # CAREFUL IF USED ELSEWHERE. SHOULD BE mm^3
-# gas_volume = '${units ${fparse pi*inner_radius^2*height} mm^3}'
-# Ambient Physical & Chemical Parameters
-temperature = '${units 313.15 K}' # mild temp
-estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}' # Anywhere from 1-10% of 24 psi
+height = '${units 7.06 in -> mm}' # Height/length of canister
 
-initial_pressure_air = '${units 0.051 Pa}' # Hydrogen in atmosphere is negligible?
-# initial_pressure_air = '${units 0 psi -> Pa}'
-ideal_gas_constant = '${units 8.31446261815324 J/K/mol -> J/K/mumol}'
+### INPUT PARAMETERS ###
 
-# Initial Concentrations
-# initial_concentration_steel = '${units ${fparse initial_pressure_air/(ideal_gas_constant*temperature)} mumol/m^3 -> mumol/mm^3}'
-initial_concentration_steel = '${units 0 mumol/mm^3}'
+temperature = '${units 313.15 K}' # INL Report: Section 2.3
+estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}' # SRNL Report: Estimation of Partial Pressure of H_2 with HE backfill to 24 psi
+ideal_gas_constant = '${units 8.31446261815324 J/K/mol -> J/K/mumol}' # Needed for concentration units in mumol/mm^3
+initial_concentration_steel = '${units 0 mumol/mm^3}' # Initial Concentration of mobile hydrogen in steel C_s
 
-### STEEL-ONLY MODEL MUST ASSUME TOTAL CONCENTRATION IN GAS ###
-assumed_gas_total_mass = '${units 1466.5 mumol}' # molecular hydrogen peak from SRNL data
-# assumed_gas_total_mass = '${units ${fparse estimated_pressure_gas*gas_volume_meters/(ideal_gas_constant*temperature)} mumol}' # Estimation using ideal gas law
-
-# Hydrogen Diffusivity in Steel
+# Sandia Report: Hydrogen Diffusivity & Solubility in 304 Stainless Steel
 diffusivity_preexponential_factor_in_steel = '${units 0.20e-6 m^2/s -> mm^2/day}'
 diffusivity_activation_energy_in_steel = '${units 49.3 kJ/mol -> J/mumol}'
 diffusivity_H_in_steel = '${units ${fparse diffusivity_preexponential_factor_in_steel * exp(-diffusivity_activation_energy_in_steel/(ideal_gas_constant*temperature))} mm^2/day}'
+solubility_preexponential_factor_in_steel = '${units 266e-6 mumol/mm^3/Pa}' # Actual units are mumol/mm^3/sqrt(Pa) due to Sievert's law in EquilibriumBC
+solubility_activation_energy_in_steel = '${units 6.86 kJ/mol -> J/mol}' # J/mol needed since EquilibriumBC uses ideal gas constant in SI units from PhysicalConstants namespace
 
-# Hydrogen Solubility in Steel
-#https://www.sandia.gov/app/uploads/sites/158/2021/12/1500TechRef_ferriticSS.pdf
-# solubility_preexponential_factor_in_steel = '${units 266e-3 mol/m^3/Pa -> mumol/mm^3/Pa}' #sqrt Pa used in BC due to sievert's law
-solubility_preexponential_factor_in_steel = '${units 266e-6 mumol/mm^3/Pa}' #sqrt Pa used in BC due to sievert's law
-solubility_activation_energy_in_steel = '${units 6.86 kJ/mol -> J/mol}' # Leave as mol to cancel out with ideal gas constant
-
-# Mesh
-num_intervals_steel = 5000
-
-# Numerics
+# Numerical discretization parameters
+num_elements_steel = 5000
+endtime = '${units 0.25 year -> day}'
+dt_start = '${units 300 s -> day}'
 dt_max = '${units 7 day}'
 dt_min = '${units 1 s -> day}'
-# endtime = '${units 1 year -> day}'
-# endtime = '${units 0.25 year -> day}'
-endtime = '${units 10 year -> day}'
-dt_start = '${units 300 s -> day}' # 3 hours does not give negative concentration for current input parameters
 
 [Mesh]
   coord_type = 'RZ' # Specify 2D axisymmetric coordinates
-  rz_coord_axis = Y # Specifies X is radial direction and Y is axial coordinate
+  rz_coord_axis = Y # Specifies X axis is radial direction and Y axis is axis of symmetry
   [steel]
     type = GeneratedMeshGenerator
     dim = 1
-    nx = '${num_intervals_steel}'
+    nx = '${num_elements_steel}'
     xmin = '${inner_radius}'
     xmax = '${total_radius}'
   []
 []
 
 [Variables]
-  [H_mobile_steel]
+  [H_mobile_steel] # Mobile H_2 concentration in steel
     initial_condition = '${initial_concentration_steel}'
+    order = FIRST
+    family = LAGRANGE
   []
 []
 
 [AuxVariables]
-  [H_partial_pressure_gas]
-    initial_condition = 0 # Pressured ramped in time or data fit to SRNL data, both of which have starting value of 0
+  [H_partial_pressure_gas] # Partial pressure of H_2 in internal gas chamber
     order = FIRST
     family = LAGRANGE
   []
-  [H_partial_pressure_air]
-    initial_condition = '${initial_pressure_air}'
-    order = FIRST
-    family = SCALAR
-    outputs = none
-  []
-  [H_mobile_steel_derivative]
+  [H_mobile_steel_derivative] # dC_s/dx
     order = FIRST
     family = MONOMIAL
+  []
+  [T] # Temperature
   []
 []
 
 [AuxKernels]
-  [pressure_fit] # Pressure term starts at zero and ramps up over time
+  [pressure_fit] # Comment out undesired pressure function type
     type = FunctionAux
-    # function = time_ramp_pressure
-    function = SRNL_pressure_data_fun # Corrected or Uncorrected
+    # function = time_ramp_pressure # Estimated pressure with time ramping over first few timesteps to avoid negative concentrations
+    function = SRNL_pressure_data_fun # Data fit of SRNL reported pressure over time for As-Corroded No-Vaccum surrogate assembly in Table 7-5
     variable = H_partial_pressure_gas
   []
 
-  [concentration_gradient_left_boundary] # For Diffusion length calculation
+  [concentration_gradient_left_boundary] # dC_s/dx @ x = inner_radius
     type = DiffusionFluxAux
     component = x
     diffusion_variable = H_mobile_steel
-    diffusivity = negative_unity
+    diffusivity = negative_unity # Gives gradient
     variable = H_mobile_steel_derivative
     boundary = '0'
+  []
+
+  [constant_temperature] # EquilibriumBC expects a variable for temperature
+    type = ConstantAux
+    variable = T
+    value = '${temperature}'
   []
 []
 
@@ -124,52 +118,42 @@ dt_start = '${units 300 s -> day}' # 3 hours does not give negative concentratio
 []
 
 [BCs]
-  [gas_steel_boundary] # Boundary of gas in canister and steel wall
+  [gas_steel_boundary] # Species equilibrium condition between internal gas chamber and steel
     type = EquilibriumBC
     Ko = '${solubility_preexponential_factor_in_steel}'
-    Ko_scaling_factor = 2 # Account for solubility given for molecular hydrogen
+    Ko_scaling_factor = 2 # Convert solubility to represent atomic H
     boundary = '0'
-    activation_energy = '${solubility_activation_energy_in_steel}' # used since ideal gas constant units cannot be changed
-    enclosure_var = H_partial_pressure_gas # Pa = J/m^3
-    variable = H_mobile_steel #
-    temperature = '${temperature}'
+    activation_energy = '${solubility_activation_energy_in_steel}'
+    enclosure_var = H_partial_pressure_gas
+    variable = H_mobile_steel
+    temperature = T
     p = 0.5 # Sievert's Law
   []
 
   [steel_air_boundary] # Boundary of outside edge of steel and open air
-    type = EquilibriumBC
-    Ko = '${solubility_preexponential_factor_in_steel}'
-    Ko_scaling_factor = 2 # Account for solubility given for molecular hydrogen
+    type = DirichletBC
     boundary = '1'
-    activation_energy = '${solubility_activation_energy_in_steel}'
-    enclosure_var = H_partial_pressure_air
+    value = 0
     variable = H_mobile_steel
-    temperature = '${temperature}'
-    p = 0.5 # Sievert's Law
   []
 []
 
 [Functions]
+  # Pressure implementations
   [time_ramp_pressure]
     type = TimeRampFunction
     final_value = '${estimated_pressure_gas}'
     initial_value = 0
     ramp_duration = '${units 3 h -> day}'
-    # ramp_duration = '${endtime}'
   []
   [SRNL_pressure_data_fun]
     type = ParsedFunction
     expression = '376.7588*t^0.6177' # Pa
-    # expression = '381.1436*t^0.6209' # Pa with average correction
-  []
-  [diffusion_length_fun]
-    type = ParsedFunction
-    expression = 'sqrt(pi*${diffusivity_H_in_steel}*t)'
   []
 []
 
 [VectorPostprocessors]
-  [solution_profile]
+  [solution_profile]  # Generate Solution Profile
     type = NodalValueSampler
     sort_by = x
     variable = H_mobile_steel
@@ -180,9 +164,12 @@ dt_start = '${units 300 s -> day}' # 3 hours does not give negative concentratio
 
   ## Length of Diffusion Front ##
 
-  [exact_diffusion_length] # Correct only for time independent boundary condition
-    type = FunctionValuePostprocessor
-    function = diffusion_length_fun
+  [exact_diffusion_length]   # Analytical Diffusion length (non-temporal BC technically required for this to be accurate)
+    type = ParsedPostprocessor
+    expression = 'sqrt(pi*D*t)'
+    constant_names = 'D pi'
+    constant_expressions = '${diffusivity_H_in_steel} 3.1415926535897932' # How to put in pi properly
+    use_t = true
     outputs = csv_data
   []
 
@@ -235,8 +222,7 @@ dt_start = '${units 300 s -> day}' # 3 hours does not give negative concentratio
 
   [flux_difference] # Ensure that we are accounting for atomic vs molecular hydrogen
     type = ParsedPostprocessor
-    expression = 'outflux - influx'
-    # expression = '-influx - outflux'
+    expression = '-influx - outflux'
     pp_names = 'influx outflux'
     outputs = csv_data
   []
@@ -244,6 +230,7 @@ dt_start = '${units 300 s -> day}' # 3 hours does not give negative concentratio
   [time_integrated_flux]
     type = TimeIntegratedPostprocessor
     value = flux_difference
+    time_integration_scheme = trapezoidal-rule
     outputs = csv_data
   []
 
@@ -264,20 +251,13 @@ dt_start = '${units 300 s -> day}' # 3 hours does not give negative concentratio
   []
 
 
-  ### Miscellaneous ###
+  ### Miscellaneous
 
   [assumed_gas_total_mass]
-    type = ConstantPostprocessor
-    value = '${assumed_gas_total_mass}' # Currently mols of H2 molecules
-    execute_on = 'Initial'
-    # outputs = csv_data
-  []
-
-  [min_steel] # Rough Check for Negative Concentrations
-  type = ADElementExtremeFunctorValue
-  functor = H_mobile_steel
-  value_type = min
-  # outputs = csv_data
+    type = ParsedPostprocessor
+    expression = '69.7055*t^0.6808' # Power model linear least squares fit of SRNL data
+    use_t = True
+    outputs = csv_data
   []
 
 []

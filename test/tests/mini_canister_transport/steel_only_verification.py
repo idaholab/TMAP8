@@ -21,25 +21,30 @@ annulus_flux = data['3d_time_integrated_flux']
 exact_diffusion_length = data['exact_diffusion_length']
 simulated_diffusion_length = data['simulated_diffusion_length']
 assumed_gas_total_mass = 2*data['assumed_gas_total_mass'] # Count Atomic Hydrogen
-print("Total Atomic H Assumed in gas phase:", assumed_gas_total_mass[0])
+assumed_total_mass = assumed_gas_total_mass + annulus_total_mass
 
 # Total Mass and Percentage in Steel
 fig, ax1 = plt.subplots(figsize=(10, 6))
 
 # Plot the total mass data
-ax1.plot(t, annulus_total_mass)
+ax1.plot(t, annulus_total_mass, label = 'Steel Total Mass H')
 ax1.set_ylabel(r'H Total Mass ($\mu$mol)')
 ax1.set_xlabel('Time (days)')
-ax1.set_title(f'Atomic Hydrogen in Steel of 3D Annulus vs Time')
+ax1.set_title(f'Atomic Hydrogen H in Steel of 3D Annulus vs Time')
 ax1.set_xlim(0)
 ax1.set_ylim(0)
 ax1.grid(True)
 
 # Plot Percentage data for assumed mass in gas-phase
 ax2 = ax1.twinx()
-ax2.set_ylabel('% Total Hydrogen (Assuming Ideal Gas)', color='k')
-scaling_factor = 100/assumed_gas_total_mass[0]  # Construct percentage
-ax2.set_ylim(ax1.get_ylim()[0] * scaling_factor, ax1.get_ylim()[1] * scaling_factor)
+ax2.set_ylabel('% Total H', color='k')
+percentage = 100. * annulus_total_mass / assumed_total_mass
+ax2.plot(t, percentage, color='tab:orange', linestyle='--', label='% in Steel')
+ax2.set_ylim(0)
+
+lines1, labels1 = ax1.get_legend_handles_labels()
+lines2, labels2 = ax2.get_legend_handles_labels()
+ax1.legend(lines1 + lines2, labels1 + labels2)
 plt.tight_layout()
 plt.show()
 

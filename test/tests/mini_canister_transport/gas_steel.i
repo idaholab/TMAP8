@@ -47,8 +47,8 @@ num_intervals_gas = '${fparse int(num_intervals_steel * inner_radius / steel_thi
 # Numerics
 dt_max = '${units 7 day}'
 dt_min = '${units 1 s -> day}'
-endtime = '${units 10 year -> day}'
-# endtime = '${units 0.25 year -> day}'
+# endtime = '${units 10 year -> day}'
+endtime = '${units 0.25 year -> day}'
 # dt_start = '${units 0.125 day -> day}'
 # dt_start = '${units 300 s -> day}' # nonlinear source functions need smaller timestep for solver to converge
 
@@ -320,7 +320,8 @@ endtime = '${units 10 year -> day}'
 
   [circle_flux_difference]
     type = ParsedPostprocessor
-    expression = 'circle_outflux - 2*circle_influx' # Account for atomic hydrogen
+    # expression = 'circle_outflux - 2*circle_influx' # Account for atomic hydrogen
+    expression = '-2*circle_influx-circle_outflux' # Change from Carson
     pp_names = 'circle_influx circle_outflux'
     outputs = csv_data
   []
