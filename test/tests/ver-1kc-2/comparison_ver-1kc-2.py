@@ -195,7 +195,6 @@ ax.plot(
 ax.set_yticks(np.arange(0, 21, 10))
 ax.set_xlim(0, TMAP8_time_k10.max())
 ax.set_xlabel("Time (s)")
-ax.set_xlim(0, TMAP8_time_k10.max())
 ax.set_ylabel(r"Concentrations ratio $C_{\mathrm{encl1}} / \sqrt{C_{\mathrm{encl2}}}$")
 ax.legend(loc="best")
 ax.grid(which="major", color="0.65", linestyle="--", alpha=0.3)

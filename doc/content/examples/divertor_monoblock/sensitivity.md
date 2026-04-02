@@ -15,7 +15,10 @@ First, the modifications made to the [Divertor Monoblock](examples/divertor_mono
 
 ### Divertor Monoblock modifications 
 
-The pulsed operation of the divertor is computationally expensive, so as a first approximation, we replace the pulsed operation with a single steady pulse. We also add several postprocessors.
+The pulsed operation of the divertor monoblock is relatively computationally expensive to accurately model since it requires taking small time steps to capture transients. 
+For a sensitivity analysis study, where many simulations are required, lowering the cost of individual simulations is paramount. 
+So as a first approximation, we replace the pulsed operation with a single steady pulse in this study. 
+We also add several postprocessors.
 
 First, we add a postprocessor to track the flux across the CuCrZr boundary, and scale it to obtain a total flux
 
@@ -62,7 +65,7 @@ And the total area (2D volume) each material occupies
 ### Steady operation 
 
 The sensitivity studies must sample from a distribution of parameters to determine the net effects of those parameters
-on the model. Here, we vary the incident heat flux, tritium flux, coolant temperature and coolant tritium concentration, sampling from
+on the model. Here, we vary the incident heat flux, tritium flux, coolant temperature, and coolant tritium concentration. For all these parameters, the sampling is done from
 uniform distributions as shown in [tab:steady_case] and [fig:steady_inputs]. It should be noted that the coolant temperature is unusually high
 in this case, as the ITER divertor is designed to have coolant run at 100&deg;C with a 50&deg;C temperature increase at the outlet [!cite](hirai2010iter).
 
@@ -82,10 +85,10 @@ in this case, as the ITER divertor is designed to have coolant run at 100&deg;C 
 
 !style halign=left
 
-For a transient case of an inadvertent shutdown, we modify parameters as shown in [tab:inadvertent_shutdown_case] and [fig:shutdown_inputs]. This case is modified such that we assume constant operation for 5.5 hours before encountering a `Peak Heat` (and proportionally scaled tritium) `Flux` for the sampled `Peak Duration` before resuming at one-tenth the heat and tritium flux of the original steady-state.
+For a transient case of an inadvertent shutdown, we modify parameters as shown in [tab:inadvertent_shutdown_case] and [fig:shutdown_inputs]. This case is modified such that we assume constant operation for 5.5 hours before encountering a `Peak Heat Flux` (and proportionally scaled tritium flux) for the sampled `Peak Duration` before resuming at one-tenth the heat and tritium flux of the original steady-state.
 
 !alert! note title=Input file time duration
-The input files as contained in the tests directory have an end_time parameter that prevents the entire scenario from being run. This parameter must be changed to some number higher than 2e4+`Peak Duration` in order to model these cases
+The input files as contained in the tests directory have an `end_time` parameter that prevents the entire scenario from being run. This parameter must be changed to some number higher than 2$\times 10^4$ seconds + `Peak Duration` in order to model these cases
 !alert-end!
 
 The top boundary tritium flux and temperature flux are both adjusted to be a function of time, with functions defined in the input file as follows.
@@ -119,7 +122,7 @@ To simulate an edge-localized mode (ELM) disruption, we simulate a set of input 
 !table id=tab:elm_transient_case caption=Edge-localized mode transient case parameter space.
 | Parameter | Samples | Nominal Value | Distribution | Deviation |
 | --- | --- | --- | --- | --- |
-| Peak Duration | 1000 | 1.32ms | Normal | $\sigma$=$\pm$5% |
+| Peak Duration | 1000 | 1.32 ms | Normal | $\sigma$=$\pm$5% |
 | Peak Heat Flux | 1000 | 1147 MW/m$^2$ [!cite](loarte2017elms) | Normal | $\sigma$=$\pm$5% |
 | Coolant Temperature | 1000 | 552 K | Normal | $\sigma$=$\pm$5% |
 | Tungsten Conductivity Factor | 1000 | 1.0 | Uniform | $\sigma$=$\pm$5% |
@@ -129,7 +132,11 @@ To simulate an edge-localized mode (ELM) disruption, we simulate a set of input 
 
 ### Steady operation 
 
-For purposes of comparison, we look at the maximum observed tungsten temperature and the scaled permeation flux with regards to the heat flux in [fig:ss_correlation]. For the steady-state case, the heat flux and tritium flux are not coupled, though we would expect to see some correlation due to increased diffusivity and trapping considerations. We would also expect increases in heat flux to lead to increased tungsten temperature. While we observe both, the effect of heat flux on tritium permeation rate is more attenuated.
+For purposes of comparison, we look at the maximum observed tungsten temperature and the scaled permeation flux with regards to the heat flux in [fig:ss_correlation]. 
+The maximum tungsten temperature naturally correlates with the heat flux, but also depends on thermal conductivity and coolant temperature, as expected.
+The link between heat flux and tritium flux is not as strong. In general, larger values of tritium flux to the coolant are obtained with higher heat flux, which is the results from increased diffusivity and temperatures more likely to be sufficient for tritium release from traps. 
+However, small tritium flux values are still obtained when a large heat flux is applied. This is attributed to lower temperatures towards the coolant (due to cooler coolant or higher thermal conductivity).
+Note, however, that low tritium flux are less likely as the heat flux increases.  
 
 !media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/steady_comparison.png id=fig:ss_correlation
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
@@ -145,7 +152,7 @@ For the inadvertent shutdown case, we can correlate the input parameters with se
 
 ### Edge-localized mode disruption 
 
-For the case of simulating an ELM disruption event, we show in [fig:elm_correlation] that though the operating conditions vary, the physics are substantially the same.
+For the case of simulating an ELM disruption event, we show in [fig:elm_correlation] that although the operating conditions vary, the trends are substantially the same.
 
 !media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/elm_pairplots.png id=fig:elm_correlation
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
