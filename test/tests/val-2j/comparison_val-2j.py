@@ -24,7 +24,9 @@ exp_e_release = exp_e["release_rate (arb)"].values
 exp_e_norm = exp_e_release / np.max(np.abs(exp_e_release))
 
 
-def compute_rmspe(sim_temperature, sim_norm, exp_temperature, exp_norm, threshold_frac=0.05):
+def compute_rmspe(
+    sim_temperature, sim_norm, exp_temperature, exp_norm, threshold_frac=0.05
+):
     """Compute RMSPE between interpolated simulation and experimental data.
 
     Only points where the experimental value exceeds threshold_frac of the
@@ -56,7 +58,9 @@ sim_ref_temperature = sim_ref["temperature_pp"]
 sim_ref_release = np.abs(sim_ref["release_rate"])
 sim_ref_norm = sim_ref_release / sim_ref_release.max()
 
-rmspe_ref = compute_rmspe(sim_ref_temperature, sim_ref_norm, exp_e_temperature, exp_e_norm)
+rmspe_ref = compute_rmspe(
+    sim_ref_temperature, sim_ref_norm, exp_e_temperature, exp_e_norm
+)
 
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
@@ -82,6 +86,7 @@ ax.plot(
 ax.set_xlabel("Temperature (K)")
 ax.set_ylabel("Normalized tritium release rate (-)")
 ax.set_xlim(300, 900)
+ax.set_ylim(bottom=0)
 ax.legend(loc="best")
 ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
 ax.minorticks_on()
@@ -100,12 +105,14 @@ plt.close(fig)
 # Figure 2: Optimized parameters vs experiment
 # ============================================================
 
-sim_opt = pd.read_csv(os.path.join(gold_folder, "optimal_bayesian_params_out.csv"))
+sim_opt = pd.read_csv(os.path.join(gold_folder, "val-2j_optimal_bayesian_params_out.csv"))
 sim_opt_temperature = sim_opt["temperature_pp"]
 sim_opt_release = np.abs(sim_opt["release_rate"])
 sim_opt_norm = sim_opt_release / sim_opt_release.max()
 
-rmspe_opt = compute_rmspe(sim_opt_temperature, sim_opt_norm, exp_e_temperature, exp_e_norm)
+rmspe_opt = compute_rmspe(
+    sim_opt_temperature, sim_opt_norm, exp_e_temperature, exp_e_norm
+)
 
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
@@ -131,6 +138,7 @@ ax.plot(
 ax.set_xlabel("Temperature (K)")
 ax.set_ylabel("Normalized tritium release rate (-)")
 ax.set_xlim(300, 900)
+ax.set_ylim(bottom=0)
 ax.legend(loc="best")
 ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
 ax.minorticks_on()

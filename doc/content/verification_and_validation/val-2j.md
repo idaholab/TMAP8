@@ -8,7 +8,7 @@ This validation case models tritium thermal desorption spectroscopy (TDS) from n
 
 Li$_2$TiO$_3$ samples were irradiated at the Kyoto University Reactor (KUR) at various neutron fluences. After irradiation, the tritium release behavior was measured by TDS with a heating rate of 5 K/min starting from 300 K using pure helium as the purge gas. The average grain radius was 1.5 $\mu$m.
 
-Sample E (high defect density, $D_{id}$ = 0.018 defect/Li$_2$TiO$_3$) is modeled, where tritium release is significantly influenced by trapping at O$^{-}$-centers and defect annihilation.
+Sample E (high defect density, $D_{id}$ = $3.384 \times 10^{26}$ m$^{-3}$, corresponding to 0.018 defect/Li$_2$TiO$_3$) is modeled, where tritium release is significantly influenced by trapping at O$^{-}$-centers and defect annihilation.
 
 ## Model Description
 
@@ -80,6 +80,8 @@ Since the TDS output is normalized to arbitrary units, only the shape of the rel
 
 ## Case and Model Parameters
 
+The model parameters are summarized in [val-2j_parameters].
+
 !table id=val-2j_parameters caption=Values of model parameters.
 | Parameter | Description | Value | Units | Reference |
 | --- | --- | --- | --- | --- |
@@ -94,7 +96,8 @@ Since the TDS output is normalized to arbitrary units, only the shape of the rel
 | $E_{dp-da}$ | Annihilation energy | 0.9 | eV | [!cite](kobayashi2015developing), Eq. 18 |
 | $N$ | Lattice density | 1.88 $\times 10^{28}$ | m$^{-3}$ | Calculated |
 | $\beta$ | TDS heating rate | 5 | K/min | [!cite](kobayashi2015developing) |
-| $D_{id,E}$ | Defect fraction (Sample E) | 0.018 | - | [!cite](kobayashi2015developing), Table 1 |
+| $k_B$ | Boltzmann constant | 1.380649 $\times 10^{-23}$ | J/K | |
+| $D_{id,E}$ | Defect density (Sample E) | $3.384 \times 10^{26}$ | m$^{-3}$ | [!cite](kobayashi2015developing), Table 1 |
 
 ## Results
 
@@ -111,6 +114,8 @@ Since the TDS output is normalized to arbitrary units, only the shape of the rel
 ### Results after optimization
 
 The agreement between the TMAP8 simulation and experimental data can be improved by optimizing the model parameters using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html). A Bayesian optimization approach [!citep](DHULIPALA2026102776) was applied to optimize six key parameters (i.e., three Arrhenius pre-exponential factors (in log$_{10}$ space) and three activation energies) to better match the experimental TDS curve for Sample E. The optimization used Gaussian Process active learning with Expected Improvement acquisition, running 40 iterations with 5 parallel proposals per iteration.
+
+The objective function evaluates the RMSPE between the simulated and experimental normalized release rates at 22 discrete temperature points. The experimental reference values are pre-computed from the measured TDS data by normalizing the release rate by its maximum value. Temperatures from 525 K to 825 K (every 25 K) cover the main signal region where the experimental release rate is significant, while temperatures from 300 K to 500 K serve as low-temperature constraint points with a small target value to penalize parameter sets that produce spurious early release peaks.
 
 [val-2j_optimized_parameters] compares the reference values from [!cite](kobayashi2015developing) with the Bayesian-optimized parameters.
 
@@ -137,8 +142,9 @@ The agreement between the TMAP8 simulation and experimental data can be improved
 !style halign=left
 The input files for this validation case are:
 
-- [/val-2j.i]: Simulates tritium transport in Li$_2$TiO$_3$ spherical sample with original input parameters. [/optimal_bayesian_params.i] includes the optimal initial parameters from bayesian optimization.
-- [/bayesian_main_val2j.i] and [/val-2j_bayesian.i]: Include the optimization main and sub input files, respectively, to initialize the bayesian optimization.
+- [/val-2j_base.i]: Contains the shared simulation blocks (mesh, variables, kernels, materials, etc.) used by all val-2j cases.
+- [/val-2j.i]: Simulates tritium transport in Li$_2$TiO$_3$ spherical sample with reference parameters. [/optimal_bayesian_params.i] overrides with Bayesian-optimized parameters.
+- [/bayesian_main_val2j.i] and [/val-2j_bayesian.i]: The optimization main and sub input files, respectively, for Bayesian parameter optimization.
 
 More information about these tests can be found in the test specification file for this case, namely [/val-2j/tests].
 

@@ -6,11 +6,11 @@
 
 # ============ Optimizable Parameters (log-space for prefactors) ============
 log10_alpha_t = '${fparse log10(4.2e8)}'    # ~8.623
-epsilon_t_eV = 1.04 eV
+epsilon_t_eV = 1.04    # eV
 log10_alpha_r = '${fparse log10(4.1e6)}'    # ~6.613
-epsilon_r_eV = 1.19 eV
+epsilon_r_eV = 1.19    # eV
 log10_D0 = '${fparse log10(6.9e-7)}'        # ~-6.161
-E_d_eV = 1.07 eV
+E_d_eV = 1.07    # eV
 
 # ============ Derived Physical Parameters ============
 alpha_t = '${fparse pow(10, log10_alpha_t)}'
@@ -24,29 +24,25 @@ E_d = '${fparse E_d_eV * 1.602176634e-19 / 1.380649e-23}'
 # ============ Physical Constants ============
 kB_J = '${units 1.380649e-23 J/K}'
 
-# ============ Geometry ============
-grain_radius = '${units 1.5e-6 m -> mum}'
-num_elems = 100
-
 # ============ Fixed Defect Annihilation Parameters (Eqs. 16-18) ============
 alpha_anneal = '${units 1.0e2 1/s}'
 E_anneal = '${fparse ${units 0.9 eV -> J} / ${kB_J}}'
 
-# ============ Material Properties ============
-N_lattice = '${units 1.88e28 1/m^3 -> 1/mum^3}'
-Ct0 = 0.018
-trap_per_free = 1
-
-# ============ TDS Parameters ============
-T_start = '${units 300 K}'
-heating_rate = '${units ${fparse 5.0/60.0} K/s}'
-end_time = '${fparse (900.0 - 300.0) / ${heating_rate}}'
-
-# ============ Initial Conditions ============
-C0_trapped = 1.0
-C0_mobile = '${fparse alpha_r * exp(-epsilon_r / T_start) * C0_trapped / (alpha_t * exp(-epsilon_t / T_start) * Ct0)}'
+!include val-2j_base.i
 
 # ============ Pre-computed Normalized Experimental Values ============
+# The Bayesian optimization objective function compares the simulated TDS release
+# rate (normalized by its maximum) against experimental data at discrete temperature
+# points. These values are pre-computed from the experimental CSV data
+# (experiment_data_sample_e.csv) by normalizing the measured release rate by its
+# maximum value (7.123 arb. units).
+#
+# Temperatures 525-825 K (every 25 K) cover the main TDS signal region where
+# the experimental release rate is significant.
+# Temperatures 300-500 K serve as low-temperature constraint points: the measured
+# release is negligible in this range, so a small target value (0.01) penalizes
+# parameter sets that produce spurious early release peaks.
+
 # From Kobayashi et al. (2015) Sample E, normalized by max release (7.123)
 exp_norm_525 = 0.022055
 exp_norm_550 = 0.037797
@@ -73,161 +69,7 @@ exp_norm_450 = 0.01
 exp_norm_475 = 0.01
 exp_norm_500 = 0.01
 
-[Mesh]
-  type = GeneratedMesh
-  dim = 1
-  nx = ${num_elems}
-  xmax = ${grain_radius}
-  coord_type = RSPHERICAL
-[]
-
-[Problem]
-  type = ReferenceResidualProblem
-  extra_tag_vectors = 'ref'
-  reference_vector = 'ref'
-[]
-
-[Variables]
-  [mobile]
-    initial_condition = ${C0_mobile}
-  []
-  [trapped]
-    initial_condition = ${C0_trapped}
-  []
-  [defect_density]
-    initial_condition = ${Ct0}
-  []
-[]
-
-[AuxVariables]
-  [temperature]
-  []
-[]
-
-[AuxKernels]
-  [temperature_aux]
-    type = FunctionAux
-    variable = temperature
-    function = temperature_ramp
-    execute_on = 'initial timestep_end linear'
-  []
-[]
-
-[Kernels]
-  [diffusion]
-    type = ADMatDiffusion
-    variable = mobile
-    diffusivity = diffusivity
-    extra_vector_tags = ref
-  []
-  [time_mobile]
-    type = ADTimeDerivative
-    variable = mobile
-    extra_vector_tags = ref
-  []
-  [coupled_time_trapped]
-    type = ScaledCoupledTimeDerivative
-    variable = mobile
-    v = trapped
-    factor = ${trap_per_free}
-    extra_vector_tags = ref
-  []
-[]
-
-[NodalKernels]
-  [time_trapped]
-    type = TimeDerivativeNodalKernel
-    variable = trapped
-  []
-  [trapping]
-    type = TrappingNodalKernel
-    variable = trapped
-    mobile_concentration = mobile
-    alpha_t = ${alpha_t}
-    trapping_energy = ${epsilon_t}
-    N = ${N_lattice}
-    Ct0 = 'Ct0_func'
-    temperature = temperature
-    trap_per_free = ${trap_per_free}
-    extra_vector_tags = ref
-  []
-  [releasing]
-    type = ReleasingNodalKernel
-    variable = trapped
-    alpha_r = ${alpha_r}
-    detrapping_energy = ${epsilon_r}
-    temperature = temperature
-  []
-  [time_defect_density]
-    type = TimeDerivativeNodalKernel
-    variable = defect_density
-  []
-  [defect_annihilation]
-    type = ReleasingNodalKernel
-    variable = defect_density
-    alpha_r = ${alpha_anneal}
-    detrapping_energy = ${E_anneal}
-    temperature = temperature
-    extra_vector_tags = ref
-  []
-[]
-
-[BCs]
-  [surface]
-    type = ADDirichletBC
-    variable = mobile
-    boundary = right
-    value = 0
-  []
-[]
-
-[Materials]
-  [diffusivity_mat]
-    type = ADDerivativeParsedMaterial
-    property_name = diffusivity
-    functor_names = 'temperature_ramp'
-    functor_symbols = 'T'
-    expression = '${D0} * exp(-${E_d} / T)'
-  []
-  [converter_to_regular]
-    type = MaterialADConverter
-    ad_props_in = 'diffusivity'
-    reg_props_out = 'diffusivity_nonAD'
-    outputs = none
-  []
-[]
-
-[Functions]
-  [temperature_ramp]
-    type = ParsedFunction
-    expression = '${T_start} + ${heating_rate} * t'
-  []
-  [Ct0_func]
-    type = ParsedFunction
-    symbol_names = 'Ct0_value'
-    symbol_values = 'defect_density_pp'
-    expression = 'Ct0_value'
-  []
-[]
-
 [Postprocessors]
-  # --- Core simulation postprocessors ---
-  [release_rate]
-    type = SideDiffusiveFluxIntegral
-    variable = mobile
-    diffusivity = diffusivity_nonAD
-    boundary = right
-  []
-  [temperature_pp]
-    type = FunctionValuePostprocessor
-    function = temperature_ramp
-  []
-  [defect_density_pp]
-    type = AverageNodalVariableValue
-    variable = defect_density
-    execute_on = 'initial timestep_end'
-  []
-
   # --- Maximum release rate over entire simulation ---
   [abs_release_rate]
     type = ParsedPostprocessor
@@ -596,32 +438,7 @@ exp_norm_500 = 0.01
   []
 []
 
-[Preconditioning]
-  [smp]
-    type = SMP
-    full = true
-  []
-[]
-
 [Executioner]
-  type = Transient
-  scheme = bdf2
-  solve_type = NEWTON
-  petsc_options_iname = '-pc_type'
-  petsc_options_value = 'lu'
-  line_search = none
-
-  end_time = ${end_time}
-  dtmax = 30
-  [TimeStepper]
-    type = IterationAdaptiveDT
-    dt = 1.0
-    optimal_iterations = 12
-    growth_factor = 1.2
-    cutback_factor = 0.8
-  []
-  nl_rel_tol = 1e-8
-  nl_abs_tol = 1e-12
   error_on_dtmin = false
 []
 
