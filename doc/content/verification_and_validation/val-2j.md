@@ -75,7 +75,7 @@ The raising temperature reduces the available trap sites: the trap site fraction
 - $\partial C / \partial r = 0$ at $r = 0$ (symmetry at grain center)
 - $C = 0$ at $r = r_g$ (fast surface release, [!cite](kobayashi2015developing))
 
-The mobile and trapped tritium concentrations are initialized at their local trapping/detrapping equilibrium values at the starting temperature $T_{\text{start}}$ = 300 K. The equilibrium mobile concentration is computed from the balance of trapping and detrapping rates. This avoids an initial transient from any imbalance between trapping and detrapping. 
+The mobile and trapped tritium concentrations are initialized at their local trapping/detrapping equilibrium values at the starting temperature $T_{\text{start}}$ = 300 K. The equilibrium mobile concentration is computed from the balance of trapping and detrapping rates. This avoids an initial transient from any imbalance between trapping and detrapping.
 Since the TDS output is normalized to arbitrary units, only the shape of the release curve matters, not the absolute concentrations.
 
 ## Case and Model Parameters
@@ -122,12 +122,28 @@ The objective function evaluates the RMSPE between the simulated and experimenta
 !table id=val-2j_optimized_parameters caption=Reference and Bayesian-optimized parameter values.
 | Parameter | Reference | Optimized | Units |
 | --- | --- | --- | --- |
-| $D_0$ | 6.9 $\times 10^{-7}$ | 5.82 $\times 10^{-5}$ | m$^2$/s |
-| $E_d$ | 1.07 | 1.15 | eV |
-| $\alpha_{t0}$ | 4.2 $\times 10^{8}$ | 1.02 $\times 10^{8}$ | s$^{-1}$ |
-| $\epsilon_t$ | 1.04 | 0.99 | eV |
-| $\alpha_{r0}$ | 4.1 $\times 10^{6}$ | 1.91 $\times 10^{5}$ | s$^{-1}$ |
-| $\epsilon_r$ | 1.19 | 1.09 | eV |
+| $D_0$ | 6.9 $\times 10^{-7}$ | 8.19 $\times 10^{-5}$ | m$^2$/s |
+| $E_d$ | 1.07 | 0.97 | eV |
+| $\alpha_{t0}$ | 4.2 $\times 10^{8}$ | 1.29 $\times 10^{9}$ | s$^{-1}$ |
+| $\epsilon_t$ | 1.04 | 0.89 | eV |
+| $\alpha_{r0}$ | 4.1 $\times 10^{6}$ | 2.49 $\times 10^{5}$ | s$^{-1}$ |
+| $\epsilon_r$ | 1.19 | 1.10 | eV |
+
+[val-2j_bayesian_parameter_exploration] compares the reference parameter values from [!cite](kobayashi2015developing) (blue dashed lines) with the Bayesian-optimized values (red solid lines) for each of the six fitted parameters. The gray shaded region indicates the search range used during optimization. The most notable shift is in the diffusivity pre-exponential ($D_0$), which increases by roughly two orders of magnitude, and in the detrapping prefactor ($\alpha_{r0}$), which decreases by over one order of magnitude. The activation energies shift more modestly.
+
+!media comparison_val-2j.py
+       image_name=val-2j_bayesian_parameter_exploration.png
+       style=width:90%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2j_bayesian_parameter_exploration
+       caption=Comparison of reference (blue dashed) and Bayesian-optimized (red solid) parameter values. The gray shaded region indicates the search range used during optimization.
+
+[val-2j_arrhenius_comparison] compares the Arrhenius-law temperature dependence of the diffusivity $D(T)$, trapping rate coefficient $\alpha_t(T)$, and detrapping rate coefficient $\alpha_r(T)$ between the reference and optimized parameter sets over the 300--900 K TDS temperature range. The diffusivity pre-exponential increases by roughly two orders of magnitude while the activation energy rises modestly (1.07 to 1.15 eV). The trapping and detrapping rate coefficients shift a little after optimization.
+
+!media comparison_val-2j.py
+       image_name=val-2j_arrhenius_comparison.png
+       style=width:90%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2j_arrhenius_comparison
+       caption=Comparison of Arrhenius temperature dependence for diffusivity, trapping rate, and detrapping rate between reference and Bayesian-optimized parameter sets.
 
 [val-2j_comparison_optimized] shows the comparison between TMAP8 with the optimized parameters and the experimental data. The optimized parameters significantly reduce the RMSPE compared to the reference parameters, demonstrating improved agreement with the experimental TDS spectrum.
 

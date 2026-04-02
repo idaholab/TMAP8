@@ -1,0 +1,595 @@
+{
+    "number_of_parts": 5,
+    "part": 2,
+    "reporters": {
+        "conditional": {
+            "type": "GenericActiveLearner",
+            "values": {
+                "acquisition_function": {
+                    "type": "std::vector<double>"
+                },
+                "convergence_value": {
+                    "type": "double"
+                },
+                "inputs": {
+                    "type": "std::vector<std::vector<double>>"
+                },
+                "outputs_required": {
+                    "type": "std::vector<double>"
+                },
+                "sorted_indices": {
+                    "type": "std::vector<unsigned int>"
+                }
+            }
+        },
+        "constant": {
+            "type": "StochasticReporter",
+            "values": {
+                "reporter_transfer:converged": {
+                    "row_begin": 2,
+                    "row_end": 3,
+                    "type": "std::vector<bool>"
+                },
+                "reporter_transfer:pp_log_inverse_error:value": {
+                    "row_begin": 2,
+                    "row_end": 3,
+                    "type": "std::vector<double>"
+                }
+            }
+        }
+    },
+    "time_steps": [
+        {
+            "conditional": {
+                "acquisition_function": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "convergence_value": 0.0,
+                "inputs": [
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                ],
+                "outputs_required": [],
+                "sorted_indices": [
+                    1,
+                    1,
+                    1,
+                    1,
+                    1
+                ]
+            },
+            "constant": {
+                "reporter_transfer:converged": [
+                    false
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    0.0
+                ]
+            },
+            "time": 0.0,
+            "time_step": 0
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.740127793990917
+                ]
+            },
+            "time": 1.0,
+            "time_step": 1
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    3.148812813284611
+                ]
+            },
+            "time": 2.0,
+            "time_step": 2
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    1.1032611822600467
+                ]
+            },
+            "time": 3.0,
+            "time_step": 3
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.1259060867577606
+                ]
+            },
+            "time": 4.0,
+            "time_step": 4
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    1.124913084525623
+                ]
+            },
+            "time": 5.0,
+            "time_step": 5
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    1.044184001605348
+                ]
+            },
+            "time": 6.0,
+            "time_step": 6
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    1.086585833133099
+                ]
+            },
+            "time": 7.0,
+            "time_step": 7
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.857046092768636
+                ]
+            },
+            "time": 8.0,
+            "time_step": 8
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.5943062764894584
+                ]
+            },
+            "time": 9.0,
+            "time_step": 9
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.239406481830351
+                ]
+            },
+            "time": 10.0,
+            "time_step": 10
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.1414743796506612
+                ]
+            },
+            "time": 11.0,
+            "time_step": 11
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    1.9039127462614716
+                ]
+            },
+            "time": 12.0,
+            "time_step": 12
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    1.6937634023118133
+                ]
+            },
+            "time": 13.0,
+            "time_step": 13
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    0.978176335813315
+                ]
+            },
+            "time": 14.0,
+            "time_step": 14
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    1.0795018824169973
+                ]
+            },
+            "time": 15.0,
+            "time_step": 15
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    3.462359825196321
+                ]
+            },
+            "time": 16.0,
+            "time_step": 16
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    1.909991686606477
+                ]
+            },
+            "time": 17.0,
+            "time_step": 17
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    1.3827407785362003
+                ]
+            },
+            "time": 18.0,
+            "time_step": 18
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    3.2028827961185975
+                ]
+            },
+            "time": 19.0,
+            "time_step": 19
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    1.4568733052415168
+                ]
+            },
+            "time": 20.0,
+            "time_step": 20
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    1.9101695636799134
+                ]
+            },
+            "time": 21.0,
+            "time_step": 21
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.6795740182796073
+                ]
+            },
+            "time": 22.0,
+            "time_step": 22
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.7094963791344004
+                ]
+            },
+            "time": 23.0,
+            "time_step": 23
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.0103625228755804
+                ]
+            },
+            "time": 24.0,
+            "time_step": 24
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    1.3671106731101537
+                ]
+            },
+            "time": 25.0,
+            "time_step": 25
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.2960123460168522
+                ]
+            },
+            "time": 26.0,
+            "time_step": 26
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.0589775321528223
+                ]
+            },
+            "time": 27.0,
+            "time_step": 27
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.5726211799514576
+                ]
+            },
+            "time": 28.0,
+            "time_step": 28
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    1.164815842043221
+                ]
+            },
+            "time": 29.0,
+            "time_step": 29
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    3.403613524097611
+                ]
+            },
+            "time": 30.0,
+            "time_step": 30
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    1.5864760472231652
+                ]
+            },
+            "time": 31.0,
+            "time_step": 31
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.685266573220218
+                ]
+            },
+            "time": 32.0,
+            "time_step": 32
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.333361318297198
+                ]
+            },
+            "time": 33.0,
+            "time_step": 33
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.1508526810180135
+                ]
+            },
+            "time": 34.0,
+            "time_step": 34
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.3444781115479003
+                ]
+            },
+            "time": 35.0,
+            "time_step": 35
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.9643878261282626
+                ]
+            },
+            "time": 36.0,
+            "time_step": 36
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    3.395832291134988
+                ]
+            },
+            "time": 37.0,
+            "time_step": 37
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    3.2856823211398476
+                ]
+            },
+            "time": 38.0,
+            "time_step": 38
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    2.7183812903093636
+                ]
+            },
+            "time": 39.0,
+            "time_step": 39
+        },
+        {
+            "constant": {
+                "reporter_transfer:converged": [
+                    true
+                ],
+                "reporter_transfer:pp_log_inverse_error:value": [
+                    3.5628008333829118
+                ]
+            },
+            "time": 40.0,
+            "time_step": 40
+        }
+    ]
+}

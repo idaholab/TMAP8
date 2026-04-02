@@ -2,7 +2,7 @@
 # Tritium TDS from neutron-irradiated Li2TiO3 solid breeder
 # This file is a parameterized version of val-2j.i for Bayesian optimization.
 # It runs the full TDS simulation and computes a score (log(1/RMSPE)) by
-# comparing the normalized release rate at 22 temperatures against experiment.
+# comparing the normalized release rate against the experimental TDS curve.
 
 # ============ Optimizable Parameters (log-space for prefactors) ============
 log10_alpha_t = '${fparse log10(4.2e8)}'    # ~8.623
@@ -30,47 +30,27 @@ E_anneal = '${fparse ${units 0.9 eV -> J} / ${kB_J}}'
 
 !include val-2j_base.i
 
-# ============ Pre-computed Normalized Experimental Values ============
-# The Bayesian optimization objective function compares the simulated TDS release
-# rate (normalized by its maximum) against experimental data at discrete temperature
-# points. These values are pre-computed from the experimental CSV data
-# (experiment_data_sample_e.csv) by normalizing the measured release rate by its
-# maximum value (7.123 arb. units).
-#
-# Temperatures 525-825 K (every 25 K) cover the main TDS signal region where
-# the experimental release rate is significant.
-# Temperatures 300-500 K serve as low-temperature constraint points: the measured
-# release is negligible in this range, so a small target value (0.01) penalizes
-# parameter sets that produce spurious early release peaks.
+# ============ Experimental data as PiecewiseLinear function of time ============
+# Normalized experimental TDS data from experiment_data_sample_e.csv.
+# Temperature converted to time via t = (T - 300) * 12 (heating rate 5 K/min).
+# Release rate normalized by experimental maximum (7.1227 arb).
+# Low-temperature constraint points (300-475 K) included with small values
+# to penalize parameter sets that produce spurious early release peaks.
+[Functions]
+  [exp_norm_function]
+    type = PiecewiseLinear
+    x = '0.0000 2330.5605 2503.7649 2681.8139 2783.8513 2873.7583 2963.5903 3056.9524 3146.4463 3215.1347 3314.7686 3406.0652 3501.0797 3592.6016 3687.4284 3780.6779 3862.4355 3952.3801 4050.1361 4145.1507 4236.3346 4321.2093 4409.9146 4503.0514 4595.4370 4668.2189 4773.7114 4864.4447 4948.0424 5040.5783 5140.0244 5226.8519 5311.3135 5403.2485 5488.1232 5582.9124 5668.5757 5764.7920 5852.7087 5945.7328 6036.0905 6129.7906 6226.3074 6314.0738 7200.0000'
+    y = '0.010000 0.016492 0.018341 0.021065 0.026622 0.031582 0.035917 0.040738 0.051156 0.058324 0.076327 0.094220 0.123516 0.154373 0.189813 0.232907 0.281031 0.341362 0.406823 0.473070 0.549178 0.634819 0.731485 0.832545 0.927719 0.999215 1.000000 0.935145 0.809671 0.660656 0.504463 0.384834 0.285067 0.209048 0.141917 0.093753 0.065004 0.047100 0.034107 0.027546 0.021025 0.015568 0.011213 0.010388 0.010000'
+  []
+[]
 
-# From Kobayashi et al. (2015) Sample E, normalized by max release (7.123)
-exp_norm_525 = 0.022055
-exp_norm_550 = 0.037797
-exp_norm_575 = 0.073658
-exp_norm_600 = 0.157138
-exp_norm_625 = 0.306228
-exp_norm_650 = 0.518851
-exp_norm_675 = 0.829234
-exp_norm_700 = 0.981209
-exp_norm_725 = 0.567327
-exp_norm_750 = 0.211734
-exp_norm_775 = 0.059157
-exp_norm_800 = 0.023630
-exp_norm_825 = 0.010521
-
-# Low-temperature constraint points (300-500 K) to penalize spurious early peaks
-exp_norm_300 = 0.01
-exp_norm_325 = 0.01
-exp_norm_350 = 0.01
-exp_norm_375 = 0.01
-exp_norm_400 = 0.01
-exp_norm_425 = 0.01
-exp_norm_450 = 0.01
-exp_norm_475 = 0.01
-exp_norm_500 = 0.01
-
+# ============ RMSPE computation using continuous comparison (val-2g approach) ============
+# Instead of sampling at 22 discrete temperatures, compare simulation vs experiment
+# at every timestep. The RMSPE with sim_max normalization is computed via the
+# algebraic identity:
+#   RMSPE² = sum(sim²)/(N·sim_max²) - 2·sum(sim·exp)/(N·sim_max) + sum(exp²)/N
+# where sim = abs(release_rate), exp = exp_norm(t), and N = number of timesteps.
 [Postprocessors]
-  # --- Maximum release rate over entire simulation ---
   [abs_release_rate]
     type = ParsedPostprocessor
     pp_names = 'release_rate'
@@ -83,351 +63,65 @@ exp_norm_500 = 0.01
     value_type = max
     execute_on = 'initial timestep_end'
   []
+  [exp_norm_pp]
+    type = FunctionValuePostprocessor
+    function = exp_norm_function
+    execute_on = 'initial timestep_end'
+  []
 
-  # --- Release rate sampling at 22 temperatures (300-825 K, every 25 K) ---
-  # Each pair: release_near_T (nonzero only within 2 K window) + release_at_T (peak capture)
-  # 300-500 K: low-temperature constraint points to penalize spurious early peaks
-
-  # T = 300 K
-  [release_near_300]
+  # --- Three accumulation terms for deferred-normalization RMSPE ---
+  [sim_sq]
     type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 300), abs_release_rate, 0)'
+    pp_names = 'abs_release_rate'
+    expression = 'abs_release_rate^2'
     execute_on = 'initial timestep_end'
   []
-  [release_at_300]
-    type = TimeExtremeValue
-    postprocessor = release_near_300
-    value_type = max
+  [sim_times_exp]
+    type = ParsedPostprocessor
+    pp_names = 'abs_release_rate exp_norm_pp'
+    expression = 'abs_release_rate * exp_norm_pp'
+    execute_on = 'initial timestep_end'
+  []
+  [exp_sq]
+    type = ParsedPostprocessor
+    pp_names = 'exp_norm_pp'
+    expression = 'exp_norm_pp^2'
     execute_on = 'initial timestep_end'
   []
 
-  # T = 325 K
-  [release_near_325]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 325), abs_release_rate, 0)'
+  # --- Cumulative sums ---
+  [sum_sim_sq]
+    type = CumulativeValuePostprocessor
+    postprocessor = sim_sq
     execute_on = 'initial timestep_end'
   []
-  [release_at_325]
-    type = TimeExtremeValue
-    postprocessor = release_near_325
-    value_type = max
+  [sum_sim_times_exp]
+    type = CumulativeValuePostprocessor
+    postprocessor = sim_times_exp
+    execute_on = 'initial timestep_end'
+  []
+  [sum_exp_sq]
+    type = CumulativeValuePostprocessor
+    postprocessor = exp_sq
+    execute_on = 'initial timestep_end'
+  []
+  [one]
+    type = ParsedPostprocessor
+    pp_names = 'abs_release_rate'
+    expression = '1'
+    execute_on = 'initial timestep_end'
+  []
+  [timestep_count]
+    type = CumulativeValuePostprocessor
+    postprocessor = one
     execute_on = 'initial timestep_end'
   []
 
-  # T = 350 K
-  [release_near_350]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 350), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_350]
-    type = TimeExtremeValue
-    postprocessor = release_near_350
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 375 K
-  [release_near_375]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 375), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_375]
-    type = TimeExtremeValue
-    postprocessor = release_near_375
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 400 K
-  [release_near_400]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 400), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_400]
-    type = TimeExtremeValue
-    postprocessor = release_near_400
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 425 K
-  [release_near_425]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 425), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_425]
-    type = TimeExtremeValue
-    postprocessor = release_near_425
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 450 K
-  [release_near_450]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 450), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_450]
-    type = TimeExtremeValue
-    postprocessor = release_near_450
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 475 K
-  [release_near_475]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 475), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_475]
-    type = TimeExtremeValue
-    postprocessor = release_near_475
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 500 K
-  [release_near_500]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 500), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_500]
-    type = TimeExtremeValue
-    postprocessor = release_near_500
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 525 K
-  [release_near_525]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 525), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_525]
-    type = TimeExtremeValue
-    postprocessor = release_near_525
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 550 K
-  [release_near_550]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 550), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_550]
-    type = TimeExtremeValue
-    postprocessor = release_near_550
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 575 K
-  [release_near_575]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 575), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_575]
-    type = TimeExtremeValue
-    postprocessor = release_near_575
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 600 K
-  [release_near_600]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 600), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_600]
-    type = TimeExtremeValue
-    postprocessor = release_near_600
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 625 K
-  [release_near_625]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 625), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_625]
-    type = TimeExtremeValue
-    postprocessor = release_near_625
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 650 K
-  [release_near_650]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 650), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_650]
-    type = TimeExtremeValue
-    postprocessor = release_near_650
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 675 K
-  [release_near_675]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 675), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_675]
-    type = TimeExtremeValue
-    postprocessor = release_near_675
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 700 K
-  [release_near_700]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 700), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_700]
-    type = TimeExtremeValue
-    postprocessor = release_near_700
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 725 K
-  [release_near_725]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 725), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_725]
-    type = TimeExtremeValue
-    postprocessor = release_near_725
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 750 K
-  [release_near_750]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 750), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_750]
-    type = TimeExtremeValue
-    postprocessor = release_near_750
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 775 K
-  [release_near_775]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 775), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_775]
-    type = TimeExtremeValue
-    postprocessor = release_near_775
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 800 K
-  [release_near_800]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 800), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_800]
-    type = TimeExtremeValue
-    postprocessor = release_near_800
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # T = 825 K
-  [release_near_825]
-    type = ParsedPostprocessor
-    pp_names = 'temperature_pp abs_release_rate'
-    expression = 'if(2 - abs(temperature_pp - 825), abs_release_rate, 0)'
-    execute_on = 'initial timestep_end'
-  []
-  [release_at_825]
-    type = TimeExtremeValue
-    postprocessor = release_near_825
-    value_type = max
-    execute_on = 'initial timestep_end'
-  []
-
-  # --- Scoring: RMSPE of normalized release vs experiment ---
-  [sum_error_sq]
-    type = ParsedPostprocessor
-    pp_names = 'release_at_300 release_at_325 release_at_350 release_at_375 release_at_400 release_at_425 release_at_450 release_at_475 release_at_500 release_at_525 release_at_550 release_at_575 release_at_600 release_at_625 release_at_650 release_at_675 release_at_700 release_at_725 release_at_750 release_at_775 release_at_800 release_at_825 sim_max'
-    expression = '(release_at_300/(sim_max + 1e-30) - ${exp_norm_300})^2
-      + (release_at_325/(sim_max + 1e-30) - ${exp_norm_325})^2
-      + (release_at_350/(sim_max + 1e-30) - ${exp_norm_350})^2
-      + (release_at_375/(sim_max + 1e-30) - ${exp_norm_375})^2
-      + (release_at_400/(sim_max + 1e-30) - ${exp_norm_400})^2
-      + (release_at_425/(sim_max + 1e-30) - ${exp_norm_425})^2
-      + (release_at_450/(sim_max + 1e-30) - ${exp_norm_450})^2
-      + (release_at_475/(sim_max + 1e-30) - ${exp_norm_475})^2
-      + (release_at_500/(sim_max + 1e-30) - ${exp_norm_500})^2
-      + (release_at_525/(sim_max + 1e-30) - ${exp_norm_525})^2
-      + (release_at_550/(sim_max + 1e-30) - ${exp_norm_550})^2
-      + (release_at_575/(sim_max + 1e-30) - ${exp_norm_575})^2
-      + (release_at_600/(sim_max + 1e-30) - ${exp_norm_600})^2
-      + (release_at_625/(sim_max + 1e-30) - ${exp_norm_625})^2
-      + (release_at_650/(sim_max + 1e-30) - ${exp_norm_650})^2
-      + (release_at_675/(sim_max + 1e-30) - ${exp_norm_675})^2
-      + (release_at_700/(sim_max + 1e-30) - ${exp_norm_700})^2
-      + (release_at_725/(sim_max + 1e-30) - ${exp_norm_725})^2
-      + (release_at_750/(sim_max + 1e-30) - ${exp_norm_750})^2
-      + (release_at_775/(sim_max + 1e-30) - ${exp_norm_775})^2
-      + (release_at_800/(sim_max + 1e-30) - ${exp_norm_800})^2
-      + (release_at_825/(sim_max + 1e-30) - ${exp_norm_825})^2'
-    execute_on = 'timestep_end'
-  []
+  # --- Final RMSPE and log-inverse score ---
   [pp_RMSPE]
     type = ParsedPostprocessor
-    pp_names = 'sum_error_sq'
-    expression = 'sqrt(sum_error_sq / 22)'
+    pp_names = 'sum_sim_sq sum_sim_times_exp sum_exp_sq sim_max timestep_count'
+    expression = 'sqrt(sum_sim_sq / (timestep_count * (sim_max + 1e-30)^2) - 2 * sum_sim_times_exp / (timestep_count * (sim_max + 1e-30)) + sum_exp_sq / timestep_count)'
     execute_on = 'timestep_end'
   []
   [pp_log_inverse_error]
