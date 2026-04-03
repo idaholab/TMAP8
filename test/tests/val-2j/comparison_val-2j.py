@@ -160,8 +160,8 @@ plt.close(fig)
 # ============================================================
 
 kB_eV = 8.617333262e-5  # Boltzmann constant in eV/K
-T_arr = np.linspace(300, 900, 500)
-inv_T = 1.0 / T_arr
+temperature_array = np.linspace(300, 900, 500) # K
+inverse_temperature = 1.0 / temperature_array  # 1/K
 
 # Reference parameters
 D0_ref, Ed_ref = 6.9e-7, 1.07
@@ -173,21 +173,21 @@ D0_opt_val, Ed_opt_val = 8.190614e-5, 0.970690
 at0_opt_val, et_opt_val = 1.290375e9, 0.887460
 ar0_opt_val, er_opt_val = 2.486356e5, 1.100495
 
-D_ref = D0_ref * np.exp(-Ed_ref / (kB_eV * T_arr))
-D_opt_arr = D0_opt_val * np.exp(-Ed_opt_val / (kB_eV * T_arr))
+D_ref = D0_ref * np.exp(-Ed_ref / (kB_eV * temperature_array))
+D_opt_arr = D0_opt_val * np.exp(-Ed_opt_val / (kB_eV * temperature_array))
 
-at_ref = at0_ref * np.exp(-et_ref / (kB_eV * T_arr))
-at_opt_arr = at0_opt_val * np.exp(-et_opt_val / (kB_eV * T_arr))
+at_ref = at0_ref * np.exp(-et_ref / (kB_eV * temperature_array))
+at_opt_arr = at0_opt_val * np.exp(-et_opt_val / (kB_eV * temperature_array))
 
-ar_ref = ar0_ref * np.exp(-er_ref / (kB_eV * T_arr))
-ar_opt_arr = ar0_opt_val * np.exp(-er_opt_val / (kB_eV * T_arr))
+ar_ref = ar0_ref * np.exp(-er_ref / (kB_eV * temperature_array))
+ar_opt_arr = ar0_opt_val * np.exp(-er_opt_val / (kB_eV * temperature_array))
 
 fig, axes = plt.subplots(1, 3, figsize=[14, 4.5])
 
 # Panel 1: Diffusivity D(T)
 ax = axes[0]
-ax.semilogy(1000 * inv_T, D_ref, "-", color="tab:blue", label="Reference")
-ax.semilogy(1000 * inv_T, D_opt_arr, "--", color="tab:red", label="Optimized")
+ax.semilogy(1000 * inverse_temperature, D_ref, "-", color="tab:blue", label="Reference")
+ax.semilogy(1000 * inverse_temperature, D_opt_arr, "--", color="tab:red", label="Optimized")
 ax.set_xlabel("1000/T (1/K)")
 ax.set_ylabel("D (m$^2$/s)")
 ax.set_title("Diffusivity")
@@ -197,8 +197,8 @@ ax.minorticks_on()
 
 # Panel 2: Trapping rate alpha_t(T)
 ax = axes[1]
-ax.semilogy(1000 * inv_T, at_ref, "-", color="tab:blue", label="Reference")
-ax.semilogy(1000 * inv_T, at_opt_arr, "--", color="tab:red", label="Optimized")
+ax.semilogy(1000 * inverse_temperature, at_ref, "-", color="tab:blue", label="Reference")
+ax.semilogy(1000 * inverse_temperature, at_opt_arr, "--", color="tab:red", label="Optimized")
 ax.set_xlabel("1000/T (1/K)")
 ax.set_ylabel(r"$\alpha_t$ (s$^{-1}$)")
 ax.set_title("Trapping rate coefficient")
@@ -208,8 +208,8 @@ ax.minorticks_on()
 
 # Panel 3: Detrapping rate alpha_r(T)
 ax = axes[2]
-ax.semilogy(1000 * inv_T, ar_ref, "-", color="tab:blue", label="Reference")
-ax.semilogy(1000 * inv_T, ar_opt_arr, "--", color="tab:red", label="Optimized")
+ax.semilogy(1000 * inverse_temperature, ar_ref, "-", color="tab:blue", label="Reference")
+ax.semilogy(1000 * inverse_temperature, ar_opt_arr, "--", color="tab:red", label="Optimized")
 ax.set_xlabel("1000/T (1/K)")
 ax.set_ylabel(r"$\alpha_r$ (s$^{-1}$)")
 ax.set_title("Detrapping rate coefficient")

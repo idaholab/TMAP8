@@ -129,7 +129,7 @@ The objective function evaluates the RMSPE between the simulated and experimenta
 | $\alpha_{r0}$ | 4.1 $\times 10^{6}$ | 2.49 $\times 10^{5}$ | s$^{-1}$ |
 | $\epsilon_r$ | 1.19 | 1.10 | eV |
 
-[val-2j_bayesian_parameter_exploration] compares the reference parameter values from [!cite](kobayashi2015developing) (blue dashed lines) with the Bayesian-optimized values (red solid lines) for each of the six fitted parameters. The gray shaded region indicates the search range used during optimization. The most notable shift is in the diffusivity pre-exponential ($D_0$), which increases by roughly two orders of magnitude, and in the detrapping prefactor ($\alpha_{r0}$), which decreases by over one order of magnitude. The activation energies shift more modestly.
+[val-2j_bayesian_parameter_exploration] compares the reference parameter values from [!cite](kobayashi2015developing) (blue dashed lines) with the Bayesian-optimized values (red solid lines) for each of the six fitted parameters. The gray shaded region indicates the search range used during optimization. The most notable shifts are in the diffusivity pre-exponential ($D_0$), which increases by roughly two orders of magnitude, and in the detrapping prefactor ($\alpha_{r0}$), which decreases by over one order of magnitude. The activation energies shift more modestly.
 
 !media comparison_val-2j.py
        image_name=val-2j_bayesian_parameter_exploration.png
