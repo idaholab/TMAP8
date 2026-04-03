@@ -264,7 +264,9 @@ plt.close(fig)
 
 import json
 
-bayesian_json = os.path.join(gold_folder, "bayesian_val2j_results/val2j_bayesian_6p.json")
+bayesian_json = os.path.join(
+    gold_folder, "bayesian_val2j_results/val2j_bayesian_6p.json"
+)
 all_inputs = []
 all_scores = []
 if os.path.exists(bayesian_json):
@@ -321,8 +323,9 @@ for i, (label, ref_val, opt_val, lb, ub, json_col) in enumerate(param_info):
         x_kde = np.linspace(lb, ub, 200)
         y_kde = kde(x_kde)
         ax.fill_between(x_kde, y_kde, alpha=0.2, color="tab:green")
-        ax.plot(x_kde, y_kde, color="tab:green", linewidth=1.5,
-                label="Top 20% evaluations")
+        ax.plot(
+            x_kde, y_kde, color="tab:green", linewidth=1.5, label="Top 20% evaluations"
+        )
     ax.axvline(
         ref_val, color="tab:blue", linestyle="--", linewidth=2, label="Reference"
     )
