@@ -30,7 +30,7 @@
 		[Shimada2024_run-physics]
 			type = Exodiff
 			input = 'divertor_monoblock_physics.i'
-			detail = 'pulsed operation with shorthand physics'
+			detail = 'pulsed operation with shorthand physics syntax'
 			exodiff = 'divertor_monoblock_physics_exodus.e'
 			cli_args = 'Outputs/exodus/sync_only=true
 			Executioner/end_time=1600

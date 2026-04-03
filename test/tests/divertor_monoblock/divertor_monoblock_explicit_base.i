@@ -1,5 +1,5 @@
-### This input file is the complete input file for the divertor monoblock case.
-### This case was published in:
+### This input file contains everything necessary for the divertor monoblock
+### case that is not used in the physics-based inputs
 ### M. Shimada, P.-C. A. Simon, C. T. Icenhour, and G. Singh, “Toward a high-fidelity
 ### tritium transport modeling for retention and permeation experiments,” Fusion
 ### Engineering and Design, Volume 203, 2024, 114438, ISSN 0920-3796,
@@ -10,13 +10,6 @@
 ### C_mobile_j      mobile H concentration in "j" material, where j = CuCrZr, Cu, W
 ### C_trapped_j     trapped H concentration in "j" material, where j = CuCrZr, Cu, W
 ### C_total_j       total H concentration in "j" material, where j = CuCrZr, Cu, W
-###
-### S_empty_j       empty site concentration in "j" material, where j = CuCrZr, Cu, W
-### S_trapped_j     trapped site concentration in "j" material, where j = CuCrZr, Cu, W
-### S_total_j       total site H concentration in "j" material, where j = CuCrZr, Cu, W
-###
-### F_permeation    permeation flux
-### F_recombination recombination flux
 ###
 ### Sc_             Scaled
 ### Int_            Integrated
@@ -30,8 +23,9 @@ C_mobile_CuCrZr_init = 1.0e-15 # at.fraction
 !include divertor_monoblock_mesh_base.i
 !include divertor_monoblock_common_base.i
 !include divertor_monoblock_multi_variable_base.i
+
 [Functions]
-  [temp_ss]
+  [temperature_steady_state]
     type = ParsedFunction
     expression = "-1.59786e4*x^2  -1.11629611e4*x + 4.84297313e2 + 1.9491599e6*y^2 + 1.55723201e4*y "
                  "- 7.312884e5*x*y"
@@ -140,6 +134,11 @@ C_mobile_CuCrZr_init = 1.0e-15 # at.fraction
     values = 'ScInt_C_total_W ScInt_C_total_Cu ScInt_C_total_CuCrZr'
     execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
   []
+
+  # TMAP8 will give an error if the parser does not find a use for defined parameters
+  # It also seems that the parser does not deal well with multiple layers of includes,
+  # so the definitions of the mesh parameters need to have a use somewhere in this input file
+  # This is a dummy postprocessor that is used to satisfy the parser for known terms.
   [unused_parameters]
     type = ParsedPostprocessor
     expression = '${num_sectors} + ${rings_H2O} + ${rings_CuCrZr} + ${rings_Cu} + ${rings_W}'
@@ -147,6 +146,7 @@ C_mobile_CuCrZr_init = 1.0e-15 # at.fraction
     outputs = ''
   []
 []
+
 [Problem]
   type = ReferenceResidualProblem
   extra_tag_vectors = 'ref'
@@ -429,7 +429,7 @@ C_mobile_CuCrZr_init = 1.0e-15 # at.fraction
     type = FunctionDirichletBC
     variable = temperature
     boundary = '2to1'
-    function = temperature_inner_func
+    function = temperature_inner_function
   []
 []
 

@@ -50,7 +50,7 @@ C_mobile_CuCrZr_init = 1.0e-15 # at.fraction
       heat_flux_boundaries = 'top'
       boundary_heat_fluxes = 'temperature_flux_bc_function'
       fixed_temperature_boundaries = '2to1'
-      boundary_temperatures = 'temperature_inner_func'
+      boundary_temperatures = 'temperature_inner_function'
     []
   []
   [Diffusion]

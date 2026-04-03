@@ -1,9 +1,12 @@
 # This input file contains key pieces for the divertor monoblock case.
 # It cannot be run on its own and is included in the main input files for all divertor monoblock
-# cases, namely:
+# cases. Some input files dependent on this that can be run are:
 # - divertor_monoblock.i
 # - divertor_monoblock_physics.i
 # - divertor_monoblock_physics-single-variable.i
+# - steady_state_runner.i
+# - shutdown_transient_runner.i
+# - elm_transient_runner.i
 
 # Geometry and design
 radius_coolant = 0.006 # depends on MOOSE PR 32524  '${units 6.0 mm -> m}'
@@ -123,7 +126,7 @@ scaling_factor_2 = '${units 3.44e10 g/m^2}' # (1.0e3)*(1.0e3)*(${tungsten_atomic
     symbol_names = 'pulse_time_function'
     expression = '(${plasma_max_heat} - ${plasma_min_heat}) * pulse_time_function + ${plasma_min_heat}'
   []
-  [temperature_inner_func]
+  [temperature_inner_function]
     type = ParsedFunction
     symbol_values = 'pulse_time_function'
     symbol_names = 'pulse_time_function'

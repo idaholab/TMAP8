@@ -1,6 +1,24 @@
+### This input file defines a sobol indice analysis of the monoblock input file to simulate an
+### steady-state operation of the ITER divertor monoblock,
+### with some simplifying assumptions that allow it
+### to be run in a short amount of time.
+### The physics input file is steady_state_runner.i
+### This file should be called directly by TMAP8, preferably with access to multiple cpus
+### Output information including summary statistics can be found in a json file
+
+# Define parameters in one spot for easier reading
+upper_heat_flux_lower = ${units 9.5 MW/m^2 -> W/m^2}
+upper_heat_flux_upper = ${units 10.5 MW/m^2 -> W/m^2}
+upper_tritium_flux_lower = 7.505e-13 # units
+upper_tritium_flux_upper = 8.295e-13 # units
+coolant_temperature_lower = ${units 524.4 K}
+coolant_temperature_upper = ${units 579.6 K}
+N_samples = 10
+
 [StochasticTools]
   # Designate as the Controller/Main Input
 []
+
 [MultiApps]
   # Designate a subapp to control later
   [runner]
@@ -11,6 +29,7 @@
     keep_full_output_history = True
   []
 []
+
 [Controls]
   # Control inputs from Main->Subapp
   [cmdline]
@@ -22,37 +41,39 @@
                    temperature_tube_val"
   []
 []
+
 [Distributions]
   # Define probability distributions of parameters for sampling
   [H_top]
     type = Uniform
-    lower_bound = 9.5e6
-    upper_bound = 10.5e6
+    lower_bound = ${upper_heat_flux_lower}
+    upper_bound = ${upper_heat_flux_upper}
   []
   [C_top]
     type = Uniform
-    lower_bound = 7.505e-13
-    upper_bound = 8.295e-13
+    lower_bound = ${upper_tritium_flux_lower}
+    upper_bound = ${upper_tritium_flux_upper}
   []
   [H_bot]
     type = Uniform
-    lower_bound = 524.4
-    upper_bound = 579.6
+    lower_bound = ${coolant_temperature_lower}
+    upper_bound = ${coolant_temperature_upper}
   []
 []
+
 [Samplers]
   # Sampling methodology using the probability distributions above
   [hypercube_1]
     type = LatinHypercube
     distributions = 'H_top C_top H_bot'
-    num_rows = 10 # N Samples
+    num_rows = ${N_samples}
     seed = 1001
     execute_on = 'PRE_MULTIAPP_SETUP'
   []
   [hypercube_2]
     type = LatinHypercube
     distributions = 'H_top C_top H_bot'
-    num_rows = 10 # N Samples
+    num_rows = ${N_samples}
     seed = 1002
     execute_on = 'PRE_MULTIAPP_SETUP'
   []
@@ -63,6 +84,7 @@
     execute_on = 'PRE_MULTIAPP_SETUP'
   []
 []
+
 [Transfers]
   # Define values to extract from subapp
   [results]
@@ -93,6 +115,7 @@
                        max_temperature_CuCrZr/value"
   []
 []
+
 [Reporters]
   [results]
     type = StochasticReporter
@@ -137,6 +160,7 @@
     parallel_type = ROOT
   []
 []
+
 [Outputs]
   [out]
     type = JSON

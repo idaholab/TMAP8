@@ -1,6 +1,25 @@
+### This input file defines a sobol indice analysis of the monoblock input file to simulate a
+### shutdown transient, with some simplifying assumptions that allow it
+### to be run in a short amount of time.
+### The physics input file is elm_transient_runner.i
+### This file should be called directly by TMAP8, preferably with access to multiple cpus
+### Output information including summary statistics can be found in a json file
+
+# Define parameters in one spot for easier reading
+peak_flux_value = ${units 20 MW/m^2 -> W/m^2}
+peak_flux_std_deviation = ${units 1 MW/m^2 -> W/m^2}
+peak_flux_duration_value = ${units 1 s}
+peak_flux_duration_std_deviation = ${units 0.05 s}
+coolant_temperature_value = ${units 552 K}
+coolant_temperature_std_deviation = ${units 27.6 K}
+tungsten_kth_prefactor_lower = 0.9
+tungsten_kth_prefactor_upper = 1.0
+N_samples = 10
+
 [StochasticTools]
   # Designate as the Controller/Main Input
 []
+
 [MultiApps]
   # Designate a subapp to control later
   [runner]
@@ -12,6 +31,7 @@
     ignore_solve_not_converge = True
   []
 []
+
 [Controls]
   # Control inputs from Main->Subapp
   [cmdline]
@@ -20,46 +40,48 @@
     sampler = sobol
     param_names = "peak_value
                      peak_duration
-                     coolant_temp
+                     coolant_temperature
                      W_cond_factor"
   []
 []
+
 [Distributions]
   # Define probability distributions of parameters for sampling
   [P_val]
     type = Normal
-    mean = 2e7
-    standard_deviation = 1e6
+    mean = ${peak_flux_value}
+    standard_deviation = ${peak_flux_std_deviation}
   []
   [P_dur]
     type = Normal
-    mean = 1
-    standard_deviation = 0.05
+    mean = ${peak_flux_duration_value}
+    standard_deviation = ${peak_flux_duration_std_deviation}
   []
-  [C_tem]
+  [C_temperature]
     type = Normal
-    mean = 552
-    standard_deviation = 27.6
+    mean = ${coolant_temperature_value}
+    standard_deviation = ${coolant_temperature_std_deviation}
   []
   [W_cond]
     type = Uniform
-    lower_bound = 0.9
-    upper_bound = 1.0
+    lower_bound = ${tungsten_kth_prefactor_lower}
+    upper_bound = ${tungsten_kth_prefactor_upper}
   []
 []
+
 [Samplers]
   # Sampling methodology using the probability distributions above
   [hypercube_1]
     type = LatinHypercube
-    distributions = 'P_val P_dur C_tem W_cond'
-    num_rows = 10 # N Samples
+    distributions = 'P_val P_dur C_temperature W_cond'
+    num_rows = ${N_samples}
     seed = 1001
     execute_on = 'PRE_MULTIAPP_SETUP'
   []
   [hypercube_2]
     type = LatinHypercube
-    distributions = 'P_val P_dur C_tem W_cond'
-    num_rows = 10 # N Samples
+    distributions = 'P_val P_dur C_temperature W_cond'
+    num_rows = ${N_samples}
     seed = 1002
     execute_on = 'PRE_MULTIAPP_SETUP'
   []
@@ -70,6 +92,7 @@
     execute_on = 'PRE_MULTIAPP_SETUP'
   []
 []
+
 [Transfers]
   # Define values to extract from subapp
   [results]
@@ -106,6 +129,7 @@
                        time_max_T_CuCrZr/value"
   []
 []
+
 [Reporters]
   [results]
     type = StochasticReporter
@@ -151,12 +175,13 @@
     sampler = sobol
     sampler_column_names = "peak_value
                               peak_duration
-                              coolant_temp
+                              coolant_temperature
                               W_cond_factor"
     execute_on = 'FINAL'
     parallel_type = ROOT
   []
 []
+
 [Outputs]
   [out]
     type = JSON
