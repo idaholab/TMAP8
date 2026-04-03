@@ -76,6 +76,31 @@ ssdf = pd.DataFrame(nparrs["steady"], columns=ssdf_keys)
 a1df = pd.DataFrame(nparrs["a1df"], columns=a1df_keys)  # transient shutdown
 a2df = pd.DataFrame(nparrs["a2df"], columns=a2df_keys)  # ELMs
 
+keyvals = {
+    "BCs/C_mob_W_top_flux": "Incident T Flux [C/m$^2$/s]",
+    "BCs/mobile_tube": "Coolant T Concentration [C]",
+    "BCs/temp_top": "Incident Heat Flux [W/m$^2$]",
+    "BCs/temp_tube": "Coolant Temperature [K]",
+    "C_mob_W_top_flux": "Incident T flux [C/m$^2$]",
+    "mobile_tube": "Coolant T Concentration [C]",
+    "temp_top": "Incident Heat Flux [W/m$^2$ K]",
+    "temp_tube": "Coolant Temperature [K]",
+    "W_cond_factor": "Tungsten Thermal Conductivity [W/m K]",
+    "coolant_temp": "Coolant Temperature [K]",
+    "peak_duration": "Peak Duration [s]",
+    "peak_value": "Peak Value [MW/$m^2$]",
+    "F_permeation": "Permeation Flux [C/m$^2$ /s]",
+    "Scaled_Tritium_Flux": "Tritium Flux [C/m$^2$/ s]",
+    "coolant_heat_flux": "Coolant Heat Flux [W/m$^2$]",
+    "max_temperature_Cu": "Max Cu T [K]",
+    "max_temperature_CuCrZr": "Max CuCrZr Temperature [K]",
+    "max_temperature_W": "Max Tungsten Temperature [K]",
+    "time_max_T_Cu": "time of max Cu Temp [s]",
+    "time_max_T_CuCrZr": "time of max CuCrZr Temp [s]",
+    "time_max_T_W": "time of max W Temp [s]",
+    "total_retention": "Total T retention [C]",
+}
+
 
 def pairplot(
     df,
@@ -169,8 +194,22 @@ def pairplot(
 
             # Edge-only labels
             ax.tick_params(labelsize=7)
-            ax.set_xlabel(cx, fontsize=9) if row == n - 1 else ax.set_xticklabels([])
-            ax.set_ylabel(cy, fontsize=9) if col == 0 else ax.set_yticklabels([])
+            if col == 0 and row == 0:
+                xticks = ax.get_xticks()
+                ymin, ymax = ax.get_ylim()
+                ytick_positions = np.linspace(ymin, ymax, num=len(xticks))
+                ax.set_yticks(ytick_positions)
+                ax.set_yticklabels(xticks)
+            (
+                ax.set_xlabel(keyvals[cx], fontsize=9)
+                if row == n - 1
+                else ax.set_xticklabels([])
+            )
+            (
+                ax.set_ylabel(keyvals[cy], fontsize=9)
+                if col == 0
+                else ax.set_yticklabels([])
+            )
 
     if hue:
         fig.legend(

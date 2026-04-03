@@ -67,7 +67,8 @@ And the total area (2D volume) each material occupies
 The sensitivity studies must sample from a distribution of parameters to determine the net effects of those parameters
 on the model. Here, we vary the incident heat flux, tritium flux, coolant temperature, and coolant tritium concentration. For all these parameters, the sampling is done from
 uniform distributions as shown in [tab:steady_case] and [fig:steady_inputs]. It should be noted that the coolant temperature is unusually high
-in this case, as the ITER divertor is designed to have coolant run at 100&deg;C with a 50&deg;C temperature increase at the outlet [!cite](hirai2010iter).
+in this case, as the ITER divertor is designed to have coolant run at 100&deg;C with a 50&deg;C temperature increase at the outlet [!cite](hirai2010iter); however, this is
+ the designed 240&deg;C temperature for the divertor to run high-pressure water in the bake-off regime for tritium unloading.
 
 !table id=tab:steady_case caption=Steady case varied boundary conditions.
 | Parameter | Samples | Nominal Value | Distribution | Deviation |
@@ -88,7 +89,7 @@ in this case, as the ITER divertor is designed to have coolant run at 100&deg;C 
 For a transient case of an inadvertent shutdown, we modify parameters as shown in [tab:inadvertent_shutdown_case] and [fig:shutdown_inputs]. This case is modified such that we assume constant operation for 5.5 hours before encountering a `Peak Heat Flux` (and proportionally scaled tritium flux) for the sampled `Peak Duration` before resuming at one-tenth the heat and tritium flux of the original steady-state.
 
 !alert! note title=Input file time duration
-The input files as contained in the tests directory have an `end_time` parameter that prevents the entire scenario from being run. This parameter must be changed to some number higher than 2$\times 10^4$ seconds + `Peak Duration` in order to model these cases
+The input files as contained in the tests directory have an `end_time` parameter that prevents the entire scenario from being run, which allows for tests to finish in a reasonable amount of time. This parameter must be changed to some number higher than 2$\times 10^4$ seconds + `Peak Duration` in order to model these cases
 !alert-end!
 
 The top boundary tritium flux and temperature flux are both adjusted to be a function of time, with functions defined in the input file as follows.
@@ -102,30 +103,25 @@ The top boundary tritium flux and temperature flux are both adjusted to be a fun
 | --- | --- | --- | --- | --- |
 | Peak Duration | 1000 | 1s | Normal | $\sigma$=$\pm$5% |
 | Peak Heat Flux | 1000 | 20 MW/m$^2$ | Normal | $\sigma$=$\pm$5% |
-| Coolant Temperature | 1000 | 552 K | Normal | $\sigma$=$\pm$5% |
-| Tungsten Conductivity Factor | 1000 | 0.95 W/m K | Uniform | $\pm$5% |
+| Coolant Temperature | 1000 | 552 K [!cite](hirai2010iter) | Normal | $\sigma$=$\pm$5% |
+| Tungsten Conductivity | 1000 | 0.95 W/m K [!cite](Shimada2024114438) | Uniform | $\pm$5% |
 
 !media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/transients_inputs.png id=fig:shutdown_inputs 
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        caption=Distribution of sampled transient shutdown characteristics.
 
-The results of the simulation are shown in [fig:shutdown_results]. As would be expected, the amount of permeation and the amount of tritium retention have an approximately inverse relationship, and the pairwise interactions across the board are shown. The time at which maximum temperatures occur are all correlated, as one might expect.
-
-!media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/shutdown_transient_results.png id=fig:shutdown_results style=width:80%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       caption=Distribution of sampled postprocessor values in the inadvertent shutdown case
-
 ### Transient case: edge-localized mode disruption 
 
 !style halign=left
-To simulate an edge-localized mode (ELM) disruption, we simulate a set of input conditions as described in [tab:elm_transient_case]. The heat flux is much larger than the transient shutdown case, but over a shorter duration. Given that the parameters are uncertainties in physical behavior, we model most of these with a normal distribution. The results will be shown below in [fig:elm_correlation]. We use the same tungsten conductivy as in [!cite](Shimada2024114438), but vary the conductivity by a constant factor in the range of $\pm$5%. 
+To simulate an edge-localized mode (ELM) disruption, we simulate a set of input conditions as described in [tab:elm_transient_case]. The heat flux is much larger than the transient shutdown case, but over a shorter duration. Most of the parameters will be selected from a normal distribution, as they reflect variations around some target or estimated value. The results will be shown below in [fig:elm_correlation]. We use the same tungsten conductivy as in [!cite](Shimada2024114438), but vary the conductivity by a constant factor in the range of $\pm$5%. 
 
 !table id=tab:elm_transient_case caption=Edge-localized mode transient case parameter space.
 | Parameter | Samples | Nominal Value | Distribution | Deviation |
 | --- | --- | --- | --- | --- |
 | Peak Duration | 1000 | 1.32 ms | Normal | $\sigma$=$\pm$5% |
 | Peak Heat Flux | 1000 | 1147 MW/m$^2$ [!cite](loarte2017elms) | Normal | $\sigma$=$\pm$5% |
-| Coolant Temperature | 1000 | 552 K | Normal | $\sigma$=$\pm$5% |
-| Tungsten Conductivity Factor | 1000 | 1.0 | Uniform | $\sigma$=$\pm$5% |
+| Coolant Temperature | 1000 | 552 K [!cite](hirai2010iter)| Normal | $\sigma$=$\pm$5% |
+| Tungsten Conductivity | 1000 | 0.95 W/m K [!cite](Shimada2024114438) | Uniform | $\sigma$=$\pm$5% |
 
 
 ## Results 
@@ -149,6 +145,12 @@ For the inadvertent shutdown case, we can correlate the input parameters with se
 !media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/shutdown_pairplots.png id=fig:shutdown_correlation
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        caption=Correlation betweeen the input parameters and several metrics of performance in an inadvertent shutdown scenario.
+
+The results of the simulation are shown in [fig:shutdown_results]. As would be expected, the amount of permeation and the amount of tritium retention have an approximately inverse relationship, and the pairwise interactions across the board are shown. The time at which maximum temperatures occur are all correlated, as one might expect.
+
+!media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/shutdown_transient_results.png id=fig:shutdown_results style=width:80%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       caption=Distribution of sampled postprocessor values in the inadvertent shutdown case
+
 
 ### Edge-localized mode disruption 
 
