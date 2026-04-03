@@ -13,7 +13,7 @@ Unlike the existing one-shot validation cases, `val-2k` is intentionally develop
 The current implementation is the natural-oxide baseline for the staged `val-2k` workflow. It includes:
 
 - one-dimensional deuterium diffusion in tungsten
-- two trapped populations in the self-irradiated near-surface region
+- six trap families in the self-irradiated near-surface region
 - deuterium recombination and release as D$_2$ on both free surfaces
 - the experimental TDS temperature ramp from 300 K to 1000 K at 3 K/min
 
@@ -28,12 +28,12 @@ Those additions are deferred to later iterations so their individual influence o
 
 ## Model Description
 
-The first iteration models only the tungsten response. A 0.8 mm tungsten slab is represented as a one-dimensional domain. The first 2.3 micrometers correspond to the self-irradiated region that initially contains the trapped deuterium inventory. Two trapped populations are used as a simplified baseline representation of the defect-rich layer.
+The current reference iteration models only the tungsten response. A 0.8 mm tungsten slab is represented as a one-dimensional domain. The defect-rich near-surface region is described using the intrinsic plus five damage-induced trap families adopted from [val-2f](val-2f.md exact=True). Their spatial distributions follow the same sigmoidal `val-2f` shape centered at 2.5 $\mu$m with a width of 0.5 $\mu$m, and the full set of trap site densities is scaled uniformly so the initial areal inventory matches the earlier `val-2k` natural-oxide preload.
 
 The mobile deuterium concentration $C_M$ is governed by:
 
 \begin{equation}
-\frac{\partial C_M}{\partial t} = \nabla \cdot D \nabla C_M + \sum_{i=1}^{2} f_{T/M,i} \frac{\partial C_{T_i}}{\partial t}
+\frac{\partial C_M}{\partial t} = \nabla \cdot D \nabla C_M + \sum_{i \in \{intr,1,\dots,5\}} f_{T/M,i} \frac{\partial C_{T_i}}{\partial t}
 \end{equation}
 
 and each trapped population follows:
@@ -76,22 +76,33 @@ The current baseline parameters are listed in [val-2k_parameters].
 | $\beta$ | Heating rate | 3 | K/min | [!cite](Kremer2022oxide) |
 | $D_0$ | Diffusivity prefactor | 1.6 $\times 10^{-7}$ | m$^2$/s | Adopted from [val-2f](val-2f.md exact=True) for the initial baseline |
 | $E_D$ | Diffusion activation energy | 0.28 | eV | Adopted from [val-2f](val-2f.md exact=True) for the initial baseline |
-| $E_{T,1}$ | Trap 1 detrapping energy | 1.15 | eV | Stage 1 baseline value |
-| $E_{T,2}$ | Trap 2 detrapping energy | 1.65 | eV | Stage 1 baseline value |
-| $C_{T_1,0}$ | Trap 1 site density | 1.264 $\times 10^{27}$ | at/m$^3$ | Stage 1 baseline value, equal to 0.020 $N_W$ |
-| $C_{T_2,0}$ | Trap 2 site density | 9.483 $\times 10^{26}$ | at/m$^3$ | Stage 1 baseline value, equal to 0.015 $N_W$ |
+| $x_c$ | Trap-distribution center | 2.5 | $\mu$m | Adopted from [val-2f](val-2f.md exact=True) |
+| $w_d$ | Trap-distribution width | 0.5 | $\mu$m | Adopted from [val-2f](val-2f.md exact=True) |
+| $s_T$ | Uniform trap-density scale factor | 6.644848 | - | Chosen so the six-trap model matches the prior `val-2k` initial areal inventory |
+| $E_{T,intr}$ | Intrinsic detrapping energy | 1.04 | eV | Adopted from [val-2f](val-2f.md exact=True) |
+| $E_{T,1}$ | Trap 1 detrapping energy | 1.15 | eV | Adopted from [val-2f](val-2f.md exact=True) |
+| $E_{T,2}$ | Trap 2 detrapping energy | 1.35 | eV | Adopted from [val-2f](val-2f.md exact=True) |
+| $E_{T,3}$ | Trap 3 detrapping energy | 1.65 | eV | Adopted from [val-2f](val-2f.md exact=True) |
+| $E_{T,4}$ | Trap 4 detrapping energy | 1.85 | eV | Adopted from [val-2f](val-2f.md exact=True) |
+| $E_{T,5}$ | Trap 5 detrapping energy | 2.05 | eV | Adopted from [val-2f](val-2f.md exact=True) |
+| $C_{T,intr,0}$ | Intrinsic trap site density | 1.595 $\times 10^{23}$ | at/m$^3$ | Scaled from [val-2f](val-2f.md exact=True) |
+| $C_{T_1,0}$ | Trap 1 site density | 3.076 $\times 10^{26}$ | at/m$^3$ | Scaled from [val-2f](val-2f.md exact=True) |
+| $C_{T_2,0}$ | Trap 2 site density | 1.910 $\times 10^{26}$ | at/m$^3$ | Scaled from [val-2f](val-2f.md exact=True) |
+| $C_{T_3,0}$ | Trap 3 site density | 1.304 $\times 10^{26}$ | at/m$^3$ | Scaled from [val-2f](val-2f.md exact=True) |
+| $C_{T_4,0}$ | Trap 4 site density | 1.972 $\times 10^{26}$ | at/m$^3$ | Scaled from [val-2f](val-2f.md exact=True) |
+| $C_{T_5,0}$ | Trap 5 site density | 5.228 $\times 10^{25}$ | at/m$^3$ | Scaled from [val-2f](val-2f.md exact=True) |
 | $K_r$ | Recombination prefactor | 3.8 $\times 10^{-16}$ | m$^4$/at/s | Adopted from [val-2f](val-2f.md exact=True) for the initial baseline |
 | $E_r$ | Recombination activation energy | 0.34 | eV | Adopted from [val-2f](val-2f.md exact=True) for the initial baseline |
 
 ## Results
 
-The first result of `val-2k` is the initial natural-oxide baseline simulation. The comparison script is already structured to overlay digitized data from Fig. 6 of [!cite](Kremer2022oxide). At this stage, the experimental CSV is only a placeholder, so the generated figure reports the simulation baseline and marks the pending data digitization step explicitly.
+The current branch state uses the scaled six-trap `val-2f` reference model as the active natural-oxide baseline. The comparison script overlays the manual Fig. 6 natural-oxide `HD + D_2` curve directly against the `val-2k` prediction, and the profile figure reports the initial mobile plus six trapped deuterium populations across the near-surface region.
 
 !media comparison_val-2k.py
     image_name=val-2k_natural_oxide_iteration_1_comparison.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2k_natural_oxide_iteration_1_comparison
-    caption=Stage 1 natural-oxide baseline for `val-2k`. The comparison infrastructure is in place and will be extended as digitized experimental data are added.
+    caption=Current natural-oxide reference state for `val-2k` using the scaled six-trap `val-2f` family. The figure is intended as a branch baseline for subsequent retuning and physics additions.
 
 ## Planned Extensions
 
