@@ -79,7 +79,7 @@ ax.plot(
     release_rate,
     linestyle="-",
     color="tab:blue",
-    label="TMAP8 iteration 1",
+    label="TMAP8 six-trap reference",
 )
 
 experiment_time = natural_oxide_experiment["time (h)"]
