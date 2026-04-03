@@ -113,9 +113,15 @@ The model parameters are summarized in [val-2j_parameters].
 
 ### Results after optimization
 
-The agreement between the TMAP8 simulation and experimental data can be improved by optimizing the model parameters using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html). A Bayesian optimization approach [!citep](DHULIPALA2026102776) was applied to optimize six key parameters (i.e., three Arrhenius pre-exponential factors (in log$_{10}$ space) and three activation energies) to better match the experimental TDS curve for Sample E. The optimization used Gaussian Process active learning with Expected Improvement acquisition, running 40 iterations with 5 parallel proposals per iteration.
+The agreement between the TMAP8 simulation and experimental data can be improved by optimizing the model parameters using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html). A Bayesian optimization approach [!citep](DHULIPALA2026102776) was applied to optimize six key parameters (i.e., three Arrhenius pre-exponential factors (in log$_{10}$ space) and three activation energies) to better match the experimental TDS curve for Sample E. The defect annihilation parameters were not included in the optimization because annihilation has only a minor impact on the tritium release during TDS. As shown in [val-2j_defect_density_evolution], the normalized defect density remains close to unity throughout the main release region (below ~750 K) and only decreases significantly at higher temperatures where the tritium release has largely concluded. The optimization used Gaussian Process active learning with Expected Improvement acquisition, running 40 iterations with 5 parallel proposals per iteration.
 
-The objective function evaluates the RMSPE between the simulated and experimental normalized release rates at 22 discrete temperature points. The experimental reference values are pre-computed from the measured TDS data by normalizing the release rate by its maximum value. Temperatures from 525 K to 825 K (every 25 K) cover the main signal region where the experimental release rate is significant, while temperatures from 300 K to 500 K serve as low-temperature constraint points with a small target value to penalize parameter sets that produce spurious early release peaks.
+!media comparison_val-2j.py
+       image_name=val-2j_defect_density_evolution.png
+       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       id=val-2j_defect_density_evolution
+       caption=Evolution of the normalized defect density $D_{id}/D_{id,0}$ during the TDS temperature ramp. Significant annihilation occurs only above ~750 K, after the main tritium release peak.
+
+The objective function evaluates the RMSPE between the simulated and experimental normalized release rates using a continuous comparison at every simulation timestep. The experimental TDS curve is represented as a piecewise-linear interpolation function, and the RMSPE is accumulated over the full temperature ramp. Low-temperature constraint points (300--475 K) with a small target value penalize parameter sets that produce spurious early release peaks.
 
 [val-2j_optimized_parameters] compares the reference values from [!cite](kobayashi2015developing) with the Bayesian-optimized parameters.
 
@@ -129,15 +135,15 @@ The objective function evaluates the RMSPE between the simulated and experimenta
 | $\alpha_{r0}$ | 4.1 $\times 10^{6}$ | 2.49 $\times 10^{5}$ | s$^{-1}$ |
 | $\epsilon_r$ | 1.19 | 1.10 | eV |
 
-[val-2j_bayesian_parameter_exploration] compares the reference parameter values from [!cite](kobayashi2015developing) (blue dashed lines) with the Bayesian-optimized values (red solid lines) for each of the six fitted parameters. The gray shaded region indicates the search range used during optimization. The most notable shifts are in the diffusivity pre-exponential ($D_0$), which increases by roughly two orders of magnitude, and in the detrapping prefactor ($\alpha_{r0}$), which decreases by over one order of magnitude. The activation energies shift more modestly.
+[val-2j_bayesian_parameter_exploration] compares the reference parameter values from [!cite](kobayashi2015developing) (blue dashed lines) with the Bayesian-optimized values (red solid lines) for each of the six fitted parameters. The green curves show the distribution of the parameters with top 20% RMSPE evaluations from the Bayesian optimization, providing insight into which parameter regions produce good fits to the experimental data. The gray shaded region indicates the search range used during optimization. The optimized values fall within the high-density regions of the distributions, confirming consistency with the near-optimal parameter space.
 
 !media comparison_val-2j.py
        image_name=val-2j_bayesian_parameter_exploration.png
        style=width:90%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2j_bayesian_parameter_exploration
-       caption=Comparison of reference (blue dashed) and Bayesian-optimized (red solid) parameter values. The gray shaded region indicates the search range used during optimization.
+       caption=Comparison of reference (blue dashed) and Bayesian-optimized (red solid) parameter values. Green curves show the distribution of the parameters with top 20% RMSPE from the Bayesian optimization. The gray shaded region indicates the search range.
 
-[val-2j_arrhenius_comparison] compares the Arrhenius-law temperature dependence of the diffusivity $D(T)$, trapping rate coefficient $\alpha_t(T)$, and detrapping rate coefficient $\alpha_r(T)$ between the reference and optimized parameter sets over the 300--900 K TDS temperature range. The diffusivity pre-exponential increases by roughly two orders of magnitude while the activation energy rises modestly (1.07 to 1.15 eV). The trapping and detrapping rate coefficients shift a little after optimization.
+[val-2j_arrhenius_comparison] compares the Arrhenius-law temperature dependence of the diffusivity $D(T)$, trapping rate coefficient $\alpha_t(T)$, and detrapping rate coefficient $\alpha_r(T)$ between the reference and optimized parameter sets over the 300--900 K TDS temperature range. The diffusivity pre-exponential increases by roughly two orders of magnitude while the activation energy decreases modestly (1.07 to 0.97 eV). The trapping prefactor increases by about one order of magnitude with a reduced activation energy, while the detrapping parameters shift more modestly.
 
 !media comparison_val-2j.py
        image_name=val-2j_arrhenius_comparison.png
