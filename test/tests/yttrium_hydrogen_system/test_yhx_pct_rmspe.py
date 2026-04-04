@@ -1,3 +1,6 @@
+# This python script tests if the RMSPE (between TMAP8 
+# predictions and analytical expressions) is smaller than 0.1
+
 import os
 import unittest
 

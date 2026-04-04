@@ -1,3 +1,6 @@
+# The python script compares the TMAP8 predictions against the 
+# analytical expression of the PCT curve
+
 import os
 
 import numpy as np

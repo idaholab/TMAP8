@@ -29,13 +29,13 @@
       species_scaling_factors = '1'
       species_initial_concentrations = '0'
       mobile = 'deuterium_concentration_W'
-      dimensionless_trapping_rate = '${dimensionless_trapping_rate_5}'
+      dimensionless_trapping_rate_coefficient = '${dimensionless_trapping_rate_coefficient_5}'
       trapping_energy = '${trapping_energy_5}'
       N = ${tungsten_density}
       Ct0 = 'trap_distribution_function_5'
       trap_concentration_reference = '${trap_concentration_reference_5}'
       mobile_concentration_reference = ${mobile_concentration_reference}
-      dimensionless_release_rate = '${dimensionless_release_rate_5}'
+      dimensionless_release_rate_coefficient = '${dimensionless_release_rate_coefficient_5}'
       detrapping_energy = '${detrapping_energy_5}'
       temperature = 'temperature'
       dimensionless_species = true
