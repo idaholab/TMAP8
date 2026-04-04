@@ -28,7 +28,7 @@ protected:
   Real computeQpJacobian() override;
 
   /// Effective release-rate coefficient multiplying the Arrhenius factor and variable value.
-  const Real _release_rate;
+  const Real _release_rate_coefficient;
   /// Detrapping activation energy, expressed in Kelvin.
   const Real _detrapping_energy;
   /// Coupled temperature field.

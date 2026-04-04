@@ -30,7 +30,7 @@ TrappingNodalKernelBase::TrappingNodalKernelBase(const InputParameters & paramet
                                                  Real trapping_rate,
                                                  Real residual_denominator)
   : NodalKernel(parameters),
-    _trapping_rate(trapping_rate),
+    _trapping_rate_coefficient(trapping_rate_coefficient),
     _trapping_energy(getParam<Real>("trapping_energy")),
     _N(getParam<Real>("N")),
     _Ct0(getFunction("Ct0")),
@@ -74,7 +74,7 @@ TrappingNodalKernelBase::computeQpResidual()
   for (const auto i : index_range(_occupancy_concentrations))
     empty_trapping_sites -= (*_occupancy_concentrations[i])[_qp] * _occupancy_weights[i];
 
-  return -_trapping_rate * std::exp(-_trapping_energy / _temperature[_qp]) * empty_trapping_sites *
+  return -_trapping_rate_coefficient * std::exp(-_trapping_energy / _temperature[_qp]) * empty_trapping_sites *
          _mobile_concentration[_qp] / _residual_denominator;
 }
 
@@ -97,7 +97,7 @@ TrappingNodalKernelBase::ADHelper()
   LocalDN mobile_concentration = _mobile_concentration[_qp];
   mobile_concentration.derivatives().insert(_var_numbers.back()) = 1.;
 
-  _jacobian = -_trapping_rate * std::exp(-_trapping_energy / _temperature[_qp]) *
+  _jacobian = -_trapping_rate_coefficient * std::exp(-_trapping_energy / _temperature[_qp]) *
               empty_trapping_sites * mobile_concentration / _residual_denominator;
 }
 

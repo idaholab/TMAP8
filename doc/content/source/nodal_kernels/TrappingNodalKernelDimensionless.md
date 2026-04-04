@@ -6,7 +6,8 @@
 
 `TrappingNodalKernelDimensionless` is the dimensionless analogue of
 [TrappingNodalKernel](TrappingNodalKernel.md). It applies the trapping source term
-to a dimensionless trapped-species variable, $\hat{C}_t = C_t / C_{t,\mathrm{ref}}$.
+to a dimensionless trapped-species variable, $\hat{C}_t = C_t / C_{t,\mathrm{ref}}$
+with $C_t$ the trapped-species variable and $C_{t,\mathrm{ref}}$ the characteristic trapped-species scale in the same unit as $C_t$.
 
 This object implements the residual
 
@@ -37,7 +38,7 @@ dimensionless unknown $\hat{C}_t$. Unlike [TrappingNodalKernel](TrappingNodalKer
 this object does not use the `trap_per_free` scaling factor that the dimensional
 kernel uses to convert between trapped-species and mobile-species concentration
 scales. Here, the conversion is handled explicitly through
-`trap_concentration_reference` and `other_trap_concentration_references`, so the
+`trap_concentration_reference` ($C_{t,\mathrm{ref}}$) and `other_trap_concentration_references` ($C_{t,\mathrm{ref},j}$), so the
 residual is expected to remain $O(\hat{k}_t)$ when the variables are scaled with
 appropriate reference values.
 

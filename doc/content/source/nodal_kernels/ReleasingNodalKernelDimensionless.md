@@ -1,10 +1,13 @@
 # ReleasingNodalKernelDimensionless
 
+!syntax description /NodalKernels/ReleasingNodalKernelDimensionless
+
 ## Overview
 
 `ReleasingNodalKernelDimensionless` is the dimensionless analogue of
 [ReleasingNodalKernel](ReleasingNodalKernel.md). It applies the release source term
-to a dimensionless trapped-species variable, $\hat{C}_t = C_t / C_{t,\mathrm{ref}}$.
+to a dimensionless trapped-species variable, $\hat{C}_t = C_t / C_{t,\mathrm{ref}}$
+with $C_t$ the trapped-species variable and $C_{t,\mathrm{ref}}$ the characteristic trapped-species scale in the same unit as $C_t$.
 
 This object implements the residual
 

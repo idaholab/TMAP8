@@ -1,3 +1,5 @@
+# This input file tests the physics syntax and dimensionless capabilities with two traps.
+
 [ActionComponents]
   [structure]
     type = Structure1D

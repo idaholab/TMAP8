@@ -20,8 +20,8 @@ TrappingNodalKernelDimensionless::validParams()
       "The mobile concentration may be either physical or dimensionless. "
       "No equation scaling is applied; the residual is O(k_t_hat).");
   params.addRequiredParam<Real>(
-      "dimensionless_trapping_rate",
-      "Dimensionless trapping rate k_t_hat = t_ref * alpha_t * C_m_ref / N.");
+      "dimensionless_trapping_rate_coefficient",
+      "Dimensionless trapping rate coefficient k_t_hat = t_ref * alpha_t * C_m_ref / N.");
   params.addRequiredParam<Real>(
       "trap_concentration_reference",
       "Reference concentration C_t_ref for this trap species (same units as N). "
@@ -42,7 +42,7 @@ TrappingNodalKernelDimensionless::validParams()
 TrappingNodalKernelDimensionless::TrappingNodalKernelDimensionless(
     const InputParameters & parameters)
   : TrappingNodalKernelBase(parameters,
-                            parameters.get<Real>("dimensionless_trapping_rate"),
+                            parameters.get<Real>("dimensionless_trapping_rate_coefficient"),
                             parameters.get<Real>("trap_concentration_reference"))
 {
   std::vector<Real> other_trap_concentration_references =

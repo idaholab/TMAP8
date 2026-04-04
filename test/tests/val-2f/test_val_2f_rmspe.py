@@ -1,14 +1,14 @@
+# This python script compares the TMAP8 predictions against the experimental data and computes the RMSPE.
+# It then checks if the RMSPE is below a given threshold.
+
 import os
 import unittest
 
 import numpy as np
 import pandas as pd
 
-K_MAX = 1000
-K_MIN = 300
-HEATING_RATE = 3 / 60
-CHARGE_TIME = 72 * 3600
-COOLDOWN_TIME = 12 * 3600
+CHARGE_TIME = 72 * 3600 # s
+COOLDOWN_TIME = 12 * 3600 # s
 START_TIME = CHARGE_TIME + COOLDOWN_TIME
 
 INVENTORY_RMSPE_LIMIT = 0.02

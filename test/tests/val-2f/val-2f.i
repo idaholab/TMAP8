@@ -455,7 +455,6 @@
     growth_factor = 1.1
     timestep_limiting_postprocessor = max_time_step_size
   []
-  verbose = true
   [Predictor]
     type = SimplePredictor
     scale = 1.0

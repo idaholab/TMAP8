@@ -47,7 +47,7 @@ SpeciesTrappingPhysics::validParams()
       "If a single vector is specified, the same trapping rate coefficient will be used on every "
       "component");
   params.addParam<std::vector<Real>>(
-      "dimensionless_trapping_rate",
+      "dimensionless_trapping_rate_coefficient",
       {},
       "Dimensionless trapping rate k_t_hat = t_ref * alpha_t * C_m_ref / N for each "
       "component and species. Required when dimensionless_species = true.");
@@ -70,7 +70,7 @@ SpeciesTrappingPhysics::validParams()
       false,
       "Whether to use dimensionless mobile and trapped species. When true, "
       "'mobile_concentration_reference', 'trap_concentration_reference', "
-      "'dimensionless_trapping_rate', and 'dimensionless_release_rate' must all be supplied.");
+      "'dimensionless_trapping_rate_coefficient', and 'dimensionless_release_rate' must all be supplied.");
   params.addParam<std::vector<Real>>(
       "trap_concentration_reference",
       {},
@@ -86,7 +86,7 @@ SpeciesTrappingPhysics::validParams()
       "The release rate coefficient. If a single vector is specified, "
       "the same release rate coefficient will be used on every component");
   params.addParam<std::vector<Real>>(
-      "dimensionless_release_rate",
+      "dimensionless_release_rate_coefficient",
       {},
       "Dimensionless release rate k_r_hat = t_ref * alpha_r for each component and species. "
       "Required when dimensionless_species = true.");
@@ -98,10 +98,10 @@ SpeciesTrappingPhysics::validParams()
 
   // Parameter groups
   params.addParamNamesToGroup(
-      "alpha_t dimensionless_trapping_rate trapping_energy N Ct0 trap_per_free "
+      "alpha_t dimensionless_trapping_rate_coefficient trapping_energy N Ct0 trap_per_free "
       "different_traps_for_each_species",
       "Trapping");
-  params.addParamNamesToGroup("alpha_r dimensionless_release_rate temperature detrapping_energy",
+  params.addParamNamesToGroup("alpha_r dimensionless_release_rate_coefficient temperature detrapping_energy",
                               "Releasing");
   params.addParamNamesToGroup(
       "dimensionless_species trap_concentration_reference mobile_concentration_reference",
@@ -119,9 +119,9 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
     _Ns(isParamValid("N") ? std::vector<Real>(1, getParam<Real>("N")) : std::vector<Real>()),
     _Ct0s({getParam<std::vector<FunctionName>>("Ct0")}),
     _dimensionless_trapping_rates(
-        isParamValid("dimensionless_trapping_rate")
+        isParamValid("dimensionless_trapping_rate_coefficient")
             ? std::vector<std::vector<Real>>(
-                  1, getParam<std::vector<Real>>("dimensionless_trapping_rate"))
+                  1, getParam<std::vector<Real>>("dimensionless_trapping_rate_coefficient"))
             : std::vector<std::vector<Real>>()),
     _trap_concentration_references(
         isParamValid("trap_concentration_reference")
@@ -137,9 +137,9 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
                         : std::vector<Real>()),
     _alpha_rs({getParam<std::vector<Real>>("alpha_r")}),
     _dimensionless_release_rates(
-        isParamValid("dimensionless_release_rate")
+        isParamValid("dimensionless_release_rate_coefficient")
             ? std::vector<std::vector<Real>>(
-                  1, getParam<std::vector<Real>>("dimensionless_release_rate"))
+                  1, getParam<std::vector<Real>>("dimensionless_release_rate_coefficient"))
             : std::vector<std::vector<Real>>()),
     _detrapping_energies({getParam<std::vector<Real>>("detrapping_energy")}),
     _single_variable_set(!getParam<bool>("separate_variables_per_component")),
@@ -156,8 +156,8 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
   checkSecondParamSetOnlyIfFirstOneSet("species", "mobile");
   if (_use_dimensionless_species)
   {
-    checkSecondParamSetOnlyIfFirstOneSet("species", "dimensionless_trapping_rate");
-    checkSecondParamSetOnlyIfFirstOneSet("species", "dimensionless_release_rate");
+    checkSecondParamSetOnlyIfFirstOneSet("species", "dimensionless_trapping_rate_coefficient");
+    checkSecondParamSetOnlyIfFirstOneSet("species", "dimensionless_release_rate_coefficient");
     checkSecondParamSetOnlyIfFirstOneSet("species", "trap_concentration_reference");
     checkSecondParamSetOnlyIfFirstOneSet("species", "mobile_concentration_reference");
   }
@@ -189,7 +189,7 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
         "species", "trap_concentration_reference", true);
   if (_use_dimensionless_species)
     checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>(
-        "species", "dimensionless_release_rate", true);
+        "species", "dimensionless_release_rate_coefficient", true);
   else
     checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "alpha_r", true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>(
@@ -215,21 +215,21 @@ SpeciesTrappingPhysics::trapConcentrationReference(unsigned int c_i, unsigned in
 Real
 SpeciesTrappingPhysics::dimensionlessTrappingRate(unsigned int c_i, unsigned int s_j)
 {
-  mooseAssert(c_i < _dimensionless_trapping_rates.size(),
+  mooseAssert(c_i < _dimensionless_trapping_rates_coefficient.size(),
               "component index higher than dimensionless trapping-rate component count");
-  mooseAssert(s_j < _dimensionless_trapping_rates[c_i].size(),
+  mooseAssert(s_j < _dimensionless_trapping_rates_coefficient[c_i].size(),
               "species index higher than dimensionless trapping-rate species count");
-  return _dimensionless_trapping_rates[c_i][s_j];
+  return _dimensionless_trapping_rates_coefficient[c_i][s_j];
 }
 
 Real
 SpeciesTrappingPhysics::dimensionlessReleaseRate(unsigned int c_i, unsigned int s_j)
 {
-  mooseAssert(c_i < _dimensionless_release_rates.size(),
+  mooseAssert(c_i < _dimensionless_release_rates_coefficient.size(),
               "component index higher than dimensionless release-rate component count");
-  mooseAssert(s_j < _dimensionless_release_rates[c_i].size(),
+  mooseAssert(s_j < _dimensionless_release_rates_coefficient[c_i].size(),
               "species index higher than dimensionless release-rate species count");
-  return _dimensionless_release_rates[c_i][s_j];
+  return _dimensionless_release_rates_coefficient[c_i][s_j];
 }
 
 void
@@ -293,12 +293,12 @@ SpeciesTrappingPhysics::addComponent(const ActionComponent & component)
       "detrapping_energy", component, comp_index, _species.back(), _detrapping_energies);
   if (_use_dimensionless_species)
   {
-    processComponentMatprop<std::vector<Real>>("dimensionless_trapping_rate",
+    processComponentMatprop<std::vector<Real>>("dimensionless_trapping_rate_coefficient",
                                                component,
                                                comp_index,
                                                _species.back(),
                                                _dimensionless_trapping_rates);
-    processComponentMatprop<std::vector<Real>>("dimensionless_release_rate",
+    processComponentMatprop<std::vector<Real>>("dimensionless_release_rate_coefficient",
                                                component,
                                                comp_index,
                                                _species.back(),
@@ -369,11 +369,11 @@ SpeciesTrappingPhysics::addSolverVariables()
         paramError("detrapping_energy", "Should not be empty if not using Components");
       if (_use_dimensionless_species)
       {
-        if (_dimensionless_trapping_rates.empty() || _dimensionless_trapping_rates[0].empty())
-          paramError("dimensionless_trapping_rate",
+        if (_dimensionless_trapping_rates_coefficient.empty() || _dimensionless_trapping_rates_coefficient[0].empty())
+          paramError("dimensionless_trapping_rate_coefficient",
                      "Should not be empty when using dimensionless trapped species");
-        if (_dimensionless_release_rates.empty() || _dimensionless_release_rates[0].empty())
-          paramError("dimensionless_release_rate",
+        if (_dimensionless_release_rates_coefficient.empty() || _dimensionless_release_rates_coefficient[0].empty())
+          paramError("dimensionless_release_rate_coefficient",
                      "Should not be empty when using dimensionless trapped species");
         if (_trap_concentration_references.empty() || _trap_concentration_references[0].empty())
           paramError("trap_concentration_reference",
@@ -472,9 +472,9 @@ SpeciesTrappingPhysics::addFEKernels()
   if (_use_dimensionless_species)
   {
     checkSizeComponentSpeciesIndexedVectorOfVector(
-        _dimensionless_trapping_rates, "dimensionless_trapping_rate", false);
+        _dimensionless_trapping_rates_coefficient, "dimensionless_trapping_rate_coefficient", false);
     checkSizeComponentSpeciesIndexedVectorOfVector(
-        _dimensionless_release_rates, "dimensionless_release_rate", false);
+        _dimensionless_release_rates,_coefficient "dimensionless_release_rate_coefficient", false);
     checkSizeComponentSpeciesIndexedVectorOfVector(
         _trap_concentration_references, "trap_concentration_reference", false);
     checkSizeComponentIndexedVector(
@@ -548,7 +548,7 @@ SpeciesTrappingPhysics::addFEKernels()
 
         if (_use_dimensionless_species)
         {
-          params.set<Real>("dimensionless_trapping_rate") = dimensionlessTrappingRate(c_i, s_j);
+          params.set<Real>("dimensionless_trapping_rate_coefficient") = dimensionlessTrappingRate(c_i, s_j);
           params.set<Real>("trap_concentration_reference") = trapConcentrationReference(c_i, s_j);
         }
         else
@@ -596,7 +596,7 @@ SpeciesTrappingPhysics::addFEKernels()
         setTemperature(params);
 
         if (_use_dimensionless_species)
-          params.set<Real>("dimensionless_release_rate") = dimensionlessReleaseRate(c_i, s_j);
+          params.set<Real>("dimensionless_release_rate_coefficient") = dimensionlessReleaseRate(c_i, s_j);
         else
           params.set<Real>("alpha_r") = _alpha_rs[c_i][s_j];
 

@@ -20,7 +20,7 @@ ReleasingNodalKernelBase::validParams()
 ReleasingNodalKernelBase::ReleasingNodalKernelBase(const InputParameters & parameters,
                                                    Real release_rate)
   : NodalKernel(parameters),
-    _release_rate(release_rate),
+    _release_rate_coefficient(release_rate_coefficient),
     _detrapping_energy(getParam<Real>("detrapping_energy")),
     _temperature(coupledValue("temperature"))
 {
@@ -29,11 +29,11 @@ ReleasingNodalKernelBase::ReleasingNodalKernelBase(const InputParameters & param
 Real
 ReleasingNodalKernelBase::computeQpResidual()
 {
-  return _release_rate * std::exp(-_detrapping_energy / _temperature[_qp]) * _u[_qp];
+  return _release_rate_coefficient * std::exp(-_detrapping_energy / _temperature[_qp]) * _u[_qp];
 }
 
 Real
 ReleasingNodalKernelBase::computeQpJacobian()
 {
-  return _release_rate * std::exp(-_detrapping_energy / _temperature[_qp]);
+  return _release_rate_coefficient * std::exp(-_detrapping_energy / _temperature[_qp]);
 }

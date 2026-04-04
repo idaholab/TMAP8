@@ -52,7 +52,7 @@ protected:
   Real computeQpOffDiagJacobian(unsigned int jvar) override;
 
   /// Effective trapping-rate coefficient multiplying the Arrhenius factor.
-  const Real _trapping_rate;
+  const Real _trapping_rate_coefficient;
   /// Trapping activation energy, expressed in Kelvin.
   const Real _trapping_energy;
   /// Atomic number density of the host material.
