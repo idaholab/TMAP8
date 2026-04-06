@@ -113,13 +113,16 @@ The model parameters are summarized in [val-2j_parameters].
 
 ### Results after optimization
 
-The agreement between the TMAP8 simulation and experimental data can be improved by optimizing the model parameters using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html). A Bayesian optimization approach [!citep](DHULIPALA2026102776) was applied to optimize six key parameters (i.e., three Arrhenius pre-exponential factors (in log$_{10}$ space) and three activation energies) to better match the experimental TDS curve for Sample E. The defect annihilation parameters were not included in the optimization because annihilation has only a minor impact on the tritium release during TDS. As shown in [val-2j_defect_density_evolution], the normalized defect density remains close to unity throughout the main release region (below ~750 K) and only decreases significantly at higher temperatures where the tritium release has largely concluded. The optimization used Gaussian Process active learning with Expected Improvement acquisition, running 40 iterations with 5 parallel proposals per iteration.
+The agreement between the TMAP8 simulation and experimental data can be improved by optimizing the model parameters using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html). A Bayesian optimization approach [!citep](DHULIPALA2026102776) was applied to optimize six key parameters (i.e., three Arrhenius pre-exponential factors (in log$_{10}$ space) and three activation energies) to better match the experimental TDS curve for Sample E. 
+The defect annihilation parameters were not included in the optimization because annihilation parameter has only a minor impact on the tritium release during TDS. 
+As shown in [val-2j_defect_density_evolution], the normalized defect density remains close to unity throughout the main release region (below ~750 K) and only decreases significantly at higher temperatures where the tritium release flux is decreasing. 
+The optimization used Gaussian Process active learning with Expected Improvement acquisition, running 40 iterations with 5 parallel proposals per iteration.
 
 !media comparison_val-2j.py
        image_name=val-2j_defect_density_evolution.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2j_defect_density_evolution
-       caption=Evolution of the normalized defect density $D_{id}/D_{id,0}$ during the TDS temperature ramp. Significant annihilation occurs only above ~750 K, after the main tritium release peak.
+       caption=Evolution of the normalized defect density $D_{id}/D_{id,0}$ during the TDS temperature ramp. Significant annihilation occurs only above ~750 K, during the second part main tritium release peak.
 
 The objective function evaluates the RMSPE between the simulated and experimental normalized release rates using a continuous comparison at every simulation timestep. The experimental TDS curve is represented as a piecewise-linear interpolation function, and the RMSPE is accumulated over the full temperature ramp. Low-temperature constraint points (300--475 K) with a small target value penalize parameter sets that produce spurious early release peaks.
 
