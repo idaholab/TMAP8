@@ -24,7 +24,7 @@ FuelCycleSystemScalarKernelTempl<is_ad>::validParams()
   InputParameters params =
       is_ad ? ADScalarTimeDerivative::validParams() : ODETimeDerivative::validParams();
   params += FunctorInterface::validParams();
-  params.addClassDescription("Implements a generic system component.");
+  params.addClassDescription("Implements a generic scalar system component for tritium fuel cycle calculations.");
   params.addCoupledVar(
       "inputs", {}, "Variables which feed into this system. Takes a list of scalar variable names");
   params.addParam<std::vector<MooseFunctorName>>(
@@ -122,17 +122,14 @@ FuelCycleSystemScalarKernelTempl<is_ad>::computeQpResidual()
   const int _i = 0;
   const auto _state = _is_implicit ? Moose::currentState() : Moose::oldState();
   for (unsigned int i = 0; i < _n_inputs; ++i)
-  {
     partial_residual += -(*(_input_vals[i]))[_i] * (*(_input_fractions[i]))(_qp, _state);
-  }
+
   for (unsigned int i = 0; i < _n_other_sources; ++i)
-  {
     partial_residual += -(*(_other_sources[i]))(_qp, _state);
-  }
+  
   for (unsigned int i = 0; i < _n_other_sinks; ++i)
-  {
     partial_residual += (*(_other_sinks[i]))(_qp, _state);
-  }
+
   partial_residual += -_TBR(_qp, _state) * _burn_rate(_qp, _state);
   if (!_disable_residence_time)
   {

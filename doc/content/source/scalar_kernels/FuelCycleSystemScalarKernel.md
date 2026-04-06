@@ -6,7 +6,9 @@
 
 This object implements the time-dependent mass-transport equations for a
 single variable given an arbitrary number of coupled inputs/outputs (coupled [ScalarVariables](/syntax/Variables))
-and/or sources and sinks. Also tracks tritium decay. All parameters are defined as functors,
+and/or sources and sinks. 
+This kernel tracks tritium decay. 
+All parameters are defined as functors,
 which should allow versatility in accepting a variety of input arguments. An example of using this
 kernel for a system is available, following the [Abdou fuel cycle](/examples/fuel_cycle_Abdou) model.
 

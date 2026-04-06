@@ -24,6 +24,7 @@
     initial_condition = 42
   []
 []
+
 [ScalarKernels]
   [I1] # Breeding Zone
     type = FuelCycleSystemScalarKernel

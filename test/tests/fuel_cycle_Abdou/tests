@@ -30,8 +30,8 @@
     input = 'ss_kernel.i'
     issues = '#329'
     design = 'FuelCycleSystemScalarKernel.md'
-    cli_args = 'ScalarKernels/I1/steady_state=false ScalarKernels/I1/is_implicit=true Outputs/file_base=implicit_out'
-    csvdiff = 'implicit_out.csv'
+    cli_args = 'ScalarKernels/I1/steady_state=false ScalarKernels/I1/is_implicit=true Outputs/file_base=ss_kernel_implicit_out'
+    csvdiff = 'ss_kernel_implicit_out.csv'
     requirement = 'The fuel cycle system kernel shall run with either current or old state inputs.'
   []
   [fuel_cycle_kernel_inputs_mismatch]
