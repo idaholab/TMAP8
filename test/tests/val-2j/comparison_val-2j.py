@@ -159,17 +159,37 @@ plt.close(fig)
 # Figure 2b: Defect density evolution during TDS
 # ============================================================
 
+# Analytical solution of defect annihilation ODE:
+#   dD/dt = -alpha_anneal * exp(-E_anneal / (kB * T(t))) * D
+# with T(t) = 300 + beta*t, beta = 5/60 K/s.
+# Solution: D(T)/D0 = exp(-(alpha/beta) * integral_300^T exp(-E/(kB*T')) dT')
+
+kB_J_val = 1.380649e-23  # J/K
+E_anneal_J = 0.9 * 1.602176634e-19  # 0.9 eV in Joules
+beta = 5.0 / 60.0  # K/s heating rate
+T_defect = np.linspace(300, 900, 1000)
+dT = T_defect[1] - T_defect[0]
+
+# Integrand: exp(-E_anneal / (kB * T))
+integrand = np.exp(-E_anneal_J / (kB_J_val * T_defect))
+cumulative_integral = np.cumsum(integrand) * dT  # numerical integration
+
+alpha_anneal_values = [1e1, 1e2, 1e3, 1e4]
+colors = ["tab:blue", "tab:red", "tab:green", "tab:orange"]
+
 fig = plt.figure(figsize=[6.5, 5.5])
 gs = gridspec.GridSpec(1, 1)
 ax = fig.add_subplot(gs[0])
 
-ax.plot(
-    sim_ref["temperature_pp"],
-    sim_ref["defect_density_pp"] / sim_ref["defect_density_pp"].iloc[0],
-    linestyle="-",
-    label="TMAP8",
-    color="tab:red",
-)
+for alpha_val, color in zip(alpha_anneal_values, colors):
+    D_norm = np.exp(-(alpha_val / beta) * cumulative_integral)
+    ax.plot(
+        T_defect,
+        D_norm,
+        linestyle="-",
+        color=color,
+        label=rf"$\alpha_{{anneal}}$ = 10$^{{{int(np.log10(alpha_val))}}}$ s$^{{-1}}$",
+    )
 
 ax.set_xlabel("Temperature (K)")
 ax.set_ylabel("Normalized defect density $D_{id}/D_{id,0}$ (-)")
@@ -195,9 +215,9 @@ at0_ref, et_ref = 4.2e8, 1.04
 ar0_ref, er_ref = 4.1e6, 1.19
 
 # Optimized parameters
-D0_opt_val, Ed_opt_val = 8.190614e-5, 0.970690
-at0_opt_val, et_opt_val = 1.290375e9, 0.887460
-ar0_opt_val, er_opt_val = 2.486356e5, 1.100495
+D0_opt_val, Ed_opt_val = 4.499236e-6, 1.008663
+at0_opt_val, et_opt_val = 2.210226e7, 0.817421
+ar0_opt_val, er_opt_val = 2.143938e5, 1.082378
 
 D_ref = D0_ref * np.exp(-Ed_ref / (kB_eV * temperature_array))
 D_opt_arr = D0_opt_val * np.exp(-Ed_opt_val / (kB_eV * temperature_array))
@@ -264,9 +284,7 @@ plt.close(fig)
 
 import json
 
-bayesian_json = os.path.join(
-    gold_folder, "bayesian_val2j_results/val2j_bayesian_6p.json"
-)
+bayesian_json = os.path.join(gold_folder, "val2j_bayesian_8p.json")
 all_inputs = []
 all_scores = []
 if os.path.exists(bayesian_json):
@@ -284,26 +302,35 @@ if os.path.exists(bayesian_json):
     all_inputs = np.array(all_inputs)
     all_scores = np.array(all_scores)
 
-# Parameter metadata: name, reference value, optimized value, search bounds
-# Column order in JSON: log10_alpha_t, epsilon_t, log10_alpha_r, epsilon_r, log10_D0, E_d
-# Reorder for display: D0, E_d, alpha_t, epsilon_t, alpha_r, epsilon_r
+# Parameter metadata: name, reference value, optimized value, search bounds, JSON column
+# Column order in JSON: log10_alpha_t, epsilon_t, log10_alpha_r, epsilon_r, log10_D0, E_d,
+#                       log10_alpha_anneal, E_anneal
 param_info = [
-    (r"log$_{10}$($D_0$) (m$^2$/s)", -6.161, np.log10(8.190614e-5), -8.0, -4.0, 4),
-    (r"$E_d$ (eV)", 1.07, 0.970690, 0.8, 1.4, 5),
+    (r"log$_{10}$($D_0$) (m$^2$/s)", -6.161, np.log10(4.499236e-6), -8.0, -4.0, 4),
+    (r"$E_d$ (eV)", 1.07, 1.008663, 0.8, 1.4, 5),
     (
         r"log$_{10}$($\alpha_{t0}$) (s$^{-1}$)",
         8.623,
-        np.log10(1.290375e9),
+        np.log10(2.210226e7),
         7.0,
         10.0,
         0,
     ),
-    (r"$\epsilon_t$ (eV)", 1.04, 0.887460, 0.8, 1.3, 1),
-    (r"log$_{10}$($\alpha_{r0}$) (s$^{-1}$)", 6.613, np.log10(2.486356e5), 5.0, 8.0, 2),
-    (r"$\epsilon_r$ (eV)", 1.19, 1.100495, 0.9, 1.5, 3),
+    (r"$\epsilon_t$ (eV)", 1.04, 0.817421, 0.8, 1.3, 1),
+    (r"log$_{10}$($\alpha_{r0}$) (s$^{-1}$)", 6.613, np.log10(2.143938e5), 5.0, 8.0, 2),
+    (r"$\epsilon_r$ (eV)", 1.19, 1.082378, 0.9, 1.5, 3),
+    (
+        r"log$_{10}$($\alpha_{anneal}$) (s$^{-1}$)",
+        2.0,
+        np.log10(8.264733e1),
+        1.0,
+        5.0,
+        6,
+    ),
+    (r"$E_{anneal}$ (eV)", 0.9, 1.270004, 0.5, 1.5, 7),
 ]
 
-fig, axes = plt.subplots(2, 3, figsize=[14, 6])
+fig, axes = plt.subplots(2, 4, figsize=[18, 6])
 axes = axes.flatten()
 
 # Filter to top 20% scoring evaluations for plot

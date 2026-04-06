@@ -113,9 +113,8 @@ The model parameters are summarized in [val-2j_parameters].
 
 ### Results after optimization
 
-The agreement between the TMAP8 simulation and experimental data can be improved by optimizing the model parameters using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html). A Bayesian optimization approach [!citep](DHULIPALA2026102776) was applied to optimize six key parameters (i.e., three Arrhenius pre-exponential factors (in log$_{10}$ space) and three activation energies) to better match the experimental TDS curve for Sample E. 
-The defect annihilation parameters were not included in the optimization because annihilation parameter has only a minor impact on the tritium release during TDS. 
-As shown in [val-2j_defect_density_evolution], the normalized defect density remains close to unity throughout the main release region (below ~750 K) and only decreases significantly at higher temperatures where the tritium release flux is decreasing. 
+The agreement between the TMAP8 simulation and experimental data can be improved by optimizing the model parameters using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html). A Bayesian optimization approach [!citep](DHULIPALA2026102776) was applied to optimize eight key parameters (i.e., four Arrhenius pre-exponential factors (in log$_{10}$ space) and four activation energies, including the defect annihilation parameters) to better match the experimental TDS curve for Sample E.
+As shown in [val-2j_defect_density_evolution], the normalized defect density with the reference annihilation prefactor ($\alpha_{anneal}$ = 10$^2$ s$^{-1}$) remains close to unity throughout the main release region (below ~750 K) and only decreases significantly at higher temperatures where the tritium release flux is decreasing. Larger annihilation prefactors would shift the defect annihilation to lower temperatures, but the optimization consistently finds values near the reference.
 The optimization used Gaussian Process active learning with Expected Improvement acquisition, running 40 iterations with 5 parallel proposals per iteration.
 
 !media comparison_val-2j.py
@@ -131,14 +130,16 @@ The objective function evaluates the RMSPE between the simulated and experimenta
 !table id=val-2j_optimized_parameters caption=Reference and Bayesian-optimized parameter values.
 | Parameter | Reference | Optimized | Units |
 | --- | --- | --- | --- |
-| $D_0$ | 6.9 $\times 10^{-7}$ | 8.19 $\times 10^{-5}$ | m$^2$/s |
-| $E_d$ | 1.07 | 0.97 | eV |
-| $\alpha_{t0}$ | 4.2 $\times 10^{8}$ | 1.29 $\times 10^{9}$ | s$^{-1}$ |
-| $\epsilon_t$ | 1.04 | 0.89 | eV |
-| $\alpha_{r0}$ | 4.1 $\times 10^{6}$ | 2.49 $\times 10^{5}$ | s$^{-1}$ |
-| $\epsilon_r$ | 1.19 | 1.10 | eV |
+| $D_0$ | 6.9 $\times 10^{-7}$ | 4.50 $\times 10^{-6}$ | m$^2$/s |
+| $E_d$ | 1.07 | 1.01 | eV |
+| $\alpha_{t0}$ | 4.2 $\times 10^{8}$ | 2.21 $\times 10^{7}$ | s$^{-1}$ |
+| $\epsilon_t$ | 1.04 | 0.82 | eV |
+| $\alpha_{r0}$ | 4.1 $\times 10^{6}$ | 2.14 $\times 10^{5}$ | s$^{-1}$ |
+| $\epsilon_r$ | 1.19 | 1.08 | eV |
+| $k_{dp-da,0}$ | 1.0 $\times 10^{2}$ | 8.26 $\times 10^{1}$ | s$^{-1}$ |
+| $E_{dp-da}$ | 0.9 | 1.27 | eV |
 
-[val-2j_bayesian_parameter_exploration] compares the reference parameter values from [!cite](kobayashi2015developing) (blue dashed lines) with the Bayesian-optimized values (red solid lines) for each of the six fitted parameters. The green curves show the distribution of the parameters with top 20% RMSPE evaluations from the Bayesian optimization, providing insight into which parameter regions produce good fits to the experimental data. The gray shaded region indicates the search range used during optimization. The optimized values fall within the high-density regions of the distributions, confirming consistency with the near-optimal parameter space.
+[val-2j_bayesian_parameter_exploration] compares the reference parameter values from [!cite](kobayashi2015developing) (blue dashed lines) with the Bayesian-optimized values (red solid lines) for each of the eight fitted parameters. The green curves show the distribution of the parameters with top 20% RMSPE evaluations from the Bayesian optimization, providing insight into which parameter regions produce good fits to the experimental data. The gray shaded region indicates the search range used during optimization. The optimized values fall within the high-density regions of the distributions, confirming consistency with the near-optimal parameter space.
 
 !media comparison_val-2j.py
        image_name=val-2j_bayesian_parameter_exploration.png
@@ -146,7 +147,7 @@ The objective function evaluates the RMSPE between the simulated and experimenta
        id=val-2j_bayesian_parameter_exploration
        caption=Comparison of reference (blue dashed) and Bayesian-optimized (red solid) parameter values. Green curves show the distribution of the parameters with top 20% RMSPE from the Bayesian optimization. The gray shaded region indicates the search range.
 
-[val-2j_arrhenius_comparison] compares the Arrhenius-law temperature dependence of the diffusivity $D(T)$, trapping rate coefficient $\alpha_t(T)$, and detrapping rate coefficient $\alpha_r(T)$ between the reference and optimized parameter sets over the 300--900 K TDS temperature range. The diffusivity pre-exponential increases by roughly two orders of magnitude while the activation energy decreases modestly (1.07 to 0.97 eV). The trapping prefactor increases by about one order of magnitude with a reduced activation energy, while the detrapping parameters shift more modestly.
+[val-2j_arrhenius_comparison] compares the Arrhenius-law temperature dependence of the diffusivity $D(T)$, trapping rate coefficient $\alpha_t(T)$, and detrapping rate coefficient $\alpha_r(T)$ between the reference and optimized parameter sets over the 300--900 K TDS temperature range. The diffusivity pre-exponential increases by roughly two orders of magnitude while the activation energy remains close to the reference (1.07 to 1.01 eV). The trapping prefactor decreases by about one order of magnitude with a reduced activation energy (1.04 to 0.82 eV), while the detrapping prefactor decreases by about one order of magnitude with a slightly reduced activation energy (1.19 to 1.08 eV). The optimized annihilation prefactor (~83 s$^{-1}$) remains close to the reference value (100 s$^{-1}$), with the annihilation activation energy increasing from 0.9 to 1.27 eV, further suppressing annihilation effects during TDS.
 
 !media comparison_val-2j.py
        image_name=val-2j_arrhenius_comparison.png

@@ -112,6 +112,15 @@ C0_mobile = '${fparse alpha_r * exp(-epsilon_r / T_start) * C0_trapped / (alpha_
     alpha_r = ${alpha_r}
     detrapping_energy = ${epsilon_r}
     temperature = temperature
+    extra_vector_tags = ref
+  []
+  [releasing_defect_annealing]
+    type = ReleasingNodalKernel
+    variable = trapped
+    alpha_r = ${alpha_anneal}
+    detrapping_energy = ${E_anneal}
+    temperature = temperature
+    extra_vector_tags = ref
   []
   # --- Defect annihilation ODE: dD_id/dt = -k_anneal * D_id ---
   [time_defect_density]
@@ -201,6 +210,8 @@ C0_mobile = '${fparse alpha_r * exp(-epsilon_r / T_start) * C0_trapped / (alpha_
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
   line_search = none
+  automatic_scaling = true
+  compute_scaling_once = true
 
   end_time = ${end_time}
   dtmax = 30  # limit time step to ~2.5 K per step for TDS resolution
@@ -211,6 +222,6 @@ C0_mobile = '${fparse alpha_r * exp(-epsilon_r / T_start) * C0_trapped / (alpha_
     growth_factor = 1.2
     cutback_factor = 0.8
   []
-  nl_rel_tol = 1e-8
+  nl_rel_tol = 1e-10
   nl_abs_tol = 1e-12
 []

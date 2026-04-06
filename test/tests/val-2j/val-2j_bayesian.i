@@ -11,6 +11,8 @@ log10_alpha_r = '${fparse log10(4.1e6)}'    # ~6.613
 epsilon_r_eV = 1.19    # eV
 log10_D0 = '${fparse log10(6.9e-7)}'        # ~-6.161
 E_d_eV = 1.07    # eV
+log10_alpha_anneal = '${fparse log10(1.0e2)}'  # ~2.0
+E_anneal_eV = 0.9    # eV
 
 # ============ Derived Physical Parameters ============
 alpha_t = '${fparse pow(10, log10_alpha_t)}'
@@ -20,13 +22,10 @@ epsilon_r = '${fparse epsilon_r_eV * 1.602176634e-19 / 1.380649e-23}'
 D0_m2s = '${fparse pow(10, log10_D0)}'
 D0 = '${fparse D0_m2s * 1e12}'  # m^2/s -> um^2/s
 E_d = '${fparse E_d_eV * 1.602176634e-19 / 1.380649e-23}'
+alpha_anneal = '${fparse pow(10, log10_alpha_anneal)}'
+E_anneal = '${fparse E_anneal_eV * 1.602176634e-19 / 1.380649e-23}'
 
-# ============ Physical Constants ============
-kB_J = '${units 1.380649e-23 J/K}'
-
-# ============ Fixed Defect Annihilation Parameters (Eqs. 16-18) ============
-alpha_anneal = '${units 1.0e2 1/s}'
-E_anneal = '${fparse ${units 0.9 eV -> J} / ${kB_J}}'
+# ============ Physical Constants (kB_J defined in val-2j_base.i) ============
 
 !include val-2j_base.i
 
