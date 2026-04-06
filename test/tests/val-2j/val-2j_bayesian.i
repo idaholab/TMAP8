@@ -25,7 +25,6 @@ E_d = '${fparse E_d_eV * 1.602176634e-19 / 1.380649e-23}'
 alpha_anneal = '${fparse pow(10, log10_alpha_anneal)}'
 E_anneal = '${fparse E_anneal_eV * 1.602176634e-19 / 1.380649e-23}'
 
-# ============ Physical Constants (kB_J defined in val-2j_base.i) ============
 
 !include val-2j_base.i
 

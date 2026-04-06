@@ -28,6 +28,24 @@ D = D_0 \exp \left( -\frac{E_d}{k_B T} \right),
 
 where $D_0$ is the pre-exponential factor, $E_d$ is the activation energy, $k_B$ is the Boltzmann constant, and $T$ is the temperature.
 
+### Defect annihilation
+
+During TDS heating, radiation-induced defect sites undergo first-order annihilation [!citep](kobayashi2015developing):
+
+\begin{equation} \label{eq:annihilation}
+\frac{d D_{id}}{dt} = -k_{dp-da} \, D_{id},
+\end{equation}
+
+where $D_{id}$ is the defect density. The trap site fraction $\chi$ is related to radiation defect density $D_{id}$. However, the exact relationship is not clearly indicated in [!citep](kobayashi2015developing). Therefore, the initial trap site density is assumed to equal the defect density with $\chi(0)N = D_{id}$.
+
+The annihilation rate coefficient, $k_{dp-da}$, is described as:
+
+\begin{equation} \label{eq:annihilation_rate}
+k_{dp-da} = k_{dp-da,0} \exp \left( -\frac{E_{dp-da}}{k_B T} \right).
+\end{equation}
+
+The raising temperature reduces the available trap sites: the trap site fraction $\chi$ decays over time following [eq:annihilation], preventing re-trapping into annihilated sites. This is implemented by solving the annihilation equation self-consistently as an additional variable within the simulation, using a `ReleasingNodalKernel`.
+
 ### Trapping and Detrapping
 
 Only O$^{-}$-center (hydroxyl group) trapping is included in this model. As noted by [!cite](kobayashi2015developing) (p. 26), tritium release controlled by detrapping from F$^+$-centers (oxygen vacancies) occurs near 580 K, which corresponds to the release temperature controlled by the diffusion process itself. Because F$^+$-center detrapping is not rate-limiting relative to diffusion, it does not produce a distinct feature (i.e., peak) in the TDS spectrum, and is therefore excluded from the model.
@@ -35,7 +53,7 @@ Only O$^{-}$-center (hydroxyl group) trapping is included in this model. As note
 The trapped concentration $C_T$ evolves according to:
 
 \begin{equation}  \label{eq:trapping}
-\frac{\partial C_T}{\partial t} = \alpha_t \frac{C_T^{\text{empty}} C_M}{N} - \alpha_r C_T,
+\frac{\partial C_T}{\partial t} = \alpha_t \frac{C_T^{\text{empty}} C_M}{N} - \alpha_r C_T - k_{dp-da} C_T,
 \end{equation}
 
 where $N$ is the lattice site density, and $C_T^{\text{empty}} = \chi N - C_T$ is the empty trap concentration with $\chi$ being the trap site fraction.
@@ -51,6 +69,7 @@ The trapping and detrapping rate coefficients follow Arrhenius relationships:
 \end{equation}
 
 where $\alpha_{t0}$ and $\alpha_{r0}$ are pre-factors of trapping and release rate coefficients, $\epsilon_t$ and $\epsilon_r$ are the trapping and release energies, and $k_B$ is the Boltzmann constant.
+The last term in [eq:trapping], $k_{dp-da} C_T$, accounts for the trapped tritium atoms released when full defects are annealed. 
 
 ### Defect annihilation
 
@@ -96,7 +115,7 @@ The model parameters are summarized in [val-2j_parameters].
 | $E_{dp-da}$ | Annihilation energy | 0.9 | eV | [!cite](kobayashi2015developing), Eq. 18 |
 | $N$ | Lattice density | 1.88 $\times 10^{28}$ | m$^{-3}$ | Calculated |
 | $\beta$ | TDS heating rate | 5 | K/min | [!cite](kobayashi2015developing) |
-| $k_B$ | Boltzmann constant | 1.380649 $\times 10^{-23}$ | J/K | |
+| $k_B$ | Boltzmann constant | 1.380649 $\times 10^{-23}$ | J/K | [PhysicalConstants.h](https://physics.nist.gov/cgi-bin/cuu/Value?r) |
 | $D_{id,E}$ | Defect density (Sample E) | $3.384 \times 10^{26}$ | m$^{-3}$ | [!cite](kobayashi2015developing), Table 1 |
 
 ## Results
@@ -113,15 +132,15 @@ The model parameters are summarized in [val-2j_parameters].
 
 ### Results after optimization
 
-The agreement between the TMAP8 simulation and experimental data can be improved by optimizing the model parameters using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html). A Bayesian optimization approach [!citep](DHULIPALA2026102776) was applied to optimize eight key parameters (i.e., four Arrhenius pre-exponential factors (in log$_{10}$ space) and four activation energies, including the defect annihilation parameters) to better match the experimental TDS curve for Sample E.
-As shown in [val-2j_defect_density_evolution], the normalized defect density with the reference annihilation prefactor ($\alpha_{anneal}$ = 10$^2$ s$^{-1}$) remains close to unity throughout the main release region (below ~750 K) and only decreases significantly at higher temperatures where the tritium release flux is decreasing. Larger annihilation prefactors would shift the defect annihilation to lower temperatures, but the optimization consistently finds values near the reference.
+The agreement between the TMAP8 simulation and experimental data can be improved by optimizing the model parameters using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html). A Bayesian optimization approach [!citep](DHULIPALA2026102776) was applied to optimize eight key parameters (i.e., four Arrhenius pre-exponential factors (in log$_{10}$ space) and four activation energies for the diffusivity, trapping, releasing, and defect annealing) to better match the experimental TDS curve for Sample E.
+As shown in [val-2j_defect_density_evolution], the normalized defect density with the reference annihilation prefactor ($\alpha_{anneal}$ = 10$^2$ s$^{-1}$) remains close to unity throughout the main release region (below ~750 K) and only decreases significantly at higher temperatures where the tritium release flux is decreasing. Larger annihilation prefactors would shift the defect annihilation and the associated tritium release to lower temperatures, but the optimization consistently finds values near the reference.
 The optimization used Gaussian Process active learning with Expected Improvement acquisition, running 40 iterations with 5 parallel proposals per iteration.
 
 !media comparison_val-2j.py
        image_name=val-2j_defect_density_evolution.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2j_defect_density_evolution
-       caption=Evolution of the normalized defect density $D_{id}/D_{id,0}$ during the TDS temperature ramp. Significant annihilation occurs only above ~750 K, during the second part main tritium release peak.
+       caption=Evolution of the normalized defect density $D_{id}/D_{id,0}$ during the TDS temperature ramp. As expected, the annihilation temperature strongly depends on $\alpha_{anneal}$.
 
 The objective function evaluates the RMSPE between the simulated and experimental normalized release rates using a continuous comparison at every simulation timestep. The experimental TDS curve is represented as a piecewise-linear interpolation function, and the RMSPE is accumulated over the full temperature ramp. Low-temperature constraint points (300--475 K) with a small target value penalize parameter sets that produce spurious early release peaks.
 
