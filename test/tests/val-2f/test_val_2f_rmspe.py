@@ -7,8 +7,8 @@ import unittest
 import numpy as np
 import pandas as pd
 
-CHARGE_TIME = 72 * 3600 # s
-COOLDOWN_TIME = 12 * 3600 # s
+CHARGE_TIME = 72 * 3600  # s
+COOLDOWN_TIME = 12 * 3600  # s
 START_TIME = CHARGE_TIME + COOLDOWN_TIME
 
 INVENTORY_RMSPE_LIMIT = 0.02

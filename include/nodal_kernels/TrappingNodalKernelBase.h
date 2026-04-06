@@ -34,7 +34,7 @@ public:
    * Build the shared trapping kernel state from the supplied rate and residual scaling.
    */
   TrappingNodalKernelBase(const InputParameters & parameters,
-                          Real trapping_rate,
+                          Real trapping_rate_coefficient,
                           Real residual_denominator);
 
   static InputParameters validParams();

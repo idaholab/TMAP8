@@ -18,7 +18,7 @@ ReleasingNodalKernelBase::validParams()
 }
 
 ReleasingNodalKernelBase::ReleasingNodalKernelBase(const InputParameters & parameters,
-                                                   Real release_rate)
+                                                   Real release_rate_coefficient)
   : NodalKernel(parameters),
     _release_rate_coefficient(release_rate_coefficient),
     _detrapping_energy(getParam<Real>("detrapping_energy")),

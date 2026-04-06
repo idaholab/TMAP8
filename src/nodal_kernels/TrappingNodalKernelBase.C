@@ -27,7 +27,7 @@ TrappingNodalKernelBase::validParams()
 }
 
 TrappingNodalKernelBase::TrappingNodalKernelBase(const InputParameters & parameters,
-                                                 Real trapping_rate,
+                                                 Real trapping_rate_coefficient,
                                                  Real residual_denominator)
   : NodalKernel(parameters),
     _trapping_rate_coefficient(trapping_rate_coefficient),

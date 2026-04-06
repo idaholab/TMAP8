@@ -70,7 +70,7 @@ SpeciesTrappingPhysics::validParams()
       false,
       "Whether to use dimensionless mobile and trapped species. When true, "
       "'mobile_concentration_reference', 'trap_concentration_reference', "
-      "'dimensionless_trapping_rate_coefficient', and 'dimensionless_release_rate' must all be supplied.");
+      "'dimensionless_trapping_rate_coefficient', and 'dimensionless_release_rate_coefficient' must all be supplied.");
   params.addParam<std::vector<Real>>(
       "trap_concentration_reference",
       {},
@@ -118,7 +118,7 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
     _trapping_energies({getParam<std::vector<Real>>("trapping_energy")}),
     _Ns(isParamValid("N") ? std::vector<Real>(1, getParam<Real>("N")) : std::vector<Real>()),
     _Ct0s({getParam<std::vector<FunctionName>>("Ct0")}),
-    _dimensionless_trapping_rates(
+    _dimensionless_trapping_rates_coefficient(
         isParamValid("dimensionless_trapping_rate_coefficient")
             ? std::vector<std::vector<Real>>(
                   1, getParam<std::vector<Real>>("dimensionless_trapping_rate_coefficient"))
@@ -136,7 +136,7 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
                         ? std::vector<Real>(1, getParam<Real>("trap_per_free"))
                         : std::vector<Real>()),
     _alpha_rs({getParam<std::vector<Real>>("alpha_r")}),
-    _dimensionless_release_rates(
+    _dimensionless_release_rates_coefficient(
         isParamValid("dimensionless_release_rate_coefficient")
             ? std::vector<std::vector<Real>>(
                   1, getParam<std::vector<Real>>("dimensionless_release_rate_coefficient"))
@@ -179,7 +179,7 @@ SpeciesTrappingPhysics::SpeciesTrappingPhysics(const InputParameters & parameter
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, VariableName>("species", "mobile", true);
   if (_use_dimensionless_species)
     checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>(
-        "species", "dimensionless_trapping_rate", true);
+        "species", "dimensionless_trapping_rate_coefficient", true);
   else
     checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "alpha_t", true);
   checkVectorParamsSameLengthIfSet<NonlinearVariableName, Real>("species", "trapping_energy", true);
@@ -297,12 +297,12 @@ SpeciesTrappingPhysics::addComponent(const ActionComponent & component)
                                                component,
                                                comp_index,
                                                _species.back(),
-                                               _dimensionless_trapping_rates);
+                                               _dimensionless_trapping_rates_coefficient);
     processComponentMatprop<std::vector<Real>>("dimensionless_release_rate_coefficient",
                                                component,
                                                comp_index,
                                                _species.back(),
-                                               _dimensionless_release_rates);
+                                               _dimensionless_release_rates_coefficient);
     processComponentMatprop<std::vector<Real>>("trap_concentration_reference",
                                                component,
                                                comp_index,
@@ -474,7 +474,7 @@ SpeciesTrappingPhysics::addFEKernels()
     checkSizeComponentSpeciesIndexedVectorOfVector(
         _dimensionless_trapping_rates_coefficient, "dimensionless_trapping_rate_coefficient", false);
     checkSizeComponentSpeciesIndexedVectorOfVector(
-        _dimensionless_release_rates,_coefficient "dimensionless_release_rate_coefficient", false);
+        _dimensionless_release_rates_coefficient, "dimensionless_release_rate_coefficient", false);
     checkSizeComponentSpeciesIndexedVectorOfVector(
         _trap_concentration_references, "trap_concentration_reference", false);
     checkSizeComponentIndexedVector(

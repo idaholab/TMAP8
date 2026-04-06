@@ -19,7 +19,7 @@
 class ReleasingNodalKernelBase : public NodalKernel
 {
 public:
-  ReleasingNodalKernelBase(const InputParameters & parameters, Real release_rate);
+  ReleasingNodalKernelBase(const InputParameters & parameters, Real release_rate_coefficient);
 
   static InputParameters validParams();
 
