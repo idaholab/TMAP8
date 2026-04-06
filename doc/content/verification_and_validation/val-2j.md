@@ -71,24 +71,6 @@ The trapping and detrapping rate coefficients follow Arrhenius relationships:
 where $\alpha_{t0}$ and $\alpha_{r0}$ are pre-factors of trapping and release rate coefficients, $\epsilon_t$ and $\epsilon_r$ are the trapping and release energies, and $k_B$ is the Boltzmann constant.
 The last term in [eq:trapping], $k_{dp-da} C_T$, accounts for the trapped tritium atoms released when full defects are annealed. 
 
-### Defect annihilation
-
-During TDS heating, radiation-induced defect sites undergo first-order annihilation [!citep](kobayashi2015developing):
-
-\begin{equation} \label{eq:annihilation}
-\frac{d D_{id}}{dt} = -k_{dp-da} \, D_{id},
-\end{equation}
-
-where $D_{id}$ is the defect density. The trap site fraction $\chi$ is related to radiation defect density $D_{id}$. However, the exact relationship is not clearly indicated in [!citep](kobayashi2015developing). Therefore, the initial trap site density is assumed to equal the defect density with $\chi(0)N = D_{id}$.
-
-The annihilation rate coefficient, $k_{dp-da}$, is described as:
-
-\begin{equation} \label{eq:annihilation_rate}
-k_{dp-da} = k_{dp-da,0} \exp \left( -\frac{E_{dp-da}}{k_B T} \right).
-\end{equation}
-
-The raising temperature reduces the available trap sites: the trap site fraction $\chi$ decays over time following [eq:annihilation], preventing re-trapping into annihilated sites. This is implemented by solving the annihilation equation self-consistently as an additional variable within the simulation, using a `ReleasingNodalKernel`.
-
 ### Boundary and initial conditions
 
 - $\partial C / \partial r = 0$ at $r = 0$ (symmetry at grain center)
