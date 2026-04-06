@@ -45,7 +45,7 @@ Functions/timestep_function/expression := 'if(t<100, 25, 400)'
 
 Executioner/nl_rel_tol := 1e-2
 Executioner/nl_abs_tol := 1e-1
-Executioner/end_time := 2.5e1
+Executioner/end_time := ${fparse plasma_cycle_time + plasma_ss_duration}
 Executioner/nl_max_its := 24
 Executioner/TimeStepper/growth_factor := 2.0
 

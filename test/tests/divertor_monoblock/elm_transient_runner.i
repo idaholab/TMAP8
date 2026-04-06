@@ -20,10 +20,10 @@
 ### ScInt_          Scaled and integrated
 
 !include divertor_monoblock_explicit_base.i
-base_power = 10e6
-coolant_temperature = 552
-elm_value = 1147e6
-elm_duration = 1.32e-3
+base_power = 10e6 # ${units 10 MW/m^2 -> W/m^2}
+coolant_temperature = ${units 552 K}
+elm_value = ${units 1147 MW/m^2 -> W/m^2}
+elm_duration = ${units 1.32 ms -> s}
 W_cond_factor = 1.0
 
 Functions/mobile_flux_bc_function/expression := "if(t<2e2, (${base_power}*7.9e-13/1e7),

@@ -300,6 +300,54 @@ The input file [/divertor_monoblock.i] returns the outputs that were used in [!c
 
 Note that the current model has been utilized in a follow up study to perform a sensitivity study on material properties and operation conditions, for which the documentation is available [here](examples/divertor_monoblock/sensitivity.md exact=True).
 
+## Postprocessors
+
+!style halign=left
+Relevant postprocessors have been added to characterize temperatures, fluxes and concentrations of tritium at various points in the model. 
+
+First, we add a postprocessor to track the flux across the CuCrZr boundary, and scale it to obtain a total flux
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i block=Postprocessors/Tritium_SideFluxIntegral link=false
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i block=Postprocessors/Scaled_Tritium_Flux link=false
+
+We also track the heat flux and maximum temperature in each material
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i block=Postprocessors/coolant_heat_flux link=false
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i block=Postprocessors/max_temperature_W link=false
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i block=Postprocessors/max_temperature_Cu link=false
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i block=Postprocessors/max_temperature_CuCrZr link=false
+
+Additionally the average temperature in each material
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i block=Postprocessors/avg_temperature_W link=false
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i block=Postprocessors/avg_temperature_Cu link=false
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i block=Postprocessors/avg_temperature_CuCrZr link=false
+
+We also look at the maximum concentration of tritium in each material
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i block=Postprocessors/max_concentration_W link=false
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i block=Postprocessors/max_concentration_Cu link=false
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i block=Postprocessors/max_concentration_CuCrZr link=false
+
+And the total area (2D volume) each material occupies
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i block=Postprocessors/area_W link=false
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i block=Postprocessors/area_Cu link=false
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i block=Postprocessors/area_CuCrZr link=false
+
+!listing test/tests/divertor_monoblock/divertor_monoblock.i block=Postprocessors/total_retention link=false
+
+
 ## Complete input file
 
 This case is reproduced three times:
@@ -315,10 +363,20 @@ Note that since these input files have a lot of sections in common, we utilize t
 - [/divertor_monoblock_multi_variable_base.i] contains the parts shared by both the [/divertor_monoblock.i] and [/divertor_monoblock_physics.i] cases.
 - [/divertor_monoblock_physics-single-variable.i] contains the parts equivalent to the ones in [/divertor_monoblock_multi_variable_base.i], but for the case in [/divertor_monoblock_physics-single-variable.i].
 
-Below is the input file [/divertor_monoblock.i], which includes several of the base input files described above.
+Below are the input files which [/divertor_monoblock.i] uses to demonstrate model the scenario described above.
 This case can be run reliably with approximately 4 processor cores.
 Note that this input file has been optimized for showcasing capability rather than computational cost.
 
 !listing test/tests/divertor_monoblock/divertor_monoblock.i
+
+!listing test/tests/divertor_monoblock/divertor_monoblock_explicit_base.i
+
+!listing test/tests/divertor_monoblock/divertor_monoblock_mesh_base.i
+
+!listing test/tests/divertor_monoblock/divertor_monoblock_common_base.i
+
+!listing test/tests/divertor_monoblock/divertor_monoblock_multi_variable_base.i
+
+!listing test/tests/divertor_monoblock/divertor_monoblock_output_base.i
 
 !bibtex bibliography

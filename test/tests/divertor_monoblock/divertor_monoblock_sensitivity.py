@@ -88,7 +88,7 @@ keyvals = {
     "W_cond_factor": "Tungsten Thermal Conductivity [W/m K]",
     "coolant_temp": "Coolant Temperature [K]",
     "peak_duration": "Peak Duration [s]",
-    "peak_value": "Peak Value [MW/$m^2$]",
+    "peak_value": "Peak Value [W/$m^2$]",
     "F_permeation": "Permeation Flux [C/m$^2$ /s]",
     "Scaled_Tritium_Flux": "Tritium Flux [C/m$^2$/ s]",
     "coolant_heat_flux": "Coolant Heat Flux [W/m$^2$]",
@@ -114,6 +114,7 @@ def pairplot(
     alpha=0.7,
     diag_kws=None,
     plot_kws=None,
+    markersize=0.15,
 ):
     cols = vars or list(df.select_dtypes(include="number").columns)
     n = len(cols)
@@ -178,7 +179,7 @@ def pairplot(
                             yv,
                             color=c,
                             alpha=alpha,
-                            s=0.15,
+                            s=markersize,
                             linewidths=0,
                             **plot_kws
                         )
@@ -199,17 +200,18 @@ def pairplot(
                 ymin, ymax = ax.get_ylim()
                 ytick_positions = np.linspace(ymin, ymax, num=len(xticks))
                 ax.set_yticks(ytick_positions)
-                ax.set_yticklabels(xticks)
-            (
+                ax.set_yticklabels(["{:7<.3g}".format(x) for x in xticks])
+            if row == n - 1:
                 ax.set_xlabel(keyvals[cx], fontsize=9)
-                if row == n - 1
-                else ax.set_xticklabels([])
-            )
-            (
+                ax.xaxis.set_major_formatter("{x:6<.3g}")
+                ax.tick_params("x", rotation=45)
+            else:
+                ax.set_xticklabels([])
+            if col == 0:
                 ax.set_ylabel(keyvals[cy], fontsize=9)
-                if col == 0
-                else ax.set_yticklabels([])
-            )
+                ax.yaxis.set_major_formatter("{x:6<.3g}")
+            else:
+                ax.set_yticklabels([])
 
     if hue:
         fig.legend(
@@ -228,6 +230,8 @@ fig1, ax1 = pairplot(
     ssdf[["BCs/C_mob_W_top_flux", "BCs/mobile_tube", "BCs/temp_top", "BCs/temp_tube"]],
     diag_kind="kde",
     alpha=0.2,
+    markersize=10,
+    lower_kind="kde",
 )
 fig1.savefig("divertor_monoblock_sensitivity_figures/steady_state_inputs.png", dpi=70)
 
@@ -235,7 +239,9 @@ fig1.savefig("divertor_monoblock_sensitivity_figures/steady_state_inputs.png", d
 fig2, ax2 = pairplot(
     a1df[["W_cond_factor", "coolant_temp", "peak_duration", "peak_value"]],
     diag_kind="kde",
+    lower_kind="kde",
     alpha=0.2,
+    markersize=2,
 )
 fig2.savefig("divertor_monoblock_sensitivity_figures/transients_inputs.png", dpi=70)
 
@@ -250,6 +256,7 @@ fig3, ax3 = pairplot(
         ]
     ],
     diag_kind="kde",
+    lower_kind="kde",
     alpha=0.2,
 )
 fig3.savefig(
@@ -257,8 +264,8 @@ fig3.savefig(
 )
 
 fig4, ax = plt.subplots(ncols=2, sharex=True)
-ax[0].scatter(ssdf["BCs/temp_top"], ssdf["max_temperature_W"], s=0.75, alpha=0.5)
-ax[1].scatter(ssdf["BCs/temp_top"], ssdf["F_permeation"], s=0.75, alpha=0.5)
+ax[0].scatter(ssdf["BCs/temp_top"], ssdf["max_temperature_W"], s=1.5, alpha=0.5)
+ax[1].scatter(ssdf["BCs/temp_top"], ssdf["F_permeation"], s=1.5, alpha=0.5)
 ax[0].set_xlabel("Max Heat Flux [W/m$^2$]")
 ax[1].set_xlabel("Max Heat Flux [W/m$^2$]")
 ax[0].set_ylabel("Max W Temperature [K]")

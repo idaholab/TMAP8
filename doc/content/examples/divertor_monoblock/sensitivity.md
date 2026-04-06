@@ -18,49 +18,6 @@ First, the modifications made to the [Divertor Monoblock](examples/divertor_mono
 The pulsed operation of the divertor monoblock is relatively computationally expensive to accurately model since it requires taking small time steps to capture transients. 
 For a sensitivity analysis study, where many simulations are required, lowering the cost of individual simulations is paramount. 
 So as a first approximation, we replace the pulsed operation with a single steady pulse in this study. 
-We also add several postprocessors.
-
-First, we add a postprocessor to track the flux across the CuCrZr boundary, and scale it to obtain a total flux
-
-!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/Tritium_SideFluxIntegral link=false
-
-!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/Scaled_Tritium_Flux link=false
-
-We also track the heat flux and maximum temperature in each material
-
-!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/coolant_heat_flux link=false
-
-!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/max_temperature_W link=false
-
-!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/max_temperature_Cu link=false
-
-!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/max_temperature_CuCrZr link=false
-
-Additionally the average temperature in each material
-
-!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/avg_temperature_W link=false
-
-!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/avg_temperature_Cu link=false
-
-!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/avg_temperature_CuCrZr link=false
-
-We also look at the maximum concentration of tritium in each material
-
-!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/max_concentration_W link=false
-
-!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/max_concentration_Cu link=false
-
-!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/max_concentration_CuCrZr link=false
-
-And the total area (2D volume) each material occupies
-
-!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/area_W link=false
-
-!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/area_Cu link=false
-
-!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/area_CuCrZr link=false
-
-!listing test/tests/divertor_monoblock/steady_state_runner.i block=Postprocessors/total_retention link=false
 
 ### Steady operation 
 
@@ -87,10 +44,6 @@ in this case, as the ITER divertor is designed to have coolant run at 100&deg;C 
 !style halign=left
 
 For a transient case of an inadvertent shutdown, we modify parameters as shown in [tab:inadvertent_shutdown_case] and [fig:shutdown_inputs]. This case is modified such that we assume constant operation for 5.5 hours before encountering a `Peak Heat Flux` (and proportionally scaled tritium flux) for the sampled `Peak Duration` before resuming at one-tenth the heat and tritium flux of the original steady-state.
-
-!alert! note title=Input file time duration
-The input files as contained in the tests directory have an `end_time` parameter that prevents the entire scenario from being run, which allows for tests to finish in a reasonable amount of time. This parameter must be changed to some number higher than 2$\times 10^4$ seconds + `Peak Duration` in order to model these cases
-!alert-end!
 
 The top boundary tritium flux and temperature flux are both adjusted to be a function of time, with functions defined in the input file as follows.
 
@@ -136,7 +89,7 @@ Note, however, that low tritium flux are less likely as the heat flux increases.
 
 !media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/steady_comparison.png id=fig:ss_correlation
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       caption=Correlation betweeen the incident heat flux and the maximum temperature of the tungsten, as well as the total (scaled) permeation flux of tritium into the coolant.
+       caption=Correlation between the incident heat flux and the maximum temperature of the tungsten, as well as the total (scaled) permeation flux of tritium into the coolant.
 
 ### Inadvertent shutdown 
 
@@ -144,12 +97,12 @@ For the inadvertent shutdown case, we can correlate the input parameters with se
 
 !media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/shutdown_pairplots.png id=fig:shutdown_correlation
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       caption=Correlation betweeen the input parameters and several metrics of performance in an inadvertent shutdown scenario.
+       caption=Correlation between the input parameters and several metrics of performance in an inadvertent shutdown scenario.
 
 The results of the simulation are shown in [fig:shutdown_results]. As would be expected, the amount of permeation and the amount of tritium retention have an approximately inverse relationship, and the pairwise interactions across the board are shown. The time at which maximum temperatures occur are all correlated, as one might expect.
 
 !media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/shutdown_transient_results.png id=fig:shutdown_results style=width:80%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       caption=Distribution of sampled postprocessor values in the inadvertent shutdown case
+       caption=Distribution of sampled postprocessor values in the inadvertent shutdown case.
 
 
 ### Edge-localized mode disruption 
@@ -157,8 +110,8 @@ The results of the simulation are shown in [fig:shutdown_results]. As would be e
 For the case of simulating an ELM disruption event, we show in [fig:elm_correlation] that although the operating conditions vary, the trends are substantially the same.
 
 !media divertor_monoblock_sensitivity.py image_name=divertor_monoblock_sensitivity_figures/elm_pairplots.png id=fig:elm_correlation
-       style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       caption=Correlation betweeen the incident heat flu and the maximum temperature of the tungsten, as well as the total (scaled) permeation flux of tritium t
+       style=width:80%;margin-bottom:2%;margin-left:auto;margin-right:auto
+       caption=Correlation between the incident heat flux and the maximum temperature of the tungsten, as well as the total (scaled) permeation flux of tritium.
 
 ## Complete input files 
 

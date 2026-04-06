@@ -20,9 +20,9 @@
 ### ScInt_          Scaled and integrated                                                          # Nelson S. Comments/Annotations
 
 ### VARIABLES ###
-peak_value = 2.0e7
-peak_duration = 1.0
-coolant_temperature = 552
+peak_value = ${units 20 MW/m^2 -> W/m^2}
+peak_duration = ${units 1.0 s}
+coolant_temperature = ${units 552 K}
 W_cond_factor = 1.0
 
 !include divertor_monoblock_explicit_base.i
@@ -40,7 +40,7 @@ Executioner/petsc_options_iname := '-pc_type'
 Executioner/petsc_options_value := 'lu'
 Executioner/nl_rel_tol := 1e-2
 Executioner/nl_abs_tol := 1e-1
-Executioner/end_time := 2.5e1
+Executioner/end_time := ${units 2.0002e4 s}
 Executioner/TimeStepper/dt := 100
 Executioner/dtmin := 1e-6
 Executioner/nl_max_its := 36
