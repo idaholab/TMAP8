@@ -11,8 +11,8 @@
     temperature = '1'
 
     # Material properties
-    property_names = 'dimensionless_trapping_rate_trapped_a
-                      dimensionless_trapping_rate_trapped_b
+    property_names = 'dimensionless_trapping_rate_coefficient_trapped_a
+                      dimensionless_trapping_rate_coefficient_trapped_b
                       N
                       Ct0_trapped_a
                       Ct0_trapped_b
@@ -20,8 +20,8 @@
                       trap_concentration_reference_trapped_b
                       trapping_energy_trapped_a
                       trapping_energy_trapped_b
-                      dimensionless_release_rate_trapped_a
-                      dimensionless_release_rate_trapped_b
+                      dimensionless_release_rate_coefficient_trapped_a
+                      dimensionless_release_rate_coefficient_trapped_b
                       detrapping_energy_trapped_a
                       detrapping_energy_trapped_b
                       mobile_concentration_reference'
