@@ -213,11 +213,13 @@ inverse_temperature = 1.0 / temperature_array  # 1/K
 D0_ref, Ed_ref = 6.9e-7, 1.07
 at0_ref, et_ref = 4.2e8, 1.04
 ar0_ref, er_ref = 4.1e6, 1.19
+ann0_ref, Eann_ref = 1.0e2, 0.9
 
 # Optimized parameters
 D0_opt_val, Ed_opt_val = 4.499236e-6, 1.008663
 at0_opt_val, et_opt_val = 2.210226e7, 0.817421
 ar0_opt_val, er_opt_val = 2.143938e5, 1.082378
+ann0_opt_val, Eann_opt_val = 8.264733e1, 1.270004
 
 D_ref = D0_ref * np.exp(-Ed_ref / (kB_eV * temperature_array))
 D_opt_arr = D0_opt_val * np.exp(-Ed_opt_val / (kB_eV * temperature_array))
@@ -228,7 +230,23 @@ at_opt_arr = at0_opt_val * np.exp(-et_opt_val / (kB_eV * temperature_array))
 ar_ref = ar0_ref * np.exp(-er_ref / (kB_eV * temperature_array))
 ar_opt_arr = ar0_opt_val * np.exp(-er_opt_val / (kB_eV * temperature_array))
 
-fig, axes = plt.subplots(1, 3, figsize=[14, 4.5])
+ann_ref = ann0_ref * np.exp(-Eann_ref / (kB_eV * temperature_array))
+ann_opt_arr = ann0_opt_val * np.exp(-Eann_opt_val / (kB_eV * temperature_array))
+
+
+# Helper to add temperature top axis
+def add_temperature_top_axis(ax):
+    ax2 = ax.twiny()
+    temp_ticks_K = np.array([900, 700, 500, 400, 300])
+    tick_positions = 1000.0 / temp_ticks_K
+    ax2.set_xlim(ax.get_xlim())
+    ax2.set_xticks(tick_positions)
+    ax2.set_xticklabels([str(int(t)) for t in temp_ticks_K])
+    ax2.set_xlabel("Temperature (K)", fontsize=14)
+    return ax2
+
+
+fig, axes = plt.subplots(1, 4, figsize=[18, 4.5])
 
 # Panel 1: Diffusivity D(T)
 ax = axes[0]
@@ -236,12 +254,13 @@ ax.semilogy(1000 * inverse_temperature, D_ref, "-", color="tab:blue", label="Ref
 ax.semilogy(
     1000 * inverse_temperature, D_opt_arr, "--", color="tab:red", label="Optimized"
 )
-ax.set_xlabel("1000/T (1/K)")
-ax.set_ylabel("D (m$^2$/s)")
-ax.set_title("Diffusivity")
-ax.legend()
+ax.set_xlabel("1000/T (1/K)", fontsize=14)
+ax.set_ylabel("D (m$^2$/s)", fontsize=14)
+ax.set_title("Diffusivity", fontsize=14)
+ax.legend(fontsize=14)
 ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
 ax.minorticks_on()
+add_temperature_top_axis(ax)
 
 # Panel 2: Trapping rate alpha_t(T)
 ax = axes[1]
@@ -251,12 +270,13 @@ ax.semilogy(
 ax.semilogy(
     1000 * inverse_temperature, at_opt_arr, "--", color="tab:red", label="Optimized"
 )
-ax.set_xlabel("1000/T (1/K)")
-ax.set_ylabel(r"$\alpha_t$ (s$^{-1}$)")
-ax.set_title("Trapping rate coefficient")
-ax.legend()
+ax.set_xlabel("1000/T (1/K)", fontsize=14)
+ax.set_ylabel(r"$\alpha_t$ (s$^{-1}$)", fontsize=14)
+ax.set_title("Trapping rate coefficient", fontsize=14)
+ax.legend(fontsize=14)
 ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
 ax.minorticks_on()
+add_temperature_top_axis(ax)
 
 # Panel 3: Detrapping rate alpha_r(T)
 ax = axes[2]
@@ -266,12 +286,29 @@ ax.semilogy(
 ax.semilogy(
     1000 * inverse_temperature, ar_opt_arr, "--", color="tab:red", label="Optimized"
 )
-ax.set_xlabel("1000/T (1/K)")
-ax.set_ylabel(r"$\alpha_r$ (s$^{-1}$)")
-ax.set_title("Detrapping rate coefficient")
-ax.legend()
+ax.set_xlabel("1000/T (1/K)", fontsize=14)
+ax.set_ylabel(r"$\alpha_r$ (s$^{-1}$)", fontsize=14)
+ax.set_title("Detrapping rate coefficient", fontsize=14)
+ax.legend(fontsize=14)
 ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
 ax.minorticks_on()
+add_temperature_top_axis(ax)
+
+# Panel 4: Annihilation rate k_dp-da(T)
+ax = axes[3]
+ax.semilogy(
+    1000 * inverse_temperature, ann_ref, "-", color="tab:blue", label="Reference"
+)
+ax.semilogy(
+    1000 * inverse_temperature, ann_opt_arr, "--", color="tab:red", label="Optimized"
+)
+ax.set_xlabel("1000/T (1/K)", fontsize=14)
+ax.set_ylabel(r"$k_{dp-da}$ (s$^{-1}$)", fontsize=14)
+ax.set_title("Annihilation rate coefficient", fontsize=14)
+ax.legend(fontsize=14)
+ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
+ax.minorticks_on()
+add_temperature_top_axis(ax)
 
 plt.tight_layout()
 plt.savefig("val-2j_arrhenius_comparison.png", bbox_inches="tight", dpi=300)
@@ -284,7 +321,9 @@ plt.close(fig)
 
 import json
 
-bayesian_json = os.path.join(gold_folder, "val2j_bayesian_8p.json")
+bayesian_json = os.path.join(
+    gold_folder, "bayesian_val2j_results/val2j_bayesian_8p.json"
+)
 all_inputs = []
 all_scores = []
 if os.path.exists(bayesian_json):
