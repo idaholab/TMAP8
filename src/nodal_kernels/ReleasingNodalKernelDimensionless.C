@@ -19,13 +19,15 @@ ReleasingNodalKernelDimensionless::validParams()
       "Ct_hat = C_t / C_t_ref. "
       "The residual R = +k_r_hat * exp(-E_r / T) * Ct_hat is naturally O(k_r_hat) "
       "because Ct_hat is O(1). No equation scaling is applied.");
-  params.addRequiredParam<Real>("dimensionless_release_rate_coefficient",
-                                "Dimensionless release rate coefficient k_r_hat = t_ref * alpha_r.");
+  params.addRequiredParam<Real>(
+      "dimensionless_release_rate_coefficient",
+      "Dimensionless release rate coefficient k_r_hat = t_ref * alpha_r.");
   return params;
 }
 
 ReleasingNodalKernelDimensionless::ReleasingNodalKernelDimensionless(
     const InputParameters & parameters)
-  : ReleasingNodalKernelBase(parameters, parameters.get<Real>("dimensionless_release_rate_coefficient"))
+  : ReleasingNodalKernelBase(parameters,
+                             parameters.get<Real>("dimensionless_release_rate_coefficient"))
 {
 }
