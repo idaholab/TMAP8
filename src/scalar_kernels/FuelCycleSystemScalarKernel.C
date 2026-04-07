@@ -24,7 +24,8 @@ FuelCycleSystemScalarKernelTempl<is_ad>::validParams()
   InputParameters params =
       is_ad ? ADScalarTimeDerivative::validParams() : ODETimeDerivative::validParams();
   params += FunctorInterface::validParams();
-  params.addClassDescription("Implements a generic scalar system component for tritium fuel cycle calculations.");
+  params.addClassDescription(
+      "Implements a generic scalar system component for tritium fuel cycle calculations.");
   params.addCoupledVar("inputs",
                        {},
                        "Variables (usually tritium inventory) which feed into this system. Takes a "
