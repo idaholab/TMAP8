@@ -549,7 +549,7 @@
 [Executioner]
   type = Transient
   solve_type = NEWTON
-  scheme = 'implicit-euler'
+  scheme = 'bdf2'
   petsc_options_iname = '-pc_type -snes_type -pc_factor_mat_solver_type'
   petsc_options_value = 'lu       vinewtonrsls mumps'
 

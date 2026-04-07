@@ -1,30 +1,31 @@
 [Tests]
   design = 'val-2c.md'
   validation = 'val-2c.md'
-  issues = '#12 #98'
+  issues = '#12 #98' # ``
+  # Check test data consistency across operating systems and core counts for heavy tests using `Executioner/scheme=implicit-euler`
   [val-2c_immediate_injection_csv]
     type = CSVDiff
     input = val-2c_immediate_injection.i
-    cli_args = 'Outputs/exodus=true'
-    csvdiff = val-2c_immediate_injection_csv.csv
+    cli_args = 'Executioner/scheme=implicit-euler Outputs/exodus=true Outputs/file_base=val-2c_immediate_injection_ie_out'
+    csvdiff = val-2c_immediate_injection_ie_out.csv
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with immediate T2 injection.'
     rel_err = 3e-5
   []
   [val-2c_immediate_injection_exodus]
     type = Exodiff
     input = val-2c_immediate_injection.i
-    cli_args = 'Outputs/exodus=true'
+    cli_args = 'Executioner/scheme=implicit-euler Outputs/exodus=true Outputs/file_base=val-2c_immediate_injection_ie_out'
     prereq = val-2c_immediate_injection_csv
     should_execute = false # this test relies on the output files from val-2c_immediate_injection_csv, so it shouldn't be run twice
-    exodiff = val-2c_immediate_injection_out.e
+    exodiff = val-2c_immediate_injection_ie_out.e
     custom_cmp = 'val-2c_exodus.exodiff'
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with immediate T2 injection and properly compute the exodus file.'
   []
   [val-2c_delay_csv]
     type = CSVDiff
     input = val-2c_delay.i
-    cli_args = 'Outputs/exodus=true'
-    csvdiff = val-2c_delay_csv.csv
+    cli_args = 'Executioner/scheme=implicit-euler Outputs/exodus=true Outputs/file_base=val-2c_delay_ie_out'
+    csvdiff = val-2c_delay_ie_out.csv
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection.'
     abs_zero = 1e-8
     rel_err = 3e-5
@@ -32,10 +33,10 @@
   [val-2c_delay_exodus]
     type = Exodiff
     input = val-2c_delay.i
-    cli_args = 'Outputs/exodus=true'
+    cli_args = 'Executioner/scheme=implicit-euler Outputs/exodus=true Outputs/file_base=val-2c_delay_ie_out'
     prereq = val-2c_delay_csv
     should_execute = false # this test relies on the output files from val-2c_delay_csv, so it shouldn't be run twice
-    exodiff = val-2c_delay_out.e
+    exodiff = val-2c_delay_ie_out.e
     custom_cmp = 'val-2c_exodus.exodiff'
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection and properly compute the exodus file.'
   []
@@ -49,8 +50,9 @@
                 log_solubility_elemental_tritium=-3.683352919815223
                 log_solubility_tritiated_water=6.8938628913078555
                 time_injection_T2_end=9536.239653312441
-                Outputs/file_base=val-2c_delay_calibrated_out'
-    csvdiff = val-2c_delay_calibrated_out.csv
+                Executioner/scheme=implicit-euler
+                Outputs/file_base=val-2c_delay_calibrated_ie_out'
+    csvdiff = val-2c_delay_calibrated_ie_out.csv
     requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection using calibrated model parameters.'
     abs_zero = 1e-8
     rel_err = 3e-5
@@ -78,5 +80,29 @@
     command = 'python3 comparison_val-2c.py'
     requirement = 'The system shall be able to generate comparison plots between simulated solutions and experimental data of validation cases val-2c, modeling a Test Cell Release Experiment.'
     required_python_packages = 'matplotlib numpy pandas scipy os json'
+  []
+  # Check tests run to generate output data for documentation only for heavy tests using 'Executioner/scheme=bdf2'
+  [val-2c_immediate_injection_csv_RunApp]
+    type = RunApp
+    input = val-2c_immediate_injection.i
+    requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with immediate T2 injection to generate output data for documentation.'
+  []
+  [val-2c_delay_csv_RunApp]
+    type = RunApp
+    input = val-2c_delay.i
+    requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection to generate output data for documentation..'
+  []
+  [val-2c_delay_calibrated_csv_RunApp]
+    type = RunApp
+    input = 'val-2c_delay.i'
+     # the parameter values below are from gold/calibrated_parameter_values.txt
+    cli_args = 'reaction_rate=2.8331901331213944e-11
+                diffusivity_elemental_tritium=3.8640662435310973
+                diffusivity_tritiated_water=0.017373835349450507
+                log_solubility_elemental_tritium=-3.683352919815223
+                log_solubility_tritiated_water=6.8938628913078555
+                time_injection_T2_end=9536.239653312441
+                Outputs/file_base=val-2c_delay_calibrated_out'
+    requirement = 'The system shall be able to model the Test Cell Release Experiment (val-2c) with delayed T2 injection using calibrated model parameters to generate output data for documentation..'
   []
 []

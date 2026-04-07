@@ -37,6 +37,7 @@
     rel_err = 1e-3
     abs_zero = 1e-5
   []
+  # Check test data consistency across operating systems and core counts for heavy tests using `Executioner/scheme=implicit-euler`
   [val-2f_heavy_csv]
     type = CSVDiff
     input = val-2f.i
@@ -89,6 +90,35 @@
     csvdiff = val-2f_heavy_desorption_inf_recombination_out.csv
     heavy = true
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output, for the infinite recombination case. Only desorption phase data is compared with every other timestep.'
+    max_time = 3600
+  []
+  # Check tests run to generate output data for documentation only for heavy tests using 'Executioner/scheme=bdf2'
+  [val-2f_heavy_csv_RunApp]
+    type = RunApp
+    input = val-2f.i
+    heavy = true
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output.'
+    max_time = 2000
+  []
+  [val-2f_heavy_csv_inf_recombination_RunApp]
+    type = RunApp
+    input = val-2f.i
+    cli_args = "ix1='${fparse 500}' ix4='${fparse 500}'
+                AuxVariables/active='bounds_dummy temperature'
+                BCs/active='left_concentration_sieverts right_concentration_sieverts'
+                Physics/SpeciesTrapping/trapping_1/Ct0='trap_distribution_function_1_inf'
+                Physics/SpeciesTrapping/trapping_2/Ct0='trap_distribution_function_2_inf'
+                Physics/SpeciesTrapping/trapping_3/Ct0='trap_distribution_function_3_inf'
+                Physics/SpeciesTrapping/trapping_4/Ct0='trap_distribution_function_4_inf'
+                Physics/SpeciesTrapping/trapping_5/Ct0='trap_distribution_function_5_inf'
+                Materials/active='diffusivity_W_func diffusivity_nonAD'
+                Postprocessors/active='integral_source_deuterium scaled_implanted_deuterium integral_deuterium_concentration scaled_mobile_deuterium flux_surface_left_sieverts scaled_flux_surface_left_sieverts flux_surface_right_sieverts scaled_flux_surface_right_sieverts temperature diffusion_W_hat diffusion_W max_time_step_size max_time_step_size_coarse integral_trapped_concentration_1 scaled_trapped_deuterium_1 integral_trapped_concentration_2 scaled_trapped_deuterium_2 integral_trapped_concentration_3 scaled_trapped_deuterium_3 integral_trapped_concentration_4 scaled_trapped_deuterium_4 integral_trapped_concentration_5 scaled_trapped_deuterium_5 integral_trapped_concentration_intrinsic scaled_trapped_deuterium_intrinsic spatial_max_mobile_d2 spatial_max_trapped_1 spatial_max_trapped_2 spatial_max_trapped_3 spatial_max_trapped_4 spatial_max_trapped_5 spatial_max_trapped_intrinsic max_mobile_d2 max_trapped_1 max_trapped_2 max_trapped_3 max_trapped_4 max_trapped_5 max_trapped_intrinsic max_scaled_flux_surface_left_sieverts max_scaled_flux_surface_right_sieverts max_scaled_mobile_deuterium max_scaled_trapped_deuterium_intrinsic'
+                Postprocessors/max_time_step_size/function=max_dt_size_function_inf
+                Outputs/file_base='val-2f_out_inf_recombination'
+                Executioner/abort_on_solve_fail=false
+                Executioner/nl_abs_tol=5e-4"
+    heavy = true
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output, for the infinite recombination case.'
     max_time = 3600
   []
   [val-2f_comparison]
