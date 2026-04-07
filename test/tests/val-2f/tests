@@ -44,7 +44,8 @@
                 Outputs/csv/time_step_interval=2
                 Outputs/exodus/start_time='${fparse charge_time_hat + cooldown_duration_hat}'
                 Outputs/exodus/time_step_interval=400
-                Outputs/file_base=val-2f_heavy_desorption_out"
+                Outputs/file_base=val-2f_heavy_desorption_out
+                Executioner/scheme=implicit-euler"
     csvdiff = val-2f_heavy_desorption_out.csv
     heavy = true
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output. Only desorption phase data is compared with every other timestep.'
@@ -57,7 +58,8 @@
                 Outputs/csv/time_step_interval=2
                 Outputs/exodus/start_time='${fparse charge_time_hat + cooldown_duration_hat}'
                 Outputs/exodus/time_step_interval=400
-                Outputs/file_base=val-2f_heavy_desorption_out"
+                Outputs/file_base=val-2f_heavy_desorption_out
+                Executioner/scheme=implicit-euler"
     exodiff = val-2f_heavy_desorption_out.e
     heavy = true
     prereq = val-2f_heavy_csv
@@ -82,7 +84,8 @@
                 Outputs/csv/time_step_interval=2
                 Outputs/file_base=val-2f_heavy_desorption_inf_recombination_out
                 Executioner/abort_on_solve_fail=false
-                Executioner/nl_abs_tol=5e-4"
+                Executioner/nl_abs_tol=5e-4
+                Executioner/scheme=implicit-euler"
     csvdiff = val-2f_heavy_desorption_inf_recombination_out.csv
     heavy = true
     requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output, for the infinite recombination case. Only desorption phase data is compared with every other timestep.'
