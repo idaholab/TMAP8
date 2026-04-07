@@ -16,7 +16,7 @@ Some consideration should be given to the [!param](/ScalarKernels/FuelCycleSyste
 should be done with the current or the last accepted value for the system as the beginning parameter. Functionally this is similar to using a time-dependence for a steady-state system
 as it allows the system to evolve more slowly which may avoid some issues with respect to divergence of particularly unstable systems.
 
-Rather than using [`ParsedODEKernel`](/syntax/ScalarKernels/ParsedODEKernel) and [`ODETimeDerivative`](/syntax/Scalarkernels/ODETimeDerivative) kernels, the scalar kernels block can be simplified.
+Rather than using [`ParsedODEKernel`](/source/ScalarKernels/ParsedODEKernel.html) and [`ODETimeDerivative`](/source/Scalarkernels/ODETimeDerivative.html) kernels, the scalar kernels block can be simplified.
 
 !listing test/tests/fuel_cycle_Abdou/fuel_cycle_abdou_generic.i link=false block=ScalarKernels
 
