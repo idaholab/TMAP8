@@ -363,7 +363,7 @@ Note that since these input files have a lot of sections in common, we utilize t
 - [/divertor_monoblock_multi_variable_base.i] contains the parts shared by both the [/divertor_monoblock.i] and [/divertor_monoblock_physics.i] cases.
 - [/divertor_monoblock_physics-single-variable.i] contains the parts equivalent to the ones in [/divertor_monoblock_multi_variable_base.i], but for the case in [/divertor_monoblock_physics-single-variable.i].
 
-Below are the input files which [/divertor_monoblock.i] uses to demonstrate model the scenario described above.
+Below are the input files which [/divertor_monoblock.i] uses to model the scenario described above.
 This case can be run reliably with approximately 4 processor cores.
 Note that this input file has been optimized for showcasing capability rather than computational cost.
 

@@ -108,7 +108,7 @@ Materials/thermal_conductivity_W/expression := '${W_cond_factor}*(2.41e2 - 2.90e
 
 
 [ICs]
-  [t_ic]
+  [temperature_ic]
     type = FunctionIC
     function = temperature_steady_state
     variable = temperature
