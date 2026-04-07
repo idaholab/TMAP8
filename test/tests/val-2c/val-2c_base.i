@@ -501,7 +501,6 @@
     block = 1
   []
 
-
   # Inventory in paint
   [t2_paint_inventory] # (molecules/microns^2)
     type = ElementIntegralVariablePostprocessor
@@ -527,7 +526,6 @@
     execute_on = 'initial timestep_end'
     block = 0
   []
-
 
   [tritium_total_inventory]
     type = LinearCombinationPostprocessor

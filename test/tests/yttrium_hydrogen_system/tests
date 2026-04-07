@@ -1,6 +1,23 @@
 [Tests]
   design = 'InterfaceDiffusion.md ADMatInterfaceReactionYHxPCT.md MatDiffusion.md TimeDerivative.md'
   issues = '#261'
+  [YHx_PCT_csv]
+    type = CSVDiff
+    input = YHx_PCT.i
+    cli_args = 'Executioner/nl_rel_tol=6e-6 InterfaceKernels/interface_reaction_YHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
+    csvdiff = YHx_PCT_out.csv
+    recover = false # see #196
+    requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature.'
+  []
+  [YHx_PCT_exodus]
+    type = Exodiff
+    input = YHx_PCT.i
+    cli_args = 'Executioner/nl_rel_tol=6e-6 InterfaceKernels/interface_reaction_YHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
+    exodiff = YHx_PCT_out.e
+    prereq = YHx_PCT_csv
+    should_execute = false # this test relies on the output files from YHx_PCT_csv, so it shouldn't be run twice
+    requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature and generate an exodus file.'
+  []
   [YHx_PCT_T1173_P1e3_csv]
     type = CSVDiff
     input = YHx_PCT.i
@@ -31,7 +48,7 @@
     requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e4 Pa and T=1173.15 K.'
   []
   [YHx_PCT_T1173_P5e4_csv]
-    type = RunApp
+    type = CSVDiff
     input = YHx_PCT.i
     cli_args = 'output_file_base=YHx_PCT_T1173_P5e4_out
                 temperature=1173.15
@@ -41,10 +58,12 @@
                 Executioner/nl_rel_tol=5e-7
                 Executioner/TimeStepper/growth_factor=1.2
                 InterfaceKernels/interface_reaction_YHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
+    csvdiff = YHx_PCT_T1173_P5e4_out.csv
+    recover = false # see #196
     requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature for P=5e4 Pa and T=1173.15 K.'
   []
   [YHx_PCT_T1273_P3e3_csv]
-    type = RunApp
+    type = CSVDiff
     input = YHx_PCT.i
     cli_args = 'output_file_base=YHx_PCT_T1273_P3e3_out
                 temperature=1273.15
@@ -53,14 +72,9 @@
                 Executioner/num_steps=200
                 Executioner/nl_rel_tol=9e-6
                 InterfaceKernels/interface_reaction_YHx_PCT/silence_warnings=true' # should be removed once PCT curve implementation for low pressure is complete
+    csvdiff = YHx_PCT_T1273_P3e3_out.csv
+    recover = false
     requirement = 'The system shall be able to model the PCT curves of YHx to determine the surface atomic fraction as a function of pressure and temperature for P=3e3 Pa and T=1273.15 K.'
-  []
-  [YHx_PCT_prediction_rmspe]
-    type = RecoverableRunCommand
-    command = 'python3 -m unittest -v test_yhx_pct_rmspe.TestYHxPCTRMSPE.test_prediction_rmspe'
-    prereq = 'YHx_PCT_T1173_P1e3_csv YHx_PCT_T1173_P1e4_csv YHx_PCT_T1173_P5e4_csv YHx_PCT_T1273_P3e3_csv'
-    requirement = 'The system shall reproduce the YHx PCT analytical correlation across the plotted TMAP8 prediction points with less than 0.1 percent RMSPE.'
-    required_python_packages = 'numpy pandas os'
   []
   [YHx_PCT_comparison]
     type = RunCommand
