@@ -22,6 +22,7 @@ exact_diffusion_length = data['exact_diffusion_length']
 simulated_diffusion_length = data['simulated_diffusion_length']
 assumed_gas_total_mass = 2*data['assumed_gas_total_mass'] # Count Atomic Hydrogen
 assumed_total_mass = assumed_gas_total_mass + annulus_total_mass
+min_concentration = data['min_concentration']
 
 # Total Mass and Percentage in Steel
 fig, ax1 = plt.subplots(figsize=(10, 6))
@@ -68,6 +69,18 @@ plt.show()
 
 # Plot Difference
 
+plt.figure(figsize=(10, 6))
+plt.plot(t,min_concentration)
+plt.ylabel(r'$\mu$mol H/mm^3')
+plt.xlabel('Time (days)')
+plt.title(f'Hydrogen Canister Simulation: Minimum Concentration')
+plt.xlim(0,0.01)
+plt.ylim(min(min_concentration))
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# Plot Min Concentration
 plt.figure(figsize=(10, 6))
 plt.plot(t,abs(exact_diffusion_length - simulated_diffusion_length))
 plt.ylabel('Difference in Length (mm)')

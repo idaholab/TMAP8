@@ -75,8 +75,9 @@ dt_min = '${units 1 s -> day}'
 [AuxKernels]
   [pressure_fit] # Comment out undesired pressure function type
     type = FunctionAux
+    function = constant_pressure
     # function = time_ramp_pressure # Estimated pressure with time ramping over first few timesteps to avoid negative concentrations
-    function = SRNL_pressure_data_fun # Data fit of SRNL reported pressure over time for As-Corroded No-Vaccum surrogate assembly in Table 7-5
+    # function = SRNL_pressure_data_fun # Data fit of SRNL reported pressure over time for As-Corroded No-Vaccum surrogate assembly in Table 7-5
     variable = H_partial_pressure_gas
   []
 
@@ -146,6 +147,10 @@ dt_min = '${units 1 s -> day}'
     initial_value = 0
     ramp_duration = '${units 3 h -> day}'
   []
+  [constant_pressure]
+    type = ConstantFunction
+    value = '${estimated_pressure_gas}'
+  []
   [SRNL_pressure_data_fun]
     type = ParsedFunction
     expression = '376.7588*t^0.6177' # Pa
@@ -190,6 +195,7 @@ dt_min = '${units 1 s -> day}'
   [simulated_diffusion_length]
     type = ParsedPostprocessor
     expression = '-interface_concentration/gradient_left_boundary'
+    # expression = '-interface_concentration/gradient_left_boundary + interface_location'
     constant_expressions = ${inner_radius}
     constant_names = interface_location
     pp_names = 'interface_concentration gradient_left_boundary'
@@ -260,6 +266,12 @@ dt_min = '${units 1 s -> day}'
     outputs = csv_data
   []
 
+  [min_concentration]
+    type = ElementExtremeValue
+    variable = H_mobile_steel
+    value_type = min
+    # outputs = csv_data
+  []
 []
 
 [Preconditioning]
