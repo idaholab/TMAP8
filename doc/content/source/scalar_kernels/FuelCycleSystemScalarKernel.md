@@ -12,7 +12,7 @@ All parameters are defined as functors,
 which should allow versatility in accepting a variety of input arguments. An example of using this
 kernel for a system is available, following the [Abdou fuel cycle](/examples/fuel_cycle_Abdou) model.
 
-Some consideration should be given to the [!param](/syntax/ScalarKernels/FuelCycleSystemScalarKernel/is_implicit) parameter. This term allows the user to select whether the solve
+Some consideration should be given to the [!param](/ScalarKernels/FuelCycleSystemScalarKernel/is_implicit) parameter. This term allows the user to select whether the solve
 should be done with the current or the last accepted value for the system as the beginning parameter. Functionally this is similar to using a time-dependence for a steady-state system
 as it allows the system to evolve more slowly which may avoid some issues with respect to divergence of particularly unstable systems.
 

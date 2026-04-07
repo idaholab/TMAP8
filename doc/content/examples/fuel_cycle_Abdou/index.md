@@ -4,7 +4,7 @@ This demonstration re-creates the tritium fuel cycle model described by [!cite](
 
 There are multiple ways to generate an input file that uses scalar kernels. The [`ParsedODEKernel`](/syntax/ScalarKernels/ParsedODEKernel)
 and [`ODETimeDerivative`](/syntax/ScalarKernels/ODETimeDerivative) can be used to deal with almost any system of ordinary differential equations,
-but there is also a utility class [`FuelCycleSystemScalarKernel`](/syntax/scalar_kernels/FuelCycleSystemScalarKernel) which can be used to 
+but there is also a utility class [`FuelCycleSystemScalarKernel`](/syntax/ScalarKernels/FuelCycleSystemScalarKernel) which can be used to 
 simplify the inputs.
 
 ### Generating the Input File
