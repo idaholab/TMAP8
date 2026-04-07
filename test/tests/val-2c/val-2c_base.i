@@ -34,7 +34,6 @@
     paired_block = '0' # paint
     new_boundary = 'interface_other'
   []
-  # uniform_refine = 1
 []
 
 [Variables]
@@ -502,66 +501,6 @@
     block = 1
   []
 
-  # [spatial_max_t2_enclosure]
-  #   type = NodalExtremeValue
-  #   value_type = 'max'
-  #   variable = t2_enclosure_concentration
-  #   execute_on = 'initial timestep_end'
-  #   outputs = 'console'
-  #   block = 1
-  # []
-  # [spatial_max_ht_enclosure]
-  #   type = NodalExtremeValue
-  #   value_type = 'max'
-  #   variable = ht_enclosure_concentration
-  #   execute_on = 'initial timestep_end'
-  #   outputs = 'console'
-  #   block = 1
-  # []
-  # [spatial_max_hto_enclosure]
-  #   type = NodalExtremeValue
-  #   value_type = 'max'
-  #   variable = hto_enclosure_concentration
-  #   execute_on = 'initial timestep_end'
-  #   outputs = 'console'
-  #   block = 1
-  # []
-  # [spatial_max_h2o_enclosure]
-  #   type = NodalExtremeValue
-  #   value_type = 'max'
-  #   variable = h2o_enclosure_concentration
-  #   execute_on = 'initial timestep_end'
-  #   outputs = 'console'
-  #   block = 1
-  # []
-  # [max_t2_enclosure]
-  #   type = TimeExtremeValue
-  #   value_type = 'max'
-  #   postprocessor = spatial_max_t2_enclosure
-  #   execute_on = 'initial timestep_end'
-  #   outputs = 'console'
-  # []
-  # [max_ht_enclosure]
-  #   type = TimeExtremeValue
-  #   value_type = 'max'
-  #   postprocessor = spatial_max_ht_enclosure
-  #   execute_on = 'initial timestep_end'
-  #   outputs = 'console'
-  # []
-  # [max_hto_enclosure]
-  #   type = TimeExtremeValue
-  #   value_type = 'max'
-  #   postprocessor = spatial_max_hto_enclosure
-  #   execute_on = 'initial timestep_end'
-  #   outputs = 'console'
-  # []
-  # [max_h2o_enclosure]
-  #   type = TimeExtremeValue
-  #   value_type = 'max'
-  #   postprocessor = spatial_max_h2o_enclosure
-  #   execute_on = 'initial timestep_end'
-  #   outputs = 'console'
-  # []
 
   # Inventory in paint
   [t2_paint_inventory] # (molecules/microns^2)
@@ -589,66 +528,6 @@
     block = 0
   []
 
-  # [spatial_max_t2_paint]
-  #   type = NodalExtremeValue
-  #   value_type = 'max'
-  #   variable = t2_paint_concentration
-  #   execute_on = 'initial timestep_end'
-  #   outputs = 'console'
-  #   block = 0
-  # []
-  # [spatial_max_ht_paint]
-  #   type = NodalExtremeValue
-  #   value_type = 'max'
-  #   variable = ht_paint_concentration
-  #   execute_on = 'initial timestep_end'
-  #   outputs = 'console'
-  #   block = 0
-  # []
-  # [spatial_max_hto_paint]
-  #   type = NodalExtremeValue
-  #   value_type = 'max'
-  #   variable = hto_paint_concentration
-  #   execute_on = 'initial timestep_end'
-  #   outputs = 'console'
-  #   block = 0
-  # []
-  # [spatial_max_h2o_paint]
-  #   type = NodalExtremeValue
-  #   value_type = 'max'
-  #   variable = h2o_paint_concentration
-  #   execute_on = 'initial timestep_end'
-  #   outputs = 'console'
-  #   block = 0
-  # []
-  # [max_t2_paint]
-  #   type = TimeExtremeValue
-  #   value_type = 'max'
-  #   postprocessor = spatial_max_t2_paint
-  #   execute_on = 'initial timestep_end'
-  #   outputs = 'console'
-  # []
-  # [max_ht_paint]
-  #   type = TimeExtremeValue
-  #   value_type = 'max'
-  #   postprocessor = spatial_max_ht_paint
-  #   execute_on = 'initial timestep_end'
-  #   outputs = 'console'
-  # []
-  # [max_hto_paint]
-  #   type = TimeExtremeValue
-  #   value_type = 'max'
-  #   postprocessor = spatial_max_hto_paint
-  #   execute_on = 'initial timestep_end'
-  #   outputs = 'console'
-  # []
-  # [max_h2o_paint]
-  #   type = TimeExtremeValue
-  #   value_type = 'max'
-  #   postprocessor = spatial_max_h2o_paint
-  #   execute_on = 'initial timestep_end'
-  #   outputs = 'console'
-  # []
 
   [tritium_total_inventory]
     type = LinearCombinationPostprocessor
@@ -684,7 +563,6 @@
   dtmax = ${dtmax}
   dtmin = ${dtmin}
   nl_max_its = 16
-  # abort_on_solve_fail = true
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = ${time_step}
