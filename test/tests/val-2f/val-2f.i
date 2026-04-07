@@ -448,7 +448,6 @@
   nl_rel_tol = 1e-8
   nl_abs_tol = 4e-5
   nl_max_its = 34
-  abort_on_solve_fail = true
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = '${fparse dt_init / time_reference}'
