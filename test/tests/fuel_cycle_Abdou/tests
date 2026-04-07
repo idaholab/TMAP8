@@ -12,8 +12,9 @@
     input = 'fuel_cycle_abdou_generic.i'
     issues = '#329'
     design = 'FuelCycleSystemScalarKernel.md'
-    csvdiff = 'fuel_cycle_out.csv'
-    cli_args = 'Outputs/file_base=fuel_cycle_out'
+    csvdiff = 'fuel_cycle_abdou_generic_csv.csv'
+    #cli_args = 'Outputs/csv/file_base=fuel_cycle_out Outputs/csv/append_restart=true'
+    cli_args = 'Outputs/csv/append_restart=true'
     rel_err = 1.6e-6
     requirement = 'The system shall reproduce a consistent solution to an ODE system of equations modeling the tritium fuel cycle with a built-in kernel.'
   []
@@ -57,8 +58,8 @@
     input = 'fuel_cycle_abdou_generic_AD.i'
     issues = '#329'
     design = 'FuelCycleSystemScalarKernel.md'
-    csvdiff = 'fuel_cycle_out.csv'
-    cli_args = 'Outputs/file_base=fuel_cycle_out'
+    csvdiff = 'fuel_cycle_abdou_generic_AD_csv.csv'
+    cli_args = 'Outputs/csv/append_restart=true'
     rel_err = 1.6e-6
     requirement = 'The system shall reproduce a consistent solution to an ODE system of equations modeling the tritium fuel cycle with a built-in AD kernel.'
   []

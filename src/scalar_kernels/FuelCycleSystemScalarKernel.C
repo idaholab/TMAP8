@@ -25,12 +25,15 @@ FuelCycleSystemScalarKernelTempl<is_ad>::validParams()
       is_ad ? ADScalarTimeDerivative::validParams() : ODETimeDerivative::validParams();
   params += FunctorInterface::validParams();
   params.addClassDescription("Implements a generic scalar system component for tritium fuel cycle calculations.");
-  params.addCoupledVar(
-      "inputs", {}, "Variables which feed into this system. Takes a list of scalar variable names");
+  params.addCoupledVar("inputs",
+                       {},
+                       "Variables (usually tritium inventory) which feed into this system. Takes a "
+                       "list of scalar variable names");
   params.addParam<std::vector<MooseFunctorName>>(
       "input_fractions",
       std::vector<MooseFunctorName>({}),
-      "Fraction of upstream variable coming into this system. Must be the same length as 'inputs'");
+      "Fraction of upstream variable (inventory) coming into this system. Must be the same length "
+      "as 'inputs'");
   params.addParam<MooseFunctorName>("decay_constant",
                                     PhysicalConstants::tritium_decay_const,
                                     "The decay constant of tritium (ln(2)/half-life)");
@@ -126,7 +129,7 @@ FuelCycleSystemScalarKernelTempl<is_ad>::computeQpResidual()
 
   for (unsigned int i = 0; i < _n_other_sources; ++i)
     partial_residual += -(*(_other_sources[i]))(_qp, _state);
-  
+
   for (unsigned int i = 0; i < _n_other_sinks; ++i)
     partial_residual += (*(_other_sinks[i]))(_qp, _state);
 

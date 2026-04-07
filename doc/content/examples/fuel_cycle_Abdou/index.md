@@ -2,6 +2,11 @@
 
 This demonstration re-creates the tritium fuel cycle model described by [!cite](Abdou2021). It is also described in [!cite](Simon2025).
 
+There are multiple ways to generate an input file that uses scalar kernels. The [`ParsedODEKernel`](/syntax/ScalarKernels/ParsedODEKernel)
+and [`ODETimeDerivative`](/syntax/ScalarKernels/ODETimeDerivative) can be used to deal with almost any system of ordinary differential equations,
+but there is also a utility class [`FuelCycleSystemScalarKernel`](/syntax/scalar_kernels/FuelCycleSystemScalarKernel) which can be used to 
+simplify the inputs.
+
 ### Generating the Input File
 
 First, we instantiate a mesh
@@ -94,7 +99,13 @@ and the other terms can be lumped in [`ParsedODEKernel`](/syntax/ScalarKernels/P
 negate the [`ParsedODEKernel`](/syntax/ScalarKernels/ParsedODEKernel) equation from its representation above (move it to the left hand side). We use [`Postprocessors`](/syntax/Postprocessors)
 to re-use the recurring variables.
 
-!listing test/tests/fuel_cycle_Abdou/fuel_cycle.i link=false block=ScalarKernels
+!listing test/tests/fuel_cycle_Abdou/fuel_cycle.i link=true block=ScalarKernels
+
+Manually entering equations that describe these systems opens the potential for arithmetical errors, so the [`FuelCycleSystemScalarKernel`](/syntax/ScalarKernels/FuelCycleSystemScalarKernel)
+ scalar kernel has been created, allowing each system to be modelled with one scalar kernel. Each of the parameters in the scalar kernel is only required to be a [`Functor`](/syntax/Functors), allowing
+great flexibility in the kinds of information that can be fed to the scalar kernel. An example model using each approach can be found at `fuel_cycle_abdou.i` and `fuel_cycle_abdou_generic.i`
+
+!listing test/tests/fuel_cycle_Abdou/fuel_cycle_abdou_generic.i link=true block=ScalarKernels
 
 Finally, we define the [`Postprocessors`](/syntax/Postprocessors) and set their values to those referenced in [!cite](Abdou2021). Because the [`Postprocessors`](/syntax/Postprocessors) are
 inputs, not outputs, we must be careful to properly set the [!param](/Postprocessors/ConstantPostprocessor/execute_on) parameter. We also gather the values of the different variables in
