@@ -156,6 +156,10 @@ and the darker lines are the results from the model. The agreement is quite good
 
 !listing test/tests/fuel_cycle_Abdou/fuel_cycle.i
 
+#### How to run
+
+This example can be run from three different driver input files, an [explicit model](tests/fuel_cycle_Abdou/fuel_cycle.i) using [`ParsedODEKernel`](scalarkernels/ParsedODEKernel.md) and two class-based models which leverage [`FuelCycleSystemScalarKernel`](scalarkernels/FuelCycleSystemScalarKernel.md), one [with](tests/fuel_cycle_Abdou/fuel_cycle_abdou_generic_AD.i) and one [without](tests/fuel_cycle_Abdou/fuel_cycle_abdou_generic.i) automatic differentiation. As there is significant overlap between the two models, they both use the `!include` syntax to import common terms from a [base file](tests/fuel_cycle_Abdou/fuel_cycle_abdou_base.i).
+
 ### Python-based Interactive Script
 
 A python-based graphical interactive script is available at [/test/tests/fuel_cycle_Abdou/fuel_cycle_gui.py] as a demonstration of the various effects of
