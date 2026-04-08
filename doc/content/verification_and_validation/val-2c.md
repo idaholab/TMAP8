@@ -178,7 +178,7 @@ This affects some of the model parameters.
        caption=Comparison of TMAP8 calculations against the experimental data for HTO concentration in the enclosure over time. Calibration of the delayed injection model delivers further improvements, with more accurate simulation results when T$_2$ is injected over a given period rather than immediately.
 
 As shown in the red curve in [val-2c_comparison_T2] and [val-2c_comparison_HTO], using [MOOSE's stochastic tools module](modules/stochastic_tools/index.md) notably increased the agreement between the modeling predictions and experimental data for both the T$_2$ and HTO concentrations.
-The RMSPE for T$_2$ decreases from 89.50% to 30.18% and the RMSPE for HTO decreases from 75.71% to 67.118%.
+The RMSPE for T$_2$ decreases from 89.50% to 30.18% and the RMSPE for HTO decreases from 75.71% to 67.18%.
 Note that although the calibration approach is similar to the one presented in [!cite](Simon2025), the results presented here include more simulations and the quality of the calibration is increased here (RMSPE values are further decreased here).
 
 [val-2c_calibration_input] and [val-2c_calibration_output] show the evolution of the model parameter values and of the optimization metric (time integral of $g$ defined in [eq:optimization_metric]) as a function of the number of simulation. The calibrated model corresponds to the highest value.
