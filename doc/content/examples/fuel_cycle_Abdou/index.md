@@ -114,8 +114,8 @@ inputs, not outputs, we must be careful to properly set the [!param](/Postproces
 !listing test/tests/fuel_cycle_Abdou/fuel_cycle.i link=false block=Postprocessors
 
 
-Finally, we can set the [`Executioner`](/syntax/Executioner) block. In this case, we ask for a simple [`Transient`](/syntax/executioners/Transient.md) executioner with an exponentially growing
-[`TimeStepper`](/syntax/Executioner/TimeStepper), [`IterationAdaptiveDT`](/syntax/timesteppers/IterationAdaptiveDT.md).
+Finally, we can set the [`Executioner`](/syntax/Executioner) block. In this case, we ask for a simple [`Transient`](executioners/Transient.md) executioner with an exponentially growing
+[`TimeStepper`](/syntax/Executioner/TimeStepper), [`IterationAdaptiveDT`](timesteppers/IterationAdaptiveDT.md).
 
 !listing test/tests/fuel_cycle_Abdou/fuel_cycle.i link=false block=Executioner
 
