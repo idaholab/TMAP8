@@ -75,9 +75,9 @@ dt_min = '${units 1 s -> day}'
 [AuxKernels]
   [pressure_fit] # Comment out undesired pressure function type
     type = FunctionAux
-    function = constant_pressure
+    # function = constant_pressure
     # function = time_ramp_pressure # Estimated pressure with time ramping over first few timesteps to avoid negative concentrations
-    # function = SRNL_pressure_data_fun # Data fit of SRNL reported pressure over time for As-Corroded No-Vaccum surrogate assembly in Table 7-5
+    function = SRNL_pressure_data_fun # Data fit of SRNL reported pressure over time for As-Corroded No-Vaccum surrogate assembly in Table 7-5
     variable = H_partial_pressure_gas
   []
 
@@ -215,7 +215,7 @@ dt_min = '${units 1 s -> day}'
     boundary = '0'
     variable = H_mobile_steel
     diffusivity = ${diffusivity_H_in_steel}
-    outputs = csv_data
+    # outputs = csv_data
   []
 
   [outflux]
@@ -223,7 +223,7 @@ dt_min = '${units 1 s -> day}'
     boundary = '1'
     variable = H_mobile_steel
     diffusivity = ${diffusivity_H_in_steel}
-    outputs = csv_data
+    # outputs = csv_data
   []
 
   [flux_difference] # Ensure that we are accounting for atomic vs molecular hydrogen
