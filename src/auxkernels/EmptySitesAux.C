@@ -40,7 +40,7 @@ EmptySitesAux::EmptySitesAux(const InputParameters & parameters)
   // Resize to n_other_concs plus the concentration corresponding to this NodalKernel's variable
   _trapped_concentrations.resize(_n_concs);
 
-  for (MooseIndex(_n_concs) i = 0; i < _n_concs; ++i)
+  for (const auto i : make_range(_n_concs))
     _trapped_concentrations[i] = &coupledValue("trapped_concentration_variables", i);
 }
 

@@ -8,43 +8,15 @@
 
 #pragma once
 
-#include "NodalKernel.h"
+#include "TrappingNodalKernelBase.h"
 
-#include "metaphysicl/dualdynamicsparsenumberarray.h"
-
-using MetaPhysicL::DualNumber;
-using MetaPhysicL::DynamicSparseNumberArray;
-
-class Function;
-
-// Forward Declarations
-typedef DualNumber<Real, DynamicSparseNumberArray<Real, unsigned int>> LocalDN;
-
-class TrappingNodalKernel : public NodalKernel
+/**
+ * Trapping NodalKernel for trapped-species concentrations in physical units.
+ */
+class TrappingNodalKernel : public TrappingNodalKernelBase
 {
 public:
   TrappingNodalKernel(const InputParameters & parameters);
 
   static InputParameters validParams();
-
-protected:
-  Real computeQpResidual() override;
-  Real computeQpJacobian() override;
-  Real computeQpOffDiagJacobian(unsigned int jvar) override;
-
-  const Real _alpha_t;
-  const Real _trapping_energy;
-  const Real _N;
-  const Function & _Ct0;
-  const VariableValue & _mobile_concentration;
-  unsigned int _n_other_concs;
-  std::vector<const VariableValue *> _trapped_concentrations;
-  std::vector<unsigned int> _var_numbers;
-  const Node * _last_node;
-  const Real _trap_per_free;
-  const VariableValue & _temperature;
-  LocalDN _jacobian;
-
-private:
-  void ADHelper();
 };

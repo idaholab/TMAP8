@@ -5,8 +5,9 @@
 ## Overview
 
 This class inherits from [CoupledTimeDerivative.md] and simply scales the
-residual and Jacobian by the user provided `factor`. The default value for
-`factor` is 1.
+residual and Jacobian by the user provided `factor`. It is also used for the
+dimensionless trapping formulation, where `factor` is set to a concentration
+reference ratio. The default value for `factor` is 1.
 
 !syntax parameters /Kernels/ScaledCoupledTimeDerivative
 

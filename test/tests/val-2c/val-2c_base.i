@@ -107,42 +107,42 @@
     variable = bounds_dummy_t2_paint_concentration
     bounded_variable = t2_paint_concentration
     bound_type = lower
-    bound_value = ${lower_value_threshold}
+    bound_value = 0
   []
   [t2_enclosure_concentration_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy_t2_enclosure_concentration
     bounded_variable = t2_enclosure_concentration
     bound_type = lower
-    bound_value = ${lower_value_threshold}
+    bound_value = 0
   []
   [hto_paint_concentration_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy_hto_paint_concentration
     bounded_variable = hto_paint_concentration
     bound_type = lower
-    bound_value = ${lower_value_threshold}
+    bound_value = 0
   []
   [hto_enclosure_concentration_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy_hto_enclosure_concentration
     bounded_variable = hto_enclosure_concentration
     bound_type = lower
-    bound_value = ${lower_value_threshold}
+    bound_value = 0
   []
   [h2o_paint_concentration_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy_h2o_paint_concentration
     bounded_variable = h2o_paint_concentration
     bound_type = lower
-    bound_value = -1e-4
+    bound_value = 0
   []
   [h2o_enclosure_concentration_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy_h2o_enclosure_concentration
     bounded_variable = h2o_enclosure_concentration
     bound_type = lower
-    bound_value = -1e-4
+    bound_value = 0
   []
 []
 
@@ -550,13 +550,12 @@
   type = Transient
   solve_type = NEWTON
   scheme = 'bdf2'
-
-  petsc_options_iname = '-pc_type -sub_pc_type -snes_type'
-  petsc_options_value = 'asm      lu           vinewtonrsls' # This petsc option helps prevent negative concentrations with bounds'
+  petsc_options_iname = '-pc_type -snes_type -pc_factor_mat_solver_type'
+  petsc_options_value = 'lu       vinewtonrsls mumps'
 
   nl_rel_tol = 1.e-10
   automatic_scaling = true
-  compute_scaling_once = false
+  compute_scaling_once = true
 
   end_time = ${time_end}
   dtmax = ${dtmax}
@@ -573,7 +572,7 @@
 []
 
 [Outputs]
-  perf_graph = true
+  exodus = false
   [csv]
     type = CSV
     execute_on = 'initial timestep_end'

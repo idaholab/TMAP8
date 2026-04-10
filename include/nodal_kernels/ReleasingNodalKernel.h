@@ -8,20 +8,15 @@
 
 #pragma once
 
-#include "NodalKernel.h"
+#include "ReleasingNodalKernelBase.h"
 
-class ReleasingNodalKernel : public NodalKernel
+/**
+ * Releasing NodalKernel for trapped-species concentrations in physical units.
+ */
+class ReleasingNodalKernel : public ReleasingNodalKernelBase
 {
 public:
   ReleasingNodalKernel(const InputParameters & parameters);
 
   static InputParameters validParams();
-
-protected:
-  Real computeQpResidual() override;
-  Real computeQpJacobian() override;
-
-  const Real _alpha_r;
-  const Real _detrapping_energy;
-  const VariableValue & _temperature;
 };
