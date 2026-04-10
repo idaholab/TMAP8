@@ -1,7 +1,6 @@
 [Tests]
   design = 'val-2c.md'
   validation = 'val-2c.md'
-  issues = '#12 #98' # ``
   issues = '#12 #98'
   # Check test data consistency across operating systems and core counts for heavy tests using `Executioner/scheme=implicit-euler` due to its high stability
   [val-2c_immediate_injection_csv_implicit-euler]
