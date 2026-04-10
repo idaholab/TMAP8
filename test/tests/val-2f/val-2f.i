@@ -16,7 +16,7 @@
   [cartesian_mesh]
     type = CartesianMeshGenerator
     dim = 1
-    dx = '${dx1} ${dx2} ${dx3} ${dx4} ${dx5}'
+    dx = '${dx1_hat} ${dx2_hat} ${dx3_hat} ${dx4_hat} ${dx5_hat}'
     ix = '${ix1} ${ix2} ${ix3} ${ix4} ${ix5}'
     subdomain_id = '0 0 0 0 0'
   []
@@ -44,7 +44,7 @@
     variable = bounds_dummy
     bounded_variable = deuterium_concentration_W
     bound_type = lower
-    bound_value = '${fparse -1e-20}'
+    bound_value = 0
   []
 []
 
@@ -94,13 +94,13 @@
   # Sieverts boundary conditions
   [left_concentration_sieverts]
     type = ADDirichletBC
-    value = '${fparse 1e-10}'
+    value = '${sieverts_boundary_hat}'
     boundary = left
     variable = deuterium_concentration_W
   []
   [right_concentration_sieverts]
     type = ADDirichletBC
-    value = '${fparse 1e-10}'
+    value = '${sieverts_boundary_hat}'
     boundary = right
     variable = deuterium_concentration_W
   []
@@ -109,17 +109,17 @@
 [Functions]
   [temperature_bc_func]
     type = ParsedFunction
-    expression = 'if(t<${charge_time}, ${temperature_initial},
-                  if(t<${fparse charge_time + cooldown_duration}, ${temperature_cooldown},
-                  ${temperature_desorption_min}+${desorption_heating_rate}*(t-${fparse charge_time + cooldown_duration})))'
+    expression = 'if(t<${charge_time_hat}, ${temperature_initial},
+                  if(t<${fparse charge_time_hat + cooldown_duration_hat}, ${temperature_cooldown},
+                  ${temperature_desorption_min}+${desorption_heating_rate_hat}*(t-${fparse charge_time_hat + cooldown_duration_hat})))'
   []
   [source_distribution]
     type = ParsedFunction
-    expression = '1 / (${sigma} * sqrt(2 * pi)) * exp(-0.5 * ((x - ${R_p}) / ${sigma}) ^ 2)'
+    expression = '1 / (${sigma_hat} * sqrt(2 * pi)) * exp(-0.5 * ((x - ${R_p_hat}) / ${sigma_hat}) ^ 2)'
   []
   [surface_flux_func]
     type = ParsedFunction
-    expression = 'if(t<${charge_time}, ${flux}, 0)'
+    expression = 'if(t<${charge_time_hat}, ${surface_flux_hat}, 0)'
   []
   [source_deuterium]
     type = ParsedFunction
@@ -129,36 +129,36 @@
   []
   [max_dt_size_function]
     type = ParsedFunction
-    expression = 'if(t<${fparse 5}, ${fparse 1e-2},
-                  if(t<${fparse 8}, ${fparse 1e2},
-                  if(t<${fparse 12}, ${fparse 1e-2},
-                  if(t<${fparse 20}, ${fparse 1e2},
-                  if(t<${fparse 35}, ${fparse 1e-2},
-                  if(t<${fparse 450}, ${fparse 1e2},
-                  if(t<${fparse 5000}, ${fparse 1e1},
-                  if(t<${fparse 11000}, ${fparse 1e2},
-                  if(t<${fparse 13000}, ${fparse 1e1},
-                  if(t<${fparse charge_time + cooldown_duration + 4500}, ${fparse 1e2},
-                  if(t<${fparse 313000}, ${fparse 1e2},
-                  if(t<${fparse 315000}, ${fparse 1e1}, ${fparse 1e3}))))))))))))'
+    expression = 'if(t<${fparse 5 / time_reference}, ${fparse 1e-2 / time_reference},
+                  if(t<${fparse 8 / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 12 / time_reference}, ${fparse 1e-2 / time_reference},
+                  if(t<${fparse 20 / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 35 / time_reference}, ${fparse 1e-2 / time_reference},
+                  if(t<${fparse 450 / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 5000 / time_reference}, ${fparse 1e1 / time_reference},
+                  if(t<${fparse 11000 / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 13000 / time_reference}, ${fparse 1e1 / time_reference},
+                  if(t<${fparse (charge_time + cooldown_duration + 4500) / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 313000 / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 315000 / time_reference}, ${fparse 1e1 / time_reference}, ${fparse 1e3 / time_reference}))))))))))))'
   []
   [max_dt_size_function_inf]
     type = ParsedFunction
-    expression = 'if(t<${fparse 5}, ${fparse 1e-2},
-                  if(t<${fparse 8}, ${fparse 1e2},
-                  if(t<${fparse 12}, ${fparse 1e-2},
-                  if(t<${fparse 20}, ${fparse 1e2},
-                  if(t<${fparse 35}, ${fparse 1e-2},
-                  if(t<${fparse 450}, ${fparse 1e2},
-                  if(t<${fparse 5000}, ${fparse 1e1},
-                  if(t<${fparse 11000}, ${fparse 1e2},
-                  if(t<${fparse 13000}, ${fparse 1e1},
-                  if(t<${fparse charge_time + cooldown_duration + 4500}, ${fparse 1e2},
-                  if(t<${fparse 315000}, ${fparse 1e1}, ${fparse 1e3})))))))))))'
+    expression = 'if(t<${fparse 5 / time_reference}, ${fparse 1e-2 / time_reference},
+                  if(t<${fparse 8 / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 12 / time_reference}, ${fparse 1e-2 / time_reference},
+                  if(t<${fparse 20 / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 35 / time_reference}, ${fparse 1e-2 / time_reference},
+                  if(t<${fparse 450 / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 5000 / time_reference}, ${fparse 1e1 / time_reference},
+                  if(t<${fparse 11000 / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 13000 / time_reference}, ${fparse 1e1 / time_reference},
+                  if(t<${fparse (charge_time + cooldown_duration + 4500) / time_reference}, ${fparse 1e2 / time_reference},
+                  if(t<${fparse 315000 / time_reference}, ${fparse 1e1 / time_reference}, ${fparse 1e3 / time_reference})))))))))))'
   []
   [max_dt_size_function_coarse]
     type = ParsedFunction
-    expression = 'if(t<${fparse 1e-1}, ${fparse 1e4}, ${fparse 1e5})'
+    expression = 'if(t<${fparse 1e-1 / time_reference}, ${fparse 1e4 / time_reference}, ${fparse 1e5 / time_reference})'
   []
 []
 
@@ -169,8 +169,7 @@
     property_name = 'diffusivity_W'
     functor_names = 'temperature_bc_func'
     functor_symbols = 'temperature'
-    expression = '${diffusion_W_preexponential} * exp(- ${diffusion_W_energy} / ${kb_eV} / temperature)'
-    output_properties = 'diffusivity_W'
+    expression = '${diffusion_W_preexponential_hat} * exp(- ${diffusion_W_energy} / ${kb_eV} / temperature)'
   []
   [diffusivity_nonAD]
     type = MaterialADConverter
@@ -182,8 +181,7 @@
     property_name = 'Kr'
     functor_names = 'temperature_bc_func'
     functor_symbols = 'temperature'
-    expression = '${recombination_coefficient} * exp(- ${recombination_energy} / ${kb_eV} / temperature)'
-    output_properties = 'Kr'
+    expression = '${recombination_coefficient_hat} * exp(- ${recombination_energy} / ${kb_eV} / temperature)'
   []
   [flux_recombination_surface]
     type = ADDerivativeParsedMaterial
@@ -197,11 +195,14 @@
 [Postprocessors]
   active = 'integral_source_deuterium scaled_implanted_deuterium integral_deuterium_concentration
   scaled_mobile_deuterium flux_surface_left scaled_flux_surface_left
-  flux_surface_right scaled_flux_surface_right temperature diffusion_W
+  flux_surface_right scaled_flux_surface_right temperature diffusion_W_hat diffusion_W
   max_time_step_size max_time_step_size_coarse integral_trapped_concentration_1 scaled_trapped_deuterium_1
   integral_trapped_concentration_2 scaled_trapped_deuterium_2 integral_trapped_concentration_3 scaled_trapped_deuterium_3
   integral_trapped_concentration_4 scaled_trapped_deuterium_4 integral_trapped_concentration_5 scaled_trapped_deuterium_5
-  integral_trapped_concentration_intrinsic scaled_trapped_deuterium_intrinsic'
+  integral_trapped_concentration_intrinsic scaled_trapped_deuterium_intrinsic
+  spatial_max_mobile_d2 spatial_max_trapped_1 spatial_max_trapped_2 spatial_max_trapped_3 spatial_max_trapped_4 spatial_max_trapped_5 spatial_max_trapped_intrinsic
+  max_mobile_d2 max_trapped_1 max_trapped_2 max_trapped_3 max_trapped_4 max_trapped_5 max_trapped_intrinsic max_scaled_flux_surface_left max_scaled_flux_surface_right
+  max_scaled_mobile_deuterium max_scaled_trapped_deuterium_intrinsic'
   [integral_source_deuterium]
     type = FunctionElementIntegral
     function = source_deuterium
@@ -209,7 +210,7 @@
   []
   [scaled_implanted_deuterium]
     type = ScalePostprocessor
-    scaling_factor = '${fparse ${units 1 m^2 -> mum^2}}'
+    scaling_factor = '${fparse mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
     value = integral_source_deuterium
   []
   [integral_deuterium_concentration]
@@ -219,8 +220,14 @@
   []
   [scaled_mobile_deuterium]
     type = ScalePostprocessor
-    scaling_factor = '${fparse ${units 1 m^2 -> mum^2}}'
+    scaling_factor = '${fparse mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2}}'
     value = integral_deuterium_concentration
+  []
+  [max_scaled_mobile_deuterium]
+    type = TimeExtremeValue
+    postprocessor = scaled_mobile_deuterium
+    value_type = max
+    outputs = 'console'
   []
   [flux_surface_left]
     type = ADSideAverageMaterialProperty
@@ -230,9 +237,15 @@
   []
   [scaled_flux_surface_left]
     type = ScalePostprocessor
-    scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
+    scaling_factor = '${fparse -1 * mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
     value = flux_surface_left
     execute_on = 'initial nonlinear linear timestep_end'
+  []
+  [max_scaled_flux_surface_left]
+    type = TimeExtremeValue
+    postprocessor = scaled_flux_surface_left
+    execute_on = 'initial timestep_end'
+    outputs = 'console'
   []
   [flux_surface_left_sieverts]
     type = SideDiffusiveFluxAverage
@@ -243,9 +256,14 @@
   []
   [scaled_flux_surface_left_sieverts]
     type = ScalePostprocessor
-    scaling_factor = '${fparse ${units 1 m^2 -> mum^2}}'
+    scaling_factor = '${fparse mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
     value = flux_surface_left_sieverts
     execute_on = 'initial nonlinear linear timestep_end'
+  []
+  [max_scaled_flux_surface_left_sieverts]
+    type = TimeExtremeValue
+    postprocessor = scaled_flux_surface_left_sieverts
+    value_type = max
   []
   [flux_surface_right]
     type = ADSideAverageMaterialProperty
@@ -255,9 +273,15 @@
   []
   [scaled_flux_surface_right]
     type = ScalePostprocessor
-    scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
+    scaling_factor = '${fparse -1 * mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
     value = flux_surface_right
     execute_on = 'initial nonlinear linear timestep_end'
+  []
+  [max_scaled_flux_surface_right]
+    type = TimeExtremeValue
+    postprocessor = scaled_flux_surface_right
+    execute_on = 'initial timestep_end'
+    outputs = 'console'
   []
   [flux_surface_right_sieverts]
     type = SideDiffusiveFluxAverage
@@ -268,18 +292,29 @@
   []
   [scaled_flux_surface_right_sieverts]
     type = ScalePostprocessor
-    scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
+    scaling_factor = '${fparse -1 * mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
     value = flux_surface_right_sieverts
     execute_on = 'initial nonlinear linear timestep_end'
+  []
+  [max_scaled_flux_surface_right_sieverts]
+    type = TimeExtremeValue
+    postprocessor = scaled_flux_surface_right_sieverts
+    value_type = max
   []
   [temperature]
     type = ElementAverageValue
     variable = temperature
     execute_on = 'initial timestep_end'
   []
+  [diffusion_W_hat]
+    type = ElementAverageMaterialProperty
+    mat_prop = diffusivity_W_nonAD
+    outputs = none
+  []
   [diffusion_W]
-    type = ElementAverageValue
-    variable = diffusivity_W
+    type = ScalePostprocessor
+    scaling_factor = '${fparse length_reference ^ 2 / time_reference}'
+    value = diffusion_W_hat
     outputs = none
   []
   [max_time_step_size]
@@ -294,6 +329,105 @@
     execute_on = 'initial nonlinear linear timestep_end'
     outputs = none
   []
+
+  [spatial_max_mobile_d2]
+    type = NodalExtremeValue
+    value_type = 'max'
+    variable = deuterium_concentration_W
+    execute_on = 'initial timestep_end'
+    outputs = 'console'
+  []
+  [spatial_max_trapped_1]
+    type = NodalExtremeValue
+    value_type = 'max'
+    variable = trapped_1
+    execute_on = 'initial timestep_end'
+    outputs = 'console'
+  []
+  [spatial_max_trapped_2]
+    type = NodalExtremeValue
+    value_type = 'max'
+    variable = trapped_2
+    execute_on = 'initial timestep_end'
+    outputs = 'console'
+  []
+  [spatial_max_trapped_3]
+    type = NodalExtremeValue
+    value_type = 'max'
+    variable = trapped_3
+    execute_on = 'initial timestep_end'
+    outputs = 'console'
+  []
+  [spatial_max_trapped_4]
+    type = NodalExtremeValue
+    value_type = 'max'
+    variable = trapped_4
+    execute_on = 'initial timestep_end'
+    outputs = 'console'
+  []
+  [spatial_max_trapped_5]
+    type = NodalExtremeValue
+    value_type = 'max'
+    variable = trapped_5
+    execute_on = 'initial timestep_end'
+    outputs = 'console'
+  []
+  [spatial_max_trapped_intrinsic]
+    type = NodalExtremeValue
+    value_type = 'max'
+    variable = trapped_intrinsic
+    execute_on = 'initial timestep_end'
+    outputs = 'console'
+  []
+  [max_mobile_d2]
+    type = TimeExtremeValue
+    value_type = 'max'
+    postprocessor = spatial_max_mobile_d2
+    execute_on = 'initial timestep_end'
+    outputs = 'console'
+  []
+  [max_trapped_1]
+    type = TimeExtremeValue
+    value_type = 'max'
+    postprocessor = spatial_max_trapped_1
+    execute_on = 'initial timestep_end'
+    outputs = 'console'
+  []
+  [max_trapped_2]
+    type = TimeExtremeValue
+    value_type = 'max'
+    postprocessor = spatial_max_trapped_2
+    execute_on = 'initial timestep_end'
+    outputs = 'console'
+  []
+  [max_trapped_3]
+    type = TimeExtremeValue
+    value_type = 'max'
+    postprocessor = spatial_max_trapped_3
+    execute_on = 'initial timestep_end'
+    outputs = 'console'
+  []
+  [max_trapped_4]
+    type = TimeExtremeValue
+    value_type = 'max'
+    postprocessor = spatial_max_trapped_4
+    execute_on = 'initial timestep_end'
+    outputs = 'console'
+  []
+  [max_trapped_5]
+    type = TimeExtremeValue
+    value_type = 'max'
+    postprocessor = spatial_max_trapped_5
+    execute_on = 'initial timestep_end'
+    outputs = 'console'
+  []
+  [max_trapped_intrinsic]
+    type = TimeExtremeValue
+    value_type = 'max'
+    postprocessor = spatial_max_trapped_intrinsic
+    execute_on = 'initial timestep_end'
+    outputs = 'console'
+  []
 []
 
 [Preconditioning]
@@ -307,28 +441,26 @@
   type = Transient
   scheme = bdf2
   solve_type = 'Newton'
-  petsc_options_iname = '-pc_type -sub_pc_type -snes_type'
-  petsc_options_value = 'asm lu vinewtonrsls' # This petsc option helps prevent negative concentrations with bounds'
-  end_time = ${endtime}
-  automatic_scaling = true
-  compute_scaling_once = false
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_type -snes_type'
+  petsc_options_value = 'lu       mumps                      vinewtonrsls'
+  end_time = ${endtime_hat}
   line_search = 'none'
-  nl_rel_tol = 5e-7
-  nl_abs_tol = 1e-10
+  nl_rel_tol = 1e-8
+  nl_abs_tol = 4e-5
   nl_max_its = 34
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = ${dt_init}
-    optimal_iterations = 25
+    dt = '${fparse dt_init / time_reference}'
     growth_factor = 1.1
-    cutback_factor = 0.9
-    cutback_factor_at_failure = 0.9
     timestep_limiting_postprocessor = max_time_step_size
+  []
+  [Predictor]
+    type = SimplePredictor
+    scale = 1.0
   []
 []
 
 [Debug]
-  show_var_residual = 'deuterium_concentration_W'
   show_var_residual_norms = true
 []
 

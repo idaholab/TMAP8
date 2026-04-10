@@ -152,7 +152,9 @@
     [alpha_t]
       type = RunException
       input = trapping.i
-      cli_args = "ActionComponents/structure/physics=mobile_diff"
+      cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/trapping_energy=0
+                  Physics/SpeciesTrapping/trapped/N=1 Physics/SpeciesTrapping/trapped/Ct0=1
+                  Physics/SpeciesTrapping/trapped/detrapping_energy=0 Physics/SpeciesTrapping/trapped/trap_per_free=1"
       detail = "the trapping coefficient is not specified,"
       expect_err = "alpha_t: Should not be empty if not using Components"
     []
@@ -182,7 +184,8 @@
       type = RunException
       input = trapping.i
       cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/alpha_t=1
-                  Physics/SpeciesTrapping/trapped/trapping_energy=0 Physics/SpeciesTrapping/trapped/N=1 Physics/SpeciesTrapping/trapped/Ct0=1"
+                  Physics/SpeciesTrapping/trapped/trapping_energy=0 Physics/SpeciesTrapping/trapped/N=1 Physics/SpeciesTrapping/trapped/Ct0=1
+                  Physics/SpeciesTrapping/trapped/detrapping_energy=0"
       detail = "the number of traps filled per free particle trapped is not specified,"
       expect_err = "trap_per_free: Should not be empty if not using Components"
     []
@@ -191,7 +194,8 @@
       input = trapping.i
       cli_args = "ActionComponents/structure/physics=mobile_diff Physics/SpeciesTrapping/trapped/alpha_t=1
                   Physics/SpeciesTrapping/trapped/trapping_energy=0 Physics/SpeciesTrapping/trapped/N=1
-                  Physics/SpeciesTrapping/trapped/Ct0=1 Physics/SpeciesTrapping/trapped/trap_per_free=1"
+                  Physics/SpeciesTrapping/trapped/Ct0=1 Physics/SpeciesTrapping/trapped/trap_per_free=1
+                  Physics/SpeciesTrapping/trapped/detrapping_energy=0"
       detail = "the release coefficient is not specified,"
       expect_err = "alpha_r: Should not be empty if not using Components"
     []

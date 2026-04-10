@@ -19,7 +19,6 @@ desorption_heating_rate = '${units ${fparse 3/60} K/s}'
 charge_time = '${units 72 h -> s}'
 cooldown_duration = '${units 12 h -> s}'
 desorption_duration = '${fparse (temperature_desorption_max-temperature_desorption_min)/desorption_heating_rate}'
-endtime = '${fparse charge_time + cooldown_duration + desorption_duration}'
 dt_init = 1e-8
 
 # Materials properties
@@ -45,7 +44,6 @@ dx1 = '${fparse 6*sigma}'
 dx2 = '${units 3e-6 m -> mum}'
 dx3 = '${units 7.997e-6 m -> mum}'
 dx4 = '${units 7.2e-5 m -> mum}'
-dx5 = '${fparse sample_thickness - dx1 - dx2 - dx3 - dx4}'
 ix1 = 100
 ix2 = 100
 ix3 = 100
@@ -74,7 +72,7 @@ trap_density_01dpa_1 = '${units ${fparse -S_1/r_1 * exp(-r_1*damage_duration) + 
 trapping_site_fraction_1 = '${fparse trap_density_01dpa_1 / tungsten_density}'
 trap_density_01dpa_1_inf = '${units 4.8e25 at/m^3 -> at/mum^3}'
 trapping_site_fraction_1_inf = '${fparse trap_density_01dpa_1_inf / tungsten_density}'
-trap_per_free_1 = 1e7 # (-)
+trap_concentration_reference_1 = '${fparse tungsten_density * 1e-8}'
 
 # Trap 2 parameters
 trapping_energy_2 = '${fparse trapping_energy}'
@@ -91,7 +89,7 @@ trap_density_01dpa_2 = '${units ${fparse -S_2/r_2 * exp(-r_2*damage_duration) + 
 trapping_site_fraction_2 = '${fparse trap_density_01dpa_2 / tungsten_density}'
 trap_density_01dpa_2_inf = '${units 3.8e25 at/m^3 -> at/mum^3}'
 trapping_site_fraction_2_inf = '${fparse trap_density_01dpa_2_inf / tungsten_density}'
-trap_per_free_2 = 1e7 # (-)
+trap_concentration_reference_2 = '${fparse tungsten_density * 1e-8}'
 
 # Trap 3 parameters
 trapping_energy_3 = '${fparse trapping_energy}'
@@ -108,7 +106,7 @@ trap_density_01dpa_3 = '${units ${fparse -S_3/r_3 * exp(-r_3*damage_duration) + 
 trapping_site_fraction_3 = '${fparse trap_density_01dpa_3 / tungsten_density}'
 trap_density_01dpa_3_inf = '${units 2.6e25 at/m^3 -> at/mum^3}'
 trapping_site_fraction_3_inf = '${fparse trap_density_01dpa_3_inf / tungsten_density}'
-trap_per_free_3 = 1e7 # (-)
+trap_concentration_reference_3 = '${fparse tungsten_density * 1e-8}'
 
 # Trap 4 parameters
 trapping_energy_4 = '${fparse trapping_energy}'
@@ -125,7 +123,7 @@ trap_density_01dpa_4 = '${units ${fparse -S_4/r_4 * exp(-r_4*damage_duration) + 
 trapping_site_fraction_4 = '${fparse trap_density_01dpa_4 / tungsten_density}'
 trap_density_01dpa_4_inf = '${units 3.6e25 at/m^3 -> at/mum^3}'
 trapping_site_fraction_4_inf = '${fparse trap_density_01dpa_4_inf / tungsten_density}'
-trap_per_free_4 = 1e7 # (-)
+trap_concentration_reference_4 = '${fparse tungsten_density * 1e-8}'
 
 # Trap 5 parameters
 trapping_energy_5 = '${fparse trapping_energy}'
@@ -140,7 +138,7 @@ trap_density_01dpa_5 = '${units ${fparse -S_5/r_5 * exp(-r_5*damage_duration) + 
 trapping_site_fraction_5 = '${fparse trap_density_01dpa_5 / tungsten_density}'
 trap_density_01dpa_5_inf = '${units 1.1e25 at/m^3 -> at/mum^3}'
 trapping_site_fraction_5_inf = '${fparse trap_density_01dpa_5_inf / tungsten_density}'
-trap_per_free_5 = 1e7 # (-)
+trap_concentration_reference_5 = '${fparse tungsten_density * 1e-8}'
 
 # Trap intrinsic parameters
 trapping_energy_intrinsic = '${fparse trapping_energy}'
@@ -149,4 +147,47 @@ detrapping_energy_intrinsic = '${fparse ${units 1.04 eV -> J} / kb}'
 detrapping_prefactor_intrinsic = '${fparse detrapping_prefactor}'
 trap_density_01dpa_intrinsic = '${units 2.4e22 at/m^3 -> at/mum^3}'
 trapping_site_fraction_intrinsic = '${fparse trap_density_01dpa_intrinsic / tungsten_density}'
-trap_per_free_intrinsic = 1e7 # (-)
+trap_concentration_reference_intrinsic = '${fparse tungsten_density * 1e-11}'
+
+mobile_concentration_reference = '${fparse tungsten_density * 1e-12}'
+length_reference = ${units 1 mum}
+time_reference = ${units 1 s}
+
+# Dimensionless trap rate groups: k_t_hat = alpha_t * C_m_ref / N * t_ref
+# (from nondimensionalizing dC_t/dt = alpha_t/N * C_m * (N*Ct0 - C_t))
+dimensionless_trapping_rate_coefficient_intrinsic = '${fparse trapping_prefactor_intrinsic * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_coefficient_1 = '${fparse trapping_prefactor_1 * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_coefficient_2 = '${fparse trapping_prefactor_2 * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_coefficient_3 = '${fparse trapping_prefactor_3 * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_coefficient_4 = '${fparse trapping_prefactor_4 * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_coefficient_5 = '${fparse trapping_prefactor_5 * time_reference * mobile_concentration_reference / tungsten_density}'
+
+dimensionless_release_rate_coefficient_intrinsic = '${fparse detrapping_prefactor_intrinsic * time_reference}'
+dimensionless_release_rate_coefficient_1 = '${fparse detrapping_prefactor_1 * time_reference}'
+dimensionless_release_rate_coefficient_2 = '${fparse detrapping_prefactor_2 * time_reference}'
+dimensionless_release_rate_coefficient_3 = '${fparse detrapping_prefactor_3 * time_reference}'
+dimensionless_release_rate_coefficient_4 = '${fparse detrapping_prefactor_4 * time_reference}'
+dimensionless_release_rate_coefficient_5 = '${fparse detrapping_prefactor_5 * time_reference}'
+
+# Dimensionless geometry and time quantities used by val-2f-dimensionless.
+sigma_hat = '${fparse sigma / length_reference}'
+R_p_hat = '${fparse R_p / length_reference}'
+depth_center_hat = '${fparse depth_center / length_reference}'
+depth_width_hat = '${fparse depth_width / length_reference}'
+sample_thickness_hat = '${fparse sample_thickness / length_reference}'
+dx1_hat = '${fparse dx1 / length_reference}'
+dx2_hat = '${fparse dx2 / length_reference}'
+dx3_hat = '${fparse dx3 / length_reference}'
+dx4_hat = '${fparse dx4 / length_reference}'
+dx5_hat = '${fparse sample_thickness_hat - dx1_hat - dx2_hat - dx3_hat - dx4_hat}'
+charge_time_hat = '${fparse charge_time / time_reference}'
+cooldown_duration_hat = '${fparse cooldown_duration / time_reference}'
+desorption_duration_hat = '${fparse desorption_duration / time_reference}'
+endtime_hat = '${fparse charge_time_hat + cooldown_duration_hat + desorption_duration_hat}'
+desorption_heating_rate_hat = '${fparse desorption_heating_rate * time_reference}'
+
+# Dimensionless mobile transport quantities.
+diffusion_W_preexponential_hat = '${fparse diffusion_W_preexponential * time_reference / (length_reference^2)}'
+surface_flux_hat = '${fparse flux * time_reference / (mobile_concentration_reference * length_reference)}'
+recombination_coefficient_hat = '${fparse recombination_coefficient * mobile_concentration_reference * time_reference / length_reference}'
+sieverts_boundary_hat = '${fparse 1e-10 / mobile_concentration_reference}'

@@ -14,7 +14,11 @@ InputParameters
 ScaledCoupledTimeDerivative::validParams()
 {
   InputParameters params = CoupledTimeDerivative::validParams();
-  params.addParam<Real>("factor", 1, "The factor by which to scale");
+  params.addClassDescription(
+      "Adds factor * (psi, dv/dt) to the residual of the primary variable. "
+      "This covers both the standard scaled form and the dimensionless trapping form "
+      "where factor = C_t_ref / C_m_ref.");
+  params.addParam<Real>("factor", 1, "Constant multiplier applied to the coupled time derivative.");
   return params;
 }
 

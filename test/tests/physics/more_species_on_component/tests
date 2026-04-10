@@ -14,4 +14,11 @@
     design = 'SpeciesTrappingPhysics.md'
     requirement = 'The system shall be able to accept parameters for species trapping on a component with the trapping physics parameters defined for a single species.'
   []
+  [trapping_dimensionless_other_trap]
+    type = CSVDiff
+    input = 'species_trapping_dimensionless_other_trap.i'
+    csvdiff = 'species_trapping_dimensionless_other_trap_out.csv'
+    design = 'SpeciesTrappingPhysics.md'
+    requirement = 'The system shall couple dimensionless trapped species on a component through shared trap occupancy using physics-syntax generated dimensionless trapping kernels.'
+  []
 []

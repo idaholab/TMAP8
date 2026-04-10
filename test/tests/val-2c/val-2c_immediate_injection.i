@@ -40,7 +40,6 @@ time_step = '${units 1 s}'
 time_end = '${units 180000 s}'
 dtmax = '${units 1e3 s}'
 dtmin = '${units 1 s}'
-lower_value_threshold = '${units -1e-20 at/mum^3}' # lower limit for concentration
 
 ## Inflow and outflow
 inflow = '${units 0.54 m^3/h -> mum^3/s}' # inflow of normally moist (20% relative humidity) air at the same temperature as the enclosure

@@ -168,6 +168,7 @@ framework/contrib/asio/
 *.cpr
 *.cpa-*
 *.cpr-*
+*_cp/
 
 # Ignore petsc arch
 petsc/arch-*/*
@@ -245,3 +246,9 @@ doc/content/verification_and_validation/figures/val-2g_environment_history.png
 doc/content/examples/figures/fuel_cycle_*.png
 doc/content/source/interfacekernels/figures/YHx_PCT_*.png
 doc/content/source/interfacekernels/figures/ZrCoHx_PCT_*.png
+
+# temporary testharness_time files
+*.testharness_time
+
+# val-2c PSS results
+test/tests/val-2c/val-2c_pss_results_short
