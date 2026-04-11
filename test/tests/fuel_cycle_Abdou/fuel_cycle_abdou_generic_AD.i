@@ -1,0 +1,13 @@
+!include fuel_cycle_abdou_generic.i
+
+ScalarKernels/I1/type:=ADFuelCycleSystemScalarKernel
+ScalarKernels/I2/type:=ADFuelCycleSystemScalarKernel
+ScalarKernels/I3/type:=ADFuelCycleSystemScalarKernel
+ScalarKernels/I4/type:=ADFuelCycleSystemScalarKernel
+ScalarKernels/I5/type:=ADFuelCycleSystemScalarKernel
+ScalarKernels/I6/type:=ADFuelCycleSystemScalarKernel
+ScalarKernels/I7/type:=ADFuelCycleSystemScalarKernel
+ScalarKernels/I8/type:=ADFuelCycleSystemScalarKernel
+ScalarKernels/I9/type:=ADFuelCycleSystemScalarKernel
+ScalarKernels/I10/type:=ADFuelCycleSystemScalarKernel
+ScalarKernels/I11/type:=ADFuelCycleSystemScalarKernel

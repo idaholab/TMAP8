@@ -161,11 +161,15 @@ class fuel_cycle_form(tk.Tk):
         )
         instring = ""
         test_path = os.path.join(dir_path, "fuel_cycle.i")
+        test_path_2 = os.path.join(dir_path, "fuel_cycle_abdou_base.i")
         self.gold_path = os.path.join(dir_path, "gold", "fuel_cycle_out.csv")
         if not os.path.isfile(test_path):
             raise OSError("Unable to locate the fuel cycle input file")
         with open(test_path, "r") as infile:
             instring = infile.read()
+        with open(test_path_2, "r") as infile2:
+            instring_2 = infile2.read()
+        instring = instring.replace("!include fuel_cycle_abdou_base.i", instring_2)
         ic_loc = instring.find("initial_condition")
         ic_end = instring.find("\n", ic_loc)
         start = instring.find("Postprocessors]") + len("Postprocessors]\n")
@@ -428,9 +432,18 @@ class fuel_cycle_form(tk.Tk):
 
         output_string = self.apply_template(self.labeldict)
         with open(self.tmpfile, "w") as outfile:
-            outfile.write(output_string)
+            outfile.write(
+                output_string.replace(
+                    "file_base=fuel_cycle_out",
+                    "file_base={:s}_out".format(self.tmpfile[:-2]),
+                )
+            )
         self.proc = subprocess.Popen(
-            [self.tmap8_path, "-i", self.tmpfile],
+            [
+                self.tmap8_path,
+                "-i",
+                self.tmpfile,
+            ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             cwd=os.path.dirname(self.tmpfile),
