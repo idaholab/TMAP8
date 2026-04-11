@@ -1,0 +1,50 @@
+[Tests]
+  design = 'TrappingNodalKernel.md ReleasingNodalKernel.md'
+  issues = '#12 #400'
+  validation = 'val-2j.md'
+  [val-2j_csvdiff]
+    type = CSVDiff
+    input = 'val-2j.i'
+    csvdiff = val-2j_out.csv
+    requirement = 'The system shall be able to model tritium TDS from Li2TiO3 with fine mesh to compare with experimental desorption data from Kobayashi et al. (2015).'
+  []
+  [val-2j_optimized_csvdiff]
+    type = CSVDiff
+    input = 'val-2j.i optimal_bayesian_params.i'
+    csvdiff = 'val-2j_optimal_bayesian_params_out.csv'
+    cli_args = 'Outputs/file_base=val-2j_optimal_bayesian_params_out'
+    prereq = val-2j_csvdiff
+    requirement = 'The system shall model tritium TDS from Li2TiO3 with Bayesian-optimized parameters.'
+  []
+  [val-2j_optimized_exodiff]
+    type = Exodiff
+    input = 'val-2j.i optimal_bayesian_params.i'
+    exodiff = 'val-2j_optimal_bayesian_params_out.e'
+    cli_args = 'Outputs/file_base=val-2j_optimal_bayesian_params_out'
+    prereq = val-2j_optimized_csvdiff
+    should_execute = false
+    requirement = 'The system shall model tritium TDS from Li2TiO3 with Bayesian-optimized parameters including full simulation outputs.'
+  []
+  [val-2j_comparison]
+    type = RunCommand
+    command = 'python3 comparison_val-2j.py'
+    requirement = 'The system shall generate comparison plots between TMAP8 simulation and experimental TDS data for Li2TiO3 Sample E.'
+    required_python_packages = 'matplotlib numpy pandas os'
+  []
+  [val-2j_bayesian_json]
+    type = JSONDiff
+    input = bayesian_main_val2j.i
+    cli_args = "Executioner/num_steps=2
+                Samplers/sample/num_parallel_proposals=2
+                Samplers/sample/num_tries=100
+                Outputs/file_base=bayesian_val2j_results/val2j_bayesian_short_out
+                MultiApps/sub/cli_args='num_elems=10'"
+    jsondiff = bayesian_val2j_results/val2j_bayesian_short_out.json
+    abs_zero = 1e-8
+    rel_err = 1e-5
+    skip_keys = 'acquisition_function'
+    max_parallel = 1
+    recover = false
+    requirement = 'The system shall perform Bayesian optimization of TDS model parameters for Li2TiO3.'
+  []
+[]
