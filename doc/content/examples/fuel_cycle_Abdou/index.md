@@ -2,6 +2,11 @@
 
 This demonstration re-creates the tritium fuel cycle model described by [!cite](Abdou2021). It is also described in [!cite](Simon2025).
 
+There are multiple ways to generate an input file that uses scalar kernels. The [`ParsedODEKernel`](scalarkernels/ParsedODEKernel.md)
+and [`ODETimeDerivative`](scalarkernels/ODETimeDerivative.md) can be used to deal with almost any system of ordinary differential equations,
+but there is also a utility class [`FuelCycleSystemScalarKernel`](scalarkernels/FuelCycleSystemScalarKernel.md) which can be used to 
+simplify the inputs.
+
 ### Generating the Input File
 
 First, we instantiate a mesh
@@ -88,13 +93,19 @@ The default initial condition is zero.
 
 !listing test/tests/fuel_cycle_Abdou/fuel_cycle.i link=false block=Variables
 
-Next we initiate the [`ScalarKernels`](/syntax/ScalarKernels) block. We can model the time-dependent terms with [`ODETimeDerivative`](/syntax/ScalarKernels/ODETimeDerivative) objects
-and the other terms can be lumped in [`ParsedODEKernel`](/syntax/ScalarKernels/ParsedODEKernel) objects. We should have one [`ODETimeDerivative`](/syntax/ScalarKernels/ODETimeDerivative)
- and one (or more) [`ParsedODEKernel`](/syntax/ScalarKernels/ParsedODEKernel) object(s) per equation above. Internally, TMAP8 will sum the contributions of each object, so we need to
-negate the [`ParsedODEKernel`](/syntax/ScalarKernels/ParsedODEKernel) equation from its representation above (move it to the left hand side). We use [`Postprocessors`](/syntax/Postprocessors)
+Next we initiate the [`ScalarKernels`](/syntax/ScalarKernels) block. We can model the time-dependent terms with [`ODETimeDerivative`](scalarkernels/ODETimeDerivative.md) objects
+and the other terms can be lumped in [`ParsedODEKernel`](scalarkernels/ParsedODEKernel.md) objects. We should have one [`ODETimeDerivative`](scalarkernels/ODETimeDerivative.md)
+ and one (or more) [`ParsedODEKernel`](scalarkernels/ParsedODEKernel.md) object(s) per equation above. Internally, TMAP8 will sum the contributions of each object, so we need to
+negate the [`ParsedODEKernel`](scalarkernels/ParsedODEKernel.md) equation from its representation above (move it to the left hand side). We use [`Postprocessors`](/syntax/Postprocessors)
 to re-use the recurring variables.
 
-!listing test/tests/fuel_cycle_Abdou/fuel_cycle.i link=false block=ScalarKernels
+!listing test/tests/fuel_cycle_Abdou/fuel_cycle.i link=true block=ScalarKernels
+
+Manually entering equations that describe these systems opens the potential for arithmetical errors, so the [`FuelCycleSystemScalarKernel`](scalarkernels/FuelCycleSystemScalarKernel.md)
+ scalar kernel has been created, allowing each system to be modelled with one scalar kernel. Each of the parameters in the scalar kernel is only required to be a [`Functor`](/syntax/Functors), allowing
+great flexibility in the kinds of information that can be fed to the scalar kernel. An example model using each approach can be found at `fuel_cycle_abdou.i` and `fuel_cycle_abdou_generic.i`
+
+!listing test/tests/fuel_cycle_Abdou/fuel_cycle_abdou_generic.i link=true block=ScalarKernels
 
 Finally, we define the [`Postprocessors`](/syntax/Postprocessors) and set their values to those referenced in [!cite](Abdou2021). Because the [`Postprocessors`](/syntax/Postprocessors) are
 inputs, not outputs, we must be careful to properly set the [!param](/Postprocessors/ConstantPostprocessor/execute_on) parameter. We also gather the values of the different variables in
@@ -103,8 +114,8 @@ inputs, not outputs, we must be careful to properly set the [!param](/Postproces
 !listing test/tests/fuel_cycle_Abdou/fuel_cycle.i link=false block=Postprocessors
 
 
-Finally, we can set the [`Executioner`](/syntax/Executioner) block. In this case, we ask for a simple [`Transient`](/source/executioners/Transient.html) executioner with an exponentially growing
-[`TimeStepper`](/syntax/Executioner/TimeStepper), [`IterationAdaptiveDT`](/source/timesteppers/IterationAdaptiveDT.html).
+Finally, we can set the [`Executioner`](/syntax/Executioner) block. In this case, we ask for a simple [`Transient`](executioners/Transient.md) executioner with an exponentially growing
+[`TimeStepper`](/syntax/Executioner/TimeStepper), [`IterationAdaptiveDT`](timesteppers/IterationAdaptiveDT.md).
 
 !listing test/tests/fuel_cycle_Abdou/fuel_cycle.i link=false block=Executioner
 
@@ -144,6 +155,10 @@ and the darker lines are the results from the model. The agreement is quite good
        caption=Tritium inventories of specific systems as a function of time. Shaded regions are best estimate of Figure 3 in [!cite](Abdou2021).
 
 !listing test/tests/fuel_cycle_Abdou/fuel_cycle.i
+
+#### How to run
+
+This example can be run from three different driver input files, an [explicit model](tests/fuel_cycle_Abdou/fuel_cycle.i) using [`ParsedODEKernel`](scalarkernels/ParsedODEKernel.md) and two class-based models which leverage [`FuelCycleSystemScalarKernel`](scalarkernels/FuelCycleSystemScalarKernel.md), one [with](tests/fuel_cycle_Abdou/fuel_cycle_abdou_generic_AD.i) and one [without](tests/fuel_cycle_Abdou/fuel_cycle_abdou_generic.i) automatic differentiation. As there is significant overlap between the two models, they both use the `!include` syntax to import common terms from a [base file](tests/fuel_cycle_Abdou/fuel_cycle_abdou_base.i).
 
 ### Python-based Interactive Script
 
