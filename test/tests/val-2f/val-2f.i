@@ -195,7 +195,7 @@
 [Postprocessors]
   active = 'integral_source_deuterium scaled_implanted_deuterium integral_deuterium_concentration
   scaled_mobile_deuterium flux_surface_left scaled_flux_surface_left
-  flux_surface_right scaled_flux_surface_right temperature diffusion_W_hat diffusion_W
+  flux_surface_right scaled_flux_surface_right temperature_pps diffusion_W_hat diffusion_W
   max_time_step_size max_time_step_size_coarse integral_trapped_concentration_1 scaled_trapped_deuterium_1
   integral_trapped_concentration_2 scaled_trapped_deuterium_2 integral_trapped_concentration_3 scaled_trapped_deuterium_3
   integral_trapped_concentration_4 scaled_trapped_deuterium_4 integral_trapped_concentration_5 scaled_trapped_deuterium_5
@@ -301,7 +301,7 @@
     postprocessor = scaled_flux_surface_right_sieverts
     value_type = max
   []
-  [temperature]
+  [temperature_pps]
     type = ElementAverageValue
     variable = temperature
     execute_on = 'initial timestep_end'
@@ -465,13 +465,19 @@
 []
 
 [Outputs]
-  file_base = 'val-2f_out'
   [csv]
     type = CSV
+    file_base = 'val-2f_out'
+  []
+  [csv_temperature_history]
+    type = CSV
+    show = 'temperature_pps'
+    file_base = 'val-2f_temperature_out'
   []
   [exodus]
     type = Exodus
     output_material_properties = true
     time_step_interval = 200
+    file_base = 'val-2f_out'
   []
 []
