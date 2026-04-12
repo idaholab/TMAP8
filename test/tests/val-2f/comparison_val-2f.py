@@ -16,8 +16,12 @@ os.chdir(script_folder)
 # Extract TMAP8 predictions
 if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
     csv_folder = "../../../../test/tests/val-2f/gold/val-2f_out.csv"
-    csv_folder_inf_recombination = "../../../../test/tests/val-2f/gold/val-2f_out_inf_recombination.csv"
-    csv_folder_history = "../../../../test/tests/val-2f/gold/val-2f_temperature_implicit_euler_out.csv"
+    csv_folder_inf_recombination = (
+        "../../../../test/tests/val-2f/gold/val-2f_out_inf_recombination.csv"
+    )
+    csv_folder_history = (
+        "../../../../test/tests/val-2f/gold/val-2f_temperature_implicit_euler_out.csv"
+    )
     csv_folder_exp = "../../../../test/tests/val-2f/gold/0.1_dpa.csv"
 else:  # if in test folder
     csv_folder = "./gold/val-2f_out.csv"
