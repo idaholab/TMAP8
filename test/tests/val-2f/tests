@@ -10,7 +10,8 @@
                 dt_init=2e-3
                 charge_time='${units 1e-1 s}' cooldown_duration='${units 1e-1 s}'
                 Executioner/TimeStepper/timestep_limiting_postprocessor=max_time_step_size_coarse
-                Outputs/file_base=val-2f_light_out
+                Outputs/csv/file_base=val-2f_light_out
+                Outputs/exodus/file_base=val-2f_light_out
                 Outputs/csv/start_time=0.2
                 Executioner/TimeStepper/growth_factor=1.05
                 Executioner/scheme=implicit-euler"
@@ -45,11 +46,13 @@
                 Outputs/csv/time_step_interval=2
                 Outputs/exodus/start_time='${fparse charge_time_hat + cooldown_duration_hat}'
                 Outputs/exodus/time_step_interval=400
-                Outputs/file_base=val-2f_heavy_desorption_out
+                Outputs/csv/file_base=val-2f_heavy_desorption_out
+                Outputs/exodus/file_base=val-2f_heavy_desorption_out
+                Outputs/csv_temperature_history/file_base=val-2f_temperature_implicit_euler_out
                 Executioner/scheme=implicit-euler"
     csvdiff = val-2f_heavy_desorption_out.csv
     heavy = true
-    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output. Only desorption phase data is compared with every other timestep.'
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport using the implicit-euler time integration scheme for numerical stability and generate CSV data output. Only desorption phase data is compared with every other timestep.'
     max_time = 2000
   []
   [val-2f_heavy_exodus_implicit-euler]
@@ -59,13 +62,31 @@
                 Outputs/csv/time_step_interval=2
                 Outputs/exodus/start_time='${fparse charge_time_hat + cooldown_duration_hat}'
                 Outputs/exodus/time_step_interval=400
-                Outputs/file_base=val-2f_heavy_desorption_out
+                Outputs/csv/file_base=val-2f_heavy_desorption_out
+                Outputs/exodus/file_base=val-2f_heavy_desorption_out
+                Outputs/csv_temperature_history/file_base=val-2f_temperature_implicit_euler_out
                 Executioner/scheme=implicit-euler"
     exodiff = val-2f_heavy_desorption_out.e
     heavy = true
     prereq = val-2f_heavy_csv_implicit-euler
-    should_execute = false # this test relies on the output files from val-2f_heavy_csv, so it shouldn't be run twice
-    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport. Only desorption phase data is compared with every other timestep.'
+    should_execute = false # this test relies on the output files from val-2f_heavy_csv_implicit-euler, so it shouldn't be run twice
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport using the implicit-euler time integration scheme for numerical stability. Only desorption phase data is compared with every other timestep.'
+  []
+  [val-2f_heavy_temperature_csv_implicit-euler]
+    type = CSVDiff
+    input = val-2f.i
+    cli_args = "Outputs/csv/start_time='${fparse charge_time_hat + cooldown_duration_hat}'
+                Outputs/csv/time_step_interval=2
+                Outputs/exodus/start_time='${fparse charge_time_hat + cooldown_duration_hat}'
+                Outputs/exodus/time_step_interval=400
+                Outputs/csv_temperature_history/file_base=val-2f_temperature_implicit_euler_out
+                Executioner/scheme=implicit-euler"
+    prereq = val-2f_heavy_csv_implicit-euler
+    should_execute = false # this test relies on the output files from val-2f_heavy_csv_implicit-euler, so it shouldn't be run twice
+    csvdiff = val-2f_temperature_implicit_euler_out.csv
+    heavy = true
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport using the implicit-euler time integration scheme for numerical stability and generate CSV data output about the temperature for documentation plots.'
+    max_time = 2000
   []
   [val-2f_heavy_csv_inf_recombination_implicit-euler]
     type = CSVDiff
@@ -79,17 +100,18 @@
                 Physics/SpeciesTrapping/trapping_4/Ct0='trap_distribution_function_4_inf'
                 Physics/SpeciesTrapping/trapping_5/Ct0='trap_distribution_function_5_inf'
                 Materials/active='diffusivity_W_func diffusivity_nonAD'
-                Postprocessors/active='integral_source_deuterium scaled_implanted_deuterium integral_deuterium_concentration scaled_mobile_deuterium flux_surface_left_sieverts scaled_flux_surface_left_sieverts flux_surface_right_sieverts scaled_flux_surface_right_sieverts temperature max_time_step_size max_time_step_size_coarse integral_trapped_concentration_1 scaled_trapped_deuterium_1 integral_trapped_concentration_2 scaled_trapped_deuterium_2 integral_trapped_concentration_3 scaled_trapped_deuterium_3 integral_trapped_concentration_4 scaled_trapped_deuterium_4 integral_trapped_concentration_5 scaled_trapped_deuterium_5 integral_trapped_concentration_intrinsic scaled_trapped_deuterium_intrinsic'
+                Postprocessors/active='integral_source_deuterium scaled_implanted_deuterium integral_deuterium_concentration scaled_mobile_deuterium flux_surface_left_sieverts scaled_flux_surface_left_sieverts flux_surface_right_sieverts scaled_flux_surface_right_sieverts temperature_pps max_time_step_size max_time_step_size_coarse integral_trapped_concentration_1 scaled_trapped_deuterium_1 integral_trapped_concentration_2 scaled_trapped_deuterium_2 integral_trapped_concentration_3 scaled_trapped_deuterium_3 integral_trapped_concentration_4 scaled_trapped_deuterium_4 integral_trapped_concentration_5 scaled_trapped_deuterium_5 integral_trapped_concentration_intrinsic scaled_trapped_deuterium_intrinsic'
                 Postprocessors/max_time_step_size/function=max_dt_size_function_inf
                 Outputs/csv/start_time='${fparse charge_time_hat + cooldown_duration_hat}'
                 Outputs/csv/time_step_interval=2
-                Outputs/file_base=val-2f_heavy_desorption_inf_recombination_out
+                Outputs/csv/file_base=val-2f_heavy_desorption_inf_recombination_out
+                Outputs/exodus/file_base=val-2f_heavy_desorption_inf_recombination_out
                 Executioner/abort_on_solve_fail=false
                 Executioner/nl_abs_tol=5e-4
                 Executioner/scheme=implicit-euler"
     csvdiff = val-2f_heavy_desorption_inf_recombination_out.csv
     heavy = true
-    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output, for the infinite recombination case. Only desorption phase data is compared with every other timestep.'
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport using the implicit-euler time integration scheme for numerical stability and generate CSV data output, for the infinite recombination case. Only desorption phase data is compared with every other timestep.'
     max_time = 3600
   []
   # Check the test data for the same heavy tests using 'Executioner/scheme=bdf2' for documentation. Since consistency has already been verified with `Executioner/scheme=implicit-euler` tests, the error tolerance can be relaxed.
@@ -100,7 +122,7 @@
                 Outputs/csv/sync_times='${fparse charge_time_hat + cooldown_duration_hat}'"
     csvdiff = val-2f_out.csv
     heavy = true
-    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output.'
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport using the bdf2 time integration scheme for accuracy and generate CSV data output.'
     max_time = 2000
     rel_err = 1e-4
     override_columns = 'scaled_flux_surface_right scaled_flux_surface_left scaled_mobile_deuterium scaled_trapped_deuterium_1 scaled_trapped_deuterium_2'
@@ -119,16 +141,17 @@
                 Physics/SpeciesTrapping/trapping_4/Ct0='trap_distribution_function_4_inf'
                 Physics/SpeciesTrapping/trapping_5/Ct0='trap_distribution_function_5_inf'
                 Materials/active='diffusivity_W_func diffusivity_nonAD'
-                Postprocessors/active='integral_source_deuterium scaled_implanted_deuterium integral_deuterium_concentration scaled_mobile_deuterium flux_surface_left_sieverts scaled_flux_surface_left_sieverts flux_surface_right_sieverts scaled_flux_surface_right_sieverts temperature diffusion_W_hat diffusion_W max_time_step_size max_time_step_size_coarse integral_trapped_concentration_1 scaled_trapped_deuterium_1 integral_trapped_concentration_2 scaled_trapped_deuterium_2 integral_trapped_concentration_3 scaled_trapped_deuterium_3 integral_trapped_concentration_4 scaled_trapped_deuterium_4 integral_trapped_concentration_5 scaled_trapped_deuterium_5 integral_trapped_concentration_intrinsic scaled_trapped_deuterium_intrinsic spatial_max_mobile_d2 spatial_max_trapped_1 spatial_max_trapped_2 spatial_max_trapped_3 spatial_max_trapped_4 spatial_max_trapped_5 spatial_max_trapped_intrinsic max_mobile_d2 max_trapped_1 max_trapped_2 max_trapped_3 max_trapped_4 max_trapped_5 max_trapped_intrinsic max_scaled_flux_surface_left_sieverts max_scaled_flux_surface_right_sieverts max_scaled_mobile_deuterium max_scaled_trapped_deuterium_intrinsic'
+                Postprocessors/active='integral_source_deuterium scaled_implanted_deuterium integral_deuterium_concentration scaled_mobile_deuterium flux_surface_left_sieverts scaled_flux_surface_left_sieverts flux_surface_right_sieverts scaled_flux_surface_right_sieverts temperature_pps diffusion_W_hat diffusion_W max_time_step_size max_time_step_size_coarse integral_trapped_concentration_1 scaled_trapped_deuterium_1 integral_trapped_concentration_2 scaled_trapped_deuterium_2 integral_trapped_concentration_3 scaled_trapped_deuterium_3 integral_trapped_concentration_4 scaled_trapped_deuterium_4 integral_trapped_concentration_5 scaled_trapped_deuterium_5 integral_trapped_concentration_intrinsic scaled_trapped_deuterium_intrinsic spatial_max_mobile_d2 spatial_max_trapped_1 spatial_max_trapped_2 spatial_max_trapped_3 spatial_max_trapped_4 spatial_max_trapped_5 spatial_max_trapped_intrinsic max_mobile_d2 max_trapped_1 max_trapped_2 max_trapped_3 max_trapped_4 max_trapped_5 max_trapped_intrinsic max_scaled_flux_surface_left_sieverts max_scaled_flux_surface_right_sieverts max_scaled_mobile_deuterium max_scaled_trapped_deuterium_intrinsic'
                 Postprocessors/max_time_step_size/function=max_dt_size_function_inf
-                Outputs/file_base='val-2f_out_inf_recombination'
+                Outputs/csv/file_base='val-2f_out_inf_recombination'
+                Outputs/exodus/file_base='val-2f_out_inf_recombination'
                 Outputs/csv/start_time='${fparse charge_time_hat + cooldown_duration_hat}'
                 Outputs/csv/sync_times='${fparse charge_time_hat + cooldown_duration_hat}'
                 Executioner/abort_on_solve_fail=false
                 Executioner/nl_abs_tol=5e-4"
     csvdiff = val-2f_out_inf_recombination.csv
     heavy = true
-    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport and generate CSV data output, for the infinite recombination case.'
+    requirement = 'The system shall be able to model self-damaged tungsten effects on deuterium transport using the bdf2 time integration scheme for accuracy and generate CSV data output, for the infinite recombination case.'
     max_time = 3600
     rel_err = 1e-5
     abs_zero = 1e4
