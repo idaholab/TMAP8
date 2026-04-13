@@ -1,4 +1,4 @@
-time,scaled_flux_surface_left,scaled_flux_surface_right,scaled_implanted_deuterium,scaled_mobile_deuterium,scaled_trapped_deuterium_1,scaled_trapped_deuterium_2,scaled_trapped_deuterium_3,scaled_trapped_deuterium_4,scaled_trapped_deuterium_5,scaled_trapped_deuterium_intrinsic,temperature
+time,scaled_flux_surface_left,scaled_flux_surface_right,scaled_implanted_deuterium,scaled_mobile_deuterium,scaled_trapped_deuterium_1,scaled_trapped_deuterium_2,scaled_trapped_deuterium_3,scaled_trapped_deuterium_4,scaled_trapped_deuterium_5,scaled_trapped_deuterium_intrinsic,temperature_pps
 302400,6134830588353.7,2894705211.0138,0,4.6853343894259e+16,1.1583285001642e+20,7.1951430848484e+19,4.9114945031374e+19,7.4284105663858e+19,1.9701311002936e+19,1.8832280037766e+19,300
 302500,13148708516275,8872981606.9556,0,5.3727537309795e+16,1.1583213318212e+20,7.1951430231859e+19,4.9114945031366e+19,7.4284105663858e+19,1.9701311002936e+19,1.882515062074e+19,305
 302600,26939715865048,25288914861.991,0,6.0411497878221e+16,1.1583043993972e+20,7.1951428505626e+19,4.9114945031341e+19,7.4284105663858e+19,1.9701311002936e+19,1.8818039737e+19,310

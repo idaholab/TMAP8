@@ -19,10 +19,14 @@ if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
     csv_folder_inf_recombination = (
         "../../../../test/tests/val-2f/gold/val-2f_out_inf_recombination.csv"
     )
+    csv_folder_history = (
+        "../../../../test/tests/val-2f/gold/val-2f_temperature_implicit_euler_out.csv"
+    )
     csv_folder_exp = "../../../../test/tests/val-2f/gold/0.1_dpa.csv"
 else:  # if in test folder
     csv_folder = "./gold/val-2f_out.csv"
     csv_folder_inf_recombination = "./gold/val-2f_out_inf_recombination.csv"
+    csv_folder_history = "./gold/val-2f_temperature_implicit_euler_out.csv"
     csv_folder_exp = "./gold/0.1_dpa.csv"
 
 
@@ -48,7 +52,7 @@ def numerical_solution_on_experiment_input(x_exp, x_sim, y_sim):
 
 def extract_tmap_data_desorption(df):
     t = df["time"]
-    temp = df["temperature"]
+    temp = df["temperature_pps"]
 
     if (
         "scaled_flux_surface_left_sieverts" in df.columns
@@ -98,6 +102,7 @@ def extract_tmap_data_desorption(df):
 tmap_data = {
     "default": pd.read_csv(csv_folder),
     "inf": pd.read_csv(csv_folder_inf_recombination),
+    "history": pd.read_csv(csv_folder_history),
     "exp": pd.read_csv(csv_folder_exp),
 }
 experiment = tmap_data["exp"]
@@ -133,8 +138,8 @@ save_plot(fig, "val-2f_implantation_distribution.png")
 fig = plt.figure(figsize=[6.5, 5.5])
 ax = fig.add_subplot(gridspec.GridSpec(1, 1)[0])
 ax.plot(
-    tmap_data["default"]["time"] / 3600,
-    tmap_data["default"]["temperature"],
+    tmap_data["history"]["time"] / 3600,
+    tmap_data["history"]["temperature_pps"],
     "--",
     color="b",
     label="Temperature",
