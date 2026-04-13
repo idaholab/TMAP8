@@ -6,7 +6,7 @@
     type = CSVDiff
     input = 'val-2j.i'
     csvdiff = val-2j_out.csv
-    requirement = 'The system shall be able to model tritium TDS from Li2TiO3 with fine mesh to compare with experimental desorption data from Kobayashi et al. (2015).'
+    requirement = 'The system shall be able to model tritium TDS from Li2TiO3 with a fine mesh to compare with experimental desorption data from Kobayashi et al. (2015).'
   []
   [val-2j_optimized_csvdiff]
     type = CSVDiff

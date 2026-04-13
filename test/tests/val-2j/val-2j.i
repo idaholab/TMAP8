@@ -3,7 +3,7 @@
 # Reference: Kobayashi et al., J. Nucl. Mater. 458 (2015) 22-28
 # O--center trapping model with first-order defect annihilation during TDS heating.
 # F+-center trapping is excluded because its detrapping is too fast relative to
-# diffusion (release near 580 K coincides with diffusion-controlled release; see p.26).
+# diffusion (release near 580 K coincides with diffusion-controlled release; see Kobayashi p.26).
 
 # ============ Physical Constants ============
 kB_J = '${units 1.380649e-23 J/K}'   # Boltzmann constant in J/K

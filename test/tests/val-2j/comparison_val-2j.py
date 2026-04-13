@@ -25,11 +25,11 @@ exp_e_norm = exp_e_release / np.max(np.abs(exp_e_release))
 
 
 def compute_rmspe(
-    sim_temperature, sim_norm, exp_temperature, exp_norm, threshold_frac=0.05
+    sim_temperature, sim_norm, exp_temperature, exp_norm, threshold_fraction=0.05
 ):
     """Compute RMSPE between interpolated simulation and experimental data.
 
-    Only points where the experimental value exceeds threshold_frac of the
+    Only points where the experimental value exceeds threshold_fraction of the
     experimental maximum are included.
 
     Args:
@@ -37,13 +37,13 @@ def compute_rmspe(
         sim_norm: normalized simulation release rate
         exp_temperature: experimental temperature array
         exp_norm: normalized experimental release rate
-        threshold_frac: fraction of max experimental value used as filter
+        threshold_fraction: fraction of max experimental value used as filter
 
     Returns:
         float: RMSPE value in percent
     """
     sim_interp = np.interp(exp_temperature, sim_temperature, sim_norm)
-    mask = exp_norm > threshold_frac * np.max(np.abs(exp_norm))
+    mask = exp_norm > threshold_fraction * np.max(np.abs(exp_norm))
     rmse = np.sqrt(np.mean((sim_interp[mask] - exp_norm[mask]) ** 2))
     rmspe = rmse * 100.0 / np.mean(np.abs(exp_norm[mask]))
     return rmspe
@@ -408,9 +408,3 @@ plt.tight_layout()
 plt.savefig("val-2j_bayesian_parameter_exploration.png", bbox_inches="tight", dpi=300)
 plt.close(fig)
 
-# ============================================================
-# Print RMSPE values
-# ============================================================
-
-print(f"Reference parameters RMSPE = {rmspe_ref:.2f}%")
-print(f"Optimized parameters RMSPE = {rmspe_opt:.2f}%")

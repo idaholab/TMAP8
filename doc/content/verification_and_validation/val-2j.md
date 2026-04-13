@@ -20,7 +20,7 @@ TMAP8 simulates tritium diffusion and trapping in a single spherical grain of Li
 \frac{\partial C}{\partial t} = D \left( \frac{\partial^2 C}{\partial r^2} + \frac{2}{r} \frac{\partial C}{\partial r} \right) - \frac{\partial C_T}{\partial t},
 \end{equation}
 
-where $C_T$ is the concentration of trapped tritium in O$^{-}$-centers, $D$ is the temperature-dependent diffusivity following the Arrhenius law:
+where $C_T$ is the concentration of trapped tritium in O$^{-}$-centers and $D$ is the temperature-dependent diffusivity following the Arrhenius law:
 
 \begin{equation} \label{eq:diffusivity}
 D = D_0 \exp \left( -\frac{E_d}{k_B T} \right),
@@ -36,15 +36,15 @@ During TDS heating, radiation-induced defect sites undergo first-order annihilat
 \frac{d D_{id}}{dt} = -k_{dp-da} \, D_{id},
 \end{equation}
 
-where $D_{id}$ is the defect density. The trap site fraction $\chi$ is related to radiation defect density $D_{id}$. However, the exact relationship is not clearly indicated in [!citep](kobayashi2015developing). Therefore, the initial trap site density is assumed to equal the defect density with $\chi(0)N = D_{id}$.
+where $D_{id}$ is the defect density and $k_{dp-da}$ is the annihilation rate coefficient. The trap site fraction $\chi$ is related to $D_{id}$. However, the exact relationship is not clearly indicated in [!citep](kobayashi2015developing). Therefore, the initial trap site density is assumed to equal the defect density with $\chi(0)N = D_{id}$.
 
-The annihilation rate coefficient, $k_{dp-da}$, is described as:
+$k_{dp-da}$ is described as:
 
 \begin{equation} \label{eq:annihilation_rate}
 k_{dp-da} = k_{dp-da,0} \exp \left( -\frac{E_{dp-da}}{k_B T} \right).
 \end{equation}
 
-The raising temperature reduces the available trap sites: the trap site fraction $\chi$ decays over time following [eq:annihilation], preventing re-trapping into annihilated sites. This is implemented by solving the annihilation equation self-consistently as an additional variable within the simulation, using a `ReleasingNodalKernel`.
+Raising the temperature reduces the available trap sites; the trap site fraction $\chi$ decays over time following [eq:annihilation], preventing re-trapping into annihilated sites. This is implemented by solving the annihilation equation self-consistently as an additional variable within the simulation, using a [ReleasingNodalKernel.md].
 
 ### Trapping and Detrapping
 
@@ -114,7 +114,7 @@ The model parameters are summarized in [val-2j_parameters].
 
 ### Results after optimization
 
-The agreement between the TMAP8 simulation and experimental data can be improved by optimizing the model parameters using [MOOSE's stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html). A Bayesian optimization approach [!citep](DHULIPALA2026102776) was applied to optimize eight key parameters (i.e., four Arrhenius pre-exponential factors (in log$_{10}$ space) and four activation energies for the diffusivity, trapping, releasing, and defect annealing) to better match the experimental TDS curve for Sample E.
+The agreement between the TMAP8 simulation and experimental data can be improved by optimizing the model parameters using the [MOOSE stochastic tools module](https://mooseframework.inl.gov/modules/stochastic_tools/index.html). A Bayesian optimization approach [!citep](DHULIPALA2026102776) was applied to optimize eight key parameters (i.e., four Arrhenius pre-exponential factors (in log$_{10}$ space) and four activation energies for the diffusivity, trapping, releasing, and defect annealing) to better match the experimental TDS curve for Sample E.
 As shown in [val-2j_defect_density_evolution], the normalized defect density with the reference annihilation prefactor ($\alpha_{anneal}$ = 10$^2$ s$^{-1}$) remains close to unity throughout the main release region (below ~750 K) and only decreases significantly at higher temperatures where the tritium release flux is decreasing. Larger annihilation prefactors would shift the defect annihilation and the associated tritium release to lower temperatures, but the optimization consistently finds values near the reference.
 The optimization used Gaussian Process active learning with Expected Improvement acquisition, running 40 iterations with 5 parallel proposals per iteration.
 
@@ -122,7 +122,7 @@ The optimization used Gaussian Process active learning with Expected Improvement
        image_name=val-2j_defect_density_evolution.png
        style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=val-2j_defect_density_evolution
-       caption=Evolution of the normalized defect density $D_{id}/D_{id,0}$ during the TDS temperature ramp. As expected, the annihilation temperature strongly depends on $\alpha_{anneal}$.
+       caption=Evolution of the normalized defect density, $D_{id}/D_{id,0}$, during the TDS temperature ramp. As expected, the annihilation temperature strongly depends on $\alpha_{anneal}$.
 
 The objective function evaluates the RMSPE between the simulated and experimental normalized release rates using a continuous comparison at every simulation timestep. The experimental TDS curve is represented as a piecewise-linear interpolation function, and the RMSPE is accumulated over the full temperature ramp. Low-temperature constraint points (300--475 K) with a small target value penalize parameter sets that produce spurious early release peaks.
 
@@ -148,7 +148,7 @@ The objective function evaluates the RMSPE between the simulated and experimenta
        id=val-2j_bayesian_parameter_exploration
        caption=Comparison of reference (blue dashed) and Bayesian-optimized (red solid) parameter values. Green curves show the distribution of the parameters with top 20% RMSPE from the Bayesian optimization. The gray shaded region indicates the search range.
 
-[val-2j_arrhenius_comparison] compares the Arrhenius-law temperature dependence of the diffusivity $D(T)$, trapping rate coefficient $\alpha_t(T)$, detrapping rate coefficient $\alpha_r(T)$, and annihilation rate coefficient $k_{dp-da}(T)$ between the reference and optimized parameter sets over the 300--900 K TDS temperature range. The diffusivity pre-exponential increases by roughly one order of magnitude while the activation energy remains close to the reference (1.07 to 1.01 eV). The trapping prefactor decreases by about one order of magnitude with a reduced activation energy (1.04 to 0.82 eV), while the detrapping prefactor decreases by about one order of magnitude with a slightly reduced activation energy (1.19 to 1.08 eV). The optimized annihilation prefactor (~83 s$^{-1}$) remains close to the reference value (100 s$^{-1}$), with the annihilation activation energy increasing from 0.9 to 1.27 eV, further suppressing annihilation effects during TDS.
+[val-2j_arrhenius_comparison] compares the Arrhenius-law temperature dependence of the diffusivity $D(T)$, trapping rate coefficient $\alpha_t(T)$, detrapping rate coefficient $\alpha_r(T)$, and annihilation rate coefficient $k_{dp-da}(T)$ between the reference and optimized parameter sets over the 300--900 K TDS temperature range. The diffusivity pre-exponential factor increases by roughly one order of magnitude while the activation energy remains close to the reference (1.07 to 1.01 eV). The trapping prefactor decreases by about one order of magnitude with a reduced activation energy (1.04 to 0.82 eV), while the detrapping prefactor decreases by about one order of magnitude with a slightly reduced activation energy (1.19 to 1.08 eV). The optimized annihilation prefactor (~83 s$^{-1}$) remains close to the reference value (100 s$^{-1}$), with the annihilation activation energy increasing from 0.9 to 1.27 eV, further suppressing annihilation effects during TDS.
 
 !media comparison_val-2j.py
        image_name=val-2j_arrhenius_comparison.png

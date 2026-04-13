@@ -42,7 +42,7 @@ E_anneal = '${fparse E_anneal_eV * 1.602176634e-19 / 1.380649e-23}'
   []
 []
 
-# ============ RMSPE computation using continuous comparison (val-2g approach) ============
+# ============ RMSPE computation using continuous comparison ============
 # Instead of sampling at 22 discrete temperatures, compare simulation vs experiment
 # at every timestep. The RMSPE with sim_max normalization is computed via the
 # algebraic identity:

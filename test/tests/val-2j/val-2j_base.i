@@ -1,6 +1,6 @@
 # Base input file for val-2j: Tritium TDS from Li2TiO3 solid breeder
 # This file contains the shared simulation blocks for all val-2j cases.
-# The including file must define:
+# The including input file must define:
 #   D0, E_d, alpha_t, epsilon_t, alpha_r, epsilon_r (diffusion/trapping params)
 #   alpha_anneal, E_anneal (defect annihilation params)
 
