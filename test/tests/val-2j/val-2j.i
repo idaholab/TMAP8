@@ -1,8 +1,8 @@
 # Validation Problem val-2j
 # Tritium TDS from neutron-irradiated Li2TiO3 solid breeder
 # Reference: Kobayashi et al., J. Nucl. Mater. 458 (2015) 22-28
-# O--center trapping model with first-order defect annihilation during TDS heating.
-# F+-center trapping is excluded because its detrapping is too fast relative to
+# (O-)-center trapping model with first-order defect annihilation during TDS heating.
+# (F+)-center trapping is excluded because its detrapping is too fast relative to
 # diffusion (release near 580 K coincides with diffusion-controlled release; see Kobayashi p.26).
 
 # ============ Physical Constants ============
