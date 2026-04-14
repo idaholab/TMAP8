@@ -36,15 +36,15 @@ During TDS heating, radiation-induced defect sites undergo first-order annihilat
 \frac{d D_{id}}{dt} = -k_{dp-da} \, D_{id},
 \end{equation}
 
-where $D_{id}$ is the defect density and $k_{dp-da}$ is the annihilation rate coefficient. The trap site fraction $\chi$ is related to $D_{id}$. However, the exact relationship is not clearly indicated in [!citep](kobayashi2015developing). Therefore, the initial trap site density is assumed to equal the defect density with $\chi(0)N = D_{id}$.
+where $D_{id}$ is the defect density and $k_{dp-da}$ is the annihilation rate coefficient. The trap site fraction $\chi$ is related to $D_{id}$. However, the exact relationship is not clearly indicated in [!citep](kobayashi2015developing). Therefore, the initial trap site density is assumed to equal the defect density with $\chi(0)N = D_{id}$ with $N$ as the lattice site density.
 
 $k_{dp-da}$ is described as:
 
 \begin{equation} \label{eq:annihilation_rate}
-k_{dp-da} = k_{dp-da,0} \exp \left( -\frac{E_{dp-da}}{k_B T} \right).
+k_{dp-da} = k_{dp-da,0} \exp \left( -\frac{E_{dp-da}}{k_B T} \right),
 \end{equation}
 
-Raising the temperature reduces the available trap sites; the trap site fraction $\chi$ decays over time following [eq:annihilation], preventing re-trapping into annihilated sites. This is implemented by solving the annihilation equation self-consistently as an additional variable within the simulation, using a [ReleasingNodalKernel.md].
+where $k_{dp-da,0}$ and $E_{dp-da}$ are the Annihilation prefactor and energy, respectively. Raising the temperature reduces the available trap sites; the trap site fraction $\chi$ decays over time following [eq:annihilation], preventing re-trapping into annihilated sites. This is implemented by solving the annihilation equation self-consistently as an additional variable within the simulation, using a [ReleasingNodalKernel.md].
 
 ### Trapping and Detrapping
 
@@ -56,7 +56,7 @@ The trapped concentration $C_T$ evolves according to:
 \frac{\partial C_T}{\partial t} = \alpha_t \frac{C_T^{\text{empty}} C_M}{N} - \alpha_r C_T - k_{dp-da} C_T,
 \end{equation}
 
-where $N$ is the lattice site density, and $C_T^{\text{empty}} = \chi N - C_T$ is the empty trap concentration with $\chi$ being the trap site fraction.
+where $C_T^{\text{empty}} = \chi N - C_T$ is the empty trap concentration.
 
 The trapping and detrapping rate coefficients follow Arrhenius relationships:
 
@@ -68,7 +68,7 @@ The trapping and detrapping rate coefficients follow Arrhenius relationships:
 \alpha_r = \alpha_{r0} \exp\left(-\frac{\epsilon_r}{k_B T}\right),
 \end{equation}
 
-where $\alpha_{t0}$ and $\alpha_{r0}$ are pre-factors of trapping and release rate coefficients, $\epsilon_t$ and $\epsilon_r$ are the trapping and release energies, and $k_B$ is the Boltzmann constant.
+where $\alpha_{t0}$ and $\alpha_{r0}$ are pre-factors of trapping and release rate coefficients, and $\epsilon_t$ and $\epsilon_r$ are the trapping and release energies.
 The last term in [eq:trapping], $k_{dp-da} C_T$, accounts for the trapped tritium atoms released when full defects are annealed.
 
 ### Boundary and initial conditions
@@ -124,7 +124,7 @@ The optimization used Gaussian Process active learning with Expected Improvement
        id=val-2j_defect_density_evolution
        caption=Evolution of the normalized defect density, $D_{id}/D_{id,0}$, during the TDS temperature ramp. As expected, the annihilation temperature strongly depends on $\alpha_{anneal}$.
 
-The objective function evaluates the RMSPE between the simulated and experimental normalized release rates using a continuous comparison at every simulation timestep. The experimental TDS curve is represented as a piecewise-linear interpolation function, and the RMSPE is accumulated over the full temperature ramp. Low-temperature constraint points (300--475 K) with a small target value penalize parameter sets that produce spurious early release peaks.
+The objective function evaluates the root mean square percentage error (RMSPE) between the simulated and experimental normalized release rates using a continuous comparison at every simulation timestep. The experimental TDS curve is represented as a piecewise-linear interpolation function, and the RMSPE is accumulated over the full temperature ramp. Low-temperature constraint points (300--475 K) with a small target value penalize parameter sets that produce spurious early release peaks.
 
 [val-2j_optimized_parameters] compares the reference values from [!cite](kobayashi2015developing) with the Bayesian-optimized parameters, along with the parameter ranges used in the optimization.
 

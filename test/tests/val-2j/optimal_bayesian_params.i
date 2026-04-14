@@ -1,3 +1,6 @@
+# Bayesian-optimized parameters using 8-parameter optimization.
+# These values override the reference parameters in val-2j.i.
+
 alpha_t = '${units 2.210226e+07 1/s}'
 epsilon_t = '${fparse ${units 0.817421 eV -> J} / ${kB_J}}'
 alpha_r = '${units 2.143938e+05 1/s}'

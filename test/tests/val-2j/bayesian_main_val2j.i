@@ -1,6 +1,7 @@
 # Level 1: Bayesian optimization of 8 TDS parameters for val-2j
-# Optimizes trapping/detrapping/diffusion parameters to minimize RMSPE
-# between simulated and experimental TDS curves from Kobayashi et al. (2015).
+# Optimizes trapping/detrapping/diffusion parameters to minimize the root
+# mean square percentage error (RMSPE) between simulated and experimental TDS
+# curves from Kobayashi et al. (2015).
 # Uses Gaussian Process active learning with Expected Improvement acquisition.
 
 [StochasticTools]

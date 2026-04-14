@@ -5,26 +5,26 @@
 #   alpha_anneal, E_anneal (defect annihilation params)
 
 # ============ Geometry ============
-grain_radius = '${units 1.5e-6 m -> mum}'  # average grain radius
-num_elems = 100  # number of radial elements
+grain_radius = '${units 1.5e-6 m -> mum}' # average grain radius
+num_elems = 100 # number of radial elements
 
 # ============ Material Properties ============
 # Li2TiO3 lattice density: rho=3.43 g/cm3, MW=109.75 g/mol
-N_lattice = '${units 1.88e28 1/m^3 -> 1/mum^3}'  # lattice molecule density
-Ct0 = 0.018   # total defect fraction: Sample E (Table 1)
-trap_per_free = 1        # concentration scaling factor
+N_lattice = '${units 1.88e28 1/m^3 -> 1/mum^3}' # lattice molecule density
+Ct0 = 0.018 # total defect fraction: Sample E (Table 1)
+trap_per_free = 1 # concentration scaling factor
 
 # ============ TDS Parameters ============
-T_start = '${units 300 K}'   # initial temperature
-heating_rate = '${units ${fparse 5.0/60.0} K/s}'  # 5 K/min
-end_time = '${fparse (900.0 - 300.0) / ${heating_rate}}'  # ramp duration (300 K to 900 K)
+T_start = '${units 300 K}' # initial temperature
+heating_rate = '${units ${fparse 5.0/60.0} K/s}' # 5 K/min
+end_time = '${fparse (900.0 - 300.0) / ${heating_rate}}' # ramp duration (300 K to 900 K)
 
 # ============ Initial Conditions ============
 # Mobile and trapped concentrations start in local trapping/detrapping
 # equilibrium at T_start. This avoids an initial transient from an
 # imbalance between trapping and detrapping rates.
 # Since TDS output is normalized, absolute concentrations don't matter.
-C0_trapped = 1.0   # initial trapped concentration (arb. units, uniform)
+C0_trapped = 1.0 # initial trapped concentration (arb. units, uniform)
 C0_mobile = '${fparse alpha_r * exp(-epsilon_r / T_start) * C0_trapped / (alpha_t * exp(-epsilon_t / T_start) * Ct0)}'
 
 [Mesh]
@@ -214,7 +214,7 @@ C0_mobile = '${fparse alpha_r * exp(-epsilon_r / T_start) * C0_trapped / (alpha_
   compute_scaling_once = true
 
   end_time = ${end_time}
-  dtmax = 30  # limit time step to ~2.5 K per step for TDS resolution
+  dtmax = 30 # limit time step to ~2.5 K per step for TDS resolution
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = 1.0

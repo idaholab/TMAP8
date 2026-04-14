@@ -27,7 +27,8 @@ exp_e_norm = exp_e_release / np.max(np.abs(exp_e_release))
 def compute_rmspe(
     sim_temperature, sim_norm, exp_temperature, exp_norm, threshold_fraction=0.05
 ):
-    """Compute RMSPE between interpolated simulation and experimental data.
+    """Compute the root mean square percentage error (RMSPE) between interpolated
+    simulation and experimental data.
 
     Only points where the experimental value exceeds threshold_fraction of the
     experimental maximum are included.
@@ -407,4 +408,3 @@ for i, (label, ref_val, opt_val, lb, ub, json_col) in enumerate(param_info):
 plt.tight_layout()
 plt.savefig("val-2j_bayesian_parameter_exploration.png", bbox_inches="tight", dpi=300)
 plt.close(fig)
-
