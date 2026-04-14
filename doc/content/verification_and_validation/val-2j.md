@@ -44,7 +44,7 @@ $k_{dp-da}$ is described as:
 k_{dp-da} = k_{dp-da,0} \exp \left( -\frac{E_{dp-da}}{k_B T} \right),
 \end{equation}
 
-where $k_{dp-da,0}$ and $E_{dp-da}$ are the Annihilation prefactor and energy, respectively. Raising the temperature reduces the available trap sites; the trap site fraction $\chi$ decays over time following [eq:annihilation], preventing re-trapping into annihilated sites. This is implemented by solving the annihilation equation self-consistently as an additional variable within the simulation, using a [ReleasingNodalKernel.md].
+where $k_{dp-da,0}$ and $E_{dp-da}$ are the annihilation prefactor and energy, respectively. Raising the temperature reduces the available trap sites; the trap site fraction $\chi$ decays over time following [eq:annihilation], preventing re-trapping into annihilated sites. This is implemented by solving the annihilation equation self-consistently as an additional variable within the simulation, using a [ReleasingNodalKernel.md].
 
 ### Trapping and Detrapping
 
