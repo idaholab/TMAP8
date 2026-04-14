@@ -89,7 +89,7 @@ C0_mobile = '${fparse alpha_r * exp(-epsilon_r / T_start) * C0_trapped / (alpha_
 []
 
 [NodalKernels]
-  # --- O--center (hydroxyl) trap ---
+  # --- (O-)-center (hydroxyl) trap ---
   [time_trapped]
     type = TimeDerivativeNodalKernel
     variable = trapped

@@ -12,7 +12,7 @@ kB_J = '${units 1.380649e-23 J/K}'   # Boltzmann constant in J/K
 D0 = '${units 6.9e-7 m^2/s -> mum^2/s}'  # diffusivity pre-exponential
 E_d = '${fparse ${units 1.07 eV -> J} / ${kB_J}}'  # diffusion activation energy (K)
 
-# ============ O--center (hydroxyl) Trapping Parameters (Eq. 13, 21) ============
+# ============ (O-)-center (hydroxyl) Trapping Parameters (Eq. 13, 21) ============
 alpha_t = '${units 4.2e8 1/s}'   # trapping prefactor (Eq. 21)
 epsilon_t = '${fparse ${units 1.04 eV -> J} / ${kB_J}}'  # trapping energy (K) (Eq. 21)
 alpha_r = '${units 4.1e6 1/s}'   # detrapping prefactor (Eq. 13)
