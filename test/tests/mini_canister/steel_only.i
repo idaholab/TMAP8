@@ -156,7 +156,7 @@ dt_min = '${units 1 s -> day}'
 
 [Postprocessors]
 
-  ### DIFFUSION FRONT VERIFICATION ###
+  ### Diffusion front verification ###
 
   [exact_diffusion_length]   # Analytical Diffusion length (time-independent BC required for this to be correct)
     type = ParsedPostprocessor
@@ -164,21 +164,21 @@ dt_min = '${units 1 s -> day}'
     constant_names = 'D pi'
     constant_expressions = '${diffusivity_H_in_steel} 3.1415926535897932'
     use_t = true
-    outputs = csv_data
+    outputs = csv
   []
 
   [gradient_left_boundary]
     type = PointValue
     point = '${inner_radius} 0 0'
     variable = H_mobile_steel_derivative
-    outputs = csv_data
+    outputs = csv
   []
 
   [interface_concentration]
     type = PointValue
     point = '${inner_radius} 0 0'
     variable = H_mobile_steel
-    outputs = csv_data
+    outputs = csv
   []
 
   [simulated_diffusion_length] # x-intercept of tangent line at interface
@@ -187,15 +187,15 @@ dt_min = '${units 1 s -> day}'
     constant_expressions = ${inner_radius}
     constant_names = interface_location
     pp_names = 'interface_concentration gradient_left_boundary'
-    outputs = csv_data
+    outputs = csv
   []
 
-  ### 2D CONSERVATION OF MASS ###
+  ### Conservation of mass ###
 
   [mass_in_domain] # Axisymmetric: 2D integral of annulus
     type = ElementIntegralVariablePostprocessor
     variable = H_mobile_steel
-    outputs = csv_data
+    outputs = csv
   []
 
   [influx]
@@ -203,7 +203,7 @@ dt_min = '${units 1 s -> day}'
     boundary = '0'
     variable = H_mobile_steel
     diffusivity = ${diffusivity_H_in_steel}
-    outputs = csv_data
+    outputs = csv
   []
 
   [outflux]
@@ -211,53 +211,51 @@ dt_min = '${units 1 s -> day}'
     boundary = '1'
     variable = H_mobile_steel
     diffusivity = ${diffusivity_H_in_steel}
-    outputs = csv_data
+    outputs = csv
   []
 
   [flux_difference]
     type = ParsedPostprocessor
     expression = '-influx - outflux' # negative sign on influx to account for outward normal vector direction
     pp_names = 'influx outflux'
-    outputs = csv_data
+    outputs = csv
   []
 
   [time_integrated_flux]
     type = TimeIntegratedPostprocessor
     value = flux_difference
     time_integration_scheme = trapezoidal-rule
-    outputs = csv_data
+    outputs = csv
   []
-
-  ### 3D CONSERVATION OF MASS ###
 
   [3d_mass_in_domain] # total mass in annulur cylinder
     type = ScalePostprocessor
     value = mass_in_domain
     scaling_factor = '${height}'
-    outputs = csv_data
+    outputs = csv
   []
 
   [3d_time_integrated_flux]
     type = ScalePostprocessor
     value = time_integrated_flux
     scaling_factor = ${height}
-    outputs = csv_data
+    outputs = csv
   []
 
-  ### MISCELLANEOUS ###
+  # Miscellaneous
 
   [assumed_gas_total_mass]
     type = ParsedPostprocessor
     expression = '69.7055*t^0.6808' # Power model linear least squares fit of SRNL data
     use_t = True
-    outputs = csv_data
+    outputs = csv
   []
 
   [min_concentration] # Check for negative concentrations
     type = ElementExtremeValue
     variable = H_mobile_steel
     value_type = min
-    outputs = csv_data
+    outputs = csv
   []
 []
 
@@ -281,11 +279,7 @@ dt_min = '${units 1 s -> day}'
 []
 
 [Outputs]
-  perf_graph = true
   exodus = true
-  [csv_data]
-    type = CSV
-    file_base = 'steel_only_out'
-    execute_on = 'TIMESTEP_END'
-  []
+  csv = true
+  file_base = 'steel_only_out'
 []
