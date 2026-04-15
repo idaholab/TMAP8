@@ -3,9 +3,9 @@ import numpy as np
 import pandas as pd
 
 # Load CSV data
-data_steel_only = pd.read_csv('csv_data_steel_only/verification_RZ.csv') # CHANGE BELOW TOO
-data = pd.read_csv('csv_data/verification_RZ.csv')
-SRNL_data = pd.read_csv('SRNL_data.csv')
+data_steel_only = pd.read_csv('steel_only_out.csv') # CHANGE BELOW TOO
+data = pd.read_csv('gas_steel_out.csv')
+SRNL_data = pd.read_csv('gold/SRNL_data.csv')
 
 # interface_location = 35.941 # mm
 

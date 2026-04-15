@@ -1,9 +1,8 @@
-# Validation problem to address hydrogen concentration, trapping, and diffusion through a 304 stainless steel mini canister
-# Reports:
-# https://inldigitallibrary.inl.gov/sites/sti/sti/Sort_129733.pdf
-# https://www.osti.gov/biblio/2477665
+# Author: Evan Butterworth
+# Contact: Evan.Butterworth@inl.gov
 
-# Geometry
+### GEOMETRY ###
+
 inner_radius = '${units 1.415 in -> mm}' # Radius of canister containing gases
 steel_thickness = '${units 0.085 in -> mm}' # Thickness of steel enclosure
 total_radius = '${units ${fparse inner_radius + steel_thickness} mm}'
@@ -180,21 +179,6 @@ endtime = '${units 0.25 year -> day}'
     expression = '69.7055*0.6808*t^(0.6808-1)/${gas_volume}' # derivative of power fit
     # expression = '1035.1/(t+29.1299)/${gas_volume}'
     # expression = '143.8883/(2*sqrt(t)*${gas_volume})'
-  []
-[]
-
-[VectorPostprocessors]
-  [solution_profile_gas]
-    type = NodalValueSampler
-    sort_by = x
-    variable = H_mobile_gas
-    block = '0'
-  []
-  [solution_profile_steel]
-    type = NodalValueSampler
-    sort_by = x
-    variable = H_mobile_steel
-    block = '1'
   []
 []
 
@@ -410,7 +394,7 @@ endtime = '${units 0.25 year -> day}'
   # exodus = true
   [csv_data]
     type = CSV
-    file_base = 'csv_data/verification_RZ'
+    file_base = 'gas_steel_out'
     execute_on = 'TIMESTEP_END'
   []
 []
