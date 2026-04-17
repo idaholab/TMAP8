@@ -312,7 +312,10 @@
 
 [Outputs]
   file_base = val-2k_out
-  exodus = true
+  [exodus]
+    type = Exodus
+    time_step_interval = 10
+  []
   [csv]
     type = CSV
   []
