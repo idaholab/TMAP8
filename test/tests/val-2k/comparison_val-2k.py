@@ -74,6 +74,13 @@ simulation_data = pd.read_csv(simulation_csv)
 time_s = simulation_data["time"] * time_reference
 time_h = time_s / 3600.0
 temperature_k = simulation_data["temperature_pps"]
+mobile_inventory = simulation_data["mobile_inventory_physical"]
+trapped_intrinsic_inventory = simulation_data["trapped_deuterium_intrinsic_physical"]
+trapped_1_inventory = simulation_data["trapped_deuterium_1_physical"]
+trapped_2_inventory = simulation_data["trapped_deuterium_2_physical"]
+trapped_3_inventory = simulation_data["trapped_deuterium_3_physical"]
+trapped_4_inventory = simulation_data["trapped_deuterium_4_physical"]
+trapped_5_inventory = simulation_data["trapped_deuterium_5_physical"]
 release_flux = (
     simulation_data["scaled_flux_surface_left"] + simulation_data["scaled_flux_surface_right"]
 )
@@ -140,6 +147,98 @@ ax.legend(
 ax.minorticks_on()
 
 plt.savefig("val-2k_natural_oxide_iteration_1_comparison.png", bbox_inches="tight", dpi=300)
+plt.close(fig)
+
+positive_inventory_floor = 1e-3
+
+fig, ax = plt.subplots(figsize=(6.5, 5.5))
+mobile_handle = ax.plot(
+    time_h,
+    np.clip(mobile_inventory, positive_inventory_floor, None),
+    color="tab:blue",
+    linestyle="--",
+    label="Mobile D",
+)[0]
+intrinsic_handle = ax.plot(
+    time_h,
+    np.clip(trapped_intrinsic_inventory, positive_inventory_floor, None),
+    color="tab:purple",
+    label="Intrinsic trap D",
+)[0]
+trap_1_handle = ax.plot(
+    time_h,
+    np.clip(trapped_1_inventory, positive_inventory_floor, None),
+    color="tab:orange",
+    label="Trap 1 D",
+)[0]
+trap_2_handle = ax.plot(
+    time_h,
+    np.clip(trapped_2_inventory, positive_inventory_floor, None),
+    color="tab:green",
+    label="Trap 2 D",
+)[0]
+trap_3_handle = ax.plot(
+    time_h,
+    np.clip(trapped_3_inventory, positive_inventory_floor, None),
+    color="tab:red",
+    label="Trap 3 D",
+)[0]
+trap_4_handle = ax.plot(
+    time_h,
+    np.clip(trapped_4_inventory, positive_inventory_floor, None),
+    color="tab:brown",
+    label="Trap 4 D",
+)[0]
+trap_5_handle = ax.plot(
+    time_h,
+    np.clip(trapped_5_inventory, positive_inventory_floor, None),
+    color="tab:pink",
+    label="Trap 5 D",
+)[0]
+
+ax_temperature = ax.twinx()
+temperature_handle = ax_temperature.plot(
+    time_h,
+    temperature_k,
+    linestyle=":",
+    color="tab:gray",
+    linewidth=1.5,
+    label="TMAP8 temperature history",
+)[0]
+
+ax.set_xlabel("Time (h)")
+ax.set_ylabel("Deuterium inventory (atoms)")
+ax.set_xlim(0, 4.2)
+ax.set_yscale("log")
+ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
+ax_temperature.set_ylabel("Temperature (K)")
+ax_temperature.set_ylim(280, 1100)
+ax.legend(
+    [
+        mobile_handle,
+        intrinsic_handle,
+        trap_1_handle,
+        trap_2_handle,
+        trap_3_handle,
+        trap_4_handle,
+        trap_5_handle,
+        temperature_handle,
+    ],
+    [
+        mobile_handle.get_label(),
+        intrinsic_handle.get_label(),
+        trap_1_handle.get_label(),
+        trap_2_handle.get_label(),
+        trap_3_handle.get_label(),
+        trap_4_handle.get_label(),
+        trap_5_handle.get_label(),
+        temperature_handle.get_label(),
+    ],
+    loc="best",
+)
+ax.minorticks_on()
+
+plt.savefig("val-2k_natural_oxide_iteration_1_inventory.png", bbox_inches="tight", dpi=300)
 plt.close(fig)
 
 profile_data = pd.read_csv(profile_csv)
