@@ -1,6 +1,7 @@
 import os
 import tempfile
 from glob import glob
+import re
 
 os.environ.setdefault("MPLCONFIGDIR", tempfile.mkdtemp(prefix="matplotlib-val-2k-"))
 
@@ -34,7 +35,26 @@ def get_numeric_parameter(parameter_name):
             if stripped.startswith(f"{parameter_name} ="):
                 value = stripped.split("=", maxsplit=1)[1].strip().strip("'")
                 if value.startswith("${units ") and value.endswith("}"):
-                    return float(value[len("${units ") : -1].split()[0])
+                    units_expr = value[len("${units ") : -1].strip()
+                    match = re.fullmatch(
+                        r"([0-9eE.+-]+)\s+([A-Za-z/]+)(?:\s*->\s*([A-Za-z/]+))?",
+                        units_expr,
+                    )
+                    if not match:
+                        raise ValueError(f"Unsupported units expression: {value}")
+                    numeric_value = float(match.group(1))
+                    from_unit = match.group(2)
+                    to_unit = match.group(3)
+                    if to_unit is None or from_unit == to_unit:
+                        return numeric_value
+                    supported_time_conversions = {
+                        ("h", "s"): 3600.0,
+                        ("s", "h"): 1.0 / 3600.0,
+                    }
+                    factor = supported_time_conversions.get((from_unit, to_unit))
+                    if factor is None:
+                        raise ValueError(f"Unsupported conversion in units expression: {value}")
+                    return numeric_value * factor
                 return float(value)
     raise KeyError(f"Could not find parameter {parameter_name} in {parameters_file}")
 

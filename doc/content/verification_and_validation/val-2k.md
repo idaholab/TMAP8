@@ -15,7 +15,7 @@ The current implementation is the natural-oxide baseline for the staged `val-2k`
 - one-dimensional deuterium diffusion in tungsten
 - six trap families in the self-irradiated near-surface region using the [SpeciesTrappingPhysics](SpeciesTrappingPhysics.md exact=True) syntax
 - deuterium recombination and release as D$_2$ on both free surfaces
-- the experimental TDS temperature ramp from 300 K to 1000 K at 3 K/min
+- the experimental desorption temperature history digitized from `Experimental_desorption_temperature.csv`
 
 The current implementation does not yet include:
 
@@ -38,7 +38,7 @@ As in the current `val-2f` implementation, `val-2k` is solved in dimensionless f
 \hat{C}_{T_i} = \frac{C_{T_i}}{C_{T_i,\text{ref}}}
 \end{equation}
 
-with $L_{\text{ref}} = 1 \ \mu$m and $t_{\text{ref}} = 1$ s. The mobile deuterium balance solved in the input file is:
+with $L_{\text{ref}} = 1 \ \mu$m and $t_{\text{ref}} = 1$ s. The desorption temperature history is imported directly from `Experimental_desorption_temperature.csv` through a `PiecewiseLinear` `data_file`. The mobile deuterium balance solved in the input file is:
 
 \begin{equation}
 \frac{\partial \hat{C}_M}{\partial \hat{t}} =
@@ -79,9 +79,9 @@ The current baseline parameters are listed in [val-2k_parameters].
 | --------- | ----------- | ----- | ----- | --------- |
 | $l_W$ | Tungsten thickness | 0.8 | mm | [!cite](Kremer2022oxide) |
 | $l_d$ | Self-damaged depth | 2.3 | $\mu$m | [!cite](Kremer2022oxide) |
-| $T_0$ | Initial temperature | 300 | K | [!cite](Kremer2022oxide) |
-| $T_f$ | Final temperature | 1000 | K | [!cite](Kremer2022oxide) |
-| $\beta$ | Heating rate | 3 | K/min | [!cite](Kremer2022oxide) |
+| $T_0$ | Initial desorption temperature | 295.775 | K | Digitized from `Experimental_desorption_temperature.csv` |
+| $T_f$ | Final desorption temperature | 1001.408 | K | Digitized from `Experimental_desorption_temperature.csv` |
+| $t_f$ | Final desorption time | 4.166 | h | Digitized from `Experimental_desorption_temperature.csv` |
 | $D_0$ | Diffusivity prefactor | 1.6 $\times 10^{-7}$ | m$^2$/s | Adopted from [val-2f](val-2f.md) for the initial baseline |
 | $E_D$ | Diffusion activation energy | 0.28 | eV | Adopted from [val-2f](val-2f.md) for the initial baseline |
 | $x_c$ | Trap-distribution center | 2.5 | $\mu$m | Adopted from [val-2f](val-2f.md) |
