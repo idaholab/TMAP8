@@ -167,10 +167,11 @@
 
 [Functions]
   [temperature_history]
-    type = ParsedFunction
-    expression = 'temperature_initial + temperature_rate_hat * t'
-    symbol_names = 'temperature_initial temperature_rate_hat'
-    symbol_values = '${temperature_initial} ${temperature_rate_hat}'
+    type = PiecewiseLinear
+    data_file = gold/Experimental_desorption_temperature.csv
+    format = columns
+    x_title = 'time (s)'
+    y_title = 'Temperature (K)'
   []
 []
 

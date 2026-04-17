@@ -27,10 +27,9 @@ profile_depth = '${units 3.1 mum}'
 profile_num_points = 163
 
 # Temperature history for the initial natural-oxide iteration
-temperature_initial = '${units 300 K}'
-temperature_final = '${units 1000 K}'
-temperature_rate = '${units ${fparse 3 / 60} K/s}'
-end_time = '${fparse (temperature_final - temperature_initial) / temperature_rate}'
+# Experimental desorption history digitized from gold/Experimental_desorption_temperature.csv
+temperature_initial = '${units 295.7746478873239 K}'
+end_time = '${units 4.166189111747851 h -> s}'
 
 # Tungsten transport
 tungsten_density = '${units 6.3222e28 at/m^3 -> at/mum^3}'
@@ -87,7 +86,6 @@ damage_depth_hat = '${fparse damage_depth / length_reference}'
 buffer_depth_hat = '${fparse buffer_depth / length_reference}'
 bulk_depth_hat = '${fparse bulk_depth / length_reference}'
 profile_depth_hat = '${fparse profile_depth / length_reference}'
-temperature_rate_hat = '${fparse temperature_rate * time_reference}'
 end_time_hat = '${fparse end_time / time_reference}'
 depth_center_hat = '${fparse depth_center / length_reference}'
 depth_width_hat = '${fparse depth_width / length_reference}'
