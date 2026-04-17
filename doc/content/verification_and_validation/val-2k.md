@@ -117,6 +117,14 @@ The current branch state uses the scaled six-trap `val-2f` reference model as th
     id=val-2k_natural_oxide_iteration_1_comparison
     caption=Current natural-oxide reference state for `val-2k` using the scaled six-trap `val-2f` family. The figure is intended as a branch baseline for subsequent retuning and physics additions.
 
+!media comparison_val-2k.py
+    image_name=val-2k_natural_oxide_iteration_1_inventory.png
+    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+    id=val-2k_natural_oxide_iteration_1_inventory
+    caption=Evolution of the mobile and trapped deuterium inventories during desorption for the current `val-2k` natural-oxide baseline, with the imposed temperature history shown on the right axis.
+
+[val-2k_natural_oxide_iteration_1_inventory] shows that the initial deuterium inventory is dominated by the trapping populations, while the mobile deuterium inventory remains much smaller throughout the desorption ramp. The lower-energy traps begin to empty first as the temperature rises, followed by the deeper trap populations later in the ramp. The imposed experimental temperature history is shown on the right axis so the changes in each trap inventory can be related directly to the heating schedule used in the TDS experiment.
+
 ## Planned Extensions
 
 The intended order of future extensions is:
