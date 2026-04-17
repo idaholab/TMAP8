@@ -8,6 +8,7 @@ os.environ.setdefault("MPLCONFIGDIR", tempfile.mkdtemp(prefix="matplotlib-val-2k
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from matplotlib.patches import Patch
 
 # Changes working directory to script directory for consistent MooseDocs usage.
 script_folder = os.path.dirname(__file__)
@@ -149,51 +150,40 @@ ax.minorticks_on()
 plt.savefig("val-2k_natural_oxide_iteration_1_comparison.png", bbox_inches="tight", dpi=300)
 plt.close(fig)
 
-positive_inventory_floor = 1e-3
-
 fig, ax = plt.subplots(figsize=(6.5, 5.5))
-mobile_handle = ax.plot(
+cmap = plt.get_cmap("viridis")
+inventory_colors = cmap(np.linspace(0, 1, 7))
+inventory_series = [
+    ("Trap 5 D", trapped_5_inventory, inventory_colors[0]),
+    ("Trap 4 D", trapped_4_inventory, inventory_colors[1]),
+    ("Trap 3 D", trapped_3_inventory, inventory_colors[2]),
+    ("Trap 2 D", trapped_2_inventory, inventory_colors[3]),
+    ("Intrinsic trap D", trapped_intrinsic_inventory, inventory_colors[4]),
+    ("Trap 1 D", trapped_1_inventory, inventory_colors[5]),
+    ("Mobile D", mobile_inventory, inventory_colors[6]),
+]
+inventory_bottom = np.zeros_like(mobile_inventory)
+legend_patches = []
+
+for label, values, color in inventory_series:
+    ax.fill_between(
+        time_h,
+        inventory_bottom,
+        inventory_bottom + values,
+        color=color,
+        alpha=0.3,
+    )
+    ax.plot(time_h, inventory_bottom + values, color=color, linewidth=1.0)
+    inventory_bottom += values
+    legend_patches.append(Patch(color=color, alpha=0.5, label=label))
+
+total_inventory = inventory_bottom.copy()
+total_handle = ax.plot(
     time_h,
-    np.clip(mobile_inventory, positive_inventory_floor, None),
-    color="tab:blue",
-    linestyle="--",
-    label="Mobile D",
-)[0]
-intrinsic_handle = ax.plot(
-    time_h,
-    np.clip(trapped_intrinsic_inventory, positive_inventory_floor, None),
-    color="tab:purple",
-    label="Intrinsic trap D",
-)[0]
-trap_1_handle = ax.plot(
-    time_h,
-    np.clip(trapped_1_inventory, positive_inventory_floor, None),
-    color="tab:orange",
-    label="Trap 1 D",
-)[0]
-trap_2_handle = ax.plot(
-    time_h,
-    np.clip(trapped_2_inventory, positive_inventory_floor, None),
+    total_inventory,
     color="tab:green",
-    label="Trap 2 D",
-)[0]
-trap_3_handle = ax.plot(
-    time_h,
-    np.clip(trapped_3_inventory, positive_inventory_floor, None),
-    color="tab:red",
-    label="Trap 3 D",
-)[0]
-trap_4_handle = ax.plot(
-    time_h,
-    np.clip(trapped_4_inventory, positive_inventory_floor, None),
-    color="tab:brown",
-    label="Trap 4 D",
-)[0]
-trap_5_handle = ax.plot(
-    time_h,
-    np.clip(trapped_5_inventory, positive_inventory_floor, None),
-    color="tab:pink",
-    label="Trap 5 D",
+    linewidth=1.5,
+    label="Total D inventory",
 )[0]
 
 ax_temperature = ax.twinx()
@@ -201,7 +191,7 @@ temperature_handle = ax_temperature.plot(
     time_h,
     temperature_k,
     linestyle=":",
-    color="tab:gray",
+    color="tab:orange",
     linewidth=1.5,
     label="TMAP8 temperature history",
 )[0]
@@ -209,30 +199,32 @@ temperature_handle = ax_temperature.plot(
 ax.set_xlabel("Time (h)")
 ax.set_ylabel("Deuterium inventory (atoms)")
 ax.set_xlim(0, 4.2)
-ax.set_yscale("log")
+ax.set_ylim(bottom=0)
 ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
 ax_temperature.set_ylabel("Temperature (K)")
 ax_temperature.set_ylim(280, 1100)
 ax.legend(
     [
-        mobile_handle,
-        intrinsic_handle,
-        trap_1_handle,
-        trap_2_handle,
-        trap_3_handle,
-        trap_4_handle,
-        trap_5_handle,
+        total_handle,
         temperature_handle,
+        legend_patches[-1],
+        legend_patches[-2],
+        legend_patches[-3],
+        legend_patches[-4],
+        legend_patches[-5],
+        legend_patches[-6],
+        legend_patches[-7],
     ],
     [
-        mobile_handle.get_label(),
-        intrinsic_handle.get_label(),
-        trap_1_handle.get_label(),
-        trap_2_handle.get_label(),
-        trap_3_handle.get_label(),
-        trap_4_handle.get_label(),
-        trap_5_handle.get_label(),
+        total_handle.get_label(),
         temperature_handle.get_label(),
+        legend_patches[-1].get_label(),
+        legend_patches[-2].get_label(),
+        legend_patches[-3].get_label(),
+        legend_patches[-4].get_label(),
+        legend_patches[-5].get_label(),
+        legend_patches[-6].get_label(),
+        legend_patches[-7].get_label(),
     ],
     loc="best",
 )
