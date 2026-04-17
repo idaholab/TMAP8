@@ -6,8 +6,8 @@
 #
 # This first implementation stage only models the natural-oxide baseline.
 # Included physics:
-# - deuterium diffusion in tungsten
-# - six scaled val-2f trap families in the self-irradiated layer
+# - dimensionless deuterium diffusion in tungsten
+# - six scaled val-2f trap families introduced through SpeciesTrapping physics blocks in the irradiated layer
 # - D2 surface recombination on both surfaces
 # Deferred to later stages:
 # - explicit hydrogen-containing species
@@ -24,14 +24,14 @@
   [mesh_fine]
     type = CartesianMeshGenerator
     dim = 1
-    dx = '${damage_depth} ${buffer_depth} ${bulk_depth}'
+    dx = '${damage_depth_hat} ${buffer_depth_hat} ${bulk_depth_hat}'
     ix = '${ix_damage_fine} ${ix_buffer_fine} ${ix_bulk_fine}'
     subdomain_id = '0 0 0'
   []
   [mesh_coarse]
     type = CartesianMeshGenerator
     dim = 1
-    dx = '${damage_depth} ${buffer_depth} ${bulk_depth}'
+    dx = '${damage_depth_hat} ${buffer_depth_hat} ${bulk_depth_hat}'
     ix = '${ix_damage_coarse} ${ix_buffer_coarse} ${ix_bulk_coarse}'
     subdomain_id = '0 0 0'
   []
@@ -41,19 +41,52 @@
   [deuterium_mobile]
     order = FIRST
     family = LAGRANGE
-    initial_condition = ${initial_mobile_concentration}
+    initial_condition = ${initial_mobile_concentration_hat}
   []
 []
 
 [AuxVariables]
+  active = 'bounds_dummy temperature deuterium_mobile_physical deuterium_trapped_intrinsic_physical
+  deuterium_trapped_1_physical deuterium_trapped_2_physical deuterium_trapped_3_physical
+  deuterium_trapped_4_physical deuterium_trapped_5_physical deuterium_total_physical'
+  [bounds_dummy]
+    order = FIRST
+    family = LAGRANGE
+  []
   [temperature]
     initial_condition = ${temperature_initial}
+  []
+  [deuterium_mobile_physical]
+  []
+  [deuterium_trapped_intrinsic_physical]
+  []
+  [deuterium_trapped_1_physical]
+  []
+  [deuterium_trapped_2_physical]
+  []
+  [deuterium_trapped_3_physical]
+  []
+  [deuterium_trapped_4_physical]
+  []
+  [deuterium_trapped_5_physical]
+  []
+  [deuterium_total_physical]
+  []
+[]
+
+[Bounds]
+  [deuterium_mobile_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = deuterium_mobile
+    bound_type = lower
+    bound_value = 0
   []
 []
 
 [Kernels]
   [mobile_time]
-    type = ADTimeDerivative
+    type = TimeDerivative
     variable = deuterium_mobile
   []
   [mobile_diffusion]
@@ -68,16 +101,76 @@
     type = FunctionAux
     variable = temperature
     function = temperature_history
-    execute_on = 'INITIAL LINEAR TIMESTEP_END'
+    execute_on = 'INITIAL LINEAR'
+  []
+  [deuterium_mobile_physical_aux]
+    type = NormalizationAux
+    variable = deuterium_mobile_physical
+    normal_factor = ${mobile_concentration_reference_m3}
+    source_variable = deuterium_mobile
+    execute_on = 'INITIAL TIMESTEP_END'
+  []
+  [deuterium_trapped_intrinsic_physical_aux]
+    type = NormalizationAux
+    variable = deuterium_trapped_intrinsic_physical
+    normal_factor = ${trap_concentration_reference_intrinsic_m3}
+    source_variable = deuterium_trapped_intrinsic
+    execute_on = 'INITIAL TIMESTEP_END'
+  []
+  [deuterium_trapped_1_physical_aux]
+    type = NormalizationAux
+    variable = deuterium_trapped_1_physical
+    normal_factor = ${trap_concentration_reference_1_m3}
+    source_variable = deuterium_trapped_1
+    execute_on = 'INITIAL TIMESTEP_END'
+  []
+  [deuterium_trapped_2_physical_aux]
+    type = NormalizationAux
+    variable = deuterium_trapped_2_physical
+    normal_factor = ${trap_concentration_reference_2_m3}
+    source_variable = deuterium_trapped_2
+    execute_on = 'INITIAL TIMESTEP_END'
+  []
+  [deuterium_trapped_3_physical_aux]
+    type = NormalizationAux
+    variable = deuterium_trapped_3_physical
+    normal_factor = ${trap_concentration_reference_3_m3}
+    source_variable = deuterium_trapped_3
+    execute_on = 'INITIAL TIMESTEP_END'
+  []
+  [deuterium_trapped_4_physical_aux]
+    type = NormalizationAux
+    variable = deuterium_trapped_4_physical
+    normal_factor = ${trap_concentration_reference_4_m3}
+    source_variable = deuterium_trapped_4
+    execute_on = 'INITIAL TIMESTEP_END'
+  []
+  [deuterium_trapped_5_physical_aux]
+    type = NormalizationAux
+    variable = deuterium_trapped_5_physical
+    normal_factor = ${trap_concentration_reference_5_m3}
+    source_variable = deuterium_trapped_5
+    execute_on = 'INITIAL TIMESTEP_END'
+  []
+  [deuterium_total_physical_aux]
+    type = ParsedAux
+    variable = deuterium_total_physical
+    coupled_variables = 'deuterium_mobile_physical deuterium_trapped_intrinsic_physical
+    deuterium_trapped_1_physical deuterium_trapped_2_physical deuterium_trapped_3_physical
+    deuterium_trapped_4_physical deuterium_trapped_5_physical'
+    expression = 'deuterium_mobile_physical + deuterium_trapped_intrinsic_physical +
+    deuterium_trapped_1_physical + deuterium_trapped_2_physical + deuterium_trapped_3_physical +
+    deuterium_trapped_4_physical + deuterium_trapped_5_physical'
+    execute_on = 'INITIAL TIMESTEP_END'
   []
 []
 
 [Functions]
   [temperature_history]
     type = ParsedFunction
-    expression = 'temperature_initial + temperature_rate * t'
-    symbol_names = 'temperature_initial temperature_rate'
-    symbol_values = '${temperature_initial} ${temperature_rate}'
+    expression = 'temperature_initial + temperature_rate_hat * t'
+    symbol_names = 'temperature_initial temperature_rate_hat'
+    symbol_values = '${temperature_initial} ${temperature_rate_hat}'
   []
 []
 
@@ -87,7 +180,7 @@
     property_name = diffusivity_W
     functor_names = 'temperature_history'
     functor_symbols = temperature
-    expression = '${diffusion_W_preexponential} * exp(-${diffusion_W_energy} / ${kb_eV} / temperature)'
+    expression = '${diffusion_W_preexponential_hat} * exp(-${diffusion_W_energy} / ${kb_eV} / temperature)'
   []
   [diffusivity_W_nonad]
     type = MaterialADConverter
@@ -99,7 +192,7 @@
     property_name = Kr
     functor_names = 'temperature_history'
     functor_symbols = temperature
-    expression = '${recombination_coefficient} * exp(-${recombination_energy} / ${kb_eV} / temperature)'
+    expression = '${recombination_coefficient_hat} * exp(-${recombination_energy} / ${kb_eV} / temperature)'
   []
   [flux_recombination_surface]
     type = ADDerivativeParsedMaterial
@@ -111,6 +204,11 @@
 []
 
 [Postprocessors]
+  [temperature_pps]
+    type = ElementAverageValue
+    variable = temperature
+    execute_on = 'INITIAL TIMESTEP_END'
+  []
   [integral_mobile]
     type = ElementIntegralVariablePostprocessor
     variable = deuterium_mobile
@@ -118,8 +216,13 @@
   []
   [scaled_mobile]
     type = ScalePostprocessor
-    scaling_factor = '${fparse ${units 1 m^2 -> mum^2}}'
+    scaling_factor = '${fparse mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2}}'
     value = integral_mobile
+  []
+  [mobile_inventory_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_mobile
   []
   [flux_surface_left]
     type = ADSideAverageMaterialProperty
@@ -129,9 +232,14 @@
   []
   [scaled_flux_surface_left]
     type = ScalePostprocessor
-    scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
+    scaling_factor = '${fparse -1 * mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
     value = flux_surface_left
     execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
+  []
+  [flux_surface_left_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_flux_surface_left
   []
   [flux_surface_right]
     type = ADSideAverageMaterialProperty
@@ -141,9 +249,14 @@
   []
   [scaled_flux_surface_right]
     type = ScalePostprocessor
-    scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
+    scaling_factor = '${fparse -1 * mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
     value = flux_surface_right
     execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
+  []
+  [flux_surface_right_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_flux_surface_right
   []
 []
 
@@ -151,21 +264,30 @@
   [line_profile]
     type = LineValueSampler
     start_point = '0 0 0'
-    end_point = '${profile_depth} 0 0'
+    end_point = '${profile_depth_hat} 0 0'
     num_points = ${profile_num_points}
     sort_by = x
-    variable = 'deuterium_mobile deuterium_trapped_intrinsic deuterium_trapped_1 deuterium_trapped_2 deuterium_trapped_3 deuterium_trapped_4 deuterium_trapped_5'
+    variable = 'deuterium_total_physical deuterium_mobile_physical deuterium_trapped_intrinsic_physical
+    deuterium_trapped_1_physical deuterium_trapped_2_physical deuterium_trapped_3_physical
+    deuterium_trapped_4_physical deuterium_trapped_5_physical'
     execute_on = INITIAL
+  []
+[]
+
+[Preconditioning]
+  [SMP]
+    type = SMP
+    full = true
   []
 []
 
 [Executioner]
   type = Transient
-  end_time = ${end_time}
-  solve_type = NEWTON
+  end_time = ${end_time_hat}
+  solve_type = Newton
   scheme = bdf2
-  petsc_options_iname = '-pc_type'
-  petsc_options_value = 'lu'
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_type -snes_type'
+  petsc_options_value = 'lu       mumps                      vinewtonrsls'
   line_search = none
   automatic_scaling = true
   nl_rel_tol = 1e-9
@@ -176,10 +298,14 @@
   abort_on_solve_fail = true
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 1.0
+    dt = '${fparse 1 / time_reference}'
     optimal_iterations = 8
     growth_factor = 1.2
     cutback_factor = 0.8
+  []
+  [Predictor]
+    type = SimplePredictor
+    scale = 1.0
   []
 []
 

@@ -32,7 +32,10 @@ def get_numeric_parameter(parameter_name):
         for line in handle:
             stripped = line.strip()
             if stripped.startswith(f"{parameter_name} ="):
-                return float(stripped.split("=", maxsplit=1)[1].strip().strip("'"))
+                value = stripped.split("=", maxsplit=1)[1].strip().strip("'")
+                if value.startswith("${units ") and value.endswith("}"):
+                    return float(value[len("${units ") : -1].split()[0])
+                return float(value)
     raise KeyError(f"Could not find parameter {parameter_name} in {parameters_file}")
 
 
@@ -44,18 +47,13 @@ simulation_csv = get_repo_relative_path("gold/val-2k_out.csv")
 profile_csv = get_latest_profile_csv(
     get_repo_relative_path("gold/val-2k_profile_initial_out_line_profile_*.csv")
 )
-trap_per_free_intrinsic = get_numeric_parameter("trap_per_free_intrinsic")
-trap_per_free_1 = get_numeric_parameter("trap_per_free_1")
-trap_per_free_2 = get_numeric_parameter("trap_per_free_2")
-trap_per_free_3 = get_numeric_parameter("trap_per_free_3")
-trap_per_free_4 = get_numeric_parameter("trap_per_free_4")
-trap_per_free_5 = get_numeric_parameter("trap_per_free_5")
-atoms_per_cubic_micron_to_atoms_per_cubic_meter = 1e18
+time_reference = get_numeric_parameter("time_reference")
 sample_surface_area_m2 = 10e-3 * 14e-3
 
 simulation_data = pd.read_csv(simulation_csv)
-time_s = simulation_data["time"]
+time_s = simulation_data["time"] * time_reference
 time_h = time_s / 3600.0
+temperature_k = simulation_data["temperature_pps"]
 release_flux = (
     simulation_data["scaled_flux_surface_left"] + simulation_data["scaled_flux_surface_right"]
 )
@@ -74,23 +72,33 @@ experimental_fig6_curves = {
 natural_oxide_experiment = experimental_fig6_curves["hd_d2_nat_oxide"]
 
 fig, ax = plt.subplots(figsize=(6.5, 5.5))
-ax.plot(
+release_handle = ax.plot(
     time_h,
     release_rate,
     linestyle="-",
     color="tab:blue",
     label="TMAP8 six-trap reference",
-)
+)[0]
 
 experiment_time = natural_oxide_experiment["time (h)"]
 experiment_flux = natural_oxide_experiment["release flux (10^13 D atoms/s)"]
-ax.plot(
+experiment_handle = ax.plot(
     experiment_time,
     experiment_flux,
     linestyle="--",
     color="k",
     label="Experimental HD + D2 (nat. oxide)",
-)
+)[0]
+
+ax_temperature = ax.twinx()
+temperature_handle = ax_temperature.plot(
+    time_h,
+    temperature_k,
+    linestyle=":",
+    color="tab:red",
+    linewidth=1.5,
+    label="TMAP8 temperature history",
+)[0]
 
 simulated_on_experiment_grid = np.interp(experiment_time, time_h, release_rate)
 rmse = np.sqrt(np.mean((simulated_on_experiment_grid - experiment_flux) ** 2))
@@ -102,7 +110,13 @@ ax.set_ylabel("Release flux (10$^{13}$ D atoms/s)")
 ax.set_xlim(0, 4.2)
 ax.set_ylim(bottom=0)
 ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
-ax.legend(loc="best")
+ax_temperature.set_ylabel("Temperature (K)")
+ax_temperature.set_ylim(280, 1100)
+ax.legend(
+    [release_handle, experiment_handle, temperature_handle],
+    [release_handle.get_label(), experiment_handle.get_label(), temperature_handle.get_label()],
+    loc="best",
+)
 ax.minorticks_on()
 
 plt.savefig("val-2k_natural_oxide_iteration_1_comparison.png", bbox_inches="tight", dpi=300)
@@ -110,46 +124,14 @@ plt.close(fig)
 
 profile_data = pd.read_csv(profile_csv)
 distance_to_surface_microns = profile_data["x"]
-deuterium_mobile = profile_data["deuterium_mobile"] * atoms_per_cubic_micron_to_atoms_per_cubic_meter
-deuterium_trapped_intrinsic = (
-    profile_data["deuterium_trapped_intrinsic"]
-    * trap_per_free_intrinsic
-    * atoms_per_cubic_micron_to_atoms_per_cubic_meter
-)
-deuterium_trapped_1 = (
-    profile_data["deuterium_trapped_1"]
-    * trap_per_free_1
-    * atoms_per_cubic_micron_to_atoms_per_cubic_meter
-)
-deuterium_trapped_2 = (
-    profile_data["deuterium_trapped_2"]
-    * trap_per_free_2
-    * atoms_per_cubic_micron_to_atoms_per_cubic_meter
-)
-deuterium_trapped_3 = (
-    profile_data["deuterium_trapped_3"]
-    * trap_per_free_3
-    * atoms_per_cubic_micron_to_atoms_per_cubic_meter
-)
-deuterium_trapped_4 = (
-    profile_data["deuterium_trapped_4"]
-    * trap_per_free_4
-    * atoms_per_cubic_micron_to_atoms_per_cubic_meter
-)
-deuterium_trapped_5 = (
-    profile_data["deuterium_trapped_5"]
-    * trap_per_free_5
-    * atoms_per_cubic_micron_to_atoms_per_cubic_meter
-)
-deuterium_total = (
-    deuterium_mobile
-    + deuterium_trapped_intrinsic
-    + deuterium_trapped_1
-    + deuterium_trapped_2
-    + deuterium_trapped_3
-    + deuterium_trapped_4
-    + deuterium_trapped_5
-)
+deuterium_total = profile_data["deuterium_total_physical"]
+deuterium_mobile = profile_data["deuterium_mobile_physical"]
+deuterium_trapped_intrinsic = profile_data["deuterium_trapped_intrinsic_physical"]
+deuterium_trapped_1 = profile_data["deuterium_trapped_1_physical"]
+deuterium_trapped_2 = profile_data["deuterium_trapped_2_physical"]
+deuterium_trapped_3 = profile_data["deuterium_trapped_3_physical"]
+deuterium_trapped_4 = profile_data["deuterium_trapped_4_physical"]
+deuterium_trapped_5 = profile_data["deuterium_trapped_5_physical"]
 
 fig, ax = plt.subplots(figsize=(6.5, 5.5))
 ax.plot(
