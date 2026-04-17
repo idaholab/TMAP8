@@ -1,64 +1,49 @@
-# This include replaces the original two-trap baseline with the six trap families
-# used in val-2f. The val-2f site densities are scaled uniformly so the initial
-# areal inventory matches the current val-2k preloaded natural-oxide inventory.
+# This include adds the six scaled val-2f trap families used by val-2k.
+# It follows the deployed val-2f approach by introducing the trapped species
+# through SpeciesTrapping physics blocks with dimensionless concentrations.
 
-[Variables]
-  [deuterium_trapped_intrinsic]
-    order = FIRST
-    family = LAGRANGE
+[Bounds]
+  [deuterium_trapped_intrinsic_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = deuterium_trapped_intrinsic
+    bound_type = lower
+    bound_value = 0
   []
-  [deuterium_trapped_1]
-    order = FIRST
-    family = LAGRANGE
+  [deuterium_trapped_1_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = deuterium_trapped_1
+    bound_type = lower
+    bound_value = 0
   []
-  [deuterium_trapped_2]
-    order = FIRST
-    family = LAGRANGE
+  [deuterium_trapped_2_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = deuterium_trapped_2
+    bound_type = lower
+    bound_value = 0
   []
-  [deuterium_trapped_3]
-    order = FIRST
-    family = LAGRANGE
+  [deuterium_trapped_3_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = deuterium_trapped_3
+    bound_type = lower
+    bound_value = 0
   []
-  [deuterium_trapped_4]
-    order = FIRST
-    family = LAGRANGE
+  [deuterium_trapped_4_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = deuterium_trapped_4
+    bound_type = lower
+    bound_value = 0
   []
-  [deuterium_trapped_5]
-    order = FIRST
-    family = LAGRANGE
-  []
-[]
-
-[ICs]
-  [deuterium_trapped_intrinsic_ic]
-    type = FunctionIC
-    variable = deuterium_trapped_intrinsic
-    function = '${fparse trapping_site_fraction_intrinsic * tungsten_density / trap_per_free_intrinsic}'
-  []
-  [deuterium_trapped_1_ic]
-    type = FunctionIC
-    variable = deuterium_trapped_1
-    function = '${fparse trapping_site_fraction_1 * tungsten_density / trap_per_free_1} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
-  []
-  [deuterium_trapped_2_ic]
-    type = FunctionIC
-    variable = deuterium_trapped_2
-    function = '${fparse trapping_site_fraction_2 * tungsten_density / trap_per_free_2} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
-  []
-  [deuterium_trapped_3_ic]
-    type = FunctionIC
-    variable = deuterium_trapped_3
-    function = '${fparse trapping_site_fraction_3 * tungsten_density / trap_per_free_3} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
-  []
-  [deuterium_trapped_4_ic]
-    type = FunctionIC
-    variable = deuterium_trapped_4
-    function = '${fparse trapping_site_fraction_4 * tungsten_density / trap_per_free_4} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
-  []
-  [deuterium_trapped_5_ic]
-    type = FunctionIC
-    variable = deuterium_trapped_5
-    function = '${fparse trapping_site_fraction_5 * tungsten_density / trap_per_free_5} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
+  [deuterium_trapped_5_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = deuterium_trapped_5
+    bound_type = lower
+    bound_value = 0
   []
 []
 
@@ -69,259 +54,246 @@
   []
   [trap_1_sites_function]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_1} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
+    expression = '${trapping_site_fraction_1} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
   []
   [trap_2_sites_function]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_2} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
+    expression = '${trapping_site_fraction_2} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
   []
   [trap_3_sites_function]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_3} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
+    expression = '${trapping_site_fraction_3} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
   []
   [trap_4_sites_function]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_4} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
+    expression = '${trapping_site_fraction_4} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
   []
   [trap_5_sites_function]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_5} / (1 + exp((x - ${depth_center}) / ${depth_width}))'
+    expression = '${trapping_site_fraction_5} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+  []
+
+  [initial_deuterium_trapped_intrinsic]
+    type = ParsedFunction
+    expression = '${trapping_site_fraction_intrinsic} * ${tungsten_density} / ${trap_concentration_reference_intrinsic}'
+  []
+  [initial_deuterium_trapped_1]
+    type = ParsedFunction
+    expression = '${trapping_site_fraction_1} * ${tungsten_density} / ${trap_concentration_reference_1} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+  []
+  [initial_deuterium_trapped_2]
+    type = ParsedFunction
+    expression = '${trapping_site_fraction_2} * ${tungsten_density} / ${trap_concentration_reference_2} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+  []
+  [initial_deuterium_trapped_3]
+    type = ParsedFunction
+    expression = '${trapping_site_fraction_3} * ${tungsten_density} / ${trap_concentration_reference_3} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+  []
+  [initial_deuterium_trapped_4]
+    type = ParsedFunction
+    expression = '${trapping_site_fraction_4} * ${tungsten_density} / ${trap_concentration_reference_4} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+  []
+  [initial_deuterium_trapped_5]
+    type = ParsedFunction
+    expression = '${trapping_site_fraction_5} * ${tungsten_density} / ${trap_concentration_reference_5} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
   []
 []
 
-[Kernels]
-  [mobile_coupled_deuterium_trapped_intrinsic]
-    type = ADCoefCoupledTimeDerivative
-    variable = deuterium_mobile
-    v = deuterium_trapped_intrinsic
-    coef = ${trap_per_free_intrinsic}
-  []
-  [mobile_coupled_deuterium_trapped_1]
-    type = ADCoefCoupledTimeDerivative
-    variable = deuterium_mobile
-    v = deuterium_trapped_1
-    coef = ${trap_per_free_1}
-  []
-  [mobile_coupled_deuterium_trapped_2]
-    type = ADCoefCoupledTimeDerivative
-    variable = deuterium_mobile
-    v = deuterium_trapped_2
-    coef = ${trap_per_free_2}
-  []
-  [mobile_coupled_deuterium_trapped_3]
-    type = ADCoefCoupledTimeDerivative
-    variable = deuterium_mobile
-    v = deuterium_trapped_3
-    coef = ${trap_per_free_3}
-  []
-  [mobile_coupled_deuterium_trapped_4]
-    type = ADCoefCoupledTimeDerivative
-    variable = deuterium_mobile
-    v = deuterium_trapped_4
-    coef = ${trap_per_free_4}
-  []
-  [mobile_coupled_deuterium_trapped_5]
-    type = ADCoefCoupledTimeDerivative
-    variable = deuterium_mobile
-    v = deuterium_trapped_5
-    coef = ${trap_per_free_5}
-  []
-[]
-
-[NodalKernels]
-  [time_deuterium_trapped_intrinsic]
-    type = TimeDerivativeNodalKernel
-    variable = deuterium_trapped_intrinsic
-  []
-  [trapping_deuterium_intrinsic]
-    type = TrappingNodalKernel
-    variable = deuterium_trapped_intrinsic
-    mobile_concentration = deuterium_mobile
-    alpha_t = '${trapping_prefactor}'
-    trapping_energy = '${trapping_energy}'
-    N = '${tungsten_density}'
-    Ct0 = trap_intrinsic_sites_function
-    temperature = temperature
-    trap_per_free = ${trap_per_free_intrinsic}
-  []
-  [release_deuterium_intrinsic]
-    type = ReleasingNodalKernel
-    variable = deuterium_trapped_intrinsic
-    alpha_r = '${detrapping_prefactor}'
-    detrapping_energy = '${detrapping_energy_intrinsic}'
-    temperature = temperature
-  []
-  [time_deuterium_trapped_1]
-    type = TimeDerivativeNodalKernel
-    variable = deuterium_trapped_1
-  []
-  [trapping_deuterium_1]
-    type = TrappingNodalKernel
-    variable = deuterium_trapped_1
-    mobile_concentration = deuterium_mobile
-    alpha_t = '${trapping_prefactor}'
-    trapping_energy = '${trapping_energy}'
-    N = '${tungsten_density}'
-    Ct0 = trap_1_sites_function
-    temperature = temperature
-    trap_per_free = ${trap_per_free_1}
-  []
-  [release_deuterium_1]
-    type = ReleasingNodalKernel
-    variable = deuterium_trapped_1
-    alpha_r = '${detrapping_prefactor}'
-    detrapping_energy = '${detrapping_energy_1}'
-    temperature = temperature
-  []
-  [time_deuterium_trapped_2]
-    type = TimeDerivativeNodalKernel
-    variable = deuterium_trapped_2
-  []
-  [trapping_deuterium_2]
-    type = TrappingNodalKernel
-    variable = deuterium_trapped_2
-    mobile_concentration = deuterium_mobile
-    alpha_t = '${trapping_prefactor}'
-    trapping_energy = '${trapping_energy}'
-    N = '${tungsten_density}'
-    Ct0 = trap_2_sites_function
-    temperature = temperature
-    trap_per_free = ${trap_per_free_2}
-  []
-  [release_deuterium_2]
-    type = ReleasingNodalKernel
-    variable = deuterium_trapped_2
-    alpha_r = '${detrapping_prefactor}'
-    detrapping_energy = '${detrapping_energy_2}'
-    temperature = temperature
-  []
-  [time_deuterium_trapped_3]
-    type = TimeDerivativeNodalKernel
-    variable = deuterium_trapped_3
-  []
-  [trapping_deuterium_3]
-    type = TrappingNodalKernel
-    variable = deuterium_trapped_3
-    mobile_concentration = deuterium_mobile
-    alpha_t = '${trapping_prefactor}'
-    trapping_energy = '${trapping_energy}'
-    N = '${tungsten_density}'
-    Ct0 = trap_3_sites_function
-    temperature = temperature
-    trap_per_free = ${trap_per_free_3}
-  []
-  [release_deuterium_3]
-    type = ReleasingNodalKernel
-    variable = deuterium_trapped_3
-    alpha_r = '${detrapping_prefactor}'
-    detrapping_energy = '${detrapping_energy_3}'
-    temperature = temperature
-  []
-  [time_deuterium_trapped_4]
-    type = TimeDerivativeNodalKernel
-    variable = deuterium_trapped_4
-  []
-  [trapping_deuterium_4]
-    type = TrappingNodalKernel
-    variable = deuterium_trapped_4
-    mobile_concentration = deuterium_mobile
-    alpha_t = '${trapping_prefactor}'
-    trapping_energy = '${trapping_energy}'
-    N = '${tungsten_density}'
-    Ct0 = trap_4_sites_function
-    temperature = temperature
-    trap_per_free = ${trap_per_free_4}
-  []
-  [release_deuterium_4]
-    type = ReleasingNodalKernel
-    variable = deuterium_trapped_4
-    alpha_r = '${detrapping_prefactor}'
-    detrapping_energy = '${detrapping_energy_4}'
-    temperature = temperature
-  []
-  [time_deuterium_trapped_5]
-    type = TimeDerivativeNodalKernel
-    variable = deuterium_trapped_5
-  []
-  [trapping_deuterium_5]
-    type = TrappingNodalKernel
-    variable = deuterium_trapped_5
-    mobile_concentration = deuterium_mobile
-    alpha_t = '${trapping_prefactor}'
-    trapping_energy = '${trapping_energy}'
-    N = '${tungsten_density}'
-    Ct0 = trap_5_sites_function
-    temperature = temperature
-    trap_per_free = ${trap_per_free_5}
-  []
-  [release_deuterium_5]
-    type = ReleasingNodalKernel
-    variable = deuterium_trapped_5
-    alpha_r = '${detrapping_prefactor}'
-    detrapping_energy = '${detrapping_energy_5}'
-    temperature = temperature
+[Physics]
+  [SpeciesTrapping]
+    [trapping_intrinsic]
+      species = 'deuterium_trapped_intrinsic'
+      species_scaling_factors = '1'
+      species_initial_concentrations = 'initial_deuterium_trapped_intrinsic'
+      mobile = 'deuterium_mobile'
+      dimensionless_trapping_rate_coefficient = '${dimensionless_trapping_rate_coefficient_intrinsic}'
+      trapping_energy = '${trapping_energy_intrinsic}'
+      N = ${tungsten_density}
+      Ct0 = 'trap_intrinsic_sites_function'
+      trap_concentration_reference = '${trap_concentration_reference_intrinsic}'
+      mobile_concentration_reference = ${mobile_concentration_reference}
+      dimensionless_release_rate_coefficient = '${dimensionless_release_rate_coefficient_intrinsic}'
+      detrapping_energy = '${detrapping_energy_intrinsic}'
+      temperature = 'temperature'
+      dimensionless_species = true
+    []
+    [trapping_1]
+      species = 'deuterium_trapped_1'
+      species_scaling_factors = '1'
+      species_initial_concentrations = 'initial_deuterium_trapped_1'
+      mobile = 'deuterium_mobile'
+      dimensionless_trapping_rate_coefficient = '${dimensionless_trapping_rate_coefficient_1}'
+      trapping_energy = '${trapping_energy_1}'
+      N = ${tungsten_density}
+      Ct0 = 'trap_1_sites_function'
+      trap_concentration_reference = '${trap_concentration_reference_1}'
+      mobile_concentration_reference = ${mobile_concentration_reference}
+      dimensionless_release_rate_coefficient = '${dimensionless_release_rate_coefficient_1}'
+      detrapping_energy = '${detrapping_energy_1}'
+      temperature = 'temperature'
+      dimensionless_species = true
+    []
+    [trapping_2]
+      species = 'deuterium_trapped_2'
+      species_scaling_factors = '1'
+      species_initial_concentrations = 'initial_deuterium_trapped_2'
+      mobile = 'deuterium_mobile'
+      dimensionless_trapping_rate_coefficient = '${dimensionless_trapping_rate_coefficient_2}'
+      trapping_energy = '${trapping_energy_2}'
+      N = ${tungsten_density}
+      Ct0 = 'trap_2_sites_function'
+      trap_concentration_reference = '${trap_concentration_reference_2}'
+      mobile_concentration_reference = ${mobile_concentration_reference}
+      dimensionless_release_rate_coefficient = '${dimensionless_release_rate_coefficient_2}'
+      detrapping_energy = '${detrapping_energy_2}'
+      temperature = 'temperature'
+      dimensionless_species = true
+    []
+    [trapping_3]
+      species = 'deuterium_trapped_3'
+      species_scaling_factors = '1'
+      species_initial_concentrations = 'initial_deuterium_trapped_3'
+      mobile = 'deuterium_mobile'
+      dimensionless_trapping_rate_coefficient = '${dimensionless_trapping_rate_coefficient_3}'
+      trapping_energy = '${trapping_energy_3}'
+      N = ${tungsten_density}
+      Ct0 = 'trap_3_sites_function'
+      trap_concentration_reference = '${trap_concentration_reference_3}'
+      mobile_concentration_reference = ${mobile_concentration_reference}
+      dimensionless_release_rate_coefficient = '${dimensionless_release_rate_coefficient_3}'
+      detrapping_energy = '${detrapping_energy_3}'
+      temperature = 'temperature'
+      dimensionless_species = true
+    []
+    [trapping_4]
+      species = 'deuterium_trapped_4'
+      species_scaling_factors = '1'
+      species_initial_concentrations = 'initial_deuterium_trapped_4'
+      mobile = 'deuterium_mobile'
+      dimensionless_trapping_rate_coefficient = '${dimensionless_trapping_rate_coefficient_4}'
+      trapping_energy = '${trapping_energy_4}'
+      N = ${tungsten_density}
+      Ct0 = 'trap_4_sites_function'
+      trap_concentration_reference = '${trap_concentration_reference_4}'
+      mobile_concentration_reference = ${mobile_concentration_reference}
+      dimensionless_release_rate_coefficient = '${dimensionless_release_rate_coefficient_4}'
+      detrapping_energy = '${detrapping_energy_4}'
+      temperature = 'temperature'
+      dimensionless_species = true
+    []
+    [trapping_5]
+      species = 'deuterium_trapped_5'
+      species_scaling_factors = '1'
+      species_initial_concentrations = 'initial_deuterium_trapped_5'
+      mobile = 'deuterium_mobile'
+      dimensionless_trapping_rate_coefficient = '${dimensionless_trapping_rate_coefficient_5}'
+      trapping_energy = '${trapping_energy_5}'
+      N = ${tungsten_density}
+      Ct0 = 'trap_5_sites_function'
+      trap_concentration_reference = '${trap_concentration_reference_5}'
+      mobile_concentration_reference = ${mobile_concentration_reference}
+      dimensionless_release_rate_coefficient = '${dimensionless_release_rate_coefficient_5}'
+      detrapping_energy = '${detrapping_energy_5}'
+      temperature = 'temperature'
+      dimensionless_species = true
+    []
   []
 []
 
 [Postprocessors]
-  [integral_deuterium_trapped_intrinsic]
+  [integral_trapped_concentration_intrinsic]
     type = ElementIntegralVariablePostprocessor
     variable = deuterium_trapped_intrinsic
     outputs = none
   []
-  [scaled_deuterium_trapped_intrinsic]
+  [scaled_trapped_deuterium_intrinsic]
     type = ScalePostprocessor
-    scaling_factor = '${fparse trap_per_free_intrinsic * ${units 1 m^2 -> mum^2}}'
-    value = integral_deuterium_trapped_intrinsic
+    scaling_factor = '${fparse trap_concentration_reference_intrinsic * length_reference * ${units 1 m^2 -> mum^2}}'
+    value = integral_trapped_concentration_intrinsic
   []
-  [integral_deuterium_trapped_1]
+  [trapped_deuterium_intrinsic_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_trapped_deuterium_intrinsic
+  []
+
+  [integral_trapped_concentration_1]
     type = ElementIntegralVariablePostprocessor
     variable = deuterium_trapped_1
     outputs = none
   []
-  [scaled_deuterium_trapped_1]
+  [scaled_trapped_deuterium_1]
     type = ScalePostprocessor
-    scaling_factor = '${fparse trap_per_free_1 * ${units 1 m^2 -> mum^2}}'
-    value = integral_deuterium_trapped_1
+    scaling_factor = '${fparse trap_concentration_reference_1 * length_reference * ${units 1 m^2 -> mum^2}}'
+    value = integral_trapped_concentration_1
   []
-  [integral_deuterium_trapped_2]
+  [trapped_deuterium_1_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_trapped_deuterium_1
+  []
+
+  [integral_trapped_concentration_2]
     type = ElementIntegralVariablePostprocessor
     variable = deuterium_trapped_2
     outputs = none
   []
-  [scaled_deuterium_trapped_2]
+  [scaled_trapped_deuterium_2]
     type = ScalePostprocessor
-    scaling_factor = '${fparse trap_per_free_2 * ${units 1 m^2 -> mum^2}}'
-    value = integral_deuterium_trapped_2
+    scaling_factor = '${fparse trap_concentration_reference_2 * length_reference * ${units 1 m^2 -> mum^2}}'
+    value = integral_trapped_concentration_2
   []
-  [integral_deuterium_trapped_3]
+  [trapped_deuterium_2_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_trapped_deuterium_2
+  []
+
+  [integral_trapped_concentration_3]
     type = ElementIntegralVariablePostprocessor
     variable = deuterium_trapped_3
     outputs = none
   []
-  [scaled_deuterium_trapped_3]
+  [scaled_trapped_deuterium_3]
     type = ScalePostprocessor
-    scaling_factor = '${fparse trap_per_free_3 * ${units 1 m^2 -> mum^2}}'
-    value = integral_deuterium_trapped_3
+    scaling_factor = '${fparse trap_concentration_reference_3 * length_reference * ${units 1 m^2 -> mum^2}}'
+    value = integral_trapped_concentration_3
   []
-  [integral_deuterium_trapped_4]
+  [trapped_deuterium_3_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_trapped_deuterium_3
+  []
+
+  [integral_trapped_concentration_4]
     type = ElementIntegralVariablePostprocessor
     variable = deuterium_trapped_4
     outputs = none
   []
-  [scaled_deuterium_trapped_4]
+  [scaled_trapped_deuterium_4]
     type = ScalePostprocessor
-    scaling_factor = '${fparse trap_per_free_4 * ${units 1 m^2 -> mum^2}}'
-    value = integral_deuterium_trapped_4
+    scaling_factor = '${fparse trap_concentration_reference_4 * length_reference * ${units 1 m^2 -> mum^2}}'
+    value = integral_trapped_concentration_4
   []
-  [integral_deuterium_trapped_5]
+  [trapped_deuterium_4_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_trapped_deuterium_4
+  []
+
+  [integral_trapped_concentration_5]
     type = ElementIntegralVariablePostprocessor
     variable = deuterium_trapped_5
     outputs = none
   []
-  [scaled_deuterium_trapped_5]
+  [scaled_trapped_deuterium_5]
     type = ScalePostprocessor
-    scaling_factor = '${fparse trap_per_free_5 * ${units 1 m^2 -> mum^2}}'
-    value = integral_deuterium_trapped_5
+    scaling_factor = '${fparse trap_concentration_reference_5 * length_reference * ${units 1 m^2 -> mum^2}}'
+    value = integral_trapped_concentration_5
+  []
+  [trapped_deuterium_5_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_trapped_deuterium_5
   []
 []

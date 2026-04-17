@@ -13,7 +13,7 @@ Unlike the existing one-shot validation cases, `val-2k` is intentionally develop
 The current implementation is the natural-oxide baseline for the staged `val-2k` workflow. It includes:
 
 - one-dimensional deuterium diffusion in tungsten
-- six trap families in the self-irradiated near-surface region
+- six trap families in the self-irradiated near-surface region using the [SpeciesTrappingPhysics](SpeciesTrappingPhysics.md exact=True) syntax
 - deuterium recombination and release as D$_2$ on both free surfaces
 - the experimental TDS temperature ramp from 300 K to 1000 K at 3 K/min
 
@@ -30,37 +30,45 @@ Those additions are deferred to later iterations so their individual influence o
 
 The current reference iteration models only the tungsten response. A 0.8 mm tungsten slab is represented as a one-dimensional domain. The defect-rich near-surface region is described using the intrinsic plus five damage-induced trap families adopted from [val-2f](val-2f.md). Their spatial distributions follow the same sigmoidal `val-2f` shape centered at 2.5 $\mu$m with a width of 0.5 $\mu$m, and the full set of trap site densities is scaled uniformly so the initial areal inventory matches the earlier `val-2k` natural-oxide preload.
 
-The mobile deuterium concentration $C_M$ is governed by:
+As in the current `val-2f` implementation, `val-2k` is solved in dimensionless form using:
 
 \begin{equation}
-\frac{\partial C_M}{\partial t} = \nabla \cdot D \nabla C_M + \sum_{i \in \{intr,1,\dots,5\}} f_{T/M,i} \frac{\partial C_{T_i}}{\partial t}
+\hat{x} = \frac{x}{L_{\text{ref}}}, \qquad \hat{t} = \frac{t}{t_{\text{ref}}}, \qquad
+\hat{C}_M = \frac{C_M}{C_{M,\text{ref}}}, \qquad
+\hat{C}_{T_i} = \frac{C_{T_i}}{C_{T_i,\text{ref}}}
 \end{equation}
 
-and each trapped population follows:
+with $L_{\text{ref}} = 1 \ \mu$m and $t_{\text{ref}} = 1$ s. The mobile deuterium balance solved in the input file is:
 
 \begin{equation}
-\frac{\partial C_{T_i}}{\partial t} = \alpha_t^i \frac{C_{T_i}^{empty} C_M}{N f_{T/M,i}} - \alpha_r^i C_{T_i}
+\frac{\partial \hat{C}_M}{\partial \hat{t}} =
+\hat{\nabla} \cdot \hat{D} \hat{\nabla} \hat{C}_M +
+\sum_{i \in \{intr,1,\dots,5\}}
+\frac{C_{T_i,\text{ref}}}{C_{M,\text{ref}}}
+\frac{\partial \hat{C}_{T_i}}{\partial \hat{t}}
 \end{equation}
 
-with:
+The trapped species are introduced using six [SpeciesTrappingPhysics](SpeciesTrappingPhysics.md exact=True) blocks, one for each trap family. Each block creates the time derivative, trapping, releasing, and mobile-species coupling terms automatically. The dimensionless trapping and release groups are:
 
 \begin{equation}
-C_{T_i}^{empty} = C_{{T_i}0} N - f_{T/M,i} C_{T_i}
+\hat{k}_{t,i} = t_{\text{ref}} \alpha_{t,i} \frac{C_{M,\text{ref}}}{N}
+\qquad \text{and} \qquad
+\hat{k}_{r,i} = t_{\text{ref}} \alpha_{r,i}
 \end{equation}
 
-The mobile deuterium diffusivity is modeled using:
+while the same Arrhenius diffusivity and detrapping energetics as [val-2f](val-2f.md) are retained:
 
 \begin{equation}
-D = D_0 \exp \left(- \frac{E_D}{k_B T} \right)
+\hat{D} = \hat{D}_0 \exp \left(- \frac{E_D}{k_B T} \right)
 \end{equation}
 
-The surface release is modeled as a finite recombination flux on both free surfaces:
+The surface release is modeled as a finite recombination flux on both free surfaces in the same dimensionless form used in [val-2f](val-2f.md):
 
 \begin{equation}
-J = 2 K_r C_M^2
+\hat{J} = 2 \hat{K}_r \hat{C}_M^2
 \end{equation}
 
-This is a deliberate simplification for the first stage. The natural oxide is not yet represented as an explicit transport layer. Instead, the current model establishes the tungsten diffusion, trapping, and D$_2$ release baseline that later iterations will build on.
+The comparison script rescales the mobile concentration, trapped concentrations, distance, and time back to physical units before plotting the TDS and initial-profile figures. This remains a deliberate simplification for the first stage: the natural oxide is not yet represented as an explicit transport layer, and the current model establishes the tungsten diffusion, trapping, and D$_2$ release baseline that later iterations will build on.
 
 ## Case and Model Parameters
 
@@ -78,6 +86,11 @@ The current baseline parameters are listed in [val-2k_parameters].
 | $E_D$ | Diffusion activation energy | 0.28 | eV | Adopted from [val-2f](val-2f.md) for the initial baseline |
 | $x_c$ | Trap-distribution center | 2.5 | $\mu$m | Adopted from [val-2f](val-2f.md) |
 | $w_d$ | Trap-distribution width | 0.5 | $\mu$m | Adopted from [val-2f](val-2f.md) |
+| $L_{\text{ref}}$ | Reference length for the dimensionless solve | 1 | $\mu$m | Chosen to match the val-2f adimensionalization |
+| $t_{\text{ref}}$ | Reference time for the dimensionless solve | 1 | s | Chosen to match the val-2f adimensionalization |
+| $C_{M,\text{ref}}$ | Mobile reference concentration | 6.3222 $\times 10^{16}$ | at/m$^3$ | Adopted from [val-2f](val-2f.md) |
+| $C_{T,\text{ref}}^{intr}$ | Intrinsic-trap reference concentration | 6.3222 $\times 10^{17}$ | at/m$^3$ | Adopted from [val-2f](val-2f.md) |
+| $C_{T,\text{ref}}^{1-5}$ | Non-intrinsic trap reference concentration | 6.3222 $\times 10^{20}$ | at/m$^3$ | Adopted from [val-2f](val-2f.md) |
 | $s_T$ | Uniform trap-density scale factor | 6.644848 | - | Chosen so the six-trap model matches the prior `val-2k` initial areal inventory |
 | $E_{T,intr}$ | Intrinsic detrapping energy | 1.04 | eV | Adopted from [val-2f](val-2f.md) |
 | $E_{T,1}$ | Trap 1 detrapping energy | 1.15 | eV | Adopted from [val-2f](val-2f.md) |
@@ -96,7 +109,7 @@ The current baseline parameters are listed in [val-2k_parameters].
 
 ## Results
 
-The current branch state uses the scaled six-trap `val-2f` reference model as the active natural-oxide baseline. The comparison script overlays the manual Fig. 6 natural-oxide `HD + D_2` curve directly against the `val-2k` prediction, and the profile figure reports the initial mobile plus six trapped deuterium populations across the near-surface region.
+The current branch state uses the scaled six-trap `val-2f` reference model as the active natural-oxide baseline. The underlying solve now uses the same `val-2f`-style adimensional mobile transport and `SpeciesTrappingPhysics` syntax, while the comparison script converts the results back to physical units. The script overlays the manual Fig. 6 natural-oxide `HD + D_2` curve directly against the `val-2k` prediction, and the profile figure reports the initial mobile plus six trapped deuterium populations across the near-surface region.
 
 !media comparison_val-2k.py
     image_name=val-2k_natural_oxide_iteration_1_comparison.png

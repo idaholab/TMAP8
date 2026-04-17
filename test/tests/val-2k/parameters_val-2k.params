@@ -45,12 +45,6 @@ detrapping_energy_3 = '${fparse ${units 1.65 eV -> J} / kb}'
 detrapping_energy_4 = '${fparse ${units 1.85 eV -> J} / kb}'
 detrapping_energy_5 = '${fparse ${units 2.05 eV -> J} / kb}'
 detrapping_energy_intrinsic = '${fparse ${units 1.04 eV -> J} / kb}'
-trap_per_free_1 = 1e7
-trap_per_free_2 = 1e7
-trap_per_free_3 = 1e7
-trap_per_free_4 = 1e7
-trap_per_free_5 = 1e7
-trap_per_free_intrinsic = 1e7
 
 # Surface recombination
 recombination_coefficient = '${units 3.8e-16 m^4/at/s -> mum^4/at/s}'
@@ -69,3 +63,62 @@ trapping_site_fraction_2 = '${fparse trap_density_scale * 4.5458706307839917e-04
 trapping_site_fraction_3 = '${fparse trap_density_scale * 3.103067322529255e-04}'
 trapping_site_fraction_4 = '${fparse trap_density_scale * 4.6932472533804296e-04}'
 trapping_site_fraction_5 = '${fparse trap_density_scale * 1.2447228505500194e-04}'
+
+# Dimensionless references and groups, following the val-2f formulation.
+length_reference = '${units 1 mum}'
+time_reference = '${units 1 s}'
+mobile_concentration_reference = '${units 6.3222e16 at/m^3 -> at/mum^3}'
+trap_concentration_reference_intrinsic = '${units 6.3222e17 at/m^3 -> at/mum^3}'
+trap_concentration_reference_1 = '${units 6.3222e20 at/m^3 -> at/mum^3}'
+trap_concentration_reference_2 = '${units 6.3222e20 at/m^3 -> at/mum^3}'
+trap_concentration_reference_3 = '${units 6.3222e20 at/m^3 -> at/mum^3}'
+trap_concentration_reference_4 = '${units 6.3222e20 at/m^3 -> at/mum^3}'
+trap_concentration_reference_5 = '${units 6.3222e20 at/m^3 -> at/mum^3}'
+mobile_concentration_reference_m3 = '${units 6.3222e16 at/m^3}'
+trap_concentration_reference_intrinsic_m3 = '${units 6.3222e17 at/m^3}'
+trap_concentration_reference_1_m3 = '${units 6.3222e20 at/m^3}'
+trap_concentration_reference_2_m3 = '${units 6.3222e20 at/m^3}'
+trap_concentration_reference_3_m3 = '${units 6.3222e20 at/m^3}'
+trap_concentration_reference_4_m3 = '${units 6.3222e20 at/m^3}'
+trap_concentration_reference_5_m3 = '${units 6.3222e20 at/m^3}'
+
+initial_mobile_concentration_hat = '${fparse initial_mobile_concentration / mobile_concentration_reference}'
+damage_depth_hat = '${fparse damage_depth / length_reference}'
+buffer_depth_hat = '${fparse buffer_depth / length_reference}'
+bulk_depth_hat = '${fparse bulk_depth / length_reference}'
+profile_depth_hat = '${fparse profile_depth / length_reference}'
+temperature_rate_hat = '${fparse temperature_rate * time_reference}'
+end_time_hat = '${fparse end_time / time_reference}'
+depth_center_hat = '${fparse depth_center / length_reference}'
+depth_width_hat = '${fparse depth_width / length_reference}'
+
+trapping_energy_intrinsic = '${fparse trapping_energy}'
+trapping_energy_1 = '${fparse trapping_energy}'
+trapping_energy_2 = '${fparse trapping_energy}'
+trapping_energy_3 = '${fparse trapping_energy}'
+trapping_energy_4 = '${fparse trapping_energy}'
+trapping_energy_5 = '${fparse trapping_energy}'
+
+detrapping_prefactor_intrinsic = '${fparse detrapping_prefactor}'
+detrapping_prefactor_1 = '${fparse detrapping_prefactor}'
+detrapping_prefactor_2 = '${fparse detrapping_prefactor}'
+detrapping_prefactor_3 = '${fparse detrapping_prefactor}'
+detrapping_prefactor_4 = '${fparse detrapping_prefactor}'
+detrapping_prefactor_5 = '${fparse detrapping_prefactor}'
+
+dimensionless_trapping_rate_coefficient_intrinsic = '${fparse trapping_prefactor * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_coefficient_1 = '${fparse trapping_prefactor * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_coefficient_2 = '${fparse trapping_prefactor * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_coefficient_3 = '${fparse trapping_prefactor * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_coefficient_4 = '${fparse trapping_prefactor * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_coefficient_5 = '${fparse trapping_prefactor * time_reference * mobile_concentration_reference / tungsten_density}'
+
+dimensionless_release_rate_coefficient_intrinsic = '${fparse detrapping_prefactor_intrinsic * time_reference}'
+dimensionless_release_rate_coefficient_1 = '${fparse detrapping_prefactor_1 * time_reference}'
+dimensionless_release_rate_coefficient_2 = '${fparse detrapping_prefactor_2 * time_reference}'
+dimensionless_release_rate_coefficient_3 = '${fparse detrapping_prefactor_3 * time_reference}'
+dimensionless_release_rate_coefficient_4 = '${fparse detrapping_prefactor_4 * time_reference}'
+dimensionless_release_rate_coefficient_5 = '${fparse detrapping_prefactor_5 * time_reference}'
+
+diffusion_W_preexponential_hat = '${fparse diffusion_W_preexponential * time_reference / (length_reference ^ 2)}'
+recombination_coefficient_hat = '${fparse recombination_coefficient * mobile_concentration_reference * time_reference / length_reference}'

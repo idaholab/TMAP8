@@ -1,5 +1,5 @@
 [Tests]
-  design = 'TrappingNodalKernel.md ReleasingNodalKernel.md MatNeumannBC.md'
+  design = 'SpeciesTrappingPhysics.md MatNeumannBC.md'
   issues = '#399'
   validation = 'val-2k.md'
   [val-2k_csvdiff]
