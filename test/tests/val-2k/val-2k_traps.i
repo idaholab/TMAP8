@@ -1,4 +1,3 @@
-
 # This input file defines the six scaled trap model used by val-2k.
 # It follows the approach deployed in val-2f by introducing the trapped species
 # through SpeciesTrapping physics blocks with dimensionless concentrations.
