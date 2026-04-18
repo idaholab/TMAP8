@@ -13,7 +13,7 @@ Unlike the existing one-shot validation cases, `val-2k` is intentionally develop
 The current implementation is the natural-oxide baseline for the staged `val-2k` workflow. It includes:
 
 - one-dimensional deuterium diffusion in tungsten
-- six trap families in the self-irradiated near-surface region using the [SpeciesTrappingPhysics](SpeciesTrappingPhysics.md exact=True) syntax
+- six trap families in the self-irradiated near-surface region using the [SpeciesTrappingPhysics](SpeciesTrappingPhysics.md) syntax
 - deuterium recombination and release as D$_2$ on both free surfaces
 - the experimental desorption temperature history digitized from `Experimental_desorption_temperature.csv`
 
@@ -48,7 +48,7 @@ with $L_{\text{ref}} = 1 \ \mu$m and $t_{\text{ref}} = 1$ s. The desorption temp
 \frac{\partial \hat{C}_{T_i}}{\partial \hat{t}}
 \end{equation}
 
-The trapped species are introduced using six [SpeciesTrappingPhysics](SpeciesTrappingPhysics.md exact=True) blocks, one for each trap family. Each block creates the time derivative, trapping, releasing, and mobile-species coupling terms automatically. The dimensionless trapping and release groups are:
+The trapped species are introduced using six [SpeciesTrappingPhysics](SpeciesTrappingPhysics.md) blocks, one for each trap family. Each block creates the time derivative, trapping, releasing, and mobile-species coupling terms automatically. The dimensionless trapping and release groups are:
 
 \begin{equation}
 \hat{k}_{t,i} = t_{\text{ref}} \alpha_{t,i} \frac{C_{M,\text{ref}}}{N}
