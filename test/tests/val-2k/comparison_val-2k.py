@@ -10,7 +10,8 @@ import numpy as np
 import pandas as pd
 from matplotlib.patches import Patch
 
-# Changes working directory to script directory for consistent MooseDocs usage.
+# Setup: work from the script directory so MooseDocs and local test runs resolve
+# the same relative paths.
 script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
 
@@ -66,6 +67,8 @@ def load_experimental_curve(filename):
     return pd.read_csv(get_repo_relative_path(f"gold/{filename}"))
 
 
+# Stage 1: load the simulated CSV outputs and the experimental desorption curve
+# used in the current natural-oxide comparison.
 simulation_csv = get_repo_relative_path("gold/val-2k_out.csv")
 profile_csv = get_latest_profile_csv(
     get_repo_relative_path("gold/val-2k_profile_initial_out_line_profile_*.csv")
@@ -102,6 +105,8 @@ experimental_fig6_curves = {
 }
 natural_oxide_experiment = experimental_fig6_curves["hd_d2_nat_oxide"]
 
+# Stage 2: generate the desorption comparison figure with the imposed
+# temperature history on the right axis.
 fig, ax = plt.subplots(figsize=(6.5, 5.5))
 release_handle = ax.plot(
     time_h,
@@ -161,6 +166,8 @@ plt.savefig(
 )
 plt.close(fig)
 
+# Stage 3: generate the inventory history figure showing the cumulative
+# deuterium inventory and the contribution of each trap family.
 fig, ax = plt.subplots(figsize=(6.5, 5.5))
 cmap = plt.get_cmap("viridis")
 inventory_colors = cmap(np.linspace(0, 1, 7))
@@ -246,6 +253,8 @@ plt.savefig(
 )
 plt.close(fig)
 
+# Stage 4: generate the initial concentration profile used to start the
+# desorption calculation.
 profile_data = pd.read_csv(profile_csv)
 distance_to_surface_microns = profile_data["x"]
 deuterium_total = profile_data["deuterium_total_physical"]
