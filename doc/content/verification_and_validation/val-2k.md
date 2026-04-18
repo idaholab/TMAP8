@@ -13,7 +13,7 @@ Unlike the existing one-shot validation cases, `val-2k` is intentionally develop
 The current implementation is the natural-oxide baseline for the staged `val-2k` workflow. It includes:
 
 - one-dimensional deuterium diffusion in tungsten
-- six trap families in the self-irradiated near-surface region using the [SpeciesTrappingPhysics](SpeciesTrappingPhysics.md) syntax
+- six trap families in the self-irradiated near-surface region using the [SpeciesTrappingPhysics](physics/SpeciesTrappingPhysics.md) syntax
 - deuterium recombination and release as D$_2$ on both free surfaces
 - the experimental desorption temperature history digitized from `Experimental_desorption_temperature.csv`
 
@@ -26,19 +26,30 @@ The current implementation does not yet include:
 
 Those additions are deferred to later iterations so their individual influence on the match with experiment can be assessed cleanly.
 
+## Sample history
+
+The desorption temperature history is taken from Fig. 6 in [!cite](Kremer2022oxide).
+
 ## Model Description
 
-The current reference iteration models only the tungsten response. A 0.8 mm tungsten slab is represented as a one-dimensional domain. The defect-rich near-surface region is described using the intrinsic plus five damage-induced trap families adopted from [val-2f](val-2f.md). Their spatial distributions follow the same sigmoidal `val-2f` shape centered at 2.5 $\mu$m with a width of 0.5 $\mu$m, and the full set of trap site densities is scaled uniformly so the initial areal inventory matches the earlier `val-2k` natural-oxide preload.
+The current reference iteration models the tungsten with natural oxide, which is currently neglected.
+A 0.8 mm tungsten slab is represented as a one-dimensional domain.
+The irradiated defect-rich near-surface region is described using the intrinsic plus five damage-induced trap families adopted from [val-2f](val-2f.md).
+The density of the intridic trap, since it is independant of irradiation, is homogeneous in the sample.
+The densities of irradiation-induced traps, however, are hemegeneous in the 2.5 $\mu$m-thick self damaged region, and then quickly decreases to 0 in the bulk of the sample (with an transition length of 0.5 $\mu$m).
+The full set of trap site densities is scaled uniformly from [val-2f](val-2f.md) values so the initial areal inventory matches the earlier `val-2k` natural-oxide preload.
 
 As in the current `val-2f` implementation, `val-2k` is solved in dimensionless form using:
 
 \begin{equation}
 \hat{x} = \frac{x}{L_{\text{ref}}}, \qquad \hat{t} = \frac{t}{t_{\text{ref}}}, \qquad
 \hat{C}_M = \frac{C_M}{C_{M,\text{ref}}}, \qquad
-\hat{C}_{T_i} = \frac{C_{T_i}}{C_{T_i,\text{ref}}}
+\hat{C}_{T_i} = \frac{C_{T_i}}{C_{T_i,\text{ref}}},
 \end{equation}
 
-with $L_{\text{ref}} = 1 \ \mu$m and $t_{\text{ref}} = 1$ s. The desorption temperature history is imported directly from `Experimental_desorption_temperature.csv` through a `PiecewiseLinear` `data_file`. The mobile deuterium balance solved in the input file is:
+with $L_{\text{ref}} = 1$ $\mu$m and $t_{\text{ref}} = 1$ s.
+
+The mobile deuterium balance solved in the input file is:
 
 \begin{equation}
 \frac{\partial \hat{C}_M}{\partial \hat{t}} =
@@ -48,7 +59,7 @@ with $L_{\text{ref}} = 1 \ \mu$m and $t_{\text{ref}} = 1$ s. The desorption temp
 \frac{\partial \hat{C}_{T_i}}{\partial \hat{t}}
 \end{equation}
 
-The trapped species are introduced using six [SpeciesTrappingPhysics](SpeciesTrappingPhysics.md) blocks, one for each trap family. Each block creates the time derivative, trapping, releasing, and mobile-species coupling terms automatically. The dimensionless trapping and release groups are:
+The trapped species are introduced using six [SpeciesTrappingPhysics](physics/SpeciesTrappingPhysics.md) blocks, one for each trap family. Each block creates the time derivative, trapping, releasing, and mobile-species coupling terms automatically. The dimensionless trapping and release groups are:
 
 \begin{equation}
 \hat{k}_{t,i} = t_{\text{ref}} \alpha_{t,i} \frac{C_{M,\text{ref}}}{N}
@@ -68,7 +79,8 @@ The surface release is modeled as a finite recombination flux on both free surfa
 \hat{J} = 2 \hat{K}_r \hat{C}_M^2
 \end{equation}
 
-The comparison script rescales the mobile concentration, trapped concentrations, distance, and time back to physical units before plotting the TDS and initial-profile figures. This remains a deliberate simplification for the first stage: the natural oxide is not yet represented as an explicit transport layer, and the current model establishes the tungsten diffusion, trapping, and D$_2$ release baseline that later iterations will build on.
+The comparison script rescales the mobile concentration, trapped concentrations, distance, and time back to physical units before plotting the TDS and initial-profile figures.
+This remains a deliberate simplification for the first stage: the natural oxide is not yet represented as an explicit transport layer, and the current model establishes the tungsten diffusion, trapping, and D$_2$ release baseline that later iterations will build on.
 
 ## Case and Model Parameters
 
