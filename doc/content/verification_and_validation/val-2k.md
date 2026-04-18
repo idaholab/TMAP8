@@ -28,15 +28,25 @@ Those additions are deferred to later iterations so their individual influence o
 
 ## Sample history
 
-The desorption temperature history is taken from Fig. 6 in [!cite](Kremer2022oxide).
+The current `val-2k` baseline focuses on the natural-oxide reference sample from [!cite](Kremer2022oxide). In the experiment, the tungsten specimen is first prepared with a self-damaged near-surface region, then loaded with deuterium so that the retained inventory is concentrated in the first few micrometers of the sample. For the present iteration, the native air-formed oxide is not modeled explicitly, but the desorption history is still taken from the experimental natural-oxide case.
+
+The modeled desorption stage starts from that preloaded state and follows the digitized temperature history from `Experimental_desorption_temperature.csv`, which heats the sample from about 296 K to about 1001 K over roughly 4.17 h. This first stage therefore isolates how the tungsten diffusion, trapping, and surface release model responds to the same thermal ramp used in the experiment before explicit oxide transport or oxygen-removal physics are added.
+
+The initial deuterium profile used at the start of desorption is shown in [val-2k_natural_oxide_iteration_1_profile]. In the current six-trap baseline, most of the retained inventory is placed in the irradiation-induced traps inside the damaged zone, while the mobile deuterium concentration is comparatively small. The sharp drop beyond the first few micrometers reflects the prescribed trap-density distribution used to localize the self-damage near the exposed surface; this figure reports the model initial condition for the desorption calculation rather than a direct fit of the measured depth profile.
+
+!media comparison_val-2k.py
+    image_name=val-2k_natural_oxide_iteration_1_profile.png
+    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+    id=val-2k_natural_oxide_iteration_1_profile
+    caption=Initial deuterium concentration profile used to start the `val-2k` desorption calculation. The profile shows the mobile deuterium concentration, the six trapped populations, and their total.
 
 ## Model Description
 
 The current reference iteration models the tungsten with natural oxide, which is currently neglected.
 A 0.8 mm tungsten slab is represented as a one-dimensional domain.
 The irradiated defect-rich near-surface region is described using the intrinsic plus five damage-induced trap families adopted from [val-2f](val-2f.md).
-The density of the intridic trap, since it is independant of irradiation, is homogeneous in the sample.
-The densities of irradiation-induced traps, however, are hemegeneous in the 2.5 $\mu$m-thick self damaged region, and then quickly decreases to 0 in the bulk of the sample (with an transition length of 0.5 $\mu$m).
+The density of the intrinsic trap, since it is independent of irradiation, is homogeneous in the sample.
+The densities of irradiation-induced traps, however, are homogeneous in the 2.5 $\mu$m-thick self-damaged region, and then quickly decrease to 0 in the bulk of the sample, with a transition length of 0.5 $\mu$m.
 The full set of trap site densities is scaled uniformly from [val-2f](val-2f.md) values so the initial areal inventory matches the earlier `val-2k` natural-oxide preload.
 
 As in the current `val-2f` implementation, `val-2k` is solved in dimensionless form using:
@@ -79,7 +89,7 @@ The surface release is modeled as a finite recombination flux on both free surfa
 \hat{J} = 2 \hat{K}_r \hat{C}_M^2
 \end{equation}
 
-The comparison script rescales the mobile concentration, trapped concentrations, distance, and time back to physical units before plotting the TDS and initial-profile figures.
+The input file also writes physical-unit auxiliary variables and postprocessors for the mobile and trapped deuterium populations, and the comparison script reads those physical outputs directly when generating the TDS, inventory, and initial-profile figures.
 This remains a deliberate simplification for the first stage: the natural oxide is not yet represented as an explicit transport layer, and the current model establishes the tungsten diffusion, trapping, and D$_2$ release baseline that later iterations will build on.
 
 ## Case and Model Parameters
@@ -128,6 +138,8 @@ The current branch state uses the scaled six-trap `val-2f` reference model as th
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2k_natural_oxide_iteration_1_comparison
     caption=Current natural-oxide reference state for `val-2k` using the scaled six-trap `val-2f` family. The figure is intended as a branch baseline for subsequent retuning and physics additions.
+
+[val-2k_natural_oxide_iteration_1_comparison] compares the present tungsten-only six-trap baseline against the digitized natural-oxide `HD + D_2` desorption data from Fig. 6 of [!cite](Kremer2022oxide). The added temperature trace on the right axis shows exactly when the model begins to release deuterium relative to the experimental heating history. At this stage, the figure should be interpreted as a reference point for later refinement: it shows how much of the natural-oxide response can already be explained by tungsten diffusion, trapping, and surface recombination alone, and where additional oxide-related physics will be needed to improve the match to the measured release curve.
 
 !media comparison_val-2k.py
     image_name=val-2k_natural_oxide_iteration_1_inventory.png

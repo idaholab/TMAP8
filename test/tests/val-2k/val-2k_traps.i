@@ -76,27 +76,39 @@
 
   [initial_deuterium_trapped_intrinsic]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_intrinsic} * ${tungsten_density} / ${trap_concentration_reference_intrinsic}'
+    symbol_names = 'trap_sites_function'
+    symbol_values = 'trap_intrinsic_sites_function'
+    expression = 'trap_sites_function * ${tungsten_density} / ${trap_concentration_reference_intrinsic}'
   []
   [initial_deuterium_trapped_1]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_1} * ${tungsten_density} / ${trap_concentration_reference_1} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+    symbol_names = 'trap_sites_function'
+    symbol_values = 'trap_1_sites_function'
+    expression = 'trap_sites_function * ${tungsten_density} / ${trap_concentration_reference_1}'
   []
   [initial_deuterium_trapped_2]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_2} * ${tungsten_density} / ${trap_concentration_reference_2} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+    symbol_names = 'trap_sites_function'
+    symbol_values = 'trap_2_sites_function'
+    expression = 'trap_sites_function * ${tungsten_density} / ${trap_concentration_reference_2}'
   []
   [initial_deuterium_trapped_3]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_3} * ${tungsten_density} / ${trap_concentration_reference_3} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+    symbol_names = 'trap_sites_function'
+    symbol_values = 'trap_3_sites_function'
+    expression = 'trap_sites_function * ${tungsten_density} / ${trap_concentration_reference_3}'
   []
   [initial_deuterium_trapped_4]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_4} * ${tungsten_density} / ${trap_concentration_reference_4} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+    symbol_names = 'trap_sites_function'
+    symbol_values = 'trap_4_sites_function'
+    expression = 'trap_sites_function * ${tungsten_density} / ${trap_concentration_reference_4}'
   []
   [initial_deuterium_trapped_5]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_5} * ${tungsten_density} / ${trap_concentration_reference_5} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+    symbol_names = 'trap_sites_function'
+    symbol_values = 'trap_5_sites_function'
+    expression = 'trap_sites_function * ${tungsten_density} / ${trap_concentration_reference_5}'
   []
 []
 

@@ -28,6 +28,15 @@
     heavy = true
     requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a natural oxide layer during a TDS experiment using deuterium diffusion, trapping, and D2 surface recombination, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
   []
+  [val-2k_bdf2_initial_profile_csvdiff]
+    type = CSVDiff
+    input = val-2k.i
+    csvdiff = val-2k_profile_initial_out_line_profile_0000.csv
+    prereq = val-2k_bdf2_csvdiff
+    should_execute = false # this test relies on the output files from val-2k_bdf2_csvdiff, so it shouldn't be run twice
+    heavy = true
+    requirement = 'The system shall be able to output the initial deuterium concentration profile for the val-2k natural-oxide baseline, including the mobile and trapped populations used to initialize the desorption calculation.'
+  []
   [val-2k_comparison]
     type = RunCommand
     command = 'python3 comparison_val-2k.py'
