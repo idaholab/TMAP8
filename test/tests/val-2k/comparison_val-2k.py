@@ -54,7 +54,9 @@ def get_numeric_parameter(parameter_name):
                     }
                     factor = supported_time_conversions.get((from_unit, to_unit))
                     if factor is None:
-                        raise ValueError(f"Unsupported conversion in units expression: {value}")
+                        raise ValueError(
+                            f"Unsupported conversion in units expression: {value}"
+                        )
                     return numeric_value * factor
                 return float(value)
     raise KeyError(f"Could not find parameter {parameter_name} in {parameters_file}")
@@ -83,7 +85,8 @@ trapped_3_inventory = simulation_data["trapped_deuterium_3_physical"]
 trapped_4_inventory = simulation_data["trapped_deuterium_4_physical"]
 trapped_5_inventory = simulation_data["trapped_deuterium_5_physical"]
 release_flux = (
-    simulation_data["scaled_flux_surface_left"] + simulation_data["scaled_flux_surface_right"]
+    simulation_data["scaled_flux_surface_left"]
+    + simulation_data["scaled_flux_surface_right"]
 )
 release_rate = release_flux * sample_surface_area_m2 / 1e13
 
@@ -131,7 +134,9 @@ temperature_handle = ax_temperature.plot(
 simulated_on_experiment_grid = np.interp(experiment_time, time_h, release_rate)
 rmse = np.sqrt(np.mean((simulated_on_experiment_grid - experiment_flux) ** 2))
 rmspe = rmse * 100.0 / np.mean(experiment_flux)
-ax.text(2.6, 0.85 * max(release_rate.max(), experiment_flux.max()), f"RMSPE = {rmspe:.2f} %")
+ax.text(
+    2.6, 0.85 * max(release_rate.max(), experiment_flux.max()), f"RMSPE = {rmspe:.2f} %"
+)
 
 ax.set_xlabel("Time (h)")
 ax.set_ylabel("Release flux (10$^{13}$ D atoms/s)")
@@ -142,12 +147,18 @@ ax_temperature.set_ylabel("Temperature (K)")
 ax_temperature.set_ylim(280, 1100)
 ax.legend(
     [release_handle, experiment_handle, temperature_handle],
-    [release_handle.get_label(), experiment_handle.get_label(), temperature_handle.get_label()],
+    [
+        release_handle.get_label(),
+        experiment_handle.get_label(),
+        temperature_handle.get_label(),
+    ],
     loc="best",
 )
 ax.minorticks_on()
 
-plt.savefig("val-2k_natural_oxide_iteration_1_comparison.png", bbox_inches="tight", dpi=300)
+plt.savefig(
+    "val-2k_natural_oxide_iteration_1_comparison.png", bbox_inches="tight", dpi=300
+)
 plt.close(fig)
 
 fig, ax = plt.subplots(figsize=(6.5, 5.5))
@@ -230,7 +241,9 @@ ax.legend(
 )
 ax.minorticks_on()
 
-plt.savefig("val-2k_natural_oxide_iteration_1_inventory.png", bbox_inches="tight", dpi=300)
+plt.savefig(
+    "val-2k_natural_oxide_iteration_1_inventory.png", bbox_inches="tight", dpi=300
+)
 plt.close(fig)
 
 profile_data = pd.read_csv(profile_csv)
@@ -304,5 +317,7 @@ ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
 ax.legend(loc="best")
 ax.minorticks_on()
 
-plt.savefig("val-2k_natural_oxide_iteration_1_profile.png", bbox_inches="tight", dpi=300)
+plt.savefig(
+    "val-2k_natural_oxide_iteration_1_profile.png", bbox_inches="tight", dpi=300
+)
 plt.close(fig)
