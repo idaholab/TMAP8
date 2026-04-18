@@ -15,7 +15,7 @@
     type = Exodiff
     input = val-2k.i
     exodiff = val-2k_implicit_euler_out.e
-    prereq = val-2k_csvdiff
+    prereq = val-2k_implicit_euler_csvdiff
     should_execute = false
     heavy = true
     requirement = 'The system shall be able to produce the full field solution of a simulation of deuterium transport in self-irradiated tungsten with a natural oxide layer during a TDS experiment using deuterium diffusion, trapping, and D2 surface recombination, using the implicit Euler time integration scheme.'
