@@ -60,4 +60,3 @@ TMAP8 also contains [example cases](examples/tmap_index.md), which showcase how 
 | val-2g | [Deuterium Transport in Proton-Conducting Ceramics](val-2g.md) |
 | val-2k | [Oxide effects on deuterium release from self-irradiated tungsten](val-2k.md) |
 | val-2j | [Tritium TDS from Li$_2$TiO$_3$ Solid Breeder](val-2j.md) |
-(Update documentation and reference)

@@ -1,5 +1,5 @@
 # Validation Problem #val-2k
-# Incremental validation case for deuterium release from self-irradiated tungsten with
+# Validation case for deuterium release from self-irradiated tungsten with
 # natural and artificial oxide layers based on:
 # Kremer, K., Brucker, M., Jacob, W., Schwarz-Selinger, T. (2022)
 # "Influence of thin surface oxide films on hydrogen isotope release from ion-irradiated tungsten"
@@ -190,7 +190,7 @@
   []
   [recombination_rate_surface]
     type = ADDerivativeParsedMaterial
-    property_name = Kr
+    property_name = Kr_hat
     functor_names = 'temperature_history'
     functor_symbols = temperature
     expression = '${recombination_coefficient_hat} * exp(-${recombination_energy} / ${kb_eV} / temperature)'
@@ -199,8 +199,8 @@
     type = ADDerivativeParsedMaterial
     coupled_variables = deuterium_mobile
     property_name = flux_recombination_surface
-    material_property_names = Kr
-    expression = '-2 * Kr * deuterium_mobile ^ 2'
+    material_property_names = Kr_hat
+    expression = '-2 * Kr_hat * deuterium_mobile ^ 2'
   []
 []
 

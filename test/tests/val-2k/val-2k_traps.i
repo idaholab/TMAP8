@@ -1,5 +1,6 @@
-# This include adds the six scaled val-2f trap families used by val-2k.
-# It follows the deployed val-2f approach by introducing the trapped species
+
+# This input file defines the six scaled trap model used by val-2k.
+# It follows the approach deployed in val-2f by introducing the trapped species
 # through SpeciesTrapping physics blocks with dimensionless concentrations.
 
 [Bounds]
