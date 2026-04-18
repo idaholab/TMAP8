@@ -2,21 +2,31 @@
   design = 'SpeciesTrappingPhysics.md MatNeumannBC.md'
   issues = '#399'
   validation = 'val-2k.md'
-  [val-2k_csvdiff]
+  [val-2k_implicit_euler_csvdiff]
     type = CSVDiff
     input = val-2k.i
-    csvdiff = val-2k_out.csv
+    cli_args = 'Executioner/scheme=implicit-euler
+                Outputs/file_base=val-2k_implicit_euler_out'
+    csvdiff = val-2k_implicit_euler_out.csv
     heavy = true
-    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a natural oxide layer during a TDS experiment using deuterium diffusion, trapping, and D2 surface recombination.'
+    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a natural oxide layer during a TDS experiment using deuterium diffusion, trapping, and D2 surface recombination, using the implicit Euler time integration scheme.'
   []
-  [val-2k_exodiff]
+  [val-2k_implicit_euler_exodiff]
     type = Exodiff
     input = val-2k.i
-    exodiff = val-2k_out.e
+    exodiff = val-2k_implicit_euler_out.e
     prereq = val-2k_csvdiff
     should_execute = false
     heavy = true
-    requirement = 'The system shall be able to produce the full field solution of a simulation of deuterium transport in self-irradiated tungsten with a natural oxide layer during a TDS experiment using deuterium diffusion, trapping, and D2 surface recombination..'
+    requirement = 'The system shall be able to produce the full field solution of a simulation of deuterium transport in self-irradiated tungsten with a natural oxide layer during a TDS experiment using deuterium diffusion, trapping, and D2 surface recombination, using the implicit Euler time integration scheme.'
+  []
+  [val-2k_bdf2_csvdiff]
+    type = CSVDiff
+    input = val-2k.i
+    cli_args = 'Outputs/file_base=val-2k_out'
+    csvdiff = val-2k_out.csv
+    heavy = true
+    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a natural oxide layer during a TDS experiment using deuterium diffusion, trapping, and D2 surface recombination, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
   []
   [val-2k_comparison]
     type = RunCommand
