@@ -1,0 +1,1 @@
+../../../../test/tests/mini_canister/steel_only_comparison.py

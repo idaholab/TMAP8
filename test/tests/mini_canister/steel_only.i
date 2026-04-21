@@ -23,7 +23,7 @@ estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}' # For constant o
 pressure_function = 'constant_pressure'
 
 # Numerics
-num_elements_steel = 2000
+num_elements_steel = 1500
 endtime = '${units 0.25 year -> day}'
 dt_start = '${units 300 s -> day}'
 dt_max = '${units 7 day}'
@@ -266,5 +266,6 @@ dt_min = '${units 1 s -> day}'
 
 [Outputs]
   csv = true
+  exodus = true
   file_base = 'steel_only_out'
 []

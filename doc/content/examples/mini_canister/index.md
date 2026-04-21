@@ -5,7 +5,7 @@ TMAP8 is used to model hydrogen transport and permeation through an aluminum-cla
 1. [steel_only.i] — isolates hydrogen diffusion through the steel wall with an assumed boundary partial pressure. This simpler model permits verification against an analytical solution, provided the Dirichlet boundary conditions are time-independent.
 2. [gas_steel.i] — simulates the full system: radiolytic H$_2$ generation, gas-phase transport inside the canister, and simultaneous permeation through the steel wall. This model is validated against SRNL experimental measurements [!citep](d'entremont2024aunfminicanister).
 
-!media examples/figures/srnl_mini_canister.jpg
+!media examples/figures/srnl_mini_canister.jpeg
   id=fig:canister
   caption=SRNL AUNF mini-canister storage device.
   style=display:block;margin-left:auto;margin-right:auto;width:40%
