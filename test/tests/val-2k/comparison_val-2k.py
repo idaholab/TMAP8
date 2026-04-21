@@ -321,6 +321,7 @@ ax.plot(
 ax.set_xlabel("Distance to tungsten surface (um)")
 ax.set_ylabel("Deuterium concentration (atoms/m$^3$)")
 ax.set_xlim(left=0)
+ax.set_ylim(0, 9.5e26)
 ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
 ax.legend(loc="best")
 ax.minorticks_on()
