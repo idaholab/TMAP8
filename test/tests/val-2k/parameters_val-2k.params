@@ -13,15 +13,20 @@ kb_eV = '${units ${fparse kb / eV_to_J} eV/K}'
 # Geometry
 sample_thickness = '${units 0.8e-3 m -> mum}'
 damage_depth = '${units 2.3e-6 m -> mum}'
+left_refined_depth = '${units 8 mum}'
 buffer_depth = '${units 20e-6 m -> mum}'
-bulk_depth = '${fparse sample_thickness - damage_depth - buffer_depth}'
+buffer_fine_depth = '${fparse left_refined_depth - damage_depth}'
+buffer_coarse_depth = '${fparse buffer_depth - buffer_fine_depth}'
+bulk_depth = '${fparse sample_thickness - damage_depth - buffer_fine_depth - buffer_coarse_depth}'
 
 # Mesh settings
 ix_damage_fine = 120
 ix_buffer_fine = 120
+ix_buffer_coarse_fine = 34
 ix_bulk_fine = 180
 ix_damage_coarse = 40
 ix_buffer_coarse = 40
+ix_buffer_coarse_coarse = 12
 ix_bulk_coarse = 60
 profile_depth = '${units 3.1 mum}'
 profile_num_points = 163
@@ -65,7 +70,7 @@ recombination_energy = '${units 0.34 eV}'
 
 # val-2f six-trap reference scaled to preserve the current val-2k initial areal inventory
 depth_center = '${units 2.3e-6 m -> mum}'
-depth_width = '${units 5e-7 m -> mum}'
+depth_width = '${units 5e-8 m -> mum}'
 trap_density_scale = 6.6448483834798155 # (/)
 trapping_site_fraction_intrinsic = '${fparse trap_density_scale * 3.796146910885451e-07}' # (/)
 trapping_site_fraction_1 = '${fparse trap_density_scale * 7.322741092695964e-04}' # (/)
@@ -97,7 +102,8 @@ trap_concentration_reference_5_m3 = '${units 6.3222e20 at/m^3}'
 
 initial_mobile_concentration_hat = '${fparse initial_mobile_concentration / mobile_concentration_reference}'
 damage_depth_hat = '${fparse damage_depth / length_reference}'
-buffer_depth_hat = '${fparse buffer_depth / length_reference}'
+buffer_fine_depth_hat = '${fparse buffer_fine_depth / length_reference}'
+buffer_coarse_depth_hat = '${fparse buffer_coarse_depth / length_reference}'
 bulk_depth_hat = '${fparse bulk_depth / length_reference}'
 profile_depth_hat = '${fparse profile_depth / length_reference}'
 end_time_hat = '${fparse end_time / time_reference}'

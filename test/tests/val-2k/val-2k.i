@@ -24,16 +24,16 @@
   [mesh_fine]
     type = CartesianMeshGenerator
     dim = 1
-    dx = '${damage_depth_hat} ${buffer_depth_hat} ${bulk_depth_hat}'
-    ix = '${ix_damage_fine} ${ix_buffer_fine} ${ix_bulk_fine}'
-    subdomain_id = '0 0 0'
+    dx = '${damage_depth_hat} ${buffer_fine_depth_hat} ${buffer_coarse_depth_hat} ${bulk_depth_hat}'
+    ix = '${ix_damage_fine} ${ix_buffer_fine} ${ix_buffer_coarse_fine} ${ix_bulk_fine}'
+    subdomain_id = '0 0 0 0'
   []
   [mesh_coarse]
     type = CartesianMeshGenerator
     dim = 1
-    dx = '${damage_depth_hat} ${buffer_depth_hat} ${bulk_depth_hat}'
-    ix = '${ix_damage_coarse} ${ix_buffer_coarse} ${ix_bulk_coarse}'
-    subdomain_id = '0 0 0'
+    dx = '${damage_depth_hat} ${buffer_fine_depth_hat} ${buffer_coarse_depth_hat} ${bulk_depth_hat}'
+    ix = '${ix_damage_coarse} ${ix_buffer_coarse} ${ix_buffer_coarse_coarse} ${ix_bulk_coarse}'
+    subdomain_id = '0 0 0 0'
   []
 []
 
