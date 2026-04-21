@@ -1,8 +1,6 @@
 # Author: Evan Butterworth
 # Contact: Evan.Butterworth@inl.gov
 
-### Input parameters ###
-
 # Geometry
 inner_radius = '${units 1.415 in -> mm}' # Radius of canister containing gases
 steel_thickness = '${units 0.085 in -> mm}' # Thickness of steel enclosure
@@ -11,8 +9,7 @@ height = '${units 7.06 in -> mm}' # Height of canister
 
 # Misc
 temperature = '${units 313.15 K}' # INL Report: Section 2.3
-estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}' # SRNL Report: Estimation of Partial Pressure of H_2 with HE backfill to 24 psi
-ideal_gas_constant = '${units 8.31446261815324 J/K/mol -> J/K/mumol}' # Needed for concentration units in mumol/mm^3
+ideal_gas_constant = '${units 8.31446261815324 J/K/mol -> J/K/mumol}' # Note: EqulibriumBC uses value from PhysicalConstants namespace in K/K/mol
 
 # Sandia Technical Reference: Hydrogen Diffusivity & Solubility in 304 Stainless Steel
 diffusivity_preexponential_factor_in_steel = '${units 0.20e-6 m^2/s -> mm^2/day}'
@@ -20,6 +17,10 @@ diffusivity_activation_energy_in_steel = '${units 49.3 kJ/mol -> J/mumol}'
 diffusivity_H_in_steel = '${units ${fparse diffusivity_preexponential_factor_in_steel * exp(-diffusivity_activation_energy_in_steel/(ideal_gas_constant*temperature))} mm^2/day}'
 solubility_preexponential_factor_in_steel = '${units 266e-6 mumol/mm^3/Pa}' # Actual units are mumol/mm^3/sqrt(Pa) due to Sievert's law in EquilibriumBC
 solubility_activation_energy_in_steel = '${units 6.86 kJ/mol -> J/mol}' # J/mol needed since EquilibriumBC uses ideal gas constant in SI units from PhysicalConstants namespace
+
+# Pressure implementation: constant_pressure | time_ramp_pressure | SRNL_pressure_data_fun
+estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}' # For constant or time_ramp pressure. % estimation of partial pressure of H_2 with HE backfill to 24 psi
+pressure_function = 'constant_pressure'
 
 # Numerics
 num_elements_steel = 2000
@@ -41,7 +42,7 @@ dt_min = '${units 1 s -> day}'
 []
 
 [Variables]
-  [H_mobile_steel]
+  [H_mobile_steel] # Mobile H atoms within steel
   []
 []
 
@@ -52,6 +53,7 @@ dt_min = '${units 1 s -> day}'
     family = MONOMIAL # Need element rather than nodal family to define gradient at a node
   []
   [T] # Temperature
+    initial_condition = ${temperature}
   []
 []
 
@@ -76,65 +78,10 @@ dt_min = '${units 1 s -> day}'
   []
 []
 
-[BCs]
-  [gas_steel_boundary] # Species equilibrium condition between internal gas and steel wall
-    type = EquilibriumBC
-    Ko = '${solubility_preexponential_factor_in_steel}'
-    Ko_scaling_factor = 2 # Convert from molecular to atomic solubility
-    boundary = '0'
-    activation_energy = '${solubility_activation_energy_in_steel}'
-    enclosure_var = H_partial_pressure_gas
-    variable = H_mobile_steel
-    temperature = T
-    p = 0.5 # Sieverts' Law
-  []
-
-  [steel_air_boundary] # Boundary of steel and outside environment
-    type = DirichletBC
-    boundary = '1'
-    value = 0
-    variable = H_mobile_steel
-  []
-[]
-
-[Functions]
-  [constant_pressure]
-    type = ConstantFunction
-    value = '${estimated_pressure_gas}'
-  []
-  [time_ramp_pressure]
-    type = TimeRampFunction
-    final_value = '${estimated_pressure_gas}'
-    initial_value = 0
-    ramp_duration = '${units 3 h -> day}'
-  []
-  [SRNL_pressure_data_fun]
-    type = ParsedFunction
-    expression = '376.7588*t^0.6177'
-  []
-[]
-
 [AuxKernels]
-
-  # List preferred pressure implementation here
-  active = 'constant_pressure_fit
-  constant_temperature concentration_gradient_left_boundary'
-
-  [constant_pressure_fit]
+  [pressure_aux]
     type = FunctionAux
-    function = constant_pressure
-    variable = H_partial_pressure_gas
-  []
-
-  [time_ramp_pressure_fit]
-    type = FunctionAux
-    function = time_ramp_pressure
-    variable = H_partial_pressure_gas
-  []
-
-  [SRNL_pressure_fit]
-    type = FunctionAux
-    function = SRNL_pressure_data_fun
+    function = ${pressure_function}
     variable = H_partial_pressure_gas
   []
 
@@ -154,9 +101,47 @@ dt_min = '${units 1 s -> day}'
   []
 []
 
+[BCs]
+  [gas_steel_boundary] # Species equilibrium condition between internal gas and steel wall
+    type = EquilibriumBC
+    Ko = '${solubility_preexponential_factor_in_steel}'
+    Ko_scaling_factor = 2 # Convert solubility to represent H atoms
+    boundary = '0'
+    activation_energy = '${solubility_activation_energy_in_steel}'
+    enclosure_var = H_partial_pressure_gas
+    variable = H_mobile_steel
+    temperature = T
+    p = 0.5 # Sieverts' Law
+  []
+
+  [steel_air_boundary] # Boundary of steel and outside environment
+    type = DirichletBC
+    boundary = '1'
+    value = 0
+    variable = H_mobile_steel
+  []
+[]
+
+[Functions]
+  [constant_pressure] # Assumed
+    type = ConstantFunction
+    value = '${estimated_pressure_gas}'
+  []
+  [time_ramp_pressure]
+    type = TimeRampFunction
+    initial_value = 0
+    final_value = '${estimated_pressure_gas}'
+    ramp_duration = '${units 3 h -> day}'
+  []
+  [SRNL_pressure_data_fun] # Power model linear least sqaures fit to Pa vs days
+    type = ParsedFunction
+    expression = '376.7588*t^0.6177'
+  []
+[]
+
 [Postprocessors]
 
-  ### Diffusion front verification ###
+  # Diffusion front verification
 
   [exact_diffusion_length]   # Analytical Diffusion length (time-independent BC required for this to be correct)
     type = ParsedPostprocessor
@@ -190,7 +175,7 @@ dt_min = '${units 1 s -> day}'
     outputs = csv
   []
 
-  ### Conservation of mass ###
+  # Conservation of mass
 
   [mass_in_domain] # Axisymmetric: 2D integral of annulus
     type = ElementIntegralVariablePostprocessor
@@ -269,6 +254,7 @@ dt_min = '${units 1 s -> day}'
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
   end_time = ${endtime}
+  automatic_scaling = true
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = ${dt_start}
@@ -279,7 +265,6 @@ dt_min = '${units 1 s -> day}'
 []
 
 [Outputs]
-  exodus = true
   csv = true
   file_base = 'steel_only_out'
 []

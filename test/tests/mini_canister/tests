@@ -15,6 +15,7 @@
   []
   [gas_steel_csvdiff]
     type = CSVDiff
+    heavy = true
     input = 'gas_steel.i'
     csvdiff = gas_steel_out.csv
     requirement = 'The system shall be able to model hydrogen generation and permeation through the gas chamber and steel walls of the SRNL mini-canister'
