@@ -15,7 +15,7 @@ The current implementation covers two deuterium-only configurations for the stag
 - the original one-dimensional tungsten-only surrogate for the natural-oxide reference sample
 - a companion one-dimensional model with a front 5 nm oxide layer and a tungsten substrate
 - six trap families in the self-irradiated tungsten near-surface region using the [SpeciesTrappingPhysics](physics/SpeciesTrappingPhysics.md) syntax
-- deuterium recombination and release as D$_2$ on the free surfaces
+- deuterium release through phenomenological D$_2$ and D$_2$O surface channels on the free surfaces
 - the experimental desorption temperature history digitized from `Experimental_desorption_temperature.csv`
 
 The current implementation does not yet include:
@@ -30,7 +30,7 @@ Those additions are deferred to later iterations so their individual influence o
 
 The reference sample history is still taken from the natural-oxide experiment in [!cite](Kremer2022oxide). In the experiment, the tungsten specimen is first prepared with a self-damaged near-surface region, then loaded with deuterium so that the retained inventory is concentrated in the first few micrometers of the sample. The tungsten-only input keeps that history but does not add an explicit oxide block, so it remains the original baseline surrogate for the natural-oxide case. The companion 5 nm input keeps the same deuterium preload and tungsten trapping model, but inserts a separate front oxide transport layer so the effect of that additional barrier can be assessed directly against the 5 nm experimental curve.
 
-Both desorption calculations start from the same preloaded tungsten state and follow the digitized temperature history from `Experimental_desorption_temperature.csv`, which heats the sample from about 296 K to about 1001 K over roughly 4.17 h. This stepwise setup isolates the contribution of the explicit oxide layer from the already-established tungsten diffusion, trapping, and surface release model.
+Both desorption calculations start from the same preloaded tungsten state and follow the digitized temperature history from `Experimental_desorption_temperature.csv`, which heats the sample from about 296 K to about 1001 K over roughly 4.17 h. This stepwise setup isolates the contribution of the explicit oxide layer from the already-established tungsten diffusion, trapping, and surface release model. A phenomenological D$_2$O surface-loss channel is now included in parallel with the existing D$_2$ release channel, but it does not yet consume or evolve an explicit oxygen inventory.
 
 The initial deuterium profile used at the start of desorption is shown in [val-2k_natural_oxide_iteration_1_profile]. This figure is reported for the tungsten-only baseline because that preload is the common starting point used before the explicit 5 nm oxide layer is added. In the current six-trap baseline, most of the retained inventory is placed in the irradiation-induced traps inside the damaged zone, while the mobile deuterium concentration is comparatively small. The sharp drop beyond the first few micrometers reflects the prescribed trap-density distribution used to localize the self-damage near the exposed surface; this figure reports the model initial condition for the desorption calculation rather than a direct fit of the measured depth profile.
 
@@ -83,13 +83,13 @@ while the same Arrhenius diffusivity and detrapping energetics as [val-2f](val-2
 \hat{D} = \hat{D}_0 \exp \left(- \frac{E_D}{k_B T} \right)
 \end{equation}
 
-The surface release is modeled as a finite recombination flux on both free surfaces in the same dimensionless form used in [val-2f](val-2f.md):
+The surface release is modeled as finite fluxes on both free surfaces. The baseline D$_2$ channel uses the same dimensionless recombination form as [val-2f](val-2f.md):
 
 \begin{equation}
 \hat{J} = 2 \hat{K}_r \hat{C}_M^2
 \end{equation}
 
-The companion 5 nm oxide layer is modeled here as a constant barrier with effective thickness and Arrhenius diffusivity parameters. No oxide-specific traps, no partition coefficient, and no oxide reduction are included yet. Both input files write physical-unit auxiliary variables and postprocessors for the mobile and trapped deuterium populations, and the comparison script reads those physical outputs directly when generating the TDS, inventory, and initial-profile figures. This remains a deliberate simplification for the current stage: the tungsten-only surrogate is preserved as the original baseline, and the explicit 5 nm oxide geometry is added only as a controlled next comparison.
+The same phenomenological form is also used for a D$_2$O surface-loss channel with its own Arrhenius parameters. In the current stage those D$_2$O parameters are set equal to the D$_2$ values, which means the water-release mechanism is present structurally but still assumes an effectively constant oxygen supply at the surface. The companion 5 nm oxide layer is modeled here as a constant barrier with effective thickness and Arrhenius diffusivity parameters. No oxide-specific traps, no partition coefficient, and no oxide reduction are included yet. Both input files write physical-unit auxiliary variables and postprocessors for the mobile and trapped deuterium populations, and the comparison script reads those physical outputs directly when generating the TDS, inventory, and initial-profile figures. This remains a deliberate simplification for the current stage: the tungsten-only surrogate is preserved as the original baseline, the explicit 5 nm oxide geometry is added only as a controlled next comparison, and the new D$_2$O channel is a phenomenological release mechanism rather than a mechanistic oxide-reduction model.
 
 ## Case and Model Parameters
 
@@ -130,10 +130,12 @@ The current baseline parameters are listed in [val-2k_parameters].
 | $C_{T_5,0}$ | Trap 5 site density | 5.228 $\times 10^{25}$ | at/m$^3$ | Scaled from [val-2f](val-2f.md) |
 | $K_r$ | Recombination prefactor | 3.8 $\times 10^{-16}$ | m$^4$/at/s | Adopted from [val-2f](val-2f.md) for the initial baseline |
 | $E_r$ | Recombination activation energy | 0.34 | eV | Adopted from [val-2f](val-2f.md) for the initial baseline |
+| $K_r^{D_2O}$ | D$_2$O surface-release prefactor | 3.8 $\times 10^{-16}$ | m$^4$/at/s | Provisional assumption, set equal to $K_r$ in the current stage |
+| $E_r^{D_2O}$ | D$_2$O surface-release activation energy | 0.34 | eV | Provisional assumption, set equal to $E_r$ in the current stage |
 
 ## Results
 
-The current branch state keeps the scaled six-trap `val-2f` tungsten-only model as the original baseline and adds a second input with a constant front 5 nm oxide transport layer. Both solves use the same `val-2f`-style adimensional mobile transport and `SpeciesTrappingPhysics` syntax in tungsten, while the comparison script converts the results back to physical units. The script now overlays the natural-oxide and 5 nm experimental `HD + D_2` curves against their corresponding model predictions, while the profile and inventory figures continue to document the shared tungsten preload baseline.
+The current branch state keeps the scaled six-trap `val-2f` tungsten-only model as the original baseline and adds a second input with a constant front 5 nm oxide transport layer. Both solves use the same `val-2f`-style adimensional mobile transport and `SpeciesTrappingPhysics` syntax in tungsten, while the comparison script converts the results back to physical units. The script now overlays the natural-oxide and 5 nm experimental `HD + D_2` curves together with the experimental `HDO + D_2O` curves against their corresponding model predictions, while the profile and inventory figures continue to document the shared tungsten preload baseline.
 
 !media comparison_val-2k.py
     image_name=val-2k_natural_oxide_iteration_1_comparison.png
@@ -141,7 +143,7 @@ The current branch state keeps the scaled six-trap `val-2f` tungsten-only model 
     id=val-2k_natural_oxide_iteration_1_comparison
     caption=Current `val-2k` deuterium-only comparison state, showing the tungsten-only natural-oxide surrogate and the companion explicit 5 nm oxide-layer case against the corresponding Fig. 6 experimental curves.
 
-[val-2k_natural_oxide_iteration_1_comparison] compares the tungsten-only baseline against the digitized natural-oxide `HD + D_2` desorption data from Fig. 6 of [!cite](Kremer2022oxide), and also compares the explicit 5 nm oxide input against the 5 nm experimental curve from the same figure. The added temperature trace on the right axis shows exactly when both models begin to release deuterium relative to the experimental heating history. At this stage, the figure should be interpreted as a controlled side-by-side reference point: the no-oxide case preserves the earlier surrogate baseline, while the explicit 5 nm case isolates the effect of adding a simple transport barrier before any oxide chemistry or reduction physics is introduced.
+[val-2k_natural_oxide_iteration_1_comparison] compares the tungsten-only baseline against the digitized natural-oxide `HD + D_2` and `HDO + D_2O` desorption data from Fig. 6 of [!cite](Kremer2022oxide), and also compares the explicit 5 nm oxide input against the corresponding 5 nm experimental curves from the same figure. The added temperature trace on the right axis shows exactly when both models begin to release deuterium relative to the experimental heating history. At this stage, the figure should be interpreted as a controlled side-by-side reference point: the no-oxide case preserves the earlier surrogate baseline, the explicit 5 nm case isolates the effect of adding a simple transport barrier, and the new D$_2$O curves should be interpreted as a phenomenological surface-release partition rather than a mechanistic water-formation model.
 
 !media comparison_val-2k.py
     image_name=val-2k_natural_oxide_iteration_1_inventory.png

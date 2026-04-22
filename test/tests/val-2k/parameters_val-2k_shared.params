@@ -64,6 +64,8 @@ detrapping_energy_intrinsic = '${fparse ${units 1.04 eV -> J} / kb}'
 # Surface recombination
 recombination_coefficient = '${units 3.8e-16 m^4/at/s -> mum^4/at/s}'
 recombination_energy = '${units 0.34 eV}'
+d2o_recombination_coefficient = '${fparse recombination_coefficient}'
+d2o_recombination_energy = '${fparse recombination_energy}'
 
 # val-2f six-trap reference scaled to preserve the current val-2k initial areal inventory
 depth_center = '${units 2.3e-6 m -> mum}'
@@ -120,3 +122,4 @@ dimensionless_release_rate_coefficient_5 = '${fparse detrapping_prefactor_5 * ti
 
 diffusion_W_preexponential_hat = '${fparse diffusion_W_preexponential * time_reference / (length_reference ^ 2)}'
 recombination_coefficient_hat = '${fparse recombination_coefficient * mobile_concentration_reference * time_reference / length_reference}'
+d2o_recombination_coefficient_hat = '${fparse d2o_recombination_coefficient * mobile_concentration_reference * time_reference / length_reference}'

@@ -9,17 +9,25 @@
 
 # Oxide geometry and transport
 oxide_thickness = '${units 5 nm -> mum}'
+left_refined_total_depth = '${fparse 2 * oxide_thickness}'
+left_refined_tungsten_depth = '${fparse left_refined_total_depth - oxide_thickness}'
 oxide_buffer_fine_depth = '${fparse left_refined_depth - oxide_thickness - damage_depth}'
 oxide_buffer_coarse_depth = '${fparse buffer_depth - oxide_buffer_fine_depth}'
 oxide_bulk_depth = '${fparse sample_thickness - oxide_thickness - damage_depth - oxide_buffer_fine_depth - oxide_buffer_coarse_depth}'
 
-ix_oxide_fine = 20
-ix_oxide_coarse = 4
+ix_oxide_fine = 15
+ix_left_refined_tungsten_fine = 15
+ix_damage_remainder_fine = '${fparse ix_damage_fine - ix_left_refined_tungsten_fine}'
+ix_oxide_coarse = 3
+ix_left_refined_tungsten_coarse = 3
+ix_damage_remainder_coarse = '${fparse ix_damage_coarse - ix_left_refined_tungsten_coarse}'
 
 diffusion_oxide_preexponential = ${diffusion_W_preexponential} ####'${units 1e-10 m^2/s -> mum^2/s}'
 diffusion_oxide_energy = '${diffusion_W_energy}'
 
 oxide_thickness_hat = '${fparse oxide_thickness / length_reference}'
+left_refined_tungsten_depth_hat = '${fparse left_refined_tungsten_depth / length_reference}'
+damage_remainder_depth_hat = '${fparse damage_depth_hat - left_refined_tungsten_depth_hat}'
 oxide_buffer_fine_depth_hat = '${fparse oxide_buffer_fine_depth / length_reference}'
 oxide_buffer_coarse_depth_hat = '${fparse oxide_buffer_coarse_depth / length_reference}'
 oxide_bulk_depth_hat = '${fparse oxide_bulk_depth / length_reference}'
