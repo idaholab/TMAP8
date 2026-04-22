@@ -1,7 +1,6 @@
 import os
-import tempfile
-from glob import glob
 import re
+import tempfile
 
 os.environ.setdefault("MPLCONFIGDIR", tempfile.mkdtemp(prefix="matplotlib-val-2k-"))
 
@@ -10,8 +9,8 @@ import numpy as np
 import pandas as pd
 from matplotlib.patches import Patch
 
-# Setup: work from the script directory so MooseDocs and local test runs resolve
-# the same relative paths.
+# Stage 1: resolve all file paths from the script directory so MooseDocs and
+# local test runs use the same relative paths.
 script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
 
@@ -22,125 +21,167 @@ def get_repo_relative_path(test_path):
     return os.path.join(".", test_path)
 
 
-def get_latest_profile_csv(pattern):
-    matches = sorted(glob(pattern))
-    if not matches:
-        raise FileNotFoundError(f"No profile CSV found matching {pattern}")
-    return matches[-1]
-
-
 def get_numeric_parameter(parameter_name):
     parameters_file = get_repo_relative_path("parameters_val-2k.params")
-    with open(parameters_file, encoding="utf-8") as handle:
-        for line in handle:
-            stripped = line.strip()
-            if stripped.startswith(f"{parameter_name} ="):
-                value = stripped.split("=", maxsplit=1)[1].strip().strip("'")
-                if value.startswith("${units ") and value.endswith("}"):
-                    units_expr = value[len("${units ") : -1].strip()
-                    match = re.fullmatch(
-                        r"([0-9eE.+-]+)\s+([A-Za-z/]+)(?:\s*->\s*([A-Za-z/]+))?",
-                        units_expr,
-                    )
-                    if not match:
-                        raise ValueError(f"Unsupported units expression: {value}")
-                    numeric_value = float(match.group(1))
-                    from_unit = match.group(2)
-                    to_unit = match.group(3)
-                    if to_unit is None or from_unit == to_unit:
-                        return numeric_value
-                    supported_time_conversions = {
-                        ("h", "s"): 3600.0,
-                        ("s", "h"): 1.0 / 3600.0,
-                    }
-                    factor = supported_time_conversions.get((from_unit, to_unit))
-                    if factor is None:
-                        raise ValueError(
-                            f"Unsupported conversion in units expression: {value}"
-                        )
-                    return numeric_value * factor
-                return float(value)
-    raise KeyError(f"Could not find parameter {parameter_name} in {parameters_file}")
+
+    def parse_numeric_value(value):
+        if value.startswith("${units ") and value.endswith("}"):
+            units_expr = value[len("${units ") : -1].strip()
+            match = re.fullmatch(
+                r"([0-9eE.+-]+)\s+([A-Za-z/]+)(?:\s*->\s*([A-Za-z/]+))?",
+                units_expr,
+            )
+            if not match:
+                raise ValueError(f"Unsupported units expression: {value}")
+            numeric_value = float(match.group(1))
+            from_unit = match.group(2)
+            to_unit = match.group(3)
+            if to_unit is None or from_unit == to_unit:
+                return numeric_value
+            supported_time_conversions = {
+                ("h", "s"): 3600.0,
+                ("s", "h"): 1.0 / 3600.0,
+            }
+            factor = supported_time_conversions.get((from_unit, to_unit))
+            if factor is None:
+                raise ValueError(f"Unsupported conversion in units expression: {value}")
+            return numeric_value * factor
+        return float(value)
+
+    def search_parameter(path, visited):
+        if path in visited:
+            return None
+        visited.add(path)
+        with open(path, encoding="utf-8") as handle:
+            for line in handle:
+                stripped = line.strip()
+                if stripped.startswith("!include "):
+                    include_name = stripped.split(maxsplit=1)[1]
+                    include_path = os.path.join(os.path.dirname(path), include_name)
+                    result = search_parameter(include_path, visited)
+                    if result is not None:
+                        return result
+                if stripped.startswith(f"{parameter_name} ="):
+                    value = stripped.split("=", maxsplit=1)[1].strip().strip("'")
+                    return parse_numeric_value(value)
+        return None
+
+    result = search_parameter(parameters_file, set())
+    if result is None:
+        raise KeyError(f"Could not find parameter {parameter_name} in {parameters_file}")
+    return result
 
 
 def load_experimental_curve(filename):
     return pd.read_csv(get_repo_relative_path(f"gold/{filename}"))
 
 
-# Stage 1: load the simulated CSV outputs and the experimental desorption curve
-# used in the current natural-oxide comparison.
-simulation_csv = get_repo_relative_path("gold/val-2k_out.csv")
-profile_csv = get_latest_profile_csv(
-    get_repo_relative_path("gold/val-2k_profile_initial_out_line_profile_*.csv")
-)
+def load_simulation_case(csv_name):
+    simulation_data = pd.read_csv(get_repo_relative_path(f"gold/{csv_name}"))
+    time_s = simulation_data["time"] * time_reference
+    release_flux = (
+        simulation_data["scaled_flux_surface_left"]
+        + simulation_data["scaled_flux_surface_right"]
+    )
+    return {
+        "data": simulation_data,
+        "time_s": time_s,
+        "time_h": time_s / 3600.0,
+        "temperature_k": simulation_data["temperature_pps"],
+        "mobile_inventory": simulation_data["mobile_inventory_physical"],
+        "trapped_intrinsic_inventory": simulation_data[
+            "trapped_deuterium_intrinsic_physical"
+        ],
+        "trapped_1_inventory": simulation_data["trapped_deuterium_1_physical"],
+        "trapped_2_inventory": simulation_data["trapped_deuterium_2_physical"],
+        "trapped_3_inventory": simulation_data["trapped_deuterium_3_physical"],
+        "trapped_4_inventory": simulation_data["trapped_deuterium_4_physical"],
+        "trapped_5_inventory": simulation_data["trapped_deuterium_5_physical"],
+        "release_rate": release_flux * sample_surface_area_m2 / 1e13,
+    }
+
+
+def compute_rmspe(case_time_h, case_release_rate, experimental_curve):
+    experiment_time = experimental_curve["time (h)"]
+    experiment_flux = experimental_curve["release flux (10^13 D atoms/s)"]
+    simulated_on_experiment_grid = np.interp(experiment_time, case_time_h, case_release_rate)
+    rmse = np.sqrt(np.mean((simulated_on_experiment_grid - experiment_flux) ** 2))
+    return rmse * 100.0 / np.mean(experiment_flux)
+
+
+# Stage 2: load the simulated outputs for the tungsten-only and explicit-oxide
+# cases, together with the experimental curves from Fig. 6.
 time_reference = get_numeric_parameter("time_reference")
 sample_surface_area_m2 = 10e-3 * 14e-3
 
-simulation_data = pd.read_csv(simulation_csv)
-time_s = simulation_data["time"] * time_reference
-time_h = time_s / 3600.0
-temperature_k = simulation_data["temperature_pps"]
-mobile_inventory = simulation_data["mobile_inventory_physical"]
-trapped_intrinsic_inventory = simulation_data["trapped_deuterium_intrinsic_physical"]
-trapped_1_inventory = simulation_data["trapped_deuterium_1_physical"]
-trapped_2_inventory = simulation_data["trapped_deuterium_2_physical"]
-trapped_3_inventory = simulation_data["trapped_deuterium_3_physical"]
-trapped_4_inventory = simulation_data["trapped_deuterium_4_physical"]
-trapped_5_inventory = simulation_data["trapped_deuterium_5_physical"]
-release_flux = (
-    simulation_data["scaled_flux_surface_left"]
-    + simulation_data["scaled_flux_surface_right"]
+baseline_case = load_simulation_case("val-2k_out.csv")
+oxide_case = load_simulation_case("val-2k_5nm_oxide_out.csv")
+baseline_profile = pd.read_csv(
+    get_repo_relative_path("gold/val-2k_profile_initial_out_line_profile_0000.csv")
 )
-release_rate = release_flux * sample_surface_area_m2 / 1e13
 
-experimental_fig6_curves = {
-    "hd_d2_nat_oxide": load_experimental_curve("experimental_HD_D2_nat_oxide.csv"),
-    "hd_d2_5nm": load_experimental_curve("experimental_HD_D2_5nm.csv"),
-    "hd_d2_10nm": load_experimental_curve("experimental_HD_D2_10nm.csv"),
-    "hd_d2_15nm": load_experimental_curve("experimental_HD_D2_15nm.csv"),
-    "hdo_d2o_nat_oxide": load_experimental_curve("experimental_HDO_D2O_nat_oxide.csv"),
-    "hdo_d2o_5nm": load_experimental_curve("experimental_HDO_D2O_5nm.csv"),
-    "hdo_d2o_10nm": load_experimental_curve("experimental_HDO_D2O_10nm.csv"),
-    "hdo_d2o_15nm": load_experimental_curve("experimental_HDO_D2O_15nm.csv"),
-}
-natural_oxide_experiment = experimental_fig6_curves["hd_d2_nat_oxide"]
+natural_oxide_experiment = load_experimental_curve("experimental_HD_D2_nat_oxide.csv")
+oxide_5nm_experiment = load_experimental_curve("experimental_HD_D2_5nm.csv")
 
-# Stage 2: generate the desorption comparison figure with the imposed
-# temperature history on the right axis.
-fig, ax = plt.subplots(figsize=(6.5, 5.5))
-release_handle = ax.plot(
-    time_h,
-    release_rate,
+# Stage 3: generate the desorption comparison figure for both currently modeled
+# cases and include the imposed temperature history on the right axis.
+fig, ax = plt.subplots(figsize=(6.8, 5.6))
+
+baseline_handle = ax.plot(
+    baseline_case["time_h"],
+    baseline_case["release_rate"],
     linestyle="-",
     color="tab:blue",
-    label="TMAP8 six-trap reference",
+    label="TMAP8 no oxide layer",
 )[0]
-
-experiment_time = natural_oxide_experiment["time (h)"]
-experiment_flux = natural_oxide_experiment["release flux (10^13 D atoms/s)"]
-experiment_handle = ax.plot(
-    experiment_time,
-    experiment_flux,
+oxide_handle = ax.plot(
+    oxide_case["time_h"],
+    oxide_case["release_rate"],
+    linestyle="-",
+    color="tab:green",
+    label="TMAP8 5 nm oxide layer",
+)[0]
+natural_experiment_handle = ax.plot(
+    natural_oxide_experiment["time (h)"],
+    natural_oxide_experiment["release flux (10^13 D atoms/s)"],
     linestyle="--",
     color="k",
     label="Experimental HD + D2 (nat. oxide)",
 )[0]
+oxide_experiment_handle = ax.plot(
+    oxide_5nm_experiment["time (h)"],
+    oxide_5nm_experiment["release flux (10^13 D atoms/s)"],
+    linestyle="--",
+    color="0.45",
+    label="Experimental HD + D2 (5 nm oxide)",
+)[0]
 
 ax_temperature = ax.twinx()
 temperature_handle = ax_temperature.plot(
-    time_h,
-    temperature_k,
+    baseline_case["time_h"],
+    baseline_case["temperature_k"],
     linestyle=":",
     color="tab:red",
     linewidth=1.5,
     label="TMAP8 temperature history",
 )[0]
 
-simulated_on_experiment_grid = np.interp(experiment_time, time_h, release_rate)
-rmse = np.sqrt(np.mean((simulated_on_experiment_grid - experiment_flux) ** 2))
-rmspe = rmse * 100.0 / np.mean(experiment_flux)
+baseline_rmspe = compute_rmspe(
+    baseline_case["time_h"], baseline_case["release_rate"], natural_oxide_experiment
+)
+oxide_rmspe = compute_rmspe(
+    oxide_case["time_h"], oxide_case["release_rate"], oxide_5nm_experiment
+)
 ax.text(
-    2.6, 0.85 * max(release_rate.max(), experiment_flux.max()), f"RMSPE = {rmspe:.2f} %"
+    2.55,
+    0.87
+    * max(
+        baseline_case["release_rate"].max(),
+        oxide_case["release_rate"].max(),
+        natural_oxide_experiment["release flux (10^13 D atoms/s)"].max(),
+        oxide_5nm_experiment["release flux (10^13 D atoms/s)"].max(),
+    ),
+    f"No oxide RMSPE = {baseline_rmspe:.2f} %\n5 nm oxide RMSPE = {oxide_rmspe:.2f} %",
 )
 
 ax.set_xlabel("Time (h)")
@@ -151,10 +192,18 @@ ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
 ax_temperature.set_ylabel("Temperature (K)")
 ax_temperature.set_ylim(280, 1100)
 ax.legend(
-    [release_handle, experiment_handle, temperature_handle],
     [
-        release_handle.get_label(),
-        experiment_handle.get_label(),
+        baseline_handle,
+        oxide_handle,
+        natural_experiment_handle,
+        oxide_experiment_handle,
+        temperature_handle,
+    ],
+    [
+        baseline_handle.get_label(),
+        oxide_handle.get_label(),
+        natural_experiment_handle.get_label(),
+        oxide_experiment_handle.get_label(),
         temperature_handle.get_label(),
     ],
     loc="best",
@@ -166,38 +215,40 @@ plt.savefig(
 )
 plt.close(fig)
 
-# Stage 3: generate the inventory history figure showing the cumulative
+# Stage 4: generate the baseline inventory history figure showing the cumulative
 # deuterium inventory and the contribution of each trap family.
 fig, ax = plt.subplots(figsize=(6.5, 5.5))
 cmap = plt.get_cmap("viridis")
 inventory_colors = cmap(np.linspace(0, 1, 7))
 inventory_series = [
-    ("Trap 5 D", trapped_5_inventory, inventory_colors[0]),
-    ("Trap 4 D", trapped_4_inventory, inventory_colors[1]),
-    ("Trap 3 D", trapped_3_inventory, inventory_colors[2]),
-    ("Trap 2 D", trapped_2_inventory, inventory_colors[3]),
-    ("Intrinsic trap D", trapped_intrinsic_inventory, inventory_colors[4]),
-    ("Trap 1 D", trapped_1_inventory, inventory_colors[5]),
-    ("Mobile D", mobile_inventory, inventory_colors[6]),
+    ("Trap 5 D", baseline_case["trapped_5_inventory"], inventory_colors[0]),
+    ("Trap 4 D", baseline_case["trapped_4_inventory"], inventory_colors[1]),
+    ("Trap 3 D", baseline_case["trapped_3_inventory"], inventory_colors[2]),
+    ("Trap 2 D", baseline_case["trapped_2_inventory"], inventory_colors[3]),
+    ("Intrinsic trap D", baseline_case["trapped_intrinsic_inventory"], inventory_colors[4]),
+    ("Trap 1 D", baseline_case["trapped_1_inventory"], inventory_colors[5]),
+    ("Mobile D", baseline_case["mobile_inventory"], inventory_colors[6]),
 ]
-inventory_bottom = np.zeros_like(mobile_inventory)
+inventory_bottom = np.zeros_like(baseline_case["mobile_inventory"])
 legend_patches = []
 
 for label, values, color in inventory_series:
     ax.fill_between(
-        time_h,
+        baseline_case["time_h"],
         inventory_bottom,
         inventory_bottom + values,
         color=color,
         alpha=0.3,
     )
-    ax.plot(time_h, inventory_bottom + values, color=color, linewidth=1.0)
+    ax.plot(
+        baseline_case["time_h"], inventory_bottom + values, color=color, linewidth=1.0
+    )
     inventory_bottom += values
     legend_patches.append(Patch(color=color, alpha=0.5, label=label))
 
 total_inventory = inventory_bottom.copy()
 total_handle = ax.plot(
-    time_h,
+    baseline_case["time_h"],
     total_inventory,
     color="tab:green",
     linewidth=1.5,
@@ -206,8 +257,8 @@ total_handle = ax.plot(
 
 ax_temperature = ax.twinx()
 temperature_handle = ax_temperature.plot(
-    time_h,
-    temperature_k,
+    baseline_case["time_h"],
+    baseline_case["temperature_k"],
     linestyle=":",
     color="tab:orange",
     linewidth=1.5,
@@ -253,18 +304,17 @@ plt.savefig(
 )
 plt.close(fig)
 
-# Stage 4: generate the initial concentration profile used to start the
+# Stage 5: generate the baseline initial concentration profile used to start the
 # desorption calculation.
-profile_data = pd.read_csv(profile_csv)
-distance_to_surface_microns = profile_data["x"]
-deuterium_total = profile_data["deuterium_total_physical"]
-deuterium_mobile = profile_data["deuterium_mobile_physical"]
-deuterium_trapped_intrinsic = profile_data["deuterium_trapped_intrinsic_physical"]
-deuterium_trapped_1 = profile_data["deuterium_trapped_1_physical"]
-deuterium_trapped_2 = profile_data["deuterium_trapped_2_physical"]
-deuterium_trapped_3 = profile_data["deuterium_trapped_3_physical"]
-deuterium_trapped_4 = profile_data["deuterium_trapped_4_physical"]
-deuterium_trapped_5 = profile_data["deuterium_trapped_5_physical"]
+distance_to_surface_microns = baseline_profile["x"]
+deuterium_total = baseline_profile["deuterium_total_physical"]
+deuterium_mobile = baseline_profile["deuterium_mobile_physical"]
+deuterium_trapped_intrinsic = baseline_profile["deuterium_trapped_intrinsic_physical"]
+deuterium_trapped_1 = baseline_profile["deuterium_trapped_1_physical"]
+deuterium_trapped_2 = baseline_profile["deuterium_trapped_2_physical"]
+deuterium_trapped_3 = baseline_profile["deuterium_trapped_3_physical"]
+deuterium_trapped_4 = baseline_profile["deuterium_trapped_4_physical"]
+deuterium_trapped_5 = baseline_profile["deuterium_trapped_5_physical"]
 
 fig, ax = plt.subplots(figsize=(6.5, 5.5))
 ax.plot(

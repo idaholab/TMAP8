@@ -1,0 +1,26 @@
+# This file extends the shared val-2k parameters for the explicit 5 nm oxide case.
+# Unit system:
+# - length: micrometers in the input file
+# - time: seconds
+# - concentration: atoms / micrometer^3
+# - flux: atoms / micrometer^2 / second
+
+!include parameters_val-2k_shared.params
+
+# Oxide geometry and transport
+oxide_thickness = '${units 5 nm -> mum}'
+oxide_buffer_fine_depth = '${fparse left_refined_depth - oxide_thickness - damage_depth}'
+oxide_buffer_coarse_depth = '${fparse buffer_depth - oxide_buffer_fine_depth}'
+oxide_bulk_depth = '${fparse sample_thickness - oxide_thickness - damage_depth - oxide_buffer_fine_depth - oxide_buffer_coarse_depth}'
+
+ix_oxide_fine = 20
+ix_oxide_coarse = 4
+
+diffusion_oxide_preexponential = ${diffusion_W_preexponential} ####'${units 1e-10 m^2/s -> mum^2/s}'
+diffusion_oxide_energy = '${diffusion_W_energy}'
+
+oxide_thickness_hat = '${fparse oxide_thickness / length_reference}'
+oxide_buffer_fine_depth_hat = '${fparse oxide_buffer_fine_depth / length_reference}'
+oxide_buffer_coarse_depth_hat = '${fparse oxide_buffer_coarse_depth / length_reference}'
+oxide_bulk_depth_hat = '${fparse oxide_bulk_depth / length_reference}'
+diffusion_oxide_preexponential_hat = '${fparse diffusion_oxide_preexponential * time_reference / (length_reference ^ 2)}'
