@@ -9,7 +9,7 @@
                 Outputs/file_base=val-2k_implicit_euler_out'
     csvdiff = val-2k_implicit_euler_out.csv
     heavy = true
-    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a natural oxide layer during a TDS experiment using deuterium diffusion, trapping, and D2 surface recombination, using the implicit Euler time integration scheme.'
+    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a natural oxide layer during a TDS experiment using deuterium diffusion, trapping, and phenomenological D2 and D2O surface release, using the implicit Euler time integration scheme.'
   []
   [val-2k_implicit_euler_exodiff]
     type = Exodiff
@@ -18,7 +18,7 @@
     prereq = val-2k_implicit_euler_csvdiff
     should_execute = false
     heavy = true
-    requirement = 'The system shall be able to produce the full field solution of a simulation of deuterium transport in self-irradiated tungsten with a natural oxide layer during a TDS experiment using deuterium diffusion, trapping, and D2 surface recombination, using the implicit Euler time integration scheme.'
+    requirement = 'The system shall be able to produce the full field solution of a simulation of deuterium transport in self-irradiated tungsten with a natural oxide layer during a TDS experiment using deuterium diffusion, trapping, and phenomenological D2 and D2O surface release, using the implicit Euler time integration scheme.'
   []
   [val-2k_bdf2_csvdiff]
     type = CSVDiff
@@ -26,7 +26,7 @@
     cli_args = 'Outputs/file_base=val-2k_out'
     csvdiff = val-2k_out.csv
     heavy = true
-    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a natural oxide layer during a TDS experiment using deuterium diffusion, trapping, and D2 surface recombination, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
+    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a natural oxide layer during a TDS experiment using deuterium diffusion, trapping, and phenomenological D2 and D2O surface release, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
   []
   [val-2k_bdf2_initial_profile_csvdiff]
     type = CSVDiff
@@ -40,7 +40,7 @@
   [val-2k_comparison]
     type = RunCommand
     command = 'python3 comparison_val-2k.py'
-    requirement = 'The system shall be able to generate comparison plots for the val-2k validation, comparing the tungsten-only and 5 nm oxide-layer deuterium-release cases against the experimental data.'
+    requirement = 'The system shall be able to generate comparison plots for the val-2k validation, comparing the tungsten-only and 5 nm oxide-layer D2 and D2O release cases against the experimental data.'
     required_python_packages = 'matplotlib numpy pandas os'
   []
   [val-2k_5nm_oxide_bdf2_csvdiff]
@@ -48,7 +48,7 @@
     input = val-2k_5nm_oxide.i
     csvdiff = val-2k_5nm_oxide_out.csv
     heavy = true
-    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with an explicit 5 nm oxide layer during a TDS experiment using deuterium diffusion, trapping, and D2 surface recombination, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
+    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with an explicit 5 nm oxide layer during a TDS experiment using deuterium diffusion, trapping, and phenomenological D2 and D2O surface release, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
   []
   [val-2k_5nm_oxide_exodiff]
     type = Exodiff
@@ -57,7 +57,7 @@
     prereq = val-2k_5nm_oxide_bdf2_csvdiff
     should_execute = false
     heavy = true
-    requirement = 'The system shall be able to produce the full field solution of a simulation of deuterium transport in self-irradiated tungsten with an explicit 5 nm oxide layer during a TDS experiment using deuterium diffusion, trapping, and D2 surface recombination.'
+    requirement = 'The system shall be able to produce the full field solution of a simulation of deuterium transport in self-irradiated tungsten with an explicit 5 nm oxide layer during a TDS experiment using deuterium diffusion, trapping, and phenomenological D2 and D2O surface release.'
   []
   [val-2k_5nm_oxide_initial_profile_csvdiff]
     type = CSVDiff

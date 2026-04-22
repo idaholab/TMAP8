@@ -8,7 +8,7 @@
 # Included physics:
 # - dimensionless deuterium diffusion in tungsten
 # - six scaled val-2f trap families introduced through SpeciesTrapping physics blocks in the irradiated layer
-# - D2 surface recombination on both surfaces
+# - phenomenological D2 and D2O surface release on both surfaces
 # Deferred to later stages:
 # - explicit hydrogen-containing species
 # - water formation
@@ -202,6 +202,20 @@
     material_property_names = Kr_hat
     expression = '-2 * Kr_hat * deuterium_mobile ^ 2'
   []
+  [d2o_recombination_rate_surface]
+    type = ADDerivativeParsedMaterial
+    property_name = Kr_d2o_hat
+    functor_names = 'temperature_history'
+    functor_symbols = temperature
+    expression = '${d2o_recombination_coefficient_hat} * exp(-${d2o_recombination_energy} / ${kb_eV} / temperature)'
+  []
+  [flux_recombination_surface_d2o]
+    type = ADDerivativeParsedMaterial
+    coupled_variables = deuterium_mobile
+    property_name = flux_recombination_surface_d2o
+    material_property_names = Kr_d2o_hat
+    expression = '-2 * Kr_d2o_hat * deuterium_mobile ^ 2'
+  []
 []
 
 [Postprocessors]
@@ -225,16 +239,43 @@
     scaling_factor = 1
     value = scaled_mobile
   []
-  [flux_surface_left]
+  [flux_surface_left_d2]
     type = ADSideAverageMaterialProperty
     boundary = left
     property = flux_recombination_surface
     outputs = none
   []
-  [scaled_flux_surface_left]
+  [scaled_flux_surface_left_d2]
     type = ScalePostprocessor
     scaling_factor = '${fparse -1 * mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
-    value = flux_surface_left
+    value = flux_surface_left_d2
+    execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
+  []
+  [flux_surface_left_d2_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_flux_surface_left_d2
+  []
+  [flux_surface_left_d2o]
+    type = ADSideAverageMaterialProperty
+    boundary = left
+    property = flux_recombination_surface_d2o
+    outputs = none
+  []
+  [scaled_flux_surface_left_d2o]
+    type = ScalePostprocessor
+    scaling_factor = '${fparse -1 * mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
+    value = flux_surface_left_d2o
+    execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
+  []
+  [flux_surface_left_d2o_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_flux_surface_left_d2o
+  []
+  [scaled_flux_surface_left]
+    type = SumPostprocessor
+    values = 'scaled_flux_surface_left_d2 scaled_flux_surface_left_d2o'
     execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
   []
   [flux_surface_left_physical]
@@ -242,16 +283,43 @@
     scaling_factor = 1
     value = scaled_flux_surface_left
   []
-  [flux_surface_right]
+  [flux_surface_right_d2]
     type = ADSideAverageMaterialProperty
     boundary = right
     property = flux_recombination_surface
     outputs = none
   []
-  [scaled_flux_surface_right]
+  [scaled_flux_surface_right_d2]
     type = ScalePostprocessor
     scaling_factor = '${fparse -1 * mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
-    value = flux_surface_right
+    value = flux_surface_right_d2
+    execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
+  []
+  [flux_surface_right_d2_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_flux_surface_right_d2
+  []
+  [flux_surface_right_d2o]
+    type = ADSideAverageMaterialProperty
+    boundary = right
+    property = flux_recombination_surface_d2o
+    outputs = none
+  []
+  [scaled_flux_surface_right_d2o]
+    type = ScalePostprocessor
+    scaling_factor = '${fparse -1 * mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
+    value = flux_surface_right_d2o
+    execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
+  []
+  [flux_surface_right_d2o_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_flux_surface_right_d2o
+  []
+  [scaled_flux_surface_right]
+    type = SumPostprocessor
+    values = 'scaled_flux_surface_right_d2 scaled_flux_surface_right_d2o'
     execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
   []
   [flux_surface_right_physical]

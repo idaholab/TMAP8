@@ -9,7 +9,7 @@
 # Included physics:
 # - dimensionless deuterium diffusion in a front 5 nm oxide layer and tungsten substrate
 # - six scaled val-2f trap families introduced through SpeciesTrapping physics blocks in the tungsten
-# - D2 surface recombination on the front oxide surface and back tungsten surface
+# - phenomenological D2 and D2O surface release on the front oxide surface and back tungsten surface
 # Deferred to later stages:
 # - explicit hydrogen-containing species
 # - water formation
@@ -25,16 +25,16 @@
   [mesh_fine]
     type = CartesianMeshGenerator
     dim = 1
-    dx = '${oxide_thickness_hat} ${damage_depth_hat} ${oxide_buffer_fine_depth_hat} ${oxide_buffer_coarse_depth_hat} ${oxide_bulk_depth_hat}'
-    ix = '${ix_oxide_fine} ${ix_damage_fine} ${ix_buffer_fine} ${ix_buffer_coarse_fine} ${ix_bulk_fine}'
-    subdomain_id = '0 1 1 1 1'
+    dx = '${oxide_thickness_hat} ${left_refined_tungsten_depth_hat} ${damage_remainder_depth_hat} ${oxide_buffer_fine_depth_hat} ${oxide_buffer_coarse_depth_hat} ${oxide_bulk_depth_hat}'
+    ix = '${ix_oxide_fine} ${ix_left_refined_tungsten_fine} ${ix_damage_remainder_fine} ${ix_buffer_fine} ${ix_buffer_coarse_fine} ${ix_bulk_fine}'
+    subdomain_id = '0 1 1 1 1 1'
   []
   [mesh_coarse]
     type = CartesianMeshGenerator
     dim = 1
-    dx = '${oxide_thickness_hat} ${damage_depth_hat} ${oxide_buffer_fine_depth_hat} ${oxide_buffer_coarse_depth_hat} ${oxide_bulk_depth_hat}'
-    ix = '${ix_oxide_coarse} ${ix_damage_coarse} ${ix_buffer_coarse} ${ix_buffer_coarse_coarse} ${ix_bulk_coarse}'
-    subdomain_id = '0 1 1 1 1'
+    dx = '${oxide_thickness_hat} ${left_refined_tungsten_depth_hat} ${damage_remainder_depth_hat} ${oxide_buffer_fine_depth_hat} ${oxide_buffer_coarse_depth_hat} ${oxide_bulk_depth_hat}'
+    ix = '${ix_oxide_coarse} ${ix_left_refined_tungsten_coarse} ${ix_damage_remainder_coarse} ${ix_buffer_coarse} ${ix_buffer_coarse_coarse} ${ix_bulk_coarse}'
+    subdomain_id = '0 1 1 1 1 1'
   []
 []
 
@@ -209,16 +209,43 @@
     scaling_factor = 1
     value = scaled_mobile
   []
-  [flux_surface_left]
+  [flux_surface_left_d2]
     type = ADSideAverageMaterialProperty
     boundary = left
     property = flux_recombination_surface
     outputs = none
   []
-  [scaled_flux_surface_left]
+  [scaled_flux_surface_left_d2]
     type = ScalePostprocessor
     scaling_factor = '${fparse -1 * mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
-    value = flux_surface_left
+    value = flux_surface_left_d2
+    execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
+  []
+  [flux_surface_left_d2_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_flux_surface_left_d2
+  []
+  [flux_surface_left_d2o]
+    type = ADSideAverageMaterialProperty
+    boundary = left
+    property = flux_recombination_surface_d2o
+    outputs = none
+  []
+  [scaled_flux_surface_left_d2o]
+    type = ScalePostprocessor
+    scaling_factor = '${fparse -1 * mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
+    value = flux_surface_left_d2o
+    execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
+  []
+  [flux_surface_left_d2o_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_flux_surface_left_d2o
+  []
+  [scaled_flux_surface_left]
+    type = SumPostprocessor
+    values = 'scaled_flux_surface_left_d2 scaled_flux_surface_left_d2o'
     execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
   []
   [flux_surface_left_physical]
@@ -226,16 +253,43 @@
     scaling_factor = 1
     value = scaled_flux_surface_left
   []
-  [flux_surface_right]
+  [flux_surface_right_d2]
     type = ADSideAverageMaterialProperty
     boundary = right
     property = flux_recombination_surface
     outputs = none
   []
-  [scaled_flux_surface_right]
+  [scaled_flux_surface_right_d2]
     type = ScalePostprocessor
     scaling_factor = '${fparse -1 * mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
-    value = flux_surface_right
+    value = flux_surface_right_d2
+    execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
+  []
+  [flux_surface_right_d2_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_flux_surface_right_d2
+  []
+  [flux_surface_right_d2o]
+    type = ADSideAverageMaterialProperty
+    boundary = right
+    property = flux_recombination_surface_d2o
+    outputs = none
+  []
+  [scaled_flux_surface_right_d2o]
+    type = ScalePostprocessor
+    scaling_factor = '${fparse -1 * mobile_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
+    value = flux_surface_right_d2o
+    execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
+  []
+  [flux_surface_right_d2o_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_flux_surface_right_d2o
+  []
+  [scaled_flux_surface_right]
+    type = SumPostprocessor
+    values = 'scaled_flux_surface_right_d2 scaled_flux_surface_right_d2o'
     execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
   []
   [flux_surface_right_physical]

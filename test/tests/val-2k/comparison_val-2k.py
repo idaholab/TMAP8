@@ -1,6 +1,7 @@
 import os
 import re
 import tempfile
+from pathlib import Path
 
 os.environ.setdefault("MPLCONFIGDIR", tempfile.mkdtemp(prefix="matplotlib-val-2k-"))
 
@@ -19,6 +20,18 @@ def get_repo_relative_path(test_path):
     if "/tmap8/doc/" in script_folder.lower():
         return os.path.join("../../../../test/tests/val-2k", test_path)
     return os.path.join(".", test_path)
+
+
+def get_output_path(filename):
+    candidates = [
+        Path(get_repo_relative_path(f"../../../{filename}")),
+        Path(get_repo_relative_path(filename)),
+        Path(get_repo_relative_path(f"gold/{filename}")),
+    ]
+    existing_candidates = [candidate for candidate in candidates if candidate.exists()]
+    if existing_candidates:
+        return max(existing_candidates, key=lambda path: path.stat().st_mtime)
+    return candidates[-1]
 
 
 def get_numeric_parameter(parameter_name):
@@ -77,11 +90,15 @@ def load_experimental_curve(filename):
 
 
 def load_simulation_case(csv_name):
-    simulation_data = pd.read_csv(get_repo_relative_path(f"gold/{csv_name}"))
+    simulation_data = pd.read_csv(get_output_path(csv_name))
     time_s = simulation_data["time"] * time_reference
-    release_flux = (
-        simulation_data["scaled_flux_surface_left"]
-        + simulation_data["scaled_flux_surface_right"]
+    release_flux_d2 = (
+        simulation_data["scaled_flux_surface_left_d2"]
+        + simulation_data["scaled_flux_surface_right_d2"]
+    )
+    release_flux_d2o = (
+        simulation_data["scaled_flux_surface_left_d2o"]
+        + simulation_data["scaled_flux_surface_right_d2o"]
     )
     return {
         "data": simulation_data,
@@ -97,7 +114,11 @@ def load_simulation_case(csv_name):
         "trapped_3_inventory": simulation_data["trapped_deuterium_3_physical"],
         "trapped_4_inventory": simulation_data["trapped_deuterium_4_physical"],
         "trapped_5_inventory": simulation_data["trapped_deuterium_5_physical"],
-        "release_rate": release_flux * sample_surface_area_m2 / 1e13,
+        "release_rate_d2": release_flux_d2 * sample_surface_area_m2 / 1e13,
+        "release_rate_d2o": release_flux_d2o * sample_surface_area_m2 / 1e13,
+        "release_rate_total": (release_flux_d2 + release_flux_d2o)
+        * sample_surface_area_m2
+        / 1e13,
     }
 
 
@@ -116,12 +137,12 @@ sample_surface_area_m2 = 10e-3 * 14e-3
 
 baseline_case = load_simulation_case("val-2k_out.csv")
 oxide_case = load_simulation_case("val-2k_5nm_oxide_out.csv")
-baseline_profile = pd.read_csv(
-    get_repo_relative_path("gold/val-2k_profile_initial_out_line_profile_0000.csv")
-)
+baseline_profile = pd.read_csv(get_output_path("val-2k_profile_initial_out_line_profile_0000.csv"))
 
 natural_oxide_experiment = load_experimental_curve("experimental_HD_D2_nat_oxide.csv")
 oxide_5nm_experiment = load_experimental_curve("experimental_HD_D2_5nm.csv")
+natural_oxide_d2o_experiment = load_experimental_curve("experimental_HDO_D2O_nat_oxide.csv")
+oxide_5nm_d2o_experiment = load_experimental_curve("experimental_HDO_D2O_5nm.csv")
 
 # Stage 3: generate the desorption comparison figure for both currently modeled
 # cases and include the imposed temperature history on the right axis.
@@ -129,17 +150,31 @@ fig, ax = plt.subplots(figsize=(6.8, 5.6))
 
 baseline_handle = ax.plot(
     baseline_case["time_h"],
-    baseline_case["release_rate"],
+    baseline_case["release_rate_d2"],
     linestyle="-",
     color="tab:blue",
-    label="TMAP8 no oxide layer",
+    label="TMAP8 D2, no oxide layer",
 )[0]
 oxide_handle = ax.plot(
     oxide_case["time_h"],
-    oxide_case["release_rate"],
+    oxide_case["release_rate_d2"],
     linestyle="-",
     color="tab:green",
-    label="TMAP8 5 nm oxide layer",
+    label="TMAP8 D2, 5 nm oxide layer",
+)[0]
+baseline_d2o_handle = ax.plot(
+    baseline_case["time_h"],
+    baseline_case["release_rate_d2o"],
+    linestyle=":",
+    color="tab:blue",
+    label="TMAP8 D2O, no oxide layer",
+)[0]
+oxide_d2o_handle = ax.plot(
+    oxide_case["time_h"],
+    oxide_case["release_rate_d2o"],
+    linestyle=":",
+    color="tab:green",
+    label="TMAP8 D2O, 5 nm oxide layer",
 )[0]
 natural_experiment_handle = ax.plot(
     natural_oxide_experiment["time (h)"],
@@ -155,6 +190,20 @@ oxide_experiment_handle = ax.plot(
     color="0.45",
     label="Experimental HD + D2 (5 nm oxide)",
 )[0]
+natural_d2o_experiment_handle = ax.plot(
+    natural_oxide_d2o_experiment["time (h)"],
+    natural_oxide_d2o_experiment["release flux (10^13 D atoms/s)"],
+    linestyle="--",
+    color="tab:purple",
+    label="Experimental HDO + D2O (nat. oxide)",
+)[0]
+oxide_d2o_experiment_handle = ax.plot(
+    oxide_5nm_d2o_experiment["time (h)"],
+    oxide_5nm_d2o_experiment["release flux (10^13 D atoms/s)"],
+    linestyle="--",
+    color="tab:brown",
+    label="Experimental HDO + D2O (5 nm oxide)",
+)[0]
 
 ax_temperature = ax.twinx()
 temperature_handle = ax_temperature.plot(
@@ -167,21 +216,32 @@ temperature_handle = ax_temperature.plot(
 )[0]
 
 baseline_rmspe = compute_rmspe(
-    baseline_case["time_h"], baseline_case["release_rate"], natural_oxide_experiment
+    baseline_case["time_h"], baseline_case["release_rate_d2"], natural_oxide_experiment
 )
 oxide_rmspe = compute_rmspe(
-    oxide_case["time_h"], oxide_case["release_rate"], oxide_5nm_experiment
+    oxide_case["time_h"], oxide_case["release_rate_d2"], oxide_5nm_experiment
+)
+baseline_d2o_rmspe = compute_rmspe(
+    baseline_case["time_h"], baseline_case["release_rate_d2o"], natural_oxide_d2o_experiment
+)
+oxide_d2o_rmspe = compute_rmspe(
+    oxide_case["time_h"], oxide_case["release_rate_d2o"], oxide_5nm_d2o_experiment
 )
 ax.text(
     2.55,
     0.87
     * max(
-        baseline_case["release_rate"].max(),
-        oxide_case["release_rate"].max(),
+        baseline_case["release_rate_total"].max(),
+        oxide_case["release_rate_total"].max(),
         natural_oxide_experiment["release flux (10^13 D atoms/s)"].max(),
         oxide_5nm_experiment["release flux (10^13 D atoms/s)"].max(),
+        natural_oxide_d2o_experiment["release flux (10^13 D atoms/s)"].max(),
+        oxide_5nm_d2o_experiment["release flux (10^13 D atoms/s)"].max(),
     ),
-    f"No oxide RMSPE = {baseline_rmspe:.2f} %\n5 nm oxide RMSPE = {oxide_rmspe:.2f} %",
+    "No oxide RMSPEs: "
+    f"D2={baseline_rmspe:.2f} %, D2O={baseline_d2o_rmspe:.2f} %\n"
+    "5 nm oxide RMSPEs: "
+    f"D2={oxide_rmspe:.2f} %, D2O={oxide_d2o_rmspe:.2f} %",
 )
 
 ax.set_xlabel("Time (h)")
@@ -195,15 +255,23 @@ ax.legend(
     [
         baseline_handle,
         oxide_handle,
+        baseline_d2o_handle,
+        oxide_d2o_handle,
         natural_experiment_handle,
         oxide_experiment_handle,
+        natural_d2o_experiment_handle,
+        oxide_d2o_experiment_handle,
         temperature_handle,
     ],
     [
         baseline_handle.get_label(),
         oxide_handle.get_label(),
+        baseline_d2o_handle.get_label(),
+        oxide_d2o_handle.get_label(),
         natural_experiment_handle.get_label(),
         oxide_experiment_handle.get_label(),
+        natural_d2o_experiment_handle.get_label(),
+        oxide_d2o_experiment_handle.get_label(),
         temperature_handle.get_label(),
     ],
     loc="best",
