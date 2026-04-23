@@ -156,7 +156,6 @@ dt_min = '${units 1 s -> day}'
     type = PointValue
     point = '${inner_radius} 0 0'
     variable = H_mobile_steel_derivative
-    outputs = csv
   []
 
   [interface_concentration]
@@ -226,22 +225,6 @@ dt_min = '${units 1 s -> day}'
     scaling_factor = ${height}
     outputs = csv
   []
-
-  # Miscellaneous
-
-  [assumed_gas_total_mass]
-    type = ParsedPostprocessor
-    expression = '69.7055*t^0.6808' # Power model linear least squares fit of SRNL data
-    use_t = True
-    outputs = csv
-  []
-
-  [min_concentration] # Check for negative concentrations
-    type = ElementExtremeValue
-    variable = H_mobile_steel
-    value_type = min
-    outputs = csv
-  []
 []
 
 [Executioner]
@@ -266,6 +249,5 @@ dt_min = '${units 1 s -> day}'
 
 [Outputs]
   csv = true
-  exodus = true
   file_base = 'steel_only_out'
 []

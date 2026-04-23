@@ -7,34 +7,16 @@
     csvdiff = steel_only_out.csv
     requirement = 'The system shall be able to model hydrogen permeation through the steel walls of the SRNL mini-canister'
   []
-  [steel_only_exodiff]
-    type = Exodiff
-    input = 'steel_only.i'
-    exodiff = 'steel_only_out.e'
-    requirement = 'The system shall be able to model hydrogen permeation through the steel walls of the SRNL mini-canister'
-  []
-  [steel_only_comparison]
-    type = RunCommand
-    command = 'python3 steel_only_comparison.py'
-    requirement = 'The system shall be able to generate verification and validation plots, modeling hydrogen permeation through the steel walls of the SRNL mini-canister'
-    required_python_packages = 'matplotlib numpy pandas'
-  []
   [gas_steel_csvdiff]
     type = CSVDiff
     input = 'gas_steel.i'
     csvdiff = gas_steel_out.csv
     requirement = 'The system shall be able to model hydrogen generation and permeation through the gas chamber and steel walls of the SRNL mini-canister'
   []
-  [gas_steel_exodiff]
-    type = Exodiff
-    input = 'gas_steel.i'
-    exodiff = gas_steel_out.e
-    requirement = 'The system shall be able to model hydrogen generation and permeation through the gas chamber and steel walls of the SRNL mini-canister'
-  []
   [gas_steel_comparison]
     type = RunCommand
-    command = 'python3 gas_steel_comparison.py'
-    requirement = 'The system shall be able to generate verification and validation plots, modeling hydrogen generation and permeation through the gas chamber and steel walls of the SRNL mini-canister'
+    command = 'python3 comparison_mini_canister.py'
+    requirement = 'The system shall be able to generate figures with the simulation results when modeling hydrogen generation and permeation through the gas chamber and steel walls of the SRNL mini-canister'
     required_python_packages = 'matplotlib numpy pandas'
   []
 []

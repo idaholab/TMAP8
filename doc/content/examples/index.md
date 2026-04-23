@@ -29,6 +29,6 @@ This example demonstrates TMAP8's capability to (1) generate pore structures fro
 and (2) perform pore-scale simulations of tritium transport on these pore structures based on the model described in [!cite](Simon2022).
 This example highlights the effect of pore interconnectivity on tritium transport.
 
-## [Hydrogen Transport in Aluminum-clad Used Nuclear Fuel Mini-Canister Storage Devices](examples/mini_canister/index.md)
+## [Hydrogen Transport in Aluminum-Clad Used Nuclear Fuel (AUNF) Mini-Canister Storage](examples/mini_canister/index.md)
 
-This example demonstrates TMAP8's capability to model hydrogen transport and permeation through multiple materials. This example highlights the use of TMAP-specific interface kernels and boundary conditions.
+TMAP8 is used to model hydrogen transport and permeation through AUNF storage. The storage device considered is a 304 stainless steel mini-canister from Savannah River National Laboratory (SRNL). This example highlights the use of TMAP8-specific features, such as interface kernels and boundary conditions, applied to industry-relevant technologies.

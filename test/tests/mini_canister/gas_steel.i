@@ -22,7 +22,6 @@ solubility_activation_energy_in_steel = '${units 6.86 kJ/mol -> J/mol}' # J/mol 
 
 # Numerics
 num_elements_steel = 1500
-# num_elements_gas = '${fparse int(num_elements_steel * inner_radius / steel_thickness)}' # Gives roughly same element length in two blocks
 num_elements_gas = 250
 endtime = '${units 0.25 year -> day}'
 dt_start = '${units 300 s -> day}'
@@ -287,6 +286,5 @@ dt_min = '${units 1 s -> day}'
 
 [Outputs]
   csv = true
-  exodus = true
   file_base = 'gas_steel_out'
 []
