@@ -153,6 +153,14 @@ The current branch state keeps the scaled six-trap `val-2f` tungsten-only model 
 
 [val-2k_natural_oxide_iteration_1_inventory] shows that the shared tungsten preload is dominated by the trapping populations, while the mobile deuterium inventory remains much smaller throughout the desorption ramp. The lower-energy traps begin to empty first as the temperature rises, followed by the deeper trap populations later in the ramp. The imposed experimental temperature history is shown on the right axis so the changes in each trap inventory can be related directly to the heating schedule used in the TDS experiment.
 
+!media comparison_val-2k.py
+    image_name=val-2k_natural_oxide_iteration_1_mass_conservation.png
+    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+    id=val-2k_natural_oxide_iteration_1_mass_conservation
+    caption=Relative mass-balance residual over time for the tungsten-only natural-oxide surrogate and the companion explicit 5 nm oxide case in `val-2k`.
+
+[val-2k_natural_oxide_iteration_1_mass_conservation] tracks the signed mass-balance residual normalized by the initial deuterium inventory for both currently modeled cases. The residual is formed from the change in deuterium retained in the sample plus the time-integrated left and right surface release fluxes, so values close to zero indicate that the transient inventory loss is consistent with the integrated surface outflow.
+
 ## Planned Extensions
 
 The intended order of future extensions is:

@@ -100,11 +100,20 @@ def load_simulation_case(csv_name):
         simulation_data["scaled_flux_surface_left_d2o"]
         + simulation_data["scaled_flux_surface_right_d2o"]
     )
+    initial_inventory = simulation_data["deuterium_inventory_in_sample_physical"].iloc[0]
     return {
         "data": simulation_data,
         "time_s": time_s,
         "time_h": time_s / 3600.0,
         "temperature_k": simulation_data["temperature_pps"],
+        "initial_inventory": initial_inventory,
+        "inventory_in_sample": simulation_data["deuterium_inventory_in_sample_physical"],
+        "released_inventory": simulation_data["deuterium_released_physical"],
+        "mass_conservation_residual": simulation_data["deuterium_mass_conservation_residual"],
+        "relative_mass_conservation_residual": simulation_data[
+            "deuterium_mass_conservation_residual"
+        ]
+        / initial_inventory,
         "mobile_inventory": simulation_data["mobile_inventory_physical"],
         "trapped_intrinsic_inventory": simulation_data[
             "trapped_deuterium_intrinsic_physical"
@@ -372,7 +381,42 @@ plt.savefig(
 )
 plt.close(fig)
 
-# Stage 5: generate the baseline initial concentration profile used to start the
+# Stage 5: compare the relative mass-balance residual for both currently modeled
+# cases using the postprocessors written by the transient solves.
+fig, ax = plt.subplots(figsize=(6.5, 4.8))
+
+baseline_mass_handle = ax.plot(
+    baseline_case["time_h"],
+    baseline_case["relative_mass_conservation_residual"],
+    color="tab:blue",
+    linewidth=1.8,
+    label="No oxide layer",
+)[0]
+oxide_mass_handle = ax.plot(
+    oxide_case["time_h"],
+    oxide_case["relative_mass_conservation_residual"],
+    color="tab:green",
+    linewidth=1.8,
+    label="5 nm oxide layer",
+)[0]
+
+ax.axhline(0.0, color="0.35", linewidth=1.0, linestyle="--")
+ax.set_xlabel("Time (h)")
+ax.set_ylabel("Mass-balance residual / initial inventory (-)")
+ax.set_xlim(0, 4.2)
+ax.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
+ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
+ax.legend(handles=[baseline_mass_handle, oxide_mass_handle], loc="best")
+ax.minorticks_on()
+
+plt.savefig(
+    "val-2k_natural_oxide_iteration_1_mass_conservation.png",
+    bbox_inches="tight",
+    dpi=300,
+)
+plt.close(fig)
+
+# Stage 6: generate the baseline initial concentration profile used to start the
 # desorption calculation.
 distance_to_surface_microns = baseline_profile["x"]
 deuterium_total = baseline_profile["deuterium_total_physical"]
