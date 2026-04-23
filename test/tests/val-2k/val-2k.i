@@ -327,6 +327,43 @@
     scaling_factor = 1
     value = scaled_flux_surface_right
   []
+  [deuterium_inventory_in_sample]
+    type = ElementIntegralVariablePostprocessor
+    variable = deuterium_total_physical
+    execute_on = 'INITIAL TIMESTEP_END'
+    outputs = none
+  []
+  [deuterium_inventory_in_sample_physical]
+    type = ScalePostprocessor
+    scaling_factor = '${units 1 mum -> m}'
+    value = deuterium_inventory_in_sample
+    execute_on = 'INITIAL TIMESTEP_END'
+  []
+  [deuterium_release_flux_total]
+    type = SumPostprocessor
+    values = 'scaled_flux_surface_left scaled_flux_surface_right'
+    execute_on = 'INITIAL TIMESTEP_END'
+    outputs = none
+  []
+  [deuterium_released_physical]
+    type = TimeIntegratedPostprocessor
+    value = deuterium_release_flux_total
+    time_integration_scheme = trapezoidal-rule
+    execute_on = 'INITIAL TIMESTEP_END'
+  []
+  [deuterium_inventory_change]
+    type = ChangeOverTimePostprocessor
+    postprocessor = deuterium_inventory_in_sample_physical
+    change_with_respect_to_initial = true
+    execute_on = 'INITIAL TIMESTEP_END'
+    outputs = none
+  []
+  [deuterium_mass_conservation_residual]
+    type = ParsedPostprocessor
+    pp_names = 'deuterium_inventory_change deuterium_released_physical'
+    expression = 'deuterium_inventory_change + deuterium_released_physical'
+    execute_on = 'INITIAL TIMESTEP_END'
+  []
 []
 
 [VectorPostprocessors]
