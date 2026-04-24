@@ -7,10 +7,20 @@ TMAP8 is used to model hydrogen transport and permeation through an aluminum-cla
 
 Both models share the same 1D axisymmetric geometry and material parameters for the steel wall. The progression from [steel_only.i] to [gas_steel.i] illustrates the flexibility of TMAP8 in building complexity incrementally.
 
+## Input File Structure
+
+!style halign=left
+Both models are structured around two shared files that are incorporated via the `!include` directive:
+
+- [mini_canister.params] — defines all shared model parameters (geometry, material properties, numerics).
+- [mini_canister_base.i] — defines the MOOSE objects shared by both models: the steel variable and kernels, temperature auxiliary variable, outer Dirichlet boundary condition, steel-domain postprocessors, and the executioner.
+
+Each top-level input file adds only the objects that are specific to its model. This structure keeps the shared physics in one place and avoids duplication. Both models simulate 0.25 years (≈ 91.3 days) using a BDF2 time integration scheme with an `IterationAdaptiveDT` adaptive timestep that targets 5 Newton iterations per step.
+
 ## Canister Geometry and Mesh
 
 !style halign=left
-Both models represent the canister as a 1D axisymmetric domain in cylindrical coordinates ($r$, $z$), assuming a near-uniform radial concentration profile along the height of the canister. The canister dimensions [!citep](d'entremont2024aunfminicanister), are listed in [tab:geometry].
+Both models represent the canister as a 1D axisymmetric domain in cylindrical coordinates ($r$, $z$), using `coord_type = RZ` with `rz_coord_axis = Y` so that the $x$-axis is the radial direction. The canister dimensions [!citep](d'entremont2024aunfminicanister) are listed in [tab:geometry].
 
 !table id=tab:geometry caption=Canister geometry.
 | Parameter | Value | Units |
@@ -21,7 +31,7 @@ Both models represent the canister as a 1D axisymmetric domain in cylindrical co
 | Canister height, $h$ | **7.06 in (179.3 mm)** | mm |
 | Internal gas volume, $V_g = \pi r_i^2 h$ | **$\approx$ 727,400** | mm$^3$ |
 
-In the input files, the 1D mesh represents the radial ($r$) direction only. For [steel_only.i], the mesh spans from $r_i$ to $r_o$ with 2,000 elements. For [gas_steel.i], two adjacent mesh blocks share the same element spacing: the gas block from $r = 0$ to $r = r_i$ and the steel block from $r = r_i$ to $r = r_o$.
+In [steel_only.i], the 1D mesh spans only the steel wall, from $r_i$ to $r_o$, using a single `GeneratedMeshGenerator` with 1,500 elements (subdomain 1). In [gas_steel.i], a `CartesianMeshGenerator` produces two adjacent blocks: the gas block (subdomain 0) from $r = 0$ to $r = r_i$ with 250 elements, and the steel block (subdomain 1) from $r = r_i$ to $r = r_o$ with 1,500 elements. Two `SideSetsBetweenSubdomainsGenerator` steps then create the named interface sidesets `interface_gas_to_steel` and `interface_steel_to_gas` that are required for the `ADInterfaceSorption` kernel.
 
 !listing test/tests/mini_canister/steel_only.i link=false block=Mesh
 
@@ -55,7 +65,7 @@ In the input files, the 1D mesh represents the radial ($r$) direction only. For 
 In the steel-only model, only hydrogen transport within the steel wall is simulated. The governing equation is a 1D diffusion model:
 
 \begin{equation} \label{eq:steel_diffusion}
-\frac{\partial C_s}{\partial t} = \frac{\partial}{\partial x}\left(D_s\frac{\partial C_s}{\partial x} \right),
+\frac{\partial C_s}{\partial t} = \frac{\partial}{\partial r}\left(D_s\frac{\partial C_s}{\partial r} \right),
 \end{equation}
 
 where the diffusivity follows an Arrhenius temperature dependence [!citep](san_marchi2012hydrogensteel):
@@ -64,10 +74,12 @@ where the diffusivity follows an Arrhenius temperature dependence [!citep](san_m
 D_s(T) = D_{s,0} \exp\!\left( - \frac{E_{D}}{RT} \right).
 \end{equation}
 
+Because `coord_type = RZ` is set, MOOSE automatically applies the axisymmetric cylindrical weighting to the diffusion kernel.
+
 ### Boundary Conditions
 
 !style halign=left
-At the inner steel surface ($r = r_i$), the hydrogen concentration is implemented in TMAP8 using `ADInterfaceSorption`, using Sieverts' law with the internal H$_2$ partial pressure:
+At the inner steel surface ($r = r_i$), the hydrogen concentration is fixed by Sieverts' law using the `EquilibriumBC` boundary condition. An auxiliary variable `H_partial_pressure_gas` is first set by a `FunctionAux` at the inner boundary, and `EquilibriumBC` then enforces:
 
 \begin{equation} \label{eq:sieverts_bc}
 C_s(r_i, t) = 2 K_s(T) \sqrt{P},
@@ -80,7 +92,13 @@ K_s(T) = K_{s,0} \exp\!\left( - \frac{E_{K}}{RT} \right).
 \end{equation}
 
 !style halign=left
-The H$_2$ partial pressure $P$ is provided as an auxiliary variable, set by a function representing one of three options: (1) a constant value, (2) a linear time ramp from zero to the constant value over 3 hours, or (3) a power-law fit to experimental SRNL pressure data. The default configuration uses the constant pressure option:
+The H$_2$ partial pressure $P$ is provided by a function selected via the `pressure_function` input parameter. Three options are available: (1) a constant value (`constant_pressure`), (2) a linear time ramp from zero to the constant value over 3 hours (`time_ramp_pressure`), or (3) a power-law fit to experimental SRNL pressure data (`SRNL_pressure_data_fun`):
+
+\begin{equation} \label{eq:srnl_pressure}
+P_{\text{SRNL}}(t) = 376.7588 \, t^{0.6177} \quad [\text{Pa}].
+\end{equation}
+
+The default configuration uses the constant pressure option:
 
 \begin{equation} \label{eq:assumed_pressure}
 P = 0.10 \times 24 \text{ psi} \approx 16{,}547 \text{ Pa},
@@ -88,11 +106,16 @@ P = 0.10 \times 24 \text{ psi} \approx 16{,}547 \text{ Pa},
 
 which assumes 10% of the 24 psi He-backfilled canister pressure is attributable to H$_2$ [!citep](d'entremont2024aunfminicanister,hlushko2024aunf).
 
-At the outer steel surface ($r = r_o$), hydrogen is released to the ambient environment, and the concentration is set to zero by a Dirichlet condition:
+At the outer steel surface ($r = r_o$), hydrogen is released to the ambient environment, and the concentration is set to zero by a Dirichlet condition (defined in [mini_canister_base.i]):
 
 \begin{equation} \label{eq:outer_bc}
 C_s(r_o, t) = 0.
 \end{equation}
+
+### Solver
+
+!style halign=left
+Because the steel-only problem is linear (constant diffusivity, linear Sieverts' BC), `steel_only.i` uses `solve_type = LINEAR` for a direct LU factorization at each timestep, which is more efficient than a nonlinear Newton iteration.
 
 ### Model Parameters
 
@@ -111,7 +134,7 @@ C_s(r_o, t) = 0.
 #### Diffusion Front Verification
 
 !style halign=left
-For a semi-infinite slab with a constant-concentration boundary condition, the diffusion front advances as $\ell(t) = \sqrt{\pi D_s t}$, defined here as the $x$-intercept of the tangent line to the concentration profile at the inner surface. This analytical result provides a straightforward check that the numerical diffusion is correctly implemented. [fig:diffusion_length] shows the simulated diffusion front length, using a constant pressure, compared to the analytical expression.
+For a semi-infinite slab with a constant-concentration boundary condition, the diffusion front advances as $\ell(t) = \sqrt{\pi D_s t}$, defined here as the $r$-intercept of the tangent line to the concentration profile at the inner surface. This analytical result provides a straightforward check that the numerical diffusion is correctly implemented. The simulated diffusion front is computed via the `simulated_diffusion_length` postprocessor as the $r$-intercept of the tangent line using the interface concentration and gradient. [fig:diffusion_length] shows the simulated diffusion front length, using a constant pressure, compared to the analytical expression.
 
 !media comparison_mini_canister.py
   image_name=diffusion_length.png
@@ -122,7 +145,7 @@ For a semi-infinite slab with a constant-concentration boundary condition, the d
 #### Conservation of Mass
 
 !style halign=left
-As an internal consistency check, the total hydrogen mass integrated over the steel domain is compared against the time-integrated net diffusive flux across the boundaries. It is important to note that these integrals are weighted due to the axisymmetric assumption. [fig:steel_conservation] shows the two quantities track closely throughout the simulation, confirming mass conservation.
+As an internal consistency check, the total hydrogen mass integrated over the steel domain (`annular_cylinder_total_mass_steel`) is compared against the time-integrated net diffusive flux across the inner and outer boundaries (`annular_cylinder_time_integrated_flux`). Both integrals are weighted for the axisymmetric cylindrical geometry and then scaled by the canister height $h$ to represent 3D mass in $\mu$mol H. [fig:steel_conservation] shows the two quantities track closely throughout the simulation, confirming mass conservation.
 
 !media comparison_mini_canister.py
   image_name=steel_only_conservation_of_mass.png
@@ -138,10 +161,10 @@ As an internal consistency check, the total hydrogen mass integrated over the st
 The gas-steel model resolves both the gas phase and steel simultaneously. In the gas phase ($0 \leq r \leq r_i$), H$_2$ is generated by radiolysis and transported by diffusion:
 
 \begin{equation} \label{eq:gas_diffusion}
-\frac{\partial C_g}{\partial t} = \frac{\partial}{\partial x}\left(D_g \frac{\partial C_g}{\partial x} \right) + S(t),
+\frac{\partial C_g}{\partial t} = \frac{\partial}{\partial r}\left(D_g \frac{\partial C_g}{\partial r} \right) + S(t),
 \end{equation}
 
-where $D_g$ is the diffusivity of H$_2$ in the He carrier gas [!citep](middha2002hydrogenhelium). In the steel wall ($r_i \leq r \leq r_o$), [eq:steel_diffusion] applies as before.
+where $D_g$ is the diffusivity of H$_2$ in the He carrier gas [!citep](middha2002hydrogenhelium). In the steel wall ($r_i \leq r \leq r_o$), [eq:steel_diffusion] applies as before. The axisymmetric weighting is again applied automatically by MOOSE. At the symmetry axis ($r = 0$), no explicit boundary condition is required: MOOSE's natural boundary condition enforces zero diffusive flux, which is physically correct for a cylindrical axis of symmetry.
 
 ### Hydrogen Generation Source Term
 
@@ -152,7 +175,7 @@ The cumulative radiolytic H$_2$ yield is modeled using a power-law fit to the SR
 N(t) = 69.7055 \, t^{0.6808} \quad [\mu\text{mol}],
 \end{equation}
 
-where $t$ is time in days, calibrated assuming a Co-60 irradiator dose rate of approximately 124.7 Gy/min [!citep](d'entremont2024aunfminicanister). The volumetric source term in [eq:gas_diffusion] is obtained by differentiating [eq:H2_yield] with respect to time and normalizing by the gas volume:
+where $t$ is time in days, calibrated assuming a Co-60 irradiator dose rate of approximately 124 Gy/min [!citep](d'entremont2024aunfminicanister). The volumetric source term in [eq:gas_diffusion] is obtained by differentiating [eq:H2_yield] with respect to time and normalizing by the gas volume:
 
 \begin{equation} \label{eq:source_term}
 S(t) = \frac{1}{V_g} \frac{dN}{dt} = \frac{69.7055 \times 0.6808}{V_g} \, t^{0.6808 - 1} \quad [\mu\text{mol mm}^{-3}\text{ day}^{-1}].
@@ -161,13 +184,18 @@ S(t) = \frac{1}{V_g} \frac{dN}{dt} = \frac{69.7055 \times 0.6808}{V_g} \, t^{0.6
 ### Interface Condition
 
 !style halign=left
-At the gas-steel interface ($r = r_i$), hydrogen equilibrium between the gas and solid phases is enforced via Sieverts' law. Using the ideal gas law to convert gas-phase concentration to partial pressure ($P = C_g R T$), the equilibrium atomic hydrogen concentration in the steel is:
+At the gas-steel interface ($r = r_i$), hydrogen equilibrium between the gas and solid phases is enforced by the `ADInterfaceSorption` interface kernel, applied on the `interface_steel_to_gas` sideset. Using the ideal gas law to convert gas-phase concentration to partial pressure ($P = C_g R T$), the equilibrium atomic hydrogen concentration in the steel is:
 
 \begin{equation} \label{eq:interface_sieverts}
 C_s(r_i, t) = 2 K_s(T) \sqrt{C_g(r_i, t) \, R \, T},
 \end{equation}
 
-implemented in TMAP8 using the `ADInterfaceSorption` kernel with a unit-conversion factor to account for the difference between gas-phase ($\mu$mol mm$^{-3}$) and SI pressure units.
+The `unit_scale_neighbor` parameter is set to $10^3$ to correct for the unit mismatch between $C_g$ in $\mu$mol mm$^{-3}$ and the ideal gas constant used internally by `ADInterfaceSorption`, which draws $R$ in J K$^{-1}$ mol$^{-1}$ from the MOOSE `PhysicalConstants` namespace. Converting $C_g$ from $\mu$mol mm$^{-3}$ to mol m$^{-3}$ introduces a combined factor of $10^{-6}$ (mol/$\mu$mol) $\times$ $10^{9}$ (mm$^3$/m$^3$) $= 10^3$, which is supplied via `unit_scale_neighbor`.
+
+### Solver
+
+!style halign=left
+Because the gas-steel problem is nonlinear (the interface couples $C_g$ and $C_s$ through a square-root relationship), `gas_steel.i` uses `solve_type = Newton` with `line_search = NONE`.
 
 ### Model Parameters
 
@@ -185,7 +213,7 @@ implemented in TMAP8 using the `ADInterfaceSorption` kernel with a unit-conversi
 #### Partial Pressure Validation
 
 !style halign=left
-[fig:partial_pressure] compares the simulated H$_2$ partial pressure at the gas-steel interface against pressure measurements from the SRNL irradiation experiment [!citep](d'entremont2024aunfminicanister). The simulation uses the ideal gas law to approximate the gas-phase H$_2$ concentration to partial pressure.
+[fig:partial_pressure] compares the simulated H$_2$ partial pressure at the gas-steel interface against pressure measurements from the SRNL irradiation experiment [!citep](d'entremont2024aunfminicanister). The partial pressure is computed from the gas-phase concentration at the interface using the ideal gas law via the `H_partial_pressure_interface` postprocessor.
 
 !media comparison_mini_canister.py
   image_name=partial_pressure_comparison.png
@@ -196,7 +224,7 @@ implemented in TMAP8 using the `ADInterfaceSorption` kernel with a unit-conversi
 #### Gas-Phase Hydrogen Yield Validation
 
 !style halign=left
-[fig:gas_yield] compares the total atomic hydrogen mass in the gas phase against the cumulative H$_2$ yield measured by SRNL [!citep](d'entremont2024aunfminicanister). Agreement between the simulation and experiment reflects the accuracy of the power-law source model ([eq:H2_yield]). It is important to note that we are comparing against data that is also fed into the model. Future work will include a more complex generation model independent of this data.
+[fig:gas_yield] compares the total atomic hydrogen mass in the gas phase (`inner_cylinder_total_mass_gas`) against the cumulative H$_2$ yield measured by SRNL [!citep](d'entremont2024aunfminicanister). Agreement between the simulation and experiment reflects the accuracy of the power-law source model ([eq:H2_yield]). It is important to note that we are comparing against data that is also fed into the model. Future work will include a more complex generation model independent of this data.
 
 !media comparison_mini_canister.py
   image_name=gas_phase_validation.png
@@ -207,18 +235,18 @@ implemented in TMAP8 using the `ADInterfaceSorption` kernel with a unit-conversi
 #### Comparison of Steel Hydrogen Uptake Between Models
 
 !style halign=left
-[fig:model_comparison] compares the total atomic hydrogen mass accumulated in the steel wall between the steel-only and gas-steel models. While the steel-only model uses a constant assumed H$_2$ partial pressure, the gas-steel model evolves the interface pressure self-consistently. The steel-only model can also utilize time-dependent pressure data from SRNL [!citep](d'entremont2024aunfminicanister) by changing pressure_function in [steel_only.i] or on the command line, nullifying the assumptions for the diffusion length verification but greatly improving agreement between the two models.
+[fig:model_comparison] compares the total atomic hydrogen mass accumulated in the steel wall between the steel-only and gas-steel models. The left axis shows the absolute H mass in $\mu$mol; the right axis shows the steel mass as a percentage of the total H inventory (steel + gas for gas-steel, steel + source integral for steel-only). While the steel-only model uses a constant assumed H$_2$ partial pressure, the gas-steel model evolves the interface pressure self-consistently. The steel-only model can also utilize time-dependent pressure data from SRNL [!citep](d'entremont2024aunfminicanister) by setting `pressure_function = SRNL_pressure_data_fun` in [steel_only.i] or on the command line, nullifying the assumptions required for the diffusion-front verification but greatly improving agreement between the two models.
 
 !media comparison_mini_canister.py
   image_name=hydrogen_yield_in_steel.png
   style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
   id=fig:model_comparison
-  caption=Comparison of total H mass in the steel wall between the steel-only (constant pressure) and gas-steel simulations.
+  caption=Comparison of total H mass in the steel wall (left axis) and fraction of total H inventory in the steel (right axis, dashed) between the steel-only (constant pressure) and gas-steel simulations.
 
 #### Conservation of Mass
 
 !style halign=left
-[fig:gas_steel_conservation] verifies conservation of mass in the gas-steel model by comparing the total hydrogen mass in the domain against the sum of the time-integrated boundary flux and the cumulative source term. The two quantities track closely, confirming that mass contributions from the coupled gas-generation, gas-phase transport, interface transfer, and steel diffusion are all consistently accounted for.
+[fig:gas_steel_conservation] verifies conservation of mass in the gas-steel model by comparing the total hydrogen mass in the domain (`cylinder_total_mass`, the sum of gas and steel masses) against the sum of the time-integrated boundary flux (`cylinder_time_integrated_flux`) and the cumulative source term (`cylinder_total_generation`). Throughout, all quantities are tracked in $\mu$mol H atoms: the gas-phase H$_2$ concentration is multiplied by 2 in the `inner_circle_concentration_gas` postprocessor, and the H$_2$ yield function is scaled by `scale_factor = 2` in `cylinder_total_generation`. The two quantities track closely, confirming that mass contributions from the coupled gas-generation, gas-phase transport, interface transfer, and steel diffusion are all consistently accounted for.
 
 !media comparison_mini_canister.py
   image_name=gas_steel_conservation_of_mass.png
@@ -229,7 +257,9 @@ implemented in TMAP8 using the `ADInterfaceSorption` kernel with a unit-conversi
 ## Input Files
 
 !style halign=left
-The input files for this example are [/steel_only.i] and [/gas_steel.i], and both are also used as tests in TMAP8 at [/mini_canister/tests].
+The input files for this example are [/steel_only.i] and [/gas_steel.i], together with the shared [/mini_canister_base.i] and [/mini_canister.params]. All files are also used as tests in TMAP8 at [/mini_canister/tests].
+
+!listing test/tests/mini_canister/mini_canister_base.i link=false
 
 !listing test/tests/mini_canister/steel_only.i link=false
 

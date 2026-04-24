@@ -1,32 +1,18 @@
-# Author: Evan Butterworth
-# Contact: Evan.Butterworth@inl.gov
+### This input file models the transport of H2 through both the gas chamber and
+### steel wall of the mini_canister,using InterfaceSorption to model the
+### interface between the gas chamber and steel
 
-# Geometry
-inner_radius = '${units 1.415 in -> mm}' # Radius of canister containing gases
-steel_thickness = '${units 0.085 in -> mm}' # Thickness of steel enclosure
-# total_radius = '${units ${fparse inner_radius + steel_thickness} mm}'
-height = '${units 7.06 in -> mm}'
+# Model parameters
+!include mini_canister.params
+# Volume of gas chamber in canister
 gas_volume = '${units ${fparse pi*inner_radius^2*height} mm^3}'
-
-# Misc
-temperature = '${units 313.15 K}' # INL Report: Section 2.3
-ideal_gas_constant = '${units 8.31446261815324 J/K/mol -> J/K/mumol}' # Note: InterfaceSorption uses in J/K/mol value from PhysicalConstants namespace
-diffuisivity_H2_in_He = '${units 2.7 cm^2/s -> mm^2/day}'
-
-# Sandia Technical Reference: Hydrogen Diffusivity & Solubility in 304 Stainless Steel
-diffusivity_preexponential_factor_in_steel = '${units 0.20e-6 m^2/s -> mm^2/day}'
-diffusivity_activation_energy_in_steel = '${units 49.3 kJ/mol -> J/mumol}'
-diffusivity_H_in_steel = '${units ${fparse diffusivity_preexponential_factor_in_steel * exp(-diffusivity_activation_energy_in_steel/(ideal_gas_constant*temperature))} mm^2/day}'
-solubility_preexponential_factor_in_steel = '${units 266e-6 mumol/mm^3/Pa}' # Actual units are mumol/mm^3/sqrt(Pa) due to Sievert's law in EquilibriumBC
-solubility_activation_energy_in_steel = '${units 6.86 kJ/mol -> J/mol}' # J/mol needed since InterfaceSorption uses ideal_gas_constant in J/K/mol from PhysicalConstants namespace
-
+# H2 diffusivity in He backfill
+diffusivity_H2_in_He = '${units 2.7 cm^2/s -> mm^2/day}'
 # Numerics
-num_elements_steel = 1500
 num_elements_gas = 250
-endtime = '${units 0.25 year -> day}'
-dt_start = '${units 300 s -> day}'
-dt_max = '${units 7 day}'
-dt_min = '${units 1 s -> day}'
+
+# Shared objects between two models
+!include mini_canister_base.i
 
 [Mesh]
   coord_type = 'RZ' # Axisymmetric coordinates
@@ -58,15 +44,6 @@ dt_min = '${units 1 s -> day}'
   [H_mobile_gas] # Mobile H_2 gas inside canister
     block = '0'
   []
-  [H_mobile_steel] # Mobile H atoms within steel
-    block = '1'
-  []
-[]
-
-[AuxVariables]
-  [T] #Temperature
-    initial_condition = ${temperature}
-  []
 []
 
 [Kernels]
@@ -78,7 +55,7 @@ dt_min = '${units 1 s -> day}'
   [gas_mobile_diff]
     type = ADMatDiffusion
     variable = H_mobile_gas
-    diffusivity = '${diffuisivity_H2_in_He}'
+    diffusivity = '${diffusivity_H2_in_He}'
     block = 0
   []
   [gas_source]
@@ -86,26 +63,6 @@ dt_min = '${units 1 s -> day}'
     variable = H_mobile_gas
     block = 0
     function = gas_generation_rhs_fun
-  []
-
-  [steel_mobile_time]
-    type = ADTimeDerivative
-    variable = H_mobile_steel
-    block = 1
-  []
-  [steel_mobile_diff]
-    type = ADMatDiffusion
-    variable = H_mobile_steel
-    diffusivity = '${diffusivity_H_in_steel}'
-    block = 1
-  []
-[]
-
-[AuxKernels]
-  [constant_temperature]
-    type = ConstantAux
-    variable = T
-    value = '${temperature}'
   []
 []
 
@@ -121,15 +78,6 @@ dt_min = '${units 1 s -> day}'
     n_sorption = 0.5 # Sieverts' Law
     diffusivity = '${diffusivity_H_in_steel}'
     unit_scale_neighbor = 1e3 # Unit corrections for C_s = K*\sqrt{unit_scale_neighbor*C_g*R*T}
-  []
-[]
-
-[BCs]
-  [steel_air_boundary] # Boundary of steel and outside environment
-    type = DirichletBC
-    boundary = '1'
-    value = 0
-    variable = H_mobile_steel
   []
 []
 
@@ -149,84 +97,61 @@ dt_min = '${units 1 s -> day}'
 
   # Conservation of mass: Total mass in domain
 
-  [circle_concentration_gas_molecular] # Axisymmetric: 2D Integral of inner circle Cross section
+  [inner_circle_concentration_gas_molecular] # Axisymmetric: 2D Integral of inner circle Cross section
     type = ElementIntegralVariablePostprocessor
     variable = H_mobile_gas
     block = '0'
-    outputs = csv
+    outputs = none
   []
 
-  [circle_concentration_gas]
+  [inner_circle_concentration_gas]
     type = ScalePostprocessor
-    value = circle_concentration_gas_molecular
+    value = inner_circle_concentration_gas_molecular
     scaling_factor = 2 # Count H atoms
-    outputs = csv
-  []
-
-  [annulus_concentration_steel] # Axisymmetric: 2D integral of annulus
-    type = ElementIntegralVariablePostprocessor
-    variable = H_mobile_steel
-    block = '1'
-    outputs = csv
+    outputs = none
   []
 
   [circle_concentration]
     type = SumPostprocessor
-    values = 'circle_concentration_gas annulus_concentration_steel'
-    outputs = csv
+    values = 'inner_circle_concentration_gas annulus_concentration_steel'
+    outputs = none
   []
 
-  [cylinder_total_mass_steel]
+  [inner_cylinder_total_mass_gas]
     type = ScalePostprocessor
-    value = annulus_concentration_steel
-    scaling_factor = '${height}'
-    outputs = csv
-  []
-
-  [cylinder_total_mass_gas]
-    type = ScalePostprocessor
-    value = circle_concentration_gas
+    value = inner_circle_concentration_gas
     scaling_factor = '${height}'
     outputs = csv
   []
 
   [cylinder_total_mass]
     type = SumPostprocessor
-    values = 'cylinder_total_mass_gas cylinder_total_mass_steel'
+    values = 'inner_cylinder_total_mass_gas annular_cylinder_total_mass_steel'
     outputs = csv
   []
 
   # Conservation of mass: Accumulated flux
 
-  [circle_influx] # Influx at the center of canister should be zero
+  [center_influx] # Influx at the center of canister (Natural BC enforces 0)
     type = ADSideDiffusiveFluxIntegral
     boundary = '0'
     variable = H_mobile_gas
-    diffusivity = ${diffuisivity_H2_in_He}
-    outputs = csv
-  []
-
-  [circle_outflux] # outflux on outside edges of steel.
-    type = ADSideDiffusiveFluxIntegral
-    boundary = '1'
-    variable = H_mobile_steel
-    diffusivity = ${diffusivity_H_in_steel}
-    outputs = csv
+    diffusivity = ${diffusivity_H2_in_He}
+    outputs = none
   []
 
   [circle_flux_difference]
     type = ParsedPostprocessor
-    # expression = 'circle_outflux - 2*circle_influx' # Account for atomic hydrogen
-    expression = '-2*circle_influx-circle_outflux' # Change from Carson
-    pp_names = 'circle_influx circle_outflux'
-    outputs = csv
+    expression = '-2*center_influx-outer_edge_outflux' # Account for sign of outward normal vector
+    pp_names = 'center_influx outer_edge_outflux'
+    outputs = none
   []
 
   [circle_time_integrated_flux]
     type = TimeIntegratedPostprocessor
     value = circle_flux_difference
     time_integration_scheme = trapezoidal-rule
-    outputs = csv
+    outputs = none
   []
 
   [cylinder_time_integrated_flux]
@@ -251,7 +176,7 @@ dt_min = '${units 1 s -> day}'
     type = PointValue
     point = '${inner_radius} 0 0'
     variable = H_mobile_gas
-    outputs = csv
+    outputs = none
   []
 
   [H_partial_pressure_interface] # Use ideal gas law to approximate pressure
@@ -263,28 +188,11 @@ dt_min = '${units 1 s -> day}'
 []
 
 [Executioner]
-  type = Transient
-  scheme = bdf2
-  dtmax = '${dt_max}'
-  dtmin = '${dt_min}'
-  dt = '${dt_start}'
   solve_type = Newton
-  automatic_scaling = true
   line_search = NONE
-  petsc_options_iname = '-pc_type'
-  petsc_options_value = 'lu'
   nl_rel_tol = 1e-07
-  end_time = ${endtime}
-  [TimeStepper]
-    type = IterationAdaptiveDT
-    dt = ${dt_start}
-    optimal_iterations = 5
-    growth_factor = 1.1
-    cutback_factor_at_failure = .9
-  []
 []
 
 [Outputs]
-  csv = true
   file_base = 'gas_steel_out'
 []

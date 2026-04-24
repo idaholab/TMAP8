@@ -1,33 +1,16 @@
-# Author: Evan Butterworth
-# Contact: Evan.Butterworth@inl.gov
+### This input file models the transport of H2 through only the steel wall of the mini_canister,
+### using EquilibriumBC to model the interface between the gas chamber and steel
 
+# Model parameters
+!include mini_canister.params
 # Geometry
-inner_radius = '${units 1.415 in -> mm}' # Radius of canister containing gases
-steel_thickness = '${units 0.085 in -> mm}' # Thickness of steel enclosure
 total_radius = '${units ${fparse inner_radius + steel_thickness} mm}'
-height = '${units 7.06 in -> mm}' # Height of canister
-
-# Misc
-temperature = '${units 313.15 K}' # INL Report: Section 2.3
-ideal_gas_constant = '${units 8.31446261815324 J/K/mol -> J/K/mumol}' # Note: EqulibriumBC uses value from PhysicalConstants namespace in K/K/mol
-
-# Sandia Technical Reference: Hydrogen Diffusivity & Solubility in 304 Stainless Steel
-diffusivity_preexponential_factor_in_steel = '${units 0.20e-6 m^2/s -> mm^2/day}'
-diffusivity_activation_energy_in_steel = '${units 49.3 kJ/mol -> J/mumol}'
-diffusivity_H_in_steel = '${units ${fparse diffusivity_preexponential_factor_in_steel * exp(-diffusivity_activation_energy_in_steel/(ideal_gas_constant*temperature))} mm^2/day}'
-solubility_preexponential_factor_in_steel = '${units 266e-6 mumol/mm^3/Pa}' # Actual units are mumol/mm^3/sqrt(Pa) due to Sievert's law in EquilibriumBC
-solubility_activation_energy_in_steel = '${units 6.86 kJ/mol -> J/mol}' # J/mol needed since EquilibriumBC uses ideal gas constant in SI units from PhysicalConstants namespace
-
 # Pressure implementation: constant_pressure | time_ramp_pressure | SRNL_pressure_data_fun
 estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}' # For constant or time_ramp pressure. % estimation of partial pressure of H_2 with HE backfill to 24 psi
 pressure_function = 'constant_pressure'
 
-# Numerics
-num_elements_steel = 1500
-endtime = '${units 0.25 year -> day}'
-dt_start = '${units 300 s -> day}'
-dt_max = '${units 7 day}'
-dt_min = '${units 1 s -> day}'
+# Shared objects between two models
+!include mini_canister_base.i
 
 [Mesh]
   coord_type = 'RZ' # Axisymmetric coordinates
@@ -35,14 +18,10 @@ dt_min = '${units 1 s -> day}'
   [steel]
     type = GeneratedMeshGenerator
     dim = 1
-    nx = '${num_elements_steel}'
+    nx = ${num_elements_steel}
     xmin = '${inner_radius}'
     xmax = '${total_radius}'
-  []
-[]
-
-[Variables]
-  [H_mobile_steel] # Mobile H atoms within steel
+    subdomain_ids = '1'
   []
 []
 
@@ -51,9 +30,6 @@ dt_min = '${units 1 s -> day}'
   []
   [H_mobile_steel_derivative] # dC_s/dx
     family = MONOMIAL # Need element rather than nodal family to define gradient at a node
-  []
-  [T] # Temperature
-    initial_condition = ${temperature}
   []
 []
 
@@ -66,23 +42,12 @@ dt_min = '${units 1 s -> day}'
   []
 []
 
-[Kernels]
-  [steel_mobile_time]
-    type = ADTimeDerivative
-    variable = H_mobile_steel
-  []
-  [steel_mobile_diff]
-    type = ADMatDiffusion
-    variable = H_mobile_steel
-    diffusivity = '${diffusivity_H_in_steel}'
-  []
-[]
-
 [AuxKernels]
   [pressure_aux]
     type = FunctionAux
     function = ${pressure_function}
     variable = H_partial_pressure_gas
+    boundary = '0'
   []
 
   [concentration_gradient_left_boundary] # dC_s/dx @ x = inner_radius
@@ -92,12 +57,6 @@ dt_min = '${units 1 s -> day}'
     diffusivity = negative_unity
     variable = H_mobile_steel_derivative
     boundary = '0'
-  []
-
-  [constant_temperature]
-    type = ConstantAux
-    variable = T
-    value = '${temperature}'
   []
 []
 
@@ -112,13 +71,6 @@ dt_min = '${units 1 s -> day}'
     variable = H_mobile_steel
     temperature = T
     p = 0.5 # Sieverts' Law
-  []
-
-  [steel_air_boundary] # Boundary of steel and outside environment
-    type = DirichletBC
-    boundary = '1'
-    value = 0
-    variable = H_mobile_steel
   []
 []
 
@@ -156,13 +108,14 @@ dt_min = '${units 1 s -> day}'
     type = PointValue
     point = '${inner_radius} 0 0'
     variable = H_mobile_steel_derivative
+    outputs = none
   []
 
   [interface_concentration]
     type = PointValue
     point = '${inner_radius} 0 0'
     variable = H_mobile_steel
-    outputs = csv
+    outputs = none
   []
 
   [simulated_diffusion_length] # x-intercept of tangent line at interface
@@ -174,80 +127,42 @@ dt_min = '${units 1 s -> day}'
     outputs = csv
   []
 
-  # Conservation of mass
+  # Conservation of mass: Accumulated flux
 
-  [mass_in_domain] # Axisymmetric: 2D integral of annulus
-    type = ElementIntegralVariablePostprocessor
-    variable = H_mobile_steel
-    outputs = csv
-  []
-
-  [influx]
+  [interface_influx] # Influx at interface
     type = ADSideDiffusiveFluxIntegral
     boundary = '0'
     variable = H_mobile_steel
     diffusivity = ${diffusivity_H_in_steel}
-    outputs = csv
+    outputs = none
   []
 
-  [outflux]
-    type = ADSideDiffusiveFluxIntegral
-    boundary = '1'
-    variable = H_mobile_steel
-    diffusivity = ${diffusivity_H_in_steel}
-    outputs = csv
-  []
-
-  [flux_difference]
+  [annulus_flux_difference]
     type = ParsedPostprocessor
-    expression = '-influx - outflux' # negative sign on influx to account for outward normal vector direction
-    pp_names = 'influx outflux'
-    outputs = csv
+    expression = '-interface_influx - outer_edge_outflux' # negative sign on influx to account for outward normal vector direction
+    pp_names = 'interface_influx outer_edge_outflux'
+    outputs = none
   []
 
-  [time_integrated_flux]
+  [annulus_time_integrated_flux]
     type = TimeIntegratedPostprocessor
-    value = flux_difference
+    value = annulus_flux_difference
     time_integration_scheme = trapezoidal-rule
-    outputs = csv
+    outputs = none
   []
 
-  [3d_mass_in_domain] # total mass in annulur cylinder
+  [annular_cylinder_time_integrated_flux]
     type = ScalePostprocessor
-    value = mass_in_domain
-    scaling_factor = '${height}'
-    outputs = csv
-  []
-
-  [3d_time_integrated_flux]
-    type = ScalePostprocessor
-    value = time_integrated_flux
+    value = annulus_time_integrated_flux
     scaling_factor = ${height}
     outputs = csv
   []
 []
 
 [Executioner]
-  type = Transient
-  scheme = bdf2
-  dtmax = '${dt_max}'
-  dtmin = '${dt_min}'
-  dt = '${dt_start}'
   solve_type = LINEAR # Direct solve of linear system by LU factorization
-  petsc_options_iname = '-pc_type'
-  petsc_options_value = 'lu'
-  end_time = ${endtime}
-  automatic_scaling = true
-  [TimeStepper]
-    type = IterationAdaptiveDT
-    dt = ${dt_start}
-    optimal_iterations = 5
-    growth_factor = 1.1
-    cutback_factor_at_failure = .9
-  []
 []
 
 [Outputs]
-  csv = true
   file_base = 'steel_only_out'
 []

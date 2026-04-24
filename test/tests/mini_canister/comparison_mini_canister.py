@@ -26,6 +26,7 @@ def read_csv_from_TMAP8(file_name, parameter_names):
     """
     if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
         csv_folder = f"../../../../test/tests/mini_canister/gold/{file_name}"
+
     else:  # if in test folder
         csv_folder = f"./gold/{file_name}"
     simulation_data = pd.read_csv(csv_folder)
@@ -159,8 +160,8 @@ SRNL_partial_pressure = 1e3 * SRNL_gas_pressure * SRNL_H2_fraction / 100
     "steel_only_out.csv",
     [
         "time",
-        "3d_mass_in_domain",
-        "3d_time_integrated_flux",
+        "annular_cylinder_total_mass_steel",
+        "annular_cylinder_time_integrated_flux",
         "exact_diffusion_length",
         "simulated_diffusion_length",
     ],
@@ -181,8 +182,8 @@ SRNL_partial_pressure = 1e3 * SRNL_gas_pressure * SRNL_H2_fraction / 100
     [
         "time",
         "H_partial_pressure_interface",
-        "cylinder_total_mass_steel",
-        "cylinder_total_mass_gas",
+        "annular_cylinder_total_mass_steel",
+        "inner_cylinder_total_mass_gas",
         "cylinder_total_mass",
         "cylinder_time_integrated_flux",
         "cylinder_total_generation",
@@ -212,7 +213,7 @@ for t_arr, mass_steel, total, color, label in [
     (
         steel_only_t,
         steel_only_total_mass_steel,
-        total_generation,
+        total_generation + steel_only_total_mass_steel,
         "tab:blue",
         "Steel-only",
     ),
