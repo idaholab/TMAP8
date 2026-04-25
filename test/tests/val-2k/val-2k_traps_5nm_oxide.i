@@ -1,7 +1,7 @@
-# This input file defines the six scaled trap model used by the explicit 5 nm
-# oxide case in val-2k. It follows the approach deployed in val-2f by
-# introducing the trapped species through SpeciesTrapping physics blocks with
-# dimensionless concentrations, restricted to the tungsten block.
+# This input file defines the six scaled trap model used by the 5 nm oxygen-
+# field oxide case in val-2k. The trap densities are multiplied by the same
+# sharp tanh tungsten indicator that suppresses trapping inside the front oxide
+# region while preserving the original tungsten distributions in the substrate.
 
 [Bounds]
   [deuterium_trapped_intrinsic_lower_bound]
@@ -51,27 +51,39 @@
 [Functions]
   [trap_intrinsic_sites_function]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_intrinsic}'
+    symbol_names = 'tungsten_indicator_function'
+    symbol_values = 'tungsten_indicator_function'
+    expression = '${trapping_site_fraction_intrinsic} * tungsten_indicator_function'
   []
   [trap_1_sites_function]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_1} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+    symbol_names = 'tungsten_indicator_function'
+    symbol_values = 'tungsten_indicator_function'
+    expression = '${trapping_site_fraction_1} * tungsten_indicator_function / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
   []
   [trap_2_sites_function]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_2} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+    symbol_names = 'tungsten_indicator_function'
+    symbol_values = 'tungsten_indicator_function'
+    expression = '${trapping_site_fraction_2} * tungsten_indicator_function / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
   []
   [trap_3_sites_function]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_3} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+    symbol_names = 'tungsten_indicator_function'
+    symbol_values = 'tungsten_indicator_function'
+    expression = '${trapping_site_fraction_3} * tungsten_indicator_function / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
   []
   [trap_4_sites_function]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_4} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+    symbol_names = 'tungsten_indicator_function'
+    symbol_values = 'tungsten_indicator_function'
+    expression = '${trapping_site_fraction_4} * tungsten_indicator_function / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
   []
   [trap_5_sites_function]
     type = ParsedFunction
-    expression = '${trapping_site_fraction_5} / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+    symbol_names = 'tungsten_indicator_function'
+    symbol_values = 'tungsten_indicator_function'
+    expression = '${trapping_site_fraction_5} * tungsten_indicator_function / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
   []
 
   [initial_deuterium_trapped_intrinsic]
@@ -115,7 +127,6 @@
 [Physics]
   [SpeciesTrapping]
     [trapping_intrinsic]
-      block = 1
       species = 'deuterium_trapped_intrinsic'
       species_scaling_factors = '1'
       species_initial_concentrations = 'initial_deuterium_trapped_intrinsic'
@@ -132,7 +143,6 @@
       dimensionless_species = true
     []
     [trapping_1]
-      block = 1
       species = 'deuterium_trapped_1'
       species_scaling_factors = '1'
       species_initial_concentrations = 'initial_deuterium_trapped_1'
@@ -149,7 +159,6 @@
       dimensionless_species = true
     []
     [trapping_2]
-      block = 1
       species = 'deuterium_trapped_2'
       species_scaling_factors = '1'
       species_initial_concentrations = 'initial_deuterium_trapped_2'
@@ -166,7 +175,6 @@
       dimensionless_species = true
     []
     [trapping_3]
-      block = 1
       species = 'deuterium_trapped_3'
       species_scaling_factors = '1'
       species_initial_concentrations = 'initial_deuterium_trapped_3'
@@ -183,7 +191,6 @@
       dimensionless_species = true
     []
     [trapping_4]
-      block = 1
       species = 'deuterium_trapped_4'
       species_scaling_factors = '1'
       species_initial_concentrations = 'initial_deuterium_trapped_4'
@@ -200,7 +207,6 @@
       dimensionless_species = true
     []
     [trapping_5]
-      block = 1
       species = 'deuterium_trapped_5'
       species_scaling_factors = '1'
       species_initial_concentrations = 'initial_deuterium_trapped_5'
@@ -222,7 +228,6 @@
 [Postprocessors]
   [integral_trapped_concentration_intrinsic]
     type = ElementIntegralVariablePostprocessor
-    block = 1
     variable = deuterium_trapped_intrinsic
     outputs = none
   []
@@ -239,7 +244,6 @@
 
   [integral_trapped_concentration_1]
     type = ElementIntegralVariablePostprocessor
-    block = 1
     variable = deuterium_trapped_1
     outputs = none
   []
@@ -256,7 +260,6 @@
 
   [integral_trapped_concentration_2]
     type = ElementIntegralVariablePostprocessor
-    block = 1
     variable = deuterium_trapped_2
     outputs = none
   []
@@ -273,7 +276,6 @@
 
   [integral_trapped_concentration_3]
     type = ElementIntegralVariablePostprocessor
-    block = 1
     variable = deuterium_trapped_3
     outputs = none
   []
@@ -290,7 +292,6 @@
 
   [integral_trapped_concentration_4]
     type = ElementIntegralVariablePostprocessor
-    block = 1
     variable = deuterium_trapped_4
     outputs = none
   []
@@ -307,7 +308,6 @@
 
   [integral_trapped_concentration_5]
     type = ElementIntegralVariablePostprocessor
-    block = 1
     variable = deuterium_trapped_5
     outputs = none
   []

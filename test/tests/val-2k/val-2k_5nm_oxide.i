@@ -4,12 +4,13 @@
 # Kremer, K., Brucker, M., Jacob, W., Schwarz-Selinger, T. (2022)
 # "Influence of thin surface oxide films on hydrogen isotope release from ion-irradiated tungsten"
 #
-# This companion stage adds the explicit 5 nm oxide-layer comparison while
-# leaving the tungsten-only natural-oxide baseline untouched.
+# This companion stage adds a 5 nm oxygen-field oxide comparison while leaving
+# the tungsten-only natural-oxide baseline untouched.
 # Included physics:
-# - dimensionless deuterium diffusion in a front 5 nm oxide layer and tungsten substrate
-# - six scaled val-2f trap families introduced through SpeciesTrapping physics blocks in the tungsten
-# - phenomenological D2 and D2O surface release on the front oxide surface and back tungsten surface
+# - dimensionless deuterium diffusion in tungsten with a front 5 nm oxide region represented by a sharp oxygen-field transition
+# - dimensionless oxygen diffusion using the reported oxygen inventory and O-in-W transport kinetics
+# - six scaled val-2f trap families introduced through SpeciesTrapping physics blocks and suppressed smoothly inside the oxide region
+# - phenomenological D2 release on both surfaces and oxygen-gated D2O release on the front oxide surface
 # Deferred to later stages:
 # - explicit hydrogen-containing species
 # - water formation
@@ -27,14 +28,14 @@
     dim = 1
     dx = '${oxide_thickness_hat} ${left_refined_tungsten_depth_hat} ${damage_remainder_depth_hat} ${oxide_buffer_fine_depth_hat} ${oxide_buffer_coarse_depth_hat} ${oxide_bulk_depth_hat}'
     ix = '${ix_oxide_fine} ${ix_left_refined_tungsten_fine} ${ix_damage_remainder_fine} ${ix_buffer_fine} ${ix_buffer_coarse_fine} ${ix_bulk_fine}'
-    subdomain_id = '0 1 1 1 1 1'
+    subdomain_id = '0 0 0 0 0 0'
   []
   [mesh_coarse]
     type = CartesianMeshGenerator
     dim = 1
     dx = '${oxide_thickness_hat} ${left_refined_tungsten_depth_hat} ${damage_remainder_depth_hat} ${oxide_buffer_fine_depth_hat} ${oxide_buffer_coarse_depth_hat} ${oxide_bulk_depth_hat}'
     ix = '${ix_oxide_coarse} ${ix_left_refined_tungsten_coarse} ${ix_damage_remainder_coarse} ${ix_buffer_coarse} ${ix_buffer_coarse_coarse} ${ix_bulk_coarse}'
-    subdomain_id = '0 1 1 1 1 1'
+    subdomain_id = '0 0 0 0 0 0'
   []
 []
 
@@ -44,10 +45,22 @@
     family = LAGRANGE
     initial_condition = ${initial_mobile_concentration_hat}
   []
+  [oxygen]
+    order = FIRST
+    family = LAGRANGE
+  []
+[]
+
+[ICs]
+  [oxygen_initial_condition]
+    type = FunctionIC
+    variable = oxygen
+    function = oxygen_initial_function
+  []
 []
 
 [AuxVariables]
-  active = 'bounds_dummy temperature deuterium_mobile_physical deuterium_trapped_intrinsic_physical
+  active = 'bounds_dummy temperature oxygen_physical deuterium_mobile_physical deuterium_trapped_intrinsic_physical
   deuterium_trapped_1_physical deuterium_trapped_2_physical deuterium_trapped_3_physical
   deuterium_trapped_4_physical deuterium_trapped_5_physical deuterium_total_physical'
   [bounds_dummy]
@@ -56,6 +69,8 @@
   []
   [temperature]
     initial_condition = ${temperature_initial}
+  []
+  [oxygen_physical]
   []
   [deuterium_mobile_physical]
   []
@@ -89,6 +104,20 @@
     bound_type = lower
     bound_value = 0
   []
+  [oxygen_lower_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = oxygen
+    bound_type = lower
+    bound_value = 0
+  []
+  [oxygen_upper_bound]
+    type = ConstantBounds
+    variable = bounds_dummy
+    bounded_variable = oxygen
+    bound_type = upper
+    bound_value = 1
+  []
 []
 
 [Kernels]
@@ -101,6 +130,15 @@
     variable = deuterium_mobile
     diffusivity = diffusivity_mobile
   []
+  [oxygen_time]
+    type = TimeDerivative
+    variable = oxygen
+  []
+  [oxygen_diffusion]
+    type = ADMatDiffusion
+    variable = oxygen
+    diffusivity = diffusivity_oxygen
+  []
 []
 
 [AuxKernels]
@@ -109,6 +147,13 @@
     variable = temperature
     function = temperature_history
     execute_on = 'INITIAL LINEAR'
+  []
+  [oxygen_physical_aux]
+    type = NormalizationAux
+    variable = oxygen_physical
+    normal_factor = ${oxygen_concentration_reference_m3}
+    source_variable = oxygen
+    execute_on = 'INITIAL TIMESTEP_END'
   []
   [deuterium_mobile_physical_aux]
     type = NormalizationAux
@@ -119,7 +164,6 @@
   []
   [deuterium_trapped_intrinsic_physical_aux]
     type = NormalizationAux
-    block = 1
     variable = deuterium_trapped_intrinsic_physical
     normal_factor = ${trap_concentration_reference_intrinsic_m3}
     source_variable = deuterium_trapped_intrinsic
@@ -127,7 +171,6 @@
   []
   [deuterium_trapped_1_physical_aux]
     type = NormalizationAux
-    block = 1
     variable = deuterium_trapped_1_physical
     normal_factor = ${trap_concentration_reference_1_m3}
     source_variable = deuterium_trapped_1
@@ -135,7 +178,6 @@
   []
   [deuterium_trapped_2_physical_aux]
     type = NormalizationAux
-    block = 1
     variable = deuterium_trapped_2_physical
     normal_factor = ${trap_concentration_reference_2_m3}
     source_variable = deuterium_trapped_2
@@ -143,7 +185,6 @@
   []
   [deuterium_trapped_3_physical_aux]
     type = NormalizationAux
-    block = 1
     variable = deuterium_trapped_3_physical
     normal_factor = ${trap_concentration_reference_3_m3}
     source_variable = deuterium_trapped_3
@@ -151,7 +192,6 @@
   []
   [deuterium_trapped_4_physical_aux]
     type = NormalizationAux
-    block = 1
     variable = deuterium_trapped_4_physical
     normal_factor = ${trap_concentration_reference_4_m3}
     source_variable = deuterium_trapped_4
@@ -159,7 +199,6 @@
   []
   [deuterium_trapped_5_physical_aux]
     type = NormalizationAux
-    block = 1
     variable = deuterium_trapped_5_physical
     normal_factor = ${trap_concentration_reference_5_m3}
     source_variable = deuterium_trapped_5
@@ -343,7 +382,7 @@
     end_point = '${profile_depth_hat} 0 0'
     num_points = ${profile_num_points}
     sort_by = x
-    variable = 'deuterium_total_physical deuterium_mobile_physical deuterium_trapped_intrinsic_physical
+    variable = 'oxygen_physical deuterium_total_physical deuterium_mobile_physical deuterium_trapped_intrinsic_physical
     deuterium_trapped_1_physical deuterium_trapped_2_physical deuterium_trapped_3_physical
     deuterium_trapped_4_physical deuterium_trapped_5_physical'
     execute_on = INITIAL
