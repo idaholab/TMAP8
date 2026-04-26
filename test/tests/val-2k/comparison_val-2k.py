@@ -246,7 +246,9 @@ profile_case_spec = next(
     available_cases[-1],
 )
 profile_case = pd.read_csv(get_output_path(profile_case_spec["profile_csv"]))
-oxide_thickness_profile_um = get_numeric_parameter("oxide_thickness", "val-2k_15nm_oxide.i")
+oxide_thickness_profile_um = get_numeric_parameter(
+    "oxide_thickness", "val-2k_15nm_oxide.i"
+)
 damage_depth_um = get_numeric_parameter("damage_depth")
 profile_depth_um = get_numeric_parameter("profile_depth")
 
