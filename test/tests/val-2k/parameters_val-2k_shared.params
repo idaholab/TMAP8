@@ -1,5 +1,5 @@
-# This file provides the quantities shared by the val-2k tungsten-only and
-# explicit-oxide inputs.
+# This file provides the quantities shared by the val-2k natural-oxide and
+# 5 nm oxygen-field inputs.
 # Unit system:
 # - length: micrometers in the input file
 # - time: seconds

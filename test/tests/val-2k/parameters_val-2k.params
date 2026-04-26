@@ -1,16 +1,12 @@
-# This file provides the shared model parameters for validation case val-2k.
+# This file configures the natural-oxide oxygen-field variant of val-2k.
 # Unit system:
 # - length: micrometers in the input file
 # - time: seconds
 # - concentration: atoms / micrometer^3
 # - flux: atoms / micrometer^2 / second
 
-!include parameters_val-2k_shared.params
+oxide_thickness = '${units 1 nm -> mum}'
+# output_file_base = 'val-2k_out'
+profile_output_file_base = 'val-2k_profile_initial_out'
 
-buffer_fine_depth = '${fparse left_refined_depth - damage_depth}'
-buffer_coarse_depth = '${fparse buffer_depth - buffer_fine_depth}'
-bulk_depth = '${fparse sample_thickness - damage_depth - buffer_fine_depth - buffer_coarse_depth}'
-
-buffer_fine_depth_hat = '${fparse buffer_fine_depth / length_reference}'
-buffer_coarse_depth_hat = '${fparse buffer_coarse_depth / length_reference}'
-bulk_depth_hat = '${fparse bulk_depth / length_reference}'
+!include parameters_val-2k_oxygen_field_common.params
