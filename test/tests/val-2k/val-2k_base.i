@@ -1,6 +1,6 @@
-!include val-2k_oxygen_field_layer.i
-!include val-2k_oxygen_field_traps.i
-!include val-2k_oxygen_field_surface.i
+!include val-2k_layer.i
+!include val-2k_traps.i
+!include val-2k_surface.i
 
 [Mesh]
   active = mesh_fine

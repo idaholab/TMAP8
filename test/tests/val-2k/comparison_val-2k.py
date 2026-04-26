@@ -35,7 +35,7 @@ def get_output_path(filename):
 
 
 def get_numeric_parameter(parameter_name):
-    parameters_file = get_repo_relative_path("parameters_val-2k.params")
+    parameters_file = get_repo_relative_path("val-2k_natural_oxide.i")
 
     def parse_numeric_value(value):
         if value.startswith("${units ") and value.endswith("}"):
