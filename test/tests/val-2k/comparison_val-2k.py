@@ -81,7 +81,9 @@ def get_numeric_parameter(parameter_name):
 
     result = search_parameter(parameters_file, set())
     if result is None:
-        raise KeyError(f"Could not find parameter {parameter_name} in {parameters_file}")
+        raise KeyError(
+            f"Could not find parameter {parameter_name} in {parameters_file}"
+        )
     return result
 
 
@@ -100,16 +102,22 @@ def load_simulation_case(csv_name):
         simulation_data["scaled_flux_surface_left_d2o"]
         + simulation_data["scaled_flux_surface_right_d2o"]
     )
-    initial_inventory = simulation_data["deuterium_inventory_in_sample_physical"].iloc[0]
+    initial_inventory = simulation_data["deuterium_inventory_in_sample_physical"].iloc[
+        0
+    ]
     oxygen_initial_inventory = None
     if "oxygen_initial_inventory_in_sample_physical" in simulation_data.columns:
         oxygen_initial_inventory = simulation_data[
             "oxygen_initial_inventory_in_sample_physical"
         ].iloc[0]
     elif "oxygen_inventory_in_sample_physical" in simulation_data.columns:
-        oxygen_initial_inventory = simulation_data["oxygen_inventory_in_sample_physical"].iloc[0]
+        oxygen_initial_inventory = simulation_data[
+            "oxygen_inventory_in_sample_physical"
+        ].iloc[0]
 
-    oxygen_inventory_in_sample = simulation_data.get("oxygen_inventory_in_sample_physical")
+    oxygen_inventory_in_sample = simulation_data.get(
+        "oxygen_inventory_in_sample_physical"
+    )
     oxygen_released = simulation_data.get("oxygen_released_physical")
     oxygen_mass_residual = simulation_data.get("oxygen_mass_conservation_residual")
     return {
@@ -118,9 +126,13 @@ def load_simulation_case(csv_name):
         "time_h": time_s / 3600.0,
         "temperature_k": simulation_data["temperature_pps"],
         "initial_inventory": initial_inventory,
-        "inventory_in_sample": simulation_data["deuterium_inventory_in_sample_physical"],
+        "inventory_in_sample": simulation_data[
+            "deuterium_inventory_in_sample_physical"
+        ],
         "released_inventory": simulation_data["deuterium_released_physical"],
-        "mass_conservation_residual": simulation_data["deuterium_mass_conservation_residual"],
+        "mass_conservation_residual": simulation_data[
+            "deuterium_mass_conservation_residual"
+        ],
         "relative_mass_conservation_residual": simulation_data[
             "deuterium_mass_conservation_residual"
         ]
@@ -131,7 +143,8 @@ def load_simulation_case(csv_name):
         "oxygen_mass_conservation_residual": oxygen_mass_residual,
         "relative_oxygen_mass_conservation_residual": (
             oxygen_mass_residual / oxygen_initial_inventory
-            if oxygen_mass_residual is not None and oxygen_initial_inventory not in (None, 0.0)
+            if oxygen_mass_residual is not None
+            and oxygen_initial_inventory not in (None, 0.0)
             else None
         ),
         "mobile_inventory": simulation_data["mobile_inventory_physical"],
@@ -154,7 +167,9 @@ def load_simulation_case(csv_name):
 def compute_rmspe(case_time_h, case_release_rate, experimental_curve):
     experiment_time = experimental_curve["time (h)"]
     experiment_flux = experimental_curve["release flux (10^13 D atoms/s)"]
-    simulated_on_experiment_grid = np.interp(experiment_time, case_time_h, case_release_rate)
+    simulated_on_experiment_grid = np.interp(
+        experiment_time, case_time_h, case_release_rate
+    )
     rmse = np.sqrt(np.mean((simulated_on_experiment_grid - experiment_flux) ** 2))
     return rmse * 100.0 / np.mean(experiment_flux)
 
@@ -166,11 +181,15 @@ sample_surface_area_m2 = 10e-3 * 14e-3
 
 baseline_case = load_simulation_case("val-2k_out.csv")
 oxide_case = load_simulation_case("val-2k_5nm_oxide_out.csv")
-baseline_profile = pd.read_csv(get_output_path("val-2k_profile_initial_out_line_profile_0000.csv"))
+baseline_profile = pd.read_csv(
+    get_output_path("val-2k_profile_initial_out_line_profile_0000.csv")
+)
 
 natural_oxide_experiment = load_experimental_curve("experimental_HD_D2_nat_oxide.csv")
 oxide_5nm_experiment = load_experimental_curve("experimental_HD_D2_5nm.csv")
-natural_oxide_d2o_experiment = load_experimental_curve("experimental_HDO_D2O_nat_oxide.csv")
+natural_oxide_d2o_experiment = load_experimental_curve(
+    "experimental_HDO_D2O_nat_oxide.csv"
+)
 oxide_5nm_d2o_experiment = load_experimental_curve("experimental_HDO_D2O_5nm.csv")
 
 # Stage 3: generate the desorption comparison figure for both currently modeled
@@ -255,7 +274,9 @@ oxide_rmspe = compute_rmspe(
     oxide_case["time_h"], oxide_case["release_rate_d2"], oxide_5nm_experiment
 )
 baseline_d2o_rmspe = compute_rmspe(
-    baseline_case["time_h"], baseline_case["release_rate_d2o"], natural_oxide_d2o_experiment
+    baseline_case["time_h"],
+    baseline_case["release_rate_d2o"],
+    natural_oxide_d2o_experiment,
 )
 oxide_d2o_rmspe = compute_rmspe(
     oxide_case["time_h"], oxide_case["release_rate_d2o"], oxide_5nm_d2o_experiment
@@ -323,7 +344,11 @@ inventory_series = [
     ("Trap 4 D", baseline_case["trapped_4_inventory"], inventory_colors[1]),
     ("Trap 3 D", baseline_case["trapped_3_inventory"], inventory_colors[2]),
     ("Trap 2 D", baseline_case["trapped_2_inventory"], inventory_colors[3]),
-    ("Intrinsic trap D", baseline_case["trapped_intrinsic_inventory"], inventory_colors[4]),
+    (
+        "Intrinsic trap D",
+        baseline_case["trapped_intrinsic_inventory"],
+        inventory_colors[4],
+    ),
     ("Trap 1 D", baseline_case["trapped_1_inventory"], inventory_colors[5]),
     ("Mobile D", baseline_case["mobile_inventory"], inventory_colors[6]),
 ]
