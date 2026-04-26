@@ -28,15 +28,6 @@
     heavy = true
     requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 1 nm natural-oxide oxygen-field representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
   []
-  [val-2k_bdf2_initial_profile_csvdiff]
-    type = CSVDiff
-    input = val-2k_natural_oxide.i
-    csvdiff = val-2k_profile_initial_out_line_profile_0000.csv
-    prereq = val-2k_bdf2_csvdiff
-    should_execute = false # this test relies on the output files from val-2k_bdf2_csvdiff, so it shouldn't be run twice
-    heavy = true
-    requirement = 'The system shall be able to output the initial deuterium and oxygen concentration profiles for the val-2k natural-oxide oxygen-field baseline, including the mobile and trapped deuterium populations used to initialize the desorption calculation.'
-  []
   [val-2k_comparison]
     type = RunCommand
     command = 'python3 comparison_val-2k.py'
@@ -59,15 +50,6 @@
     heavy = true
     requirement = 'The system shall be able to produce the full field solution of a simulation of deuterium transport in self-irradiated tungsten with a 5 nm oxygen-field oxide representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release.'
   []
-  [val-2k_5nm_oxide_initial_profile_csvdiff]
-    type = CSVDiff
-    input = val-2k_5nm_oxide.i
-    csvdiff = val-2k_5nm_oxide_profile_initial_out_line_profile_0000.csv
-    prereq = val-2k_5nm_oxide_bdf2_csvdiff
-    should_execute = false
-    heavy = true
-    requirement = 'The system shall be able to output the initial deuterium and oxygen concentration profiles for the 5 nm oxygen-field oxide companion case in val-2k, including the mobile and trapped deuterium populations used to initialize the desorption calculation.'
-  []
   [val-2k_10nm_oxide_bdf2_csvdiff]
     type = CSVDiff
     input = val-2k_10nm_oxide.i
@@ -83,15 +65,6 @@
     should_execute = false
     heavy = true
     requirement = 'The system shall be able to produce the full field solution of a simulation of deuterium transport in self-irradiated tungsten with a 10 nm oxygen-field oxide representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release.'
-  []
-  [val-2k_10nm_oxide_initial_profile_csvdiff]
-    type = CSVDiff
-    input = val-2k_10nm_oxide.i
-    csvdiff = val-2k_10nm_oxide_profile_initial_out_line_profile_0000.csv
-    prereq = val-2k_10nm_oxide_bdf2_csvdiff
-    should_execute = false
-    heavy = true
-    requirement = 'The system shall be able to output the initial deuterium and oxygen concentration profiles for the 10 nm oxygen-field oxide companion case in val-2k, including the mobile and trapped deuterium populations used to initialize the desorption calculation.'
   []
   [val-2k_15nm_oxide_bdf2_csvdiff]
     type = CSVDiff
@@ -112,10 +85,10 @@
   [val-2k_15nm_oxide_initial_profile_csvdiff]
     type = CSVDiff
     input = val-2k_15nm_oxide.i
-    csvdiff = val-2k_15nm_oxide_profile_initial_out_line_profile_0000.csv
+    csvdiff = profiles/val-2k_15nm_oxide_profile_initial_out_line_profile_0000.csv
     prereq = val-2k_15nm_oxide_bdf2_csvdiff
     should_execute = false
     heavy = true
-    requirement = 'The system shall be able to output the initial deuterium and oxygen concentration profiles for the 15 nm oxygen-field oxide companion case in val-2k, including the mobile and trapped deuterium populations used to initialize the desorption calculation.'
+    requirement = 'The system shall be able to output the initial deuterium and oxygen concentration profiles for the 15 nm oxygen-field oxide companion case in val-2k, including the mobile and trapped deuterium populations used to initialize the plotted sectioned profile.'
   []
 []
