@@ -101,6 +101,17 @@ def load_simulation_case(csv_name):
         + simulation_data["scaled_flux_surface_right_d2o"]
     )
     initial_inventory = simulation_data["deuterium_inventory_in_sample_physical"].iloc[0]
+    oxygen_initial_inventory = None
+    if "oxygen_initial_inventory_in_sample_physical" in simulation_data.columns:
+        oxygen_initial_inventory = simulation_data[
+            "oxygen_initial_inventory_in_sample_physical"
+        ].iloc[0]
+    elif "oxygen_inventory_in_sample_physical" in simulation_data.columns:
+        oxygen_initial_inventory = simulation_data["oxygen_inventory_in_sample_physical"].iloc[0]
+
+    oxygen_inventory_in_sample = simulation_data.get("oxygen_inventory_in_sample_physical")
+    oxygen_released = simulation_data.get("oxygen_released_physical")
+    oxygen_mass_residual = simulation_data.get("oxygen_mass_conservation_residual")
     return {
         "data": simulation_data,
         "time_s": time_s,
@@ -114,6 +125,15 @@ def load_simulation_case(csv_name):
             "deuterium_mass_conservation_residual"
         ]
         / initial_inventory,
+        "oxygen_initial_inventory": oxygen_initial_inventory,
+        "oxygen_inventory_in_sample": oxygen_inventory_in_sample,
+        "oxygen_released": oxygen_released,
+        "oxygen_mass_conservation_residual": oxygen_mass_residual,
+        "relative_oxygen_mass_conservation_residual": (
+            oxygen_mass_residual / oxygen_initial_inventory
+            if oxygen_mass_residual is not None and oxygen_initial_inventory not in (None, 0.0)
+            else None
+        ),
         "mobile_inventory": simulation_data["mobile_inventory_physical"],
         "trapped_intrinsic_inventory": simulation_data[
             "trapped_deuterium_intrinsic_physical"
@@ -381,8 +401,9 @@ plt.savefig(
 )
 plt.close(fig)
 
-# Stage 5: compare the relative mass-balance residual for both currently modeled
-# cases using the postprocessors written by the transient solves.
+# Stage 5: compare the relative deuterium mass-balance residual for both
+# currently modeled cases using the postprocessors written by the transient
+# solves.
 fig, ax = plt.subplots(figsize=(6.5, 4.8))
 
 baseline_mass_handle = ax.plot(
@@ -402,7 +423,7 @@ oxide_mass_handle = ax.plot(
 
 ax.axhline(0.0, color="0.35", linewidth=1.0, linestyle="--")
 ax.set_xlabel("Time (h)")
-ax.set_ylabel("Mass-balance residual / initial inventory (-)")
+ax.set_ylabel("Deuterium mass-balance residual / initial inventory (-)")
 ax.set_xlim(0, 4.2)
 ax.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
 ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
@@ -416,7 +437,36 @@ plt.savefig(
 )
 plt.close(fig)
 
-# Stage 6: generate the baseline initial concentration profile used to start the
+# Stage 6: plot the oxygen conservation residual for the 5 nm oxide case in a
+# dedicated figure when the oxygen bookkeeping columns are present.
+if oxide_case["relative_oxygen_mass_conservation_residual"] is not None:
+    fig, ax = plt.subplots(figsize=(6.5, 4.8))
+
+    oxygen_mass_handle = ax.plot(
+        oxide_case["time_h"],
+        oxide_case["relative_oxygen_mass_conservation_residual"],
+        color="tab:orange",
+        linewidth=1.8,
+        label="5 nm oxide layer O",
+    )[0]
+
+    ax.axhline(0.0, color="0.35", linewidth=1.0, linestyle="--")
+    ax.set_xlabel("Time (h)")
+    ax.set_ylabel("Oxygen conservation residual / initial inventory (-)")
+    ax.set_xlim(0, 4.2)
+    ax.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
+    ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
+    ax.legend(handles=[oxygen_mass_handle], loc="best")
+    ax.minorticks_on()
+
+    plt.savefig(
+        "val-2k_natural_oxide_iteration_1_oxygen_conservation.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+    plt.close(fig)
+
+# Stage 7: generate the baseline initial concentration profile used to start the
 # desorption calculation.
 distance_to_surface_microns = baseline_profile["x"]
 deuterium_total = baseline_profile["deuterium_total_physical"]

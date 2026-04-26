@@ -7,9 +7,9 @@
 # This companion stage adds a 5 nm oxygen-field oxide comparison while leaving
 # the tungsten-only natural-oxide baseline untouched.
 # Included physics:
-# - dimensionless deuterium diffusion in tungsten with a front 5 nm oxide region represented by a sharp oxygen-field transition
+# - dimensionless deuterium diffusion with the same tungsten transport properties everywhere
 # - dimensionless oxygen diffusion using the reported oxygen inventory and O-in-W transport kinetics
-# - six scaled val-2f trap families introduced through SpeciesTrapping physics blocks and suppressed smoothly inside the oxide region
+# - six scaled val-2f trap families introduced through SpeciesTrapping physics blocks and suppressed smoothly inside the oxide region with a sharp tanh profile
 # - phenomenological D2 release on both surfaces and oxygen-gated D2O release on the front oxide surface
 # Deferred to later stages:
 # - explicit hydrogen-containing species
@@ -55,7 +55,7 @@
   [oxygen_initial_condition]
     type = FunctionIC
     variable = oxygen
-    function = oxygen_initial_function
+    function = oxygen_initial_distribution_function
   []
 []
 
@@ -128,7 +128,7 @@
   [mobile_diffusion]
     type = ADMatDiffusion
     variable = deuterium_mobile
-    diffusivity = diffusivity_mobile
+    diffusivity = diffusivity_tungsten
   []
   [oxygen_time]
     type = TimeDerivative
@@ -282,6 +282,23 @@
     scaling_factor = 1
     value = scaled_flux_surface_left_d2o
   []
+  [flux_surface_left_oxygen]
+    type = ADSideAverageMaterialProperty
+    boundary = left
+    property = flux_recombination_surface_oxygen
+    outputs = none
+  []
+  [scaled_flux_surface_left_oxygen]
+    type = ScalePostprocessor
+    scaling_factor = '${fparse -1 * oxygen_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
+    value = flux_surface_left_oxygen
+    execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
+  []
+  [flux_surface_left_oxygen_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_flux_surface_left_oxygen
+  []
   [scaled_flux_surface_left]
     type = SumPostprocessor
     values = 'scaled_flux_surface_left_d2 scaled_flux_surface_left_d2o'
@@ -326,6 +343,23 @@
     scaling_factor = 1
     value = scaled_flux_surface_right_d2o
   []
+  [flux_surface_right_oxygen]
+    type = ADSideAverageMaterialProperty
+    boundary = right
+    property = flux_recombination_surface_oxygen
+    outputs = none
+  []
+  [scaled_flux_surface_right_oxygen]
+    type = ScalePostprocessor
+    scaling_factor = '${fparse -1 * oxygen_concentration_reference * length_reference * ${units 1 m^2 -> mum^2} / time_reference}'
+    value = flux_surface_right_oxygen
+    execute_on = 'INITIAL LINEAR NONLINEAR TIMESTEP_END'
+  []
+  [flux_surface_right_oxygen_physical]
+    type = ScalePostprocessor
+    scaling_factor = 1
+    value = scaled_flux_surface_right_oxygen
+  []
   [scaled_flux_surface_right]
     type = SumPostprocessor
     values = 'scaled_flux_surface_right_d2 scaled_flux_surface_right_d2o'
@@ -348,15 +382,51 @@
     value = deuterium_inventory_in_sample
     execute_on = 'INITIAL TIMESTEP_END'
   []
+  [oxygen_initial_inventory_in_sample]
+    type = FunctionElementIntegral
+    function = oxygen_initial_distribution_function
+    execute_on = 'INITIAL TIMESTEP_END'
+    outputs = none
+  []
+  [oxygen_initial_inventory_in_sample_physical]
+    type = ScalePostprocessor
+    scaling_factor = '${fparse oxygen_concentration_reference * length_reference * ${units 1 m^2 -> mum^2}}'
+    value = oxygen_initial_inventory_in_sample
+    execute_on = 'INITIAL TIMESTEP_END'
+  []
+  [oxygen_inventory_in_sample]
+    type = ElementIntegralVariablePostprocessor
+    variable = oxygen
+    execute_on = 'INITIAL TIMESTEP_END'
+    outputs = none
+  []
+  [oxygen_inventory_in_sample_physical]
+    type = ScalePostprocessor
+    scaling_factor = '${fparse oxygen_concentration_reference * length_reference * ${units 1 m^2 -> mum^2}}'
+    value = oxygen_inventory_in_sample
+    execute_on = 'INITIAL TIMESTEP_END'
+  []
   [deuterium_release_flux_total]
     type = SumPostprocessor
     values = 'scaled_flux_surface_left scaled_flux_surface_right'
     execute_on = 'INITIAL TIMESTEP_END'
     outputs = none
   []
+  [oxygen_release_flux_total]
+    type = SumPostprocessor
+    values = 'scaled_flux_surface_left_oxygen scaled_flux_surface_right_oxygen'
+    execute_on = 'INITIAL TIMESTEP_END'
+    outputs = none
+  []
   [deuterium_released_physical]
     type = TimeIntegratedPostprocessor
     value = deuterium_release_flux_total
+    time_integration_scheme = trapezoidal-rule
+    execute_on = 'INITIAL TIMESTEP_END'
+  []
+  [oxygen_released_physical]
+    type = TimeIntegratedPostprocessor
+    value = oxygen_release_flux_total
     time_integration_scheme = trapezoidal-rule
     execute_on = 'INITIAL TIMESTEP_END'
   []
@@ -367,10 +437,23 @@
     execute_on = 'INITIAL TIMESTEP_END'
     outputs = none
   []
+  [oxygen_inventory_change]
+    type = ChangeOverTimePostprocessor
+    postprocessor = oxygen_inventory_in_sample_physical
+    change_with_respect_to_initial = true
+    execute_on = 'INITIAL TIMESTEP_END'
+    outputs = none
+  []
   [deuterium_mass_conservation_residual]
     type = ParsedPostprocessor
     pp_names = 'deuterium_inventory_change deuterium_released_physical'
     expression = 'deuterium_inventory_change + deuterium_released_physical'
+    execute_on = 'INITIAL TIMESTEP_END'
+  []
+  [oxygen_mass_conservation_residual]
+    type = ParsedPostprocessor
+    pp_names = 'oxygen_inventory_change oxygen_released_physical'
+    expression = 'oxygen_inventory_change + oxygen_released_physical'
     execute_on = 'INITIAL TIMESTEP_END'
   []
 []
