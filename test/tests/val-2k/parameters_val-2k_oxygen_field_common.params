@@ -1,0 +1,47 @@
+# This file computes the shared oxygen-field quantities for the val-2k natural-
+# oxide and 5 nm oxide inputs after each wrapper defines the oxide thickness and
+# output file names.
+# Unit system:
+# - length: micrometers in the input file
+# - time: seconds
+# - concentration: atoms / micrometer^3
+# - flux: atoms / micrometer^2 / second
+
+!include parameters_val-2k_shared.params
+
+# Oxide geometry and transport
+oxide_transition_width = '${units 0.25 nm -> mum}'
+left_refined_total_depth = '${fparse 2 * oxide_thickness}'
+left_refined_tungsten_depth = '${fparse left_refined_total_depth - oxide_thickness}'
+oxide_buffer_fine_depth = '${fparse left_refined_depth - oxide_thickness - damage_depth}'
+oxide_buffer_coarse_depth = '${fparse buffer_depth - oxide_buffer_fine_depth}'
+oxide_bulk_depth = '${fparse sample_thickness - oxide_thickness - damage_depth - oxide_buffer_fine_depth - oxide_buffer_coarse_depth}'
+
+ix_oxide_fine = 15
+ix_left_refined_tungsten_fine = 15
+ix_damage_remainder_fine = '${fparse ix_damage_fine - ix_left_refined_tungsten_fine}'
+ix_oxide_coarse = 3
+ix_left_refined_tungsten_coarse = 3
+ix_damage_remainder_coarse = '${fparse ix_damage_coarse - ix_left_refined_tungsten_coarse}'
+
+oxygen_diffusion_W_preexponential = '${units 7.755607859269331e-21 m^2/s -> mum^2/s}' # '${units 7.755607859269331e-08 m^2/s -> mum^2/s}'
+oxygen_diffusion_W_energy = '${units 0.17 eV}'
+
+# The initial oxygen concentration is derived from the paper-reported removal
+# of 100 x 10^19 O/m^2 from the first 13.5 nm of oxide.
+oxygen_removed_areal_density = '${units 100e19 at/m^2}'
+oxygen_removed_depth = '${units 13.5 nm -> m}'
+oxygen_concentration_initial = '${units ${fparse oxygen_removed_areal_density / oxygen_removed_depth} at/m^3 -> at/mum^3}'
+oxygen_concentration_reference = '${fparse oxygen_concentration_initial}'
+oxygen_concentration_reference_m3 = '${units ${fparse oxygen_concentration_reference} at/mum^3 -> at/m^3}'
+oxygen_initial_concentration_hat = '${fparse oxygen_concentration_initial / oxygen_concentration_reference}'
+oxygen_release_stoichiometric_factor_hat = '${fparse 0.5 * mobile_concentration_reference / oxygen_concentration_reference}'
+
+oxide_thickness_hat = '${fparse oxide_thickness / length_reference}'
+oxide_transition_width_hat = '${fparse oxide_transition_width / length_reference}'
+left_refined_tungsten_depth_hat = '${fparse left_refined_tungsten_depth / length_reference}'
+damage_remainder_depth_hat = '${fparse damage_depth_hat - left_refined_tungsten_depth_hat}'
+oxide_buffer_fine_depth_hat = '${fparse oxide_buffer_fine_depth / length_reference}'
+oxide_buffer_coarse_depth_hat = '${fparse oxide_buffer_coarse_depth / length_reference}'
+oxide_bulk_depth_hat = '${fparse oxide_bulk_depth / length_reference}'
+oxygen_diffusion_W_preexponential_hat = '${fparse oxygen_diffusion_W_preexponential * time_reference / (length_reference ^ 2)}'

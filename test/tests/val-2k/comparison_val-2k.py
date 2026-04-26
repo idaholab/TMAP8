@@ -159,8 +159,8 @@ def compute_rmspe(case_time_h, case_release_rate, experimental_curve):
     return rmse * 100.0 / np.mean(experiment_flux)
 
 
-# Stage 2: load the simulated outputs for the tungsten-only and explicit-oxide
-# cases, together with the experimental curves from Fig. 6.
+# Stage 2: load the simulated outputs for the natural-oxide and 5 nm oxygen-
+# field cases, together with the experimental curves from Fig. 6.
 time_reference = get_numeric_parameter("time_reference")
 sample_surface_area_m2 = 10e-3 * 14e-3
 
@@ -182,28 +182,28 @@ baseline_handle = ax.plot(
     baseline_case["release_rate_d2"],
     linestyle="-",
     color="tab:blue",
-    label="TMAP8 D2, no oxide layer",
+    label="TMAP8 D2, nat. oxide (1 nm O)",
 )[0]
 oxide_handle = ax.plot(
     oxide_case["time_h"],
     oxide_case["release_rate_d2"],
     linestyle="-",
     color="tab:green",
-    label="TMAP8 D2, 5 nm oxide layer",
+    label="TMAP8 D2, 5 nm oxide",
 )[0]
 baseline_d2o_handle = ax.plot(
     baseline_case["time_h"],
     baseline_case["release_rate_d2o"],
     linestyle=":",
     color="tab:blue",
-    label="TMAP8 D2O, no oxide layer",
+    label="TMAP8 D2O, nat. oxide (1 nm O)",
 )[0]
 oxide_d2o_handle = ax.plot(
     oxide_case["time_h"],
     oxide_case["release_rate_d2o"],
     linestyle=":",
     color="tab:green",
-    label="TMAP8 D2O, 5 nm oxide layer",
+    label="TMAP8 D2O, 5 nm oxide",
 )[0]
 natural_experiment_handle = ax.plot(
     natural_oxide_experiment["time (h)"],
@@ -418,7 +418,7 @@ oxide_mass_handle = ax.plot(
     oxide_case["relative_mass_conservation_residual"],
     color="tab:green",
     linewidth=1.8,
-    label="5 nm oxide layer",
+    label="5 nm oxide",
 )[0]
 
 ax.axhline(0.0, color="0.35", linewidth=1.0, linestyle="--")
@@ -437,17 +437,27 @@ plt.savefig(
 )
 plt.close(fig)
 
-# Stage 6: plot the oxygen conservation residual for the 5 nm oxide case in a
-# dedicated figure when the oxygen bookkeeping columns are present.
-if oxide_case["relative_oxygen_mass_conservation_residual"] is not None:
+# Stage 6: plot the oxygen conservation residual for both oxygen-field cases in
+# a dedicated figure when the oxygen bookkeeping columns are present.
+if (
+    baseline_case["relative_oxygen_mass_conservation_residual"] is not None
+    and oxide_case["relative_oxygen_mass_conservation_residual"] is not None
+):
     fig, ax = plt.subplots(figsize=(6.5, 4.8))
 
-    oxygen_mass_handle = ax.plot(
+    baseline_oxygen_mass_handle = ax.plot(
+        baseline_case["time_h"],
+        baseline_case["relative_oxygen_mass_conservation_residual"],
+        color="tab:blue",
+        linewidth=1.8,
+        label="Nat. oxide (1 nm O)",
+    )[0]
+    oxide_oxygen_mass_handle = ax.plot(
         oxide_case["time_h"],
         oxide_case["relative_oxygen_mass_conservation_residual"],
         color="tab:orange",
         linewidth=1.8,
-        label="5 nm oxide layer O",
+        label="5 nm oxide",
     )[0]
 
     ax.axhline(0.0, color="0.35", linewidth=1.0, linestyle="--")
@@ -456,7 +466,9 @@ if oxide_case["relative_oxygen_mass_conservation_residual"] is not None:
     ax.set_xlim(0, 4.2)
     ax.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
     ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
-    ax.legend(handles=[oxygen_mass_handle], loc="best")
+    ax.legend(
+        handles=[baseline_oxygen_mass_handle, oxide_oxygen_mass_handle], loc="best"
+    )
     ax.minorticks_on()
 
     plt.savefig(
