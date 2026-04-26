@@ -1,7 +1,7 @@
 # This input file defines the six scaled trap model used by the 5 nm oxygen-
-# field oxide case in val-2k. The trap densities are multiplied by the same
-# sharp tanh tungsten indicator that suppresses trapping inside the front oxide
-# region while preserving the original tungsten distributions in the substrate.
+# field oxide case in val-2k. The trap densities are multiplied by a sharp tanh
+# profile that suppresses trapping inside the front oxide region while
+# preserving the original tungsten distributions in the substrate.
 
 [Bounds]
   [deuterium_trapped_intrinsic_lower_bound]
@@ -49,41 +49,45 @@
 []
 
 [Functions]
+  [damage_profile_function]
+    type = ParsedFunction
+    expression = '1 / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+  []
   [trap_intrinsic_sites_function]
     type = ParsedFunction
-    symbol_names = 'tungsten_indicator_function'
-    symbol_values = 'tungsten_indicator_function'
-    expression = '${trapping_site_fraction_intrinsic} * tungsten_indicator_function'
+    symbol_names = 'oxide_position_function'
+    symbol_values = 'oxide_position_function'
+    expression = '${trapping_site_fraction_intrinsic} * (1 - oxide_position_function)'
   []
   [trap_1_sites_function]
     type = ParsedFunction
-    symbol_names = 'tungsten_indicator_function'
-    symbol_values = 'tungsten_indicator_function'
-    expression = '${trapping_site_fraction_1} * tungsten_indicator_function / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+    symbol_names = 'oxide_position_function damage_profile_function'
+    symbol_values = 'oxide_position_function damage_profile_function'
+    expression = '${trapping_site_fraction_1} * (1 - oxide_position_function) * damage_profile_function'
   []
   [trap_2_sites_function]
     type = ParsedFunction
-    symbol_names = 'tungsten_indicator_function'
-    symbol_values = 'tungsten_indicator_function'
-    expression = '${trapping_site_fraction_2} * tungsten_indicator_function / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+    symbol_names = 'oxide_position_function damage_profile_function'
+    symbol_values = 'oxide_position_function damage_profile_function'
+    expression = '${trapping_site_fraction_2} * (1 - oxide_position_function) * damage_profile_function'
   []
   [trap_3_sites_function]
     type = ParsedFunction
-    symbol_names = 'tungsten_indicator_function'
-    symbol_values = 'tungsten_indicator_function'
-    expression = '${trapping_site_fraction_3} * tungsten_indicator_function / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+    symbol_names = 'oxide_position_function damage_profile_function'
+    symbol_values = 'oxide_position_function damage_profile_function'
+    expression = '${trapping_site_fraction_3} * (1 - oxide_position_function) * damage_profile_function'
   []
   [trap_4_sites_function]
     type = ParsedFunction
-    symbol_names = 'tungsten_indicator_function'
-    symbol_values = 'tungsten_indicator_function'
-    expression = '${trapping_site_fraction_4} * tungsten_indicator_function / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+    symbol_names = 'oxide_position_function damage_profile_function'
+    symbol_values = 'oxide_position_function damage_profile_function'
+    expression = '${trapping_site_fraction_4} * (1 - oxide_position_function) * damage_profile_function'
   []
   [trap_5_sites_function]
     type = ParsedFunction
-    symbol_names = 'tungsten_indicator_function'
-    symbol_values = 'tungsten_indicator_function'
-    expression = '${trapping_site_fraction_5} * tungsten_indicator_function / (1 + exp((x - ${depth_center_hat}) / ${depth_width_hat}))'
+    symbol_names = 'oxide_position_function damage_profile_function'
+    symbol_values = 'oxide_position_function damage_profile_function'
+    expression = '${trapping_site_fraction_5} * (1 - oxide_position_function) * damage_profile_function'
   []
 
   [initial_deuterium_trapped_intrinsic]

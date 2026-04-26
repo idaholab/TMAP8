@@ -6,14 +6,14 @@
 
 This validation case is based on the natural-oxide and thin-oxide experiments reported in [!cite](Kremer2022oxide). The long-term goal of `val-2k` is to incrementally model deuterium release from self-irradiated tungsten as progressively more oxide-related physics is introduced. The experimental study measured deuterium thermal desorption spectra from tungsten samples with a natural oxide layer and with electrochemically grown oxide layers between 5 nm and 100 nm.
 
-Unlike the existing one-shot validation cases, `val-2k` is intentionally developed in stages so that each additional piece of physics can be compared against experiment before the next one is introduced. The current deuterium-only stage now contains two closely related cases: the original tungsten-only natural-oxide surrogate and a companion case with an explicit 5 nm oxide transport layer.
+Unlike the existing one-shot validation cases, `val-2k` is intentionally developed in stages so that each additional piece of physics can be compared against experiment before the next one is introduced. The current deuterium-only stage now contains two closely related cases: the original tungsten-only natural-oxide surrogate and a companion case with a front 5 nm oxygen inventory.
 
 ## Current Scope
 
 The current implementation covers two deuterium-only configurations for the staged `val-2k` workflow. It includes:
 
 - the original one-dimensional tungsten-only surrogate for the natural-oxide reference sample
-- a companion one-dimensional model where the front 5 nm oxide layer is represented by an explicit oxygen field and sharp tanh-blended material properties
+- a companion one-dimensional model where the front 5 nm oxide layer is represented by an explicit oxygen field while the deuterium transport properties remain those of tungsten
 - six trap families in the self-irradiated tungsten near-surface region using the [SpeciesTrappingPhysics](physics/SpeciesTrappingPhysics.md) syntax
 - deuterium release through phenomenological D$_2$ and oxygen-gated D$_2$O surface channels on the free surfaces
 - the experimental desorption temperature history digitized from `Experimental_desorption_temperature.csv`
@@ -42,9 +42,9 @@ The initial deuterium profile used at the start of desorption is shown in [val-2
 
 ## Model Description
 
-The current reference iteration consists of two related one-dimensional slabs. The original baseline models a 0.8 mm tungsten slab with no explicit oxide block. The companion oxide case keeps the same one-dimensional slab but represents the front 5 nm oxide as a sharp tanh transition in the deuterium diffusivity, the trap site densities, and the initial oxygen concentration field.
+The current reference iteration consists of two related one-dimensional slabs. The original baseline models a 0.8 mm tungsten slab with no explicit oxide block. The companion oxide case keeps the same one-dimensional slab but represents the front 5 nm oxide through an initial oxygen concentration field and a sharp tanh suppression of the trap site densities near the exposed surface.
 The mesh is refined across the first 8 $\mu$m from the exposed surface so that the near-surface trapped inventory remains well resolved in both cases, and so the oxide-to-tungsten transition is also resolved in the 5 nm companion case.
-The irradiated defect-rich near-surface region is described using the intrinsic plus five damage-induced trap families adopted from [val-2f](val-2f.md). In the tungsten-only baseline the traps occupy the full single material block, while in the 5 nm companion case the same traps are multiplied by the tungsten indicator so they decay smoothly to zero inside the oxide region.
+The irradiated defect-rich near-surface region is described using the intrinsic plus five damage-induced trap families adopted from [val-2f](val-2f.md). In the tungsten-only baseline the traps occupy the full single material block, while in the 5 nm companion case the same traps are multiplied by a sharp tanh profile so they decay smoothly to zero inside the oxide region.
 The density of the intrinsic trap, since it is independent of irradiation, is homogeneous in the sample.
 The densities of irradiation-induced traps, however, are homogeneous in the 2.5 $\mu$m-thick self-damaged region, and then quickly decrease to 0 in the bulk of the sample, with a transition length of 0.05 $\mu$m.
 The full set of trap site densities is scaled uniformly from [val-2f](val-2f.md) values so the initial areal inventory matches the earlier `val-2k` natural-oxide preload.
@@ -139,7 +139,7 @@ The current baseline parameters are listed in [val-2k_parameters].
 
 ## Results
 
-The current branch state keeps the scaled six-trap `val-2f` tungsten-only model as the original baseline and adds a second input where the 5 nm oxide is represented by a finite oxygen inventory with sharp tanh transitions in the companion transport and trapping properties. Both solves use the same `val-2f`-style adimensional mobile transport and `SpeciesTrappingPhysics` syntax in tungsten, while the comparison script converts the results back to physical units. The script now overlays the natural-oxide and 5 nm experimental `HD + D_2` curves together with the experimental `HDO + D_2O` curves against their corresponding model predictions, while the profile and inventory figures continue to document the shared tungsten preload baseline.
+The current branch state keeps the scaled six-trap `val-2f` tungsten-only model as the original baseline and adds a second input where the 5 nm oxide is represented by a finite oxygen inventory together with a sharp tanh suppression of the near-surface trap site densities. Both solves use the same `val-2f`-style adimensional mobile transport and `SpeciesTrappingPhysics` syntax in tungsten, while the comparison script converts the results back to physical units. The script now overlays the natural-oxide and 5 nm experimental `HD + D_2` curves together with the experimental `HDO + D_2O` curves against their corresponding model predictions, while the profile and inventory figures continue to document the shared tungsten preload baseline.
 
 !media comparison_val-2k.py
     image_name=val-2k_natural_oxide_iteration_1_comparison.png
@@ -161,9 +161,17 @@ The current branch state keeps the scaled six-trap `val-2f` tungsten-only model 
     image_name=val-2k_natural_oxide_iteration_1_mass_conservation.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2k_natural_oxide_iteration_1_mass_conservation
-    caption=Relative mass-balance residual over time for the tungsten-only natural-oxide surrogate and the companion explicit 5 nm oxide case in `val-2k`.
+    caption=Relative deuterium mass-balance residual over time for the tungsten-only natural-oxide surrogate and the companion 5 nm oxide case in `val-2k`.
 
-[val-2k_natural_oxide_iteration_1_mass_conservation] tracks the signed mass-balance residual normalized by the initial deuterium inventory for both currently modeled cases. The residual is formed from the change in deuterium retained in the sample plus the time-integrated left and right surface release fluxes, so values close to zero indicate that the transient inventory loss is consistent with the integrated surface outflow.
+[val-2k_natural_oxide_iteration_1_mass_conservation] tracks the signed deuterium mass-balance residual normalized by the initial deuterium inventory for both currently modeled cases. The residual is formed from the change in deuterium retained in the sample plus the time-integrated left and right surface release fluxes, so values close to zero indicate that the transient inventory loss is consistent with the integrated surface outflow.
+
+!media comparison_val-2k.py
+    image_name=val-2k_natural_oxide_iteration_1_oxygen_conservation.png
+    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+    id=val-2k_natural_oxide_iteration_1_oxygen_conservation
+    caption=Relative oxygen conservation residual over time for the companion 5 nm oxide case in `val-2k`.
+
+[val-2k_natural_oxide_iteration_1_oxygen_conservation] tracks the signed oxygen conservation residual normalized by the initial oxygen inventory in the companion 5 nm oxide case. The residual is formed from the change in oxygen retained in the sample plus the time-integrated oxygen loss tied to the D$_2$O release channel, so values close to zero indicate that the transient oxygen loss is consistent with the modeled surface outflow.
 
 ## Planned Extensions
 

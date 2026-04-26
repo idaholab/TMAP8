@@ -23,8 +23,6 @@ ix_oxide_coarse = 3
 ix_left_refined_tungsten_coarse = 3
 ix_damage_remainder_coarse = '${fparse ix_damage_coarse - ix_left_refined_tungsten_coarse}'
 
-diffusion_oxide_preexponential = ${diffusion_W_preexponential} ####'${units 1e-10 m^2/s -> mum^2/s}'
-diffusion_oxide_energy = '${diffusion_W_energy}'
 oxygen_diffusion_W_preexponential = '${units 7.755607859269331e-21 m^2/s -> mum^2/s}' # '${units 7.755607859269331e-08 m^2/s -> mum^2/s}'
 oxygen_diffusion_W_energy = '${units 0.17 eV}'
 
@@ -45,5 +43,4 @@ damage_remainder_depth_hat = '${fparse damage_depth_hat - left_refined_tungsten_
 oxide_buffer_fine_depth_hat = '${fparse oxide_buffer_fine_depth / length_reference}'
 oxide_buffer_coarse_depth_hat = '${fparse oxide_buffer_coarse_depth / length_reference}'
 oxide_bulk_depth_hat = '${fparse oxide_bulk_depth / length_reference}'
-diffusion_oxide_preexponential_hat = '${fparse diffusion_oxide_preexponential * time_reference / (length_reference ^ 2)}'
 oxygen_diffusion_W_preexponential_hat = '${fparse oxygen_diffusion_W_preexponential * time_reference / (length_reference ^ 2)}'
