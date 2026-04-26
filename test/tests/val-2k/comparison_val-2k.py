@@ -175,62 +175,66 @@ oxide_5nm_d2o_experiment = load_experimental_curve("experimental_HDO_D2O_5nm.csv
 
 # Stage 3: generate the desorption comparison figure for both currently modeled
 # cases and include the imposed temperature history on the right axis.
-fig, ax = plt.subplots(figsize=(6.8, 5.6))
+fig, ax = plt.subplots(figsize=(7.2, 6.4))
+fig.subplots_adjust(top=0.8, bottom=0.3)
+
+natural_oxide_color = "tab:blue"
+oxide_5nm_color = "tab:green"
 
 baseline_handle = ax.plot(
     baseline_case["time_h"],
     baseline_case["release_rate_d2"],
     linestyle="-",
-    color="tab:blue",
+    color=natural_oxide_color,
     label="TMAP8 D2, nat. oxide (1 nm O)",
 )[0]
 oxide_handle = ax.plot(
     oxide_case["time_h"],
     oxide_case["release_rate_d2"],
     linestyle="-",
-    color="tab:green",
+    color=oxide_5nm_color,
     label="TMAP8 D2, 5 nm oxide",
 )[0]
 baseline_d2o_handle = ax.plot(
     baseline_case["time_h"],
     baseline_case["release_rate_d2o"],
-    linestyle=":",
-    color="tab:blue",
+    linestyle="--",
+    color=natural_oxide_color,
     label="TMAP8 D2O, nat. oxide (1 nm O)",
 )[0]
 oxide_d2o_handle = ax.plot(
     oxide_case["time_h"],
     oxide_case["release_rate_d2o"],
-    linestyle=":",
-    color="tab:green",
+    linestyle="--",
+    color=oxide_5nm_color,
     label="TMAP8 D2O, 5 nm oxide",
 )[0]
 natural_experiment_handle = ax.plot(
     natural_oxide_experiment["time (h)"],
     natural_oxide_experiment["release flux (10^13 D atoms/s)"],
-    linestyle="--",
-    color="k",
+    linestyle="-.",
+    color=natural_oxide_color,
     label="Experimental HD + D2 (nat. oxide)",
 )[0]
 oxide_experiment_handle = ax.plot(
     oxide_5nm_experiment["time (h)"],
     oxide_5nm_experiment["release flux (10^13 D atoms/s)"],
-    linestyle="--",
-    color="0.45",
+    linestyle="-.",
+    color=oxide_5nm_color,
     label="Experimental HD + D2 (5 nm oxide)",
 )[0]
 natural_d2o_experiment_handle = ax.plot(
     natural_oxide_d2o_experiment["time (h)"],
     natural_oxide_d2o_experiment["release flux (10^13 D atoms/s)"],
-    linestyle="--",
-    color="tab:purple",
+    linestyle=":",
+    color=natural_oxide_color,
     label="Experimental HDO + D2O (nat. oxide)",
 )[0]
 oxide_d2o_experiment_handle = ax.plot(
     oxide_5nm_d2o_experiment["time (h)"],
     oxide_5nm_d2o_experiment["release flux (10^13 D atoms/s)"],
-    linestyle="--",
-    color="tab:brown",
+    linestyle=":",
+    color=oxide_5nm_color,
     label="Experimental HDO + D2O (5 nm oxide)",
 )[0]
 
@@ -256,31 +260,25 @@ baseline_d2o_rmspe = compute_rmspe(
 oxide_d2o_rmspe = compute_rmspe(
     oxide_case["time_h"], oxide_case["release_rate_d2o"], oxide_5nm_d2o_experiment
 )
-ax.text(
-    2.55,
-    0.87
-    * max(
-        baseline_case["release_rate_total"].max(),
-        oxide_case["release_rate_total"].max(),
-        natural_oxide_experiment["release flux (10^13 D atoms/s)"].max(),
-        oxide_5nm_experiment["release flux (10^13 D atoms/s)"].max(),
-        natural_oxide_d2o_experiment["release flux (10^13 D atoms/s)"].max(),
-        oxide_5nm_d2o_experiment["release flux (10^13 D atoms/s)"].max(),
-    ),
-    "No oxide RMSPEs: "
+fig.text(
+    0.5,
+    0.96,
+    "Nat. oxide RMSPEs: "
     f"D2={baseline_rmspe:.2f} %, D2O={baseline_d2o_rmspe:.2f} %\n"
     "5 nm oxide RMSPEs: "
     f"D2={oxide_rmspe:.2f} %, D2O={oxide_d2o_rmspe:.2f} %",
+    ha="center",
+    va="top",
 )
 
 ax.set_xlabel("Time (h)")
-ax.set_ylabel("Release flux (10$^{13}$ D atoms/s)")
+ax.set_ylabel("Release rate (10$^{13}$ D atoms/s)")
 ax.set_xlim(0, 4.2)
 ax.set_ylim(bottom=0)
 ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
 ax_temperature.set_ylabel("Temperature (K)")
 ax_temperature.set_ylim(280, 1100)
-ax.legend(
+fig.legend(
     [
         baseline_handle,
         oxide_handle,
@@ -303,7 +301,10 @@ ax.legend(
         oxide_d2o_experiment_handle.get_label(),
         temperature_handle.get_label(),
     ],
-    loc="best",
+    loc="lower center",
+    bbox_to_anchor=(0.5, 0.02),
+    ncol=2,
+    frameon=True,
 )
 ax.minorticks_on()
 
