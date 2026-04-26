@@ -22,12 +22,20 @@ def get_repo_relative_path(test_path):
     return os.path.join(".", test_path)
 
 
-def get_output_path(filename):
-    candidates = [
+def get_output_candidates(filename):
+    return [
         Path(get_repo_relative_path(f"../../../{filename}")),
         Path(get_repo_relative_path(filename)),
         Path(get_repo_relative_path(f"gold/{filename}")),
     ]
+
+
+def output_exists(filename):
+    return any(candidate.exists() for candidate in get_output_candidates(filename))
+
+
+def get_output_path(filename):
+    candidates = get_output_candidates(filename)
     existing_candidates = [candidate for candidate in candidates if candidate.exists()]
     if existing_candidates:
         return max(existing_candidates, key=lambda path: path.stat().st_mtime)
@@ -174,120 +182,140 @@ def compute_rmspe(case_time_h, case_release_rate, experimental_curve):
     return rmse * 100.0 / np.mean(experiment_flux)
 
 
-# Stage 2: load the simulated outputs for the natural-oxide and 5 nm oxygen-
-# field cases, together with the experimental curves from Fig. 6.
+# Stage 2: load the simulated outputs for the currently available oxygen-field
+# cases together with the experimental curves from Fig. 6.
 time_reference = get_numeric_parameter("time_reference")
 sample_surface_area_m2 = 10e-3 * 14e-3
 
-baseline_case = load_simulation_case("val-2k_out.csv")
-oxide_case = load_simulation_case("val-2k_5nm_oxide_out.csv")
-baseline_profile = pd.read_csv(
-    get_output_path("val-2k_profile_initial_out_line_profile_0000.csv")
-)
+case_specs = [
+    {
+        "key": "natural_oxide",
+        "display_label": "nat. oxide (1 nm O)",
+        "rmspe_label": "Nat. oxide",
+        "color": "tab:blue",
+        "simulation_csv": "val-2k_out.csv",
+        "profile_csv": "val-2k_profile_initial_out_line_profile_0000.csv",
+        "experimental_d2_csv": "experimental_HD_D2_nat_oxide.csv",
+        "experimental_d2o_csv": "experimental_HDO_D2O_nat_oxide.csv",
+    },
+    {
+        "key": "oxide_5nm",
+        "display_label": "5 nm oxide",
+        "rmspe_label": "5 nm oxide",
+        "color": "tab:green",
+        "simulation_csv": "val-2k_5nm_oxide_out.csv",
+        "profile_csv": "val-2k_5nm_oxide_profile_initial_out_line_profile_0000.csv",
+        "experimental_d2_csv": "experimental_HD_D2_5nm.csv",
+        "experimental_d2o_csv": "experimental_HDO_D2O_5nm.csv",
+    },
+    {
+        "key": "oxide_10nm",
+        "display_label": "10 nm oxide",
+        "rmspe_label": "10 nm oxide",
+        "color": "tab:orange",
+        "simulation_csv": "val-2k_10nm_oxide_out.csv",
+        "profile_csv": "val-2k_10nm_oxide_profile_initial_out_line_profile_0000.csv",
+        "experimental_d2_csv": "experimental_HD_D2_10nm.csv",
+        "experimental_d2o_csv": "experimental_HDO_D2O_10nm.csv",
+    },
+    {
+        "key": "oxide_15nm",
+        "display_label": "15 nm oxide",
+        "rmspe_label": "15 nm oxide",
+        "color": "tab:red",
+        "simulation_csv": "val-2k_15nm_oxide_out.csv",
+        "profile_csv": "val-2k_15nm_oxide_profile_initial_out_line_profile_0000.csv",
+        "experimental_d2_csv": "experimental_HD_D2_15nm.csv",
+        "experimental_d2o_csv": "experimental_HDO_D2O_15nm.csv",
+    },
+]
 
-natural_oxide_experiment = load_experimental_curve("experimental_HD_D2_nat_oxide.csv")
-oxide_5nm_experiment = load_experimental_curve("experimental_HD_D2_5nm.csv")
-natural_oxide_d2o_experiment = load_experimental_curve(
-    "experimental_HDO_D2O_nat_oxide.csv"
-)
-oxide_5nm_d2o_experiment = load_experimental_curve("experimental_HDO_D2O_5nm.csv")
+available_cases = []
+for spec in case_specs:
+    spec["experimental_d2"] = load_experimental_curve(spec["experimental_d2_csv"])
+    spec["experimental_d2o"] = load_experimental_curve(spec["experimental_d2o_csv"])
+    if output_exists(spec["simulation_csv"]):
+        spec["simulation"] = load_simulation_case(spec["simulation_csv"])
+        available_cases.append(spec)
+
+baseline_case = available_cases[0]["simulation"]
+baseline_profile = pd.read_csv(get_output_path(case_specs[0]["profile_csv"]))
 
 # Stage 3: generate the desorption comparison figure for both currently modeled
 # cases and include the imposed temperature history on the right axis.
-fig, ax = plt.subplots(figsize=(7.2, 6.4))
-fig.subplots_adjust(top=0.8, bottom=0.3)
+fig, ax = plt.subplots(figsize=(7.2, 8.2))
+fig.subplots_adjust(top=0.8, bottom=0.38)
 
-natural_oxide_color = "tab:blue"
-oxide_5nm_color = "tab:green"
+tds_handles = []
+tds_labels = []
+rmspe_lines = []
 
-baseline_handle = ax.plot(
-    baseline_case["time_h"],
-    baseline_case["release_rate_d2"],
-    linestyle="-",
-    color=natural_oxide_color,
-    label="TMAP8 D2, nat. oxide (1 nm O)",
-)[0]
-oxide_handle = ax.plot(
-    oxide_case["time_h"],
-    oxide_case["release_rate_d2"],
-    linestyle="-",
-    color=oxide_5nm_color,
-    label="TMAP8 D2, 5 nm oxide",
-)[0]
-baseline_d2o_handle = ax.plot(
-    baseline_case["time_h"],
-    baseline_case["release_rate_d2o"],
-    linestyle="--",
-    color=natural_oxide_color,
-    label="TMAP8 D2O, nat. oxide (1 nm O)",
-)[0]
-oxide_d2o_handle = ax.plot(
-    oxide_case["time_h"],
-    oxide_case["release_rate_d2o"],
-    linestyle="--",
-    color=oxide_5nm_color,
-    label="TMAP8 D2O, 5 nm oxide",
-)[0]
-natural_experiment_handle = ax.plot(
-    natural_oxide_experiment["time (h)"],
-    natural_oxide_experiment["release flux (10^13 D atoms/s)"],
-    linestyle="-.",
-    color=natural_oxide_color,
-    label="Experimental HD + D2 (nat. oxide)",
-)[0]
-oxide_experiment_handle = ax.plot(
-    oxide_5nm_experiment["time (h)"],
-    oxide_5nm_experiment["release flux (10^13 D atoms/s)"],
-    linestyle="-.",
-    color=oxide_5nm_color,
-    label="Experimental HD + D2 (5 nm oxide)",
-)[0]
-natural_d2o_experiment_handle = ax.plot(
-    natural_oxide_d2o_experiment["time (h)"],
-    natural_oxide_d2o_experiment["release flux (10^13 D atoms/s)"],
-    linestyle=":",
-    color=natural_oxide_color,
-    label="Experimental HDO + D2O (nat. oxide)",
-)[0]
-oxide_d2o_experiment_handle = ax.plot(
-    oxide_5nm_d2o_experiment["time (h)"],
-    oxide_5nm_d2o_experiment["release flux (10^13 D atoms/s)"],
-    linestyle=":",
-    color=oxide_5nm_color,
-    label="Experimental HDO + D2O (5 nm oxide)",
-)[0]
+for spec in available_cases:
+    case = spec["simulation"]
+    color = spec["color"]
+    experimental_d2 = spec["experimental_d2"]
+    experimental_d2o = spec["experimental_d2o"]
+
+    simulated_d2_handle = ax.plot(
+        case["time_h"],
+        case["release_rate_d2"],
+        linestyle="-",
+        color=color,
+        label=f"TMAP8 D2, {spec['display_label']}",
+    )[0]
+    simulated_d2o_handle = ax.plot(
+        case["time_h"],
+        case["release_rate_d2o"],
+        linestyle="--",
+        color=color,
+        label=f"TMAP8 D2O, {spec['display_label']}",
+    )[0]
+    experimental_d2_handle = ax.plot(
+        experimental_d2["time (h)"],
+        experimental_d2["release flux (10^13 D atoms/s)"],
+        linestyle="-.",
+        color=color,
+        label=f"Experimental HD + D2 ({spec['display_label']})",
+    )[0]
+    experimental_d2o_handle = ax.plot(
+        experimental_d2o["time (h)"],
+        experimental_d2o["release flux (10^13 D atoms/s)"],
+        linestyle=":",
+        color=color,
+        label=f"Experimental HDO + D2O ({spec['display_label']})",
+    )[0]
+
+    tds_handles.extend(
+        [
+            simulated_d2_handle,
+            simulated_d2o_handle,
+            experimental_d2_handle,
+            experimental_d2o_handle,
+        ]
+    )
+    tds_labels.extend(handle.get_label() for handle in tds_handles[-4:])
+
+    rmspe_d2 = compute_rmspe(case["time_h"], case["release_rate_d2"], experimental_d2)
+    rmspe_d2o = compute_rmspe(
+        case["time_h"], case["release_rate_d2o"], experimental_d2o
+    )
+    rmspe_lines.append(
+        f"{spec['rmspe_label']} RMSPEs: D2={rmspe_d2:.2f} %, D2O={rmspe_d2o:.2f} %"
+    )
 
 ax_temperature = ax.twinx()
 temperature_handle = ax_temperature.plot(
     baseline_case["time_h"],
     baseline_case["temperature_k"],
-    linestyle=":",
-    color="tab:red",
+    linestyle="-",
+    color="k",
     linewidth=1.5,
     label="TMAP8 temperature history",
 )[0]
-
-baseline_rmspe = compute_rmspe(
-    baseline_case["time_h"], baseline_case["release_rate_d2"], natural_oxide_experiment
-)
-oxide_rmspe = compute_rmspe(
-    oxide_case["time_h"], oxide_case["release_rate_d2"], oxide_5nm_experiment
-)
-baseline_d2o_rmspe = compute_rmspe(
-    baseline_case["time_h"],
-    baseline_case["release_rate_d2o"],
-    natural_oxide_d2o_experiment,
-)
-oxide_d2o_rmspe = compute_rmspe(
-    oxide_case["time_h"], oxide_case["release_rate_d2o"], oxide_5nm_d2o_experiment
-)
 fig.text(
     0.5,
-    0.96,
-    "Nat. oxide RMSPEs: "
-    f"D2={baseline_rmspe:.2f} %, D2O={baseline_d2o_rmspe:.2f} %\n"
-    "5 nm oxide RMSPEs: "
-    f"D2={oxide_rmspe:.2f} %, D2O={oxide_d2o_rmspe:.2f} %",
+    0.88,
+    "\n".join(rmspe_lines),
     ha="center",
     va="top",
 )
@@ -300,30 +328,10 @@ ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
 ax_temperature.set_ylabel("Temperature (K)")
 ax_temperature.set_ylim(280, 1100)
 fig.legend(
-    [
-        baseline_handle,
-        oxide_handle,
-        baseline_d2o_handle,
-        oxide_d2o_handle,
-        natural_experiment_handle,
-        oxide_experiment_handle,
-        natural_d2o_experiment_handle,
-        oxide_d2o_experiment_handle,
-        temperature_handle,
-    ],
-    [
-        baseline_handle.get_label(),
-        oxide_handle.get_label(),
-        baseline_d2o_handle.get_label(),
-        oxide_d2o_handle.get_label(),
-        natural_experiment_handle.get_label(),
-        oxide_experiment_handle.get_label(),
-        natural_d2o_experiment_handle.get_label(),
-        oxide_d2o_experiment_handle.get_label(),
-        temperature_handle.get_label(),
-    ],
+    tds_handles + [temperature_handle],
+    tds_labels + [temperature_handle.get_label()],
     loc="lower center",
-    bbox_to_anchor=(0.5, 0.02),
+    bbox_to_anchor=(0.5, 0.085),
     ncol=2,
     frameon=True,
 )
@@ -427,25 +435,22 @@ plt.savefig(
 )
 plt.close(fig)
 
-# Stage 5: compare the relative deuterium mass-balance residual for both
-# currently modeled cases using the postprocessors written by the transient
-# solves.
+# Stage 5: compare the relative deuterium mass-balance residual for all
+# currently available modeled cases using the postprocessors written by the
+# transient solves.
 fig, ax = plt.subplots(figsize=(6.5, 4.8))
 
-baseline_mass_handle = ax.plot(
-    baseline_case["time_h"],
-    baseline_case["relative_mass_conservation_residual"],
-    color="tab:blue",
-    linewidth=1.8,
-    label="No oxide layer",
-)[0]
-oxide_mass_handle = ax.plot(
-    oxide_case["time_h"],
-    oxide_case["relative_mass_conservation_residual"],
-    color="tab:green",
-    linewidth=1.8,
-    label="5 nm oxide",
-)[0]
+mass_handles = []
+for spec in available_cases:
+    mass_handles.append(
+        ax.plot(
+            spec["simulation"]["time_h"],
+            spec["simulation"]["relative_mass_conservation_residual"],
+            color=spec["color"],
+            linewidth=1.8,
+            label=spec["display_label"],
+        )[0]
+    )
 
 ax.axhline(0.0, color="0.35", linewidth=1.0, linestyle="--")
 ax.set_xlabel("Time (h)")
@@ -453,7 +458,7 @@ ax.set_ylabel("Deuterium mass-balance residual / initial inventory (-)")
 ax.set_xlim(0, 4.2)
 ax.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
 ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
-ax.legend(handles=[baseline_mass_handle, oxide_mass_handle], loc="best")
+ax.legend(handles=mass_handles, loc="best")
 ax.minorticks_on()
 
 plt.savefig(
@@ -463,28 +468,27 @@ plt.savefig(
 )
 plt.close(fig)
 
-# Stage 6: plot the oxygen conservation residual for both oxygen-field cases in
-# a dedicated figure when the oxygen bookkeeping columns are present.
-if (
-    baseline_case["relative_oxygen_mass_conservation_residual"] is not None
-    and oxide_case["relative_oxygen_mass_conservation_residual"] is not None
-):
+# Stage 6: plot the oxygen conservation residual for every oxygen-field case
+# that has the required bookkeeping columns.
+oxygen_cases = [
+    spec
+    for spec in available_cases
+    if spec["simulation"]["relative_oxygen_mass_conservation_residual"] is not None
+]
+if oxygen_cases:
     fig, ax = plt.subplots(figsize=(6.5, 4.8))
 
-    baseline_oxygen_mass_handle = ax.plot(
-        baseline_case["time_h"],
-        baseline_case["relative_oxygen_mass_conservation_residual"],
-        color="tab:blue",
-        linewidth=1.8,
-        label="Nat. oxide (1 nm O)",
-    )[0]
-    oxide_oxygen_mass_handle = ax.plot(
-        oxide_case["time_h"],
-        oxide_case["relative_oxygen_mass_conservation_residual"],
-        color="tab:orange",
-        linewidth=1.8,
-        label="5 nm oxide",
-    )[0]
+    oxygen_handles = []
+    for spec in oxygen_cases:
+        oxygen_handles.append(
+            ax.plot(
+                spec["simulation"]["time_h"],
+                spec["simulation"]["relative_oxygen_mass_conservation_residual"],
+                color=spec["color"],
+                linewidth=1.8,
+                label=spec["display_label"],
+            )[0]
+        )
 
     ax.axhline(0.0, color="0.35", linewidth=1.0, linestyle="--")
     ax.set_xlabel("Time (h)")
@@ -492,9 +496,7 @@ if (
     ax.set_xlim(0, 4.2)
     ax.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
     ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
-    ax.legend(
-        handles=[baseline_oxygen_mass_handle, oxide_oxygen_mass_handle], loc="best"
-    )
+    ax.legend(handles=oxygen_handles, loc="best")
     ax.minorticks_on()
 
     plt.savefig(

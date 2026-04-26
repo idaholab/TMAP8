@@ -6,14 +6,14 @@
 
 This validation case is based on the natural-oxide and thin-oxide experiments reported in [!cite](Kremer2022oxide). The long-term goal of `val-2k` is to incrementally model deuterium release from self-irradiated tungsten as progressively more oxide-related physics is introduced. The experimental study measured deuterium thermal desorption spectra from tungsten samples with a natural oxide layer and with electrochemically grown oxide layers between 5 nm and 100 nm.
 
-Unlike the existing one-shot validation cases, `val-2k` is intentionally developed in stages so that each additional piece of physics can be compared against experiment before the next one is introduced. The current deuterium-only stage now contains two closely related oxygen-field cases: a natural-oxide baseline with a front 1 nm oxygen inventory and a companion case with a front 5 nm oxygen inventory.
+Unlike the existing one-shot validation cases, `val-2k` is intentionally developed in stages so that each additional piece of physics can be compared against experiment before the next one is introduced. The current deuterium-only stage now contains four closely related oxygen-field cases: a natural-oxide baseline with a front 1 nm oxygen inventory and companion cases with front 5 nm, 10 nm, and 15 nm oxygen inventories.
 
 ## Current Scope
 
-The current implementation covers two deuterium-only configurations for the staged `val-2k` workflow. It includes:
+The current implementation covers four deuterium-only configurations for the staged `val-2k` workflow. It includes:
 
 - a one-dimensional natural-oxide model where the front oxide is represented by a 1 nm explicit oxygen field
-- a companion one-dimensional model where the front 5 nm oxide layer is represented by an explicit oxygen field while the deuterium transport properties remain those of tungsten
+- companion one-dimensional models where the front 5 nm, 10 nm, and 15 nm oxide layers are represented by explicit oxygen fields while the deuterium transport properties remain those of tungsten
 - six trap families in the self-irradiated tungsten near-surface region using the [SpeciesTrappingPhysics](physics/SpeciesTrappingPhysics.md) syntax
 - deuterium release through phenomenological D$_2$ and oxygen-gated D$_2$O surface channels on the free surfaces
 - the experimental desorption temperature history digitized from `Experimental_desorption_temperature.csv`
@@ -28,9 +28,9 @@ Those additions are deferred to later iterations so their individual influence o
 
 ## Sample history
 
-The reference sample history is still taken from the natural-oxide experiment in [!cite](Kremer2022oxide). In the experiment, the tungsten specimen is first prepared with a self-damaged near-surface region, then loaded with deuterium so that the retained inventory is concentrated in the first few micrometers of the sample. The natural-oxide input keeps that history and represents the front surface through a thin 1 nm oxygen concentration field, while the companion 5 nm input keeps the same deuterium preload and tungsten trapping model but initializes that oxygen field across the first 5 nm instead.
+The reference sample history is still taken from the natural-oxide experiment in [!cite](Kremer2022oxide). In the experiment, the tungsten specimen is first prepared with a self-damaged near-surface region, then loaded with deuterium so that the retained inventory is concentrated in the first few micrometers of the sample. The natural-oxide input keeps that history and represents the front surface through a thin 1 nm oxygen concentration field, while the 5 nm, 10 nm, and 15 nm companion inputs keep the same deuterium preload and tungsten trapping model but initialize that oxygen field across the corresponding front-oxide thickness instead.
 
-Both desorption calculations start from the same preloaded tungsten state and follow the digitized temperature history from `Experimental_desorption_temperature.csv`, which heats the sample from about 296 K to about 1001 K over roughly 4.17 h. This stepwise setup isolates the contribution of the oxide-related physics from the already-established tungsten diffusion, trapping, and surface release model. In the companion 5 nm case, the D$_2$O surface-loss channel is multiplied by the evolving oxygen concentration at the front surface, and the oxygen inventory is depleted stoichiometrically as heavy water is formed.
+All four desorption calculations start from the same preloaded tungsten state and follow the digitized temperature history from `Experimental_desorption_temperature.csv`, which heats the sample from about 296 K to about 1001 K over roughly 4.17 h. This stepwise setup isolates the contribution of the oxide-related physics from the already-established tungsten diffusion, trapping, and surface release model. In each oxide-thickness case, the D$_2$O surface-loss channel is multiplied by the evolving oxygen concentration at the front surface, and the oxygen inventory is depleted stoichiometrically as heavy water is formed.
 
 The initial deuterium profile used at the start of desorption is shown in [val-2k_natural_oxide_iteration_1_profile]. This figure is reported for the natural-oxide 1 nm oxygen-field baseline because that preload is the common starting point used before the thicker 5 nm oxygen inventory is added. In the current six-trap baseline, most of the retained inventory is placed in the irradiation-induced traps inside the damaged zone, while the mobile deuterium concentration is comparatively small. The sharp drop beyond the first few micrometers reflects the prescribed trap-density distribution used to localize the self-damage near the exposed surface; this figure reports the model initial condition for the desorption calculation rather than a direct fit of the measured depth profile.
 
@@ -42,9 +42,9 @@ The initial deuterium profile used at the start of desorption is shown in [val-2
 
 ## Model Description
 
-The current reference iteration consists of two related one-dimensional slabs. The original baseline models a 0.8 mm tungsten slab with no explicit oxide block. The companion oxide case keeps the same one-dimensional slab but represents the front 5 nm oxide through an initial oxygen concentration field and a sharp tanh suppression of the trap site densities near the exposed surface.
-The mesh is refined across the first 8 $\mu$m from the exposed surface so that the near-surface trapped inventory remains well resolved in both cases, and so the oxide-to-tungsten transition is also resolved in the 5 nm companion case.
-The irradiated defect-rich near-surface region is described using the intrinsic plus five damage-induced trap families adopted from [val-2f](val-2f.md). In both oxygen-field cases the same traps are multiplied by a sharp tanh profile so they decay smoothly to zero inside the oxide region, with the natural-oxide case applying that transition over 1 nm and the companion case over 5 nm.
+The current reference iteration consists of four related one-dimensional slabs. The natural-oxide baseline and the 5 nm, 10 nm, and 15 nm companion cases all keep the same 0.8 mm tungsten slab and represent the front oxide through an initial oxygen concentration field together with a sharp tanh suppression of the trap site densities near the exposed surface.
+The mesh is refined across the first 8 $\mu$m from the exposed surface so that the near-surface trapped inventory remains well resolved in all cases, and so the oxide-to-tungsten transition is also resolved in the thickest 15 nm companion case.
+The irradiated defect-rich near-surface region is described using the intrinsic plus five damage-induced trap families adopted from [val-2f](val-2f.md). In all oxygen-field cases the same traps are multiplied by a sharp tanh profile so they decay smoothly to zero inside the oxide region, with the natural-oxide case applying that transition over 1 nm and the companion cases over 5 nm, 10 nm, and 15 nm.
 The density of the intrinsic trap, since it is independent of irradiation, is homogeneous in the sample.
 The densities of irradiation-induced traps, however, are homogeneous in the 2.5 $\mu$m-thick self-damaged region, and then quickly decrease to 0 in the bulk of the sample, with a transition length of 0.05 $\mu$m.
 The full set of trap site densities is scaled uniformly from [val-2f](val-2f.md) values so the initial areal inventory matches the earlier `val-2k` natural-oxide preload.
@@ -89,7 +89,7 @@ The surface release is modeled as finite fluxes on both free surfaces. The basel
 \hat{J} = 2 \hat{K}_r \hat{C}_M^2
 \end{equation}
 
-The same phenomenological form is also used for a D$_2$O surface-loss channel with its own Arrhenius parameters, and in both oxygen-field cases that channel is multiplied by the local oxygen concentration and only acts on the front oxide surface. The initial oxygen concentration is derived from the paper-reported removal of $100 \times 10^{19}$ O/m$^2$ from the first 13.5 nm of oxide, which corresponds to about $7.4 \times 10^{28}$ O/m$^3$. Oxygen transport is then governed by the reported O-in-W diffusion kinetics. No oxide-specific traps, no partition coefficient, and no explicit oxide-reduction chemistry beyond the D$_2$O oxygen sink are included yet. Both input files write physical-unit auxiliary variables and postprocessors for the mobile and trapped deuterium populations, and the comparison script reads those physical outputs directly when generating the TDS, inventory, and initial-profile figures. This remains a deliberate simplification for the current stage: the 1 nm natural-oxide case and the 5 nm companion case isolate the effect of changing the front-surface oxygen inventory, and the D$_2$O channel is still a phenomenological release mechanism rather than a fully mechanistic oxide-reduction model.
+The same phenomenological form is also used for a D$_2$O surface-loss channel with its own Arrhenius parameters, and in all oxygen-field cases that channel is multiplied by the local oxygen concentration and only acts on the front oxide surface. The initial oxygen concentration is derived from the paper-reported removal of $100 \times 10^{19}$ O/m$^2$ from the first 13.5 nm of oxide, which corresponds to about $7.4 \times 10^{28}$ O/m$^3$. Oxygen transport is then governed by the reported O-in-W diffusion kinetics. No oxide-specific traps, no partition coefficient, and no explicit oxide-reduction chemistry beyond the D$_2$O oxygen sink are included yet. All input files write physical-unit auxiliary variables and postprocessors for the mobile and trapped deuterium populations, and the comparison script reads those physical outputs directly when generating the TDS, inventory, and initial-profile figures. This remains a deliberate simplification for the current stage: the 1 nm natural-oxide case and the 5 nm, 10 nm, and 15 nm companion cases isolate the effect of changing the front-surface oxygen inventory, and the D$_2$O channel is still a phenomenological release mechanism rather than a fully mechanistic oxide-reduction model.
 
 ## Case and Model Parameters
 
@@ -99,7 +99,7 @@ The current baseline parameters are listed in [val-2k_parameters].
 | Parameter | Description | Value | Units | Reference |
 | --------- | ----------- | ----- | ----- | --------- |
 | $l_W$ | Tungsten thickness | 0.8 | mm | [!cite](Kremer2022oxide) |
-| $l_{ox}$ | Oxide thickness in the companion oxide case | 5 | nm | 5 nm experimental comparison case from [!cite](Kremer2022oxide) |
+| $l_{ox}$ | Oxide thickness in the oxide comparison cases | 1, 5, 10, 15 | nm | Natural-oxide proxy plus explicit thin-oxide comparison cases from [!cite](Kremer2022oxide) |
 | $w_{ox}$ | Tanh transition width used for oxide-to-W blending | 0.25 | nm | Numerical resolution choice for the oxygen-field representation |
 | $l_d$ | Self-damaged depth | 2.3 | $\mu$m | [!cite](Kremer2022oxide) |
 | $T_0$ | Initial desorption temperature | 295.775 | K | Digitized from `Experimental_desorption_temperature.csv` |
@@ -107,11 +107,9 @@ The current baseline parameters are listed in [val-2k_parameters].
 | $t_f$ | Final desorption time | 4.166 | h | Digitized from `Experimental_desorption_temperature.csv` |
 | $D_0$ | Diffusivity prefactor | 1.6 $\times 10^{-7}$ | m$^2$/s | Adopted from [val-2f](val-2f.md) for the initial baseline |
 | $E_D$ | Diffusion activation energy | 0.28 | eV | Adopted from [val-2f](val-2f.md) for the initial baseline |
-| $D_{0,ox}$ | Oxide diffusivity prefactor in the companion oxide case | 1 $\times 10^{-10}$ | m$^2$/s | Initial effective oxide-layer assumption |
-| $E_{D,ox}$ | Oxide diffusion activation energy in the companion oxide case | 0.28 | eV | Initial effective oxide-layer assumption |
-| $D_{0,O}$ | Oxygen diffusivity prefactor used in the companion oxide case | 7.76 $\times 10^{-8}$ | m$^2$/s | Inferred from [!cite](Jiang2009oxygenDiffusion) using the reported 500 K diffusivity |
-| $E_{D,O}$ | Oxygen diffusion activation energy used in the companion oxide case | 0.17 | eV | [!cite](Jiang2009oxygenDiffusion) |
-| $C_{O,0}$ | Initial oxygen concentration in the 5 nm oxide region | 7.41 $\times 10^{28}$ | at/m$^3$ | Derived from the oxygen areal density reported in [!cite](Kremer2021oxideBarrier) |
+| $D_{0,O}$ | Oxygen diffusivity prefactor used in the oxide comparison cases | 7.76 $\times 10^{-8}$ | m$^2$/s | Inferred from [!cite](Jiang2009oxygenDiffusion) using the reported 500 K diffusivity |
+| $E_{D,O}$ | Oxygen diffusion activation energy used in the oxide comparison cases | 0.17 | eV | [!cite](Jiang2009oxygenDiffusion) |
+| $C_{O,0}$ | Initial oxygen concentration in the 1 nm, 5 nm, 10 nm, and 15 nm oxide regions | 7.41 $\times 10^{28}$ | at/m$^3$ | Derived from the oxygen areal density reported in [!cite](Kremer2021oxideBarrier) |
 | $x_c$ | Trap-distribution center | 2.5 | $\mu$m | Adopted from [val-2f](val-2f.md) |
 | $w_d$ | Trap-distribution width | 0.05 | $\mu$m | Sharpened by one order of magnitude from the earlier `val-2k` baseline |
 | $L_{\text{ref}}$ | Reference length for the dimensionless solve | 1 | $\mu$m | Chosen to match the val-2f adimensionalization |
@@ -139,15 +137,15 @@ The current baseline parameters are listed in [val-2k_parameters].
 
 ## Results
 
-The current branch state uses the scaled six-trap `val-2f` model in two oxygen-field inputs: a 1 nm natural-oxide baseline and a companion 5 nm oxide case. Both solves use the same `val-2f`-style adimensional mobile transport and `SpeciesTrappingPhysics` syntax in tungsten, while the comparison script converts the results back to physical units. The script now overlays the natural-oxide and 5 nm experimental `HD + D_2` curves together with the experimental `HDO + D_2O` curves against their corresponding model predictions, while the profile and inventory figures continue to document the shared deuterium preload structure.
+The current branch state defines four oxygen-field inputs using the scaled six-trap `val-2f` model: a 1 nm natural-oxide baseline and companion 5 nm, 10 nm, and 15 nm oxide cases. All solves use the same `val-2f`-style adimensional mobile transport and `SpeciesTrappingPhysics` syntax in tungsten, while the comparison script converts the results back to physical units. The script overlays every simulated case for which output files are available against the matching experimental `HD + D_2` and `HDO + D_2O` curves, while the profile and inventory figures continue to document the shared deuterium preload structure of the natural-oxide baseline.
 
 !media comparison_val-2k.py
     image_name=val-2k_natural_oxide_iteration_1_comparison.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2k_natural_oxide_iteration_1_comparison
-    caption=Current `val-2k` deuterium-only comparison state, showing the 1 nm natural-oxide oxygen-field baseline and the companion 5 nm oxide case against the corresponding Fig. 6 experimental curves.
+    caption=Current `val-2k` deuterium-only comparison state, showing the 1 nm natural-oxide oxygen-field baseline and the available 5 nm, 10 nm, and 15 nm oxide comparison cases against the corresponding Fig. 6 experimental curves.
 
-[val-2k_natural_oxide_iteration_1_comparison] compares the 1 nm natural-oxide oxygen-field baseline against the digitized natural-oxide `HD + D_2` and `HDO + D_2O` desorption data from Fig. 6 of [!cite](Kremer2022oxide), and also compares the 5 nm oxygen-field companion input against the corresponding 5 nm experimental curves from the same figure. The added temperature trace on the right axis shows exactly when both models begin to release deuterium relative to the experimental heating history. At this stage, the figure should be interpreted as a controlled side-by-side reference point: the natural-oxide case provides the thin-inventory baseline, the 5 nm oxygen-field case isolates the effect of adding a larger front-surface oxygen inventory, and the D$_2$O curves should still be interpreted as a phenomenological surface-release channel rather than a fully mechanistic water-formation model.
+[val-2k_natural_oxide_iteration_1_comparison] compares the 1 nm natural-oxide oxygen-field baseline against the digitized natural-oxide `HD + D_2` and `HDO + D_2O` desorption data from Fig. 6 of [!cite](Kremer2022oxide), and also compares the 5 nm, 10 nm, and 15 nm oxygen-field companion inputs against the corresponding experimental curves whenever those simulation outputs are available. The added temperature trace on the right axis shows exactly when the models begin to release deuterium relative to the experimental heating history. At this stage, the figure should be interpreted as a controlled side-by-side reference point: the natural-oxide case provides the thin-inventory baseline, the thicker oxygen-field cases isolate the effect of adding larger front-surface oxygen inventories, and the D$_2$O curves should still be interpreted as a phenomenological surface-release channel rather than a fully mechanistic water-formation model.
 
 !media comparison_val-2k.py
     image_name=val-2k_natural_oxide_iteration_1_inventory.png
@@ -161,31 +159,30 @@ The current branch state uses the scaled six-trap `val-2f` model in two oxygen-f
     image_name=val-2k_natural_oxide_iteration_1_mass_conservation.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2k_natural_oxide_iteration_1_mass_conservation
-    caption=Relative deuterium mass-balance residual over time for the 1 nm natural-oxide oxygen-field baseline and the companion 5 nm oxide case in `val-2k`.
+    caption=Relative deuterium mass-balance residual over time for the available `val-2k` oxygen-field cases.
 
-[val-2k_natural_oxide_iteration_1_mass_conservation] tracks the signed deuterium mass-balance residual normalized by the initial deuterium inventory for both currently modeled cases. The residual is formed from the change in deuterium retained in the sample plus the time-integrated left and right surface release fluxes, so values close to zero indicate that the transient inventory loss is consistent with the integrated surface outflow.
+[val-2k_natural_oxide_iteration_1_mass_conservation] tracks the signed deuterium mass-balance residual normalized by the initial deuterium inventory for every currently available modeled case. The residual is formed from the change in deuterium retained in the sample plus the time-integrated left and right surface release fluxes, so values close to zero indicate that the transient inventory loss is consistent with the integrated surface outflow.
 
 !media comparison_val-2k.py
     image_name=val-2k_natural_oxide_iteration_1_oxygen_conservation.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2k_natural_oxide_iteration_1_oxygen_conservation
-    caption=Relative oxygen conservation residual over time for the companion 5 nm oxide case in `val-2k`.
+    caption=Relative oxygen conservation residual over time for the available `val-2k` oxygen-field cases.
 
-[val-2k_natural_oxide_iteration_1_oxygen_conservation] tracks the signed oxygen conservation residual normalized by the initial oxygen inventory in the companion 5 nm oxide case. The residual is formed from the change in oxygen retained in the sample plus the time-integrated oxygen loss tied to the D$_2$O release channel, so values close to zero indicate that the transient oxygen loss is consistent with the modeled surface outflow.
+[val-2k_natural_oxide_iteration_1_oxygen_conservation] tracks the signed oxygen conservation residual normalized by the initial oxygen inventory in each available oxygen-field case. The residual is formed from the change in oxygen retained in the sample plus the time-integrated oxygen loss tied to the D$_2$O release channel, so values close to zero indicate that the transient oxygen loss is consistent with the modeled surface outflow.
 
 ## Planned Extensions
 
 The intended order of future extensions is:
 
-1. retune and assess the 1 nm natural-oxide and 5 nm oxygen-field deuterium-only cases side by side
+1. retune and assess the 1 nm, 5 nm, 10 nm, and 15 nm oxygen-field deuterium-only cases side by side
 2. add hydrogen-containing release pathways without changing the preserved natural-oxide baseline
-3. extend the constant-layer model from 5 nm to the 10 nm and 15 nm oxide cases from Fig. 6
-4. add oxide reduction only after the constant-layer trends are understood
+3. add oxide reduction only after the constant-layer thickness trends are understood
 
 ## Input files
 
 !style halign=left
-The natural-oxide input file for this staged validation case is [/val-2k_natural_oxide.i]. The companion 5 nm oxide input is [/val-2k_5nm_oxide.i]. Their shared oxygen-field geometry and transport derivations are collected in [/parameters_val-2k_common.params], while the case-specific oxide thickness and output file names are defined directly in the wrapper input files. The shared model body and includes are organized using [/val-2k_base.i], [/val-2k_layer.i], [/val-2k_traps.i], and [/val-2k_surface.i]. The associated tests are defined in [/val-2k/tests].
+The natural-oxide input file for this staged validation case is [/val-2k_natural_oxide.i]. The companion oxide inputs are [/val-2k_5nm_oxide.i], [/val-2k_10nm_oxide.i], and [/val-2k_15nm_oxide.i]. Their shared oxygen-field geometry and transport derivations are collected in [/parameters_val-2k_common.params], while the case-specific oxide thickness and output file names are defined directly in the wrapper input files. The shared model body and includes are organized using [/val-2k_base.i], [/val-2k_layer.i], [/val-2k_traps.i], and [/val-2k_surface.i]. The associated tests are defined in [/val-2k/tests].
 
 !alert note title=Current test strategy
 The first robust automated test for `val-2k` uses the same fine-mesh baseline input as the validation run and is therefore marked as a heavy test. A lighter surrogate test may be added later, but only after it is shown to converge without changing the modeled behavior.
