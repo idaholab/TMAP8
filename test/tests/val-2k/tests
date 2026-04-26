@@ -4,7 +4,7 @@
   validation = 'val-2k.md'
   [val-2k_implicit_euler_csvdiff]
     type = CSVDiff
-    input = val-2k.i
+    input = val-2k_natural_oxide.i
     cli_args = 'Executioner/scheme=implicit-euler
                 Outputs/file_base=val-2k_implicit_euler_out'
     csvdiff = val-2k_implicit_euler_out.csv
@@ -13,7 +13,7 @@
   []
   [val-2k_implicit_euler_exodiff]
     type = Exodiff
-    input = val-2k.i
+    input = val-2k_natural_oxide.i
     exodiff = val-2k_implicit_euler_out.e
     prereq = val-2k_implicit_euler_csvdiff
     should_execute = false
@@ -22,7 +22,7 @@
   []
   [val-2k_bdf2_csvdiff]
     type = CSVDiff
-    input = val-2k.i
+    input = val-2k_natural_oxide.i
     cli_args = 'Outputs/file_base=val-2k_out'
     csvdiff = val-2k_out.csv
     heavy = true
@@ -30,7 +30,7 @@
   []
   [val-2k_bdf2_initial_profile_csvdiff]
     type = CSVDiff
-    input = val-2k.i
+    input = val-2k_natural_oxide.i
     csvdiff = val-2k_profile_initial_out_line_profile_0000.csv
     prereq = val-2k_bdf2_csvdiff
     should_execute = false # this test relies on the output files from val-2k_bdf2_csvdiff, so it shouldn't be run twice

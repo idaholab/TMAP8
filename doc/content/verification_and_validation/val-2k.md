@@ -185,7 +185,7 @@ The intended order of future extensions is:
 ## Input files
 
 !style halign=left
-The natural-oxide input file for this staged validation case is [/val-2k.i]. The companion 5 nm oxide input is [/val-2k_5nm_oxide.i]. Their case-specific parameters live in [/parameters_val-2k.params] and [/parameters_val-2k_5nm_oxide.params], while the shared oxygen-field geometry and transport derivations are collected in [/parameters_val-2k_oxygen_field_common.params]. The shared oxygen-field model body and includes are organized using [/val-2k_oxygen_field_base.i], [/val-2k_oxygen_field_layer.i], [/val-2k_oxygen_field_traps.i], and [/val-2k_oxygen_field_surface.i]. The associated tests are defined in [/val-2k/tests].
+The natural-oxide input file for this staged validation case is [/val-2k_natural_oxide.i]. The companion 5 nm oxide input is [/val-2k_5nm_oxide.i]. Their shared oxygen-field geometry and transport derivations are collected in [/parameters_val-2k_common.params], while the case-specific oxide thickness and output file names are defined directly in the wrapper input files. The shared model body and includes are organized using [/val-2k_base.i], [/val-2k_layer.i], [/val-2k_traps.i], and [/val-2k_surface.i]. The associated tests are defined in [/val-2k/tests].
 
 !alert note title=Current test strategy
 The first robust automated test for `val-2k` uses the same fine-mesh baseline input as the validation run and is therefore marked as a heavy test. A lighter surrogate test may be added later, but only after it is shown to converge without changing the modeled behavior.
