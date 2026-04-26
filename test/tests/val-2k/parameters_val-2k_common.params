@@ -64,8 +64,8 @@ detrapping_energy_intrinsic = '${fparse ${units 1.04 eV -> J} / kb}'
 # Surface recombination
 d2_recombination_coefficient = '${units 3.8e-16 m^4/at/s -> mum^4/at/s}'
 d2_recombination_energy = '${units 0.34 eV}'
-d2o_recombination_coefficient = '${units 3.8e-16 m^4/at/s -> mum^4/at/s}'
-d2o_recombination_energy = '${units 0.34 eV}'
+d2o_recombination_coefficient = '${units 6.0e-16 m^4/at/s -> mum^4/at/s}'
+d2o_recombination_energy = '${units 0.40 eV}'
 
 # val-2f six-trap reference scaled to preserve the current val-2k initial areal inventory
 depth_center = '${units 2.3e-6 m -> mum}'
