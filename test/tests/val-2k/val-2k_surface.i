@@ -8,7 +8,7 @@
     variable = deuterium_mobile
     boundary = left
     value = 1
-    boundary_material = flux_recombination_surface
+    boundary_material = flux_recombination_surface_d2
   []
   [left_d2o_release_flux]
     type = ADMatNeumannBC
@@ -29,7 +29,7 @@
     variable = deuterium_mobile
     boundary = right
     value = 1
-    boundary_material = flux_recombination_surface
+    boundary_material = flux_recombination_surface_d2
   []
   [right_d2o_release_flux]
     type = ADMatNeumannBC

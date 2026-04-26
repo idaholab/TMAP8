@@ -232,7 +232,7 @@
   [flux_surface_left_d2]
     type = ADSideAverageMaterialProperty
     boundary = left
-    property = flux_recombination_surface
+    property = flux_recombination_surface_d2
     outputs = none
   []
   [scaled_flux_surface_left_d2]
@@ -293,7 +293,7 @@
   [flux_surface_right_d2]
     type = ADSideAverageMaterialProperty
     boundary = right
-    property = flux_recombination_surface
+    property = flux_recombination_surface_d2
     outputs = none
   []
   [scaled_flux_surface_right_d2]

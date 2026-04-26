@@ -34,17 +34,17 @@
   []
   [recombination_rate_surface]
     type = ADDerivativeParsedMaterial
-    property_name = Kr_hat
+    property_name = Kr_d2_hat
     functor_names = 'temperature_history'
     functor_symbols = temperature
-    expression = '${recombination_coefficient_hat} * exp(-${recombination_energy} / ${kb_eV} / temperature)'
+    expression = '${d2_recombination_coefficient_hat} * exp(-${d2_recombination_energy} / ${kb_eV} / temperature)'
   []
-  [flux_recombination_surface]
+  [flux_recombination_surface_d2]
     type = ADDerivativeParsedMaterial
     coupled_variables = deuterium_mobile
-    property_name = flux_recombination_surface
-    material_property_names = Kr_hat
-    expression = '-2 * Kr_hat * deuterium_mobile ^ 2'
+    property_name = flux_recombination_surface_d2
+    material_property_names = Kr_d2_hat
+    expression = '-2 * Kr_d2_hat * deuterium_mobile ^ 2'
   []
   [d2o_recombination_rate_surface]
     type = ADDerivativeParsedMaterial
