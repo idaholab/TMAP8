@@ -42,8 +42,8 @@ def get_output_path(filename):
     return candidates[-1]
 
 
-def get_numeric_parameter(parameter_name):
-    parameters_file = get_repo_relative_path("val-2k_natural_oxide.i")
+def get_numeric_parameter(parameter_name, source_file="val-2k_natural_oxide.i"):
+    parameters_file = get_repo_relative_path(source_file)
 
     def parse_numeric_value(value):
         if value.startswith("${units ") and value.endswith("}"):
@@ -62,6 +62,8 @@ def get_numeric_parameter(parameter_name):
             supported_time_conversions = {
                 ("h", "s"): 3600.0,
                 ("s", "h"): 1.0 / 3600.0,
+                ("nm", "mum"): 1e-3,
+                ("m", "mum"): 1e6,
             }
             factor = supported_time_conversions.get((from_unit, to_unit))
             if factor is None:
@@ -194,7 +196,7 @@ case_specs = [
         "rmspe_label": "Nat. oxide",
         "color": "tab:blue",
         "simulation_csv": "val-2k_out.csv",
-        "profile_csv": "val-2k_profile_initial_out_line_profile_0000.csv",
+        "profile_csv": "profiles/val-2k_profile_initial_out_line_profile_0000.csv",
         "experimental_d2_csv": "experimental_HD_D2_nat_oxide.csv",
         "experimental_d2o_csv": "experimental_HDO_D2O_nat_oxide.csv",
     },
@@ -204,7 +206,7 @@ case_specs = [
         "rmspe_label": "5 nm oxide",
         "color": "tab:green",
         "simulation_csv": "val-2k_5nm_oxide_out.csv",
-        "profile_csv": "val-2k_5nm_oxide_profile_initial_out_line_profile_0000.csv",
+        "profile_csv": "profiles/val-2k_5nm_oxide_profile_initial_out_line_profile_0000.csv",
         "experimental_d2_csv": "experimental_HD_D2_5nm.csv",
         "experimental_d2o_csv": "experimental_HDO_D2O_5nm.csv",
     },
@@ -214,7 +216,7 @@ case_specs = [
         "rmspe_label": "10 nm oxide",
         "color": "tab:orange",
         "simulation_csv": "val-2k_10nm_oxide_out.csv",
-        "profile_csv": "val-2k_10nm_oxide_profile_initial_out_line_profile_0000.csv",
+        "profile_csv": "profiles/val-2k_10nm_oxide_profile_initial_out_line_profile_0000.csv",
         "experimental_d2_csv": "experimental_HD_D2_10nm.csv",
         "experimental_d2o_csv": "experimental_HDO_D2O_10nm.csv",
     },
@@ -224,7 +226,7 @@ case_specs = [
         "rmspe_label": "15 nm oxide",
         "color": "tab:red",
         "simulation_csv": "val-2k_15nm_oxide_out.csv",
-        "profile_csv": "val-2k_15nm_oxide_profile_initial_out_line_profile_0000.csv",
+        "profile_csv": "profiles/val-2k_15nm_oxide_profile_initial_out_line_profile_0000.csv",
         "experimental_d2_csv": "experimental_HD_D2_15nm.csv",
         "experimental_d2o_csv": "experimental_HDO_D2O_15nm.csv",
     },
@@ -239,7 +241,14 @@ for spec in case_specs:
         available_cases.append(spec)
 
 baseline_case = available_cases[0]["simulation"]
-baseline_profile = pd.read_csv(get_output_path(case_specs[0]["profile_csv"]))
+profile_case_spec = next(
+    (spec for spec in available_cases if spec["key"] == "oxide_15nm"),
+    available_cases[-1],
+)
+profile_case = pd.read_csv(get_output_path(profile_case_spec["profile_csv"]))
+oxide_thickness_profile_um = get_numeric_parameter("oxide_thickness", "val-2k_15nm_oxide.i")
+damage_depth_um = get_numeric_parameter("damage_depth")
+profile_depth_um = get_numeric_parameter("profile_depth")
 
 # Stage 3: generate the desorption comparison figure for both currently modeled
 # cases and include the imposed temperature history on the right axis.
@@ -390,8 +399,8 @@ ax_temperature = ax.twinx()
 temperature_handle = ax_temperature.plot(
     baseline_case["time_h"],
     baseline_case["temperature_k"],
-    linestyle=":",
-    color="tab:orange",
+    linestyle="-",
+    color="k",
     linewidth=1.5,
     label="TMAP8 temperature history",
 )[0]
@@ -426,7 +435,9 @@ ax.legend(
         legend_patches[-6].get_label(),
         legend_patches[-7].get_label(),
     ],
-    loc="best",
+    loc="upper center",
+    bbox_to_anchor=(0.65, 1),
+    framealpha=0.8,
 )
 ax.minorticks_on()
 
@@ -506,19 +517,25 @@ if oxygen_cases:
     )
     plt.close(fig)
 
-# Stage 7: generate the baseline initial concentration profile used to start the
-# desorption calculation.
-distance_to_surface_microns = baseline_profile["x"]
-deuterium_total = baseline_profile["deuterium_total_physical"]
-deuterium_mobile = baseline_profile["deuterium_mobile_physical"]
-deuterium_trapped_intrinsic = baseline_profile["deuterium_trapped_intrinsic_physical"]
-deuterium_trapped_1 = baseline_profile["deuterium_trapped_1_physical"]
-deuterium_trapped_2 = baseline_profile["deuterium_trapped_2_physical"]
-deuterium_trapped_3 = baseline_profile["deuterium_trapped_3_physical"]
-deuterium_trapped_4 = baseline_profile["deuterium_trapped_4_physical"]
-deuterium_trapped_5 = baseline_profile["deuterium_trapped_5_physical"]
+# Stage 7: generate the 15 nm initial concentration profile used to start the
+# desorption calculation and mark the oxide, damaged tungsten, and bulk
+# sections in the plotted depth range.
+distance_to_surface_microns = profile_case["x"]
+deuterium_total = profile_case["deuterium_total_physical"]
+deuterium_mobile = profile_case["deuterium_mobile_physical"]
+deuterium_trapped_intrinsic = profile_case["deuterium_trapped_intrinsic_physical"]
+deuterium_trapped_1 = profile_case["deuterium_trapped_1_physical"]
+deuterium_trapped_2 = profile_case["deuterium_trapped_2_physical"]
+deuterium_trapped_3 = profile_case["deuterium_trapped_3_physical"]
+deuterium_trapped_4 = profile_case["deuterium_trapped_4_physical"]
+deuterium_trapped_5 = profile_case["deuterium_trapped_5_physical"]
 
 fig, ax = plt.subplots(figsize=(6.5, 5.5))
+ax.axvspan(0.0, oxide_thickness_profile_um, color="0.88", alpha=0.9)
+ax.axvspan(oxide_thickness_profile_um, damage_depth_um, color="0.94", alpha=0.8)
+ax.axvspan(damage_depth_um, profile_depth_um, color="0.98", alpha=1.0)
+ax.axvline(oxide_thickness_profile_um, color="0.4", linewidth=1.0, linestyle="--")
+ax.axvline(damage_depth_um, color="0.4", linewidth=1.0, linestyle="--")
 ax.plot(
     distance_to_surface_microns,
     deuterium_total,
@@ -574,8 +591,24 @@ ax.set_xlabel("Distance to tungsten surface (um)")
 ax.set_ylabel("Deuterium concentration (atoms/m$^3$)")
 ax.set_xlim(left=0)
 ax.set_ylim(0, 9.5e26)
+ymax = ax.get_ylim()[1]
+ax.text(10.1 * oxide_thickness_profile_um, 0.97 * ymax, "Oxide", ha="center", va="top")
+ax.text(
+    0.5 * (oxide_thickness_profile_um + damage_depth_um),
+    0.97 * ymax,
+    "Damaged W",
+    ha="center",
+    va="top",
+)
+ax.text(
+    0.5 * (damage_depth_um + profile_depth_um),
+    0.97 * ymax,
+    "Bulk W",
+    ha="center",
+    va="top",
+)
 ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
-ax.legend(loc="best")
+ax.legend(loc="center right")
 ax.minorticks_on()
 
 plt.savefig(
