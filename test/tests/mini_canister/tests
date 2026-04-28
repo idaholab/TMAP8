@@ -17,6 +17,6 @@
     type = RunCommand
     command = 'python3 comparison_mini_canister.py'
     requirement = 'The system shall be able to generate figures with the simulation results when modeling hydrogen generation and permeation through the gas chamber and steel walls of the SRNL mini-canister'
-    required_python_packages = 'matplotlib numpy pandas'
+    required_python_packages = 'matplotlib numpy os pandas'
   []
 []

@@ -2,20 +2,10 @@
 
 TMAP8 is used to model hydrogen transport and permeation through an aluminum-clad used nuclear fuel (AUNF) mini-canister storage device from Savannah River National Laboratory (SRNL) [!citep](d'entremont2024aunfminicanister). The mini-canisters house irradiated AUNF assemblies where gamma and neutron radiation from the fuel drives radiolytic decomposition of water, generating H$_2$ gas. Over time, this hydrogen will disassociate and diffuse through the surrounding 304 stainless steel wall, raising concern for potential accumulation. This example demonstrates how TMAP8 can model these processes through two distinct input files:
 
-1. [steel_only.i] — isolates hydrogen diffusion through the steel wall with an assumed boundary partial pressure. This simpler model permits verification against an analytical solution, provided the Dirichlet boundary conditions are time-independent.
+1. [steel_only.i] — isolates hydrogen diffusion through the steel wall with an assumed boundary partial pressure. This simpler model permits verification against an analytical solution, assuming time-independent Dirichlet boundary conditions.
 2. [gas_steel.i] — simulates the full system: radiolytic H$_2$ generation, gas-phase transport inside the canister, and simultaneous permeation through the steel wall. This model is validated against SRNL experimental measurements [!citep](d'entremont2024aunfminicanister).
 
 Both models share the same 1D axisymmetric geometry and material parameters for the steel wall. The progression from [steel_only.i] to [gas_steel.i] illustrates the flexibility of TMAP8 in building complexity incrementally.
-
-## Input File Structure
-
-!style halign=left
-Both models are structured around two shared files that are incorporated via the `!include` directive:
-
-- [mini_canister.params] — defines all shared model parameters (geometry, material properties, numerics).
-- [mini_canister_base.i] — defines the MOOSE objects shared by both models: the steel variable and kernels, temperature auxiliary variable, outer Dirichlet boundary condition, steel-domain postprocessors, and the executioner.
-
-Each top-level input file adds only the objects that are specific to its model. This structure keeps the shared physics in one place and avoids duplication. Both models simulate 0.25 years (≈ 91.3 days) using a BDF2 time integration scheme with an `IterationAdaptiveDT` adaptive timestep that targets 5 Newton iterations per step.
 
 ## Canister Geometry and Mesh
 
@@ -31,10 +21,12 @@ Both models represent the canister as a 1D axisymmetric domain in cylindrical co
 | Canister height, $h$ | **7.06 in (179.3 mm)** | mm |
 | Internal gas volume, $V_g = \pi r_i^2 h$ | **$\approx$ 727,400** | mm$^3$ |
 
-In [steel_only.i], the 1D mesh spans only the steel wall, from $r_i$ to $r_o$, using a single `GeneratedMeshGenerator` with 1,500 elements (subdomain 1). In [gas_steel.i], a `CartesianMeshGenerator` produces two adjacent blocks: the gas block (subdomain 0) from $r = 0$ to $r = r_i$ with 250 elements, and the steel block (subdomain 1) from $r = r_i$ to $r = r_o$ with 1,500 elements. Two `SideSetsBetweenSubdomainsGenerator` steps then create the named interface sidesets `interface_gas_to_steel` and `interface_steel_to_gas` that are required for the `ADInterfaceSorption` kernel.
+In [steel_only.i], the 1D mesh spans only the steel wall, from $r_i$ to $r_o$, using a single [GeneratedMeshGenerator.md] with 1,500 elements (subdomain 1). In [gas_steel.i], a [CartesianMeshGenerator.md] produces two adjacent blocks: the gas block (subdomain 0) from $r = 0$ to $r = r_i$ with 250 elements, and the steel block (subdomain 1) from $r = r_i$ to $r = r_o$ with 1,500 elements. Two [SideSetsBetweenSubdomainsGenerator.md] steps then create the named interface sidesets `interface_gas_to_steel` and `interface_steel_to_gas` that are required for the [InterfaceSorption.md] kernel.
 
+In [steel_only.i], the mesh is defined as:
 !listing test/tests/mini_canister/steel_only.i link=false block=Mesh
 
+In [gas_steel.i], the mesh is defined as:
 !listing test/tests/mini_canister/gas_steel.i link=false block=Mesh
 
 ## Nomenclature
@@ -79,7 +71,7 @@ Because `coord_type = RZ` is set, MOOSE automatically applies the axisymmetric c
 ### Boundary Conditions
 
 !style halign=left
-At the inner steel surface ($r = r_i$), the hydrogen concentration is fixed by Sieverts' law using the `EquilibriumBC` boundary condition. An auxiliary variable `H_partial_pressure_gas` is first set by a `FunctionAux` at the inner boundary, and `EquilibriumBC` then enforces:
+At the inner steel surface ($r = r_i$), the hydrogen concentration is fixed by Sieverts' law using the [EquilibriumBC.md] boundary condition. An auxiliary variable `H_partial_pressure_gas` is first set by a [FunctionAux.md] at the inner boundary, and [EquilibriumBC.md] then enforces:
 
 \begin{equation} \label{eq:sieverts_bc}
 C_s(r_i, t) = 2 K_s(T) \sqrt{P},
@@ -92,7 +84,7 @@ K_s(T) = K_{s,0} \exp\!\left( - \frac{E_{K}}{RT} \right).
 \end{equation}
 
 !style halign=left
-The H$_2$ partial pressure $P$ is provided by a function selected via the `pressure_function` input parameter. Three options are available: (1) a constant value (`constant_pressure`), (2) a linear time ramp from zero to the constant value over 3 hours (`time_ramp_pressure`), or (3) a power-law fit to experimental SRNL pressure data (`SRNL_pressure_data_fun`):
+The H$_2$ partial pressure $P$ is provided by a function selected via the `pressure_function` input parameter. Three options are available: (1) a constant value (`constant_pressure`), (2) a [TimeRampFunction.md] from zero to the constant value over 3 hours (`time_ramp_pressure`), or (3) a power-law fit to experimental SRNL pressure data (`SRNL_pressure_data_fun`):
 
 \begin{equation} \label{eq:srnl_pressure}
 P_{\text{SRNL}}(t) = 376.7588 \, t^{0.6177} \quad [\text{Pa}].
@@ -106,7 +98,7 @@ P = 0.10 \times 24 \text{ psi} \approx 16{,}547 \text{ Pa},
 
 which assumes 10% of the 24 psi He-backfilled canister pressure is attributable to H$_2$ [!citep](d'entremont2024aunfminicanister,hlushko2024aunf).
 
-At the outer steel surface ($r = r_o$), hydrogen is released to the ambient environment, and the concentration is set to zero by a Dirichlet condition (defined in [mini_canister_base.i]):
+At the outer steel surface ($r = r_o$), hydrogen is released to the ambient environment, and the concentration is set to zero by a [DirichletBC.md] (defined in [mini_canister_base.i]):
 
 \begin{equation} \label{eq:outer_bc}
 C_s(r_o, t) = 0.
@@ -115,7 +107,7 @@ C_s(r_o, t) = 0.
 ### Solver
 
 !style halign=left
-Because the steel-only problem is linear (constant diffusivity, linear Sieverts' BC), `steel_only.i` uses `solve_type = LINEAR` for a direct LU factorization at each timestep, which is more efficient than a nonlinear Newton iteration.
+Because the steel-only problem is linear (constant diffusivity, linear Sieverts' BC), [steel_only.i] uses 'solve_type = LINEAR' for a direct LU factorization at each timestep.
 
 ### Model Parameters
 
@@ -184,18 +176,18 @@ S(t) = \frac{1}{V_g} \frac{dN}{dt} = \frac{69.7055 \times 0.6808}{V_g} \, t^{0.6
 ### Interface Condition
 
 !style halign=left
-At the gas-steel interface ($r = r_i$), hydrogen equilibrium between the gas and solid phases is enforced by the `ADInterfaceSorption` interface kernel, applied on the `interface_steel_to_gas` sideset. Using the ideal gas law to convert gas-phase concentration to partial pressure ($P = C_g R T$), the equilibrium atomic hydrogen concentration in the steel is:
+At the gas-steel interface ($r = r_i$), hydrogen equilibrium between the gas and solid phases is enforced by the [InterfaceSorption.md] interface kernel, applied on the `interface_steel_to_gas` sideset. Using the ideal gas law to convert gas-phase concentration to partial pressure ($P = C_g R T$), the equilibrium atomic hydrogen concentration in the steel is:
 
 \begin{equation} \label{eq:interface_sieverts}
 C_s(r_i, t) = 2 K_s(T) \sqrt{C_g(r_i, t) \, R \, T},
 \end{equation}
 
-The `unit_scale_neighbor` parameter is set to $10^3$ to correct for the unit mismatch between $C_g$ in $\mu$mol mm$^{-3}$ and the ideal gas constant used internally by `ADInterfaceSorption`, which draws $R$ in J K$^{-1}$ mol$^{-1}$ from the MOOSE `PhysicalConstants` namespace. Converting $C_g$ from $\mu$mol mm$^{-3}$ to mol m$^{-3}$ introduces a combined factor of $10^{-6}$ (mol/$\mu$mol) $\times$ $10^{9}$ (mm$^3$/m$^3$) $= 10^3$, which is supplied via `unit_scale_neighbor`.
+The `unit_scale_neighbor` parameter is set to $10^3$ to correct for the unit mismatch between $C_g$ in $\mu$mol mm$^{-3}$ and the ideal gas constant used internally by [InterfaceSorption.md], which draws $R$ in J K$^{-1}$ mol$^{-1}$ from the MOOSE [TMAP8PhysicalConstants.md] namespace. Converting $C_g$ from $\mu$mol mm$^{-3}$ to mol m$^{-3}$ introduces a combined factor of $10^{-6}$ (mol/$\mu$mol) $\times$ $10^{9}$ (mm$^3$/m$^3$) $= 10^3$, which is supplied via `unit_scale_neighbor`.
 
 ### Solver
 
 !style halign=left
-Because the gas-steel problem is nonlinear (the interface couples $C_g$ and $C_s$ through a square-root relationship), `gas_steel.i` uses `solve_type = Newton` with `line_search = NONE`.
+Because the gas-steel problem is nonlinear (the interface couples $C_g$ and $C_s$ through a square-root relationship), [gas_steel.i] uses 'solve_type = Newton` with `line_search = NONE`.
 
 ### Model Parameters
 
@@ -254,6 +246,16 @@ Because the gas-steel problem is nonlinear (the interface couples $C_g$ and $C_s
   id=fig:gas_steel_conservation
   caption=Conservation of mass check for the gas-steel model: accumulated boundary flux plus source term vs. total H mass in the domain.
 
+## Input File Structure
+
+!style halign=left
+Both models are structured around two shared files that are incorporated via the `!include` directive:
+
+- [mini_canister.params] — defines all shared model parameters (geometry, material properties, numerics).
+- [mini_canister_base.i] — defines the MOOSE objects shared by both models: the steel variable and kernels, temperature auxiliary variable, outer Dirichlet boundary condition, steel-domain postprocessors, and the executioner.
+
+Each top-level input file adds only the objects that are specific to its model. This structure keeps the shared physics in one place and avoids duplication. Both models simulate 0.25 years (≈ 91.3 days) using a [BDF2.md] time integration scheme with an [IterationAdaptiveDT.md] adaptive timestep that targets 5 Newton iterations per step.
+
 ## Input Files
 
 !style halign=left
@@ -265,6 +267,5 @@ The input files for this example are [/steel_only.i] and [/gas_steel.i], togethe
 
 !listing test/tests/mini_canister/gas_steel.i link=false
 
-## References
 
 !bibtex bibliography

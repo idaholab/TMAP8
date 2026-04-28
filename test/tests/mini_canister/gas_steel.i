@@ -1,5 +1,5 @@
 ### This input file models the transport of H2 through both the gas chamber and
-### steel wall of the mini_canister,using InterfaceSorption to model the
+### steel wall of the mini_canister, using InterfaceSorption to model the
 ### interface between the gas chamber and steel
 
 # Model parameters
