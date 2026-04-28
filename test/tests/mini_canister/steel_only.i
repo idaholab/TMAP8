@@ -6,8 +6,9 @@
 # Geometry
 total_radius = '${units ${fparse inner_radius + steel_thickness} mm}'
 # Pressure implementation: constant_pressure | time_ramp_pressure | SRNL_pressure_data_fun
-estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}' # For constant or time_ramp pressure. % estimation of partial pressure of H_2 with HE backfill to 24 psi
 pressure_function = 'constant_pressure'
+# Percentage (%) estimation of H_2 content within He backfill to 24 psi
+estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}'
 
 # Shared objects between two models
 !include mini_canister_base.i

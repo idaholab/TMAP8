@@ -15,11 +15,11 @@ Both models represent the canister as a 1D axisymmetric domain in cylindrical co
 !table id=tab:geometry caption=Canister geometry.
 | Parameter | Value | Units |
 | --- | --- | --- |
-| Inner radius, $r_i$ | **1.415 in (35.94 mm)** | mm |
-| Steel wall thickness, $\delta_s$ | **0.085 in (2.16 mm)** | mm |
-| Outer radius, $r_o = r_i + \delta_s$ | **1.500 in (38.10 mm)** | mm |
-| Canister height, $h$ | **7.06 in (179.3 mm)** | mm |
-| Internal gas volume, $V_g = \pi r_i^2 h$ | **$\approx$ 727,400** | mm$^3$ |
+| Inner radius, $\mathbf{r_i}$ | $\mathbf{35.94}$ | mm |
+| Steel wall thickness, $\mathbf{\delta_s}$ | $\mathbf{2.16}$ | mm |
+| Outer radius, $\mathbf{r_o} = \mathbf{r_i} + \mathbf{\delta_s}$ | $\mathbf{38.10}$ | mm |
+| Canister height, $\mathbf{h}$ | $\mathbf{179.3}$ | mm |
+| Internal gas volume, $\mathbf{V_g} = \pi\mathbf{r_i}^2\mathbf{h}$ | $\approx \mathbf{727,400}$ | mm$^3$ |
 
 In [steel_only.i], the 1D mesh spans only the steel wall, from $r_i$ to $r_o$, using a single [GeneratedMeshGenerator.md] with 1,500 elements (subdomain 1). In [gas_steel.i], a [CartesianMeshGenerator.md] produces two adjacent blocks: the gas block (subdomain 0) from $r = 0$ to $r = r_i$ with 250 elements, and the steel block (subdomain 1) from $r = r_i$ to $r = r_o$ with 1,500 elements. Two [SideSetsBetweenSubdomainsGenerator.md] steps then create the named interface sidesets `interface_gas_to_steel` and `interface_steel_to_gas` that are required for the [InterfaceSorption.md] kernel.
 
@@ -37,17 +37,17 @@ In [gas_steel.i], the mesh is defined as:
 !table id=tab:variables caption=Nomenclature of variables and physical parameters.
 | Symbol | Description | Units |
 | --- | --- | --- |
-| **$C_s$** | Mobile H atom concentration in steel | $\mu$mol mm$^{-3}$ |
-| **$C_g$** | Mobile H$_2$ molecule concentration in gas | $\mu$mol mm$^{-3}$ |
-| **$D_s$** | Diffusivity of H in 304 stainless steel | mm$^2$ day$^{-1}$ |
-| **$D_g$** | Diffusivity of H$_2$ in He | mm$^2$ day$^{-1}$ |
-| **$K_s$** | Solubility of H in steel (Sieverts' constant) | $\mu$mol mm$^{-3}$ Pa$^{-1/2}$ |
-| **$P$** | Partial pressure of H$_2$ | Pa |
-| **$T$** | Temperature (constant) | K |
-| **$R$** | Ideal gas constant | J K$^{-1}$ mol$^{-1}$ |
-| **$S$** | Volumetric H$_2$ generation rate in gas | $\mu$mol mm$^{-3}$ day$^{-1}$ |
-| **$N(t)$** | Cumulative H$_2$ yield in gas | $\mu$mol |
-| **$t$** | Time | day |
+| $\mathbf{C_s}$ | Mobile H atom concentration in steel | $\mathrm{\mu}$mol mm$^{-3}$ |
+| $\mathbf{C_g}$ | Mobile H$_2$ molecule concentration in gas | $\mathrm{\mu}$mol mm$^{-3}$ |
+| $\mathbf{D_s}$ | Diffusivity of H in 304 stainless steel | mm$^2$ day$^{-1}$ |
+| $\mathbf{D_g}$ | Diffusivity of H$_2$ in He | mm$^2$ day$^{-1}$ |
+| $\mathbf{K_s}$ | Solubility of H in steel (Sieverts' constant) | $\mathrm{\mu}$mol mm$^{-3}$ Pa$^{-1/2}$ |
+| $\mathbf{P}$ | Partial pressure of H$_2$ | Pa |
+| $\mathbf{T}$ | Temperature (constant) | K |
+| $\mathbf{R}$ | Ideal gas constant | J K$^{-1}$ mol$^{-1}$ |
+| $\mathbf{S}$ | Volumetric H$_2$ generation rate in gas | $\mathrm{\mu}$mol mm$^{-3}$ day$^{-1}$ |
+| $\mathbf{N(t)}$ | Cumulative H$_2$ yield in gas | $\mathrm{\mu}$mol |
+| $\mathbf{t}$ | Time | day |
 
 ## Steel-Only Model
 
@@ -57,7 +57,7 @@ In [gas_steel.i], the mesh is defined as:
 In the steel-only model, only hydrogen transport within the steel wall is simulated. The governing equation is a 1D diffusion model:
 
 \begin{equation} \label{eq:steel_diffusion}
-\frac{\partial C_s}{\partial t} = \frac{\partial}{\partial r}\left(D_s\frac{\partial C_s}{\partial r} \right),
+\frac{\partial C_s}{\partial t} = \frac{\partial}{\partial x}\left(D_s\frac{\partial C_s}{\partial x} \right),
 \end{equation}
 
 where the diffusivity follows an Arrhenius temperature dependence [!citep](san_marchi2012hydrogensteel):
@@ -114,12 +114,12 @@ Because the steel-only problem is linear (constant diffusivity, linear Sieverts'
 !table id=tab:steel_only_params caption=Steel-only model parameters.
 | Parameter | Description | Value | Units | Reference |
 | --- | --- | --- | --- | --- |
-| **$D_{s,0}$** | Diffusivity pre-exponential factor | **$0.20 \times 10^{-6}$** | m$^2$ s$^{-1}$ | [!cite](san_marchi2012hydrogensteel) |
-| **$E_{D}$** | Diffusivity activation energy | **49.3** | kJ mol$^{-1}$ | [!cite](san_marchi2012hydrogensteel) |
-| **$K_{s,0}$** | Solubility pre-exponential factor | **$266 \times 10^{-6}$** | $\mu$mol mm$^{-3}$ Pa$^{-1/2}$ | [!cite](san_marchi2012hydrogensteel) |
-| **$E_{K}$** | Solubility activation energy | **6.86** | kJ mol$^{-1}$ | [!cite](san_marchi2012hydrogensteel) |
-| **$T$** | Temperature | **313.15** | K | [!cite](hlushko2024aunf) |
-| **$P$** | Assumed H$_2$ partial pressure | **$\approx$ 16,547** | Pa | [!cite](hlushko2024aunf) |
+| $\mathbf{D_{s,0}}$ | Diffusivity pre-exponential factor | $\mathbf{0.20 \times 10^{-6}}$ | m$^2$ s$^{-1}$ | [!cite](san_marchi2012hydrogensteel) |
+| $\mathbf{E_{D}}$ | Diffusivity activation energy | $\mathbf{49.3}$ | kJ mol$^{-1}$ | [!cite](san_marchi2012hydrogensteel) |
+| $\mathbf{K_{s,0}}$ | Solubility pre-exponential factor | $\mathbf{266 \times 10^{-6}}$ | $\mathrm{\mu}$mol mm$^{-3}$ Pa$^{-1/2}$ | [!cite](san_marchi2012hydrogensteel) |
+| $\mathbf{E_{K}}$ | Solubility activation energy | $\mathbf{6.86}$ | kJ mol$^{-1}$ | [!cite](san_marchi2012hydrogensteel) |
+| $\mathbf{T}$ | Temperature | $\mathbf{313.15}$ | K | [!cite](d'entremont2024aunfminicanister) |
+| $\mathbf{P}$ | Assumed H$_2$ partial pressure | $\approx\mathbf{16,547}$ | Pa | [!cite](d'entremont2024aunfminicanister) |
 
 ### Results
 
@@ -137,7 +137,7 @@ For a semi-infinite slab with a constant-concentration boundary condition, the d
 #### Conservation of Mass
 
 !style halign=left
-As an internal consistency check, the total hydrogen mass integrated over the steel domain (`annular_cylinder_total_mass_steel`) is compared against the time-integrated net diffusive flux across the inner and outer boundaries (`annular_cylinder_time_integrated_flux`). Both integrals are weighted for the axisymmetric cylindrical geometry and then scaled by the canister height $h$ to represent 3D mass in $\mu$mol H. [fig:steel_conservation] shows the two quantities track closely throughout the simulation, confirming mass conservation.
+As an internal consistency check, the total hydrogen mass integrated over the steel domain (`annular_cylinder_total_mass_steel`) is compared against the time-integrated net diffusive flux across the inner and outer boundaries (`annular_cylinder_time_integrated_flux`). Both integrals are weighted for the axisymmetric cylindrical geometry and then scaled by the canister height $h$ to represent 3D mass in $\mathrm{\mu}$mol H. [fig:steel_conservation] shows the two quantities track closely throughout the simulation, confirming mass conservation.
 
 !media comparison_mini_canister.py
   image_name=steel_only_conservation_of_mass.png
@@ -153,7 +153,7 @@ As an internal consistency check, the total hydrogen mass integrated over the st
 The gas-steel model resolves both the gas phase and steel simultaneously. In the gas phase ($0 \leq r \leq r_i$), H$_2$ is generated by radiolysis and transported by diffusion:
 
 \begin{equation} \label{eq:gas_diffusion}
-\frac{\partial C_g}{\partial t} = \frac{\partial}{\partial r}\left(D_g \frac{\partial C_g}{\partial r} \right) + S(t),
+\frac{\partial C_g}{\partial t} = \frac{\partial}{\partial x}\left(D_g \frac{\partial C_g}{\partial x} \right) + S(t),
 \end{equation}
 
 where $D_g$ is the diffusivity of H$_2$ in the He carrier gas [!citep](middha2002hydrogenhelium). In the steel wall ($r_i \leq r \leq r_o$), [eq:steel_diffusion] applies as before. The axisymmetric weighting is again applied automatically by MOOSE. At the symmetry axis ($r = 0$), no explicit boundary condition is required: MOOSE's natural boundary condition enforces zero diffusive flux, which is physically correct for a cylindrical axis of symmetry.
@@ -164,13 +164,13 @@ where $D_g$ is the diffusivity of H$_2$ in the He carrier gas [!citep](middha200
 The cumulative radiolytic H$_2$ yield is modeled using a power-law fit to the SRNL experimental data [!citep](d'entremont2024aunfminicanister):
 
 \begin{equation} \label{eq:H2_yield}
-N(t) = 69.7055 \, t^{0.6808} \quad [\mu\text{mol}],
+N(t) = 69.7055 \, t^{0.6808} \quad [\mathrm{\mu}\text{mol}],
 \end{equation}
 
 where $t$ is time in days, calibrated assuming a Co-60 irradiator dose rate of approximately 124 Gy/min [!citep](d'entremont2024aunfminicanister). The volumetric source term in [eq:gas_diffusion] is obtained by differentiating [eq:H2_yield] with respect to time and normalizing by the gas volume:
 
 \begin{equation} \label{eq:source_term}
-S(t) = \frac{1}{V_g} \frac{dN}{dt} = \frac{69.7055 \times 0.6808}{V_g} \, t^{0.6808 - 1} \quad [\mu\text{mol mm}^{-3}\text{ day}^{-1}].
+S(t) = \frac{1}{V_g} \frac{dN}{dt} = \frac{69.7055 \times 0.6808}{V_g} \, t^{0.6808 - 1} \quad [\mathrm{\mu}\text{mol mm}^{-3}\text{ day}^{-1}].
 \end{equation}
 
 ### Interface Condition
@@ -182,7 +182,7 @@ At the gas-steel interface ($r = r_i$), hydrogen equilibrium between the gas and
 C_s(r_i, t) = 2 K_s(T) \sqrt{C_g(r_i, t) \, R \, T},
 \end{equation}
 
-The `unit_scale_neighbor` parameter is set to $10^3$ to correct for the unit mismatch between $C_g$ in $\mu$mol mm$^{-3}$ and the ideal gas constant used internally by [InterfaceSorption.md], which draws $R$ in J K$^{-1}$ mol$^{-1}$ from the MOOSE [TMAP8PhysicalConstants.md] namespace. Converting $C_g$ from $\mu$mol mm$^{-3}$ to mol m$^{-3}$ introduces a combined factor of $10^{-6}$ (mol/$\mu$mol) $\times$ $10^{9}$ (mm$^3$/m$^3$) $= 10^3$, which is supplied via `unit_scale_neighbor`.
+The `unit_scale_neighbor` parameter is set to $10^3$ to correct for the unit mismatch between $C_g$ in $\mathrm{\mu}$mol mm$^{-3}$ and the ideal gas constant used internally by [InterfaceSorption.md], which draws $R$ in J K$^{-1}$ mol$^{-1}$ from the MOOSE [TMAP8PhysicalConstants.md] namespace. Converting $C_g$ from $\mathrm{\mu}$mol mm$^{-3}$ to mol m$^{-3}$ introduces a combined factor of $10^{-6}$ (mol/$\mathrm{\mu}$mol) $\times$ $10^{9}$ (mm$^3$/m$^3$) $= 10^3$, which is supplied via `unit_scale_neighbor`.
 
 ### Solver
 
@@ -194,11 +194,8 @@ Because the gas-steel problem is nonlinear (the interface couples $C_g$ and $C_s
 !table id=tab:gas_steel_params caption=Additional gas-steel model parameters (steel parameters as in [tab:steel_only_params]).
 | Parameter | Description | Value | Units | Reference |
 | --- | --- | --- | --- | --- |
-| **$D_g$** | H$_2$ diffusivity in He | **2.7** | cm$^2$ s$^{-1}$ | [!cite](middha2002hydrogenhelium) |
-| **$a$** | H$_2$ yield pre-factor | **69.7055** | $\mu$mol day$^{-0.6808}$ | [!cite](d'entremont2024aunfminicanister) |
-| **$b$** | H$_2$ yield exponent | **0.6808** | (dimensionless) | [!cite](d'entremont2024aunfminicanister) |
-| **$V_g$** | Internal gas volume | **$\approx$ 727,400** | mm$^3$ | Computed |
-| **$T$** | Temperature | **313.15** | K | [!cite](hlushko2024aunf) |
+| $\mathbf{D_g}$ | H$_2$ diffusivity in He | $\mathbf{2.7}$ | cm$^2$ s$^{-1}$ | [!cite](middha2002hydrogenhelium) |
+| $\mathbf{V_g} = \pi\mathbf{r_i}^2\mathbf{h}$ | Internal gas volume | $\approx\mathbf{727,400}$ | mm$^3$ | Computed |
 
 ### Results
 
@@ -227,7 +224,7 @@ Because the gas-steel problem is nonlinear (the interface couples $C_g$ and $C_s
 #### Comparison of Steel Hydrogen Uptake Between Models
 
 !style halign=left
-[fig:model_comparison] compares the total atomic hydrogen mass accumulated in the steel wall between the steel-only and gas-steel models. The left axis shows the absolute H mass in $\mu$mol; the right axis shows the steel mass as a percentage of the total H inventory (steel + gas for gas-steel, steel + source integral for steel-only). While the steel-only model uses a constant assumed H$_2$ partial pressure, the gas-steel model evolves the interface pressure self-consistently. The steel-only model can also utilize time-dependent pressure data from SRNL [!citep](d'entremont2024aunfminicanister) by setting `pressure_function = SRNL_pressure_data_fun` in [steel_only.i] or on the command line, nullifying the assumptions required for the diffusion-front verification but greatly improving agreement between the two models.
+[fig:model_comparison] compares the total atomic hydrogen mass accumulated in the steel wall between the steel-only and gas-steel models. The left axis shows the absolute H mass in $\mathrm{\mu}$mol; the right axis shows the steel mass as a percentage of the total H inventory (steel + gas for gas-steel, steel + source integral for steel-only). While the steel-only model uses a constant assumed H$_2$ partial pressure, the gas-steel model evolves the interface pressure self-consistently. The steel-only model can also utilize time-dependent pressure data from SRNL [!citep](d'entremont2024aunfminicanister) by setting `pressure_function = SRNL_pressure_data_fun` in [steel_only.i] or on the command line, nullifying the assumptions required for the diffusion-front verification but greatly improving agreement between the two models.
 
 !media comparison_mini_canister.py
   image_name=hydrogen_yield_in_steel.png
@@ -238,7 +235,7 @@ Because the gas-steel problem is nonlinear (the interface couples $C_g$ and $C_s
 #### Conservation of Mass
 
 !style halign=left
-[fig:gas_steel_conservation] verifies conservation of mass in the gas-steel model by comparing the total hydrogen mass in the domain (`cylinder_total_mass`, the sum of gas and steel masses) against the sum of the time-integrated boundary flux (`cylinder_time_integrated_flux`) and the cumulative source term (`cylinder_total_generation`). Throughout, all quantities are tracked in $\mu$mol H atoms: the gas-phase H$_2$ concentration is multiplied by 2 in the `inner_circle_concentration_gas` postprocessor, and the H$_2$ yield function is scaled by `scale_factor = 2` in `cylinder_total_generation`. The two quantities track closely, confirming that mass contributions from the coupled gas-generation, gas-phase transport, interface transfer, and steel diffusion are all consistently accounted for.
+[fig:gas_steel_conservation] verifies conservation of mass in the gas-steel model by comparing the total hydrogen mass in the domain (`cylinder_total_mass`, the sum of gas and steel masses) against the sum of the time-integrated boundary flux (`cylinder_time_integrated_flux`) and the cumulative source term (`cylinder_total_generation`). Throughout, all quantities are tracked in $\mathrm{\mu}$mol H atoms: the gas-phase H$_2$ concentration is multiplied by 2 in the `inner_circle_concentration_gas` postprocessor, and the H$_2$ yield function is scaled by `scale_factor = 2` in `cylinder_total_generation`. The two quantities track closely, confirming that mass contributions from the coupled gas-generation, gas-phase transport, interface transfer, and steel diffusion are all consistently accounted for.
 
 !media comparison_mini_canister.py
   image_name=gas_steel_conservation_of_mass.png
@@ -266,6 +263,5 @@ The input files for this example are [/steel_only.i] and [/gas_steel.i], togethe
 !listing test/tests/mini_canister/steel_only.i link=false
 
 !listing test/tests/mini_canister/gas_steel.i link=false
-
 
 !bibtex bibliography
