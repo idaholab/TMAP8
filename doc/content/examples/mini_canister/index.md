@@ -1,6 +1,6 @@
 # Mini-Canister Hydrogen Transport
 
-TMAP8 is used to model hydrogen transport and permeation through an aluminum-clad used nuclear fuel (AUNF) mini-canister storage device from Savannah River National Laboratory (SRNL) [!citep](d'entremont2024aunfminicanister). The mini-canisters house irradiated AUNF assemblies where gamma and neutron radiation from the fuel drives radiolytic decomposition of water, generating H$_2$ gas. Over time, this hydrogen will disassociate and diffuse through the surrounding 304 stainless steel wall, raising concern for potential accumulation. This example demonstrates how TMAP8 can model these processes through two distinct input files:
+TMAP8 is used to model hydrogen transport and permeation through an aluminum-clad used nuclear fuel (AUNF) mini-canister storage device from Savannah River National Laboratory (SRNL) [!citep](d'entremont2024aunfminicanister). The mini-canisters house irradiated AUNF assemblies where gamma and neutron radiation from the fuel drives radiolytic decomposition of water, generating H$_2$ gas. Over time, this hydrogen will dissociate and diffuse through the surrounding 304 stainless steel wall, raising concern for potential accumulation. This example demonstrates how TMAP8 can model these processes through two distinct input files:
 
 1. [steel_only.i] — isolates hydrogen diffusion through the steel wall with an assumed boundary partial pressure. This simpler model permits verification against an analytical solution, assuming time-independent Dirichlet boundary conditions.
 2. [gas_steel.i] — simulates the full system: radiolytic H$_2$ generation, gas-phase transport inside the canister, and simultaneous permeation through the steel wall. This model is validated against SRNL experimental measurements [!citep](d'entremont2024aunfminicanister).
@@ -107,7 +107,7 @@ C_s(r_o, t) = 0.
 ### Solver
 
 !style halign=left
-Because the steel-only problem is linear (constant diffusivity, linear Sieverts' BC), [steel_only.i] uses 'solve_type = LINEAR' for a direct LU factorization at each timestep.
+Because the steel-only problem is linear (constant diffusivity, linear Sieverts' BC), [steel_only.i] uses `solve_type = LINEAR` for a direct LU factorization at each timestep.
 
 ### Model Parameters
 
@@ -187,7 +187,7 @@ The `unit_scale_neighbor` parameter is set to $10^3$ to correct for the unit mis
 ### Solver
 
 !style halign=left
-Because the gas-steel problem is nonlinear (the interface couples $C_g$ and $C_s$ through a square-root relationship), [gas_steel.i] uses 'solve_type = Newton` with `line_search = NONE`.
+Because the gas-steel problem is nonlinear (the interface couples $C_g$ and $C_s$ through a square-root relationship), [gas_steel.i] uses `solve_type = Newton` with `line_search = NONE`.
 
 ### Model Parameters
 
