@@ -127,7 +127,7 @@ d2o_recombination_coefficient_hat = '${fparse d2o_recombination_coefficient * mo
 
 # Oxide geometry and transport
 oxide_transition_width = '${units 0.25 nm -> mum}'
-left_refined_total_depth = '${fparse 2 * oxide_thickness}'
+left_refined_total_depth = '${fparse 10 * oxide_thickness}'
 left_refined_tungsten_depth = '${fparse left_refined_total_depth - oxide_thickness}'
 oxide_buffer_fine_depth = '${fparse left_refined_depth - oxide_thickness - damage_depth}'
 oxide_buffer_coarse_depth = '${fparse buffer_depth - oxide_buffer_fine_depth}'

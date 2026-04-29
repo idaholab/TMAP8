@@ -168,6 +168,14 @@ The four oxygen-field inputs use the same scaled six-trap `val-2f` formulation: 
 [val-2k_natural_oxide_iteration_1_inventory] shows that the tungsten preload is dominated by the trapping populations, while the mobile deuterium inventory remains much smaller throughout the desorption ramp. The lower-energy traps begin to empty first as the temperature rises, followed by the deeper trap populations later in the ramp. The imposed experimental temperature history is shown on the right axis so the changes in each trap inventory can be related directly to the heating schedule used in the TDS experiment.
 
 !media comparison_val-2k.py
+    image_name=val-2k_natural_oxide_iteration_1_oxygen_inventory.png
+    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+    id=val-2k_natural_oxide_iteration_1_oxygen_inventory
+    caption=Total oxygen inventory remaining in the sample over time for the available `val-2k` oxygen-field cases, using the same case colors as the TDS comparison figure and the imposed temperature history on the right axis.
+
+[val-2k_natural_oxide_iteration_1_oxygen_inventory] shows that the thicker oxygen-field cases begin with larger oxygen inventories and all four cases lose oxygen monotonically as the D$_2$O release channel consumes the front-surface oxide. Using the same case colors as [val-2k_natural_oxide_iteration_1_comparison] makes it easier to relate the oxygen depletion history of each case to the corresponding TDS response.
+
+!media comparison_val-2k.py
     image_name=val-2k_natural_oxide_iteration_1_mass_conservation.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2k_natural_oxide_iteration_1_mass_conservation

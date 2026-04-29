@@ -17,7 +17,7 @@
 # - oxide reduction
 
 oxide_thickness = '${units 1 nm -> mum}'
-# output_file_base = 'val-2k_out'
+output_file_base = 'val-2k_out'
 profile_output_file_base = 'profiles/val-2k_profile_initial_out'
 
 !include parameters_val-2k_common.params
