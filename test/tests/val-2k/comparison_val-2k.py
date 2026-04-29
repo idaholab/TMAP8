@@ -481,7 +481,57 @@ plt.savefig(
 )
 plt.close(fig)
 
-# Stage 6: plot the oxygen conservation residual for every oxygen-field case
+# Stage 6: track the total oxygen inventory in the sample for each available
+# oxygen-field case using the same case colors as the TDS comparison figure.
+oxygen_cases = [
+    spec
+    for spec in available_cases
+    if spec["simulation"]["oxygen_inventory_in_sample"] is not None
+]
+if oxygen_cases:
+    fig, ax = plt.subplots(figsize=(6.5, 4.8))
+
+    oxygen_handles = []
+    for spec in oxygen_cases:
+        oxygen_handles.append(
+            ax.plot(
+                spec["simulation"]["time_h"],
+                spec["simulation"]["oxygen_inventory_in_sample"],
+                color=spec["color"],
+                linewidth=1.8,
+                label=spec["display_label"],
+            )[0]
+        )
+
+    ax.set_xlabel("Time (h)")
+    ax.set_ylabel("Oxygen inventory in sample (atoms)")
+    ax.set_xlim(0, 4.2)
+    ax.set_ylim(bottom=0)
+    ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
+
+    ax_temperature = ax.twinx()
+    temperature_handle = ax_temperature.plot(
+        baseline_case["time_h"],
+        baseline_case["temperature_k"],
+        linestyle="-",
+        color="k",
+        linewidth=1.5,
+        label="TMAP8 temperature history",
+    )[0]
+
+    ax_temperature.set_ylabel("Temperature (K)")
+    ax_temperature.set_ylim(280, 1100)
+    ax.legend(handles=oxygen_handles + [temperature_handle], loc="best")
+    ax.minorticks_on()
+
+    plt.savefig(
+        "val-2k_natural_oxide_iteration_1_oxygen_inventory.png",
+        bbox_inches="tight",
+        dpi=300,
+    )
+    plt.close(fig)
+
+# Stage 7: plot the oxygen conservation residual for every oxygen-field case
 # that has the required bookkeeping columns.
 oxygen_cases = [
     spec
