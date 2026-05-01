@@ -19,15 +19,31 @@ buffer_depth = '${units 20e-6 m -> mum}'
 profile_depth = '${units 3.1 mum}'
 profile_num_points = 163
 
-# Shared tungsten mesh settings
-ix_damage_fine = 120
-ix_buffer_fine = 120
-ix_buffer_coarse_fine = 34
-ix_bulk_fine = 180
-ix_damage_coarse = 40
-ix_buffer_coarse = 40
-ix_buffer_coarse_coarse = 12
-ix_bulk_coarse = 60
+# Shared mesh targets
+# Preserve the current natural-oxide baseline spacing, then derive the number
+# of elements in each section from the active section length.
+mesh_count_roundoff_tolerance = 1e-9
+mesh_min_section_depth = '${units 1 nm -> mum}'
+length_multiplier_oxide_thickness_left_refined = 20
+mesh_reference_left_refined_tungsten_depth = '${fparse (length_multiplier_oxide_thickness_left_refined - 1) * oxide_thickness}'
+mesh_reference_damage_remainder_depth = '${fparse max(mesh_min_section_depth, damage_depth - mesh_reference_left_refined_tungsten_depth)}'
+mesh_reference_buffer_fine_depth = '${fparse left_refined_depth - oxide_thickness - damage_depth}'
+mesh_reference_buffer_coarse_depth = '${fparse buffer_depth - mesh_reference_buffer_fine_depth}'
+mesh_reference_bulk_depth = '${fparse sample_thickness - oxide_thickness - damage_depth - mesh_reference_buffer_fine_depth - mesh_reference_buffer_coarse_depth}'
+
+oxide_element_size_fine = '${units ${fparse 1 / 15} nm -> mum}'
+left_refined_tungsten_element_size_fine = '${fparse mesh_reference_left_refined_tungsten_depth / 100}'
+damage_remainder_element_size_fine = '${fparse mesh_reference_damage_remainder_depth / 105}'
+buffer_fine_element_size_fine = '${fparse mesh_reference_buffer_fine_depth / 120}'
+buffer_coarse_element_size_fine = '${fparse mesh_reference_buffer_coarse_depth / 34}'
+bulk_element_size_fine = '${fparse mesh_reference_bulk_depth / 180}'
+
+oxide_element_size_coarse = '${fparse oxide_thickness / 3}'
+left_refined_tungsten_element_size_coarse = '${fparse mesh_reference_left_refined_tungsten_depth / 3}'
+damage_remainder_element_size_coarse = '${fparse mesh_reference_damage_remainder_depth / 37}'
+buffer_fine_element_size_coarse = '${fparse mesh_reference_buffer_fine_depth / 40}'
+buffer_coarse_element_size_coarse = '${fparse mesh_reference_buffer_coarse_depth / 12}'
+bulk_element_size_coarse = '${fparse mesh_reference_bulk_depth / 60}'
 
 # Temperature history
 temperature_initial = '${units 295.7746478873239 K}'
@@ -100,7 +116,6 @@ trap_concentration_reference_4_m3 = '${units 6.3222e20 at/m^3}'
 trap_concentration_reference_5_m3 = '${units 6.3222e20 at/m^3}'
 
 initial_mobile_concentration_hat = '${fparse initial_mobile_concentration / mobile_concentration_reference}'
-damage_depth_hat = '${fparse damage_depth / length_reference}'
 profile_depth_hat = '${fparse profile_depth / length_reference}'
 end_time_hat = '${fparse end_time / time_reference}'
 depth_center_hat = '${fparse depth_center / length_reference}'
@@ -127,18 +142,26 @@ d2o_recombination_coefficient_hat = '${fparse d2o_recombination_coefficient * mo
 
 # Oxide geometry and transport
 oxide_transition_width = '${units 0.25 nm -> mum}'
-left_refined_total_depth = '${fparse 10 * oxide_thickness}'
+left_refined_total_depth = '${fparse length_multiplier_oxide_thickness_left_refined * oxide_thickness}'
 left_refined_tungsten_depth = '${fparse left_refined_total_depth - oxide_thickness}'
+damage_remainder_depth = '${fparse max(mesh_min_section_depth, damage_depth - left_refined_tungsten_depth)}'
 oxide_buffer_fine_depth = '${fparse left_refined_depth - oxide_thickness - damage_depth}'
 oxide_buffer_coarse_depth = '${fparse buffer_depth - oxide_buffer_fine_depth}'
 oxide_bulk_depth = '${fparse sample_thickness - oxide_thickness - damage_depth - oxide_buffer_fine_depth - oxide_buffer_coarse_depth}'
 
-ix_oxide_fine = 15
-ix_left_refined_tungsten_fine = 15
-ix_damage_remainder_fine = '${fparse ix_damage_fine - ix_left_refined_tungsten_fine}'
-ix_oxide_coarse = 3
-ix_left_refined_tungsten_coarse = 3
-ix_damage_remainder_coarse = '${fparse ix_damage_coarse - ix_left_refined_tungsten_coarse}'
+ix_oxide_fine = '${fparse ceil(oxide_thickness / oxide_element_size_fine - mesh_count_roundoff_tolerance)}'
+ix_left_refined_tungsten_fine = '${fparse ceil(left_refined_tungsten_depth / left_refined_tungsten_element_size_fine - mesh_count_roundoff_tolerance)}'
+ix_damage_remainder_fine = '${fparse ceil(damage_remainder_depth / damage_remainder_element_size_fine - mesh_count_roundoff_tolerance)}'
+ix_buffer_fine = '${fparse ceil(oxide_buffer_fine_depth / buffer_fine_element_size_fine - mesh_count_roundoff_tolerance)}'
+ix_buffer_coarse_fine = '${fparse ceil(oxide_buffer_coarse_depth / buffer_coarse_element_size_fine - mesh_count_roundoff_tolerance)}'
+ix_bulk_fine = '${fparse ceil(oxide_bulk_depth / bulk_element_size_fine - mesh_count_roundoff_tolerance)}'
+
+ix_oxide_coarse = '${fparse ceil(oxide_thickness / oxide_element_size_coarse - mesh_count_roundoff_tolerance)}'
+ix_left_refined_tungsten_coarse = '${fparse ceil(left_refined_tungsten_depth / left_refined_tungsten_element_size_coarse - mesh_count_roundoff_tolerance)}'
+ix_damage_remainder_coarse = '${fparse ceil(damage_remainder_depth / damage_remainder_element_size_coarse - mesh_count_roundoff_tolerance)}'
+ix_buffer_coarse = '${fparse ceil(oxide_buffer_fine_depth / buffer_fine_element_size_coarse - mesh_count_roundoff_tolerance)}'
+ix_buffer_coarse_coarse = '${fparse ceil(oxide_buffer_coarse_depth / buffer_coarse_element_size_coarse - mesh_count_roundoff_tolerance)}'
+ix_bulk_coarse = '${fparse ceil(oxide_bulk_depth / bulk_element_size_coarse - mesh_count_roundoff_tolerance)}'
 
 oxygen_diffusion_W_preexponential = '${units 7.755607859269331e-21 m^2/s -> mum^2/s}' # '${units 7.755607859269331e-08 m^2/s -> mum^2/s}'
 oxygen_diffusion_W_energy = '${units 0.17 eV}'
@@ -156,7 +179,7 @@ oxygen_release_stoichiometric_factor_hat = '${fparse 0.5 * mobile_concentration_
 oxide_thickness_hat = '${fparse oxide_thickness / length_reference}'
 oxide_transition_width_hat = '${fparse oxide_transition_width / length_reference}'
 left_refined_tungsten_depth_hat = '${fparse left_refined_tungsten_depth / length_reference}'
-damage_remainder_depth_hat = '${fparse damage_depth_hat - left_refined_tungsten_depth_hat}'
+damage_remainder_depth_hat = '${fparse damage_remainder_depth / length_reference}'
 oxide_buffer_fine_depth_hat = '${fparse oxide_buffer_fine_depth / length_reference}'
 oxide_buffer_coarse_depth_hat = '${fparse oxide_buffer_coarse_depth / length_reference}'
 oxide_bulk_depth_hat = '${fparse oxide_bulk_depth / length_reference}'
