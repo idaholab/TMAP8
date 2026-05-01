@@ -42,34 +42,8 @@ def get_output_path(filename):
     return candidates[-1]
 
 
-def get_numeric_parameter(parameter_name, source_file="val-2k_natural_oxide.i"):
+def get_raw_parameter_value(parameter_name, source_file="val-2k_natural_oxide.i"):
     parameters_file = get_repo_relative_path(source_file)
-
-    def parse_numeric_value(value):
-        if value.startswith("${units ") and value.endswith("}"):
-            units_expr = value[len("${units ") : -1].strip()
-            match = re.fullmatch(
-                r"([0-9eE.+-]+)\s+([A-Za-z/]+)(?:\s*->\s*([A-Za-z/]+))?",
-                units_expr,
-            )
-            if not match:
-                raise ValueError(f"Unsupported units expression: {value}")
-            numeric_value = float(match.group(1))
-            from_unit = match.group(2)
-            to_unit = match.group(3)
-            if to_unit is None or from_unit == to_unit:
-                return numeric_value
-            supported_time_conversions = {
-                ("h", "s"): 3600.0,
-                ("s", "h"): 1.0 / 3600.0,
-                ("nm", "mum"): 1e-3,
-                ("m", "mum"): 1e6,
-            }
-            factor = supported_time_conversions.get((from_unit, to_unit))
-            if factor is None:
-                raise ValueError(f"Unsupported conversion in units expression: {value}")
-            return numeric_value * factor
-        return float(value)
 
     def search_parameter(path, visited):
         if path in visited:
@@ -85,8 +59,7 @@ def get_numeric_parameter(parameter_name, source_file="val-2k_natural_oxide.i"):
                     if result is not None:
                         return result
                 if stripped.startswith(f"{parameter_name} ="):
-                    value = stripped.split("=", maxsplit=1)[1].strip().strip("'")
-                    return parse_numeric_value(value)
+                    return stripped.split("=", maxsplit=1)[1].strip().strip("'")
         return None
 
     result = search_parameter(parameters_file, set())
@@ -95,6 +68,46 @@ def get_numeric_parameter(parameter_name, source_file="val-2k_natural_oxide.i"):
             f"Could not find parameter {parameter_name} in {parameters_file}"
         )
     return result
+
+
+def get_numeric_parameter(
+    parameter_name, source_file="val-2k_natural_oxide.i", output_unit=None
+):
+    raw_value = get_raw_parameter_value(parameter_name, source_file)
+
+    def parse_numeric_value(value):
+        if value.startswith("${units ") and value.endswith("}"):
+            units_expr = value[len("${units ") : -1].strip()
+            match = re.fullmatch(
+                r"([0-9eE.+-]+)\s+([A-Za-z0-9^/]+)(?:\s*->\s*([A-Za-z0-9^/]+))?",
+                units_expr,
+            )
+            if not match:
+                raise ValueError(f"Unsupported units expression: {value}")
+            numeric_value = float(match.group(1))
+            from_unit = match.group(2)
+            to_unit = match.group(3)
+            target_unit = output_unit
+            if target_unit is None:
+                if to_unit is None or from_unit == to_unit:
+                    return numeric_value
+                target_unit = to_unit
+            if from_unit == target_unit:
+                return numeric_value
+            supported_conversions = {
+                ("h", "s"): 3600.0,
+                ("s", "h"): 1.0 / 3600.0,
+                ("nm", "mum"): 1e-3,
+                ("m", "mum"): 1e6,
+                ("m^4/at/s", "mum^4/at/s"): 1e24,
+                ("mum^4/at/s", "m^4/at/s"): 1e-24,
+            }
+            factor = supported_conversions.get((from_unit, target_unit))
+            if factor is None:
+                raise ValueError(f"Unsupported conversion in units expression: {value}")
+            return numeric_value * factor
+        return float(value)
+    return parse_numeric_value(raw_value)
 
 
 def load_experimental_curve(filename):
@@ -184,6 +197,16 @@ def compute_rmspe(case_time_h, case_release_rate, experimental_curve):
     return rmse * 100.0 / np.mean(experiment_flux)
 
 
+def add_temperature_top_axis(ax, temperature_ticks_k):
+    ax_top = ax.twiny()
+    ax_top.set_xlim(ax.get_xlim())
+    tick_temperatures = np.asarray(temperature_ticks_k, dtype=float)
+    ax_top.set_xticks(1000.0 / tick_temperatures)
+    ax_top.set_xticklabels([str(int(tick)) for tick in tick_temperatures])
+    ax_top.set_xlabel("Temperature (K)")
+    return ax_top
+
+
 # Stage 2: load the simulated outputs for the currently available oxygen-field
 # cases together with the experimental curves from Fig. 6.
 time_reference = get_numeric_parameter("time_reference")
@@ -251,6 +274,30 @@ oxide_thickness_profile_um = get_numeric_parameter(
 )
 damage_depth_um = get_numeric_parameter("damage_depth")
 profile_depth_um = get_numeric_parameter("profile_depth")
+d2_recombination_coefficient_m4 = get_numeric_parameter(
+    "d2_recombination_coefficient", output_unit="m^4/at/s"
+)
+d2_recombination_energy_ev = get_numeric_parameter("d2_recombination_energy")
+d2o_recombination_coefficient_m4 = get_numeric_parameter(
+    "d2o_recombination_coefficient", output_unit="m^4/at/s"
+)
+d2o_recombination_energy_ev = get_numeric_parameter("d2o_recombination_energy")
+temperature_bounds_k = np.array(
+    [
+        baseline_case["temperature_k"].min(),
+        baseline_case["temperature_k"].max(),
+    ]
+)
+temperature_plot_k = np.linspace(
+    temperature_bounds_k.min(), temperature_bounds_k.max(), 500
+)
+inverse_temperature_plot = 1000.0 / temperature_plot_k
+boltzmann_constant_ev = 8.617333262e-5
+temperature_ticks_k = np.array([1000, 900, 800, 700, 600, 500, 400, 300])
+temperature_ticks_k = temperature_ticks_k[
+    (temperature_ticks_k >= np.floor(temperature_bounds_k.min()))
+    & (temperature_ticks_k <= np.ceil(temperature_bounds_k.max()))
+]
 
 # Stage 3: generate the desorption comparison figure for both currently modeled
 # cases and include the imposed temperature history on the right axis.
@@ -353,7 +400,47 @@ plt.savefig(
 )
 plt.close(fig)
 
-# Stage 4: generate the baseline inventory history figure showing the cumulative
+# Stage 4: show the D2 and D2O surface recombination coefficients over the
+# experimental temperature range in Arrhenius form.
+fig, ax = plt.subplots(figsize=(6.5, 4.8))
+
+d2_recombination_rate = d2_recombination_coefficient_m4 * np.exp(
+    -d2_recombination_energy_ev / (boltzmann_constant_ev * temperature_plot_k)
+)
+d2o_recombination_rate = d2o_recombination_coefficient_m4 * np.exp(
+    -d2o_recombination_energy_ev / (boltzmann_constant_ev * temperature_plot_k)
+)
+
+ax.semilogy(
+    inverse_temperature_plot,
+    d2_recombination_rate,
+    color="tab:blue",
+    linewidth=2.0,
+    label=r"D$_2$ recombination",
+)
+ax.semilogy(
+    inverse_temperature_plot,
+    d2o_recombination_rate,
+    color="tab:orange",
+    linewidth=2.0,
+    linestyle="--",
+    label=r"D$_2$O recombination",
+)
+ax.set_xlabel("1000/T (1/K)")
+ax.set_ylabel(r"Surface recombination coefficient (m$^4$/at/s)")
+ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
+ax.legend(loc="best")
+ax.minorticks_on()
+add_temperature_top_axis(ax, temperature_ticks_k)
+
+plt.savefig(
+    "val-2k_natural_oxide_iteration_1_recombination_rates.png",
+    bbox_inches="tight",
+    dpi=300,
+)
+plt.close(fig)
+
+# Stage 5: generate the baseline inventory history figure showing the cumulative
 # deuterium inventory and the contribution of each trap family.
 fig, ax = plt.subplots(figsize=(6.5, 5.5))
 cmap = plt.get_cmap("viridis")
@@ -448,7 +535,7 @@ plt.savefig(
 )
 plt.close(fig)
 
-# Stage 5: compare the relative deuterium mass-balance residual for all
+# Stage 6: compare the relative deuterium mass-balance residual for all
 # currently available modeled cases using the postprocessors written by the
 # transient solves.
 fig, ax = plt.subplots(figsize=(6.5, 4.8))
@@ -481,7 +568,7 @@ plt.savefig(
 )
 plt.close(fig)
 
-# Stage 6: track the total oxygen inventory in the sample for each available
+# Stage 7: track the total oxygen inventory in the sample for each available
 # oxygen-field case using the same case colors as the TDS comparison figure.
 oxygen_cases = [
     spec
@@ -531,7 +618,7 @@ if oxygen_cases:
     )
     plt.close(fig)
 
-# Stage 7: plot the oxygen conservation residual for every oxygen-field case
+# Stage 8: plot the oxygen conservation residual for every oxygen-field case
 # that has the required bookkeeping columns.
 oxygen_cases = [
     spec
@@ -569,7 +656,7 @@ if oxygen_cases:
     )
     plt.close(fig)
 
-# Stage 7: generate the 15 nm initial concentration profile used to start the
+# Stage 9: generate the 15 nm initial concentration profile used to start the
 # desorption calculation and mark the oxide, damaged tungsten, and bulk
 # sections in the plotted depth range.
 distance_to_surface_microns = profile_case["x"]

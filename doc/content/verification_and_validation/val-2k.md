@@ -160,6 +160,14 @@ The four oxygen-field inputs use the same scaled six-trap `val-2f` formulation: 
 [val-2k_natural_oxide_iteration_1_comparison] compares the 1 nm natural-oxide oxygen-field baseline against the digitized natural-oxide `HD + D_2` and `HDO + D_2O` desorption data from Fig. 6 of [!cite](Kremer2022oxide), and also compares the 5 nm, 10 nm, and 15 nm oxygen-field companion inputs against the corresponding experimental curves whenever those simulation outputs are available. The added temperature trace on the right axis shows when the models begin to release deuterium relative to the experimental heating history.
 
 !media comparison_val-2k.py
+    image_name=val-2k_natural_oxide_iteration_1_recombination_rates.png
+    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+    id=val-2k_natural_oxide_iteration_1_recombination_rates
+    caption=Arrhenius-form surface recombination coefficients used for the D$_2$ and D$_2$O release channels in `val-2k`, plotted in log scale versus $1000/T$ with a secondary temperature axis in Kelvin.
+
+[val-2k_natural_oxide_iteration_1_recombination_rates] shows the two phenomenological surface-release coefficients over the experimental desorption temperature window. Because the D$_2$O channel uses a slightly larger prefactor but also a larger activation energy than the D$_2$ channel, the D$_2$O recombination coefficient remains below the D$_2$ coefficient across the temperatures reached in the current TDS ramp.
+
+!media comparison_val-2k.py
     image_name=val-2k_natural_oxide_iteration_1_inventory.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2k_natural_oxide_iteration_1_inventory
