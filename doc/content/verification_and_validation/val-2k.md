@@ -201,7 +201,7 @@ This makes it easier to inspect the onset temperature, peak placement, D$_2$/D$_
     caption=Focused comparison of the D$_2$ and D$_2$O release simulation predictions against TDS experimental measurements from [!cite](Kremer2022oxide) for the 15 nm-thick oxide case. The data is a subset of the data in [val-2k_comparison].
 
 In the case of the natural oxide shown in [val-2k_natural_oxide_case_comparison], the deuterium release is dominated by D$_2$ release with two main peaks dictated by the trapping energies.
-This is consistent with the results discussed in [val-2f](val-2f.md) and [!cite](dark2024modelling,Kadz2026).
+This is consistent with the results discussed in [val-2f](val-2f.md) and [!cite](dark2024modelling).
 The low release in D$_2$O form is attributed to the lower availability of oxygen, since the 0.5 nm thin layer quickly gets depleated, as shown in [val-2k_natural_oxide_oxygen_inventory].
 The model capture the main trends observed experimentally.
 The position and magnitude of the two peaks for D$_2$ release are predicted, as well as the ratio of D$_2$ to D$_2$O release.
@@ -212,7 +212,7 @@ This could be attributed to some oxygen availability from deeper into the tungst
     image_name=val-2k_natural_oxide_oxygen_inventory.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
     id=val-2k_natural_oxide_oxygen_inventory
-    caption=Total oxygen inventory remaining in the sample over time. As described in [!cite](Kremer2022oxide), the oxide layer disapears during TDS for most cases, but some remains for the 15 nm-thick oxide film case. Note that while no oxide was observed after TDS for the 10 nm sample, the simulation predicts some remaining inventory, albeit only a small fraction of the initial amount.
+    caption=Total oxygen inventory remaining in the sample over time.
 
 [val-2k_natural_oxide_inventory] shows the evolution of the deuterium inventory as a mobile species and in each trap over time.
 The deuterium release is dominated by the trapping populations, while the mobile deuterium inventory remains much smaller throughout the desorption ramp, as mobile deuterium quickly react at the surface of the sample.
@@ -240,6 +240,8 @@ Oxygen availability was found to be a key parameter during model calibration.
 As the oxide thickness increases and the oxygen inventory increases (see [val-2k_natural_oxide_oxygen_inventory]), the ratio of D$_2$ to D$_2$O release decreases.
 Then, as the oxygen inventory gets depleated, D$_2$O release naturally decreases.
 This explains the lack of secondary peak in D$_2$O release for the 5 nm oxide sample, as well as the thinner secondary D$_2$O peak for the 10 nm oxide sample compared to the 15 nm oxide sample.
+As described in [!cite](Kremer2022oxide), the oxide layer disapears during TDS for most cases, but some remains for the 15 nm-thick oxide film case (see [val-2k_natural_oxide_oxygen_inventory]).
+Note that while no oxide was observed after TDS for the 10 nm sample, the simulation predicts some remaining inventory, albeit only a small fraction of the initial amount.
 
 For oxygen to be effectively used for D$_2$O release, however, the ratio of the rate of the D$_2$ and D$_2$O surface reactions must be advantageous, and the oxygen diffusion in the oxide layer needs to be sufficient.
 The slight delay in the onset in D$_2$O release at low temperature compared to D$_2$ release is captured by a lower D$_2$O surface reaction rate at low temperature.

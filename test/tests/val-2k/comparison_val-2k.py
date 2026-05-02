@@ -324,7 +324,7 @@ case_specs = [
         "rmspe_label": "Nat. oxide",
         "color": "tab:blue",
         "simulation_csv": "gold/val-2k_natural_oxide_out.csv",
-        "profile_csv": "profiles/val-2k_profile_initial_out_line_profile_0000.csv",
+        "profile_csv": "gold/profiles/val-2k_profile_initial_out_line_profile_0000.csv",
         "experimental_d2_csv": "experimental_HD_D2_nat_oxide.csv",
         "experimental_d2o_csv": "experimental_HDO_D2O_nat_oxide.csv",
     },
@@ -335,7 +335,7 @@ case_specs = [
         "rmspe_label": "5 nm oxide",
         "color": "tab:green",
         "simulation_csv": "gold/val-2k_5nm_oxide_out.csv",
-        "profile_csv": "profiles/val-2k_5nm_oxide_profile_initial_out_line_profile_0000.csv",
+        "profile_csv": "gold/profiles/val-2k_5nm_oxide_profile_initial_out_line_profile_0000.csv",
         "experimental_d2_csv": "experimental_HD_D2_5nm.csv",
         "experimental_d2o_csv": "experimental_HDO_D2O_5nm.csv",
     },
@@ -346,7 +346,7 @@ case_specs = [
         "rmspe_label": "10 nm oxide",
         "color": "tab:orange",
         "simulation_csv": "gold/val-2k_10nm_oxide_out.csv",
-        "profile_csv": "profiles/val-2k_10nm_oxide_profile_initial_out_line_profile_0000.csv",
+        "profile_csv": "gold/profiles/val-2k_10nm_oxide_profile_initial_out_line_profile_0000.csv",
         "experimental_d2_csv": "experimental_HD_D2_10nm.csv",
         "experimental_d2o_csv": "experimental_HDO_D2O_10nm.csv",
     },
@@ -357,7 +357,7 @@ case_specs = [
         "rmspe_label": "15 nm oxide",
         "color": "tab:red",
         "simulation_csv": "gold/val-2k_15nm_oxide_out.csv",
-        "profile_csv": "profiles/val-2k_15nm_oxide_profile_initial_out_line_profile_0000.csv",
+        "profile_csv": "gold/profiles/val-2k_15nm_oxide_profile_initial_out_line_profile_0000.csv",
         "experimental_d2_csv": "experimental_HD_D2_15nm.csv",
         "experimental_d2o_csv": "experimental_HDO_D2O_15nm.csv",
     },
@@ -748,7 +748,7 @@ ax.plot(
 ax.set_xlabel("Distance to tungsten surface (um)")
 ax.set_ylabel("Deuterium concentration (atoms/m$^3$)")
 ax.set_xlim(left=0)
-ax.set_ylim(0, 9.5e26)
+ax.set_ylim(0, 10.2e26)
 ymax = ax.get_ylim()[1]
 ax.text(10.1 * oxide_thickness_profile_um, 0.97 * ymax, "Oxide", ha="center", va="top")
 ax.text(
