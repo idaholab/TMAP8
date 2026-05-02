@@ -411,7 +411,7 @@ temperature_ticks_k = temperature_ticks_k[
 # cases together with four companion views that isolate each case.
 create_tds_figure(
     available_cases,
-    "val-2k_natural_oxide_comparison.png",
+    "val-2k_comparison.png",
 )
 for spec in available_cases:
     create_tds_figure(
