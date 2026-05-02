@@ -40,10 +40,10 @@ bulk_element_size_fine = '${fparse mesh_reference_bulk_depth / 180}'
 
 oxide_element_size_coarse = '${fparse oxide_thickness / 3}'
 left_refined_tungsten_element_size_coarse = '${fparse mesh_reference_left_refined_tungsten_depth / 3}'
-damage_remainder_element_size_coarse = '${fparse mesh_reference_damage_remainder_depth / 37}'
-buffer_fine_element_size_coarse = '${fparse mesh_reference_buffer_fine_depth / 40}'
-buffer_coarse_element_size_coarse = '${fparse mesh_reference_buffer_coarse_depth / 12}'
-bulk_element_size_coarse = '${fparse mesh_reference_bulk_depth / 60}'
+damage_remainder_element_size_coarse = '${fparse mesh_reference_damage_remainder_depth / 20}'
+buffer_fine_element_size_coarse = '${fparse mesh_reference_buffer_fine_depth / 10}'
+buffer_coarse_element_size_coarse = '${fparse mesh_reference_buffer_coarse_depth / 6}'
+bulk_element_size_coarse = '${fparse mesh_reference_bulk_depth / 20}'
 
 # Temperature history
 temperature_initial = '${units 295.7746478873239 K}'
