@@ -13,7 +13,7 @@ In the present implementation, those grouped measurements are represented phenom
 
 The aim of this study is to understand the effect of the presence of an oxide layer on deuterium retention and release from tungsten samples.
 While tungsten oxidation is expected to be limited in fusion power plant conditions, it does take place in laboratory environments, which can affect laboratory observations.
-Understanding oxide effects can thus help better tie laboratory experiments to performance in fusion-relevant environments, thus increasing the impact of laboratory experiments and accelerating fusion eenrgy deployment.
+Understanding oxide effects can thus help better tie laboratory experiments to performance in fusion-relevant environments, thus increasing the impact of laboratory experiments and accelerating fusion energy deployment.
 
 ## Sample history and dimensions
 
@@ -180,7 +180,7 @@ The transient solve is therefore carried out in dimensionless variables, while p
 The literature-based and calibrated model parameters, geometry, and sample history conditions are listed in [val-2k_parameters].
 The initial oxygen concentration is derived from the paper-reported removal of $100 \times 10^{19}$ O/m$^2$ from the first 13.5 nm of oxide and is reduced by an additional factor of 1.5 in the current calibrated model, which yields about $4.94 \times 10^{28}$ O/m$^3$.
 
-!table id=val-2k_parameters caption=Parameters used in the current deuterium-only implementation stage of `val-2k`.
+!table id=val-2k_parameters caption=Literature-based and calibrated model parameters, geometry, and sample history conditions used in `val-2k`.
 | Parameter | Description | Value | Units | Reference |
 | --------- | ----------- | ----- | ----- | --------- |
 | $l_W$ | Tungsten thickness | 0.8 | mm | [!cite](Kremer2022oxide) |
