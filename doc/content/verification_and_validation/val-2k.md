@@ -51,78 +51,129 @@ To capture the deteurium release behavior from self irraiated tungsten with a th
 - To accurately capture the surface reactions, oxygen transport, behavior in the self-damaged region, and resolve the oxide-to-damaged-tungsten and damaged-to-bulk-tungsten transitions, the mesh is refined near the exposed surface, with a coarser mesh beeper in the sample.
 - The only difference between the four configurations of interest (e.g., natural oxide and 5, 10, and 15 nm-thick oxide films) is the thickness of the oxide layer and the mesh refinement area. The model formulation, other initial conditions, and all the model parameters are consistent across all cases.
 
-
-As in (val-2f)[val-2f.md], this is solved in dimensionless form using:
+As in [val-2f](val-2f.md), the implementation is solved internally in adimensional form, but the physical governing equations are written first here for clarity. The mobile deuterium balance is
 
 \begin{equation}
-\hat{x} = \frac{x}{L_{\text{ref}}}, \qquad \hat{t} = \frac{t}{t_{\text{ref}}}, \qquad
+\frac{\partial C_M}{\partial t} =
+\nabla \cdot \left(D_W \nabla C_M \right) +
+\sum_{i \in \{intr,1,\dots,5\}} \frac{\partial C_{T_i}}{\partial t},
+\end{equation}
+
+with one trapped-species evolution equation for each trap family:
+
+\begin{equation}
+\frac{\partial C_{T_i}}{\partial t} =
+\alpha_{t,i} \frac{C_{T_i}^{empty} C_M}{N} - \alpha_{r,i} C_{T_i},
+\end{equation}
+
+\begin{equation}
+C_{T_i}^{empty} = C_{T_i,0} N - C_{T_i},
+\end{equation}
+
+where $C_M$ is the mobile deuterium concentration, $C_{T_i}$ is the concentration trapped in family $i$, $C_{T_i}^{empty}$ is the remaining empty trap capacity, $C_{T_i,0}$ is the fraction of host sites that can act as trap family $i$, and $N$ is the tungsten host density. $D_W$ is the deuterium diffusivity in tungten (and tungsten oxide in this model), and $\alpha_{t,i}$ and $\alpha_{r,i}$ are the trapping and resolution rates for trapping family $i$, respectively.
+
+The oxygen field evolves according to
+
+\begin{equation}
+\frac{\partial C_O}{\partial t} =
+\nabla \cdot \left(D_O \nabla C_O \right),
+\end{equation}
+
+where $C_O$ is the oxygen concentration and $D_O$ is the oxygen diffusivity in the oxide layer.
+In the current model, oxygen diffusion is masked so that it is active only inside the oxide layer.
+
+The temperature-dependent diffusivities and trapping/detrapping rates follow Arrhenius forms:
+
+\begin{equation}
+D_W = D_{W,0} \exp \left(- \frac{E_D}{k_B T} \right),
+\end{equation}
+and
+\begin{equation}
+D_O = D_{O,0} \exp \left(- \frac{E_{D,O}}{k_B T} \right),
+\end{equation}
+
+for the diffusivities, and
+
+\begin{equation}
+\alpha_{t,i} = \alpha_{t,i,0} \exp \left(- \frac{E_D}{k_B T} \right),
+\end{equation}
+and
+\begin{equation}
+\alpha_{r,i} = \alpha_{r,i,0} \exp \left(- \frac{E_{T,1}}{k_B T} \right),
+\end{equation}
+
+for the trapping and detraping rates.
+
+The surface reactions represented in the model are
+
+\begin{equation}
+2D \rightarrow D_2
+\qquad \text{and} \qquad
+2D + O \rightarrow D_2O,
+\end{equation}
+
+which give the corresponding surface fluxes
+
+\begin{equation}
+J_{D_2} = -2 K_{r,D_2} C_M^2,
+\end{equation}
+\begin{equation}
+J_{D_2O} = -2 K_{r,D_2O} C_O C_M^2,
+\end{equation}
+and
+\begin{equation}
+J_O = J_{D_2O},
+\end{equation}
+
+The surface reaction rates are defined as
+
+\begin{equation}
+K_{r,D_2} = K_{r,D_2,0} \exp \left(- \frac{E_{r,D_2}}{k_B T} \right),
+\end{equation}
+and
+\begin{equation}
+K_{r,D_2O} = K_{r,D_2O,0} \exp \left(- \frac{E_{r,D_2O}}{k_B T} \right).
+\end{equation}
+
+For numerical stability, the input files adimensionalize these equations using the reference ratios
+
+\begin{equation}
+\hat{x} = \frac{x}{L_{\text{ref}}}, \qquad
+\hat{t} = \frac{t}{t_{\text{ref}}}, \qquad
 \hat{C}_M = \frac{C_M}{C_{M,\text{ref}}}, \qquad
 \hat{C}_{T_i} = \frac{C_{T_i}}{C_{T_i,\text{ref}}}, \qquad
 \hat{C}_O = \frac{C_O}{C_{O,\text{ref}}},
 \end{equation}
 
 with $L_{\text{ref}} = 1$ $\mu$m and $t_{\text{ref}} = 1$ s.
-
-The dimensionless mobile deuterium balance solved in the input file is:
-
-\begin{equation}
-\frac{\partial \hat{C}_M}{\partial \hat{t}} =
-\hat{\nabla} \cdot \left(\hat{D}_W \hat{\nabla} \hat{C}_M \right) +
-\sum_{i \in \{intr,1,\dots,5\}}
-\frac{C_{T_i,\text{ref}}}{C_{M,\text{ref}}}
-\frac{\partial \hat{C}_{T_i}}{\partial \hat{t}}
-\end{equation}
-
-and the oxygen field satisfies
+The corresponding dimensionless groups used in the input files are
 
 \begin{equation}
-\frac{\partial \hat{C}_O}{\partial \hat{t}} =
-\hat{\nabla} \cdot \left(\hat{D}_O \hat{\nabla} \hat{C}_O \right).
+\hat{k}_{t,i} = t_{\text{ref}} \alpha_{t,i} \frac{C_{M,\text{ref}}}{N},
 \end{equation}
-
-The trapped species are introduced using six [SpeciesTrappingPhysics](physics/SpeciesTrappingPhysics.md) blocks, one for each trap family. Each block creates the time derivative, trapping, releasing, and mobile-species coupling terms automatically. The dimensionless trapping and release groups are
-
 \begin{equation}
-\hat{k}_{t,i} = t_{\text{ref}} \alpha_{t,i} \frac{C_{M,\text{ref}}}{N}
-\qquad \text{and} \qquad
-\hat{k}_{r,i} = t_{\text{ref}} \alpha_{r,i}
+\hat{k}_{r,i} = t_{\text{ref}} \alpha_{r,i},
 \end{equation}
-
-and the temperature-dependent transport and surface coefficients are written as
-
 \begin{equation}
-\hat{D}_W = \hat{D}_{W,0} \exp \left(- \frac{E_{D}}{k_B T} \right),
-\qquad
-\hat{D}_O = \hat{D}_{O,0} \exp \left(- \frac{E_{D,O}}{k_B T} \right),
+\hat{D}_W = D_W \frac{t_{\text{ref}}}{L_{\text{ref}}^2},
 \end{equation}
-
 \begin{equation}
-\hat{K}_{r,D_2} = \hat{K}_{r,D_2,0} \exp \left(- \frac{E_{r,D_2}}{k_B T} \right),
-\qquad
-\hat{K}_{r,D_2O} = \hat{K}_{r,D_2O,0} \exp \left(- \frac{E_{r,D_2O}}{k_B T} \right).
+\hat{D}_O = D_O \frac{t_{\text{ref}}}{L_{\text{ref}}^2},
 \end{equation}
-
-The surface release is modeled as finite fluxes on both free surfaces, with
-
-***** write chemical reactions *****
-
 \begin{equation}
-\hat{J}_{D_2} = -2 \hat{K}_{r,D_2} \hat{C}_M^2,
-\qquad
-\hat{J}_{D_2O} = -2 \hat{K}_{r,D_2O} \hat{C}_O \hat{C}_M^2,
-\qquad
-\hat{J}_O = \hat{s}_O \hat{J}_{D_2O},
+\hat{K}_{r,D_2} = K_{r,D_2} \frac{C_{M,\text{ref}} t_{\text{ref}}}{L_{\text{ref}}},
+\end{equation}
+and
+\begin{equation}
+\hat{K}_{r,D_2O} = K_{r,D_2O} \frac{C_{M,\text{ref}} t_{\text{ref}}}{L_{\text{ref}}}.
 \end{equation}
 
-where $\hat{s}_O$ is the stoichiometric factor that converts the D$_2$O surface loss into oxygen loss.
-The initial oxygen concentration is derived from the paper-reported removal of $100 \times 10^{19}$ O/m$^2$ from the first 13.5 nm of oxide and is reduced by an additional factor of 1.5 in the current calibrated model, which yields about $4.94 \times 10^{28}$ O/m$^3$.
-Oxygen transport is also restricted to the oxide region through the same smooth oxide mask used to initialize the front-surface oxygen field.
-The current oxygen diffusivity and D$_2$O release parameters are therefore best interpreted as calibrated effective kinetics for matching the observed TDS trends rather than as a direct literature transcription.
-Future work will involved a thorough Bayesian inference study and comparison of optimized model parameters agains literature values.
+The transient solve is therefore carried out in adimensional variables, while physical-unit auxiliary variables and postprocessors are written for direct comparison with the experimental TDS data and for generation of the validation figures.
 
 ## Case and Model Parameters
 
 The literature-based and calibrated model parameters, geometry, and sample history conditions are listed in [val-2k_parameters].
+The initial oxygen concentration is derived from the paper-reported removal of $100 \times 10^{19}$ O/m$^2$ from the first 13.5 nm of oxide and is reduced by an additional factor of 1.5 in the current calibrated model, which yields about $4.94 \times 10^{28}$ O/m$^3$.
 
 !table id=val-2k_parameters caption=Parameters used in the current deuterium-only implementation stage of `val-2k`.
 | Parameter | Description | Value | Units | Reference |
@@ -295,7 +346,7 @@ To model this, the geometry should be expanded to a 2D or 3D model, which is pos
 The current study implemented the model and performed ad hoc calibration of the model paremeters based on the potential driving mechanisms of oxide evolution and deuterium detrapping, diffusion, and surface reactions.
 While the experimentally observed trends are qualitatively captured by the model, the simulation results are quantitatively different from the experimetal measurements.
 Using Bayesian inference across all sets of experimental data would enable to calibrate the model to the experimental data while quantifying uncertainties and sources of errors from model inadequacy, experimental errors, and model parameter uncertainty [!citep](DHULIPALA2026102776,DHULIPALA2025155795).
-This analysis is left for future work.
+The current oxygen diffusivity and D$_2$ and D$_2$O release parameters are therefore best interpreted as calibrated effective kinetics for matching the observed TDS trends rather than as a direct literature transcription, which will be the goal of future work.
 
 ## Input files
 
