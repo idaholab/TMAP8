@@ -215,7 +215,7 @@ sample_surface_area_m2 = 10e-3 * 14e-3
 case_specs = [
     {
         "key": "natural_oxide",
-        "display_label": "nat. oxide (1 nm O)",
+        "display_label": "nat. oxide (0.5 nm O)",
         "rmspe_label": "Nat. oxide",
         "color": "tab:blue",
         "simulation_csv": "gold/val-2k_natural_oxide_out.csv",
