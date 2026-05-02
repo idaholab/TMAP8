@@ -321,7 +321,7 @@ case_specs = [
     {
         "key": "natural_oxide",
         "focused_figure_name": "val-2k_natural_oxide_case_comparison.png",
-        "display_label": "nat. oxide (0.5 nm O)",
+        "display_label": "nat. oxide (1 nm O)",
         "rmspe_label": "Nat. oxide",
         "color": "tab:blue",
         "simulation_csv": "gold/val-2k_natural_oxide_out.csv",
