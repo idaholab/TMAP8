@@ -13,7 +13,7 @@ In the present implementation, those grouped measurements are represented phenom
 
 The aim of this study is to understand the effect of the presence of an oxide layer on deuterium retention and release from tungsten samples.
 While tungsten oxidation is expected to be limited in fusion power plant conditions, it does take place in laboratory environments, which can affect laboratory observations.
-Understanding oxide effects can thus help better tie laboratory experiments to performance in fusion-relevant environments.
+Understanding oxide effects can thus help better tie laboratory experiments to performance in fusion-relevant environments, thus increasing the impact of laboratory experiments and accelerating fusion eenrgy deployment.
 
 ## Sample history and dimensions
 
