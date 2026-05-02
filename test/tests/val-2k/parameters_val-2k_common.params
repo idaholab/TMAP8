@@ -70,18 +70,22 @@ detrapping_prefactor_2 = '${fparse detrapping_prefactor}'
 detrapping_prefactor_3 = '${fparse detrapping_prefactor}'
 detrapping_prefactor_4 = '${fparse detrapping_prefactor}'
 detrapping_prefactor_5 = '${fparse detrapping_prefactor}'
-detrapping_energy_1 = '${fparse ${units 1.15 eV -> J} / kb}'
-detrapping_energy_2 = '${fparse ${units 1.35 eV -> J} / kb}'
+detrapping_energy_1 = '${fparse ${units 1.20 eV -> J} / kb}'
+detrapping_energy_2 = '${fparse ${units 1.38 eV -> J} / kb}'
 detrapping_energy_3 = '${fparse ${units 1.65 eV -> J} / kb}'
 detrapping_energy_4 = '${fparse ${units 1.85 eV -> J} / kb}'
 detrapping_energy_5 = '${fparse ${units 2.05 eV -> J} / kb}'
-detrapping_energy_intrinsic = '${fparse ${units 1.04 eV -> J} / kb}'
+detrapping_energy_intrinsic = '${fparse ${units 1.08 eV -> J} / kb}'
 
 # Surface recombination
 d2_recombination_coefficient = '${units 3.8e-16 m^4/at/s -> mum^4/at/s}'
 d2_recombination_energy = '${units 0.34 eV}'
-d2o_recombination_coefficient = '${units 6.0e-16 m^4/at/s -> mum^4/at/s}'
-d2o_recombination_energy = '${units 0.40 eV}'
+d2o_recombination_coefficient = '${units 3.8e1 m^4/at/s -> mum^4/at/s}'
+d2o_recombination_energy = '${units 2.1 eV}'
+
+# oxygen diffusion
+oxygen_diffusion_W_preexponential = '${units 2e-17 m^2/s -> mum^2/s}'
+oxygen_diffusion_W_energy = '${units 0.45 eV}'
 
 # val-2f six-trap reference scaled to preserve the current val-2k initial areal inventory
 depth_center = '${units 2.3e-6 m -> mum}'
@@ -91,8 +95,8 @@ trapping_site_fraction_intrinsic = '${fparse trap_density_scale * 3.796146910885
 trapping_site_fraction_1 = '${fparse trap_density_scale * 7.322741092695964e-04}' # (/)
 trapping_site_fraction_2 = '${fparse trap_density_scale * 4.5458706307839917e-04}' # (/)
 trapping_site_fraction_3 = '${fparse trap_density_scale * 3.103067322529255e-04}' # (/)
-trapping_site_fraction_4 = '${fparse trap_density_scale * 4.6932472533804296e-04}' # (/)
-trapping_site_fraction_5 = '${fparse trap_density_scale * 1.2447228505500194e-04}' # (/)
+trapping_site_fraction_4 = '${fparse trap_density_scale * 5.6932472533804296e-04}' # (/)
+trapping_site_fraction_5 = '${fparse trap_density_scale * 1.7447228505500194e-04}' # (/)
 
 # Initial mobile concentration
 initial_mobile_concentration = '${units 1e-20 at/m^3 -> at/mum^3}'
@@ -163,14 +167,11 @@ ix_buffer_coarse = '${fparse ceil(oxide_buffer_fine_depth / buffer_fine_element_
 ix_buffer_coarse_coarse = '${fparse ceil(oxide_buffer_coarse_depth / buffer_coarse_element_size_coarse - mesh_count_roundoff_tolerance)}'
 ix_bulk_coarse = '${fparse ceil(oxide_bulk_depth / bulk_element_size_coarse - mesh_count_roundoff_tolerance)}'
 
-oxygen_diffusion_W_preexponential = '${units 7.755607859269331e-21 m^2/s -> mum^2/s}' # '${units 7.755607859269331e-08 m^2/s -> mum^2/s}'
-oxygen_diffusion_W_energy = '${units 0.17 eV}'
-
 # The initial oxygen concentration is derived from the paper-reported removal
 # of 100 x 10^19 O/m^2 from the first 13.5 nm of oxide.
 oxygen_removed_areal_density = '${units 100e19 at/m^2}'
 oxygen_removed_depth = '${units 13.5 nm -> m}'
-oxygen_concentration_initial = '${units ${fparse oxygen_removed_areal_density / oxygen_removed_depth} at/m^3 -> at/mum^3}'
+oxygen_concentration_initial = '${units ${fparse oxygen_removed_areal_density / oxygen_removed_depth  / 1.5} at/m^3 -> at/mum^3}'
 oxygen_concentration_reference = '${fparse oxygen_concentration_initial}'
 oxygen_concentration_reference_m3 = '${units ${fparse oxygen_concentration_reference} at/mum^3 -> at/m^3}'
 oxygen_initial_concentration_hat = '${fparse oxygen_concentration_initial / oxygen_concentration_reference}'

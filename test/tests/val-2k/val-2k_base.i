@@ -469,7 +469,7 @@
   petsc_options_value = 'lu       mumps                      vinewtonrsls'
   line_search = none
   automatic_scaling = true
-  nl_rel_tol = 1e-9
+  nl_rel_tol = 1e-7
   nl_abs_tol = 1e-10
   nl_max_its = 30
   l_tol = 1e-8

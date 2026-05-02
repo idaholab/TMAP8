@@ -28,9 +28,9 @@
   [diffusivity_oxygen_material]
     type = ADDerivativeParsedMaterial
     property_name = diffusivity_oxygen
-    functor_names = 'temperature_history'
-    functor_symbols = temperature
-    expression = '${oxygen_diffusion_W_preexponential_hat} * exp(-${oxygen_diffusion_W_energy} / ${kb_eV} / temperature)'
+    functor_names = 'temperature_history oxide_position_function'
+    functor_symbols = 'temperature oxide_position_function'
+    expression = '${oxygen_diffusion_W_preexponential_hat} * exp(-${oxygen_diffusion_W_energy} / ${kb_eV} / temperature) * oxide_position_function'
   []
   [recombination_rate_surface]
     type = ADDerivativeParsedMaterial

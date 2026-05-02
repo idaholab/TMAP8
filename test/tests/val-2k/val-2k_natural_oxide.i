@@ -5,7 +5,7 @@
 # "Influence of thin surface oxide films on hydrogen isotope release from ion-irradiated tungsten"
 #
 # This natural-oxide variant uses the same oxygen-field framework as the 5 nm
-# companion case, but initializes only a thin 1 nm oxygen inventory.
+# companion case, but initializes only a thin 0.5 nm oxygen inventory.
 # Included physics:
 # - dimensionless deuterium diffusion with the same tungsten transport properties everywhere
 # - dimensionless oxygen diffusion using the reported oxygen inventory and O-in-W transport kinetics
@@ -16,7 +16,7 @@
 # - water formation
 # - oxide reduction
 
-oxide_thickness = '${units 1 nm -> mum}'
+oxide_thickness = '${units 0.5 nm -> mum}'
 output_file_base = 'val-2k_out'
 profile_output_file_base = 'profiles/val-2k_profile_initial_out'
 
