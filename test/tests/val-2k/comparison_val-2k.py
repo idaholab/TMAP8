@@ -107,6 +107,7 @@ def get_numeric_parameter(
                 raise ValueError(f"Unsupported conversion in units expression: {value}")
             return numeric_value * factor
         return float(value)
+
     return parse_numeric_value(raw_value)
 
 
@@ -549,9 +550,7 @@ ax.legend(
 )
 ax.minorticks_on()
 
-plt.savefig(
-    "val-2k_natural_oxide_inventory.png", bbox_inches="tight", dpi=300
-)
+plt.savefig("val-2k_natural_oxide_inventory.png", bbox_inches="tight", dpi=300)
 plt.close(fig)
 
 # Stage 6: compare the relative deuterium mass-balance residual for all
@@ -769,7 +768,5 @@ ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
 ax.legend(loc="center right")
 ax.minorticks_on()
 
-plt.savefig(
-    "val-2k_natural_oxide_profile.png", bbox_inches="tight", dpi=300
-)
+plt.savefig("val-2k_natural_oxide_profile.png", bbox_inches="tight", dpi=300)
 plt.close(fig)
