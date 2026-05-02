@@ -207,6 +207,110 @@ def add_temperature_top_axis(ax, temperature_ticks_k):
     return ax_top
 
 
+def create_tds_figure(case_specs_to_plot, image_name, figure_caption_lines=None):
+    is_single_case_view = len(case_specs_to_plot) == 1
+    fig, ax = plt.subplots(figsize=(7.2, 8.2))
+    fig.subplots_adjust(top=0.8, bottom=0.38)
+
+    tds_handles = []
+    tds_labels = []
+    rmspe_lines = []
+
+    for spec in case_specs_to_plot:
+        case = spec["simulation"]
+        color = spec["color"]
+        experimental_d2 = spec["experimental_d2"]
+        experimental_d2o = spec["experimental_d2o"]
+
+        simulated_d2_handle = ax.plot(
+            case["time_h"],
+            case["release_rate_d2"],
+            linestyle="-",
+            color=color,
+            label=f"TMAP8 D2, {spec['display_label']}",
+        )[0]
+        simulated_d2o_handle = ax.plot(
+            case["time_h"],
+            case["release_rate_d2o"],
+            linestyle="--",
+            color=color,
+            label=f"TMAP8 D2O, {spec['display_label']}",
+        )[0]
+        experimental_d2_handle = ax.plot(
+            experimental_d2["time (h)"],
+            experimental_d2["release flux (10^13 D atoms/s)"],
+            linestyle="-.",
+            color=color,
+            label=f"Experimental HD + D2 ({spec['display_label']})",
+        )[0]
+        experimental_d2o_handle = ax.plot(
+            experimental_d2o["time (h)"],
+            experimental_d2o["release flux (10^13 D atoms/s)"],
+            linestyle=":",
+            color=color,
+            label=f"Experimental HDO + D2O ({spec['display_label']})",
+        )[0]
+
+        tds_handles.extend(
+            [
+                simulated_d2_handle,
+                simulated_d2o_handle,
+                experimental_d2_handle,
+                experimental_d2o_handle,
+            ]
+        )
+        tds_labels.extend(handle.get_label() for handle in tds_handles[-4:])
+
+        rmspe_d2 = compute_rmspe(
+            case["time_h"], case["release_rate_d2"], experimental_d2
+        )
+        rmspe_d2o = compute_rmspe(
+            case["time_h"], case["release_rate_d2o"], experimental_d2o
+        )
+        rmspe_lines.append(
+            f"{spec['rmspe_label']} RMSPEs: D2={rmspe_d2:.2f} %, D2O={rmspe_d2o:.2f} %"
+        )
+
+    ax_temperature = ax.twinx()
+    temperature_handle = ax_temperature.plot(
+        baseline_case["time_h"],
+        baseline_case["temperature_k"],
+        linestyle="-",
+        color="k",
+        linewidth=1.5,
+        label="TMAP8 temperature history",
+    )[0]
+    if figure_caption_lines is None:
+        figure_caption_lines = rmspe_lines
+    fig.text(
+        0.5,
+        0.82 if is_single_case_view else 0.88,
+        "\n".join(figure_caption_lines),
+        ha="center",
+        va="top",
+    )
+
+    ax.set_xlabel("Time (h)")
+    ax.set_ylabel("Release rate (10$^{13}$ D atoms/s)")
+    ax.set_xlim(0, 4.2)
+    ax.set_ylim(bottom=0)
+    ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
+    ax_temperature.set_ylabel("Temperature (K)")
+    ax_temperature.set_ylim(280, 1100)
+    fig.legend(
+        tds_handles + [temperature_handle],
+        tds_labels + [temperature_handle.get_label()],
+        loc="lower center",
+        bbox_to_anchor=(0.5, 0.22 if is_single_case_view else 0.085),
+        ncol=2,
+        frameon=True,
+    )
+    ax.minorticks_on()
+
+    plt.savefig(image_name, bbox_inches="tight", dpi=300)
+    plt.close(fig)
+
+
 # Stage 2: load the simulated outputs for the currently available oxygen-field
 # cases together with the experimental curves from Fig. 6.
 time_reference = get_numeric_parameter("time_reference")
@@ -215,6 +319,7 @@ sample_surface_area_m2 = 10e-3 * 14e-3
 case_specs = [
     {
         "key": "natural_oxide",
+        "focused_figure_name": "val-2k_natural_oxide_case_comparison.png",
         "display_label": "nat. oxide (0.5 nm O)",
         "rmspe_label": "Nat. oxide",
         "color": "tab:blue",
@@ -225,6 +330,7 @@ case_specs = [
     },
     {
         "key": "oxide_5nm",
+        "focused_figure_name": "val-2k_5nm_oxide_case_comparison.png",
         "display_label": "5 nm oxide",
         "rmspe_label": "5 nm oxide",
         "color": "tab:green",
@@ -235,6 +341,7 @@ case_specs = [
     },
     {
         "key": "oxide_10nm",
+        "focused_figure_name": "val-2k_10nm_oxide_case_comparison.png",
         "display_label": "10 nm oxide",
         "rmspe_label": "10 nm oxide",
         "color": "tab:orange",
@@ -245,6 +352,7 @@ case_specs = [
     },
     {
         "key": "oxide_15nm",
+        "focused_figure_name": "val-2k_15nm_oxide_case_comparison.png",
         "display_label": "15 nm oxide",
         "rmspe_label": "15 nm oxide",
         "color": "tab:red",
@@ -299,106 +407,17 @@ temperature_ticks_k = temperature_ticks_k[
     & (temperature_ticks_k <= np.ceil(temperature_bounds_k.max()))
 ]
 
-# Stage 3: generate the desorption comparison figure for both currently modeled
-# cases and include the imposed temperature history on the right axis.
-fig, ax = plt.subplots(figsize=(7.2, 8.2))
-fig.subplots_adjust(top=0.8, bottom=0.38)
-
-tds_handles = []
-tds_labels = []
-rmspe_lines = []
-
+# Stage 3: generate the desorption comparison figure for all currently modeled
+# cases together with four companion views that isolate each case.
+create_tds_figure(
+    available_cases,
+    "val-2k_natural_oxide_comparison.png",
+)
 for spec in available_cases:
-    case = spec["simulation"]
-    color = spec["color"]
-    experimental_d2 = spec["experimental_d2"]
-    experimental_d2o = spec["experimental_d2o"]
-
-    simulated_d2_handle = ax.plot(
-        case["time_h"],
-        case["release_rate_d2"],
-        linestyle="-",
-        color=color,
-        label=f"TMAP8 D2, {spec['display_label']}",
-    )[0]
-    simulated_d2o_handle = ax.plot(
-        case["time_h"],
-        case["release_rate_d2o"],
-        linestyle="--",
-        color=color,
-        label=f"TMAP8 D2O, {spec['display_label']}",
-    )[0]
-    experimental_d2_handle = ax.plot(
-        experimental_d2["time (h)"],
-        experimental_d2["release flux (10^13 D atoms/s)"],
-        linestyle="-.",
-        color=color,
-        label=f"Experimental HD + D2 ({spec['display_label']})",
-    )[0]
-    experimental_d2o_handle = ax.plot(
-        experimental_d2o["time (h)"],
-        experimental_d2o["release flux (10^13 D atoms/s)"],
-        linestyle=":",
-        color=color,
-        label=f"Experimental HDO + D2O ({spec['display_label']})",
-    )[0]
-
-    tds_handles.extend(
-        [
-            simulated_d2_handle,
-            simulated_d2o_handle,
-            experimental_d2_handle,
-            experimental_d2o_handle,
-        ]
+    create_tds_figure(
+        [spec],
+        spec["focused_figure_name"],
     )
-    tds_labels.extend(handle.get_label() for handle in tds_handles[-4:])
-
-    rmspe_d2 = compute_rmspe(case["time_h"], case["release_rate_d2"], experimental_d2)
-    rmspe_d2o = compute_rmspe(
-        case["time_h"], case["release_rate_d2o"], experimental_d2o
-    )
-    rmspe_lines.append(
-        f"{spec['rmspe_label']} RMSPEs: D2={rmspe_d2:.2f} %, D2O={rmspe_d2o:.2f} %"
-    )
-
-ax_temperature = ax.twinx()
-temperature_handle = ax_temperature.plot(
-    baseline_case["time_h"],
-    baseline_case["temperature_k"],
-    linestyle="-",
-    color="k",
-    linewidth=1.5,
-    label="TMAP8 temperature history",
-)[0]
-fig.text(
-    0.5,
-    0.88,
-    "\n".join(rmspe_lines),
-    ha="center",
-    va="top",
-)
-
-ax.set_xlabel("Time (h)")
-ax.set_ylabel("Release rate (10$^{13}$ D atoms/s)")
-ax.set_xlim(0, 4.2)
-ax.set_ylim(bottom=0)
-ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
-ax_temperature.set_ylabel("Temperature (K)")
-ax_temperature.set_ylim(280, 1100)
-fig.legend(
-    tds_handles + [temperature_handle],
-    tds_labels + [temperature_handle.get_label()],
-    loc="lower center",
-    bbox_to_anchor=(0.5, 0.085),
-    ncol=2,
-    frameon=True,
-)
-ax.minorticks_on()
-
-plt.savefig(
-    "val-2k_natural_oxide_iteration_1_comparison.png", bbox_inches="tight", dpi=300
-)
-plt.close(fig)
 
 # Stage 4: show the D2 and D2O surface recombination coefficients over the
 # experimental temperature range in Arrhenius form.
@@ -434,7 +453,7 @@ ax.minorticks_on()
 add_temperature_top_axis(ax, temperature_ticks_k)
 
 plt.savefig(
-    "val-2k_natural_oxide_iteration_1_recombination_rates.png",
+    "val-2k_natural_oxide_recombination_rates.png",
     bbox_inches="tight",
     dpi=300,
 )
@@ -531,7 +550,7 @@ ax.legend(
 ax.minorticks_on()
 
 plt.savefig(
-    "val-2k_natural_oxide_iteration_1_inventory.png", bbox_inches="tight", dpi=300
+    "val-2k_natural_oxide_inventory.png", bbox_inches="tight", dpi=300
 )
 plt.close(fig)
 
@@ -562,7 +581,7 @@ ax.legend(handles=mass_handles, loc="best")
 ax.minorticks_on()
 
 plt.savefig(
-    "val-2k_natural_oxide_iteration_1_mass_conservation.png",
+    "val-2k_natural_oxide_mass_conservation.png",
     bbox_inches="tight",
     dpi=300,
 )
@@ -612,7 +631,7 @@ if oxygen_cases:
     ax.minorticks_on()
 
     plt.savefig(
-        "val-2k_natural_oxide_iteration_1_oxygen_inventory.png",
+        "val-2k_natural_oxide_oxygen_inventory.png",
         bbox_inches="tight",
         dpi=300,
     )
@@ -650,7 +669,7 @@ if oxygen_cases:
     ax.minorticks_on()
 
     plt.savefig(
-        "val-2k_natural_oxide_iteration_1_oxygen_conservation.png",
+        "val-2k_natural_oxide_oxygen_conservation.png",
         bbox_inches="tight",
         dpi=300,
     )
@@ -751,6 +770,6 @@ ax.legend(loc="center right")
 ax.minorticks_on()
 
 plt.savefig(
-    "val-2k_natural_oxide_iteration_1_profile.png", bbox_inches="tight", dpi=300
+    "val-2k_natural_oxide_profile.png", bbox_inches="tight", dpi=300
 )
 plt.close(fig)

@@ -24,12 +24,12 @@ The reference sample history is taken from the natural-oxide experiment in [!cit
 
 All four desorption calculations start from the same preloaded tungsten state and follow the digitized temperature history from `Experimental_desorption_temperature.csv`, which heats the sample from about 296 K to about 1001 K over roughly 4.17 h. In each configuration, the D$_2$O surface-loss channel is multiplied by the evolving oxygen concentration at the front surface, and the oxygen inventory is depleted stoichiometrically as heavy water is released.
 
-The initial deuterium profile used at the start of desorption is shown in [val-2k_natural_oxide_iteration_1_profile] for the 15 nm configuration. The shaded regions identify the oxide, damaged tungsten, and bulk tungsten sections in the plotted depth range. In this configuration, most of the retained inventory is placed in the irradiation-induced traps inside the damaged region, while the mobile deuterium concentration remains comparatively small.
+The initial deuterium profile used at the start of desorption is shown in [val-2k_natural_oxide_profile] for the 15 nm configuration. The shaded regions identify the oxide, damaged tungsten, and bulk tungsten sections in the plotted depth range. In this configuration, most of the retained inventory is placed in the irradiation-induced traps inside the damaged region, while the mobile deuterium concentration remains comparatively small.
 
 !media comparison_val-2k.py
-    image_name=val-2k_natural_oxide_iteration_1_profile.png
+    image_name=val-2k_natural_oxide_profile.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=val-2k_natural_oxide_iteration_1_profile
+    id=val-2k_natural_oxide_profile
     caption=Initial deuterium concentration profile used to start the 15 nm `val-2k` desorption calculation. The profile shows the mobile deuterium concentration, the six trapped populations, their total, and the oxide, damaged tungsten, and bulk tungsten sections.
 
 ## Model Description
@@ -152,52 +152,78 @@ The current baseline parameters are listed in [val-2k_parameters].
 The four oxygen-field inputs use the same scaled six-trap `val-2f` formulation: a 0.5 nm natural-oxide baseline and companion 5 nm, 10 nm, and 15 nm oxide cases. All solves use the same adimensional mobile transport and `SpeciesTrappingPhysics` syntax in tungsten, while the comparison script converts the results back to physical units. The current branch state also includes a hand-calibrated oxygen-side parameter update intended to better match the overall experimental release trends. The script overlays every simulated case for which output files are available against the matching experimental `HD + D_2` and `HDO + D_2O` curves, while the inventory and profile figures report representative internal-state information from the simulated cases.
 
 !media comparison_val-2k.py
-    image_name=val-2k_natural_oxide_iteration_1_comparison.png
+    image_name=val-2k_natural_oxide_comparison.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=val-2k_natural_oxide_iteration_1_comparison
+    id=val-2k_natural_oxide_comparison
     caption=Current `val-2k` comparison state, showing the 0.5 nm natural-oxide oxygen-field baseline and the available 5 nm, 10 nm, and 15 nm oxide comparison cases against the corresponding Fig. 6 experimental curves.
 
-[val-2k_natural_oxide_iteration_1_comparison] compares the 0.5 nm natural-oxide oxygen-field baseline against the digitized natural-oxide `HD + D_2` and `HDO + D_2O` desorption data from Fig. 6 of [!cite](Kremer2022oxide), and also compares the 5 nm, 10 nm, and 15 nm oxygen-field companion inputs against the corresponding experimental curves whenever those simulation outputs are available. The added temperature trace on the right axis shows when the models begin to release deuterium relative to the experimental heating history.
+[val-2k_natural_oxide_comparison] compares the 0.5 nm natural-oxide oxygen-field baseline against the digitized natural-oxide `HD + D_2` and `HDO + D_2O` desorption data from Fig. 6 of [!cite](Kremer2022oxide), and also compares the 5 nm, 10 nm, and 15 nm oxygen-field companion inputs against the corresponding experimental curves whenever those simulation outputs are available. The added temperature trace on the right axis shows when the models begin to release deuterium relative to the experimental heating history.
 
 !media comparison_val-2k.py
-    image_name=val-2k_natural_oxide_iteration_1_recombination_rates.png
+    image_name=val-2k_natural_oxide_case_comparison.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=val-2k_natural_oxide_iteration_1_recombination_rates
+    id=val-2k_natural_oxide_case_comparison
+    caption=Focused TDS comparison for the 0.5 nm natural-oxide case, isolating the simulated and experimental D$_2$ and D$_2$O release curves for the natural-oxide proxy together with the imposed temperature history.
+
+!media comparison_val-2k.py
+    image_name=val-2k_5nm_oxide_case_comparison.png
+    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+    id=val-2k_5nm_oxide_case_comparison
+    caption=Focused TDS comparison for the 5 nm oxide case, isolating the simulated and experimental D$_2$ and D$_2$O release curves for the 5 nm oxygen-field model together with the imposed temperature history.
+
+!media comparison_val-2k.py
+    image_name=val-2k_10nm_oxide_case_comparison.png
+    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+    id=val-2k_10nm_oxide_case_comparison
+    caption=Focused TDS comparison for the 10 nm oxide case, isolating the simulated and experimental D$_2$ and D$_2$O release curves for the 10 nm oxygen-field model together with the imposed temperature history.
+
+!media comparison_val-2k.py
+    image_name=val-2k_15nm_oxide_case_comparison.png
+    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+    id=val-2k_15nm_oxide_case_comparison
+    caption=Focused TDS comparison for the 15 nm oxide case, isolating the simulated and experimental D$_2$ and D$_2$O release curves for the 15 nm oxygen-field model together with the imposed temperature history.
+
+The four focused TDS figures complement [val-2k_natural_oxide_comparison] by separating the cases that otherwise share the same axes and legend. This makes it easier to inspect the onset temperature, peak placement, D$_2$/D$_2$O balance, and RMSPE annotation for each oxide thickness without visual crowding from the other three cases.
+
+!media comparison_val-2k.py
+    image_name=val-2k_natural_oxide_recombination_rates.png
+    style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+    id=val-2k_natural_oxide_recombination_rates
     caption=Arrhenius-form surface recombination coefficients used for the D$_2$ and D$_2$O release channels in `val-2k`, plotted in log scale versus $1000/T$ with a secondary temperature axis in Kelvin.
 
-[val-2k_natural_oxide_iteration_1_recombination_rates] shows the two phenomenological surface-release coefficients over the experimental desorption temperature window. In the current hand-calibrated parameter set, the D$_2$O channel is strongly suppressed at low temperature by its larger activation energy, then rises more steeply and overtakes the D$_2$ coefficient at about 520 K because of its much larger prefactor.
+[val-2k_natural_oxide_recombination_rates] shows the two phenomenological surface-release coefficients over the experimental desorption temperature window. In the current hand-calibrated parameter set, the D$_2$O channel is strongly suppressed at low temperature by its larger activation energy, then rises more steeply and overtakes the D$_2$ coefficient at about 520 K because of its much larger prefactor.
 
 !media comparison_val-2k.py
-    image_name=val-2k_natural_oxide_iteration_1_inventory.png
+    image_name=val-2k_natural_oxide_inventory.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=val-2k_natural_oxide_iteration_1_inventory
+    id=val-2k_natural_oxide_inventory
     caption=Evolution of the mobile and trapped deuterium inventories during desorption for the current `val-2k` 0.5 nm natural-oxide oxygen-field baseline, with the imposed temperature history shown on the right axis.
 
-[val-2k_natural_oxide_iteration_1_inventory] shows that the tungsten preload is dominated by the trapping populations, while the mobile deuterium inventory remains much smaller throughout the desorption ramp. The lower-energy traps begin to empty first as the temperature rises, followed by the deeper trap populations later in the ramp. The imposed experimental temperature history is shown on the right axis so the changes in each trap inventory can be related directly to the heating schedule used in the TDS experiment.
+[val-2k_natural_oxide_inventory] shows that the tungsten preload is dominated by the trapping populations, while the mobile deuterium inventory remains much smaller throughout the desorption ramp. The lower-energy traps begin to empty first as the temperature rises, followed by the deeper trap populations later in the ramp. The imposed experimental temperature history is shown on the right axis so the changes in each trap inventory can be related directly to the heating schedule used in the TDS experiment.
 
 !media comparison_val-2k.py
-    image_name=val-2k_natural_oxide_iteration_1_oxygen_inventory.png
+    image_name=val-2k_natural_oxide_oxygen_inventory.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=val-2k_natural_oxide_iteration_1_oxygen_inventory
+    id=val-2k_natural_oxide_oxygen_inventory
     caption=Total oxygen inventory remaining in the sample over time for the available `val-2k` oxygen-field cases, using the same case colors as the TDS comparison figure and the imposed temperature history on the right axis.
 
-[val-2k_natural_oxide_iteration_1_oxygen_inventory] shows that the thicker oxygen-field cases begin with larger oxygen inventories and all four cases lose oxygen monotonically as the D$_2$O release channel consumes the front-surface oxide. Using the same case colors as [val-2k_natural_oxide_iteration_1_comparison] makes it easier to relate the oxygen depletion history of each case to the corresponding TDS response.
+[val-2k_natural_oxide_oxygen_inventory] shows that the thicker oxygen-field cases begin with larger oxygen inventories and all four cases lose oxygen monotonically as the D$_2$O release channel consumes the front-surface oxide. Using the same case colors as [val-2k_natural_oxide_comparison] makes it easier to relate the oxygen depletion history of each case to the corresponding TDS response.
 
 !media comparison_val-2k.py
-    image_name=val-2k_natural_oxide_iteration_1_mass_conservation.png
+    image_name=val-2k_natural_oxide_mass_conservation.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=val-2k_natural_oxide_iteration_1_mass_conservation
+    id=val-2k_natural_oxide_mass_conservation
     caption=Relative deuterium mass-balance residual over time for the available `val-2k` oxygen-field cases.
 
-[val-2k_natural_oxide_iteration_1_mass_conservation] tracks the signed deuterium mass-balance residual normalized by the initial deuterium inventory for every currently available modeled case. The residual is formed from the change in deuterium retained in the sample plus the time-integrated left and right surface release fluxes, so values close to zero indicate that the transient inventory loss is consistent with the integrated surface outflow.
+[val-2k_natural_oxide_mass_conservation] tracks the signed deuterium mass-balance residual normalized by the initial deuterium inventory for every currently available modeled case. The residual is formed from the change in deuterium retained in the sample plus the time-integrated left and right surface release fluxes, so values close to zero indicate that the transient inventory loss is consistent with the integrated surface outflow.
 
 !media comparison_val-2k.py
-    image_name=val-2k_natural_oxide_iteration_1_oxygen_conservation.png
+    image_name=val-2k_natural_oxide_oxygen_conservation.png
     style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-    id=val-2k_natural_oxide_iteration_1_oxygen_conservation
+    id=val-2k_natural_oxide_oxygen_conservation
     caption=Relative oxygen conservation residual over time for the available `val-2k` oxygen-field cases.
 
-[val-2k_natural_oxide_iteration_1_oxygen_conservation] tracks the signed oxygen conservation residual normalized by the initial oxygen inventory in each available oxygen-field case. The residual is formed from the change in oxygen retained in the sample plus the time-integrated oxygen loss tied to the D$_2$O release channel, so values close to zero indicate that the transient oxygen loss is consistent with the modeled surface outflow.
+[val-2k_natural_oxide_oxygen_conservation] tracks the signed oxygen conservation residual normalized by the initial oxygen inventory in each available oxygen-field case. The residual is formed from the change in oxygen retained in the sample plus the time-integrated oxygen loss tied to the D$_2$O release channel, so values close to zero indicate that the transient oxygen loss is consistent with the modeled surface outflow.
 
 ## Input files
 
