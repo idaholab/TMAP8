@@ -12,7 +12,7 @@
                 Executioner/TimeStepper/growth_factor=2
                 output_file_base=val-2k_natural_oxide_implicit_euler_light_out'
     csvdiff = val-2k_natural_oxide_implicit_euler_light_out.csv
-    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 0.5 nm natural-oxide oxygen-field representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the implicit Euler time integration scheme with a coarse mesh and loose tolerances for a light test.'
+    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 1 nm natural-oxide oxygen-field representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the implicit Euler time integration scheme with a coarse mesh and loose tolerances for a light test.'
   []
   [val-2k_natural_oxide_implicit_euler_csvdiff]
     type = CSVDiff
@@ -21,7 +21,7 @@
                 output_file_base=val-2k_natural_oxide_implicit_euler_out'
     csvdiff = val-2k_natural_oxide_implicit_euler_out.csv
     heavy = true
-    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 0.5 nm natural-oxide oxygen-field representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the implicit Euler time integration scheme.'
+    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 1 nm natural-oxide oxygen-field representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the implicit Euler time integration scheme.'
   []
   [val-2k_natural_oxide_implicit_euler_exodiff]
     type = Exodiff
@@ -30,7 +30,7 @@
     prereq = val-2k_natural_oxide_implicit_euler_csvdiff
     should_execute = false
     heavy = true
-    requirement = 'The system shall be able to produce the full field solution of a simulation of deuterium transport in self-irradiated tungsten with a 0.5 nm natural-oxide oxygen-field representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the implicit Euler time integration scheme.'
+    requirement = 'The system shall be able to produce the full field solution of a simulation of deuterium transport in self-irradiated tungsten with a 1 nm natural-oxide oxygen-field representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the implicit Euler time integration scheme.'
   []
   [val-2k_natural_oxide_bdf2_csvdiff]
     type = CSVDiff
@@ -38,7 +38,7 @@
     cli_args = 'output_file_base=val-2k_natural_oxide_out'
     csvdiff = val-2k_natural_oxide_out.csv
     heavy = true
-    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 0.5 nm natural-oxide oxygen-field representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
+    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 1 nm natural-oxide oxygen-field representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
   []
   [val-2k_5nm_oxide_bdf2_csvdiff]
     type = CSVDiff
