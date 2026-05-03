@@ -184,7 +184,7 @@ The initial oxygen concentration is derived from the paper-reported removal of $
 | Parameter | Description | Value | Units | Reference |
 | --------- | ----------- | ----- | ----- | --------- |
 | $l_W$ | Tungsten thickness | 0.8 | mm | [!cite](Kremer2022oxide) |
-| $l_{ox}$ | Oxide thickness in the oxide comparison cases | 1, 5, 10, 15 | nm | Natural-oxide proxy plus explicit thin-film cases from [!cite](Kremer2022oxide) |
+| $l_{ox}$ | Oxide thickness | 1, 5, 10, 15 | nm | Natural-oxide proxy plus explicit thin-film cases from [!cite](Kremer2022oxide) |
 | $w_{ox}$ | Tanh transition width used for oxide-to-W blending | 0.25 | nm | Numerical resolution choice |
 | $l_d$ | Self-damaged depth | 2.3 | $\mu$m | [!cite](Kremer2022oxide) |
 | $T_0$ | Initial desorption temperature | $\approx$ 295.775 | K | Digitized from Fig. 6 in [!cite](Kremer2022oxide) |
@@ -265,7 +265,7 @@ The low release in D$_2$O form is attributed to the lower availability of oxygen
 The model captures the main trends observed experimentally.
 The position and magnitude of the two peaks for D$_2$ release are predicted, as well as the ratio of D$_2$ to D$_2$O release.
 The main difference in trends is the short peak in D$_2$O instead of the wider peak observed experimentally.
-This could be attributed to some oxygen availability from deeper into the tungsten or within the experimental setup.
+This could be attributed to an overestimation of the oxygen availability or D$_2$0 surface reaction rate at lower temperatures.
 
 !media comparison_val-2k.py
     image_name=val-2k_natural_oxide_oxygen_inventory.png
@@ -290,10 +290,10 @@ As the oxide film thickness increases, the following trends are observable exper
 - The ratio of D$_2$O release over D$_2$ increases as oxygen availability increases.
 - The low-temperature D$_2$ peak maintains its position, but its magnitude decreases consistently.
 - The high-temperature peak shifts to higher temperatures and its magnitude decreases, even disappearing when the oxide thickness increases from 10 nm to 15 nm.
-- The D$_2$O release increases, with a first peak aligned with the first D$_2$ peak, then a stable region, and then either a decrease in the case of the 5 nm-thick oxide or another peak aligned with the second D$_2$ peak. This secondary D$_2$O peak for the 10 nm oxide decreases sooner than for the 15 nm oxide.
+- The D$_2$O release increases, with a first peak aligned with the first D$_2$ peak, then a stable region, and then either a decrease in the case of the 5 nm-thick oxide or another peak aligned with the second D$_2$ peak for thicker oxides. This secondary D$_2$O peak for the 10 nm oxide decreases sooner than for the 15 nm oxide.
 
 These trends are all qualitatively captured by the calibrated model.
-Furthermore, even if the model lacks a purely mechanistic description of the deuterium and oxide behavior, the simulations offer some physical insights into these observed trends.
+Furthermore, even if the model lacks a purely mechanistic description of the deuterium and oxide behavior, the simulations offer some physical insights explaining these observed trends.
 
 Oxygen availability was found to be a key parameter during model calibration.
 As the oxide thickness increases and the oxygen inventory increases (see [val-2k_natural_oxide_oxygen_inventory]), the ratio of D$_2$ to D$_2$O release decreases.
@@ -301,8 +301,9 @@ Then, as the oxygen inventory gets depleted, D$_2$O release naturally decreases.
 This helps explain the lack of a secondary peak in D$_2$O release for the 5 nm oxide sample, as well as the thinner secondary D$_2$O peak for the 10 nm oxide sample compared with the 15 nm oxide sample.
 As described in [!cite](Kremer2022oxide), the oxide layer disappears during TDS for most cases, but some remains for the 15 nm-thick oxide film case (see [val-2k_natural_oxide_oxygen_inventory]).
 Note that while no oxide was observed after TDS for the 10 nm sample, the simulation predicts some remaining inventory, albeit only a small fraction of the initial amount.
+The oxide is completely gone for the natural oxide and 5 nm-thickness cases in both experiments and simulations.
 
-For oxygen to be effectively used for D$_2$O release, however, the ratio of the rate of the D$_2$ and D$_2$O surface reactions must be advantageous, and the oxygen diffusion in the oxide layer needs to be sufficient.
+For oxygen to be effectively used for D$_2$O release, however, the ratio of the D$_2$ and D$_2$O surface reaction rates must be advantageous, and the oxygen diffusion in the oxide layer needs to be sufficient.
 The slight delay in the onset in D$_2$O release at low temperature compared to D$_2$ release is captured by a lower D$_2$O surface reaction rate at low temperature.
 However, at high temperature, the surface reaction rate of D$_2$O needs to surpass that of D$_2$ to observe the suppression of the secondary D$_2$ peak in favor of the secondary D$_2$O peak.
 [val-2k_natural_oxide_recombination_rates] shows the two phenomenological surface-release coefficients over the experimental desorption temperature window.
