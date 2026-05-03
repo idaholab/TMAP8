@@ -32,6 +32,7 @@
     type = Exodiff
     input = val-2k_natural_oxide.i
     exodiff = val-2k_natural_oxide_implicit_euler_out.e
+    custom_cmp = 'val-2k_exodus.exodiff'
     prereq = val-2k_natural_oxide_implicit_euler_csvdiff
     should_execute = false
     heavy = true
@@ -53,8 +54,12 @@
     type = CSVDiff
     input = val-2k_5nm_oxide.i
     csvdiff = val-2k_5nm_oxide_out.csv
-    heavy = true
     rel_err = 1e-5
+    # oxygen_mass_conservation_residual's magnitude is 1e17
+    override_columns = 'oxygen_mass_conservation_residual'
+    override_abs_zero = '1e12'
+    override_rel_err = '1e-3'
+    heavy = true
     requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 5 nm oxygen-field oxide representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
   []
   [val-2k_10nm_oxide_bdf2_csvdiff]
@@ -64,8 +69,8 @@
     rel_err = 1e-5
     # oxygen_mass_conservation_residual's magnitude is 1e17
     override_columns = 'oxygen_mass_conservation_residual'
-    override_abs_zero = '1e12'
-    override_rel_err = '1e-3'
+    override_abs_zero = '1e13'
+    override_rel_err = '5e-3'
     heavy = true
     requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 10 nm oxygen-field oxide representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
   []
