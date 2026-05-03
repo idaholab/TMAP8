@@ -344,10 +344,11 @@ The residual is formed from the change in oxygen retained in the sample plus the
 The model proposed herein uses a general formulation and consistent parameters for all four samples with different oxide thicknesses, and qualitatively captures the main experimentally-observed trends and differences between all configurations published in [!cite](Kremer2022oxide).
 By doing so, it provides key physical insights into the experimental measurements and observations.
 This insight is valuable to tie laboratory observations, where tungsten oxidation often takes place, to performance in fusion power plant environments.
+Using this novel model, the laboratory deuterium TDS data can be analyzed and the effect of the oxide layer can be isolated, hance providing a model applicable to fusion energy system conditions.
 
 This model, however, has limitations that should be addressed by future work.
 The limitations discussed in [!cite](Kremer2022oxide) (e.g., electrochemically grown oxide being different from thermally grown oxide) still apply to this study.
-A more thorough characterization of the oxide and a general analysis including different oxide structures would help generalize the current model, which currently does not model the oxide structure and would not differentiate between different oxide types.
+A more thorough characterization of the oxide and a general analysis including different oxide structures would help generalize the current model, which currently does not differentiate between different oxide types.
 In addition, the model makes other key assumptions and simplifications that could be challenged in the future to confirm the interpretation proposed in this study.
 For example, the model does not capture the increased surface diffusion of deuterium, which is discussed in the original paper [!citep](Kremer2022oxide) as a key release mechanism as deuterium atoms diffuse along the sample surface to find remaining pockets of oxygen to be released as D$_2$O.
 To model this, the geometry should be expanded to a 2D or 3D model, which is possible in TMAP8 [!citep](Franklin2025,Shimada2024,Simon2022,Simon2025).
@@ -355,7 +356,7 @@ To model this, the geometry should be expanded to a 2D or 3D model, which is pos
 The current study implemented the model and performed ad hoc calibration of the model parameters based on the potential driving mechanisms of oxide evolution and deuterium detrapping, diffusion, and surface reactions.
 While the experimentally observed trends are qualitatively captured by the model, the simulation results are quantitatively different from the experimental measurements.
 Using Bayesian inference across all sets of experimental data would make it possible to calibrate the model to the experimental data while quantifying uncertainties and sources of error from model inadequacy, experimental error, and model-parameter uncertainty [!citep](DHULIPALA2026102776,DHULIPALA2025155795).
-The current oxygen diffusivity and D$_2$ and D$_2$O release parameters are therefore best interpreted as calibrated effective kinetics for matching the observed TDS trends rather than as a direct literature transcription, which will be the goal of future work.
+The current oxygen diffusivity and D$_2$ and D$_2$O release parameters are therefore best interpreted as calibrated effective kinetics for matching the observed TDS trends rather than as a mechanistic description, which will be the goal of future work.
 
 ## Input files
 
