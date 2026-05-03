@@ -1,0 +1,99 @@
+[Tests]
+  design = 'SpeciesTrappingPhysics.md MatNeumannBC.md'
+  issues = '#399'
+  validation = 'val-2k.md'
+  [val-2k_natural_oxide_implicit_euler_csvdiff_light]
+    type = CSVDiff
+    input = val-2k_natural_oxide.i
+    cli_args = 'Mesh/active=mesh_coarse
+                end_time=4000
+                Executioner/nl_rel_tol=1e-4
+                Executioner/scheme=implicit-euler
+                Executioner/TimeStepper/growth_factor=2
+                output_file_base=val-2k_natural_oxide_implicit_euler_light_out'
+    csvdiff = val-2k_natural_oxide_implicit_euler_light_out.csv
+    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 1 nm natural-oxide oxygen-field representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the implicit Euler time integration scheme with a coarse mesh and loose tolerances for a light test.'
+  []
+  [val-2k_natural_oxide_implicit_euler_csvdiff]
+    type = CSVDiff
+    input = val-2k_natural_oxide.i
+    cli_args = 'Executioner/scheme=implicit-euler
+                output_file_base=val-2k_natural_oxide_implicit_euler_out
+                Outputs/exodus/time_step_interval=30'
+    csvdiff = val-2k_natural_oxide_implicit_euler_out.csv
+    # oxygen_mass_conservation_residual's magnitude is 1e17
+    override_columns = 'oxygen_mass_conservation_residual'
+    override_abs_zero = '1e12'
+    override_rel_err = '1e-3'
+    heavy = true
+    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 1 nm natural-oxide oxygen-field representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the implicit Euler time integration scheme.'
+  []
+  [val-2k_natural_oxide_implicit_euler_exodiff]
+    type = Exodiff
+    input = val-2k_natural_oxide.i
+    exodiff = val-2k_natural_oxide_implicit_euler_out.e
+    custom_cmp = 'val-2k_exodus.exodiff'
+    prereq = val-2k_natural_oxide_implicit_euler_csvdiff
+    should_execute = false
+    heavy = true
+    requirement = 'The system shall be able to produce the full field solution of a simulation of deuterium transport in self-irradiated tungsten with a 1 nm natural-oxide oxygen-field representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the implicit Euler time integration scheme.'
+  []
+  [val-2k_natural_oxide_bdf2_csvdiff]
+    type = CSVDiff
+    input = val-2k_natural_oxide.i
+    cli_args = 'output_file_base=val-2k_natural_oxide_out'
+    csvdiff = val-2k_natural_oxide_out.csv
+    # oxygen_mass_conservation_residual's magnitude is 1e17
+    override_columns = 'oxygen_mass_conservation_residual'
+    override_abs_zero = '1e12'
+    override_rel_err = '1e-3'
+    heavy = true
+    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 1 nm natural-oxide oxygen-field representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
+  []
+  [val-2k_5nm_oxide_bdf2_csvdiff]
+    type = CSVDiff
+    input = val-2k_5nm_oxide.i
+    csvdiff = val-2k_5nm_oxide_out.csv
+    rel_err = 1e-5
+    # oxygen_mass_conservation_residual's magnitude is 1e17
+    override_columns = 'oxygen_mass_conservation_residual'
+    override_abs_zero = '1e12'
+    override_rel_err = '1e-3'
+    heavy = true
+    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 5 nm oxygen-field oxide representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
+  []
+  [val-2k_10nm_oxide_bdf2_csvdiff]
+    type = CSVDiff
+    input = val-2k_10nm_oxide.i
+    csvdiff = val-2k_10nm_oxide_out.csv
+    rel_err = 1e-5
+    # oxygen_mass_conservation_residual's magnitude is 1e17
+    override_columns = 'oxygen_mass_conservation_residual'
+    override_abs_zero = '1e13'
+    override_rel_err = '5e-3'
+    heavy = true
+    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 10 nm oxygen-field oxide representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
+  []
+  [val-2k_15nm_oxide_bdf2_csvdiff]
+    type = CSVDiff
+    input = val-2k_15nm_oxide.i
+    csvdiff = val-2k_15nm_oxide_out.csv
+    heavy = true
+    requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 15 nm oxygen-field oxide representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
+  []
+  [val-2k_15nm_oxide_initial_profile_csvdiff]
+    type = CSVDiff
+    input = val-2k_15nm_oxide.i
+    csvdiff = profiles/val-2k_15nm_oxide_profile_initial_out_line_profile_0000.csv
+    prereq = val-2k_15nm_oxide_bdf2_csvdiff
+    should_execute = false
+    heavy = true
+    requirement = 'The system shall be able to output the initial deuterium and oxygen concentration profiles for the 15 nm oxygen-field oxide companion case in val-2k, including the mobile and trapped deuterium populations used to initialize the plotted sectioned profile.'
+  []
+  [val-2k_comparison]
+    type = RunCommand
+    command = 'python3 comparison_val-2k.py'
+    requirement = 'The system shall be able to generate comparison plots for the val-2k validation, comparing the natural-oxide, 5 nm, 10 nm, and 15 nm oxygen-field oxide D2 and D2O release cases against the corresponding experimental data when the matching simulation outputs are available.'
+    required_python_packages = 'matplotlib numpy pandas os'
+  []
+[]
