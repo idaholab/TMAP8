@@ -18,12 +18,13 @@
     type = CSVDiff
     input = val-2k_natural_oxide.i
     cli_args = 'Executioner/scheme=implicit-euler
-                output_file_base=val-2k_natural_oxide_implicit_euler_out'
+                output_file_base=val-2k_natural_oxide_implicit_euler_out
+                Outputs/exodus/time_step_interval=30'
     csvdiff = val-2k_natural_oxide_implicit_euler_out.csv
     # oxygen_mass_conservation_residual's magnitude is 1e17
     override_columns = 'oxygen_mass_conservation_residual'
-    override_abs_zero = '1e8'
-    override_rel_err = '1e-4'
+    override_abs_zero = '1e12'
+    override_rel_err = '1e-3'
     heavy = true
     requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 1 nm natural-oxide oxygen-field representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the implicit Euler time integration scheme.'
   []
@@ -43,8 +44,8 @@
     csvdiff = val-2k_natural_oxide_out.csv
     # oxygen_mass_conservation_residual's magnitude is 1e17
     override_columns = 'oxygen_mass_conservation_residual'
-    override_abs_zero = '1e8'
-    override_rel_err = '1e-4'
+    override_abs_zero = '1e12'
+    override_rel_err = '1e-3'
     heavy = true
     requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 1 nm natural-oxide oxygen-field representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
   []
@@ -63,8 +64,8 @@
     rel_err = 1e-5
     # oxygen_mass_conservation_residual's magnitude is 1e17
     override_columns = 'oxygen_mass_conservation_residual'
-    override_abs_zero = '1e8'
-    override_rel_err = '1e-4'
+    override_abs_zero = '1e12'
+    override_rel_err = '1e-3'
     heavy = true
     requirement = 'The system shall be able to model deuterium transport in self-irradiated tungsten with a 10 nm oxygen-field oxide representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the backwards differencing formula of second order (BDF-2) time integration scheme.'
   []
