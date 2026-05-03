@@ -211,7 +211,11 @@ def add_temperature_top_axis(ax, temperature_ticks_k):
 def create_tds_figure(case_specs_to_plot, image_name, figure_caption_lines=None):
     is_single_case_view = len(case_specs_to_plot) == 1
     fig, ax = plt.subplots(figsize=(7.2, 8.2))
-    fig.subplots_adjust(top=0.8, bottom=0.38)
+    fig.subplots_adjust(top=0.8, bottom=0.42 if is_single_case_view else 0.38)
+    axis_label_fontsize = 16 if is_single_case_view else None
+    tick_label_fontsize = 14 if is_single_case_view else None
+    legend_fontsize = 14 if is_single_case_view else None
+    text_fontsize = 14 if is_single_case_view else None
 
     tds_handles = []
     tds_labels = []
@@ -228,28 +232,44 @@ def create_tds_figure(case_specs_to_plot, image_name, figure_caption_lines=None)
             case["release_rate_d2"],
             linestyle="-",
             color=color,
-            label=f"TMAP8 D2, {spec['display_label']}",
+            label=(
+                "TMAP8 D2"
+                if is_single_case_view
+                else f"TMAP8 D2, {spec['display_label']}"
+            ),
         )[0]
         simulated_d2o_handle = ax.plot(
             case["time_h"],
             case["release_rate_d2o"],
             linestyle="--",
             color=color,
-            label=f"TMAP8 D2O, {spec['display_label']}",
+            label=(
+                "TMAP8 D2O"
+                if is_single_case_view
+                else f"TMAP8 D2O, {spec['display_label']}"
+            ),
         )[0]
         experimental_d2_handle = ax.plot(
             experimental_d2["time (h)"],
             experimental_d2["release flux (10^13 D atoms/s)"],
             linestyle="-.",
             color=color,
-            label=f"Experimental HD + D2 ({spec['display_label']})",
+            label=(
+                "Exp. HD + D2"
+                if is_single_case_view
+                else f"Experimental HD + D2 ({spec['display_label']})"
+            ),
         )[0]
         experimental_d2o_handle = ax.plot(
             experimental_d2o["time (h)"],
             experimental_d2o["release flux (10^13 D atoms/s)"],
             linestyle=":",
             color=color,
-            label=f"Experimental HDO + D2O ({spec['display_label']})",
+            label=(
+                "Exp. HDO + D2O"
+                if is_single_case_view
+                else f"Experimental HDO + D2O ({spec['display_label']})"
+            ),
         )[0]
 
         tds_handles.extend(
@@ -279,32 +299,51 @@ def create_tds_figure(case_specs_to_plot, image_name, figure_caption_lines=None)
         linestyle="-",
         color="k",
         linewidth=1.5,
-        label="TMAP8 temperature history",
+        label="Temperature" if is_single_case_view else "TMAP8 temperature history",
     )[0]
     if figure_caption_lines is None:
         figure_caption_lines = rmspe_lines
     fig.text(
         0.5,
-        0.82 if is_single_case_view else 0.88,
+        0.83 if is_single_case_view else 0.88,
         "\n".join(figure_caption_lines),
         ha="center",
         va="top",
+        fontsize=text_fontsize,
     )
 
-    ax.set_xlabel("Time (h)")
-    ax.set_ylabel("Release rate (10$^{13}$ D atoms/s)")
+    ax.set_xlabel("Time (h)", fontsize=axis_label_fontsize)
+    ax.set_ylabel("Release rate (10$^{13}$ D atoms/s)", fontsize=axis_label_fontsize)
     ax.set_xlim(0, 4.2)
     ax.set_ylim(bottom=0)
     ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
-    ax_temperature.set_ylabel("Temperature (K)")
+    ax_temperature.set_ylabel("Temperature (K)", fontsize=axis_label_fontsize)
     ax_temperature.set_ylim(280, 1100)
+    if is_single_case_view:
+        ax.tick_params(axis="both", which="both", labelsize=tick_label_fontsize)
+        ax_temperature.tick_params(
+            axis="both", which="both", labelsize=tick_label_fontsize
+        )
+        unique_legend_handles = []
+        unique_legend_labels = []
+        for handle, label in zip(
+            tds_handles + [temperature_handle],
+            tds_labels + [temperature_handle.get_label()],
+        ):
+            if label not in unique_legend_labels:
+                unique_legend_handles.append(handle)
+                unique_legend_labels.append(label)
+    else:
+        unique_legend_handles = tds_handles + [temperature_handle]
+        unique_legend_labels = tds_labels + [temperature_handle.get_label()]
     fig.legend(
-        tds_handles + [temperature_handle],
-        tds_labels + [temperature_handle.get_label()],
+        unique_legend_handles,
+        unique_legend_labels,
         loc="lower center",
-        bbox_to_anchor=(0.5, 0.22 if is_single_case_view else 0.085),
+        bbox_to_anchor=(0.5, 0.2 if is_single_case_view else 0.085),
         ncol=2,
         frameon=True,
+        fontsize=legend_fontsize,
     )
     ax.minorticks_on()
 
