@@ -1,6 +1,6 @@
 # Mini-Canister Hydrogen Transport
 
-TMAP8 is used to model hydrogen transport and permeation through an aluminum-clad used nuclear fuel (AUNF) mini-canister storage device from Savannah River National Laboratory (SRNL) [!citep](d'entremont2024aunfminicanister). The mini-canisters house irradiated AUNF assemblies where gamma and neutron radiation from the fuel drives radiolytic decomposition of water, generating H$_2$ gas. Over time, this hydrogen will dissociate and diffuse through the surrounding 304 stainless steel wall, raising concern for potential accumulation. This example demonstrates how TMAP8 can model these processes through two distinct input files:
+TMAP8 is used to model hydrogen transport and permeation through an aluminum-clad used nuclear fuel (AUNF) mini-canister storage device from Savannah River National Laboratory (SRNL) [!citep](d'entremont2024aunfminicanister). The mini-canisters house irradiated AUNF assemblies where gamma and neutron radiation from the fuel drives radiolytic decomposition of water, generating H$_2$ gas. Over time, this hydrogen will dissociate and diffuse through the surrounding 304 stainless steel wall, raising concern for potential accumulation. This example demonstrates how TMAP8 can model these processes through two distinct input files with varying degrees of fidelity:
 
 1. [steel_only.i] — isolates hydrogen diffusion through the steel wall with an assumed boundary partial pressure. This simpler model permits verification against an analytical solution, assuming time-independent Dirichlet boundary conditions.
 2. [gas_steel.i] — simulates the full system: radiolytic H$_2$ generation, gas-phase transport inside the canister, and simultaneous permeation through the steel wall. This model is validated against SRNL experimental measurements [!citep](d'entremont2024aunfminicanister).
@@ -24,9 +24,11 @@ Both models represent the canister as a 1D axisymmetric domain in cylindrical co
 In [steel_only.i], the 1D mesh spans only the steel wall, from $r_i$ to $r_o$, using a single [GeneratedMeshGenerator.md] with 1,500 elements (subdomain 1). In [gas_steel.i], a [CartesianMeshGenerator.md] produces two adjacent blocks: the gas block (subdomain 0) from $r = 0$ to $r = r_i$ with 250 elements, and the steel block (subdomain 1) from $r = r_i$ to $r = r_o$ with 1,500 elements. Two [SideSetsBetweenSubdomainsGenerator.md] steps then create the named interface sidesets `interface_gas_to_steel` and `interface_steel_to_gas` that are required for the [InterfaceSorption.md] kernel.
 
 In [steel_only.i], the mesh is defined as:
+
 !listing test/tests/mini_canister/steel_only.i link=false block=Mesh
 
 In [gas_steel.i], the mesh is defined as:
+
 !listing test/tests/mini_canister/gas_steel.i link=false block=Mesh
 
 ## Nomenclature
@@ -109,9 +111,9 @@ C_s(r_o, t) = 0.
 !style halign=left
 Because the steel-only problem is linear (constant diffusivity, linear Sieverts' BC), [steel_only.i] uses `solve_type = LINEAR` for a direct LU factorization at each timestep.
 
-### Model Parameters
+### Model Parameters and Simulation Conditions
 
-!table id=tab:steel_only_params caption=Steel-only model parameters.
+!table id=tab:steel_only_params caption=Steel-only model parameters and simulation conditions.
 | Parameter | Description | Value | Units | Reference |
 | --- | --- | --- | --- | --- |
 | $\mathbf{D_{s,0}}$ | Diffusivity pre-exponential factor | $\mathbf{0.20 \times 10^{-6}}$ | m$^2$ s$^{-1}$ | [!cite](san_marchi2012hydrogensteel) |
@@ -126,13 +128,17 @@ Because the steel-only problem is linear (constant diffusivity, linear Sieverts'
 #### Diffusion Front Verification
 
 !style halign=left
-For a semi-infinite slab with a constant-concentration boundary condition, the diffusion front advances as $\ell(t) = \sqrt{\pi D_s t}$, defined here as the $r$-intercept of the tangent line to the concentration profile at the inner surface. This analytical result provides a straightforward check that the numerical diffusion is correctly implemented. The simulated diffusion front is computed via the `simulated_diffusion_length` postprocessor as the $r$-intercept of the tangent line using the interface concentration and gradient. [fig:diffusion_length] shows the simulated diffusion front length, using a constant pressure, compared to the analytical expression.
+For a semi-infinite slab with a constant-concentration boundary condition, the diffusion front advances as $\ell(t) = \sqrt{\pi D_s t}$, defined here as the $r$-intercept of the tangent line to the concentration profile at the inner surface. This analytical result provides a straightforward check that the numerical diffusion is correctly implemented. The simulated diffusion front is computed via the `simulated_diffusion_length` postprocessor as the $r$-intercept of the tangent line using the interface concentration and gradient. [fig:diffusion_length] shows the simulated diffusion front length, using a constant pressure, compared to the analytical expression, which it matches.
 
 !media comparison_mini_canister.py
   image_name=diffusion_length.png
   style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
   id=fig:diffusion_length
   caption=Comparison of the simulated and analytical ($\sqrt{\pi D_s t}$) diffusion front length in the steel wall over 0.25 years.
+
+!listing test/tests/mini_canister/gas_steel.i link=false block=Postprocessors/exact_diffusion_length
+
+!listing test/tests/mini_canister/gas_steel.i link=false block=Postprocessors/simulated_diffusion_length
 
 #### Conservation of Mass
 
@@ -191,6 +197,8 @@ Because the gas-steel problem is nonlinear (the interface couples $C_g$ and $C_s
 
 ### Model Parameters
 
+[tab:gas_steel_params] lists the parameters used in the gas-steel model. 
+
 !table id=tab:gas_steel_params caption=Additional gas-steel model parameters (steel parameters as in [tab:steel_only_params]).
 | Parameter | Description | Value | Units | Reference |
 | --- | --- | --- | --- | --- |
@@ -221,17 +229,6 @@ Because the gas-steel problem is nonlinear (the interface couples $C_g$ and $C_s
   id=fig:gas_yield
   caption=Comparison of TMAP8 total gas-phase hydrogen mass against SRNL experimental cumulative H$_2$ yield data.
 
-#### Comparison of Steel Hydrogen Uptake Between Models
-
-!style halign=left
-[fig:model_comparison] compares the total atomic hydrogen mass accumulated in the steel wall between the steel-only and gas-steel models. The left axis shows the absolute H mass in $\mathrm{\mu}$mol; the right axis shows the steel mass as a percentage of the total H inventory (steel + gas for gas-steel, steel + source integral for steel-only). While the steel-only model uses a constant assumed H$_2$ partial pressure, the gas-steel model evolves the interface pressure self-consistently. The steel-only model can also utilize time-dependent pressure data from SRNL [!citep](d'entremont2024aunfminicanister) by setting `pressure_function = SRNL_pressure_data_fun` in [steel_only.i] or on the command line, nullifying the assumptions required for the diffusion-front verification but greatly improving agreement between the two models.
-
-!media comparison_mini_canister.py
-  image_name=hydrogen_yield_in_steel.png
-  style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
-  id=fig:model_comparison
-  caption=Comparison of total H mass in the steel wall (left axis) and fraction of total H inventory in the steel (right axis, dashed) between the steel-only (constant pressure) and gas-steel simulations.
-
 #### Conservation of Mass
 
 !style halign=left
@@ -242,11 +239,23 @@ Because the gas-steel problem is nonlinear (the interface couples $C_g$ and $C_s
   style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
   id=fig:gas_steel_conservation
   caption=Conservation of mass check for the gas-steel model: accumulated boundary flux plus source term vs. total H mass in the domain.
+  
+## Comparison of Steel Hydrogen Uptake Between the Two Models
+
+!style halign=left
+[fig:model_comparison] compares the total atomic hydrogen mass accumulated in the steel wall between the steel-only and gas-steel models. The left axis shows the absolute H mass in $\mathrm{\mu}$mol; the right axis shows the steel mass as a percentage of the total H inventory (steel + gas for gas-steel, steel + source integral for steel-only). While the steel-only model uses a constant assumed H$_2$ partial pressure, the gas-steel model evolves the interface pressure self-consistently. The steel-only model can also utilize time-dependent pressure data from SRNL [!citep](d'entremont2024aunfminicanister) by setting `pressure_function = SRNL_pressure_data_fun` in [steel_only.i] or on the command line, nullifying the assumptions required for the diffusion-front verification but greatly improving agreement between the two models.
+
+!media comparison_mini_canister.py
+  image_name=hydrogen_yield_in_steel.png
+  style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
+  id=fig:model_comparison
+  caption=Comparison of total H mass in the steel wall (left axis) and fraction of total H inventory in the steel (right axis, dashed) between the steel-only (constant pressure) and gas-steel simulations.
+
 
 ## Input File Structure
 
 !style halign=left
-Both models are structured around two shared files that are incorporated via the `!include` directive:
+Both models are structured around two shared files that are incorporated via the `!include` capability:
 
 - [mini_canister.params] — defines all shared model parameters (geometry, material properties, numerics).
 - [mini_canister_base.i] — defines the MOOSE objects shared by both models: the steel variable and kernels, temperature auxiliary variable, outer Dirichlet boundary condition, steel-domain postprocessors, and the executioner.

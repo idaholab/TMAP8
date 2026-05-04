@@ -62,7 +62,7 @@ num_elements_gas = 250
     type = ADBodyForce
     variable = H_mobile_gas
     block = 0
-    function = gas_generation_rhs_fun
+    function = gas_generation_rhs_function
   []
 []
 
@@ -82,12 +82,12 @@ num_elements_gas = 250
 []
 
 [Functions]
-  [gas_generation_fun] # Power model linear least sqaures fit to mumol vs days (assuming 124.7 Gy/min dosage rate from SRNL report)
+  [gas_generation_function] # Power model linear least sqaures fit to mumol vs days (assuming 124.7 Gy/min dosage rate from SRNL report)
     type = ParsedFunction
     expression = '69.7055*t^0.6808'
   []
 
-  [gas_generation_rhs_fun] # Take time derivative of gas_generation_fun and divide by volume to get appropriate units for source term in concentration per unit time (mumol/mm^3/day)
+  [gas_generation_rhs_function] # Take time derivative of gas_generation_function and divide by volume to get appropriate units for source term in concentration per unit time (mumol/mm^3/day)
     type = ParsedFunction
     expression = '69.7055*0.6808*t^(0.6808-1)/${gas_volume}'
   []
@@ -165,7 +165,7 @@ num_elements_gas = 250
 
   [cylinder_total_generation]
     type = FunctionValuePostprocessor
-    function = gas_generation_fun
+    function = gas_generation_function
     scale_factor = 2 # Count H atoms
     outputs = csv
   []
