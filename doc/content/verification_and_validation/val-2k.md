@@ -127,10 +127,10 @@ and
 J_O = \frac{1}{2} J_{D_2O}^{(D)},
 \end{equation}
 
-where $J_{D_2}^{(D)}$ and $J_{D_2O}^{(D)}$ are deuterium-atom fluxes leaving the mobile-deuterium balance, with units of D atoms m$^{-2}$ s$^{-1}$.
+where $J_{D_2}^{(D)}$ and $J_{D_2O}^{(D)}$ are deuterium-atom fluxes leaving the mobile-deuterium balance from $D_2$ and $D_2O$ reactions, with units of D atoms m$^{-2}$ s$^{-1}$.
 Equivalently, the molecular heavy-water flux is $J_{D_2O}^{(mol)} = \frac{1}{2} J_{D_2O}^{(D)}$, so the oxygen loss flux satisfies $J_O = J_{D_2O}^{(mol)}$ because one oxygen atom is consumed per released D$_2$O molecule.
 
-The surface reaction rates are defined as
+The surface reaction rates also follow Arrhenius forms and are defined as
 
 \begin{equation}
 K_{r,D_2} = K_{r,D_2,0} \exp \left(- \frac{E_{r,D_2}}{k_B T} \right),
@@ -214,8 +214,8 @@ The initial oxygen concentration is derived from the paper-reported removal of $
 | $C_{T_3,0}$ | Trap 3 site density | 1.304 $\times 10^{26}$ | at/m$^3$ | Scaled from [val-2f](val-2f.md) |
 | $C_{T_4,0}$ | Trap 4 site density | 2.392 $\times 10^{26}$ | at/m$^3$ | Adapted from [val-2f](val-2f.md) |
 | $C_{T_5,0}$ | Trap 5 site density | 7.330 $\times 10^{25}$ | at/m$^3$ | Adapted from [val-2f](val-2f.md) |
-| $K_r$ | Recombination prefactor | 3.8 $\times 10^{-16}$ | m$^4$/at/s | Adapted from [val-2f](val-2f.md) |
-| $E_r$ | Recombination activation energy | 0.34 | eV | Adapted from [val-2f](val-2f.md) |
+| $K_r^{D_2}$ | Recombination prefactor | 3.8 $\times 10^{-16}$ | m$^4$/at/s | Adapted from [val-2f](val-2f.md) |
+| $E_r^{D_2}$ | Recombination activation energy | 0.34 | eV | Adapted from [val-2f](val-2f.md) |
 | $K_r^{D_2O}$ | D$_2$O surface-release prefactor | 3.8 $\times 10^{1}$ | m$^4$/at/s | Calibrated |
 | $E_r^{D_2O}$ | D$_2$O surface-release activation energy | 2.10 | eV | Calibrated |
 
@@ -265,7 +265,7 @@ The low release in D$_2$O form is attributed to the lower availability of oxygen
 The model captures the main trends observed experimentally.
 The position and magnitude of the two peaks for D$_2$ release are predicted, as well as the ratio of D$_2$ to D$_2$O release.
 The main difference in trends is the short peak in D$_2$O instead of the wider peak observed experimentally.
-This could be attributed to an overestimation of the oxygen availability or D$_2$0 surface reaction rate at lower temperatures.
+This could be attributed to an overestimation of the oxygen availability or D$_2$O surface reaction rate at lower temperatures.
 
 !media comparison_val-2k.py
     image_name=val-2k_natural_oxide_oxygen_inventory.png

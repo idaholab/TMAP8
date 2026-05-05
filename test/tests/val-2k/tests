@@ -94,6 +94,6 @@
     type = RunCommand
     command = 'python3 comparison_val-2k.py'
     requirement = 'The system shall be able to generate comparison plots for the val-2k validation, comparing the natural-oxide, 5 nm, 10 nm, and 15 nm oxygen-field oxide D2 and D2O release cases against the corresponding experimental data when the matching simulation outputs are available.'
-    required_python_packages = 'matplotlib numpy pandas os'
+    required_python_packages = 'matplotlib numpy pandas os re tempfile Path'
   []
 []
