@@ -229,9 +229,9 @@ def create_tds_figure(case_specs_to_plot, image_name, figure_caption_lines=None)
             linestyle="-",
             color=color,
             label=(
-                "TMAP8 D2"
+                r"TMAP8 D$_2$"
                 if is_single_case_view
-                else f"TMAP8 D2, {spec['display_label']}"
+                else f"TMAP8 D$_2$, {spec['display_label']}"
             ),
         )[0]
         simulated_d2o_handle = ax.plot(
@@ -240,9 +240,9 @@ def create_tds_figure(case_specs_to_plot, image_name, figure_caption_lines=None)
             linestyle="--",
             color=color,
             label=(
-                "TMAP8 D2O"
+                r"TMAP8 D$_2$O"
                 if is_single_case_view
-                else f"TMAP8 D2O, {spec['display_label']}"
+                else f"TMAP8 D$_2$O, {spec['display_label']}"
             ),
         )[0]
         experimental_d2_handle = ax.plot(
@@ -251,9 +251,9 @@ def create_tds_figure(case_specs_to_plot, image_name, figure_caption_lines=None)
             linestyle="-.",
             color=color,
             label=(
-                "Exp. HD + D2"
+                r"Exp. HD + D$_2$"
                 if is_single_case_view
-                else f"Experimental HD + D2 ({spec['display_label']})"
+                else f"Experimental HD + D$_2$ ({spec['display_label']})"
             ),
         )[0]
         experimental_d2o_handle = ax.plot(
@@ -262,9 +262,9 @@ def create_tds_figure(case_specs_to_plot, image_name, figure_caption_lines=None)
             linestyle=":",
             color=color,
             label=(
-                "Exp. HDO + D2O"
+                r"Exp. HDO + D$_2$O"
                 if is_single_case_view
-                else f"Experimental HDO + D2O ({spec['display_label']})"
+                else f"Experimental HDO + D$_2$O ({spec['display_label']})"
             ),
         )[0]
 
@@ -285,7 +285,7 @@ def create_tds_figure(case_specs_to_plot, image_name, figure_caption_lines=None)
             case["time_h"], case["release_rate_d2o"], experimental_d2o
         )
         rmspe_lines.append(
-            f"{spec['rmspe_label']} RMSPEs: D2={rmspe_d2:.2f} %, D2O={rmspe_d2o:.2f} %"
+            f"{spec['rmspe_label']} RMSPEs: D$_2$={rmspe_d2:.2f} %, D$_2$O={rmspe_d2o:.2f} %"
         )
 
     ax_temperature = ax.twinx()
@@ -336,7 +336,7 @@ def create_tds_figure(case_specs_to_plot, image_name, figure_caption_lines=None)
         unique_legend_handles,
         unique_legend_labels,
         loc="lower center",
-        bbox_to_anchor=(0.5, 0.2 if is_single_case_view else 0.085),
+        bbox_to_anchor=(0.5, 0.2 if is_single_case_view else 0.081),
         ncol=2,
         frameon=True,
         fontsize=legend_fontsize,
