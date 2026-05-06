@@ -41,6 +41,7 @@ def get_output_path(filename):
         return max(existing_candidates, key=lambda path: path.stat().st_mtime)
     return candidates[-1]
 
+
 def search_parameter(path, visited, parameter_name):
     if path in visited:
         return None
@@ -58,6 +59,7 @@ def search_parameter(path, visited, parameter_name):
                 return stripped.split("=", maxsplit=1)[1].strip().strip("'")
     return None
 
+
 def get_raw_parameter_value(parameter_name, source_file="val-2k_natural_oxide.i"):
     parameters_file = get_repo_relative_path(source_file)
     result = search_parameter(parameters_file, set(), parameter_name)
@@ -66,6 +68,7 @@ def get_raw_parameter_value(parameter_name, source_file="val-2k_natural_oxide.i"
             f"Could not find parameter {parameter_name} in {parameters_file}"
         )
     return result
+
 
 def parse_numeric_value(value, output_unit=None):
     if value.startswith("${units ") and value.endswith("}"):
@@ -99,6 +102,7 @@ def parse_numeric_value(value, output_unit=None):
             raise ValueError(f"Unsupported conversion in units expression: {value}")
         return numeric_value * factor
     return float(value)
+
 
 def get_numeric_parameter(
     parameter_name, source_file="val-2k_natural_oxide.i", output_unit=None
