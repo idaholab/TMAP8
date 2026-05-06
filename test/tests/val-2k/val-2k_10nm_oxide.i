@@ -1,20 +1,15 @@
 # Validation Problem val-2k
-# Validation case for deuterium release from self-irradiated tungsten with
-# natural and artificial oxide layers based on:
-# Kremer, K., Brucker, M., Jacob, W., Schwarz-Selinger, T. (2022)
-# "Influence of thin surface oxide films on hydrogen isotope release from ion-irradiated tungsten"
-#
-# This companion stage adds a 10 nm oxygen-field oxide comparison alongside the
-# thinner natural-oxide oxygen-field baseline.
-# Included physics:
-# - dimensionless deuterium diffusion with the same tungsten transport properties everywhere
-# - dimensionless oxygen diffusion using the reported oxygen inventory and O-in-W transport kinetics
-# - six scaled val-2f trap families introduced through SpeciesTrapping physics blocks and suppressed smoothly inside the oxide region with a sharp tanh profile
-# - phenomenological D2 release on both surfaces and oxygen-gated D2O release on the front oxide surface
-# Deferred to later stages:
-# - explicit hydrogen-containing species
-# - water formation
-# - oxide reduction
+# Final 10 nm oxide wrapper for a validation case based on experimental data
+# from Kremer et al. (2022):
+# https://doi.org/10.1016/j.nme.2022.101137
+# Unit system:
+# - length: micrometers
+# - time: seconds
+# - concentration: atoms / micrometer^3
+# - flux: atoms / micrometer^2 / second
+# This wrapper sets the 10 nm front oxygen-field thickness and output names,
+# then includes the shared val-2k mesh, transport, trapping, and surface
+# release model.
 
 oxide_thickness = '${units 10 nm -> mum}'
 output_file_base = 'val-2k_10nm_oxide_out'

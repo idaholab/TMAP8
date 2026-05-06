@@ -1,7 +1,15 @@
-# This input file defines the six scaled trap model used by the oxygen-field
-# val-2k cases. The trap densities are multiplied by a sharp tanh
-# profile that suppresses trapping inside the front oxide region while
-# preserving the original tungsten distributions in the substrate.
+# Validation Problem val-2k
+# Shared six-trap model for a validation case based on experimental data from
+# Kremer et al. (2022):
+# https://doi.org/10.1016/j.nme.2022.101137
+# Unit system:
+# - length: micrometers
+# - time: seconds
+# - concentration: atoms / micrometer^3
+# - flux: atoms / micrometer^2 / second
+# This file defines the intrinsic and irradiation-induced trap families and
+# suppresses trapping inside the front oxide region while preserving the
+# tungsten substrate trap distributions.
 
 [Bounds]
   [deuterium_trapped_intrinsic_lower_bound]

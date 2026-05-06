@@ -1,10 +1,15 @@
-# This file provides the quantities shared by the val-2k natural-oxide and
-# 5 nm oxygen-field inputs.
+# Validation Problem val-2k
+# Shared parameters for a validation case based on experimental data from
+# Kremer et al. (2022):
+# https://doi.org/10.1016/j.nme.2022.101137
 # Unit system:
 # - length: micrometers
 # - time: seconds
 # - concentration: atoms / micrometer^3
 # - flux: atoms / micrometer^2 / second
+# This file defines the common geometry, mesh targets, dimensional constants,
+# scaled transport parameters, trap parameters, and output settings used by all
+# val-2k oxide-thickness wrappers.
 
 # Physical constants
 kb = '${units 1.380649e-23 J/K}' # Boltzmann constant from PhysicalConstants.h

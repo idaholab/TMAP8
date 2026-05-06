@@ -1,6 +1,14 @@
-# This input file defines the surface release assumptions for the oxygen-field
-# val-2k cases. It applies phenomenological D2 release on both
-# free surfaces and ties the D2O release channel to the evolving oxygen field.
+# Validation Problem val-2k
+# Shared surface release model for a validation case based on experimental data
+# from Kremer et al. (2022):
+# https://doi.org/10.1016/j.nme.2022.101137
+# Unit system:
+# - length: micrometers
+# - time: seconds
+# - concentration: atoms / micrometer^3
+# - flux: atoms / micrometer^2 / second
+# This file applies phenomenological D2 release on both free surfaces and ties
+# the front-surface D2O release channel to the evolving oxygen field.
 
 [BCs]
   [left_recombination_flux]

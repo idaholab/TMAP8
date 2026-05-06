@@ -1,3 +1,15 @@
+# Validation Problem val-2k
+# Shared base input for a validation case based on experimental data from
+# Kremer et al. (2022):
+# https://doi.org/10.1016/j.nme.2022.101137
+# Unit system:
+# - length: micrometers
+# - time: seconds
+# - concentration: atoms / micrometer^3
+# - flux: atoms / micrometer^2 / second
+# This file assembles the common val-2k mesh, variables, postprocessors,
+# executioner settings, and output controls, then includes the shared layer,
+# trap, and surface model blocks.
 !include val-2k_layer.i
 !include val-2k_traps.i
 !include val-2k_surface.i

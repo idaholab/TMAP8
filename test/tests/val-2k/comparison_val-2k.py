@@ -41,7 +41,7 @@ def get_output_path(filename):
         return max(existing_candidates, key=lambda path: path.stat().st_mtime)
     return candidates[-1]
 
-def search_parameter(path, visited):
+def search_parameter(path, visited, parameter_name):
     if path in visited:
         return None
     visited.add(path)
@@ -51,7 +51,7 @@ def search_parameter(path, visited):
             if stripped.startswith("!include "):
                 include_name = stripped.split(maxsplit=1)[1]
                 include_path = os.path.join(os.path.dirname(path), include_name)
-                result = search_parameter(include_path, visited)
+                result = search_parameter(include_path, visited, parameter_name)
                 if result is not None:
                     return result
             if stripped.startswith(f"{parameter_name} ="):
@@ -60,14 +60,14 @@ def search_parameter(path, visited):
 
 def get_raw_parameter_value(parameter_name, source_file="val-2k_natural_oxide.i"):
     parameters_file = get_repo_relative_path(source_file)
-    result = search_parameter(parameters_file, set())
+    result = search_parameter(parameters_file, set(), parameter_name)
     if result is None:
         raise KeyError(
             f"Could not find parameter {parameter_name} in {parameters_file}"
         )
     return result
 
-def parse_numeric_value(value):
+def parse_numeric_value(value, output_unit=None):
     if value.startswith("${units ") and value.endswith("}"):
         units_expr = value[len("${units ") : -1].strip()
         match = re.fullmatch(
@@ -104,7 +104,7 @@ def get_numeric_parameter(
     parameter_name, source_file="val-2k_natural_oxide.i", output_unit=None
 ):
     raw_value = get_raw_parameter_value(parameter_name, source_file)
-    return parse_numeric_value(raw_value)
+    return parse_numeric_value(raw_value, output_unit)
 
 
 def load_experimental_curve(filename):
@@ -443,6 +443,7 @@ temperature_ticks_k = temperature_ticks_k[
     (temperature_ticks_k >= np.floor(temperature_bounds_k.min()))
     & (temperature_ticks_k <= np.ceil(temperature_bounds_k.max()))
 ]
+recombination_temperature_ticks_k = temperature_ticks_k[temperature_ticks_k != 900]
 
 # Stage 3: generate the desorption comparison figure for all currently modeled
 # cases together with four companion views that isolate each case.
@@ -487,7 +488,7 @@ ax.set_ylabel(r"Surface recombination coefficient (m$^4$/at/s)")
 ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
 ax.legend(loc="best")
 ax.minorticks_on()
-add_temperature_top_axis(ax, temperature_ticks_k)
+add_temperature_top_axis(ax, recombination_temperature_ticks_k)
 
 plt.savefig(
     "val-2k_natural_oxide_recombination_rates.png",
@@ -724,9 +725,15 @@ deuterium_trapped_4 = profile_case["deuterium_trapped_4_physical"]
 deuterium_trapped_5 = profile_case["deuterium_trapped_5_physical"]
 
 fig, ax = plt.subplots(figsize=(6.5, 5.5))
-ax.axvspan(0.0, oxide_thickness_profile_um, color="0.88", alpha=0.9)
-ax.axvspan(oxide_thickness_profile_um, damage_depth_um, color="0.94", alpha=0.8)
-ax.axvspan(damage_depth_um, profile_depth_um, color="0.98", alpha=1.0)
+xmax_profile = max(profile_depth_um, float(np.max(distance_to_surface_microns)))
+ax.axvspan(0.0, oxide_thickness_profile_um, color="0.72", alpha=0.95)
+ax.axvspan(
+    oxide_thickness_profile_um,
+    damage_depth_um,
+    color="0.84",
+    alpha=0.9,
+)
+ax.axvspan(damage_depth_um, xmax_profile, color="0.93", alpha=0.95)
 ax.axvline(oxide_thickness_profile_um, color="0.4", linewidth=1.0, linestyle="--")
 ax.axvline(damage_depth_um, color="0.4", linewidth=1.0, linestyle="--")
 ax.plot(
@@ -782,7 +789,7 @@ ax.plot(
 
 ax.set_xlabel("Distance to tungsten surface (um)")
 ax.set_ylabel("Deuterium concentration (atoms/m$^3$)")
-ax.set_xlim(left=0)
+ax.set_xlim(0, xmax_profile)
 ax.set_ylim(0, 10.2e26)
 ymax = ax.get_ylim()[1]
 ax.text(10.1 * oxide_thickness_profile_um, 0.97 * ymax, "Oxide", ha="center", va="top")
@@ -794,7 +801,7 @@ ax.text(
     va="top",
 )
 ax.text(
-    0.5 * (damage_depth_um + profile_depth_um),
+    0.5 * (damage_depth_um + xmax_profile),
     0.97 * ymax,
     "Bulk W",
     ha="center",
