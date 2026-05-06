@@ -204,7 +204,7 @@
     data_file = gold/Experimental_desorption_temperature.csv
     format = columns
     x_title = 'time (s)'
-    y_title = 'Temperature (K)'
+    y_title = 'temperature (K)'
   []
 []
 

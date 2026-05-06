@@ -46,7 +46,7 @@ To capture the deuterium release behavior from self-irradiated tungsten with a t
 - A one-dimensional geometry with an oxide layer, a self-damaged region, and the tungsten bulk, as illustrated in [val-2k_natural_oxide_profile].
 - Deuterium transport involves Fickian diffusion, trapping and resolution, and surface reactions.
 - Trapping and resolution are governed by six trap families: one intrinsic trap family and five irradiation-induced trap families. This is directly inspired by [val-2f](val-2f.md), which validates TMAP8 based on deuterium release from self-irradiated tungsten. The full set of trap site densities is adapted from [val-2f](val-2f.md) so the initial areal inventory matches the prescribed `val-2k` preload.
-- The density of the intrinsic trap, since it is independent of irradiation, is homogeneous in the sample. The densities of irradiation-induced traps, however, are homogeneous in the 2.3 $\mu$m-thick self-damaged region, and then quickly decrease to 0 in the bulk of the sample, with a transition length of 0.05 $\mu$m  (see [val-2k_natural_oxide_profile]).
+- The density of the intrinsic trap, since it is independent of irradiation, is homogeneous in the sample. The densities of irradiation-induced traps, however, are homogeneous in the 2.3 $\mu$m-thick self-damaged region, and then quickly decrease to 0 in the bulk of the sample with a transition length of 0.05 $\mu$m, and also decreases to 0 in the oxide layer with a transition length of 0.25 nm (see [val-2k_natural_oxide_profile]).
 - Deuterium release takes place either as D$_2$ or as D$_2$O by combining with an oxygen atom at the surface. The surface recombination rates of these reactions are different.
 - The oxide layer is modeled as an additional layer on top of the self-damaged region. The transport properties of deuterium in the oxide layer remain equal to those in tungsten (e.g., same diffusivity), except that no trapping sites are present in the oxide layer. Note that the thickness of the oxygen layer does not evolve in time, even as oxygen atoms are released as D$_2$O. These simplifications are considered reasonable as the oxide layer represents only a small volume and thickness in these cases.
 - The oxide layer is initialized with a given oxygen concentration (consistent across all cases), which is null everywhere else. The diffusivity of oxygen in the oxide layer is accounted for, but the diffusion of oxygen deeper into the tungsten sample is suppressed.
@@ -57,7 +57,7 @@ As in [val-2f](val-2f.md), the implementation is solved internally in dimensionl
 
 \begin{equation}
 \frac{\partial C_M}{\partial t} =
-\nabla \cdot \left(D_W \nabla C_M \right) +
+\nabla \cdot \left(D_D \nabla C_M \right) -
 \sum_{i \in \{intr,1,\dots,5\}} \frac{\partial C_{T_i}}{\partial t},
 \end{equation}
 
@@ -72,7 +72,7 @@ with one trapped-species evolution equation for each trap family:
 C_{T_i}^{empty} = C_{T_i,0} N - C_{T_i},
 \end{equation}
 
-where $C_M$ is the mobile deuterium concentration, $t$ is the time, $C_{T_i}$ is the concentration trapped in family $i$, $C_{T_i}^{empty}$ is the remaining empty trap capacity, $C_{T_i,0}$ is the fraction of host sites that can act as trap family $i$, and $N$ is the tungsten host density. $D_W$ is the deuterium diffusivity in tungsten (and tungsten oxide in this model), and $\alpha_{t,i}$ and $\alpha_{r,i}$ are the trapping and resolution rates for trapping family $i$, respectively.
+where $C_M$ is the mobile deuterium concentration, $t$ is the time, $C_{T_i}$ is the concentration trapped in family $i$, $C_{T_i}^{empty}$ is the remaining empty trap capacity, $C_{T_i,0}$ is the fraction of host sites that can act as trap family $i$, and $N$ is the tungsten host density. $D_D$ is the deuterium diffusivity in tungsten (and tungsten oxide in this model), and $\alpha_{t,i}$ and $\alpha_{r,i}$ are the trapping and resolution rates for trapping family $i$, respectively.
 
 The oxygen field evolves according to
 
@@ -87,7 +87,7 @@ In the current model, oxygen diffusion is masked so that it is active only insid
 The temperature-dependent diffusivities and trapping/detrapping rates follow Arrhenius forms:
 
 \begin{equation}
-D_W = D_{W,0} \exp \left(- \frac{E_D}{k_B T} \right),
+D_D = D_{D,0} \exp \left(- \frac{E_D}{k_B T} \right),
 \end{equation}
 and
 \begin{equation}
@@ -117,18 +117,19 @@ The surface reactions represented in the model are
 which give the corresponding surface fluxes
 
 \begin{equation}
-J_{D_2}^{(D)} = -2 K_{r,D_2} C_M^2,
+J_{D_2}^{(D\ at)} = -2 K_{r,D_2} C_M^2,
 \end{equation}
 \begin{equation}
-J_{D_2O}^{(D)} = -2 K_{r,D_2O} C_O C_M^2,
+J_{D_2O}^{(D\ at)} = -2 K_{r,D_2O} C_O C_M^2,
 \end{equation}
 and
 \begin{equation}
-J_O = \frac{1}{2} J_{D_2O}^{(D)},
+J_O = \frac{1}{2} J_{D_2O}^{(D\ at)},
 \end{equation}
 
-where $J_{D_2}^{(D)}$ and $J_{D_2O}^{(D)}$ are deuterium-atom fluxes leaving the mobile-deuterium balance from $D_2$ and $D_2O$ reactions, with units of D atoms m$^{-2}$ s$^{-1}$.
-Equivalently, the molecular heavy-water flux is $J_{D_2O}^{(mol)} = \frac{1}{2} J_{D_2O}^{(D)}$, so the oxygen loss flux satisfies $J_O = J_{D_2O}^{(mol)}$ because one oxygen atom is consumed per released D$_2$O molecule.
+where $J_{D_2}^{(D\ at)}$ and $J_{D_2O}^{(D\ at)}$ are deuterium-atom fluxes leaving the mobile-deuterium balance from $D_2$ and $D_2O$ reactions, with units of D atoms m$^{-2}$ s$^{-1}$.
+Equivalently, the molecular heavy-water flux is $J_{D_2O}^{(mol)} = \frac{1}{2} J_{D_2O}^{(D\ at)}$, so the oxygen loss flux satisfies $J_O = J_{D_2O}^{(mol)}$ because one oxygen atom is consumed per released D$_2$O molecule.
+While the reverse reactions, e.g., molecular dissociation at the surface, are possible, they are neglected here for simplicity due to the low partial pressure of deuterium in the gas surrounding the sample.
 
 The surface reaction rates also follow Arrhenius forms and are defined as
 
@@ -154,13 +155,13 @@ with $L_{\text{ref}} = 1$ $\mu$m and $t_{\text{ref}} = 1$ s.
 The corresponding dimensionless groups used in the input files are
 
 \begin{equation}
-\hat{k}_{t,i} = t_{\text{ref}} \alpha_{t,i} \frac{C_{M,\text{ref}}}{N},
+\hat{\alpha}_{t,i} = t_{\text{ref}} \alpha_{t,i} \frac{C_{M,\text{ref}}}{N},
 \end{equation}
 \begin{equation}
-\hat{k}_{r,i} = t_{\text{ref}} \alpha_{r,i},
+\hat{\alpha}_{r,i} = t_{\text{ref}} \alpha_{r,i},
 \end{equation}
 \begin{equation}
-\hat{D}_W = D_W \frac{t_{\text{ref}}}{L_{\text{ref}}^2},
+\hat{D}_D = D_D \frac{t_{\text{ref}}}{L_{\text{ref}}^2},
 \end{equation}
 \begin{equation}
 \hat{D}_O = D_O \frac{t_{\text{ref}}}{L_{\text{ref}}^2},
@@ -190,7 +191,7 @@ The initial oxygen concentration is derived from the paper-reported removal of $
 | $T_0$ | Initial desorption temperature | $\approx$ 295.775 | K | Digitized from Fig. 6 in [!cite](Kremer2022oxide) |
 | $T_f$ | Final desorption temperature | $\approx$ 1001.408 | K | Digitized from Fig. 6 in [!cite](Kremer2022oxide) |
 | $t_f$ | Final desorption time | 4.166 | h | Digitized from Fig. 6 in [!cite](Kremer2022oxide) |
-| $D_0$ | Deuterium diffusivity prefactor | 1.6 $\times 10^{-7}$ | m$^2$/s | From [val-2f](val-2f.md) |
+| $D_{D,0}$ | Deuterium diffusivity prefactor | 1.6 $\times 10^{-7}$ | m$^2$/s | From [val-2f](val-2f.md) |
 | $E_D$ | Deuterium diffusion activation energy | 0.28 | eV | From [val-2f](val-2f.md) |
 | $D_{0,O}$ | Oxygen diffusivity prefactor in oxide film | 2.0 $\times 10^{-17}$ | m$^2$/s | Calibrated, starting from [!cite](Jiang2009oxygenDiffusion) |
 | $E_{D,O}$ | Oxygen diffusion activation energy in oxide film | 0.45 | eV | Calibrated, starting from [!cite](Jiang2009oxygenDiffusion) |
@@ -208,16 +209,16 @@ The initial oxygen concentration is derived from the paper-reported removal of $
 | $E_{T,3}$ | Trap 3 detrapping energy | 1.65 | eV | From [val-2f](val-2f.md) |
 | $E_{T,4}$ | Trap 4 detrapping energy | 1.85 | eV | From [val-2f](val-2f.md) |
 | $E_{T,5}$ | Trap 5 detrapping energy | 2.05 | eV | From [val-2f](val-2f.md) |
-| $C_{T,intr,0}$ | Intrinsic trap site density | 1.595 $\times 10^{23}$ | at/m$^3$ | Scaled from [val-2f](val-2f.md) |
-| $C_{T_1,0}$ | Trap 1 site density | 3.076 $\times 10^{26}$ | at/m$^3$ | Scaled from [val-2f](val-2f.md) |
-| $C_{T_2,0}$ | Trap 2 site density | 1.910 $\times 10^{26}$ | at/m$^3$ | Scaled from [val-2f](val-2f.md) |
-| $C_{T_3,0}$ | Trap 3 site density | 1.304 $\times 10^{26}$ | at/m$^3$ | Scaled from [val-2f](val-2f.md) |
-| $C_{T_4,0}$ | Trap 4 site density | 2.392 $\times 10^{26}$ | at/m$^3$ | Adapted from [val-2f](val-2f.md) |
-| $C_{T_5,0}$ | Trap 5 site density | 7.330 $\times 10^{25}$ | at/m$^3$ | Adapted from [val-2f](val-2f.md) |
-| $K_r^{D_2}$ | Recombination prefactor | 3.8 $\times 10^{-16}$ | m$^4$/at/s | Adapted from [val-2f](val-2f.md) |
-| $E_r^{D_2}$ | Recombination activation energy | 0.34 | eV | Adapted from [val-2f](val-2f.md) |
-| $K_r^{D_2O}$ | D$_2$O surface-release prefactor | 3.8 $\times 10^{1}$ | m$^4$/at/s | Calibrated |
-| $E_r^{D_2O}$ | D$_2$O surface-release activation energy | 2.10 | eV | Calibrated |
+| $C_{T,intr,0} N$ | Intrinsic trap site density | 1.595 $\times 10^{23}$ | at/m$^3$ | Scaled from [val-2f](val-2f.md) |
+| $C_{T_1,0} N$ | Trap 1 site density | 3.076 $\times 10^{26}$ | at/m$^3$ | Scaled from [val-2f](val-2f.md) |
+| $C_{T_2,0} N$ | Trap 2 site density | 1.910 $\times 10^{26}$ | at/m$^3$ | Scaled from [val-2f](val-2f.md) |
+| $C_{T_3,0} N$ | Trap 3 site density | 1.304 $\times 10^{26}$ | at/m$^3$ | Scaled from [val-2f](val-2f.md) |
+| $C_{T_4,0} N$ | Trap 4 site density | 2.392 $\times 10^{26}$ | at/m$^3$ | Adapted from [val-2f](val-2f.md) |
+| $C_{T_5,0} N$ | Trap 5 site density | 7.330 $\times 10^{25}$ | at/m$^3$ | Adapted from [val-2f](val-2f.md) |
+| $K_{r,D_2}$ | Recombination prefactor | 3.8 $\times 10^{-16}$ | m$^4$/at/s | Adapted from [val-2f](val-2f.md) |
+| $E_{r,D_2}$ | Recombination activation energy | 0.34 | eV | Adapted from [val-2f](val-2f.md) |
+| $K_{r,D_2O}$ | D$_2$O surface-release prefactor | 3.8 $\times 10^{1}$ | m$^4$/at/s | Calibrated |
+| $E_{r,D_2O}$ | D$_2$O surface-release activation energy | 2.10 | eV | Calibrated |
 
 ## Results
 

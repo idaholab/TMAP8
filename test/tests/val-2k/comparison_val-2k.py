@@ -41,27 +41,25 @@ def get_output_path(filename):
         return max(existing_candidates, key=lambda path: path.stat().st_mtime)
     return candidates[-1]
 
+def search_parameter(path, visited):
+    if path in visited:
+        return None
+    visited.add(path)
+    with open(path, encoding="utf-8") as handle:
+        for line in handle:
+            stripped = line.strip()
+            if stripped.startswith("!include "):
+                include_name = stripped.split(maxsplit=1)[1]
+                include_path = os.path.join(os.path.dirname(path), include_name)
+                result = search_parameter(include_path, visited)
+                if result is not None:
+                    return result
+            if stripped.startswith(f"{parameter_name} ="):
+                return stripped.split("=", maxsplit=1)[1].strip().strip("'")
+    return None
 
 def get_raw_parameter_value(parameter_name, source_file="val-2k_natural_oxide.i"):
     parameters_file = get_repo_relative_path(source_file)
-
-    def search_parameter(path, visited):
-        if path in visited:
-            return None
-        visited.add(path)
-        with open(path, encoding="utf-8") as handle:
-            for line in handle:
-                stripped = line.strip()
-                if stripped.startswith("!include "):
-                    include_name = stripped.split(maxsplit=1)[1]
-                    include_path = os.path.join(os.path.dirname(path), include_name)
-                    result = search_parameter(include_path, visited)
-                    if result is not None:
-                        return result
-                if stripped.startswith(f"{parameter_name} ="):
-                    return stripped.split("=", maxsplit=1)[1].strip().strip("'")
-        return None
-
     result = search_parameter(parameters_file, set())
     if result is None:
         raise KeyError(
@@ -69,45 +67,43 @@ def get_raw_parameter_value(parameter_name, source_file="val-2k_natural_oxide.i"
         )
     return result
 
+def parse_numeric_value(value):
+    if value.startswith("${units ") and value.endswith("}"):
+        units_expr = value[len("${units ") : -1].strip()
+        match = re.fullmatch(
+            r"([0-9eE.+-]+)\s+([A-Za-z0-9^/]+)(?:\s*->\s*([A-Za-z0-9^/]+))?",
+            units_expr,
+        )
+        if not match:
+            raise ValueError(f"Unsupported units expression: {value}")
+        numeric_value = float(match.group(1))
+        from_unit = match.group(2)
+        to_unit = match.group(3)
+        target_unit = output_unit
+        if target_unit is None:
+            if to_unit is None or from_unit == to_unit:
+                return numeric_value
+            target_unit = to_unit
+        if from_unit == target_unit:
+            return numeric_value
+        supported_conversions = {
+            ("h", "s"): 3600.0,
+            ("s", "h"): 1.0 / 3600.0,
+            ("nm", "mum"): 1e-3,
+            ("m", "mum"): 1e6,
+            ("m^4/at/s", "mum^4/at/s"): 1e24,
+            ("mum^4/at/s", "m^4/at/s"): 1e-24,
+        }
+        factor = supported_conversions.get((from_unit, target_unit))
+        if factor is None:
+            raise ValueError(f"Unsupported conversion in units expression: {value}")
+        return numeric_value * factor
+    return float(value)
 
 def get_numeric_parameter(
     parameter_name, source_file="val-2k_natural_oxide.i", output_unit=None
 ):
     raw_value = get_raw_parameter_value(parameter_name, source_file)
-
-    def parse_numeric_value(value):
-        if value.startswith("${units ") and value.endswith("}"):
-            units_expr = value[len("${units ") : -1].strip()
-            match = re.fullmatch(
-                r"([0-9eE.+-]+)\s+([A-Za-z0-9^/]+)(?:\s*->\s*([A-Za-z0-9^/]+))?",
-                units_expr,
-            )
-            if not match:
-                raise ValueError(f"Unsupported units expression: {value}")
-            numeric_value = float(match.group(1))
-            from_unit = match.group(2)
-            to_unit = match.group(3)
-            target_unit = output_unit
-            if target_unit is None:
-                if to_unit is None or from_unit == to_unit:
-                    return numeric_value
-                target_unit = to_unit
-            if from_unit == target_unit:
-                return numeric_value
-            supported_conversions = {
-                ("h", "s"): 3600.0,
-                ("s", "h"): 1.0 / 3600.0,
-                ("nm", "mum"): 1e-3,
-                ("m", "mum"): 1e6,
-                ("m^4/at/s", "mum^4/at/s"): 1e24,
-                ("mum^4/at/s", "m^4/at/s"): 1e-24,
-            }
-            factor = supported_conversions.get((from_unit, target_unit))
-            if factor is None:
-                raise ValueError(f"Unsupported conversion in units expression: {value}")
-            return numeric_value * factor
-        return float(value)
-
     return parse_numeric_value(raw_value)
 
 
@@ -352,7 +348,8 @@ def create_tds_figure(case_specs_to_plot, image_name, figure_caption_lines=None)
 
 
 # Stage 2: load the simulated outputs for the currently available oxygen-field
-# cases together with the experimental curves from Fig. 6.
+# cases together with the experimental curves from Fig. 6. in Kremer et al. 2022
+#  https://doi.org/10.1016/j.nme.2022.101137
 time_reference = get_numeric_parameter("time_reference")
 sample_surface_area_m2 = 10e-3 * 14e-3
 

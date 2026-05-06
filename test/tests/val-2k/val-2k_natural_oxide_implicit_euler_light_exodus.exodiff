@@ -10,10 +10,10 @@
 #  *****************************************************************
 
 # This is use in one test:
-#  FILE 1: ~/projects/TMAP8/test/tests/val-2k/gold/val-2k_natural_oxide_implicit_euler_out.e
+#  FILE 1: ~/projects/TMAP8/test/tests/val-2k/gold/val-2k_natural_oxide_implicit_euler_light_out.e
 #   Title: val-2k
-#          Dim = 3, Blocks = 1, Nodes = 555, Elements = 554, Nodesets = 2, Sidesets = 2
-#          Vars: Global = 38, Nodal = 19, Element = 0, Nodeset = 0, Sideset = 0, Times = 26
+#          Dim = 3, Blocks = 1, Nodes = 63, Elements = 62, Nodesets = 2, Sidesets = 2
+#          Vars: Global = 38, Nodal = 19, Element = 0, Nodeset = 0, Sideset = 0, Times = 21
 
 # ==============================================================
 #  NOTE: All node and element ids are reported as global ids.

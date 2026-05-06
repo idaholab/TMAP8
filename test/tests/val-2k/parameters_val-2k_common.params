@@ -90,7 +90,7 @@ oxygen_diffusion_W_energy = '${units 0.45 eV}'
 # val-2f six-trap reference scaled to preserve the current val-2k initial areal inventory
 depth_center = '${units 2.3e-6 m -> mum}'
 depth_width = '${units 5e-8 m -> mum}'
-trap_density_scale = 6.6448483834798155 # (/)
+trap_density_scale = 6.6448483834798155 # (-)
 trapping_site_fraction_intrinsic = '${fparse trap_density_scale * 3.796146910885451e-07}' # (/)
 trapping_site_fraction_1 = '${fparse trap_density_scale * 7.322741092695964e-04}' # (/)
 trapping_site_fraction_2 = '${fparse trap_density_scale * 4.5458706307839917e-04}' # (/)
