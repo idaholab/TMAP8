@@ -1,4 +1,4 @@
-# Validation Problem #val-2k
+# Validation Problem val-2k
 # Validation case for deuterium release from self-irradiated tungsten with
 # natural and artificial oxide layers based on:
 # Kremer, K., Brucker, M., Jacob, W., Schwarz-Selinger, T. (2022)

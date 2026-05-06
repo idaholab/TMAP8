@@ -23,7 +23,7 @@ The samples are then loaded with deuterium so that the retained inventory is con
 The loading is performed at 370 K to enable deuterium mobility while minimizing defect annealing in the self-damaged region.
 Once loaded, a thin oxide layer is deposited using an electrochemical process at low temperature.
 The advantage of this approach is that compared to thermal oxidation, the temperature remains low (e.g., room temperature), which limits deuterium transport and defect annealing.
-[!cite](Kremer2022oxide) note that electro-chemically grown tungsten oxide has an amorphous structure and therefore differs from thermally grown oxide or natural oxide, which might affect the release behavior.
+[!cite](Kremer2022oxide) note that electro-chemically grown tungsten oxide has an amorphous structure and, therefore, differs from thermally grown oxide or natural oxide, which might affect the release behavior.
 
 While [!cite](Kremer2022oxide) offers a wide range of data and observations for oxide-layer thicknesses reaching up to 100 nm, the current study focuses on the thinner oxide films discussed in the experimental paper, namely a sample with a natural oxide layer and then samples with 5 nm, 10 nm, and 15 nm-thick oxide films.
 The paper describes the natural oxide as being 1-2 nm thick, and the present model uses 1 nm as a representative natural-oxide value for that case.
@@ -45,7 +45,7 @@ To capture the deuterium release behavior from self-irradiated tungsten with a t
 
 - A one-dimensional geometry with an oxide layer, a self-damaged region, and the tungsten bulk, as illustrated in [val-2k_natural_oxide_profile].
 - Deuterium transport involves Fickian diffusion, trapping and resolution, and surface reactions.
-- trapping and resolution are governed by six trap families, one intrinsic trap family and five irradiation-induced trap families. This is directly inspired by [val-2f](val-2f.md), which validates TMAP8 based on deuterium release from self-irradiated tungsten. The full set of trap site densities is adapted from [val-2f](val-2f.md) so the initial areal inventory matches the prescribed `val-2k` preload.
+- Trapping and resolution are governed by six trap families: one intrinsic trap family and five irradiation-induced trap families. This is directly inspired by [val-2f](val-2f.md), which validates TMAP8 based on deuterium release from self-irradiated tungsten. The full set of trap site densities is adapted from [val-2f](val-2f.md) so the initial areal inventory matches the prescribed `val-2k` preload.
 - The density of the intrinsic trap, since it is independent of irradiation, is homogeneous in the sample. The densities of irradiation-induced traps, however, are homogeneous in the 2.3 $\mu$m-thick self-damaged region, and then quickly decrease to 0 in the bulk of the sample, with a transition length of 0.05 $\mu$m  (see [val-2k_natural_oxide_profile]).
 - Deuterium release takes place either as D$_2$ or as D$_2$O by combining with an oxygen atom at the surface. The surface recombination rates of these reactions are different.
 - The oxide layer is modeled as an additional layer on top of the self-damaged region. The transport properties of deuterium in the oxide layer remain equal to those in tungsten (e.g., same diffusivity), except that no trapping sites are present in the oxide layer. Note that the thickness of the oxygen layer does not evolve in time, even as oxygen atoms are released as D$_2$O. These simplifications are considered reasonable as the oxide layer represents only a small volume and thickness in these cases.
@@ -72,7 +72,7 @@ with one trapped-species evolution equation for each trap family:
 C_{T_i}^{empty} = C_{T_i,0} N - C_{T_i},
 \end{equation}
 
-where $C_M$ is the mobile deuterium concentration, $t$ the time, $C_{T_i}$ is the concentration trapped in family $i$, $C_{T_i}^{empty}$ is the remaining empty trap capacity, $C_{T_i,0}$ is the fraction of host sites that can act as trap family $i$, and $N$ is the tungsten host density. $D_W$ is the deuterium diffusivity in tungsten (and tungsten oxide in this model), and $\alpha_{t,i}$ and $\alpha_{r,i}$ are the trapping and resolution rates for trapping family $i$, respectively.
+where $C_M$ is the mobile deuterium concentration, $t$ is the time, $C_{T_i}$ is the concentration trapped in family $i$, $C_{T_i}^{empty}$ is the remaining empty trap capacity, $C_{T_i,0}$ is the fraction of host sites that can act as trap family $i$, and $N$ is the tungsten host density. $D_W$ is the deuterium diffusivity in tungsten (and tungsten oxide in this model), and $\alpha_{t,i}$ and $\alpha_{r,i}$ are the trapping and resolution rates for trapping family $i$, respectively.
 
 The oxygen field evolves according to
 
@@ -344,19 +344,19 @@ The residual is formed from the change in oxygen retained in the sample plus the
 The model proposed herein uses a general formulation and consistent parameters for all four samples with different oxide thicknesses, and qualitatively captures the main experimentally-observed trends and differences between all configurations published in [!cite](Kremer2022oxide).
 By doing so, it provides key physical insights into the experimental measurements and observations.
 This insight is valuable to tie laboratory observations, where tungsten oxidation often takes place, to performance in fusion power plant environments.
-Using this novel model, the laboratory deuterium TDS data can be analyzed and the effect of the oxide layer can be isolated, hance providing a model applicable to fusion energy system conditions.
+Using this novel model, the laboratory deuterium TDS data can be analyzed and the effect of the oxide layer can be isolated, hence providing a model applicable to fusion energy system conditions.
 
 This model, however, has limitations that should be addressed by future work.
 The limitations discussed in [!cite](Kremer2022oxide) (e.g., electrochemically grown oxide being different from thermally grown oxide) still apply to this study.
 A more thorough characterization of the oxide and a general analysis including different oxide structures would help generalize the current model, which currently does not differentiate between different oxide types.
 In addition, the model makes other key assumptions and simplifications that could be challenged in the future to confirm the interpretation proposed in this study.
-For example, the model does not capture the increased surface diffusion of deuterium, which is discussed in the original paper [!citep](Kremer2022oxide) as a key release mechanism as deuterium atoms diffuse along the sample surface to find remaining pockets of oxygen to be released as D$_2$O.
+For example, the model does not capture the increased surface diffusion of deuterium, discussed in the original paper [!citep](Kremer2022oxide) as a key release mechanism, as deuterium atoms diffuse along the sample surface to find remaining pockets of oxygen to be released as D$_2$O.
 To model this, the geometry should be expanded to a 2D or 3D model, which is possible in TMAP8 [!citep](Franklin2025,Shimada2024,Simon2022,Simon2025).
 
 The current study implemented the model and performed ad hoc calibration of the model parameters based on the potential driving mechanisms of oxide evolution and deuterium detrapping, diffusion, and surface reactions.
-While the experimentally observed trends are qualitatively captured by the model, the simulation results are quantitatively different from the experimental measurements.
+While the experimentally-observed trends are qualitatively captured by the model, the simulation results are quantitatively different from the experimental measurements.
 Using Bayesian inference across all sets of experimental data would make it possible to calibrate the model to the experimental data while quantifying uncertainties and sources of error from model inadequacy, experimental error, and model-parameter uncertainty [!citep](DHULIPALA2026102776,DHULIPALA2025155795).
-The current oxygen diffusivity and D$_2$ and D$_2$O release parameters are therefore best interpreted as calibrated effective kinetics for matching the observed TDS trends rather than as a mechanistic description, which will be the goal of future work.
+The current oxygen diffusivity and D$_2$ and D$_2$O release parameters are, therefore, best interpreted as calibrated effective kinetics for matching the observed TDS trends rather than as a mechanistic description, which will be the goal of future work.
 
 ## Input files
 

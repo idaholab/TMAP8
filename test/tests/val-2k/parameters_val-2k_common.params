@@ -1,7 +1,7 @@
 # This file provides the quantities shared by the val-2k natural-oxide and
 # 5 nm oxygen-field inputs.
 # Unit system:
-# - length: micrometers in the input file
+# - length: micrometers
 # - time: seconds
 # - concentration: atoms / micrometer^3
 # - flux: atoms / micrometer^2 / second
