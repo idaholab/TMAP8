@@ -70,7 +70,7 @@
   [val-2k_15nm_oxide_initial_profile_csvdiff]
     type = CSVDiff
     input = val-2k_15nm_oxide.i
-    csvdiff = profiles/val-2k_15nm_oxide_profile_initial_out_line_profile_0000.csv
+    csvdiff = val-2k_15nm_oxide_profile_initial_out_line_profile_0000.csv
     prereq = val-2k_15nm_oxide_bdf2_csvdiff
     should_execute = false
     heavy = true

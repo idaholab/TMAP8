@@ -13,7 +13,7 @@
 
 oxide_thickness = '${units 5 nm -> mum}'
 output_file_base = 'val-2k_5nm_oxide_out'
-profile_output_file_base = 'profiles/val-2k_5nm_oxide_profile_initial_out'
+profile_output_file_base = 'val-2k_5nm_oxide_profile_initial_out'
 
 !include parameters_val-2k_common.params
 !include val-2k_base.i
