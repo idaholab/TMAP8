@@ -21,7 +21,6 @@
     custom_cmp = 'val-2k_natural_oxide_implicit_euler_light_exodus.exodiff'
     prereq = val-2k_natural_oxide_implicit_euler_csvdiff_light
     should_execute = false
-    heavy = true
     requirement = 'The system shall be able to produce the full field solution of a simulation of deuterium transport in self-irradiated tungsten with a 1 nm natural-oxide oxygen-field representation during a TDS experiment using deuterium diffusion, trapping, oxygen transport, and phenomenological D2 and D2O surface release, using the implicit Euler time integration scheme.'
   []
   [val-2k_natural_oxide_bdf2_csvdiff]
