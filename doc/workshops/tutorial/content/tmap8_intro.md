@@ -170,6 +170,3 @@ Check out the TMAP8 example cases and all relevant input file and documentation 
 
 It includes examples for fuel cycle calculations, divertor monoblock modeling, and pore microstructure modeling.
 
-!---
-
-# Summary
