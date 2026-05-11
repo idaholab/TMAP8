@@ -8,7 +8,7 @@ Tritium transport in solid materials can be divided into two main parts: (1) bul
 (2) surface reactions.
 We succinctly describe how TMAP8 models each part below. For more details on fuel cycle modeling, see [fuel_cycle_Abdou/index.md] or [fuel_cycle_Meschini/index.md].
 
-## Bulk Tramsport
+## Bulk Transport
 
 ### Main system of equations (the so-called strong forms)
 
