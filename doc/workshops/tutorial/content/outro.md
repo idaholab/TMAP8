@@ -4,7 +4,7 @@
 
 - Understand the purpose and capabilities of MOOSE and TMAP8.
 - Successfully have installed TMAP8.
-- Have run and modified simulations, as well as ploted and analyzed results.
+- Have run and modified simulations, as well as plotted and analyzed results.
 - Have identified and accessed documentation, tutorials, and community support.
 - Leave with a clear path for continued use and development.
 

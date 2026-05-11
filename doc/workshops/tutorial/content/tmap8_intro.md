@@ -161,7 +161,7 @@ Later in the hands on part of this workshop, we will go through some V&V cases i
 !style halign=center
 TMAP8's example cases list simulations performed with TMAP8 that highlight specific capabilities.
 The example cases differ from the V&V cases in that they do not necessarily have analytical solutions or experimental data to be compared against.
-In geenral, the example cases also describe how the input file relates to the simulation, making them great resources for users. Hence, these cases can serve as additional tutorial cases, or as starting point for new simulations.
+In general, the example cases also describe how the input file relates to the simulation, making them great resources for users. Hence, these cases can serve as additional tutorial cases, or as starting point for new simulations.
 
 Check out the TMAP8 example cases and all relevant input file and documentation on the:
 

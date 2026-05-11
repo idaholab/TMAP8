@@ -46,7 +46,7 @@ For case (a), the initial pressures of A and B were 1 $\mu$Pa, and the reaction 
 C_{i_0} = 10^{-18} \frac{P_{i_0} N_a}{R T},
 \end{equation}
 
-where $P_{i_0}$ is the initial pressure, $N_a$ is Avogardro's constant, $R$ is the gas constant (from  [PhysicalConstants](source/utils/TMAP8PhysicalConstants.md)), and $T$ = 298.15 K (25$\deg$C) is the temperature. The factor $10^{-18}$ converts the concentration from atoms/m$^3$ to atoms/$\mu$m$^3$.
+where $P_{i_0}$ is the initial pressure, $N_a$ is Avogadro's constant, $R$ is the gas constant (from  [PhysicalConstants](source/utils/TMAP8PhysicalConstants.md)), and $T$ = 298.15 K (25$\deg$C) is the temperature. The factor $10^{-18}$ converts the concentration from atoms/m$^3$ to atoms/$\mu$m$^3$.
 
 ## Results and comparison against analytical solution
 

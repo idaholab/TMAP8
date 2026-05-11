@@ -299,7 +299,7 @@ _permeability(getADMaterialProperty<Real>("permeability"))
 // In the "computeQp..." method
 ADReal
 SomeObject::computeQpResidual() {
-return _permability[_qp] * _grad_u[_qp] * _grad_test[_qp];
+return _permeability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 }
 ```
 
@@ -623,7 +623,7 @@ param = 5.0 * ${top_level_coef1} + ${top_level_coef2}  # Replacements
 +Krylov Solvers:+
 
 - GMRES (default)
-- Conjuate Gradient (CG), BiCGStab
+- Conjugate Gradient (CG), BiCGStab
 - Build Krylov subspace
 
 +Preconditioning:+
