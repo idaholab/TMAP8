@@ -8,18 +8,18 @@ This verification problem is taken from [!cite](longhurst1992verification, ambro
 
 ## Analytical solution at steady state
 
-The steady state solution for the PyC is given in [!cite](longhurst1992verification, ambrosek2008verification) as:
+The steady state solution for the PyC is calculated as:
 
 \begin{equation}
 \label{eqn:steady_state_pyc}
-    C = C_0 \left[1 + \frac{x}{l}  \left(\frac{a D_{PyC}}{a D_{PyC} + l D_{SiC}} - 1 \right) \right]
+    C = C_0 \left[\frac{(a-x) D_{SiC} + l D_{PyC}}{l D_{PyC} + a D_{SiC}} \right]
 \end{equation}
 
-while the concentration profile for the SiC layer is given as:
+while the concentration profile for the SiC layer is calculated as:
 
 \begin{equation}
 \label{eqn:steady_state_sic}
-    C = C_0 \left(\frac{a+l-x}{l} \right) \left(\frac{a D_{PyC}}{a D_{PyC} + l D_{SiC}} \right)
+    C = C_0 \left[\frac{(l+a-x) D_{PyC}}{l D_{PyC} + a D_{SiC}} \right]
 \end{equation}
 
 where

@@ -320,8 +320,8 @@ D_PyC = 1.274e-7  # diffusivity in PyC (m^2/s)
 D_SiC = 2.622e-11  # diffusivity in SiC (m^2/s)
 
 x = tmap_distance_tmap7
-PyC_conc = c0 * (1 + (x / l) * ((a * D_PyC) / (a * D_PyC + l * D_SiC) - 1))
-SiC_conc = c0 * (((a + l - x) / l) * (a * D_PyC) / (a * D_PyC + l * D_SiC))
+PyC_conc = c0 * ((a - x) * D_SiC + l * D_PyC) / (l * D_PyC + a * D_SiC)
+SiC_conc = c0 * ((l + a - x) * D_PyC) / (l * D_PyC + a * D_SiC)
 analytical_conc_tmap7 = (x < a) * PyC_conc + (x >= a) * SiC_conc
 
 RMSE = np.sqrt(np.mean((tmap_conc_tmap7 - analytical_conc_tmap7) ** 2))
