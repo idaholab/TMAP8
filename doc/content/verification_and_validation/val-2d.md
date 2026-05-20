@@ -36,7 +36,7 @@ The second is a uniform trap associated with dislocations and is assigned a trap
 Therefore, the diffusion of tritium in sample is described as:
 
 \begin{equation} \label{eq:diffusion}
-\frac{d C_M}{d t} = \nabla \cdot D \nabla C_M + S + \sum_{i=1}^{3} f_{T/M,i} \frac{dC_{T_i}}{dt} ,
+\frac{d C_M}{d t} = \nabla \cdot D \nabla C_M + S - \sum_{i=1}^{3} f_{T/M,i} \frac{dC_{T_i}}{dt} ,
 \end{equation}
 
 and, for $i=1$, $i=2$, and $i=3$:

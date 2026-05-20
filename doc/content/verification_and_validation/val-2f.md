@@ -88,7 +88,7 @@ The general form of the transport equations for the deuterium in tungsten is giv
 
 \begin{equation}
     \label{eq:diffusion}
-    \frac{\partial C_M}{\partial t} = \nabla \cdot D \nabla C_M + S + \sum_{i=1}^{6} f_{T/M,i} \frac{\partial C_{T_i}}{\partial t}
+    \frac{\partial C_M}{\partial t} = \nabla \cdot D \nabla C_M + S - \sum_{i=1}^{6} f_{T/M,i} \frac{\partial C_{T_i}}{\partial t}
 \end{equation}
 
 and, for $i \in [1,6]$ representing the trapping sites:
