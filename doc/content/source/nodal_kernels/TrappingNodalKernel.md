@@ -21,7 +21,7 @@ $\alpha_t$ is defined as
 with $\alpha_{t0}$ being the pre-exponential factor in units of 1/s, $\epsilon$ being the trapping energy in units of Kelvin, and $T$ being the temperature in units of Kelvin.
 
 As outlined in [getting_started/tmap8_user_notes.md#scaling exact=True], it is important
-to scale different specie numerical concentrations to the same order of magnitude
+to scale different species numerical concentrations to the same order of magnitude
 in order to have robust (non)linear solves. Unfortunately, incorporation of scaling
 tends to obfuscate residual-computing objects a bit, including
 `TrappingNodalKernel`. Hopefully we can make things clear here, however. Let's
@@ -37,18 +37,20 @@ and the mobile concentration and host density ($N$) have units of
 $C_t^e$ in the following way:
 
 ```language=c++
-  auto empty_trapping_sites = _Ct0.value(_t, (*_current_node)) * _N;
-  for (const auto & trap_conc : _trapped_concentrations)
-    empty_trapping_sites -= (*trap_conc)[_qp] * _trap_per_free;
+  Real empty_trapping_sites = _Ct0.value(_t, (*_current_node)) * _N;
+  for (const auto i : index_range(_occupancy_concentrations))
+    empty_trapping_sites -= (*_occupancy_concentrations[i])[_qp] * _occupancy_weights[i];
 ```
 
 The trapping concentration, in units of k#/volume, is converted to units of
 #/volume by multiplying by `trap_per_free` which, in this example of k#/volume
 trapping concentration and #/volume mobile concentration, has a value of
-1000 #/(k#). We then compute the residual with the code
+1000 #/(k#). For the dimensional `TrappingNodalKernel`, the residual denominator
+is `N * trap_per_free`, so the residual is computed with the code
 
 ```language=c++
-  return -_alpha_t * std::exp(-_detrapping_energy / _temperature[_qp]) * empty_trapping_sites * _mobile_conc[_qp] / (_N * _trap_per_free);
+  return -_trapping_rate_coefficient * std::exp(-_trapping_energy / _temperature[_qp]) *
+         empty_trapping_sites * _mobile_concentration[_qp] / _residual_denominator;
 ```
 
 Let's carry through the units: 1/s * #/volume * #/volume / (#/volume * 1000 #/(k#)) ->

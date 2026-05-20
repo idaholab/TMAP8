@@ -19,10 +19,10 @@ Bulk transport in TMAP8 can be represented by the generalized equation from McNa
     \frac{dC_M}{dt} = \nabla \cdot \textbf{J}  - k C_{M} + S + \sum_{i=1}^{N_{trap}} \left( \alpha_r^i f_{T/M,i} C_{T_i} -\alpha_t^i  \frac {C_{T_i}^{empty} C_M } {N} \right),
 \end{equation}
 
-where $C_M$ is the concentrations of the mobile species, $t$ is the time, $\textbf{J}$ is the flux of the mobile species, $k$ is the decay rate constant, and $S$ is the generation term.
+where $C_M$ is the concentration of the mobile species, $t$ is the time, $\textbf{J}$ is the flux of the mobile species, $k$ is the decay rate constant, and $S$ is the generation term.
 The last term on the right-hand side represents trapping and release.
 $C_{T_i}$ is the trapped species in trap $i$, $f_{T/M,i}$ is a user-defined numerical factor scaling $C_{T_i}$ to be closer to $C_M$ for better numerical convergence.
-$\alpha_r^i$ and $\alpha_t^i$ are the release and trapping rate coefficients for trap $i$, $N$ is the host material density, and $C_{T_i}^{empty}$ is the concentration of empty trapping sites of type $i$, defined as.
+$\alpha_r^i$ and $\alpha_t^i$ are the release and trapping rate coefficients for trap $i$, $N$ is the host material density, and $C_{T_i}^{empty}$ is the concentration of empty trapping sites of type $i$, defined as
 
 \begin{equation} \label{eqn:trapping_empty}
     C_{T_i}^{empty} = (C_{{T_i}0} N - f_{T/M,i} C_{T_i}  ) ,
@@ -38,11 +38,11 @@ The flux $\textbf{J}$ can be defined as
 
 where $D$ is the diffusivity of the mobile species, $S_T$ is the Soret coefficient, and $T$ is the temperature.
 In this instance, the flux accounts for Fickian diffusion and the Soret effect.
- Note that other tritium transport mechanisms, including the Nernst-Plank effect [!cite](masliyah2006electrokinetic) and stress-induced diffusion [!cite](SOFRONIS1989317), can also contribute to the flux of mobile species and be included in such a model in TMAP8.
+Note that other tritium transport mechanisms, including the Nernst-Planck effect [!cite](masliyah2006electrokinetic) and stress-induced diffusion [!cite](SOFRONIS1989317), can also contribute to the flux of mobile species and be included in such a model in TMAP8.
 
 Trapping is a key mechanism of tritium transport, as hydrogen isotopes tend to be captured by small defects in the solid materials, which slows down diffusion and increases retention.
 For example, tritium atoms can be trapped in interstitial sites, vacancies, dislocations, grain boundaries, pores, etc. These trapping sites are described with an associated density, which can evolve as a function of space, time, irradiation, etc., as well as rates and energies for trapping and release.
-In this kind of tritium transport model, the evolution of the concentration of trapped tritium in each trapping site is governed by, for $i$ $\in$ $[0,N_{trap}]$ with $N_{trap}$ the number of traps,
+In this kind of tritium transport model, the evolution of the concentration of trapped tritium in each trapping site is governed by, for $i \in [1, N_{trap}]$ with $N_{trap}$ the number of traps,
 
 \begin{equation}
     \label{eqn:trapped_rate_general}
@@ -55,7 +55,8 @@ Since TMAP8 uses the finite element method to solve this system of equations, it
 
 #### Step 1: Define and rearrange the strong forms of the equations
 
-The strong forms of the governing equations is provided in [eqn:diffusion_mobile_general] and [eqn:trapped_rate_general], and can be slightly rearranged as:
+For clarity, the weak-form derivation below considers the reduced case with no decay, no source term, and no thermal diffusion, i.e. $k = 0$, $S = 0$, and $S_T = 0$.
+The reduced strong forms of the governing equations are provided by [eqn:diffusion_mobile_general] and [eqn:trapped_rate_general], and can be rearranged as:
 
 \begin{equation} \label{eqn:diffusion_mobile_step1}
     \frac{\partial C_M}{\partial t} - \nabla \cdot \left( D \nabla C_M \right) + \sum_{i=1}^{N_{trap}} f_{T/M,i} \frac{\partial C_{T_i}}{\partial t} = 0,
@@ -100,7 +101,7 @@ For the divergence term in [eqn:diffusion_mobile_step3], applying integration by
 \end{equation}
 where $\partial \Omega$ is the boundary of the domain and $\mathbf{n}$ is the outward-facing normal vector.
 
-This update term is then substituted back into [eqn:diffusion_mobile_step3], which leads to:
+This updated term is then substituted back into [eqn:diffusion_mobile_step3], which leads to:
 \begin{equation} \label{eqn:diffusion_mobile_step4}
     \int_\Omega \psi \frac{\partial C_M}{\partial t} \, d\Omega + \int_\Omega \nabla \psi \cdot \left( D \nabla C_M \right) \, d\Omega - \oint\limits_{\partial \Omega} \psi \left( D \nabla C_M \right) \cdot \mathbf{n} \, d\partial \Omega + \int_\Omega \psi \, \sum_{i=1}^{N_{trap}} f_{T/M,i} \frac{\partial C_{T_i}}{\partial t} \, d\Omega = 0.
 \end{equation}
@@ -113,7 +114,7 @@ Since no divergence terms exist in [eqn:trapped_rate_step3], no integration by p
 
 [eqn:diffusion_mobile_step4] becomes
 \begin{equation}
-    \langle \psi, \frac{\partial C_M}{\partial t} \rangle + \langle \nabla \psi, D \nabla C_M \rangle - \langle \psi, \sum_{i=1}^{N_{trap}} f_{T/M,i} \frac{\partial C_{T_i}}{\partial t} \rangle + \int_{\partial \Omega} \psi \left( D \nabla C_M \right) \cdot \mathbf{n} \, d\Gamma = 0,
+    \langle \psi, \frac{\partial C_M}{\partial t} \rangle + \langle \nabla \psi, D \nabla C_M \rangle - \int_{\partial \Omega} \psi \left( D \nabla C_M \right) \cdot \mathbf{n} \, d\Gamma + \langle \psi, \sum_{i=1}^{N_{trap}} f_{T/M,i} \frac{\partial C_{T_i}}{\partial t} \rangle  = 0,
 \end{equation}
 and, for $i$ $\in$ $[0,N_{trap}]$, [eqn:trapped_rate_step3] becomes
 \begin{equation}
@@ -134,7 +135,7 @@ While ongoing efforts are implementing the multi-occupancy model in TMAP8, the c
 At the surface, reactions can be described by several models and assumptions, each with different levels of fidelity or simplicity.
 One can assume quasi-steady-state equilibrium at the surface if reaction kinetics are much faster than the kinetics of bulk transport or capture the dissociation and recombination reactions taking place at the material's surface.
 TMAP8 can support these different assumptions, as well as convective transport at the surface (see [ver-1ha](ver-1ha.md) and [ver-1hb](ver-1hb.md)).
-TMAP7 proposed three main surface conditions, namely ``ratedep", ``surfdep", and ``lawdep" [!citep](ambrosek2008verification).
+TMAP7 proposed three main surface conditions, namely `ratedep`, `surfdep`, and `lawdep` [!citep](ambrosek2008verification).
 TMAP8 reproduces these models in a more general way, which is detailed below.
 
 ### Dissociation and recombination reaction kinetics - Ratedep conditions
@@ -182,7 +183,7 @@ Inversely, the transition from molecules to single atoms is modeled as a two-ste
 
 When using the `surfdep` approach, the molecular flux across the surface $J_m$ is then given by
 \begin{equation} \label{eq:flux_surface_dep_net}
-J_m = \frac{P_m}{\sqrt{2 \pi M k T}} \exp\left( -\frac{E_x}{k_B T} \right) - C_m \nu_0 \exp\left( -\frac{E_x-E_c}{k_BT} \right)
+J_m = \frac{P_m}{\sqrt{2 \pi M k_B T}} \exp\left( -\frac{E_x}{k_B T} \right) - C_m \nu_0 \exp\left( -\frac{E_x-E_c}{k_B T} \right)
 \end{equation}
 
 where $M$ is the molecular mass,
