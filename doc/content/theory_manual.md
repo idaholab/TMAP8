@@ -63,7 +63,7 @@ The reduced strong forms of the governing equations are provided by [eqn:diffusi
 \begin{equation} \label{eqn:diffusion_mobile_step1}
     \frac{\partial C_M}{\partial t} - \nabla \cdot \left( D \nabla C_M \right) + \sum_{i=1}^{N_{trap}} f_{T/M,i} \frac{\partial C_{T_i}}{\partial t} = 0,
 \end{equation}
-and, for $i$ $\in$ $[0,N_{trap}]$:
+and, for $i \in [1, N_{trap}]$:
 \begin{equation} \label{eqn:trapped_rate_step1}
     \frac{\partial C_{T_i}}{\partial t} - \alpha_t^i \frac{C_{T_i}^{\text{empty}} C_M}{(N f_{T/M,i})} + \alpha_r^i C_{T_i} = 0,
 \end{equation}
@@ -77,7 +77,7 @@ Multiply each term of the equations by an appropriate test function $\psi$ (or $
 \begin{equation} \label{eqn:diffusion_mobile_step2}
     \psi \frac{\partial C_M}{\partial t} - \psi \nabla \cdot \left( D \nabla C_M \right) + \psi \, \sum_{i=1}^{N_{trap}} f_{T/M,i} \frac{\partial C_{T_i}}{\partial t} = 0,
 \end{equation}
-and, for $i$ $\in$ $[0,N_{trap}]$, [eqn:trapped_rate_step1] becomes
+and, for $i \in [1, N_{trap}]$, [eqn:trapped_rate_step1] becomes
 \begin{equation} \label{eqn:trapped_rate_step2}
     \psi_i \left( \frac{\partial C_{T_i}}{\partial t} - \alpha_t^i \frac{C_{T_i}^{\text{empty}} C_M}{N f_{T/M,i}} + \alpha_r^i C_{T_i} \right) = 0.
 \end{equation}
@@ -90,7 +90,7 @@ After integration over the domain, we obtain:
     \int_\Omega \psi \frac{\partial C_M}{\partial t} \, d\Omega - \int_\Omega \psi \nabla \cdot \left( D \nabla C_M \right) \, d\Omega + \int_\Omega \psi \, \sum_{i=1}^{N_{trap}} f_{T/M,i} \frac{\partial C_{T_i}}{\partial t} \, d\Omega = 0,
 \end{equation}
 
-and, for $i$ $\in$ $[0,N_{trap}]$,
+and, for $i \in [1, N_{trap}]$,
 \begin{equation} \label{eqn:trapped_rate_step3}
     \int_\Omega \psi_i \frac{\partial C_{T_i}}{\partial t} \, d\Omega - \int_\Omega \psi_i \alpha_t^i \frac{C_{T_i}^{\text{empty}} C_M}{N f_{T/M,i}} \, d\Omega + \int_\Omega \psi_i \alpha_r^i C_{T_i} \, d\Omega = 0.
 \end{equation}
@@ -118,7 +118,7 @@ Since no divergence terms exist in [eqn:trapped_rate_step3], no integration by p
 \begin{equation}
     \langle \psi, \frac{\partial C_M}{\partial t} \rangle + \langle \nabla \psi, D \nabla C_M \rangle - \int_{\partial \Omega} \psi \left( D \nabla C_M \right) \cdot \mathbf{n} \, d\Gamma + \langle \psi, \sum_{i=1}^{N_{trap}} f_{T/M,i} \frac{\partial C_{T_i}}{\partial t} \rangle  = 0,
 \end{equation}
-and, for $i$ $\in$ $[0,N_{trap}]$, [eqn:trapped_rate_step3] becomes
+and, for $i \in [1, N_{trap}]$, [eqn:trapped_rate_step3] becomes
 \begin{equation}
     \langle \psi_i, \frac{\partial C_{T_i}}{\partial t} \rangle - \langle \psi_i, \alpha_t^i \frac{C_{T_i}^{\text{empty}} C_M}{N f_{T/M,i}} \rangle + \langle \psi_i, \alpha_r^i C_{T_i} \rangle = 0.
 \end{equation}
