@@ -162,7 +162,7 @@ In this section provides the model parameters for this validation case. [val-2f_
 | $\Phi_D$  | Incident fluence                               | 1.5 $\times 10^{25}$        | atoms/m$^2$   | [!cite](dark2024modelling) |
 | $\phi_D$  | Incident flux                                  | 5.79 $\times 10^{19}$       | atoms/m$^2$/s | [!cite](dark2024modelling) |
 | $l_W$     | Length of the tungsten sample                  | 0.8                         | mm            | [!cite](dark2024modelling) |
-| $N$       | Tungten density                                | 6.3222 $\times 10^{28 }$    | at/m$^3$      | [J-Dark-PhD](https://zenodo.org/records/11085134) |
+| $N$       | Tungsten density                               | 6.3222 $\times 10^{28 }$    | at/m$^3$      | [J-Dark-PhD](https://zenodo.org/records/11085134) |
 
 
 !table id=val-2f_damaged_induced_traps caption=Damaged-induced traps parameters from [!cite](dark2024modelling) used in [eq:trapping_sites_density] to capture the evolution of trap properties with irradiation.

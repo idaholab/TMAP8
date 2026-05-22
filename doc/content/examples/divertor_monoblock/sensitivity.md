@@ -66,7 +66,7 @@ The top boundary tritium flux and temperature flux are both adjusted to be a fun
 ### Transient case: edge-localized mode disruption 
 
 !style halign=left
-To simulate an edge-localized mode (ELM) disruption, we simulate a set of input conditions as described in [tab:elm_transient_case]. The heat flux is much larger than the transient shutdown case, but over a shorter duration. Most of the parameters will be selected from a normal distribution, as they reflect variations around some target or estimated value. The results will be shown below in [fig:elm_correlation]. We use the same tungsten conductivy as in [!cite](Shimada2024114438), but vary the conductivity by a constant factor in the range of $\pm$5%. 
+To simulate an edge-localized mode (ELM) disruption, we simulate a set of input conditions as described in [tab:elm_transient_case]. The heat flux is much larger than the transient shutdown case, but over a shorter duration. Most of the parameters will be selected from a normal distribution, as they reflect variations around some target or estimated value. The results will be shown below in [fig:elm_correlation]. We use the same tungsten conductivity as in [!cite](Shimada2024114438), but vary the conductivity by a constant factor in the range of $\pm$5%. 
 
 !table id=tab:elm_transient_case caption=Edge-localized mode transient case parameter space.
 | Parameter | Samples | Nominal Value | Distribution | Deviation |

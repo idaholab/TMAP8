@@ -47,7 +47,7 @@ The label and corresponding equation for each systems are shown in [tritium_syst
 | Divertor                               | 4  | `T_04_DIV`      | [eqn:t4] |
 | Heat Exchanger                         | 5  | `T_05_HX`       | [eqn:t5] |
 | Detritiation System                    | 6  | `T_06_DS`       | [eqn:t6] |
-| Vaccum Pump                            | 7  | `T_07_vacuum`   | [eqn:t7] |
+| Vacuum Pump                            | 7  | `T_07_vacuum`   | [eqn:t7] |
 | Fuel Clean-up                          | 8  | `T_08_FCU`      | [eqn:t8] |
 | Isotope Separation System              | 9  | `T_09_ISS`      | [eqn:t9] |
 | Storage and Management                 | 10 | `T_10_storage`  | [eqn:t10] |

@@ -24,7 +24,7 @@ and $\rho$ is the zirconium-cobalt atomic density in mol/m$^3$.
        id=ZrCoHx_PCT_Data
        caption=PCT data for ZrCoHx from [!cite](jat2013hydrogen) and [!cite](nagasaki1986zirconium).
 
-To include this PCT data in TMAP8 modelling capabilites the high and low pressure regions were extracted and regressed for the resulting equations.
+To include this PCT data in TMAP8 modelling capabilities the high and low pressure regions were extracted and regressed for the resulting equations.
 
 The low pressure is captured as:
 \begin{equation}\label{eq:low_pressure}
@@ -64,7 +64,7 @@ The jump between the low low high pressure occurs if the atomic fraction is equa
 
 [/ZrCoHx_PCT.i] tests the implantation of the ZrCoHx PCT curves in TMAP8.
 The domain contains two blocks: gas (left) and ZrCoHx (right) with an interface between the two blocks.
-The diffusion is for this test case is given by [!citep](yu2024hydrogen) and the surface reaction rate $K$ is taken from [!citep](jat2013hydrogen) ($K_f=K_b=K$). Note that the diffusion used is based on ZrH$_{1.58}$ hydride since there is not diffusion value on ZrCo hydride. This should not affect the end results of the test case since simulation time goes until equlibrium is achieved.
+The diffusion is for this test case is given by [!citep](yu2024hydrogen) and the surface reaction rate $K$ is taken from [!citep](jat2013hydrogen) ($K_f=K_b=K$). Note that the diffusion used is based on ZrH$_{1.58}$ hydride since there is not diffusion value on ZrCo hydride. This should not affect the end results of the test case since simulation time goes until equilibrium is achieved.
 To model the interface, the input file employs the [InterfaceDiffusion.md] object to model the flux of hydrogen at the surface, and `ADMatInterfaceReactionZrCoHxPCT` to model the steady-state condition for the hydrogen concentration at the surface $C_s$ defined by:
 \begin{equation} \label{eq:test_interfacereaction}
 \frac{d C_s}{dt} = 0 = K (f_{at}(T,P) \rho - C_s),

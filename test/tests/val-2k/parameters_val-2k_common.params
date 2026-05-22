@@ -1,0 +1,192 @@
+# Validation Problem val-2k
+# Shared parameters for a validation case based on experimental data from
+# Kremer et al. (2022):
+# https://doi.org/10.1016/j.nme.2022.101137
+# Unit system:
+# - length: micrometers
+# - time: seconds
+# - concentration: atoms / micrometer^3
+# - flux: atoms / micrometer^2 / second
+# This file defines the common geometry, mesh targets, dimensional constants,
+# scaled transport parameters, trap parameters, and output settings used by all
+# val-2k oxide-thickness wrappers.
+
+# Physical constants
+kb = '${units 1.380649e-23 J/K}' # Boltzmann constant from PhysicalConstants.h
+eV_to_J = '${units 1.602176634e-19 J/eV}' # Electron-volt to Joule conversion from PhysicalConstants.h
+kb_eV = '${units ${fparse kb / eV_to_J} eV/K}'
+
+# Shared geometry
+sample_thickness = '${units 0.8e-3 m -> mum}'
+damage_depth = '${units 2.3e-6 m -> mum}'
+left_refined_depth = '${units 8 mum}'
+buffer_depth = '${units 20e-6 m -> mum}'
+profile_depth = '${units 3.1 mum}'
+profile_num_points = 163
+
+# Shared mesh targets
+# Preserve the current natural-oxide baseline spacing, then derive the number
+# of elements in each section from the active section length.
+mesh_count_roundoff_tolerance = 1e-9
+mesh_min_section_depth = '${units 1 nm -> mum}'
+length_multiplier_oxide_thickness_left_refined = 20
+mesh_reference_left_refined_tungsten_depth = '${fparse (length_multiplier_oxide_thickness_left_refined - 1) * oxide_thickness}'
+mesh_reference_damage_remainder_depth = '${fparse max(mesh_min_section_depth, damage_depth - mesh_reference_left_refined_tungsten_depth)}'
+mesh_reference_buffer_fine_depth = '${fparse left_refined_depth - oxide_thickness - damage_depth}'
+mesh_reference_buffer_coarse_depth = '${fparse buffer_depth - mesh_reference_buffer_fine_depth}'
+mesh_reference_bulk_depth = '${fparse sample_thickness - oxide_thickness - damage_depth - mesh_reference_buffer_fine_depth - mesh_reference_buffer_coarse_depth}'
+
+oxide_element_size_fine = '${units ${fparse 1 / 15} nm -> mum}'
+left_refined_tungsten_element_size_fine = '${fparse mesh_reference_left_refined_tungsten_depth / 100}'
+damage_remainder_element_size_fine = '${fparse mesh_reference_damage_remainder_depth / 105}'
+buffer_fine_element_size_fine = '${fparse mesh_reference_buffer_fine_depth / 120}'
+buffer_coarse_element_size_fine = '${fparse mesh_reference_buffer_coarse_depth / 34}'
+bulk_element_size_fine = '${fparse mesh_reference_bulk_depth / 180}'
+
+oxide_element_size_coarse = '${fparse oxide_thickness / 3}'
+left_refined_tungsten_element_size_coarse = '${fparse mesh_reference_left_refined_tungsten_depth / 3}'
+damage_remainder_element_size_coarse = '${fparse mesh_reference_damage_remainder_depth / 20}'
+buffer_fine_element_size_coarse = '${fparse mesh_reference_buffer_fine_depth / 10}'
+buffer_coarse_element_size_coarse = '${fparse mesh_reference_buffer_coarse_depth / 6}'
+bulk_element_size_coarse = '${fparse mesh_reference_bulk_depth / 20}'
+
+# Temperature history
+temperature_initial = '${units 295.7746478873239 K}'
+end_time = '${units 4.166189111747851 h -> s}'
+
+# Material properties
+tungsten_density = '${units 6.3222e28 at/m^3 -> at/mum^3}'
+
+# Tritium diffusion and trapping
+diffusion_W_preexponential = '${units 1.6e-7 m^2/s -> mum^2/s}'
+diffusion_W_energy = '${units 0.28 eV}'
+trapping_energy = '${fparse ${units ${diffusion_W_energy} eV -> J} / kb}'
+trapping_energy_intrinsic = '${fparse trapping_energy}'
+trapping_energy_1 = '${fparse trapping_energy}'
+trapping_energy_2 = '${fparse trapping_energy}'
+trapping_energy_3 = '${fparse trapping_energy}'
+trapping_energy_4 = '${fparse trapping_energy}'
+trapping_energy_5 = '${fparse trapping_energy}'
+trapping_prefactor = '${units ${fparse ${units ${diffusion_W_preexponential} mum^2/s -> m^2/s} / (1.1e-10^2 * 6)} 1/s}'
+detrapping_prefactor = '${units 1e13 1/s}'
+detrapping_prefactor_intrinsic = '${fparse detrapping_prefactor}'
+detrapping_prefactor_1 = '${fparse detrapping_prefactor}'
+detrapping_prefactor_2 = '${fparse detrapping_prefactor}'
+detrapping_prefactor_3 = '${fparse detrapping_prefactor}'
+detrapping_prefactor_4 = '${fparse detrapping_prefactor}'
+detrapping_prefactor_5 = '${fparse detrapping_prefactor}'
+detrapping_energy_1 = '${fparse ${units 1.20 eV -> J} / kb}'
+detrapping_energy_2 = '${fparse ${units 1.38 eV -> J} / kb}'
+detrapping_energy_3 = '${fparse ${units 1.65 eV -> J} / kb}'
+detrapping_energy_4 = '${fparse ${units 1.85 eV -> J} / kb}'
+detrapping_energy_5 = '${fparse ${units 2.05 eV -> J} / kb}'
+detrapping_energy_intrinsic = '${fparse ${units 1.08 eV -> J} / kb}'
+
+# Surface recombination
+d2_recombination_coefficient = '${units 3.8e-16 m^4/at/s -> mum^4/at/s}'
+d2_recombination_energy = '${units 0.34 eV}'
+d2o_recombination_coefficient = '${units 3.8e1 m^4/at/s -> mum^4/at/s}'
+d2o_recombination_energy = '${units 2.1 eV}'
+
+# oxygen diffusion
+oxygen_diffusion_W_preexponential = '${units 2e-17 m^2/s -> mum^2/s}'
+oxygen_diffusion_W_energy = '${units 0.45 eV}'
+
+# val-2f six-trap reference scaled to preserve the current val-2k initial areal inventory
+depth_center = '${units 2.3e-6 m -> mum}'
+depth_width = '${units 5e-8 m -> mum}'
+trap_density_scale = 6.6448483834798155 # (-)
+trapping_site_fraction_intrinsic = '${fparse trap_density_scale * 3.796146910885451e-07}' # (/)
+trapping_site_fraction_1 = '${fparse trap_density_scale * 7.322741092695964e-04}' # (/)
+trapping_site_fraction_2 = '${fparse trap_density_scale * 4.5458706307839917e-04}' # (/)
+trapping_site_fraction_3 = '${fparse trap_density_scale * 3.103067322529255e-04}' # (/)
+trapping_site_fraction_4 = '${fparse trap_density_scale * 5.6932472533804296e-04}' # (/)
+trapping_site_fraction_5 = '${fparse trap_density_scale * 1.7447228505500194e-04}' # (/)
+
+# Initial mobile concentration
+initial_mobile_concentration = '${units 1e-20 at/m^3 -> at/mum^3}'
+
+# Dimensionless references and groups, following the val-2f formulation.
+length_reference = '${units 1 mum}'
+time_reference = '${units 1 s}'
+mobile_concentration_reference = '${units 6.3222e16 at/m^3 -> at/mum^3}'
+trap_concentration_reference_intrinsic = '${units 6.3222e17 at/m^3 -> at/mum^3}'
+trap_concentration_reference_1 = '${units 6.3222e20 at/m^3 -> at/mum^3}'
+trap_concentration_reference_2 = '${units 6.3222e20 at/m^3 -> at/mum^3}'
+trap_concentration_reference_3 = '${units 6.3222e20 at/m^3 -> at/mum^3}'
+trap_concentration_reference_4 = '${units 6.3222e20 at/m^3 -> at/mum^3}'
+trap_concentration_reference_5 = '${units 6.3222e20 at/m^3 -> at/mum^3}'
+mobile_concentration_reference_m3 = '${units 6.3222e16 at/m^3}'
+trap_concentration_reference_intrinsic_m3 = '${units 6.3222e17 at/m^3}'
+trap_concentration_reference_1_m3 = '${units 6.3222e20 at/m^3}'
+trap_concentration_reference_2_m3 = '${units 6.3222e20 at/m^3}'
+trap_concentration_reference_3_m3 = '${units 6.3222e20 at/m^3}'
+trap_concentration_reference_4_m3 = '${units 6.3222e20 at/m^3}'
+trap_concentration_reference_5_m3 = '${units 6.3222e20 at/m^3}'
+
+initial_mobile_concentration_hat = '${fparse initial_mobile_concentration / mobile_concentration_reference}'
+profile_depth_hat = '${fparse profile_depth / length_reference}'
+end_time_hat = '${fparse end_time / time_reference}'
+depth_center_hat = '${fparse depth_center / length_reference}'
+depth_width_hat = '${fparse depth_width / length_reference}'
+
+dimensionless_trapping_rate_coefficient_intrinsic = '${fparse trapping_prefactor * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_coefficient_1 = '${fparse trapping_prefactor * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_coefficient_2 = '${fparse trapping_prefactor * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_coefficient_3 = '${fparse trapping_prefactor * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_coefficient_4 = '${fparse trapping_prefactor * time_reference * mobile_concentration_reference / tungsten_density}'
+dimensionless_trapping_rate_coefficient_5 = '${fparse trapping_prefactor * time_reference * mobile_concentration_reference / tungsten_density}'
+
+dimensionless_release_rate_coefficient_intrinsic = '${fparse detrapping_prefactor_intrinsic * time_reference}'
+dimensionless_release_rate_coefficient_1 = '${fparse detrapping_prefactor_1 * time_reference}'
+dimensionless_release_rate_coefficient_2 = '${fparse detrapping_prefactor_2 * time_reference}'
+dimensionless_release_rate_coefficient_3 = '${fparse detrapping_prefactor_3 * time_reference}'
+dimensionless_release_rate_coefficient_4 = '${fparse detrapping_prefactor_4 * time_reference}'
+dimensionless_release_rate_coefficient_5 = '${fparse detrapping_prefactor_5 * time_reference}'
+
+diffusion_W_preexponential_hat = '${fparse diffusion_W_preexponential * time_reference / (length_reference ^ 2)}'
+d2_recombination_coefficient_hat = '${fparse d2_recombination_coefficient * mobile_concentration_reference * time_reference / length_reference}'
+d2o_recombination_coefficient_hat = '${fparse d2o_recombination_coefficient * mobile_concentration_reference * time_reference / length_reference}'
+
+
+# Oxide geometry and transport
+oxide_transition_width = '${units 0.25 nm -> mum}'
+left_refined_total_depth = '${fparse length_multiplier_oxide_thickness_left_refined * oxide_thickness}'
+left_refined_tungsten_depth = '${fparse left_refined_total_depth - oxide_thickness}'
+damage_remainder_depth = '${fparse max(mesh_min_section_depth, damage_depth - left_refined_tungsten_depth)}'
+oxide_buffer_fine_depth = '${fparse left_refined_depth - oxide_thickness - damage_depth}'
+oxide_buffer_coarse_depth = '${fparse buffer_depth - oxide_buffer_fine_depth}'
+oxide_bulk_depth = '${fparse sample_thickness - oxide_thickness - damage_depth - oxide_buffer_fine_depth - oxide_buffer_coarse_depth}'
+
+ix_oxide_fine = '${fparse ceil(oxide_thickness / oxide_element_size_fine - mesh_count_roundoff_tolerance)}'
+ix_left_refined_tungsten_fine = '${fparse ceil(left_refined_tungsten_depth / left_refined_tungsten_element_size_fine - mesh_count_roundoff_tolerance)}'
+ix_damage_remainder_fine = '${fparse ceil(damage_remainder_depth / damage_remainder_element_size_fine - mesh_count_roundoff_tolerance)}'
+ix_buffer_fine = '${fparse ceil(oxide_buffer_fine_depth / buffer_fine_element_size_fine - mesh_count_roundoff_tolerance)}'
+ix_buffer_coarse_fine = '${fparse ceil(oxide_buffer_coarse_depth / buffer_coarse_element_size_fine - mesh_count_roundoff_tolerance)}'
+ix_bulk_fine = '${fparse ceil(oxide_bulk_depth / bulk_element_size_fine - mesh_count_roundoff_tolerance)}'
+
+ix_oxide_coarse = '${fparse ceil(oxide_thickness / oxide_element_size_coarse - mesh_count_roundoff_tolerance)}'
+ix_left_refined_tungsten_coarse = '${fparse ceil(left_refined_tungsten_depth / left_refined_tungsten_element_size_coarse - mesh_count_roundoff_tolerance)}'
+ix_damage_remainder_coarse = '${fparse ceil(damage_remainder_depth / damage_remainder_element_size_coarse - mesh_count_roundoff_tolerance)}'
+ix_buffer_coarse = '${fparse ceil(oxide_buffer_fine_depth / buffer_fine_element_size_coarse - mesh_count_roundoff_tolerance)}'
+ix_buffer_coarse_coarse = '${fparse ceil(oxide_buffer_coarse_depth / buffer_coarse_element_size_coarse - mesh_count_roundoff_tolerance)}'
+ix_bulk_coarse = '${fparse ceil(oxide_bulk_depth / bulk_element_size_coarse - mesh_count_roundoff_tolerance)}'
+
+# The initial oxygen concentration is derived from the paper-reported removal
+# of 100 x 10^19 O/m^2 from the first 13.5 nm of oxide.
+oxygen_removed_areal_density = '${units 100e19 at/m^2}'
+oxygen_removed_depth = '${units 13.5 nm -> m}'
+oxygen_concentration_initial = '${units ${fparse oxygen_removed_areal_density / oxygen_removed_depth  / 1.5} at/m^3 -> at/mum^3}'
+oxygen_concentration_reference = '${fparse oxygen_concentration_initial}'
+oxygen_concentration_reference_m3 = '${units ${fparse oxygen_concentration_reference} at/mum^3 -> at/m^3}'
+oxygen_initial_concentration_hat = '${fparse oxygen_concentration_initial / oxygen_concentration_reference}'
+oxygen_release_stoichiometric_factor_hat = '${fparse 0.5 * mobile_concentration_reference / oxygen_concentration_reference}'
+
+oxide_thickness_hat = '${fparse oxide_thickness / length_reference}'
+oxide_transition_width_hat = '${fparse oxide_transition_width / length_reference}'
+left_refined_tungsten_depth_hat = '${fparse left_refined_tungsten_depth / length_reference}'
+damage_remainder_depth_hat = '${fparse damage_remainder_depth / length_reference}'
+oxide_buffer_fine_depth_hat = '${fparse oxide_buffer_fine_depth / length_reference}'
+oxide_buffer_coarse_depth_hat = '${fparse oxide_buffer_coarse_depth / length_reference}'
+oxide_bulk_depth_hat = '${fparse oxide_bulk_depth / length_reference}'
+oxygen_diffusion_W_preexponential_hat = '${fparse oxygen_diffusion_W_preexponential * time_reference / (length_reference ^ 2)}'
