@@ -36,11 +36,11 @@ and the mobile concentration and host density ($N$) have units of
 #/volume. `TrappingNodalKernel` computes the empty trapping sites concentration,
 $C_t^e$ in the following way:
 
-```language=c++
-  Real empty_trapping_sites = _Ct0.value(_t, (*_current_node)) * _N;
-  for (const auto i : index_range(_occupancy_concentrations))
-    empty_trapping_sites -= (*_occupancy_concentrations[i])[_qp] * _occupancy_weights[i];
-```
+
+!listing src/nodal_kernels/TrappingNodalKernelBase.C
+         start=Real empty_trapping_sites
+         end=_residual_denominator;
+         include-end=True
 
 The trapping concentration, in units of k#/volume, is converted to units of
 #/volume by multiplying by `trap_per_free` which, in this example of k#/volume
@@ -48,10 +48,11 @@ trapping concentration and #/volume mobile concentration, has a value of
 1000 #/(k#). For the dimensional `TrappingNodalKernel`, the residual denominator
 is `N * trap_per_free`, so the residual is computed with the code
 
-```language=c++
-  return -_trapping_rate_coefficient * std::exp(-_trapping_energy / _temperature[_qp]) *
-         empty_trapping_sites * _mobile_concentration[_qp] / _residual_denominator;
-```
+
+!listing src/nodal_kernels/TrappingNodalKernelBase.C
+         start=return -_trapping_rate_coefficient * std
+         end=empty_trapping_sites * _mobile_concentration
+         include-end=True
 
 Let's carry through the units: 1/s * #/volume * #/volume / (#/volume * 1000 #/(k#)) ->
 k#/(s*volume) which is exactly the units that we needed.

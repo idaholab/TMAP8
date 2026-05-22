@@ -49,7 +49,7 @@ In this kind of tritium transport model, the evolution of the concentration of t
     \frac{dC_{T_i}}{dt} = \alpha_t^i  \frac {C_{T_i}^{empty} C_M } {N f_{T/M,i}} - \alpha_r^i C_{T_i} - k C_{T_i}.
 \end{equation}
 
-Note that these equations can also be solved as a dimensionless system with [TrappingNodalKernelDimensionless](TrappingNodalKernelDimensionless.md) and [ReleasingNodalKernelDimensionless](ReleasingNodalKernelDimensionless.md) or, with the physics syntax, [SpeciesTrappingPhysics](SpeciesTrappingPhysics.md).
+Note that these equations can also be solved as a dimensionless system with [TrappingNodalKernelDimensionless.md] and [ReleasingNodalKernelDimensionless.md] or, with the physics syntax, [SpeciesTrappingPhysics.md].
 
 Since TMAP8 uses the finite element method to solve this system of equations, it is necessary to derive the weak form of these equations. The derivation of the weak forms of the equations can be found in [!cite](Simon2025) and is reproduced below.
 
