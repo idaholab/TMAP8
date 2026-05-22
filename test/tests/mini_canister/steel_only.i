@@ -5,8 +5,8 @@
 !include mini_canister.params
 # Geometry
 total_radius = '${units ${fparse inner_radius + steel_thickness} mm}'
-# Pressure implementation: constant_pressure | time_ramp_pressure | SRNL_pressure_data_fun
-pressure_function = 'constant_pressure'
+# Pressure implementation: constant_pressure | time_ramp_pressure | SRNL_pressure
+pressure_function = 'SRNL_pressure'
 # Percentage (%) estimation of H_2 content within He backfill to 24 psi
 estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}'
 
@@ -86,7 +86,7 @@ estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}'
     final_value = '${estimated_pressure_gas}'
     ramp_duration = '${units 3 h -> day}'
   []
-  [SRNL_pressure_data_fun] # Power model linear least sqaures fit to Pa vs days
+  [SRNL_pressure] # Power model linear least sqaures fit to Pa vs days
     type = ParsedFunction
     expression = '376.7588*t^0.6177'
   []
@@ -148,7 +148,7 @@ estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}'
   [annulus_time_integrated_flux]
     type = TimeIntegratedPostprocessor
     value = annulus_flux_difference
-    time_integration_scheme = trapezoidal-rule
+    time_integration_scheme = IMPLICIT-EULER
     outputs = none
   []
 
@@ -165,5 +165,5 @@ estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}'
 []
 
 [Outputs]
-  file_base = 'steel_only_out'
+  file_base = 'steel_only_out_${pressure_function}'
 []

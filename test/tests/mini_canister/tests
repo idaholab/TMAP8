@@ -1,11 +1,19 @@
 [Tests]
   design = 'mini_canister/index.md'
   issues = '#293'
-  [steel_only_csvdiff]
+  [steel_only_csvdiff_const_pressure]
     type = CSVDiff
     input = 'steel_only.i'
-    csvdiff = steel_only_out.csv
-    requirement = 'The system shall be able to model hydrogen permeation through the steel walls of the SRNL mini-canister'
+    cli_args = 'pressure_function=constant_pressure'
+    csvdiff = steel_only_out_constant_pressure.csv
+    requirement = 'The system shall be able to model hydrogen permeation through the steel walls of the SRNL mini-canister with a constant-pressure boundary condition'
+  []
+  [steel_only_csvdiff_SRNL_pressure]
+    type = CSVDiff
+    input = 'steel_only.i'
+    cli_args = 'pressure_function=SRNL_pressure'
+    csvdiff = steel_only_out_SRNL_pressure.csv
+    requirement = 'The system shall be able to model hydrogen permeation through the steel walls of the SRNL mini-canister with a data-fit function'
   []
   [gas_steel_csvdiff]
     type = CSVDiff

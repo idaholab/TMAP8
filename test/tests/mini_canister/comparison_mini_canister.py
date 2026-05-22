@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pandas as pd
+from matplotlib import gridspec
 
 # Changes working directory to script directory (for consistent MooseDocs usage)
 script_folder = os.path.dirname(__file__)
@@ -83,33 +84,41 @@ def annotate_rmspe(simulated, reference, x_pos, y_pos):
     plt.text(x_pos, y_pos, "RMSPE = %.2f %%" % RMSPE, fontweight="bold")
 
 
-def plot_conservation_of_mass(t, flux, mass, flux_label, title, filename):
-    """Plot accumulated boundary flux against total mass to verify conservation
+def plot_conservation_of_mass(t, flux, mass, filename):
+    """Plot the absolute percent difference between accumulated boundary flux
+    and total mass as a single curve, verifying mass conservation. Data prior
+    to t = 1 day is excluded so the metric is not dominated by early-time
+    relative noise from the time-integrated flux postprocessor — analogous to
+    the early-time slicing convention used for RMSPE in the ver-* cases.
 
     Args:
         t (float, ndarray): time array in days
         flux (float, ndarray): accumulated boundary flux in µmol H
         mass (float, ndarray): total H mass in domain in µmol H
-        flux_label (str): legend label for the flux line
-        title (str): plot title
         filename (str): output PNG filename
     """
-    fig = plt.figure(figsize=(10, 6))
-    plt.plot(t, flux, label=flux_label)
-    plt.plot(t, mass, label="H Total Mass")
-    annotate_rmspe(flux, mass, t[-1] / 2, mass[-1] / 4)
-    plt.xlabel("Time (Days)")
-    plt.ylabel(r"$\mu$mol H")
-    plt.title(title)
-    plt.xlim(0, t.max())
-    plt.ylim(0)
-    plt.legend()
-    plt.grid(True)
+    t = np.asarray(t)
+    flux = np.asarray(flux, dtype=float)
+    mass = np.asarray(mass, dtype=float)
+    idx = np.where(t > 1.0)[0][0]
+    t = t[idx:]
+    percent_diff = np.abs(flux[idx:] / mass[idx:] - 1.0) * 100.0
+
+    fig = plt.figure(figsize=[6.5, 5.5])
+    gs = gridspec.GridSpec(1, 1)
+    ax = fig.add_subplot(gs[0])
+    ax.plot(t, percent_diff, c="tab:gray")
+    ax.set_xlabel("Time (days)")
+    ax.set_ylabel("Percent difference (%)")
+    ax.set_xlim(left=t[0], right=t[-1])
+    ax.set_ylim(bottom=0)
+    plt.grid(which="major", color="0.65", linestyle="--", alpha=0.3)
+    ax.minorticks_on()
     plt.savefig(filename, bbox_inches="tight", dpi=300)
     plt.close(fig)
 
 
-def plot_validation(t_sim, sim_data, t_exp, exp_data, ylabel, title, filename):
+def plot_validation(t_sim, sim_data, t_exp, exp_data, ylabel, filename):
     """Plot simulation results against SRNL experimental data with RMSPE annotation
 
     Args:
@@ -118,21 +127,29 @@ def plot_validation(t_sim, sim_data, t_exp, exp_data, ylabel, title, filename):
         t_exp (float, ndarray): experimental time array in days
         exp_data (float, ndarray): experimental measurement values
         ylabel (str): y-axis label
-        title (str): plot title
         filename (str): output PNG filename
     """
-    fig = plt.figure(figsize=(10, 6))
-    plt.plot(t_sim, sim_data, label="Simulation")
-    plt.plot(t_exp, exp_data, "ro", label="Experimental Data")
+    fig = plt.figure(figsize=[6.5, 5.5])
+    gs = gridspec.GridSpec(1, 1)
+    ax = fig.add_subplot(gs[0])
+    ax.plot(t_sim, sim_data, label="TMAP8", c="tab:blue")
+    ax.plot(
+        t_exp,
+        exp_data,
+        label="Experiment",
+        marker="o",
+        linestyle="None",
+        c="k",
+    )
     mapped = numerical_solution_on_experiment_input(t_exp, t_sim, sim_data)
     annotate_rmspe(mapped, exp_data, t_sim[-1] / 2, sim_data[-1] / 4)
-    plt.ylabel(ylabel)
-    plt.xlabel("Time (Days)")
-    plt.title(title)
-    plt.xlim(0)
-    plt.ylim(0)
-    plt.legend()
-    plt.grid(True)
+    ax.set_xlabel("Time (days)")
+    ax.set_ylabel(ylabel)
+    ax.legend(loc="best")
+    ax.set_xlim(left=0)
+    ax.set_ylim(bottom=0)
+    plt.grid(which="major", color="0.65", linestyle="--", alpha=0.3)
+    ax.minorticks_on()
     plt.savefig(filename, bbox_inches="tight", dpi=300)
     plt.close(fig)
 
@@ -150,18 +167,32 @@ SRNL_partial_pressure = 1e3 * SRNL_gas_pressure * SRNL_H2_fraction / 100
 
 # =========================== TMAP8 steel-only simulation data extraction ========================== #
 
+# SRNL-pressure run: used for conservation of mass and the steel-only vs. gas-steel
+# hydrogen-yield comparison so the steel-only boundary condition matches the time-
+# dependent pressure history seen by the gas-steel model.
 (
     steel_only_t,
     steel_only_total_mass_steel,
     steel_only_flux_steel,
-    steel_only_exact_diffusion_length,
-    steel_only_simulated_diffusion_length,
 ) = read_csv_from_TMAP8(
-    "steel_only_out.csv",
+    "steel_only_out_SRNL_pressure.csv",
     [
         "time",
         "annular_cylinder_total_mass_steel",
         "annular_cylinder_time_integrated_flux",
+    ],
+)
+
+# Constant-pressure run: used only for the diffusion-front verification, whose
+# analytical solution ell(t) = sqrt(pi*D*t) assumes a step Dirichlet BC.
+(
+    steel_only_const_t,
+    steel_only_exact_diffusion_length,
+    steel_only_simulated_diffusion_length,
+) = read_csv_from_TMAP8(
+    "steel_only_out_constant_pressure.csv",
+    [
+        "time",
         "exact_diffusion_length",
         "simulated_diffusion_length",
     ],
@@ -207,7 +238,9 @@ elif len(steel_only_t) > len(t):
     )
 else:
     rmspe = compute_rmspe(total_mass_steel, steel_only_total_mass_steel)
-fig, ax1 = plt.subplots(figsize=(10, 6))
+fig = plt.figure(figsize=[6.5, 5.5])
+gs = gridspec.GridSpec(1, 1)
+ax1 = fig.add_subplot(gs[0])
 ax2 = ax1.twinx()
 for t_arr, mass_steel, total, color, label in [
     (
@@ -217,9 +250,9 @@ for t_arr, mass_steel, total, color, label in [
         "tab:blue",
         "Steel-only",
     ),
-    (t, total_mass_steel, total_mass, "tab:orange", "Gas-steel"),
+    (t, total_mass_steel, total_mass, "tab:red", "Gas-steel"),
 ]:
-    ax1.plot(t_arr, mass_steel, color=color, label=f"{label} Mass")
+    ax1.plot(t_arr, mass_steel, color=color, label=f"{label} mass")
     # Avoid dividing by 0 at initial time t=0
     percentage = np.divide(
         100 * mass_steel,
@@ -229,52 +262,58 @@ for t_arr, mass_steel, total, color, label in [
     )
     ax2.plot(t_arr, percentage, color=color, linestyle="--", label=f"{label} %")
 ax1.text(
-    max(steel_only_t[-1], t[-1]) / 2,
+    0.65 * max(steel_only_t[-1], t[-1]),
     max(steel_only_total_mass_steel[-1], total_mass_steel[-1]) / 2,
     "RMSPE = %.2f %%" % rmspe,
     fontweight="bold",
 )
-ax1.set_ylabel(r"H Total Mass ($\mu$mol)")
-ax1.set_xlabel("Time (Days)")
-ax1.set_title("Steel-only vs. Gas-steel: Hydrogen in Steel")
-ax1.set_xlim(0)
-ax1.set_ylim(0)
-ax1.grid(True)
-ax2.set_ylabel("% H in Steel")
-ax2.set_ylim(0)
+ax1.set_xlabel("Time (days)")
+ax1.set_ylabel(r"Total mass ($\mathrm{\mu mol\,H}$)")
+ax2.set_ylabel("H in steel (%)")
+ax1.set_xlim(left=0)
+ax1.set_ylim(bottom=0)
+ax2.set_ylim(bottom=0)
+ax1.grid(which="major", color="0.65", linestyle="--", alpha=0.3)
+ax1.minorticks_on()
+ax2.minorticks_on()
 handles1, labels1 = ax1.get_legend_handles_labels()
 handles2, labels2 = ax2.get_legend_handles_labels()
-ax1.legend(handles1 + handles2, labels1 + labels2)
+ax1.legend(handles1 + handles2, labels1 + labels2, loc="lower right")
 plt.savefig("hydrogen_yield_in_steel.png", bbox_inches="tight", dpi=300)
 plt.close(fig)
 
 # =========================== TMAP8 steel-only verification plots ========================== #
 
 # Check length of diffusion front
-fig = plt.figure(figsize=(10, 6))
-plt.plot(
-    steel_only_t,
-    steel_only_exact_diffusion_length,
-    label="Exact Diffusion Length sqrt(pi*D*t)",
-)
-plt.plot(
-    steel_only_t,
+fig = plt.figure(figsize=[6.5, 5.5])
+gs = gridspec.GridSpec(1, 1)
+ax = fig.add_subplot(gs[0])
+ax.plot(
+    steel_only_const_t,
     steel_only_simulated_diffusion_length,
-    label="Simulated Diffusion Length",
+    label="TMAP8",
+    c="tab:gray",
+)
+ax.plot(
+    steel_only_const_t,
+    steel_only_exact_diffusion_length,
+    label="Analytical",
+    c="k",
+    linestyle="--",
 )
 annotate_rmspe(
     steel_only_simulated_diffusion_length,
     steel_only_exact_diffusion_length,
-    steel_only_t[-1] / 2,
+    steel_only_const_t[-1] / 2,
     steel_only_exact_diffusion_length[-1] / 4,
 )
-plt.legend()
-plt.ylabel("Length (mm)")
-plt.xlabel("Time (days)")
-plt.title("Steel-only: 1D Diffusion Front Length")
-plt.xlim(0)
-plt.ylim(0)
-plt.grid(True)
+ax.set_xlabel("Time (days)")
+ax.set_ylabel("Length (mm)")
+ax.legend(loc="best")
+ax.set_xlim(left=0)
+ax.set_ylim(bottom=0)
+plt.grid(which="major", color="0.65", linestyle="--", alpha=0.3)
+ax.minorticks_on()
 plt.savefig("diffusion_length.png", bbox_inches="tight", dpi=300)
 plt.close(fig)
 
@@ -282,8 +321,6 @@ plot_conservation_of_mass(
     steel_only_t,
     steel_only_flux_steel,
     steel_only_total_mass_steel,
-    "Accumulated Boundary Flux",
-    "Steel-only: Conservation of Mass",
     "steel_only_conservation_of_mass.png",
 )
 
@@ -294,8 +331,7 @@ plot_validation(
     H_partial_pressure_interface,
     SRNL_time,
     SRNL_partial_pressure,
-    r"H_2 Partial Pressure (Pa)",
-    r"Gas-steel: $H_2$ Partial Pressure vs. SRNL",
+    r"$\mathrm{H}_2$ partial pressure (Pa)",
     "partial_pressure_comparison.png",
 )
 
@@ -304,8 +340,7 @@ plot_validation(
     total_mass_gas,
     SRNL_time,
     SRNL_total_mass_gas,
-    r"H_2 Total Mass ($\mu$mol $H_2$)",
-    r"Gas-steel: $H_2$ in Gas Phase vs. SRNL",
+    r"Total mass ($\mathrm{\mu mol\,H}_2$)",
     "gas_phase_validation.png",
 )
 
@@ -313,7 +348,5 @@ plot_conservation_of_mass(
     t,
     time_integrated_flux + total_generation,
     total_mass,
-    "Accumulated Boundary Flux + Source",
-    "Gas-steel: Conservation of Mass",
     "gas_steel_conservation_of_mass.png",
 )

@@ -150,7 +150,7 @@ num_elements_gas = 250
   [circle_time_integrated_flux]
     type = TimeIntegratedPostprocessor
     value = circle_flux_difference
-    time_integration_scheme = trapezoidal-rule
+    time_integration_scheme = IMPLICIT-EULER
     outputs = none
   []
 
