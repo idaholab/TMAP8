@@ -36,8 +36,8 @@ where
 
     $D_{SiC}$ = diffusivity in SiC (2.622 $\times$ 10$^{-11}$ m$^2$/sec)
 
-!alert warning title=Typo in [!cite](ambrosek2008verification)
-The expressions of the analytical solution for the steady state case in TMAP4 ([!cite](longhurst1992verification)) and TMAP7 ([!cite](ambrosek2008verification)) are inconsistent with the results. To correct this, the limit of the transient solution, from [!cite](li2010analytical) as shown below, as $t = \infty$ is taken to calculate the concentration in the PyC and SiC layers.
+!alert warning title=Typo in [!cite](ambrosek2008verification) and [!cite](Simon2025)
+The expressions of the analytical solution for the steady state case in TMAP4 ([!cite](longhurst1992verification)) and TMAP7 ([!cite](ambrosek2008verification)) and provided in [!cite](Simon2025) are inconsistent with the results and with the transient solution. To correct this, the limit of the transient solution, from [!cite](li2010analytical) as shown below, is taken with $t = \infty$ to calculate the concentration in the PyC and SiC layers at steady-state.
 
 ## Analytical solution during transient
 
