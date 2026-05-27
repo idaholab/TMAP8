@@ -8,18 +8,18 @@ This verification problem is taken from [!cite](longhurst1992verification, ambro
 
 ## Analytical solution at steady state
 
-The steady state solution for the PyC is given in [!cite](longhurst1992verification, ambrosek2008verification) as:
+The steady state solution for the PyC is derived from the transient analytical solution with $t = \infty$ in [!cite](li2010analytical) as:
 
 \begin{equation}
 \label{eqn:steady_state_pyc}
-    C = C_0 \left[1 + \frac{x}{l}  \left(\frac{a D_{PyC}}{a D_{PyC} + l D_{SiC}} - 1 \right) \right]
+    C = C_0 \left[\frac{(a-x) D_{SiC} + l D_{PyC}}{l D_{PyC} + a D_{SiC}} \right]
 \end{equation}
 
-while the concentration profile for the SiC layer is given as:
+while the concentration profile for the SiC layer is calculated similarly as:
 
 \begin{equation}
 \label{eqn:steady_state_sic}
-    C = C_0 \left(\frac{a+l-x}{l} \right) \left(\frac{a D_{PyC}}{a D_{PyC} + l D_{SiC}} \right)
+    C = C_0 \left[\frac{(l+a-x) D_{PyC}}{l D_{PyC} + a D_{SiC}} \right]
 \end{equation}
 
 where
@@ -35,6 +35,9 @@ where
     $D_{PyC}$ = diffusivity in PyC (1.274 $\times$ 10$^{-7}$ m$^2$/s)
 
     $D_{SiC}$ = diffusivity in SiC (2.622 $\times$ 10$^{-11}$ m$^2$/sec)
+
+!alert warning title=Typo in [!cite](ambrosek2008verification) and [!cite](Simon2025)
+The expressions of the analytical solution for the steady state case in TMAP4 ([!cite](longhurst1992verification)) and TMAP7 ([!cite](ambrosek2008verification)) and provided in [!cite](Simon2025) are inconsistent with the results and with the transient solution. To correct this, the limit of the transient solution, from [!cite](li2010analytical) as shown below, is taken with $t = \infty$ to calculate the concentration in the PyC and SiC layers at steady-state.
 
 ## Analytical solution during transient
 
