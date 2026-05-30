@@ -48,11 +48,9 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
   ADReal limit_pressure = 5; // lower pressure limit of fit
   ADReal r = 0;
 
-
   using std::exp;
   using std::log;
   using std::max;
-
 
   // Gas pressure (Pa): R * T * c / 2 (two atoms per molecule)
   auto neighbor_pressure =
@@ -70,8 +68,8 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
   // Calculate the atomic fraction based on the PCT curve
   auto atomic_fraction =
       5.0 - 8.32e-03 / (1e-03 + exp(-2.49 - 7.61e-03 * _neighbor_temperature[_qp] +
-                               (5.63e-02 + 1.72e-04 * _neighbor_temperature[_qp]) *
-                                   log(max(neighbor_pressure - limit_pressure, 1.e-10))));
+                                    (5.63e-02 + 1.72e-04 * _neighbor_temperature[_qp]) *
+                                        log(max(neighbor_pressure - limit_pressure, 1.e-10))));
 
   // Convert to concentration
   auto _surface_equilibrium_concentration = atomic_fraction * _density[_qp];
