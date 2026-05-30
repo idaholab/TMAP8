@@ -50,7 +50,6 @@ gold_dir = os.path.join(root, "gold")
 # ------------------------------------------------------------------------------
 
 
-
 def atom_ratio_eq_upper_func(T, P):
     """
     High-pressure isotherm model: equilibrium atomic ratio for given T and P.
@@ -61,7 +60,7 @@ def atom_ratio_eq_upper_func(T, P):
     p0 = 5
     safe_log_arg = np.maximum(P - p0, 1e-10)
     exponent = -2.49 - 7.62e-03 * T + (5.63e-02 + 1.72e-4 * T) * np.log(safe_log_arg)
-    return 5.0 - 8.3e-03/ (1.0e-03 + np.exp(exponent))
+    return 5.0 - 8.3e-03 / (1.0e-03 + np.exp(exponent))
 
 
 def rmse(y_true, y_pred):
@@ -163,7 +162,6 @@ for Tk in TEMPERATURES_K:
     P = df[COL_PRESSURE_PA].values
     AR = df[COL_ATOM_RATIO].values
 
-
     # Select upper branch (above threshold)
     idx_hi = AR > ATOM_RATIO_THRESHOLD
     if np.any(idx_hi):
@@ -176,7 +174,7 @@ for Tk in TEMPERATURES_K:
 
         if len(fit_hi) > 0:
             # Plot experimental upper-branch points
-            plt.scatter(AR_hi,P_hi, label=f"{Tk:.2f} K Data")
+            plt.scatter(AR_hi, P_hi, label=f"{Tk:.2f} K Data")
             # Compute RMSE on original points (unchanged)
             r = rmse(AR_hi, fit_hi)
             rmse_by_temp[Tk] = float(r)
@@ -192,7 +190,7 @@ for Tk in TEMPERATURES_K:
             fit_grid = atom_ratio_eq_upper_func(Tk, P_grid)
 
             # Plot smooth analytical/model curve with the same RMSE label
-            plt.plot( fit_grid,P_grid, "-", label=f"{Tk:.2f} K Fit RMSE {r:.3f}")
+            plt.plot(fit_grid, P_grid, "-", label=f"{Tk:.2f} K Fit RMSE {r:.3f}")
 
 
 # TMAP8 overlays with markers; compute error only for upper branch (P >= p0)
@@ -202,14 +200,12 @@ def overlay_tmap(dfp):
     AF_pred = float(dfp[COL_TMAP_AF].iat[-1])
     p0 = 5
 
-
     AF_model = float(atom_ratio_eq_upper_func(T_pred, np.array([P_pred]))[0])
     err_pct = abs(AF_pred - AF_model) / AF_model * 100 if AF_model != 0 else np.nan
     marker_style = "x"  # high-pressure branch
     label = f"{int(T_pred)}.15 K, {P_pred:.2e} Pa (err {err_pct:.2f}%)"
 
-
-    plt.scatter(AF_pred,P_pred, marker=marker_style, color="k", s=90, label=label)
+    plt.scatter(AF_pred, P_pred, marker=marker_style, color="k", s=90, label=label)
 
 
 for dfp in tmap_data.values():
@@ -230,7 +226,6 @@ plt.close(fig)
 • Calculates MAPE on overlapping atomic‑ratio range
 """
 from pathlib import Path
-
 
 EPS = 1e-12
 
@@ -256,6 +251,7 @@ def compute_mape(ar_t, p_t, ar_e, p_e):
     p_interp = np.interp(ar_e2, ar_t, p_t)
     return np.mean(np.abs((p_interp - p_e2) / p_e2)) * 100
 
+
 # --------------------------------------------------------------------
 # Script starts here
 # --------------------------------------------------------------------
@@ -270,15 +266,16 @@ for Tk in TEMPERATURES_K:
     ar_exp = df[COL_ATOM_RATIO].values
     p_exp = df[COL_PRESSURE_PA].values
 
-   # ---------------------------
+    # ---------------------------
     # Load TMAP8
     # ---------------------------
     tmap_name = f"Zr2FeHx_PCT_Low_to_High_{int(Tk)}K.csv"
     tmap_path = os.path.join(gold_dir, tmap_name)
     df_tmap = pd.read_csv(tmap_path)
 
-
-    ar_tmap = df_tmap["atomic_fraction_H_enclosure_2_at_interface"].astype(float).to_numpy()
+    ar_tmap = (
+        df_tmap["atomic_fraction_H_enclosure_2_at_interface"].astype(float).to_numpy()
+    )
     p_tmap = df_tmap["pressure_H2_enclosure_1_at_interface"].astype(float).to_numpy()
 
     mask = np.isfinite(ar_tmap) & np.isfinite(p_tmap) & (p_tmap > EPS)
@@ -295,8 +292,13 @@ for Tk in TEMPERATURES_K:
     # ---------------------------
     ax.scatter(ar_exp, p_exp, s=30, label=f"Exp {int(Tk)}.15 K")
     order = np.argsort(ar_tmap)
-    ax.plot(ar_tmap[order], p_tmap[order], "--", lw=2,
-            label=f"TMAP {int(Tk)}.15 K (err={mape:.2f}%)")
+    ax.plot(
+        ar_tmap[order],
+        p_tmap[order],
+        "--",
+        lw=2,
+        label=f"TMAP {int(Tk)}.15 K (err={mape:.2f}%)",
+    )
 
 # ---------------------------
 # Final formatting
