@@ -102,14 +102,20 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
   ADReal limit_pressure = 5; // lower pressure limit of fit
   ADReal r = 0;
 
+<<<<<<< HEAD
 
 >>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
+=======
+>>>>>>> d5029161 (Formatting)
   using std::exp;
   using std::log;
   using std::max;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d5029161 (Formatting)
   // Gas pressure (Pa): R * T * c / 2 (two atoms per molecule)
   auto neighbor_pressure =
       PhysicalConstants::ideal_gas_constant * _neighbor_temperature[_qp] * _neighbor_value[_qp] / 2;
@@ -176,10 +182,15 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
                                (2.32e-01 + 1.51e-04 * _neighbor_temperature[_qp]) *
 =======
       5.0 - 8.32e-03 / (1e-03 + exp(-2.49 - 7.61e-03 * _neighbor_temperature[_qp] +
+<<<<<<< HEAD
                                (5.63e-02 + 1.72e-04 * _neighbor_temperature[_qp]) *
 >>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
                                    log(max(neighbor_pressure - limit_pressure, 1.e-10))));
 >>>>>>> 79918106 (Applying python and source file formatting patches)
+=======
+                                    (5.63e-02 + 1.72e-04 * _neighbor_temperature[_qp]) *
+                                        log(max(neighbor_pressure - limit_pressure, 1.e-10))));
+>>>>>>> d5029161 (Formatting)
 
   // Convert to concentration
   auto _surface_equilibrium_concentration = atomic_fraction * _density[_qp];
