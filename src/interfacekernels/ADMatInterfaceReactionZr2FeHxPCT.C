@@ -56,10 +56,13 @@ ADMatInterfaceReactionZr2FeHxPCT::validParams()
   params.addParam<MaterialPropertyName>(
       "backward_rate", "kb", "Backward reaction rate coefficient (1/s).");
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   params.addParam<bool>(
       "silence_warnings", false, "Whether to silence correlation out of bound warnings");
 >>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
+=======
+>>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
   return params;
 }
 
@@ -70,11 +73,15 @@ ADMatInterfaceReactionZr2FeHxPCT::ADMatInterfaceReactionZr2FeHxPCT(
     _density(getADMaterialProperty<Real>("density")),
     _kf(getADMaterialProperty<Real>("forward_rate")),
 <<<<<<< HEAD
+<<<<<<< HEAD
     _kb(getNeighborADMaterialProperty<Real>("backward_rate"))
 =======
     _kb(getNeighborADMaterialProperty<Real>("backward_rate")),
     _silence_warnings(getParam<bool>("silence_warnings"))
 >>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
+=======
+    _kb(getNeighborADMaterialProperty<Real>("backward_rate"))
+>>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
 {
 }
 
@@ -83,16 +90,25 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   // Variables
   ADReal limit_pressure = 5.; // lower pressure limit of fit
   ADReal r = 0.;
 
 =======
 >>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
+=======
+  // Variables
+  ADReal limit_pressure = 5; // lower pressure limit of fit
+  ADReal r = 0;
+
+
+>>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
   using std::exp;
   using std::log;
   using std::max;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   // Gas pressure (Pa): R * T * c / 2 (two atoms per molecule)
   auto neighbor_pressure =
@@ -104,12 +120,14 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 =======
 >>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
   ADReal r = 0;
+=======
+>>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
 
-  // Calculate the equilibrium concentration value based on PCT curve
-  // (/2 because two atoms for a molecule) (pressure in Pa)
+  // Gas pressure (Pa): R * T * c / 2 (two atoms per molecule)
   auto neighbor_pressure =
       PhysicalConstants::ideal_gas_constant * _neighbor_temperature[_qp] * _neighbor_value[_qp] / 2;
 
+<<<<<<< HEAD
   // Calculate the value of the pressures-limiter
   auto limit_pressure = exp(-4.12 + 1.03e-2 * _neighbor_temperature[_qp]);
 
@@ -121,6 +139,10 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
   // Give a warning if the initial or computed neighbor pressure is out of the analytical model
   if ((neighbor_pressure > 9.e06) || (neighbor_pressure < 0.011))
 >>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
+=======
+  // Give a warning if the initial or computed neighbor pressure is out of the analytical model
+  if (((neighbor_pressure < 7) || (neighbor_pressure > 5e5)))
+>>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
     mooseDoOnce(mooseWarning("In Zr2FeHxPCT: pressure ",
                              neighbor_pressure,
                              "Pa and temperature ",
@@ -144,6 +166,7 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 >>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
 =======
   auto atomic_fraction =
+<<<<<<< HEAD
       4.30 - 1.81 / (0.5 + exp(5.41 - 1.36e-02 * _neighbor_temperature[_qp] +
 <<<<<<< HEAD
                                  (2.32e-01 + 1.51e-04 * _neighbor_temperature[_qp]) *
@@ -151,6 +174,10 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 >>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
 =======
                                (2.32e-01 + 1.51e-04 * _neighbor_temperature[_qp]) *
+=======
+      5.0 - 8.32e-03 / (1e-03 + exp(-2.49 - 7.61e-03 * _neighbor_temperature[_qp] +
+                               (5.63e-02 + 1.72e-04 * _neighbor_temperature[_qp]) *
+>>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
                                    log(max(neighbor_pressure - limit_pressure, 1.e-10))));
 >>>>>>> 79918106 (Applying python and source file formatting patches)
 
