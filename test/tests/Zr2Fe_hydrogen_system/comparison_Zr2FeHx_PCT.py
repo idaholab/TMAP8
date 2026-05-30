@@ -48,13 +48,7 @@ gold_dir = os.path.join(root, "gold")
 # ------------------------------------------------------------------------------
 # Models
 # ------------------------------------------------------------------------------
-def p0_lim_func(T):
-    """
-    Pressure-limiter function p0(T) for Zr2FeHx.
-    T in Kelvin, returns Pa.
-    """
-    T = np.array(T)
-    return np.exp(-4.12 + 1.03e-2 * T)
+
 
 
 def atom_ratio_eq_upper_func(T, P):
@@ -64,10 +58,10 @@ def atom_ratio_eq_upper_func(T, P):
     """
     T = np.array(T)
     P = np.array(P)
-    p0 = p0_lim_func(T)
+    p0 = 5
     safe_log_arg = np.maximum(P - p0, 1e-10)
-    exponent = 5.41 - 1.36e-2 * T + (2.32e-01 + 1.51e-4 * T) * np.log(safe_log_arg)
-    return 4.30 - 1.81 / (0.5 + np.exp(exponent))
+    exponent = -2.49 - 7.62e-03 * T + (5.63e-02 + 1.72e-4 * T) * np.log(safe_log_arg)
+    return 5.0 - 8.3e-03/ (1.0e-03 + np.exp(exponent))
 
 
 def rmse(y_true, y_pred):
@@ -136,37 +130,6 @@ plt.tight_layout()
 plt.savefig("Zr2FeHx_PCT_Data.png", dpi=FIG_DPI)
 plt.close(fig)
 
-# ------------------------------------------------------------------------------
-# Plateau / limiter fit (p0 vs T) from selected experimental points
-# ------------------------------------------------------------------------------
-p0_vals = p0_lim_func(np.array(TEMPERATURES_K))
-
-sel_T, sel_P = [], []
-for Tk in TEMPERATURES_K:
-    df = data_by_temp.get(Tk)
-    if df is None:
-        continue
-
-    AR = df[COL_ATOM_RATIO].values
-    P = df[COL_PRESSURE_PA].values
-    idx = np.where(AR > ATOM_RATIO_THRESHOLD)[0]
-    if idx.size:
-        sel_T.append(Tk)
-        sel_P.append(P[idx[0]])
-
-fig = plt.figure(figsize=(5, 5))
-plt.plot(TEMPERATURES_K, p0_vals, "--", label="Fit")
-if sel_T:
-    plt.scatter(sel_T, sel_P, color="red", label="Selected Pressures")
-
-plt.yscale("log")
-plt.xlabel("Temperature (K)")
-plt.ylabel("Pressure (Pa)")
-plt.grid(True)
-plt.legend()
-plt.tight_layout()
-plt.savefig("Zr2FeHx_PCT_pressure_limiter_fit.png", dpi=FIG_DPI)
-plt.close(fig)
 
 # ------------------------------------------------------------------------------
 # Load TMAP8 predictions
@@ -200,6 +163,7 @@ for Tk in TEMPERATURES_K:
     P = df[COL_PRESSURE_PA].values
     AR = df[COL_ATOM_RATIO].values
 
+
     # Select upper branch (above threshold)
     idx_hi = AR > ATOM_RATIO_THRESHOLD
     if np.any(idx_hi):
@@ -212,7 +176,7 @@ for Tk in TEMPERATURES_K:
 
         if len(fit_hi) > 0:
             # Plot experimental upper-branch points
-            plt.scatter(P_hi, AR_hi, label=f"{Tk:.2f} K Data")
+            plt.scatter(AR_hi,P_hi, label=f"{Tk:.2f} K Data")
             # Compute RMSE on original points (unchanged)
             r = rmse(AR_hi, fit_hi)
             rmse_by_temp[Tk] = float(r)
@@ -220,7 +184,7 @@ for Tk in TEMPERATURES_K:
             # ---- Smooth analytical curve: densify pressure grid (ONLY CHANGE) ----
             P_min = np.min(P_hi)
             P_max = np.max(P_hi)
-            p0_T = float(p0_lim_func(Tk))
+            p0_T = 5
             # Start slightly above p0 to keep log argument positive
             P_start = max(P_min, p0_T * 1.001)
             # Use configured number of points for smooth curve
@@ -228,7 +192,7 @@ for Tk in TEMPERATURES_K:
             fit_grid = atom_ratio_eq_upper_func(Tk, P_grid)
 
             # Plot smooth analytical/model curve with the same RMSE label
-            plt.plot(P_grid, fit_grid, "-", label=f"{Tk:.2f} K Fit RMSE {r:.3f}")
+            plt.plot( fit_grid,P_grid, "-", label=f"{Tk:.2f} K Fit RMSE {r:.3f}")
 
 
 # TMAP8 overlays with markers; compute error only for upper branch (P >= p0)
@@ -236,41 +200,112 @@ def overlay_tmap(dfp):
     T_pred = float(dfp[COL_TMAP_T].iat[-1])
     P_pred = float(dfp[COL_TMAP_P].iat[-1])
     AF_pred = float(dfp[COL_TMAP_AF].iat[-1])
-    p0 = float(p0_lim_func(T_pred))
+    p0 = 5
 
-    if P_pred >= p0:
-        AF_model = float(atom_ratio_eq_upper_func(T_pred, np.array([P_pred]))[0])
-        err_pct = abs(AF_pred - AF_model) / AF_model * 100 if AF_model != 0 else np.nan
-        marker_style = "x"  # high-pressure branch
-        label = f"{int(T_pred)} K, {P_pred:.2e} Pa (err {err_pct:.2f}%)"
-    else:
-        marker_style = "*"  # low-pressure; upper model not applicable
-        label = f"{int(T_pred)} K, {P_pred:.2e} Pa (low-branch)"
 
-    plt.scatter(P_pred, AF_pred, marker=marker_style, color="k", s=90, label=label)
+    AF_model = float(atom_ratio_eq_upper_func(T_pred, np.array([P_pred]))[0])
+    err_pct = abs(AF_pred - AF_model) / AF_model * 100 if AF_model != 0 else np.nan
+    marker_style = "x"  # high-pressure branch
+    label = f"{int(T_pred)}.15 K, {P_pred:.2e} Pa (err {err_pct:.2f}%)"
+
+
+    plt.scatter(AF_pred,P_pred, marker=marker_style, color="k", s=90, label=label)
 
 
 for dfp in tmap_data.values():
     overlay_tmap(dfp)
 
-plt.xscale("log")
-plt.xlabel("Partial Pressure (Pa)")
-plt.ylabel("Atomic Ratio H/Zr₂Fe (-)")
+plt.yscale("log")
+plt.ylabel("Partial Pressure (Pa)")
+plt.xlabel("Atomic Ratio H/Zr₂Fe (-)")
 plt.grid(True)
 plt.legend(bbox_to_anchor=(1.18, 1.02))
 plt.tight_layout()
 plt.savefig("Zr2FeHx_PCT_fit_2D.png", dpi=FIG_DPI)
 plt.close(fig)
 
-# ------------------------------------------------------------------------------
-# RMSE summary across temperatures
-# ------------------------------------------------------------------------------
-if rmse_by_temp:
-    avg_rmse = float(np.mean(list(rmse_by_temp.values())))
-    print(
-        "Temperatures (K) and RMSE values:",
-        {f"{Tk:.2f} K": v for Tk, v in rmse_by_temp.items()},
-    )
-    print(f"Average RMSE: {avg_rmse:.3f}")
-else:
-    print("No valid RMSE computed (check data and thresholds).")
+
+"""
+• Plots exp scatter vs TMAP8 dashed
+• Calculates MAPE on overlapping atomic‑ratio range
+"""
+from pathlib import Path
+
+
+EPS = 1e-12
+
+
+def compute_mape(ar_t, p_t, ar_e, p_e):
+    # Sort the TMAP8 curve
+    ar_t = ar_t[np.argsort(ar_t)]
+    p_t = p_t[np.argsort(ar_t)]
+    # Sort the Experimental curve
+    ar_e = ar_e[np.argsort(ar_e)]
+    p_e = p_e[np.argsort(p_e)]
+
+    # Determine the overlapping x-range between the two curves
+    lo = max(ar_e.min(), ar_t.min())
+    hi = min(ar_e.max(), ar_t.max())
+
+    # Keep only experimental points that fall within the overlapping range
+    mask = (ar_e >= lo) & (ar_e <= hi)
+    ar_e2 = ar_e[mask]
+    p_e2 = p_e[mask]
+
+    # Interpolate experimental curve values at the x-locations of TMAP8 curves
+    p_interp = np.interp(ar_e2, ar_t, p_t)
+    return np.mean(np.abs((p_interp - p_e2) / p_e2)) * 100
+
+# --------------------------------------------------------------------
+# Script starts here
+# --------------------------------------------------------------------
+
+base = Path(__file__).resolve().parent
+exp_dir = base / "PCT_data"
+
+fig, ax = plt.subplots(figsize=(10, 7))
+
+for Tk in TEMPERATURES_K:
+    df = data_by_temp.get(Tk)
+    ar_exp = df[COL_ATOM_RATIO].values
+    p_exp = df[COL_PRESSURE_PA].values
+
+   # ---------------------------
+    # Load TMAP8
+    # ---------------------------
+    tmap_name = f"Zr2FeHx_PCT_Low_to_High_{int(Tk)}K.csv"
+    tmap_path = os.path.join(gold_dir, tmap_name)
+    df_tmap = pd.read_csv(tmap_path)
+
+
+    ar_tmap = df_tmap["atomic_fraction_H_enclosure_2_at_interface"].astype(float).to_numpy()
+    p_tmap = df_tmap["pressure_H2_enclosure_1_at_interface"].astype(float).to_numpy()
+
+    mask = np.isfinite(ar_tmap) & np.isfinite(p_tmap) & (p_tmap > EPS)
+    ar_tmap = ar_tmap[mask]
+    p_tmap = p_tmap[mask]
+
+    # ---------------------------
+    # MAPE
+    # ---------------------------
+    mape = compute_mape(ar_tmap, p_tmap, ar_exp, p_exp)
+
+    # ---------------------------
+    # Plot
+    # ---------------------------
+    ax.scatter(ar_exp, p_exp, s=30, label=f"Exp {int(Tk)}.15 K")
+    order = np.argsort(ar_tmap)
+    ax.plot(ar_tmap[order], p_tmap[order], "--", lw=2,
+            label=f"TMAP {int(Tk)}.15 K (err={mape:.2f}%)")
+
+# ---------------------------
+# Final formatting
+# ---------------------------
+ax.set_yscale("log")
+ax.set_xlabel("Atomic Ratio H/Zr₂Fe")
+ax.set_ylabel("Pressure (Pa)")
+ax.grid(True, ls="--", alpha=0.6)
+ax.legend(fontsize=8)
+
+fig.tight_layout()
+plt.savefig("PCT_all_temperatures_experimental_vs_TMAP8_Zr2Fe.png", dpi=FIG_DPI)

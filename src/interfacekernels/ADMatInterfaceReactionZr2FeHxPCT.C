@@ -28,8 +28,6 @@ ADMatInterfaceReactionZr2FeHxPCT::validParams()
       "forward_rate", "kf", "Forward reaction rate coefficient (1/s).");
   params.addParam<MaterialPropertyName>(
       "backward_rate", "kb", "Backward reaction rate coefficient (1/s).");
-  params.addParam<bool>(
-      "silence_warnings", false, "Whether to silence correlation out of bound warnings");
   return params;
 }
 
@@ -39,30 +37,29 @@ ADMatInterfaceReactionZr2FeHxPCT::ADMatInterfaceReactionZr2FeHxPCT(
     _neighbor_temperature(this->template coupledGenericValue<true>("neighbor_temperature")),
     _density(getADMaterialProperty<Real>("density")),
     _kf(getADMaterialProperty<Real>("forward_rate")),
-    _kb(getNeighborADMaterialProperty<Real>("backward_rate")),
-    _silence_warnings(getParam<bool>("silence_warnings"))
+    _kb(getNeighborADMaterialProperty<Real>("backward_rate"))
 {
 }
 
 ADReal
 ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 {
+  // Variables
+  ADReal limit_pressure = 5; // lower pressure limit of fit
+  ADReal r = 0;
+
+
   using std::exp;
   using std::log;
   using std::max;
 
-  ADReal r = 0;
 
-  // Calculate the equilibrium concentration value based on PCT curve
-  // (/2 because two atoms for a molecule) (pressure in Pa)
+  // Gas pressure (Pa): R * T * c / 2 (two atoms per molecule)
   auto neighbor_pressure =
       PhysicalConstants::ideal_gas_constant * _neighbor_temperature[_qp] * _neighbor_value[_qp] / 2;
 
-  // Calculate the value of the pressures-limiter
-  auto limit_pressure = exp(-4.12 + 1.03e-2 * _neighbor_temperature[_qp]);
-
   // Give a warning if the initial or computed neighbor pressure is out of the analytical model
-  if ((neighbor_pressure > 9.e06) || (neighbor_pressure < 0.011))
+  if (((neighbor_pressure < 7) || (neighbor_pressure > 5e5)))
     mooseDoOnce(mooseWarning("In Zr2FeHxPCT: pressure ",
                              neighbor_pressure,
                              "Pa and temperature ",
@@ -72,8 +69,8 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 
   // Calculate the atomic fraction based on the PCT curve
   auto atomic_fraction =
-      4.30 - 1.81 / (0.5 + exp(5.41 - 1.36e-02 * _neighbor_temperature[_qp] +
-                               (2.32e-01 + 1.51e-04 * _neighbor_temperature[_qp]) *
+      5.0 - 8.32e-03 / (1e-03 + exp(-2.49 - 7.61e-03 * _neighbor_temperature[_qp] +
+                               (5.63e-02 + 1.72e-04 * _neighbor_temperature[_qp]) *
                                    log(max(neighbor_pressure - limit_pressure, 1.e-10))));
 
   // Convert to concentration

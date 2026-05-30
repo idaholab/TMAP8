@@ -4,43 +4,53 @@ N_a = '${units 6.02214076e23 1/mol}' # Avogadro's number from PhysicalConstants.
 boltzmann_constant = '${units 1.380649e-23 J/K}' # Boltzmann constant from PhysicalConstants.h
 
 # Simulation conditions and material properties
-temperature = '${units 598.15 K}'
+temperature = '${units 648.15 K}'
 density_Zr2Fe = '${units 29375.60 mol/m^3}'
 
-
-initial_pressure_H2_enclosure_1 = '${units 1e3 Pa}'
+plateau_pressure_Zr2Fe = '${units 5 Pa}'
+initial_pressure_H2_enclosure_1 = '${units 7 Pa}'
 initial_concentration_H_enclosure_1 = '${units ${fparse 2*initial_pressure_H2_enclosure_1 / (R*temperature)} mol/m^3}'
-initial_atomic_fraction =  3.0 # (-)
+
+
+
+initial_atomic_fraction= '${fparse 5.0 - 8.320e-03  / ( 1e-03 + exp(-2.4851 - 7.6091e-03 * temperature + (5.6264e-02 + 1.7197e-04 * temperature) * log(max(initial_pressure_H2_enclosure_1 - plateau_pressure_Zr2Fe, 1e-10))))}'
+
+
 initial_concentration_H_enclosure_2 = '${units ${fparse initial_atomic_fraction*density_Zr2Fe} mol/m^3}'
 
 # diffusivity from:
 #Zr:Yu, Feifei, et al. “Hydrogen Diffusion in Zirconium Hydrides from On-the-Fly Machine Learning Molecular Dynamics.” International Journal of Hydrogen Energy, vol. 56, Feb. 2024, pp. 1057–66. DOI.org (Crossref), https://doi.org/10.1016/j.ijhydene.2023.12.241
 
-diffusivity_Do = '${units 1.53e-07 m^2/s}'
+diffusivity_Do = '${units 100 m^2/s}'
 diffusivity_Ea = '${units 0.61 eV -> J}'
 
-diffusivity_ratio_gas_Zr2FeHx = '${fparse initial_concentration_H_enclosure_2 / initial_concentration_H_enclosure_1 * 10}' # this ratio is large and helps InterfaceDiffusion due to the ratio of concentrations
+diffusivity_ratio_gas_Zr2FeHx = '${fparse initial_concentration_H_enclosure_2 / initial_concentration_H_enclosure_1 * 100}' # this ratio is large and helps InterfaceDiffusion due to the ratio of concentrations
 # Surface reaction rate from:
 #Yang, Zhiyi, et al. “A Potential Hydrogen Isotope Storage Material Zr2Fe: Deep Exploration on Phase Transition Behaviors and Disproportionation Mechanism.” Energy Materials, vol. 5, no. 1, Jan. 2025. DOI.org (Crossref), https://doi.org/10.20517/energymater.2024.83.
-reaction_rate_0 = '${units 4.28e02 1/s}'
+reaction_rate_0 = '${units 4.28e08 1/s}'
 reaction_rate_Ea = '${units 0.9108 eV -> J}'
 
 # Domain size and mesh parameters
-domain_length = '${units 1 m}'
+domain_length = '${units 1.0 m}'
 num_nodes = 50
 
 # time
-simulation_time = '${units 1e9 s}'
+simulation_time = '${units 100 s}'
 dt_max = '${fparse simulation_time/100}'
 dt_init = '${units 1e-3 s}'
-tau_constant_BC = '${fparse dt_init*2e-2}' # the smaller, the faster the up-ramp for the pressure BC
+
+
+# Linear pressure ramp settings for the boundary condition
+pressure_E = '${units 5e5 Pa}'            # target/end pressure
+P_rate = '${units ${fparse (pressure_E - initial_pressure_H2_enclosure_1 )/simulation_time} Pa/s}'  # linear ramp rate
+
 
 # convergence parameters
 lower_value_threshold_concentration_enclosure_1 = -1e-20
 lower_value_threshold_concentration_enclosure_2 = -1e-20
 
 # file base
-output_file_base ='Zr2FeHx_PCT_out'
+output_file_base ='Zr2FeHx_PCT_Low_to_High_648K'
 
 
 [Mesh]
@@ -119,10 +129,12 @@ output_file_base ='Zr2FeHx_PCT_out'
 []
 
 [Functions]
-  [function_BC_concentration_H_enclosure_1]
+
+  [./function_BC_concentration_H_enclosure_1]
     type = ParsedFunction
-    expression = 'exp(-${tau_constant_BC}/t)* ${initial_concentration_H_enclosure_1}'
-  []
+    expression = '(${initial_pressure_H2_enclosure_1 } + t*${P_rate}) * 2.0 / (8.3145 * ${temperature})'
+  [../]
+
 []
 
 [Kernels]
@@ -315,8 +327,8 @@ output_file_base ='Zr2FeHx_PCT_out'
   dtmax = ${dt_max}
   nl_max_its = 16
   l_max_its = 30
-  nl_rel_tol = 1e-2
-  nl_abs_tol = 4e-15
+  nl_rel_tol = 1e-5
+  nl_abs_tol = 4e-7
   scheme = 'bdf2'
   solve_type = 'Newton'
   petsc_options_iname = '-pc_type -sub_pc_type -snes_type'
