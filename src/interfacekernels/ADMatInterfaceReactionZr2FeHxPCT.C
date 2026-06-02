@@ -165,6 +165,7 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 <<<<<<< HEAD
                                      (5.63e-02 + 1.72e-04 * _neighbor_temperature[_qp]) *
                                          log(max(neighbor_pressure - limit_pressure, 1.e-10))));
+<<<<<<< HEAD
 =======
 
   auto atomic_fraction =
@@ -198,6 +199,8 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 >>>>>>> 89481196 ( Applying hard formats to .C file)
                                         log(max(neighbor_pressure - limit_pressure, 1.e-10))));
 >>>>>>> d5029161 (Formatting)
+=======
+>>>>>>> 1f824feb (Inserting git format clang)
 
   // Convert to concentration
   auto _surface_equilibrium_concentration = atomic_fraction * _density[_qp];
