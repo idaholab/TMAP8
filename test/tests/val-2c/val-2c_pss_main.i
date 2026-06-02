@@ -65,7 +65,7 @@ sub_app_input = "val-2c_delay_pss.i"
   [sample]
     type = ParallelSubsetSimulation
     distributions = 'reaction_rate diffusivity_elemental_tritium diffusivity_tritiated_water log_solubility_elemental_tritium log_solubility_tritiated_water time_injection_T2_end'
-    execute_on = 'PRE_MULTIAPP_SETUP'
+    execute_on = 'PRE_MULTIAPP_SETUP TIMESTEP_END'
     subset_probability = ${subset_probability}
     num_samplessub = ${num_samplessub}
     num_subsets = ${num_subsets}
@@ -73,6 +73,7 @@ sub_app_input = "val-2c_delay_pss.i"
     inputs_reporter = 'adaptive_MC/inputs'
     output_reporter = 'constant/reporter_transfer:objective:value'
     seed = 1012
+    num_random_seeds = ${fparse num_samplessub * num_subsets * 2}
   []
 []
 
@@ -114,6 +115,7 @@ sub_app_input = "val-2c_delay_pss.i"
     output_value = constant/reporter_transfer:objective:value
     inputs = 'inputs'
     sampler = sample
+    execute_on = 'TIMESTEP_BEGIN'
   []
 []
 
