@@ -99,8 +99,8 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 >>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
 =======
   // Variables
-  ADReal limit_pressure = 5; // lower pressure limit of fit
-  ADReal r = 0;
+  ADReal limit_pressure = 5.; // lower pressure limit of fit
+  ADReal r = 0.;
 
 <<<<<<< HEAD
 
@@ -161,6 +161,7 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 <<<<<<< HEAD
   auto atomic_fraction =
       5.0 - 8.32e-03 / (1.e-03 + exp(-2.49 - 7.62e-03 * _neighbor_temperature[_qp] +
+<<<<<<< HEAD
                                      (5.63e-02 + 1.72e-04 * _neighbor_temperature[_qp]) *
                                          log(max(neighbor_pressure - limit_pressure, 1.e-10))));
 =======
@@ -188,6 +189,8 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
                                    log(max(neighbor_pressure - limit_pressure, 1.e-10))));
 >>>>>>> 79918106 (Applying python and source file formatting patches)
 =======
+=======
+>>>>>>> fcc94b4d (Apply suggestions from code review)
                                     (5.63e-02 + 1.72e-04 * _neighbor_temperature[_qp]) *
                                         log(max(neighbor_pressure - limit_pressure, 1.e-10))));
 >>>>>>> d5029161 (Formatting)
