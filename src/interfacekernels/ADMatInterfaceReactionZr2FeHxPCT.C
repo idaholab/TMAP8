@@ -45,8 +45,8 @@ ADReal
 ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 {
   // Variables
-  ADReal limit_pressure = 5; // lower pressure limit of fit
-  ADReal r = 0;
+  ADReal limit_pressure = 5.; // lower pressure limit of fit
+  ADReal r = 0.;
 
   using std::exp;
   using std::log;
@@ -67,7 +67,7 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 
   // Calculate the atomic fraction based on the PCT curve
   auto atomic_fraction =
-      5.0 - 8.32e-03 / (1e-03 + exp(-2.49 - 7.61e-03 * _neighbor_temperature[_qp] +
+      5.0 - 8.32e-03 / (1.e-03 + exp(-2.49 - 7.62e-03 * _neighbor_temperature[_qp] +
                                     (5.63e-02 + 1.72e-04 * _neighbor_temperature[_qp]) *
                                         log(max(neighbor_pressure - limit_pressure, 1.e-10))));
 
