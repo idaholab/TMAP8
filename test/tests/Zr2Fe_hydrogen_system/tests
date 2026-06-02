@@ -1,6 +1,7 @@
 [Tests]
   design = 'InterfaceDiffusion.md ADMatInterfaceReactionZr2FeHxPCT.md MatDiffusion.md TimeDerivative.md'
 <<<<<<< HEAD
+<<<<<<< HEAD
   issues = '#364'
   [Zr2FeHx_PCT_csv]
     type = CSVDiff
@@ -8,12 +9,18 @@
     csvdiff = Zr2FeHx_PCT_out.csv
 =======
   issues = '#261'
+=======
+  issues = '#364'
+>>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
   [Zr2FeHx_PCT_csv]
     type = CSVDiff
     input = Zr2FeHx_PCT.i
     csvdiff = Zr2FeHx_PCT_out.csv
+<<<<<<< HEAD
     max_parallel = 1 # see #200
 >>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
+=======
+>>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
     requirement = 'The system shall be able to model the PCT curves of Zr2FeHx to determine the surface atomic fraction as a function of pressure and temperature.'
   []
   [Zr2FeHx_PCT_exodus]
@@ -34,6 +41,7 @@
   [Zr2FeHx_PCT_T598_P1e03_csv]
     type = CSVDiff
     input = Zr2FeHx_PCT.i
+<<<<<<< HEAD
 <<<<<<< HEAD
     cli_args = "output_file_base=Zr2FeHx_PCT_T598_P1e03_out
                 ${dt_init}=1e1
@@ -59,14 +67,27 @@
 >>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
 =======
                 Executioner/num_steps=150'
+=======
+    cli_args = "output_file_base=Zr2FeHx_PCT_T598_P1e03_out
+                ${dt_init}=1e1
+                temperature=598.15
+                initial_pressure_H2_enclosure_1=1e3
+                initial_atomic_fraction=3.0
+                Executioner/num_steps=150
+                Functions/function_BC_concentration_H_enclosure_1/expression=' exp(-${dt_init}*2e-2/t)* ${initial_concentration_H_enclosure_1}'"
+>>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
     csvdiff = Zr2FeHx_PCT_T598_P1e03_out.csv
-    max_parallel = 1 # see #200
     requirement = 'The system shall be able to model the PCT curves of Zr2FeHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e3 Pa and T=598.15 K.'
+<<<<<<< HEAD
 >>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
+=======
+
+>>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
   []
   [Zr2FeHx_PCT_T623_P1e04_csv]
     type = CSVDiff
     input = Zr2FeHx_PCT.i
+<<<<<<< HEAD
 <<<<<<< HEAD
     cli_args = "output_file_base=Zr2FeHx_PCT_T623_P1e04_out
 =======
@@ -90,10 +111,21 @@
     max_parallel = 1 # see #200
     requirement = 'The system shall be able to model the PCT curves of Zr2FeHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e4 Pa and T=1173.15 K.'
 >>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
+=======
+    cli_args = "output_file_base=Zr2FeHx_PCT_T623_P1e04_out
+                temperature=623.15
+                initial_pressure_H2_enclosure_1=1e4
+                initial_atomic_fraction=3.7
+                Executioner/num_steps=200
+                Functions/function_BC_concentration_H_enclosure_1/expression=' exp(-${dt_init}*2e-2/t)* ${initial_concentration_H_enclosure_1}'"
+    csvdiff = Zr2FeHx_PCT_T623_P1e04_out.csv
+    requirement = 'The system shall be able to model the PCT curves of Zr2FeHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e4 Pa and T=623.15.15 K.'
+>>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
   []
   [Zr2FeHx_PCT_T648_P1e02_csv]
     type = CSVDiff
     input = Zr2FeHx_PCT.i
+<<<<<<< HEAD
 <<<<<<< HEAD
     cli_args = "output_file_base=Zr2FeHx_PCT_T648_P1e02_out
 =======
@@ -116,14 +148,22 @@
 >>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
 =======
                 Executioner/num_steps=200'
+=======
+    cli_args = "output_file_base=Zr2FeHx_PCT_T648_P1e02_out
+                temperature=648.15
+                initial_pressure_H2_enclosure_1=1e2
+                initial_atomic_fraction=1.85
+                Executioner/num_steps=200
+                Functions/function_BC_concentration_H_enclosure_1/expression=' exp(-${dt_init}*2e-2/t)* ${initial_concentration_H_enclosure_1}'"
+>>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
     csvdiff = Zr2FeHx_PCT_T648_P1e02_out.csv
-    max_parallel = 1 # see #200
     requirement = 'The system shall be able to model the PCT curves of Zr2FeHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e2 Pa and T=648.15 K.'
 >>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
   []
   [Zr2FeHx_PCT_T648_P1e05_csv]
     type = CSVDiff
     input = Zr2FeHx_PCT.i
+<<<<<<< HEAD
 <<<<<<< HEAD
     cli_args = "output_file_base=Zr2FeHx_PCT_T648_P1e05_out
                 temperature=648.15
@@ -135,11 +175,16 @@
     requirement = 'The system shall be able to model the PCT curves of Zr2FeHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e5 Pa and T=648.15 K.'
 =======
     cli_args = 'output_file_base=Zr2FeHx_PCT_T648_P1e05_out
+=======
+    cli_args = "output_file_base=Zr2FeHx_PCT_T648_P1e05_out
+>>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
                 temperature=648.15
                 initial_pressure_H2_enclosure_1=1e5
-                initial_atomic_fraction=3.7
-                Executioner/num_steps=200'
+                initial_atomic_fraction=3.0
+                Executioner/num_steps=200
+                Functions/function_BC_concentration_H_enclosure_1/expression='exp(-${dt_init}*2e-2/t)* ${initial_concentration_H_enclosure_1}'"
     csvdiff = Zr2FeHx_PCT_T648_P1e05_out.csv
+<<<<<<< HEAD
     max_parallel = 1 # see #200
 <<<<<<< HEAD
     requirement = 'The system shall be able to model the PCT curves of Zr2FeHx to determine the surface atomic fraction as a function of pressure and temperature for P=3e3 Pa and T=1273.15 K.'
@@ -151,6 +196,8 @@
     required_python_packages = 'matplotlib numpy pandas os git'
 >>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
 =======
+=======
+>>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
     requirement = 'The system shall be able to model the PCT curves of Zr2FeHx to determine the surface atomic fraction as a function of pressure and temperature for P=1e5 Pa and T=648.15 K.'
 >>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
   []
@@ -185,16 +232,27 @@
 =======
   [Zr2FeHx_PCT_Low_to_High_598K_csv]
     type = CSVDiff
-    input = Zr2FeHx_PCT_Overall.i
-    cli_args = 'output_file_base=Zr2FeHx_PCT_Low_to_High_598K
+    input =  Zr2FeHx_PCT.i
+    cli_args = "output_file_base=Zr2FeHx_PCT_Low_to_High_598K
                 temperature=598.15
+<<<<<<< HEAD
                 initial_pressure_H2_enclosure_1=7'
 >>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
+=======
+                initial_pressure_H2_enclosure_1=7
+                diffusivity_Do=100
+                reaction_rate_0=4.28e08
+                simulation_time=100
+                Functions/function_BC_concentration_H_enclosure_1/expression='(${initial_pressure_H2_enclosure_1} + t*((4e5 - ${initial_pressure_H2_enclosure_1} )/${simulation_time})) * 2.0 / (8.3145 * ${temperature})'
+                Executioner/nl_rel_tol=1e-5
+                Executioner/nl_abs_tol=4e-7"
+>>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
     csvdiff = Zr2FeHx_PCT_Low_to_High_598K.csv
     requirement = 'The system shall be able to model the entire PCT curves of Zr2FeHx at T=598.15 K with an initial pressure of starting at P=7 Pa.'
   []
   [Zr2FeHx_PCT_Low_to_High_623K_csv]
     type = CSVDiff
+<<<<<<< HEAD
 <<<<<<< HEAD
     input =  Zr2FeHx_PCT.i
     cli_args = "output_file_base=Zr2FeHx_PCT_Low_to_High_623K
@@ -212,11 +270,24 @@
                 temperature=623.15
                 initial_pressure_H2_enclosure_1=7'
 >>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
+=======
+    input =  Zr2FeHx_PCT.i
+    cli_args = "output_file_base=Zr2FeHx_PCT_Low_to_High_623K
+                temperature=623.15
+                initial_pressure_H2_enclosure_1=7
+                diffusivity_Do=100
+                reaction_rate_0=4.28e08
+                simulation_time=100
+                Functions/function_BC_concentration_H_enclosure_1/expression='(${initial_pressure_H2_enclosure_1} + t*((4e5 - ${initial_pressure_H2_enclosure_1} )/${simulation_time})) * 2.0 / (8.3145 * ${temperature})'
+                Executioner/nl_rel_tol=1e-5
+                Executioner/nl_abs_tol=4e-7"
+>>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
     csvdiff = Zr2FeHx_PCT_Low_to_High_623K.csv
     requirement = 'The system shall be able to model the entire PCT curves of Zr2FeHx at T=623.15 K with an initial pressure of starting at P=7 Pa.'
   []
   [Zr2FeHx_PCT_Low_to_High_648K_csv]
     type = CSVDiff
+<<<<<<< HEAD
 <<<<<<< HEAD
     input =  Zr2FeHx_PCT.i
     cli_args = "output_file_base=Zr2FeHx_PCT_Low_to_High_648K
@@ -234,6 +305,18 @@
                 temperature=648.15
                 initial_pressure_H2_enclosure_1=7'
 >>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
+=======
+    input =  Zr2FeHx_PCT.i
+    cli_args = "output_file_base=Zr2FeHx_PCT_Low_to_High_648K
+                temperature=648.15
+                initial_pressure_H2_enclosure_1=7
+                diffusivity_Do=100
+                reaction_rate_0=4.28e08
+                simulation_time=100
+                Functions/function_BC_concentration_H_enclosure_1/expression='(${initial_pressure_H2_enclosure_1} + t*((4e5 - ${initial_pressure_H2_enclosure_1} )/${simulation_time})) * 2.0 / (8.3145 * ${temperature})'
+                Executioner/nl_rel_tol=1e-5
+                Executioner/nl_abs_tol=4e-7"
+>>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
     csvdiff = Zr2FeHx_PCT_Low_to_High_648K.csv
     requirement ='The system shall be able to model the entire PCT curves of Zr2FeHx at T=648.15 K with an initial pressure of starting at P=7 Pa.'
   []
