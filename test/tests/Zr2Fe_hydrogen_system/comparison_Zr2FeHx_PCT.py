@@ -57,7 +57,7 @@ def atom_ratio_eq_upper_func(T, P):
     """
     T = np.array(T)
     P = np.array(P)
-    p0 = 5 # Pa
+    p0 = 5  # Pa
     safe_log_arg = np.maximum(P - p0, 1e-10)
     exponent = -2.49 - 7.62e-03 * T + (5.63e-02 + 1.72e-4 * T) * np.log(safe_log_arg)
     return 5.0 - 8.32e-03 / (1.0e-03 + np.exp(exponent))
@@ -227,7 +227,9 @@ plt.close(fig)
 """
 from pathlib import Path
 
-EPS = 1e-12
+# ------------------------------------------------------------------------------
+# Compute Mean Average Percent Error (MAPE)
+# ------------------------------------------------------------------------------
 
 
 def compute_mape(ar_t, p_t, ar_e, p_e):
@@ -253,7 +255,7 @@ def compute_mape(ar_t, p_t, ar_e, p_e):
 
 
 # --------------------------------------------------------------------
-# Script starts here
+# Full PCT TMAP8 modelling capabilities versus experimental data comparsion plots
 # --------------------------------------------------------------------
 
 base = Path(__file__).resolve().parent
@@ -278,7 +280,7 @@ for Tk in TEMPERATURES_K:
     )
     p_tmap = df_tmap["pressure_H2_enclosure_1_at_interface"].astype(float).to_numpy()
 
-    mask = np.isfinite(ar_tmap) & np.isfinite(p_tmap) & (p_tmap > EPS)
+    mask = np.isfinite(ar_tmap) & np.isfinite(p_tmap)
     ar_tmap = ar_tmap[mask]
     p_tmap = p_tmap[mask]
 

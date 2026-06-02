@@ -1,3 +1,10 @@
+###########################################
+# Testing PCT Zr2FeHx modelling capability and performance
+# This input file works in two independent ways:
+# (A) : Evaluate the equilibrium of hydrogen and Zr2Fe at a set Pressure boundary and Temperature
+# (B) : Evaluate the equilibrium of hydrogen and Zr2Fe at an increasing Pressure boundary and set Temperature
+###########################################
+
 # Physical constants
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConstants.h
 N_a = '${units 6.02214076e23 1/mol}' # Avogadro's number from PhysicalConstants.h
@@ -8,9 +15,9 @@ temperature = '${units 598.15 K}'
 density_Zr2Fe = '${units 29375.60 mol/m^3}'
 
 
-initial_pressure_H2_enclosure_1 = '${units 1e3 Pa}'
+initial_pressure_H2_enclosure_1 = '${units 7 Pa}'
 initial_concentration_H_enclosure_1 = '${units ${fparse 2*initial_pressure_H2_enclosure_1 / (R*temperature)} mol/m^3}'
-initial_atomic_fraction =  3.0 # (-)
+initial_atomic_fraction= '${fparse 5.0 - 8.320e-03  / ( 1e-03 + exp(-2.4851 - 7.6091e-03 * temperature + (5.6264e-02 + 1.7197e-04 * temperature) * log(max(initial_pressure_H2_enclosure_1 - 5, 1e-10))))}'
 initial_concentration_H_enclosure_2 = '${units ${fparse initial_atomic_fraction*density_Zr2Fe} mol/m^3}'
 
 # diffusivity from:
@@ -33,7 +40,6 @@ num_nodes = 50
 simulation_time = '${units 1e9 s}'
 dt_max = '${fparse simulation_time/100}'
 dt_init = '${units 1e-3 s}'
-tau_constant_BC = '${fparse dt_init*2e-2}' # the smaller, the faster the up-ramp for the pressure BC
 
 # convergence parameters
 lower_value_threshold_concentration_enclosure_1 = -1e-20
@@ -121,7 +127,7 @@ output_file_base ='Zr2FeHx_PCT_out'
 [Functions]
   [function_BC_concentration_H_enclosure_1]
     type = ParsedFunction
-    expression = 'exp(-${tau_constant_BC}/t)* ${initial_concentration_H_enclosure_1}'
+    expression = 'exp(-${dt_init}*2e-2/t)* ${initial_concentration_H_enclosure_1}'
   []
 []
 
@@ -336,5 +342,8 @@ output_file_base ='Zr2FeHx_PCT_out'
 [Outputs]
   file_base = ${output_file_base}
   csv = true
-  exodus = true
+  [exodus]
+    type = Exodus
+    execute_on = 'timestep_end'
+  []
 []
