@@ -162,6 +162,7 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
   auto atomic_fraction =
       5.0 - 8.32e-03 / (1.e-03 + exp(-2.49 - 7.62e-03 * _neighbor_temperature[_qp] +
 <<<<<<< HEAD
+<<<<<<< HEAD
                                      (5.63e-02 + 1.72e-04 * _neighbor_temperature[_qp]) *
                                          log(max(neighbor_pressure - limit_pressure, 1.e-10))));
 =======
@@ -192,6 +193,9 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 =======
 >>>>>>> fcc94b4d (Apply suggestions from code review)
                                     (5.63e-02 + 1.72e-04 * _neighbor_temperature[_qp]) *
+=======
+                                     (5.63e-02 + 1.72e-04 * _neighbor_temperature[_qp]) *
+>>>>>>> 89481196 ( Applying hard formats to .C file)
                                         log(max(neighbor_pressure - limit_pressure, 1.e-10))));
 >>>>>>> d5029161 (Formatting)
 
