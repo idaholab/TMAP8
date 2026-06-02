@@ -120,13 +120,14 @@
                     delta_S_T2O
                     delta_H_T2
                     delta_S_T2'
-    execute_on = PRE_MULTIAPP_SETUP
+    execute_on = 'PRE_MULTIAPP_SETUP timestep_end'
     subset_probability = 0.1
     num_samplessub = 10
     num_subsets = 2
     output_reporter = 'constant/reporter_transfer:log_inverse_error:value'
     inputs_reporter = 'PSS_reporter/inputs'
     seed = 1012
+    num_random_seeds = 100
   []
 []
 
@@ -184,6 +185,7 @@
     output_value = constant/reporter_transfer:log_inverse_error:value
     inputs = 'inputs'
     sampler = sample
+    execute_on = 'timestep_end'
   []
 []
 
