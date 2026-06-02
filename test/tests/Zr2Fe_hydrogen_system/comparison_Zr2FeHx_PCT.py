@@ -57,10 +57,10 @@ def atom_ratio_eq_upper_func(T, P):
     """
     T = np.array(T)
     P = np.array(P)
-    p0 = 5
+    p0 = 5 # Pa
     safe_log_arg = np.maximum(P - p0, 1e-10)
     exponent = -2.49 - 7.62e-03 * T + (5.63e-02 + 1.72e-4 * T) * np.log(safe_log_arg)
-    return 5.0 - 8.3e-03 / (1.0e-03 + np.exp(exponent))
+    return 5.0 - 8.32e-03 / (1.0e-03 + np.exp(exponent))
 
 
 def rmse(y_true, y_pred):
@@ -84,7 +84,7 @@ def atom_ratio_wtpct_to_atomic(series):
 # ------------------------------------------------------------------------------
 # Load experimental data
 # ------------------------------------------------------------------------------
-data_by_temp = {}
+data_by_temperature = {}
 for Tc, Tk in zip(TEMPERATURES_C, TEMPERATURES_K):
     f = os.path.join(exp_data_dir, f"{int(Tc)}.csv")
     if not os.path.exists(f):
@@ -106,14 +106,14 @@ for Tc, Tk in zip(TEMPERATURES_C, TEMPERATURES_K):
     df_out = (
         df_out[[COL_PRESSURE_PA, COL_ATOM_RATIO]].dropna().sort_values(COL_PRESSURE_PA)
     )
-    data_by_temp[Tk] = df_out.reset_index(drop=True)
+    data_by_temperature[Tk] = df_out.reset_index(drop=True)
 
 # ------------------------------------------------------------------------------
 # Raw plot (Atomic Ratio vs Pressure) for each temperature
 # ------------------------------------------------------------------------------
 fig = plt.figure(figsize=(10, 6))
 for Tk in TEMPERATURES_K:
-    df = data_by_temp.get(Tk)
+    df = data_by_temperature.get(Tk)
     if df is None:
         continue
 
@@ -153,9 +153,9 @@ for f in tmap_files:
 # ------------------------------------------------------------------------------
 fig = plt.figure(figsize=(12, 8))
 
-rmse_by_temp = {}
+rmse_by_temperature = {}
 for Tk in TEMPERATURES_K:
-    df = data_by_temp.get(Tk)
+    df = data_by_temperature.get(Tk)
     if df is None:
         continue
 
@@ -177,7 +177,7 @@ for Tk in TEMPERATURES_K:
             plt.scatter(AR_hi, P_hi, label=f"{Tk:.2f} K Data")
             # Compute RMSE on original points (unchanged)
             r = rmse(AR_hi, fit_hi)
-            rmse_by_temp[Tk] = float(r)
+            rmse_by_temperature[Tk] = float(r)
 
             # ---- Smooth analytical curve: densify pressure grid (ONLY CHANGE) ----
             P_min = np.min(P_hi)
@@ -262,7 +262,7 @@ exp_dir = base / "PCT_data"
 fig, ax = plt.subplots(figsize=(10, 7))
 
 for Tk in TEMPERATURES_K:
-    df = data_by_temp.get(Tk)
+    df = data_by_temperature.get(Tk)
     ar_exp = df[COL_ATOM_RATIO].values
     p_exp = df[COL_PRESSURE_PA].values
 
