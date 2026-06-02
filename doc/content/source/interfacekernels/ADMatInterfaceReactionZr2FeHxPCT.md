@@ -15,7 +15,7 @@ where $C_s$ is the surface H concentration in mol/m$^3$,
 $K_b$ and $K_f$ are the backward and forward surface reaction rate in 1/s, respectively,
 $f_{at}(T,P)$ is the composition in atomic fraction of H in Zr$_{2}$FeH$_{x}$ given a gas temperature $T$ and gas pressure $P$,
 and $\rho$ is the zirconium-iron molar density in mol/m$^3$.
-Note that the neighbor pressure is given as a molecular concentration (i.e., not an atomic concentration) and converted to pressure within the interface kernel. 
+Note that the neighbor pressure is given as a molecular concentration (i.e., not an atomic concentration) and converted to pressure within the interface kernel.
 
 
 [Zr2FeHx_PCT_Data] shows the experimental data from [!cite](yang2025potential) used to create numerical fits for PCT modelling.
@@ -55,7 +55,7 @@ To model the interface, the input file employs the [InterfaceDiffusion.md] objec
 \frac{d C_s}{dt} = 0 = K (f_{at}(T,P) \rho - C_s),
 \end{equation}
 
-The results of the high pressure test for ($T$, $P$) =(598.15 K, $1 \times 10^{3}$ Pa), (623.15 K, $1 \times 10^{4}$ Pa), (648.15 K, $1 \times 10^{2}$ Pa), and (648.15 K, $1 \times 10^{5}$ Pa) are shown in [Zr2FeHx_PCT_fit_2D]. As seen in the results, there are minor deviations, potentially due to rounding errors in the atomic‑fraction expression [eq:atomic_fraction]. Nonetheless, the errors remain below 1%, indicating that the fits are suitable for PCT modeling.
+The results of the high pressure test for ($T$, $P$) =(598.15 K, $1 \times 10^{3}$ Pa), (623.15 K, $1 \times 10^{4}$ Pa), (648.15 K, $1 \times 10^{2}$ Pa), and (648.15 K, $1 \times 10^{5}$ Pa) are shown in [Zr2FeHx_PCT_fit_2D] and are a good fit.
 
 
 !media comparison_Zr2FeHx_PCT.py
