@@ -5,7 +5,7 @@
 ## Case Description
 
 This validation problem is taken from [!cite](hino1998hydrogen) and uses multiple trapping capability. This case is part of the validation suite of TMAP7 as val-2d [!citep](ambrosek2008verification).
-In this experiment, tritium is implanted at 5 keV and a flux of 1 $\times 10^{19}$ atom/m$_2$/s for 5,000 seconds into a 0.1-mm-thick polycrystalline tungsten foil with a surface area of 50 $\times$ 50 mm$^2$ at room temperature (300 K).
+In this experiment, tritium is implanted at 5 keV and a flux of 1 $\times 10^{19}$ atom/m$^2$/s for 5,000 seconds into a 0.1-mm-thick polycrystalline tungsten foil with a surface area of 50 $\times$ 50 mm$^2$ at room temperature (300 K).
 The background pressure in the implantation chamber is 10$^{-3}$ Pa while the implantation is going on and 10$^{-5}$ Pa the rest of the time.
 Following the implantation, the sample is subjected to thermal desorption spectroscopy by heating under vacuum at 50 K/min to 1,273 K and is then held at that temperature for several minutes.
 
@@ -36,7 +36,7 @@ The second is a uniform trap associated with dislocations and is assigned a trap
 Therefore, the diffusion of tritium in sample is described as:
 
 \begin{equation} \label{eq:diffusion}
-\frac{d C_M}{d t} = \nabla \cdot D \nabla C_M + S + \sum_{i=1}^{3} f_{T/M,i} \frac{dC_{T_i}}{dt} ,
+\frac{d C_M}{d t} = \nabla \cdot D \nabla C_M + S - \sum_{i=1}^{3} f_{T/M,i} \frac{dC_{T_i}}{dt} ,
 \end{equation}
 
 and, for $i=1$, $i=2$, and $i=3$:

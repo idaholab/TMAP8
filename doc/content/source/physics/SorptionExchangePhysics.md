@@ -9,11 +9,11 @@ The ordinary differential equations solved for each species are:
 !equation
 \dfrac{\partial c_i}{\partial t} + \frac{\Gamma_i A}{V} \zeta = 0
 
-where $c_i$ are the species of interest, $\Gamma_i$ is the flux of the specie $i$ exiting the enclosure and entering the
+where $c_i$ are the species of interest, $\Gamma_i$ is the flux of species $i$ exiting the enclosure and entering the
 structure, $A$ is the surface area of the structure contacting the enclosure,
 $V$ is the enclosure volume, and $\zeta$ is a conversion factor from
 concentration to pressure units.
-See the respective kernels for for information.
+See the respective kernels for more information.
 
 ## Objects created
 
@@ -25,7 +25,7 @@ The species equation(s) on the 0D component (such as a [Enclosure0D.md]) are cre
 On the structures (such as a [Structure1D.md]) connected to the 0D component, an [EquilibriumBC.md] is created on their outer surface boundary.
 This boundary condition applies to a variable being diffused/migrated on that structure if a [DiffusionPhysicsBase.md]-derived
 `Physics` is defined on this structure.
-This boundary condition connects the outgoing species flux 0D component with the incoming species flux on the boundary of the structure.
+This boundary condition connects the outgoing species flux from the 0D component with the incoming species flux on the boundary of the structure.
 
 ## Interaction with ActionComponents
 
