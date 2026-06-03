@@ -357,7 +357,7 @@ return _permeability[_qp] * _grad_u[_qp] * _grad_test[_qp];
 
 This capability is located in the MOOSE Scalar Transport Module ([Link](https://github.com/idaholab/moose/blob/next/modules/scalar_transport/src/bcs/BinaryRecombinationBC.C)). More information about the surface models available in TMAP8 is available in the [theory manual](https://mooseframework.inl.gov/TMAP8/theory_manual.html).
 
-Strong form:
+Weak form:
 
 !equation
 \int_{\Omega} \psi_i K_r u v d\Omega
@@ -888,10 +888,10 @@ test/
   tests/
     kernels/
       my_kernel/
-        my_kernel.i
+        my_kernel_test.i
         tests
         gold/
-          my_kernel_out.e
+          my_kernel_test_out.e
 ```
 
 !col-end!
@@ -906,11 +906,11 @@ test/
 
 ```
 [Tests]
-  [my_test]
+  [my_kernel_test]
     type = Exodiff
-    input = test.i
+    input = my_kernel_test.i
     cli_args = 'Kernels/my_kernel/active=true'
-    exodiff = test_out.e
+    exodiff = my_kernel_test_out.e
   []
 []
 ```
