@@ -64,9 +64,10 @@
     num_parallel_proposals = 5
     num_tries = 5000
     seed = 2401
+    num_random_seeds = 200
     initial_values = '8.623 1.04 6.613 1.19 -6.161 1.07 2.0 0.9'
     max_procs_per_row = 1
-    execute_on = PRE_MULTIAPP_SETUP
+    execute_on = 'PRE_MULTIAPP_SETUP TIMESTEP_END'
   []
 []
 
@@ -112,6 +113,7 @@
     gp_evaluator = GP_eval
     acquisition = 'expectedimprovement'
     penalize_acquisition = true
+    execute_on = 'timestep_begin'
   []
 []
 

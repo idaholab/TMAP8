@@ -23,8 +23,8 @@ The equation(s) are created using the following nodal kernels:
 - A [TrappingNodalKernel.md] for the trapping term
 - A [ReleasingNodalKernel.md] for the releasing term
 
-Additionally, the rate of release minus trapping of the species being trapped is added to the mobile concentration being
-tracked using a [CoupledTimeDerivative.md] regular kernel.
+Additionally, the rate of release minus trapping of the species being trapped, scaled as needed, is added to the mobile concentration being
+tracked using a [ScaledCoupledTimeDerivative.md] regular kernel.
 
 No boundary conditions are created, the nodal kernels are created on the boundary nodes similarly to how they
 are created in the nodes inside the volume.
