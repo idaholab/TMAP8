@@ -29,18 +29,6 @@ estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}'
 [AuxVariables]
   [H_partial_pressure_gas] # Partial pressure of H_2 in internal gas chamber in Pa
   []
-  [H_mobile_steel_derivative] # dC_s/dx
-    family = MONOMIAL # Need element rather than nodal family to define gradient at a node
-  []
-[]
-
-[Materials]
-  [unity]
-    type = ConstantMaterial
-    property_name = negative_unity
-    value = -1
-    boundary = '0'
-  []
 []
 
 [AuxKernels]
@@ -48,15 +36,6 @@ estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}'
     type = FunctionAux
     function = ${pressure_function}
     variable = H_partial_pressure_gas
-    boundary = '0'
-  []
-
-  [concentration_gradient_left_boundary] # dC_s/dx @ x = inner_radius
-    type = DiffusionFluxAux
-    component = x
-    diffusion_variable = H_mobile_steel
-    diffusivity = negative_unity
-    variable = H_mobile_steel_derivative
     boundary = '0'
   []
 []
@@ -105,16 +84,17 @@ estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}'
     outputs = csv
   []
 
-  [gradient_left_boundary]
-    type = PointValue
-    point = '${inner_radius} 0 0'
-    variable = H_mobile_steel_derivative
+  [gradient_left_boundary] # dC_s/dx @ x = inner_radius
+    type = ADSideDiffusiveFluxAverage
+    boundary = '0'
+    variable = H_mobile_steel
+    diffusivity = 1
     outputs = none
   []
 
-  [interface_concentration]
-    type = PointValue
-    point = '${inner_radius} 0 0'
+  [interface_concentration] # C_s @ x = inner_radius
+    type = SideAverageValue
+    boundary = '0'
     variable = H_mobile_steel
     outputs = none
   []

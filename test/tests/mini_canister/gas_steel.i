@@ -172,9 +172,9 @@ num_elements_gas = 250
 
   # Pressure calculation
 
-  [Mobile_gas_interface]
-    type = PointValue
-    point = '${inner_radius} 0 0'
+  [Mobile_gas_interface] # C_g at the gas-steel interface
+    type = SideAverageValue
+    boundary = 'interface_gas_to_steel'
     variable = H_mobile_gas
     outputs = none
   []
