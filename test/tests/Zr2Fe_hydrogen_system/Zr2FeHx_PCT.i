@@ -382,9 +382,11 @@ output_file_base ='Zr2FeHx_PCT_out'
 >>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
   scheme = 'bdf2'
   solve_type = 'Newton'
-  petsc_options_iname = '-pc_type -sub_pc_type -snes_type'
-  petsc_options_value = 'asm      lu           vinewtonrsls' # This petsc option helps prevent negative concentrations with bounds'
+  petsc_options_iname = '-pc_type -pc_factor_mat_solver_type -snes_type'
+  petsc_options_value = 'lu       mumps                      vinewtonrsls' # This petsc option helps prevent negative concentrations with bounds'
   line_search = 'none'
+  automatic_scaling = true
+  compute_scaling_once = true
   [TimeStepper]
     type = IterationAdaptiveDT
     dt = ${dt_init}
