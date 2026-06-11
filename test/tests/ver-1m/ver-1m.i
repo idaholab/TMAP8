@@ -5,7 +5,7 @@
 #   Technol. 37 (2000) 887–892 https://doi.org/10.1080/18811248.2000.9714969
 
 # Physical constants
-boltzmann_constant = '${units 8.61e-5 eV/K}' # Boltzmann constant from PhysicalConstants.h
+boltzmann_constant = '${units 1.380649e-23 J/K -> eV/K}' # Boltzmann constant from PhysicalConstants.h
 
 # Geometry
 pin_radius = '${units 0.005 m}'
@@ -21,14 +21,14 @@ cladding_thermal_conductivity = '${units 16.5 W/m/K}'
 fuel_density = '${units  8.26e3 kg/m^3}'
 cladding_density = '${units 8.0 g/cm^3 -> kg/m^3}'
 initial_atomic_fraction = 1.6 # ratio H/Zr
-coolant_water_temp = '${units 563.15 K}'
+coolant_water_temperature = '${units 563.15 K}'
 water_convective_htc = '${units 18000 W/m^2/K}'
 gap_conductance = '${units 7.381e3 W/m^2/K}'
 gap_thermal_conductivity = '${units ${fparse gap_conductance*gap_thickness} W/m^2/K}'
 
-# diffusivity from  G Majer et al 1994 J. Phys.: Condens. Matter 6 2935
+# limiting diffusivity from  G Majer et al 1994 J. Phys.: Condens. Matter 6 2935
 diffusivity_D0 = '${units 1.53e-7 m^2/s}'
-diffusivity_Ea = '${units 0.61 eV}'
+diffusivity_Ea = '${units 0 eV}' # this value does not impact the steady state solution, so the limiting diffusivity is assumed in all cases.
 
 reference_temperature = '${units ${fparse coolant_water_temperature  + (linear_heating_rate/(2*pi*fuel_thermal_conductivity))} K}'
 
@@ -38,7 +38,7 @@ dt_max = 10000
 dt_init = 0.01
 
 # file base
-output_file_base = 'ver-1m_out_${linear_heating_rate}'
+output_file_base = 'ver-1m_out_${LHR}'
 
 [Mesh]
   [fuel_pin]
@@ -82,7 +82,7 @@ output_file_base = 'ver-1m_out_${linear_heating_rate}'
   [temperature ]
     initial_condition = '${reference_temperature }'
   []
-  [ch]
+  [hydrogen_concentration]
     initial_condition = '${initial_atomic_fraction}'
     block = '1'
   []
@@ -92,33 +92,33 @@ output_file_base = 'ver-1m_out_${linear_heating_rate}'
   # Heat conduction
   [heat_time_derivative_fuel]
     type = HeatConductionTimeDerivative
-    variable = temperature 
+    variable = temperature
   []
   [heat_conduction_fuel]
     type = HeatConduction
-    variable = temperature 
+    variable = temperature
   []
   [heat_source_fuel]
     type = HeatSource
-    variable = temperature 
+    variable = temperature
     block = '1'
     value = '${volumetric_heating_rate}'
   []
   #  Hydrogen redistribution
-  [ch_time_derivative]
+  [hydrogen_concentration_time_derivative]
     type = TimeDerivative
-    variable = ch
+    variable = hydrogen_concentration
     block = '1'
   []
-  [ch_dxdx]
+  [hydrogen_concentration_dxdx]
     type = MatDiffusion
-    variable = 'ch'
+    variable = 'hydrogen_concentration'
     diffusivity = 'D'
     block = '1'
   []
   [soretDiff]
     type = ThermoDiffusion
-    variable = 'ch'
+    variable = 'hydrogen_concentration'
     temp = 'temperature '
     heat_of_transport = 'Q'
     mass_diffusivity = 'D'
@@ -219,22 +219,22 @@ output_file_base = 'ver-1m_out_${linear_heating_rate}'
 []
 
 [Postprocessors]
-  [surface_ch]
+  [surface_hydrogen_concentration]
     type = SideAverageValue
-    variable = ch
+    variable = hydrogen_concentration
     boundary = 'fuel_outer'
     execute_on = 'INITIAL TIMESTEP_END'
   []
 []
 
 [VectorPostprocessors]
-  [H_profile]
+  [hydrogen_profile]
     type = LineValueSampler
     start_point = '0 0 0'
     end_point = '${pin_radius} 0 0'
     num_points = 101
     sort_by = 'x'
-    variable = 'ch'
+    variable = 'hydrogen_concentration'
     execute_on = 'FINAL'
     contains_complete_history = true
   []
@@ -251,7 +251,6 @@ output_file_base = 'ver-1m_out_${linear_heating_rate}'
 []
 
 [Outputs]
-  exodus = true
   file_base = '${output_file_base}'
 
   [postprocessors]
@@ -261,7 +260,7 @@ output_file_base = 'ver-1m_out_${linear_heating_rate}'
     file_base = '${output_file_base}'
   []
 
-  [h_profile]
+  [hydrogen_profile]
     type = CSV
     execute_vector_postprocessors_on = 'FINAL'
     execute_postprocessors_on = 'NONE'

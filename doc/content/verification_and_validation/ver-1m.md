@@ -41,23 +41,24 @@ where $D_0$ is the limiting diffusivity in m^2/s $E_a$ is the activation energy 
 The material properties and case parameters are provided in [ver-1m_set_up_values].
 
 !table id=ver-1m_set_up_values caption=Values of material properties and case geometry for the UZrH hydrogen migration verification problem.
-| Parameter    | Description                        | Value    | Units       |
-| ------------ | ---------------------------------- | -------- | ----------- |
-| $r_f$          | Pin radius                         | 0.005    | m           |
-| $t_g$        | Gap thickness                      | 0.0001   | m           |
-| $t_c$        | Cladding thickness                 | 0.001    | m           |
-| $k_f$        | Fuel thermal conductivity          | 17.6     | W/mK        |
-| $k_c$        | Cladding thermal conductivity      | 16.5     | W/mK        |
-| $C_g$        | Gap conductance                    | 7381     | $W/m^2K$    |
-| $h_c$        | Coolant heat transfer coefficient  | 18000    | $W/m^2K$    |
-| $T_{\infty}$ | Temperature of coolant             | 563.15   | K           |
-| $D$          | Diffusion coefficient              | 2.18e-11 | m$^2$/s     |
-| $Q^\ast$     | Heat of Transport                  | 53       | kJ/mol      |
-| $C_0$        | Initial concentration              | 1.6      | -           |
-| $R$          | Gas constant                       | 8.31446261815324    | J/molK      | [PhysicalConstants](source/utils/TMAP8PhysicalConstants.md) | 
-| LHR          | Linear heating rate                | 150-300  | W/cm        |
+| Parameter    | Description                        | Value    | Units       | Reference |
+| ------------ | ---------------------------------- | -------- | ----------- | --------- |
+| $r_f$        | Pin radius                         | 0.005    | m           | [!cite](huang01102000) |
+| $t_g$        | Gap thickness                      | 0.0001   | m           | [!cite](huang01102000) |
+| $t_c$        | Cladding thickness                 | 0.001    | m           | [!cite](huang01102000) |
+| $k_f$        | Fuel thermal conductivity          | 17.6     | W/mK        | [!cite](huang01102000) |
+| $k_c$        | Cladding thermal conductivity      | 16.5     | W/mK        | estimate
+| $C_g$        | Gap conductance                    | 7381     | $W/m^2K$    | [!cite](huang01102000) |
+| $h_c$        | Coolant heat transfer coefficient  | 18000    | $W/m^2K$    | Estimate
+| $T_{\infty}$ | Temperature of coolant             | 563.15   | K           | [!cite](huang01102000) |
+| $D_0$        | Limiting diffusivity               | 1.53e-7  | m$^2$/s     | [!cite](majer_mechanism_1994) |
+| $E_a$        | Diffusion activation energy        | 0        | kJ/mol      | *see note
+| $Q^\ast$     | Heat of Transport                  | 5.3      | kJ/mol      | [!cite](huang01102000) |
+| $C_0$        | Initial concentration              | 1.6      | -           | [!cite](huang01102000) |
+| $R$          | Gas constant                       | 8.31446261815324    | J/molK      | [PhysicalConstants](source/utils/TMAP8PhysicalConstants.md) |
+| LHR          | Linear heating rate                | 150-300  | W/cm        | [!cite](huang01102000) |
 
-Note: These parameter values were either chosen according to the values published or based on reasonable values to recreate the temperature profile in [!cite](huang01102000). Four different linear heating rates were used, 150, 200, 250 and 300 W/cm. The diffusion coefficient is technically different for each linear heating rate as calculated by the equation above, but the value does not impact the steady state solution, so one constant value is assumed.
+Note: The diffusion coefficient is technically different for each linear heating rate as calculated by the equation above, but the value does not impact the steady state solution, so the limiting diffusivity is assumed in all cases.
 
 The verification focuses on two aspects of the solution: (1) the steady state temperature profile and (2) the final steady state spatial hydrogen concentration profile.
 
@@ -114,7 +115,7 @@ where T(r) is the temperature profile and K is determined from mass conservation
        id=ver-1m_comparison_analytical_temperature_location.png
        caption=Comparison of TMAP8 calculation with the analytical solution for steady state temperature profile.
 
-[ver-1m_comparison_analytical_concentration_location.png] shows the comparison of the TMAP8 calculation and the analytical solution for the concentration profile as a function of the distance from the center. The TMAP8 prediction matches the analytical solution with excellent agreement for each linear heating rate, with a maximum RMSPE of 0.03 %. Results from literature [!cite](huang01102000) are also shown as a comparison.
+[ver-1m_comparison_analytical_concentration_location.png] shows the comparison of the TMAP8 calculation and the analytical solution for the concentration profile as a function of the distance from the center. The TMAP8 prediction matches the analytical solution with excellent agreement for each linear heating rate, with a maximum RMSPE of 0.02 %. Results from literature [!cite](huang01102000) are also shown as a comparison.
 
 !media comparison_ver-1l.py
        image_name=ver-1m_comparison_analytical_concentration_location.png

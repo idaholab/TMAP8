@@ -21,7 +21,7 @@ def analytical_solution_temperature(
         k_clad,
         gap_conductance,
         water_htc,
-        coolant_temp,
+        coolant_temperature,
         location
         ):
     """
@@ -39,7 +39,7 @@ def analytical_solution_temperature(
         k_clad (float): Thermal conductivity of the cladding in W/m/K
         gap_conductance (float): Conductance through the gap (constant) in W/m^2/K
         water_htc (float): Heat transfer coefficient of the coolant water in W/m^2/K
-        coolant_temp (float): Bulk temperature of the coolant water in K
+        coolant_temperature (float): Bulk temperature of the coolant water in K
         location (float): Location on the line across the fuel pin, between 0 and fuel_radius in m
 
     Returns:
@@ -53,7 +53,7 @@ def analytical_solution_temperature(
     R_clad = np.log(r_clad_outer / r_gap_outer) / (2*np.pi*k_clad)
     R_cool = 1.0 / (2*np.pi*r_clad_outer * water_htc)
 
-    T_center = coolant_temp + LHR*100 * (R_gap + R_clad + R_cool) + LHR*100 / (4*np.pi*k_fuel)
+    T_center = coolant_temperature + LHR*100 * (R_gap + R_clad + R_cool) + LHR*100 / (4*np.pi*k_fuel)
     A = LHR*100/ (4*np.pi*k_fuel * fuel_radius**2)
     T_of_x = T_center - A * location**2
 
@@ -107,10 +107,10 @@ k_fuel = 17.6                                   # W/m/K
 k_clad = 16.5                                   # W/m/K
 gap_conductance = 7.381e3                       # W/m^2/K
 water_htc = 18000                               # W/m^2/K
-coolant_temp = 563.15                           # K
+coolant_temperature = 563.15                    # K
 heat_of_transport = 5.3e3                       # J/mol
 initial_concentration = 1.6                     # H/M atom ratio
-gas_constant = 8.314                            # J/mol/K
+gas_constant = 8.31446261815324                 # J/mol/K
 LHRs = [150, 200, 250, 300]                     # W/cm
 locations = np.linspace(0, fuel_radius, 101)    # m
 
@@ -125,15 +125,15 @@ panel_labels = ["(a)", "(b)", "(c)", "(d)"]
 for ax, LHR, label in zip(axes, LHRs, panel_labels):
     # TMAP8 data: Extract concentration at location data from 'gold' TMAP8 run
     if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
-        csv_folder = f"../../../../test/tests/ver-1m/gold/ver-1m_out_{LHR}_end_H_profile.csv"
+        csv_folder = f"../../../../test/tests/ver-1m/gold/ver-1m_out_{LHR}_end_hydrogen_profile.csv"
     else:  # if in test folder
-        csv_folder = f"./gold/ver-1m_out_{LHR}_end_H_profile.csv"
+        csv_folder = f"./gold/ver-1m_out_{LHR}_end_hydrogen_profile.csv"
     tmap8_prediction = pd.read_csv(csv_folder)
     tmap8_location = tmap8_prediction["x"].values
-    tmap8_concentration = tmap8_prediction["ch"].values
+    tmap8_concentration = tmap8_prediction["hydrogen_concentration"].values
 
     # analytical solution: steady state concentration profile
-    temp_profile = lambda x: analytical_solution_temperature(
+    temperature_profile = lambda x: analytical_solution_temperature(
         LHR,
         fuel_radius,
         gap_thickness,
@@ -142,13 +142,13 @@ for ax, LHR, label in zip(axes, LHRs, panel_labels):
         k_clad,
         gap_conductance,
         water_htc,
-        coolant_temp,
+        coolant_temperature,
         x
         )
 
     analytical_concentration = analytical_solution_ss_concentration(
         heat_of_transport,
-        temp_profile,
+        temperature_profile,
         initial_concentration,
         fuel_radius,
         gas_constant,
@@ -181,7 +181,7 @@ for ax, LHR, label in zip(axes, LHRs, panel_labels):
         huang_H   = huang_df[h_col].values
         ax.plot(huang_loc, huang_H, c="red", lw=0.75, label="Huang")
     else:
-        print(f"Warning: Huang columns missing for LHR {LHR}")
+        print(f"Warning: Huang columns missing for LHR = {LHR}")
 
 fig.text(0.5, 0.04, "Distance from Pin Center (mm)", ha="center", fontsize=12)
 fig.text(0.04, 0.5, "Concentration (H/Zr Ratio)", va="center", rotation="vertical", fontsize=12)
@@ -207,15 +207,15 @@ panel_labels = ["(a)", "(b)", "(c)", "(d)"]
 for ax, LHR, label in zip(axes, LHRs, panel_labels):
     # TMAP8 data: Extract concentration at location data from 'gold' TMAP8 run
     if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
-        csv_folder = f"../../../../test/tests/ver-1m/gold/ver-1m_out_{LHR}_end_temp_profile.csv"
+        csv_folder = f"../../../../test/tests/ver-1m/gold/ver-1m_out_{LHR}_end_temperature_profile.csv"
     else:  # if in test folder
-        csv_folder = f"./gold/ver-1m_out_{LHR}_end_temp_profile.csv"
+        csv_folder = f"./gold/ver-1m_out_{LHR}_end_temperature_profile.csv"
     tmap8_prediction = pd.read_csv(csv_folder)
     tmap8_location = tmap8_prediction["x"].values
-    tmap8_temperature = tmap8_prediction["temp"].values
+    tmap8_temperature = tmap8_prediction["temperature"].values
 
     # analytical solution: steady state concentration profile
-    temp_profile = lambda x: analytical_solution_temperature(
+    temperature_profile = lambda x: analytical_solution_temperature(
         LHR,
         fuel_radius,
         gap_thickness,
@@ -224,21 +224,21 @@ for ax, LHR, label in zip(axes, LHRs, panel_labels):
         k_clad,
         gap_conductance,
         water_htc,
-        coolant_temp,
+        coolant_temperature,
         x
         )
 
 
     # Plot comparison of TMAP8 vs analytical solution: concentration vs location
     ax.plot(tmap8_location*1000, tmap8_temperature, label="TMAP8", c="tab:gray")
-    ax.plot(locations*1000, temp_profile(locations), label="Analytical", c="k", ls="--")
+    ax.plot(locations*1000, temperature_profile(locations), label="Analytical", c="k", ls="--")
     ax.text(0.1, 930, label,fontsize=12, fontweight="bold")
 
     ax.set_title(f"LHR = {LHR} W/cm")
     ax.grid(which="major", color="0.65", linestyle="--", alpha=0.3)
     ax.minorticks_on()
-    RMSE = np.sqrt(np.mean((tmap8_temperature - temp_profile(locations)) ** 2))
-    RMSPE = RMSE * 100 / np.mean(temp_profile(locations))
+    RMSE = np.sqrt(np.mean((tmap8_temperature - temperature_profile(locations)) ** 2))
+    RMSPE = RMSE * 100 / np.mean(temperature_profile(locations))
     ax.text(0.6, 670, "RMSPE = %.2f " % RMSPE + "%", fontweight="bold")
 
     ax.set_xlim(left=0)
