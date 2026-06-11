@@ -1,10 +1,10 @@
 # ver-1m
 
-# Heat Transfer and Hydrogen Diffusion in U-ZrH
+# Heat Transfer and Hydrogen Thermodiffusion in U-ZrH
 
 ## General Case Description
 
-This verification case is taken from [!cite](huang01102000) which considers hydrogen diffusion through a uranium zirconium hydride (UZrH) fuel pellet under the influence of a temperature gradient. The driving forces of hydrogen migration are Fickian diffusion (which was verified in other verification cases including [ver-1b](ver-1b.md) and [ver-1dd](ver-1dd.md)), and the Soret effect (which was verified in [ver-1l](ver-1l.mb)). The temperature profile in the fuel is calcualted from conduction with heat generation which is verified in [ver-1fa](ver-1fa.mb)
+This verification case is taken from [!cite](huang01102000) which considers hydrogen diffusion through a uranium zirconium hydride (UZrH) fuel pellet under the influence of a temperature gradient. The driving forces of hydrogen migration are Fickian diffusion (which was verified in other verification cases including [ver-1b](ver-1b.md) and [ver-1dd](ver-1dd.md)), and the Soret effect (which was verified in [ver-1l](ver-1l.mb)). The novelty of this verification case is the coupling of the two phenomena. The temperature profile in the fuel is calcualted from conduction with heat generation which is verified in [ver-1fa](ver-1fa.mb)
 
 Fickian diffusion describes mass transport due to a concentration gradient, while the Soret effect describes species migration in response to a temperature gradient. This coupling of thermal and mass transport can be important for metal hydride moderators for fission reactors because temperature gradients are created by fission in the core which can cause the hydrogen to migrate through the moderator and impact the overall reactivity.
 
@@ -36,7 +36,7 @@ where $c_H$ is the hydrogen atom fraction, $D$ is the diffusivity, and $Q^\ast$ 
     D=D_0exp\left(-\frac{E_a}{RT}\right),
 \end{equation}
 
-where $D_0$ is the limiting diffusivity in m^2/s $E_a$ is the activation energy in kJ/mol, R is the gas constant in J/Kmol and T is the temperature in K.
+where $D_0$ is the limiting diffusivity in m^2/s $E_a$ is the activation energy in kJ/mol, $R$ is the gas constant in J/Kmol, and $T$ is the temperature in K.
 
 The material properties and case parameters are provided in [ver-1m_set_up_values].
 
@@ -54,12 +54,12 @@ The material properties and case parameters are provided in [ver-1m_set_up_value
 | $D$          | Diffusion coefficient              | 2.18e-11 | m$^2$/s     |
 | $Q^\ast$     | Heat of Transport                  | 53       | kJ/mol      |
 | $C_0$        | Initial concentration              | 1.6      | -           |
-| $R$          | Gas constant                       | 8.314    | J/molK      |
+| $R$          | Gas constant                       | 8.31446261815324    | J/molK      | [PhysicalConstants](source/utils/TMAP8PhysicalConstants.md) | 
 | LHR          | Linear heating rate                | 150-300  | W/cm        |
 
 Note: These parameter values were either chosen according to the values published or based on reasonable values to recreate the temperature profile in [!cite](huang01102000). Four different linear heating rates were used, 150, 200, 250 and 300 W/cm. The diffusion coefficient is technically different for each linear heating rate as calculated by the equation above, but the value does not impact the steady state solution, so one constant value is assumed.
 
-The verification focuses on two aspects of the solution: (1) the final steady state spatial hydrogen concentration profile, and (2) the steady state temperature profile.
+The verification focuses on two aspects of the solution: (1) the steady state temperature profile and (2) the final steady state spatial hydrogen concentration profile.
 
 
 ## Analytical solution
@@ -106,7 +106,7 @@ where T(r) is the temperature profile and K is determined from mass conservation
 
 ### Steady state results
 
-[ver-1m_comparison_analytical_temperature_location.png] shows the comparison of the TMAP8 calculation and the analytical solution for the temperature as a function of the distance from the center. The TMAP8 prediction matches the analytical solution with excellent agreement for each linear heating rate, yielding a maximum root mean square percentage error of RMSPE = 0.18 %.
+[ver-1m_comparison_analytical_temperature_location.png] shows the comparison of the TMAP8 calculation and the analytical solution for the temperature as a function of the distance from the center. The TMAP8 prediction matches the analytical solution with excellent agreement for each linear heating rate, yielding a maximum root mean square percentage error (RMSPE) of RMSPE = 0.18 %.
 
 !media comparison_ver-1l.py
        image_name=ver-1m_comparison_analytical_temperature_location.png
@@ -114,7 +114,7 @@ where T(r) is the temperature profile and K is determined from mass conservation
        id=ver-1m_comparison_analytical_temperature_location.png
        caption=Comparison of TMAP8 calculation with the analytical solution for steady state temperature profile.
 
-[ver-1m_comparison_analytical_concentration_location.png] shows the comparison of the TMAP8 calculation and the analytical solution for the concentration profile as a function of the distance from the center. The TMAP8 prediction matches the analytical solution with excellent agreement for each linear heating rate, with a maximum root mean square percentage error of RMSPE = 0.03 %. Results from literature [!cite](huang01102000) are also shown as a comparison.
+[ver-1m_comparison_analytical_concentration_location.png] shows the comparison of the TMAP8 calculation and the analytical solution for the concentration profile as a function of the distance from the center. The TMAP8 prediction matches the analytical solution with excellent agreement for each linear heating rate, with a maximum RMSPE of 0.03 %. Results from literature [!cite](huang01102000) are also shown as a comparison.
 
 !media comparison_ver-1l.py
        image_name=ver-1m_comparison_analytical_concentration_location.png

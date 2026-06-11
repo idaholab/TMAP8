@@ -30,7 +30,7 @@ gap_thermal_conductivity = '${units ${fparse gap_conductance*gap_thickness} W/m^
 diffusivity_D0 = '${units 1.53e-7 m^2/s}'
 diffusivity_Ea = '${units 0.61 eV}'
 
-reference_temp = '${units ${fparse coolant_water_temp + (linear_heating_rate/(2*pi*fuel_thermal_conductivity))} K}'
+reference_temperature = '${units ${fparse coolant_water_temperature  + (linear_heating_rate/(2*pi*fuel_thermal_conductivity))} K}'
 
 # time
 end_time = '${fparse ${hours}*3600}'
@@ -79,8 +79,8 @@ output_file_base = 'ver-1m_out_${linear_heating_rate}'
 []
 
 [Variables]
-  [temp]
-    initial_condition = '${reference_temp}'
+  [temperature ]
+    initial_condition = '${reference_temperature }'
   []
   [ch]
     initial_condition = '${initial_atomic_fraction}'
@@ -92,15 +92,15 @@ output_file_base = 'ver-1m_out_${linear_heating_rate}'
   # Heat conduction
   [heat_time_derivative_fuel]
     type = HeatConductionTimeDerivative
-    variable = temp
+    variable = temperature 
   []
   [heat_conduction_fuel]
     type = HeatConduction
-    variable = temp
+    variable = temperature 
   []
   [heat_source_fuel]
     type = HeatSource
-    variable = temp
+    variable = temperature 
     block = '1'
     value = '${volumetric_heating_rate}'
   []
@@ -119,7 +119,7 @@ output_file_base = 'ver-1m_out_${linear_heating_rate}'
   [soretDiff]
     type = ThermoDiffusion
     variable = 'ch'
-    temp = 'temp'
+    temp = 'temperature '
     heat_of_transport = 'Q'
     mass_diffusivity = 'D'
     block = '1'
@@ -129,10 +129,10 @@ output_file_base = 'ver-1m_out_${linear_heating_rate}'
 [BCs]
   [t_out]
     type = ConvectiveHeatFluxBC
-    variable = temp
+    variable = temperature
     boundary = 'clad_outer'
     heat_transfer_coefficient = '${water_convective_htc}' # Convective heat transfer coefficient in W/m^2/K (adjust as needed)
-    T_infinity = '${coolant_water_temp}' # Temperature of the bulk fluid in K
+    T_infinity = '${coolant_water_temperature}' # Temperature of the bulk fluid in K
   []
 []
 
@@ -176,9 +176,9 @@ output_file_base = 'ver-1m_out_${linear_heating_rate}'
   [h_diffusivity]
     type = ParsedMaterial
     block = '1'
-    coupled_variables = 'temp'
+    coupled_variables = 'temperature'
     property_name = 'D'
-    expression = 'D0*exp(-Ea/(k*temp))'
+    expression = 'D0*exp(-Ea/(k*temperature))'
     constant_names = 'D0 Ea k'
     constant_expressions = '${diffusivity_D0} ${diffusivity_Ea} ${boltzmann_constant}'
   []
@@ -238,13 +238,13 @@ output_file_base = 'ver-1m_out_${linear_heating_rate}'
     execute_on = 'FINAL'
     contains_complete_history = true
   []
-  [temp_profile]
+  [temperature_profile]
     type = LineValueSampler
     start_point = '0 0 0'
     end_point = '${pin_radius} 0 0'
     num_points = 101
     sort_by = 'x'
-    variable = 'temp'
+    variable = 'temperature'
     execute_on = 'FINAL'
     contains_complete_history = true
   []
