@@ -12,18 +12,19 @@ os.chdir(script_folder)
 
 # ===============================================================================
 
+
 def analytical_solution_temperature(
-        LHR,
-        fuel_radius,
-        gap_thickness,
-        clad_thickness,
-        k_fuel,
-        k_clad,
-        gap_conductance,
-        water_htc,
-        coolant_temperature,
-        location
-        ):
+    LHR,
+    fuel_radius,
+    gap_thickness,
+    clad_thickness,
+    k_fuel,
+    k_clad,
+    gap_conductance,
+    water_htc,
+    coolant_temperature,
+    location,
+):
     """
     Analytical solution for temperature profile to couple to diffusion with Soret effect.
 
@@ -49,25 +50,29 @@ def analytical_solution_temperature(
     r_clad_outer = r_gap_outer + clad_thickness
 
     # thermal resistances
-    R_gap  = 1.0 / (2*np.pi*fuel_radius * gap_conductance)
-    R_clad = np.log(r_clad_outer / r_gap_outer) / (2*np.pi*k_clad)
-    R_cool = 1.0 / (2*np.pi*r_clad_outer * water_htc)
+    R_gap = 1.0 / (2 * np.pi * fuel_radius * gap_conductance)
+    R_clad = np.log(r_clad_outer / r_gap_outer) / (2 * np.pi * k_clad)
+    R_cool = 1.0 / (2 * np.pi * r_clad_outer * water_htc)
 
-    T_center = coolant_temperature + LHR*100 * (R_gap + R_clad + R_cool) + LHR*100 / (4*np.pi*k_fuel)
-    A = LHR*100/ (4*np.pi*k_fuel * fuel_radius**2)
+    T_center = (
+        coolant_temperature
+        + LHR * 100 * (R_gap + R_clad + R_cool)
+        + LHR * 100 / (4 * np.pi * k_fuel)
+    )
+    A = LHR * 100 / (4 * np.pi * k_fuel * fuel_radius**2)
     T_of_x = T_center - A * location**2
 
     return T_of_x
 
-def analytical_solution_ss_concentration(
-        heat_of_transport,
-        temperature_profile,
-        initial_concentration,
-        pin_radius,
-        gas_constant,
-        location
-        ):
 
+def analytical_solution_ss_concentration(
+    heat_of_transport,
+    temperature_profile,
+    initial_concentration,
+    pin_radius,
+    gas_constant,
+    location,
+):
     """
     Analytical solution of hydrogen diffusion with Soret effect.
 
@@ -88,31 +93,36 @@ def analytical_solution_ss_concentration(
 
     # numerical integration for mass conservation normalization
 
-    integrand = lambda x: x * np.exp(heat_of_transport / (gas_constant * temperature_profile(x)))
+    integrand = lambda x: x * np.exp(
+        heat_of_transport / (gas_constant * temperature_profile(x))
+    )
 
     norm, _ = quad(integrand, 0.0, pin_radius)
 
-    c0 = (initial_concentration * 0.5*pin_radius**2) / norm
+    c0 = (initial_concentration * 0.5 * pin_radius**2) / norm
 
     # steady state solution to diffusion equation: c0*e^(Q/RT)
-    c_of_x_ss = c0 * np.exp(heat_of_transport/(gas_constant*temperature_profile(location)))
+    c_of_x_ss = c0 * np.exp(
+        heat_of_transport / (gas_constant * temperature_profile(location))
+    )
 
     return c_of_x_ss
 
+
 # necessary parameters
-fuel_radius = 0.005                             # m
-gap_thickness = 0.0001                          # m
-clad_thickness = 0.001                          # m
-k_fuel = 17.6                                   # W/m/K
-k_clad = 16.5                                   # W/m/K
-gap_conductance = 7.381e3                       # W/m^2/K
-water_htc = 18000                               # W/m^2/K
-coolant_temperature = 563.15                    # K
-heat_of_transport = 5.3e3                       # J/mol
-initial_concentration = 1.6                     # H/M atom ratio
-gas_constant = 8.31446261815324                 # J/mol/K
-LHRs = [150, 200, 250, 300]                     # W/cm
-locations = np.linspace(0, fuel_radius, 101)    # m
+fuel_radius = 0.005  # m
+gap_thickness = 0.0001  # m
+clad_thickness = 0.001  # m
+k_fuel = 17.6  # W/m/K
+k_clad = 16.5  # W/m/K
+gap_conductance = 7.381e3  # W/m^2/K
+water_htc = 18000  # W/m^2/K
+coolant_temperature = 563.15  # K
+heat_of_transport = 5.3e3  # J/mol
+initial_concentration = 1.6  # H/M atom ratio
+gas_constant = 8.31446261815324  # J/mol/K
+LHRs = [150, 200, 250, 300]  # W/cm
+locations = np.linspace(0, fuel_radius, 101)  # m
 
 # Steady state concentration profiles
 huang_df = pd.read_csv("ver-1m_huang_ss_data.csv")
@@ -143,8 +153,8 @@ for ax, LHR, label in zip(axes, LHRs, panel_labels):
         gap_conductance,
         water_htc,
         coolant_temperature,
-        x
-        )
+        x,
+    )
 
     analytical_concentration = analytical_solution_ss_concentration(
         heat_of_transport,
@@ -152,13 +162,15 @@ for ax, LHR, label in zip(axes, LHRs, panel_labels):
         initial_concentration,
         fuel_radius,
         gas_constant,
-        locations
-        )
+        locations,
+    )
 
     # Plot comparison of TMAP8 vs analytical solution: concentration vs location
-    ax.plot(tmap8_location*1000, tmap8_concentration, label="TMAP8", c="tab:gray")
-    ax.plot(locations*1000, analytical_concentration, label="Analytical", c="k", ls="--")
-    ax.text(0.1, 1.685, label,fontsize=12, fontweight="bold")
+    ax.plot(tmap8_location * 1000, tmap8_concentration, label="TMAP8", c="tab:gray")
+    ax.plot(
+        locations * 1000, analytical_concentration, label="Analytical", c="k", ls="--"
+    )
+    ax.text(0.1, 1.685, label, fontsize=12, fontweight="bold")
 
     ax.set_title(f"LHR = {LHR} W/cm")
     ax.grid(which="major", color="0.65", linestyle="--", alpha=0.3)
@@ -174,19 +186,30 @@ for ax, LHR, label in zip(axes, LHRs, panel_labels):
 
     # Add data from Huang et al. for comparison
     loc_col = f"Location_{LHR}"
-    h_col   = f"H_{LHR}"
+    h_col = f"H_{LHR}"
 
     if loc_col in huang_df.columns and h_col in huang_df.columns:
         huang_loc = huang_df[loc_col].values
-        huang_H   = huang_df[h_col].values
+        huang_H = huang_df[h_col].values
         ax.plot(huang_loc, huang_H, c="red", lw=0.75, label="Huang")
     else:
         print(f"Warning: Huang columns missing for LHR = {LHR}")
 
 fig.text(0.5, 0.04, "Distance from Pin Center (mm)", ha="center", fontsize=12)
-fig.text(0.04, 0.5, "Concentration (H/Zr Ratio)", va="center", rotation="vertical", fontsize=12)
+fig.text(
+    0.04,
+    0.5,
+    "Concentration (H/Zr Ratio)",
+    va="center",
+    rotation="vertical",
+    fontsize=12,
+)
 
-fig.suptitle("Comparison of Analytical and TMAP8 Steady-State Concentration Profiles", fontsize=14, fontweight="bold")
+fig.suptitle(
+    "Comparison of Analytical and TMAP8 Steady-State Concentration Profiles",
+    fontsize=14,
+    fontweight="bold",
+)
 
 handles, labels = axes[0].get_legend_handles_labels()
 fig.legend(handles, labels, loc="upper center", ncol=3, bbox_to_anchor=(0.5, 0.95))
@@ -225,14 +248,19 @@ for ax, LHR, label in zip(axes, LHRs, panel_labels):
         gap_conductance,
         water_htc,
         coolant_temperature,
-        x
-        )
-
+        x,
+    )
 
     # Plot comparison of TMAP8 vs analytical solution: concentration vs location
-    ax.plot(tmap8_location*1000, tmap8_temperature, label="TMAP8", c="tab:gray")
-    ax.plot(locations*1000, temperature_profile(locations), label="Analytical", c="k", ls="--")
-    ax.text(0.1, 930, label,fontsize=12, fontweight="bold")
+    ax.plot(tmap8_location * 1000, tmap8_temperature, label="TMAP8", c="tab:gray")
+    ax.plot(
+        locations * 1000,
+        temperature_profile(locations),
+        label="Analytical",
+        c="k",
+        ls="--",
+    )
+    ax.text(0.1, 930, label, fontsize=12, fontweight="bold")
 
     ax.set_title(f"LHR = {LHR} W/cm")
     ax.grid(which="major", color="0.65", linestyle="--", alpha=0.3)
@@ -249,7 +277,11 @@ for ax, LHR, label in zip(axes, LHRs, panel_labels):
 fig.text(0.5, 0.04, "Distance from Pin Center (mm)", ha="center", fontsize=12)
 fig.text(0.04, 0.5, "Temperature (K)", va="center", rotation="vertical", fontsize=12)
 
-fig.suptitle("Comparison of Analytical and TMAP8 Steady-State Temperature Profiles", fontsize=14, fontweight="bold")
+fig.suptitle(
+    "Comparison of Analytical and TMAP8 Steady-State Temperature Profiles",
+    fontsize=14,
+    fontweight="bold",
+)
 
 handles, labels = axes[0].get_legend_handles_labels()
 fig.legend(handles, labels, loc="upper center", ncol=3, bbox_to_anchor=(0.5, 0.95))
