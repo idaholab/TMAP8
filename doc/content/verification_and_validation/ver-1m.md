@@ -58,7 +58,7 @@ The material properties and case parameters are provided in [ver-1m_set_up_value
 | $R$          | Gas constant                       | 8.31446261815324    | J/mol/K      | [PhysicalConstants](source/utils/TMAP8PhysicalConstants.md) |
 | LHR          | Linear heating rate                | 150-300  | W/cm        | [!cite](huang01102000) |
 
-Note: The diffusion coefficient is technically different for each linear heating rate as calculated by the equation above. The steady state solution comes from the balance of the concentration driven and thermodiffusion terms, which are both multiplied by the diffusion coefficient. The diffusion coeffient changes the time it takes to reach steady state, but does not change the ratio between the two terms. As a result, the value does not impact the steady state solution, so the limiting diffusivity is assumed in all cases.
+Note: The diffusion coefficient is technically different for each linear heating rate as calculated by the equation above. The steady state solution comes from the balance of the concentration driven and thermodiffusion terms, which are both multiplied by the diffusion coefficient. The diffusion coefficient affects the time it takes to reach steady state, but does not change the ratio between the two terms. As a result, the value does not impact the steady-state solution, so the limiting diffusivity is assumed in all cases.
 
 The verification focuses on two aspects of the solution: (1) the steady state temperature profile and (2) the final steady state spatial hydrogen concentration profile.
 
@@ -77,7 +77,7 @@ Using symmetry tells that conduction from the center is equivalent in all direct
       T_f(r) = T_c -\frac{q'}{4\pi k_fr_f^2}r^2,
 \end{equation}
 
-where $T_c$ is the centerline temperature of the fuel in K. This can be calculated by a thermal resistor model,as shown in [!cite](todreas_nuclear_1990):
+where $T_c$ is the centerline temperature of the fuel in K. This can be calculated by a thermal resistor model, as shown in [!cite](todreas_nuclear_1990):
 
 \begin{equation}
       T_c = T_\infty + q' \left[\frac{1}{2 \pi r_f h_g} + \frac{ln(\frac{r_{co}}{r_{ci}})}{2 \pi k_c} + \frac{1}{2 \pi r_{co} h_w} + \frac{1}{4 \pi r_f^2} \right].
