@@ -1,0 +1,16 @@
+# Optimized parameters used by the val-2l comparison runs
+# Values are in the units used by val-2l_membrane.i and val-2l_joule_heating.i.
+delta_H_T2O = '${units -1.54415211e+05 J/mol}'
+delta_S_T2O = '${units -1.67187585e+02 J/mol/K}'
+delta_H_T2 = '${units -5.46037663e+04 J/mol}'
+delta_S_T2 = '${units -3.36929406e+01 J/mol/K}'
+T2O_reaction_forward_energy = '${units -7.31595474e+03 J/mol}'
+T2O_reaction_forward_mol_exponent = -1.19792592e+01
+T2_reaction_forward_energy = '${units 5.13385478e+03 J/mol}'
+T2_reaction_forward_mol_exponent = -4.05998297e+00
+diffusivity_OT_energy = '${units 8.65880079e+03 J/mol}'
+diffusivity_OT_prefactor_exponent = -1.26000119e+01
+diffusivity_V_O_energy = '${units 5.87658926e+04 J/mol}'
+diffusivity_V_O_prefactor_exponent = -5.33084375e+00
+electron_concentration_initial_expo = 4.94096686e-01
+electron_concentration_initial_energy = '${units 5.90846106e+04 J/mol}'

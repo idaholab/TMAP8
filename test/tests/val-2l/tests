@@ -1,0 +1,45 @@
+[Tests]
+  design = 'EquilibriumBC.md MatDiffusion.md MatNeumannBC.md ADHeatConduction.md ADHeatConductionTimeDerivative.md ADJouleHeatingSource.md'
+  issues = '#429'
+  validation = 'val-2l.md'
+  [val-2l_optimized_csvdiff]
+    type = CSVDiff
+    input = 'val-2l.i'
+    cli_args = 'Outputs/file_base=val-2l_out'
+    csvdiff = val-2l_out.csv
+    heavy = true
+    requirement = 'The system shall be able to model hydrogen permeation through a BCY20 proton-conducting ceramic membrane under applied voltage using Bayesian-optimized parameters without Joule heating.'
+  []
+  [val-2l_joule_heating_csvdiff]
+    type = CSVDiff
+    input = 'val-2l_joule_heating_aggregator.i'
+    cli_args = 'Outputs/file_base=val-2l_joule_heating_out'
+    csvdiff = val-2l_joule_heating_out.csv
+    heavy = true
+    requirement = 'The system shall be able to model hydrogen permeation through a BCY20 proton-conducting ceramic membrane under applied voltage with Joule heating enabled.'
+  []
+  [val-2l_bayesian_json]
+    type = JSONDiff
+    input = bayesian_main_val2l.i
+    cli_args = "Executioner/num_steps=1
+                Samplers/sample/num_parallel_proposals=2
+                Samplers/sample/num_tries=100
+                Trainers/GP_al_trainer/num_iters=10
+                Trainers/GP_al_trainer/batch_size=20
+                Outputs/file_base=bayesian_val2l_results/val-2l_bayesian_short_out"
+    jsondiff = bayesian_val2l_results/val-2l_bayesian_short_out.json
+    abs_zero = 1e-8
+    rel_err = 1e-5
+    skip_keys = 'acquisition_function'
+    max_parallel = 1
+    recover = false
+    heavy = true
+    requirement = 'The system shall be able to perform a shortened Bayesian optimization study for hydrogen permeation through a BCY20 proton-conducting ceramic membrane under applied voltage.'
+  []
+  [val-2l_comparison]
+    type = RunCommand
+    command = 'python comparison_val-2l.py'
+    requirement = 'The system shall be able to generate comparison plots between simulated and experimental hydrogen flux data for the val-2l BCY20 membrane validation case.'
+    required_python_packages = 'matplotlib'
+  []
+[]

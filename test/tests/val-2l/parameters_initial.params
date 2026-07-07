@@ -1,0 +1,16 @@
+# Initial literature-based parameters for val-2l
+# Values are in the units used by val-2l_membrane.i and val-2l_joule_heating.i.
+delta_H_T2O = '${units -1.62200000e+05 J/mol}'
+delta_S_T2O = '${units -1.66700000e+02 J/mol/K}'
+delta_H_T2 = '${units -1.12177032e+05 J/mol}'
+delta_S_T2 = '${units -3.69926058e+01 J/mol/K}'
+T2O_reaction_forward_energy = '${units 1.00000000e+04 J/mol}'
+T2O_reaction_forward_mol_exponent = -7.00000000e+00
+T2_reaction_forward_energy = '${units 1.00000000e+04 J/mol}'
+T2_reaction_forward_mol_exponent = -4.00000000e+00
+diffusivity_OT_energy = '${units 6.84802300e+04 J/mol}'
+diffusivity_OT_prefactor_exponent = -6.00000000e+00
+diffusivity_V_O_energy = '${units 5.20835500e+04 J/mol}'
+diffusivity_V_O_prefactor_exponent = -6.00000000e+00
+electron_concentration_initial_expo = -4.10000000e+00
+electron_concentration_initial_energy = '${units 0.00000000e+00 J/mol}'

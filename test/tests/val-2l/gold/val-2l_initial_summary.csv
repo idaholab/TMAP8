@@ -1,0 +1,11 @@
+case,source_file,temperature_K,voltage_V,flux_atoms_m2_s
+initial,compare_initial_sub0.csv,773,0.25285610644727,8.264088704272101e+21
+initial,compare_initial_sub1.csv,773,0.88369488093245,5.253673696240700e+22
+initial,compare_initial_sub2.csv,773,1.3639034384891,1.005355282608500e+23
+initial,compare_initial_sub3.csv,773,1.6671250787273,1.357217560017700e+23
+initial,compare_initial_sub4.csv,773,1.9633469661094,1.733025364592800e+23
+initial,compare_initial_sub5.csv,973,0.033327488502953,1.881303584084300e+23
+initial,compare_initial_sub6.csv,973,0.20215275729873,1.042150352754700e+24
+initial,compare_initial_sub7.csv,973,0.48071205974479,3.486156730430300e+24
+initial,compare_initial_sub8.csv,973,0.73033945180805,6.485710668604799e+24
+initial,compare_initial_sub9.csv,973,1.0092335036304,1.049947737831300e+25
