@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import gridspec
+from matplotlib.patches import Patch
 import pandas as pd
 from scipy import special
 import scipy.stats as stats
@@ -25,7 +26,7 @@ def read_csv_from_TMAP8(file_name, parameter_names):
         ndarray: 2D array of shape (len(parameter_names), n_timesteps)
     """
     if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
-        csv_folder = f"../../../../test/tests/mini_canister/gold/{file_name}"
+        csv_folder = f"../../../../test/tests/val-2l/gold/{file_name}"
 
     else:  # if in test folder
         # csv_folder = f"./gold/{file_name}"
@@ -138,157 +139,224 @@ def plot_validation(t_sim, sim_data, t_exp, exp_data, ylabel, title, filename):
     plt.close(fig)
 
 
-def plot_source_function(depth, width, flux, filename, n_widths=6):
-    """Plot the Gaussian implantation source term centered around the implantation depth
+def plot_diffusivity_vs_temperature(
+    simulation_file="val-2l_out.csv",
+    filename="val-2l_diffusivity_vs_temperature.png",
+):
+    """Plot the deuterium diffusivity in tungsten against temperature
 
-    The source rate evaluated at position x (µm) is:
-        S(x) = flux / (width * sqrt(2*pi)) * exp(-0.5 * ((x - depth) / width)^2)
+    The diffusivity is spatially uniform (it depends only on temperature), so the
+    ``diffusivity_pp`` and ``temperature`` postprocessors from the TMAP8 output fully
+    describe D(T) over the simulated TDS ramp. Reading them straight from the CSV
+    keeps the Arrhenius law defined in exactly one place (val-2l.i). It is the
+    Frauenfelder relation corrected for deuterium, Shimada et al. 2010
+    (p. S668, Section 3): D = 2.9e-7 * exp(-0.39 eV / (k_B T)) m^2/s.
 
     Args:
-        depth (float): mean implantation depth in µm
-        width (float): standard deviation (sigma) of the implantation profile in µm
-        flux (float): incident surface flux in at/µm²/s
+        simulation_file (str): TMAP8 CSV with "temperature" (K) and "diffusivity_pp"
+            (µm²/s) columns
         filename (str): output PNG filename
-        n_widths (int): half-width of the x-axis expressed in number of sigmas
     """
-    x_lo = max(0.0, depth - n_widths * width)
-    x_hi = depth + n_widths * width
-    x = np.linspace(x_lo, x_hi, 2000)
-    source = flux / (width * np.sqrt(2 * np.pi)) * np.exp(-0.5 * ((x - depth) / width) ** 2)
+    temperature, diffusivity = read_csv_from_TMAP8(
+        simulation_file, ["temperature", "diffusivity_pp"]
+    )
+    # Drop the INITIAL row (t = 0), where postprocessors are still 0, then sort by T.
+    valid = diffusivity > 0
+    temperature, diffusivity = temperature[valid], diffusivity[valid]
+    order = np.argsort(temperature)
+    temperature, diffusivity = temperature[order], diffusivity[order]
+    diffusivity_m2_s = diffusivity * 1e-12  # µm²/s -> m²/s
+
+    reciprocal_temperature = 1000.0 / temperature  # 1000/T (1/K)
 
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.plot(x, source, color="steelblue", linewidth=2, label="Source rate")
-    ax.axvline(depth, color="k", linestyle="--", linewidth=1, label=f"Depth = {depth:.4f} µm")
-    ax.set_xlabel(r"Depth ($\mu$m)")
-    ax.set_ylabel(r"Source rate (at/$\mu$m$^3$/s)")
-    ax.set_title("Gaussian implantation source profile")
-    ax.set_xlim(x_lo, x_hi)
-    ax.set_ylim(bottom=0)
-    ax.legend()
-    ax.grid(True)
+    ax.semilogy(reciprocal_temperature, diffusivity_m2_s, color="steelblue", linewidth=2)
+    ax.set_xlabel(r"Reciprocal temperature 1000/T (K$^{-1}$)")
+    ax.set_ylabel(r"Diffusivity (m$^2$/s)")
+    ax.set_title("Deuterium diffusivity in tungsten TMAP8 Material")
+    ax.grid(True, which="both", linestyle="--", alpha=0.4)
     plt.tight_layout()
     plt.savefig(filename, bbox_inches="tight", dpi=300)
     plt.close(fig)
 
-# =========================== TMAP8 steel-only simulation data extraction ========================== #
 
-# (
-#     steel_only_t,
-#     steel_only_total_mass_steel,
-#     steel_only_flux_steel,
-#     steel_only_exact_diffusion_length,
-#     steel_only_simulated_diffusion_length,
-# ) = read_csv_from_TMAP8(
-#     "steel_only_out.csv",
-#     [
-#         "time",
-#         "annular_cylinder_total_mass_steel",
-#         "annular_cylinder_time_integrated_flux",
-#         "exact_diffusion_length",
-#         "simulated_diffusion_length",
-#     ],
-# )
+def plot_unirradiated_desorption(
+    experiment_file="unirradiated_data.csv",
+    simulation_file="val-2l_out.csv",
+    simulation_flux_column="upstream_flux",
+    experiment_plot="val-2l_experimental_desorption.png",
+    simulation_plot="val-2l_simulated_desorption.png",
+    comparison_plot="val-2l_comparison_desorption.png",
+):
+    """Plot the Shimada (2010) unirradiated desorption data and the TMAP8 comparison
+
+    Produces three figures:
+        1. The digitized experimental desorbed-flux history (Shimada 2010,
+           unirradiated / 0 dpa): time (s) versus desorbed flux (m^-2 s^-1), with
+           the y-axis written in scientific notation.
+        2. The raw TMAP8 simulated desorbed-flux history on its own time grid:
+           time (s) versus desorbed flux (m^-2 s^-1).
+        3. The TMAP8 simulated desorbed flux mapped onto the experimental time
+           points with numerical_solution_on_experiment_input, overlaid on the
+           experimental data and annotated with the RMSPE via annotate_rmspe.
+
+    The paper reports an areal desorption flux in m^-2 s^-1 (Shimada 2010,
+    Figs. 2-4), so the 1D model's areal flux is compared directly: the face area
+    cancels and no pi*r^2 scaling is needed (same convention as val-2d).
+
+    Args:
+        experiment_file (str): two-column, header-less CSV of
+            (time [s], desorbed flux [m^-2 s^-1])
+        simulation_file (str): TMAP8 CSV output holding a "time" column and the
+            desorbed-flux column
+        simulation_flux_column (str): name of the desorbed-flux column in
+            simulation_file. TMAP8 reports it in at/mum^2/s; it is converted to
+            at/m^2/s to match the experiment.
+        experiment_plot (str): output PNG filename for plot 1
+        simulation_plot (str): output PNG filename for plot 2
+        comparison_plot (str): output PNG filename for plot 3
+    """
+    # experiment: header-less (time [s], desorbed flux [m^-2 s^-1])
+    experiment = np.loadtxt(experiment_file, delimiter=",")
+    experiment_time, experiment_flux = experiment[:, 0], experiment[:, 1]
+
+    # ---- Plot 1: experimental desorption history ----
+    plt.figure(figsize=(10, 6))
+    plt.plot(experiment_time, experiment_flux, "ro", label="Experiment (Shimada 2010, 0 dpa)")
+    plt.xlabel("Time (s)")
+    plt.ylabel(r"Desorbed flux (m$^{-2}$s$^{-1}$)")
+    plt.title("Unirradiated deuterium desorption")
+    plt.xlim(0, experiment_time.max())
+    plt.ylim(0)
+    plt.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(experiment_plot, bbox_inches="tight", dpi=300)
+    # plt.show()
+
+    # simulation desorbed rate, mapped onto experiment times
+    simulation_time, simulation_flux = read_csv_from_TMAP8(
+        simulation_file, ["time", simulation_flux_column]
+    )
+    # at/mum^2/s -> at/m^2/s (x1e12); atomic D flux -> molecular D2 flux (/2) to match the
+    # RGA, which detects D2 (mass 4) and HD (mass 3) -- same convention as val-2d
+    simulation_flux = simulation_flux * 1e12 / 2
+
+    # ---- Plot 2: raw simulated desorption history ----
+    plt.figure(figsize=(10, 6))
+    plt.plot(simulation_time, simulation_flux, "b-", label="TMAP8 (0 dpa)")
+    plt.xlabel("Time (s)")
+    plt.ylabel(r"Desorbed flux (m$^{-2}$s$^{-1}$)")
+    plt.title("Unirradiated deuterium desorption: TMAP8")
+    plt.xlim(0, simulation_time.max())
+    plt.ylim(0)
+    plt.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(simulation_plot, bbox_inches="tight", dpi=300)
+    # plt.show()
+
+    mapped_simulation_flux = numerical_solution_on_experiment_input(
+        experiment_time, simulation_time, simulation_flux
+    )
+
+    # ---- Plot 3: simulation vs experiment with RMSPE ----
+    plt.figure(figsize=(10, 6))
+    plt.plot(experiment_time, experiment_flux, "ro", label="Experiment (Shimada 2010, 0 dpa)")
+    plt.plot(simulation_time, simulation_flux, "b-", label="TMAP8")
+    annotate_rmspe(
+        mapped_simulation_flux, experiment_flux, experiment_time.max() / 2, experiment_flux.max() / 4
+    )
+    plt.xlabel("Time (s)")
+    plt.ylabel(r"Desorbed flux (m$^{-2}$s$^{-1}$)")
+    plt.title("Unirradiated deuterium desorption: TMAP8 vs experiment")
+    plt.xlim(0, experiment_time.max())
+    plt.ylim(0)
+    plt.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(comparison_plot, bbox_inches="tight", dpi=300)
+    # plt.show()
+
+# =========================== TMAP8 simulation data extraction ========================== #
+
 csv_folder = "val-2l_out.csv"
 simulation_TMAP8_data = pd.read_csv(csv_folder)
 simulation_time_TMAP8 = simulation_TMAP8_data["time"]
-# simulation_recom_flux_left_TMAP8 = simulation_TMAP8_data[
-    # "scaled_recombination_flux_left"
-# ]
-# simulation_recom_flux_right_TMAP8 = simulation_TMAP8_data[
-    # "scaled_recombination_flux_right"
-# ]
 
-### Conservation of Mass ###
-time_integrated_flux_difference = simulation_TMAP8_data['time_integrated_desorbed_flux_difference']
+### Conservation of Mass (replicating val-2k) ###
+# val-2k computes the conservation residual in MOOSE (deuterium_mass_conservation_residual =
+# inventory_change + released), then in Python normalizes it by the fixed initial inventory M(0) and
+# plots the relative residual over time. We follow the same recipe here. M(0) is read from the t=0 row
+# of total_deuterium_retention, which runs on INITIAL (cf. val-2k reading
+# deuterium_inventory_in_sample_physical.iloc[0]).
 total_deuterium_retention = simulation_TMAP8_data['total_deuterium_retention']
+temperature_history = simulation_TMAP8_data['temperature']
+mass_conservation_residual = simulation_TMAP8_data['deuterium_mass_conservation_residual']
+initial_inventory = total_deuterium_retention.iloc[0]
+relative_mass_conservation_residual = mass_conservation_residual / initial_inventory
 
-# Measure and Plot Conservation of Mass
-plt.figure(figsize=(10, 6))
-plt.plot(simulation_time_TMAP8, time_integrated_flux_difference, label = 'Time-Accumulated Boundary Flux')
-plt.plot(simulation_time_TMAP8,total_deuterium_retention, label = 'Total Concentration in Tungsten')
-RMSE = np.sqrt(np.mean((total_deuterium_retention-time_integrated_flux_difference)**2) )
-RMSPE = RMSE*100/np.mean(total_deuterium_retention)
-print(f'RMSPE = %.2f '%RMSPE+'%')
-plt.text(60,0.02, 'RMSPE = %.2f '%RMSPE+'%',fontweight='bold')
-plt.xlabel('Time (s)')
-plt.ylabel(r'atom/$\mu m^2$')
-plt.title(f'Conservation of Mass')
-plt.xlim(0,simulation_time_TMAP8.max())
-plt.ylim(0)
-plt.legend()
-plt.grid(True)
-plt.tight_layout()
-plt.show()
+# --- Total deuterium inventory with temperature history (cf. val-2k Fig. 8 / comparison_val-2k.py
+# Stage 5) --- Built from a list of (label, values, color) contributions stacked with fill_between, so
+# trapped-inventory series can be appended here once traps are added; for now mobile D is the only
+# contribution and equals the total.
+inventory_series = [
+    ("Mobile D", total_deuterium_retention, plt.get_cmap("viridis")(0.95)),
+]
 
-difference = abs(time_integrated_flux_difference-total_deuterium_retention)
-plt.figure(figsize=(10, 6))
-plt.plot(simulation_time_TMAP8,difference)
-plt.xlabel('Time (s)')
-plt.ylabel(r'atom/$\mu m^2$')
-plt.title(f'Conservation of Mass Difference')
-plt.xlim(0,simulation_time_TMAP8.max())
-plt.grid(True)
-plt.tight_layout()
-plt.show()
-# Read experiment data
-# if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
-#     csv_folder = "../../../../test/tests/val-2l/gold/experiment_data_paper.csv"
-# else:  # if in test folder
-#     csv_folder = "./gold/experiment_data_paper.csv"
-# experiment_TMAP4_data = pd.read_csv(csv_folder)
-# experiment_time_TMAP4 = experiment_TMAP4_data["time (s)"]
-# experiment_flux_TMAP4 = experiment_TMAP4_data["permeation flux (atom/m^2/s)"]
+fig, ax = plt.subplots(figsize=(6.5, 5.5))
+inventory_bottom = np.zeros_like(total_deuterium_retention)
+legend_patches = []
+for label, values, color in inventory_series:
+    ax.fill_between(simulation_time_TMAP8, inventory_bottom, inventory_bottom + values,
+                    color=color, alpha=0.3)
+    ax.plot(simulation_time_TMAP8, inventory_bottom + values, color=color, linewidth=1.0)
+    inventory_bottom = inventory_bottom + values
+    legend_patches.append(Patch(color=color, alpha=0.5, label=label))
+
+total_inventory = inventory_bottom
+total_handle = ax.plot(simulation_time_TMAP8, total_inventory, color="tab:green", linewidth=1.5,
+                       label="Total D inventory")[0]
+
+ax_temperature = ax.twinx()
+temperature_handle = ax_temperature.plot(simulation_time_TMAP8, temperature_history, linestyle="-",
+                                         color="k", linewidth=1.5, label="TMAP8 temperature history")[0]
+
+ax.set_xlabel("Time (s)")
+ax.set_ylabel(r"Deuterium inventory (atoms/$\mu m^2$)")
+ax.set_xlim(0, simulation_time_TMAP8.max())
+ax.set_ylim(bottom=0)
+ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
+ax_temperature.set_ylabel("Temperature (K)")
+ax.legend(handles=[total_handle, temperature_handle] + legend_patches[::-1], loc="lower right")
+ax.minorticks_on()
+plt.savefig("val-2l_inventory.png", bbox_inches="tight", dpi=300)
+# plt.show()
+plt.close(fig)
+
+# --- Relative deuterium mass-balance residual over time (cf. comparison_val-2k.py Stage 6) ---
+fig, ax = plt.subplots(figsize=(6.5, 4.8))
+ax.plot(simulation_time_TMAP8, relative_mass_conservation_residual, color="tab:blue", linewidth=1.8)
+ax.axhline(0.0, color="0.35", linewidth=1.0, linestyle="--")
+ax.set_xlabel("Time (s)")
+ax.set_ylabel("Deuterium mass-balance residual / initial inventory (-)")
+ax.set_xlim(0, simulation_time_TMAP8.max())
+ax.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
+ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
+ax.minorticks_on()
+plt.savefig("val-2l_mass_conservation.png", bbox_inches="tight", dpi=300)
+# plt.show()
+plt.close(fig)
 
 TMAP8_file_base = "val-2l_comparison"
-############################ recombination flux - atom/m$^2$/s ############################
-# fig = plt.figure(figsize=[6.5, 5.5])
-# gs = gridspec.GridSpec(1, 1)
-# ax = fig.add_subplot(gs[0])
 
-# ax.plot(
-#     simulation_time_TMAP8 / 3600,
-#     simulation_recom_flux_right_TMAP8,
-#     linestyle="-",
-#     label=r"TMAP8",
-#     c="tab:gray",
-# )
-# ax.plot(
-#     experiment_time_TMAP4 / 3600,
-#     experiment_flux_TMAP4,
-#     linestyle="--",
-#     label=r"Experiment",
-#     c="k",
-# )
+############################ diffusivity vs temperature ############################
+# D(T) over the simulated TDS ramp, read from the temperature/diffusivity postprocessors
+plot_diffusivity_vs_temperature()
 
-# ax.set_xlabel("Time (hr)")
-# ax.set_ylabel("Deuterium flux (atom/m$^2$/s)")
-# ax.legend(loc="best")
-# ax.set_ylim(bottom=0)
-# ax.set_xlim(left=-0.1, right=2e4 / 3600)
-# plt.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
-# tmap_flux_for_rmspe = numerical_solution_on_experiment_input(
-#     experiment_time_TMAP4, simulation_time_TMAP8, simulation_recom_flux_right_TMAP8
-# )
-# RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe - experiment_flux_TMAP4) ** 2))
-# RMSPE = RMSE * 100 / np.mean(experiment_flux_TMAP4)
-# ax.text(1e4 / 3600.0, 40e15, "RMSPE = %.2f " % RMSPE + "%", fontweight="bold")
-# ax.minorticks_on()
-# ax.ticklabel_format(axis="y", style="sci", scilimits=(15, 15))
-# plt.savefig(f"{TMAP8_file_base}.png", bbox_inches="tight", dpi=300)
-# plt.close(fig)
-
-
-############################ implantation - atom/m$^2$/s ############################
-# Use VPP to pull this from MOOSE simulation???
-
-# Parameters from val-2l.i converted to µm
-depth_um = 2.64e-9 * 1e6   # ${units 2.64e-9 m -> mum}
-width_um = 3.58e-9 * 1e6   # ${units 3.58e-9 m -> mum}
-flux_um  = 5e21 * 1e-12    # ${units 5e21 at/m^2/s -> at/mum^2/s}
-
-plot_source_function(
-    depth=depth_um,
-    width=width_um,
-    flux=flux_um,
-    filename="val-2l_comparison_normal_distribution.png",
-)
+############################ desorption: experiment + TMAP8 comparison ############################
+# Shimada 2010, unirradiated / 0 dpa (unirradiated_data.csv)
+plot_unirradiated_desorption()

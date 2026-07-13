@@ -3,73 +3,69 @@
 # !include val-2l.params
 
 # General parameters
-kB = '${units 1.380649e-23 J/K}' # Boltzmann constant (from PhysicalConstants.h - https://physics.nist.gov/cgi-bin/cuu/Value?r)
+kB = '${units 1.380649e-23 J/K}' # Boltzmann constant
 
 # Mesh and solver controls
-nx_scale = 5 # mesh refinement multiplier (see [Mesh]); increase for convergence studies
+simulation_time = '${units 2 h -> s}' # 2 h TDS with temperature ramp
+nx_scale = 5
+dt_start = '${units 1 s}'
 dt_max = '${units 4 s}'
-simulation_time = '${units 0.5 h -> s}' # 2 h plasma implantation + temperature ramp
+dt_min = '${units 1e-6 s}'
 
 # Geometry
 tungsten_thickness = '${units 0.2 mm -> mum}' # Tungsten disc thickness, Shimada et al. 2010 (p. S667, Section 2.1)
-# near_surface_length = '${units 1 mum}'
-# bulk_material_length = '${units 6 mum}'
-# deep_material_length = '${fparse total_length - bulk_material_length - near_surface_length}'
 
-# Diffusion parameters
-# Temperature-dependent deuterium diffusivity from Shimada et al. 2010 (p. S668, Section 3): D = 2.9e-7 * exp(-0.39 eV / kB / T) (m^2/s)
+# Gaussian-hill initial condition (diagnostic profile; not from Shimada et al. 2010).
+gaussian_amplitude = '${units 1e26 at/m^3 -> at/mum^3}' # Peak concentration at the center (= 1 at/mum^3)
+gaussian_center = '${fparse ${tungsten_thickness} / 5}' # Hill center (20 mum)
+gaussian_sigma = '${fparse ${tungsten_thickness} / 20}' # Hill standard deviation (10 mum)
+
+# Temperature-dependent deuterium diffusivity used by Shimada et al. 2010 (p. S668, Section 3)
 diffusivity_coefficient = '${units 2.9e-7 m^2/s -> mum^2/s}' # D0 prefactor, Shimada et al. 2010 (p. S668)
 E_D = '${units 0.39 eV -> J}' # Diffusion activation energy, Shimada et al. 2010 (p. S668)
 
-# Recombination parameters
-# recombination_parameter = '${units ${fparse 3.2e-15*exp(-1.16)} m^4/at/s -> mum^4/at/s}' # Shimada et al. 2010 (p. S668), for recombination BC option
+# Recombination parameters: Shimada et al. 2010 (p. S668)
+# recombination_parameter = '${units ${fparse 3.2e-15*exp(-1.16)} m^4/at/s -> mum^4/at/s}'
 # recombination_parameter_enclos2 = '${units 2e-31 m^4/at/s -> mum^4/at/s}'
 # recombination_coefficient_parameter_enclos1_TMAP4 = '${units 1e-27 m^4/at/s -> mum^4/at/s}'
 
-# Implantation source parameters
-# NOTE: the implantation depth and width are NOT reported in Shimada et al. 2010. Pulled from val-2i
-width = '${units 3.58e-9 m -> mum}' # implantation profile standard deviation
-depth = '${units 2.64e-9 m -> mum}' # implantation mean depth
-flux_high = '${units 5e21 at/m^2/s -> at/mum^2/s}' # Incident D ion flux, Shimada et al. 2010 (p. S667, Section 2.3)
-TPE_hold_time = '${units 2 h -> s}' # Deuterium plasma implantation for 2 h, Shimada et al. 2010 (p. S667, Section 2.3 & Fig. 1)
-
 # Thermal parameters
-# Plasma exposure is held at 473 K; after transfer (Section 2.4) the TDS ramp runs from room
-# temperature to 1173 K at 10 K/min, per Shimada et al. 2010 (p. S668, Section 2.3 & Fig. 1)
-temperature_implantation = '${units 473 K}' # Plasma exposure temperature, Shimada et al. 2010 (p. S668, Section 2.3 & Fig. 1)
 temperature_tds_start = '${units 300 K}' # TDS ramp start (room temperature), Shimada et al. 2010 (p. S668, Figs. 2-4)
-temperature_high = '${units 1173 K}' # TDS ramp peak temperature, Shimada et al. 2010 (p. S668, Fig. 1)
+temperature_tds_end = '${units 1173 K}' # TDS ramp peak temperature, Shimada et al. 2010 (p. S668, Fig. 1)
 temperature_rate = '${units ${fparse 10 / 60} K/s}' # TDS ramp rate of 10 K/min, Shimada et al. 2010 (p. S668, Fig. 1)
 
 [Variables]
-  # Concentration of deuterium in tungsten (atoms/mum^3)
-  [concentration]
+  [deuterium_mobile_concentration]
+  []
+[]
+
+[ICs]
+  # Gaussian hill centered on the sample midplane (diagnostic, see header).
+  [deuterium_mobile_concentration_ic]
+    type = FunctionIC
+    variable = deuterium_mobile_concentration
+    function = gaussian_hill_initial_condition
   []
 []
 
 [Mesh]
-  # coord_type = 'RZ' # Look into how mesh axis and axis of symmetry being same effects postprocessor calculations
-  # rz_coord_axis = X # Specifies x axis is axis of symmetry of y axis is radial direction
-  # Graded mesh: sub-nm elements near the upstream surface to resolve the implantation Gaussian
-  # (mean 2.64 nm, sigma 3.58 nm), coarsening into the bulk where the concentration is ~ 0.
-  # Region lengths (near surface -> bulk): 20 nm, 80 nm, 0.9 um, 9 um, remainder to tungsten_thickness.
-  [cartesian]
+
+  [temp_mesh]
     type = CartesianMeshGenerator
     dim = 1
-    dx = '${units 2e-8 m -> mum}
-          ${units 8e-8 m -> mum}
-          ${units 9e-7 m -> mum}
-          ${units 9e-6 m -> mum}
-          ${fparse ${tungsten_thickness} - ${units 1e-5 m -> mum}}'
-    ix = '${fparse 8 * nx_scale}
-          ${fparse 4 * nx_scale}
-          ${fparse 4 * nx_scale}
-          ${fparse 4 * nx_scale}
-          ${fparse 4 * nx_scale}'
+    # Graded mesh: fine at the upstream surface, coarse in the bulk. The last block fills the
+    # remainder of the disc so the total thickness equals tungsten_thickness (0.2 mm).
+    dx = '${fparse 5 * ${units 4e-9 m -> mum}}  ${units 1e-8 m -> mum}  ${units 1e-7 m -> mum}
+          ${units 1e-6 m -> mum}                ${units 1e-5 m -> mum}
+          ${fparse ${tungsten_thickness} - 5 * ${units 4e-9 m -> mum} - ${units 1e-8 m -> mum}
+                   - ${units 1e-7 m -> mum} - ${units 1e-6 m -> mum} - ${units 1e-5 m -> mum}}'
+    ix = '${fparse 5 * ${nx_scale}}             ${nx_scale}             ${nx_scale}
+          ${nx_scale}                           ${nx_scale}             ${fparse 10 * ${nx_scale}}'
   []
-  [tungsten_disc] # Cross section through thickness of disk. Can scale measurements by 9*pi mm for full sample metrics
+
+  [tungsten_disc]
     type = RenameBoundaryGenerator
-    input = cartesian
+    input = temp_mesh
     old_boundary = 'left right'
     new_boundary = 'upstream downstream'
   []
@@ -86,45 +82,15 @@ temperature_rate = '${units ${fparse 10 / 60} K/s}' # TDS ramp rate of 10 K/min,
 [Kernels]
   [diffusion]
     type = ADMatDiffusion
-    variable = concentration
-    diffusivity = diffusivity_D
+    variable = deuterium_mobile_concentration
+    diffusivity = diffusivity_mat
     extra_vector_tags = 'ref'
   []
   [time_diffusion]
     type = ADTimeDerivative
-    variable = concentration
+    variable = deuterium_mobile_concentration
     extra_vector_tags = 'ref'
   []
-  [source]
-    type = ADBodyForce
-    variable = concentration
-    function = concentration_source_norm_func
-    extra_vector_tags = 'ref'
-  []
-[]
-
-[AuxVariables]
-  # Source term profile used for postprocessing
-  [concentration_source]
-  []
-  # # Time-dependent recombination coefficient on the upstream side
-  # [recombination_TMAP4]
-  # []
-[]
-
-[AuxKernels]
-  [concentration_source_aux]
-    type = FunctionAux
-    variable = concentration_source
-    function = concentration_source_norm_func
-    execute_on = 'INITIAL TIMESTEP_END'
-  []
-  # [recombination_aux_TMAP4]
-  #   type = FunctionAux
-  #   variable = recombination_TMAP4
-  #   function = '${recombination_coefficient_parameter_enclos1_TMAP4}'
-  #   execute_on = 'INITIAL TIMESTEP_END'
-  # []
 []
 
 [BCs]
@@ -133,204 +99,138 @@ temperature_rate = '${units ${fparse 10 / 60} K/s}' # TDS ramp rate of 10 K/min,
     type = ADDirichletBC
     boundary = upstream
     value = 0
-    variable = concentration
+    variable = deuterium_mobile_concentration
   []
   [right]
     type = ADDirichletBC
     boundary = downstream
     value = 0
-    variable = concentration
+    variable = deuterium_mobile_concentration
   []
-
-  # Flux balance from recombination on upstream surface (left)
-  # [left]
-  #   type = ADMatNeumannBC
-  #   variable = concentration
-  #   boundary = upstream
-  #   value = 1
-  #   boundary_material = flux_on_upstream
-  # []
-  # # Flux balance from recombination on downstream surface (right)
-  # [right]
-  #   type = ADMatNeumannBC
-  #   variable = concentration
-  #   boundary = downstream
-  #   value = 1
-  #   boundary_material = flux_on_downstream
-  # []
 []
 
 [Materials]
   # Temperature-dependent deuterium diffusivity in tungsten
-  [diffusivity_D]
+  [diffusivity_mat]
     type = ADDerivativeParsedMaterial
-    property_name = 'diffusivity_D'
+    property_name = 'diffusivity_mat'
     functor_names = 'Temperature_function'
     functor_symbols = 'temperature'
     expression = '${diffusivity_coefficient} * exp(- ${E_D} / ${kB} / temperature)'
-    output_properties = 'diffusivity_D'
+    output_properties = 'diffusivity_mat'
     outputs = 'exodus'
   []
-  # # Recombination-driven flux on upstream boundary (left)
-  # [flux_on_upstream]
-  #   type = ADDerivativeParsedMaterial
-  #   coupled_variables = 'concentration'
-  #   property_name = 'flux_on_upstream'
-  #   functor_names = 'Kr_upstream_func'
-  #   functor_symbols = 'Kr_upstream_func'
-  #   expression = '- 2 * Kr_upstream_func * concentration ^ 2'
-  # []
-  # # # Recombination-driven flux on downstream boundary (right)
-  # [flux_on_downstream]
-  #   type = ADDerivativeParsedMaterial
-  #   coupled_variables = 'concentration'
-  #   property_name = 'flux_on_downstream'
-  #   expression = '- 2 * ${recombination_parameter_enclos2} * concentration ^ 2'
-  # []
 []
 
 [Functions]
-  # Temperature history (K): hold at the implantation temperature while the beam is on, then an
-  # instantaneous cooldown to room temperature at the end of implantation (approximating the air
-  # transfer in Section 2.4), followed by a linear TDS ramp to the peak temperature and a hold
-  [Temperature_function]
+  # Gaussian hill, peak gaussian_amplitude at gaussian_center, standard deviation gaussian_sigma:
+  #   c(x) = A * exp(-(x - x0)^2 / (2 sigma^2))
+  [gaussian_hill_initial_condition]
     type = ParsedFunction
-    expression = 'if(t<${TPE_hold_time},   ${temperature_implantation},
-                  if(t<${TPE_hold_time} + (${temperature_high} - ${temperature_tds_start}) /
-                        ${temperature_rate},  ${temperature_tds_start} + ${temperature_rate} * (t - ${TPE_hold_time}),
-                                              ${temperature_high}))'
-  []
-  # Upstream recombination coefficient (time-dependent exponential) in microns^4/at/s
-  # [Kr_upstream_func]
-  #   type = ParsedFunction
-  #   expression = '${recombination_coefficient_parameter_enclos1_TMAP4} * (1 - 0.9999 * exp(-6e-5 * t))'
-  # []
-  # Beam flux schedule applied to upstream surface (atoms/mum^2/s)
-  [surface_flux_func]
-    type = ParsedFunction
-    expression = 'if(t<${TPE_hold_time}, ${flux_high}, 0)'
-  []
-  # Normalized implantation distribution across tungsten thickness
-  [source_distribution] # (-)
-    type = ParsedFunction
-    # expression = '1.5 / (${width} * sqrt(2 * pi)) * exp(-0.5 * ((x - ${depth}) / ${width})^2)'
-    expression = '1 / ( ${width} * sqrt(2 * pi) ) * exp(-0.5 * ((x - ${depth}) / ${width} ) ^ 2)'
-  []
-  # Spatial-temporal source term from beam flux and implantation profile (atoms/microns^2/s)
-  [concentration_source_norm_func] # atoms/microns^2/s
-    type = ParsedFunction
-    symbol_names = 'source_distribution surface_flux_func'
-    symbol_values = 'source_distribution surface_flux_func'
-    expression = 'source_distribution * surface_flux_func'
-    # expression = 1e-5
+    expression = '${gaussian_amplitude} * exp(-(x - ${gaussian_center})^2 / (2 * ${gaussian_sigma}^2))'
   []
 
-  # Adaptive timestepper ceiling
-  [max_dt_size_func] # s
+  # Linear TDS ramp from temperature_tds_start to temperature_tds_end and hold until end of simulation
+  [Temperature_function]
     type = ParsedFunction
-    expression = ${dt_max}
+    expression = 'if(t<(${temperature_tds_end} - ${temperature_tds_start}) /
+                        ${temperature_rate},  ${temperature_tds_start} + ${temperature_rate} * t,
+                                              ${temperature_tds_end})'
   []
 []
 
 [Postprocessors]
 
-  ### Conservation of Mass ###
+  ### Temperature ramp and resulting diffusivity (for post-processing/plots) ###
 
-  [total_deuterium_retention] # atoms / mum^2
-    type = ElementIntegralVariablePostprocessor
-    variable = concentration
+  [temperature] # K
+    type = FunctionValuePostprocessor
+    function = Temperature_function
     outputs = csv
   []
 
+  [diffusivity_pp] # mum^2/s; uniform in space, depends only on temperature
+    type = ADElementAverageMaterialProperty
+    mat_prop = diffusivity_mat
+    outputs = csv
+  []
+
+  ### Conservation of Mass (replicates val-2k_base.i: residual computed in MOOSE) ###
+
+  # Total deuterium inventory currently in the sample, M(t) (cf. val-2k deuterium_inventory_in_sample).
+  # Runs on INITIAL so its t=0 row is the initial inventory M(0), which the comparison script reads to
+  # normalize the residual.
+  [total_deuterium_retention] # atoms / mum^2
+    type = ElementIntegralVariablePostprocessor
+    variable = deuterium_mobile_concentration
+    execute_on = 'INITIAL TIMESTEP_END'
+    outputs = csv
+  []
+
+  # Desorption flux through each face (upstream_flux is also used for the experimental desorption
+  # comparison). With c = 0 Dirichlet faces and c > 0 inside, -D grad(c).n is positive (outward) on
+  # each face, so the two are the per-face desorption rates.
   [upstream_flux]
     type = ADSideDiffusiveFluxIntegral
     boundary = 'upstream'
-    variable = concentration
-    diffusivity = diffusivity_D
+    variable = deuterium_mobile_concentration
+    diffusivity = diffusivity_mat
+    execute_on = 'INITIAL TIMESTEP_END'
     outputs = csv
   []
 
   [downstream_flux]
     type = ADSideDiffusiveFluxIntegral
     boundary = 'downstream'
-    variable = concentration
-    diffusivity = diffusivity_D
+    variable = deuterium_mobile_concentration
+    diffusivity = diffusivity_mat
+    execute_on = 'INITIAL TIMESTEP_END'
     outputs = csv
   []
 
-  [deuterium_source] # Integral of Source function gives atoms/mum^2/s
-    type = FunctionElementIntegral
-    function = concentration_source_norm_func
-    outputs = csv
-  []
-
-  # [analytical_total_mass_source]
-  #   type = FunctionValuePostprocessor
-  #   function = analytical_total_mass_fun
-  # []
-
-  [flux_difference_plus_source]
-    type = ParsedPostprocessor
-    expression = 'deuterium_source - upstream_flux - downstream_flux'
-    pp_names = 'deuterium_source upstream_flux downstream_flux'
-    outputs = csv
-  []
-
-  [time_integrated_desorbed_flux_difference]
-    type = TimeIntegratedPostprocessor
-    value = flux_difference_plus_source
-    time_integration_scheme = trapezoidal-rule
-    outputs = csv
-  []
-
-  ### Desorbed Flux on Upstream and Downstream Surfaces
-
-  # Average flux on upstream surface (left) from recombination
-  # [dcdx_upstream]
-  #   type = ADSideAverageMaterialProperty
-  #   boundary = upstream
-  #   property = flux_on_upstream
-  #   outputs = none
-  # []
-  # Output upstream recombination flux (scaled to atoms/mum^2/s)
-  # [scaled_recombination_flux_upstream]
-  #   type = ScalePostprocessor
-  #   scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
-  #   value = dcdx_upstream
-  #   execute_on = 'initial nonlinear linear timestep_end'
-  #   outputs = 'console csv exodus'
-  # []
-  # Average flux on downstream surface (right) from recombination
-  # [dcdx_downstream]
-  #   type = ADSideAverageMaterialProperty
-  #   boundary = downstream
-  #   property = flux_on_downstream
-  #   outputs = none
-  # []
-  # # Output downstream recombination flux (scaled to atoms/mum^2/s)
-  # [scaled_recombination_flux_downstream]
-  #   type = ScalePostprocessor
-  #   scaling_factor = '${fparse -1 * ${units 1 m^2 -> mum^2}}'
-  #   value = dcdx_downstream
-  #   execute_on = 'initial nonlinear linear timestep_end'
-  #   outputs = 'console csv exodus'
-  # []
-  # Limit timestep size according to beam on/off schedule
-  [max_time_step_size]
-    type = FunctionValuePostprocessor
-    function = max_dt_size_func
-    execute_on = 'initial nonlinear linear timestep_end'
+  # Total desorption rate through both faces (cf. val-2k deuterium_release_flux_total).
+  [deuterium_release_flux_total] # atoms / mum^2 / s
+    type = SumPostprocessor
+    values = 'upstream_flux downstream_flux'
+    execute_on = 'INITIAL TIMESTEP_END'
     outputs = none
+  []
+
+  # Cumulative deuterium released through both faces (time-integrated release rate), = M(0) - M(t).
+  [deuterium_released_physical] # atoms / mum^2
+    type = TimeIntegratedPostprocessor
+    value = deuterium_release_flux_total
+    time_integration_scheme = trapezoidal-rule
+    execute_on = 'INITIAL TIMESTEP_END'
+    outputs = csv
+  []
+
+  # Change in domain inventory relative to the initial state, M(t) - M(0).
+  [deuterium_inventory_change] # atoms / mum^2
+    type = ChangeOverTimePostprocessor
+    postprocessor = total_deuterium_retention
+    change_with_respect_to_initial = true
+    execute_on = 'INITIAL TIMESTEP_END'
+    outputs = none
+  []
+
+  # Conservation residual = (M(t) - M(0)) + released; ideally 0 at all times. The comparison script
+  # divides this by the initial inventory M(0) to report the relative mass-balance residual (cf.
+  # val-2k deuterium_mass_conservation_residual). The decomposition generalizes directly to
+  # trapped + mobile once traps land: sum them into total_deuterium_retention.
+  [deuterium_mass_conservation_residual] # atoms / mum^2
+    type = ParsedPostprocessor
+    expression = 'deuterium_inventory_change + deuterium_released_physical'
+    pp_names = 'deuterium_inventory_change deuterium_released_physical'
+    execute_on = 'INITIAL TIMESTEP_END'
+    outputs = 'csv'
   []
 []
 
 [VectorPostprocessors]
-  [concentration_profile]
-    type = LineValueSampler
-    variable = concentration
-    start_point = '0 0 0'
-    end_point = '${tungsten_thickness} 0 0'
-    num_points = 500
+  [deuterium_mobile_concentration_profile]
+    type = NodalValueSampler
+    variable = deuterium_mobile_concentration
     sort_by = x
     execute_on = 'TIMESTEP_END'
     outputs = profile_csv
@@ -343,11 +243,10 @@ temperature_rate = '${units ${fparse 10 / 60} K/s}' # TDS ramp rate of 10 K/min,
   [exodus]
     type = Exodus
     output_material_properties = true
-    # time_step_interval = 2
   []
   [profile_csv]
     type = CSV
-    file_base = 'concentration_profile/val-2l_out'
+    file_base = 'deuterium_mobile_concentration_profile/val-2l_out'
   []
 []
 
@@ -362,17 +261,19 @@ temperature_rate = '${units ${fparse 10 / 60} K/s}' # TDS ramp rate of 10 K/min,
   type = Transient
   scheme = bdf2
   solve_type = NEWTON
+  line_search = 'none'
+  nl_abs_tol = 1e-10
   petsc_options_iname = '-pc_type'
   petsc_options_value = 'lu'
   end_time = ${simulation_time}
   automatic_scaling = true
-  # nl_rel_tol = 5e-7 # Borrowed from Val 2-a
+  dtmin = ${dt_min}
+  dtmax = ${dt_max}
   [TimeStepper]
     type = IterationAdaptiveDT
-    dt = 1.0
-    optimal_iterations = 6
+    dt = ${dt_start}              # initial step only
+    optimal_iterations = 5
     growth_factor = 1.1
     cutback_factor_at_failure = 0.9
-    timestep_limiting_postprocessor = max_time_step_size
   []
 []
