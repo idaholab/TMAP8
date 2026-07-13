@@ -93,7 +93,7 @@ P = P_{\text{SRNL}}\left(t\right) \coloneqq 376.7588 \, t^{0.6177} \quad \text{P
 or (2) a constant value (`constant_pressure`) that can be selected to enable the diffusion-front verification against a closed-form analytical solution (see [fig:diffusion_length]):
 
 \begin{equation} \label{eq:assumed_pressure}
-P = P_c \coloneqq 0.10 \times 24 \text{ psi} \approx 16{,}547 \text{ Pa},
+P = P_c = 0.10 \times 24 \text{ psi} \approx 16{,}547 \text{ Pa},
 \end{equation}
 
 which assumes 10% of the 24 psi He-backfilled canister pressure is attributable to H$_2$ [!citep](d'entremont2024aunfminicanister,hlushko2024aunf).
@@ -125,13 +125,19 @@ Because the steel-only problem is linear (constant diffusivity, linear Sieverts'
 #### Conservation of Mass
 
 !style halign=left
-As an internal consistency check, the total hydrogen mass integrated over the steel domain (`annular_cylinder_total_mass_steel`) is compared against the time-integrated net diffusive flux across the inner and outer boundaries (`annular_cylinder_time_integrated_flux`). Both integrals are weighted for the axisymmetric cylindrical geometry and then scaled by the canister height $h$ to represent 3D mass in $\mathrm{\mu}$mol H. [fig:steel_conservation] shows the percent difference between the two quantities as a single-curve conservation metric, defined as $\left|\,\mathrm{flux}/\mathrm{mass} - 1\,\right| \times 100\,\%$. The metric is highly sensitive to the postprocessors' small values within the first few timesteps, but quickly converges to a small value, and can be further reduced by refining the mesh and timestep.
+As an internal consistency check, the total hydrogen mass integrated over the steel domain (`annular_cylinder_total_mass_steel`) is compared against the time-integrated net diffusive flux across the inner and outer boundaries (`annular_cylinder_time_integrated_flux`). Both integrals are weighted for the axisymmetric cylindrical geometry and then scaled by the canister height $h$ to represent 3D mass in $\mathrm{\mu}$mol H. [fig:steel_conservation] shows the percent difference between the two quantities, defined as $\left|\,\mathrm{flux}/\mathrm{mass} - 1\,\right| \times 100\,\%$. The metric is highly sensitive to the postprocessors' small values within the first few timesteps, but quickly converges to a small value, and can be further reduced by refining the mesh and timestep.
+
+In the input files, these two postprocessors are defined as:
+
+!listing test/tests/mini_canister/steel_only.i link=false block=Postprocessors/exact_diffusion_length
+
+!listing test/tests/mini_canister/steel_only.i link=false block=Postprocessors/simulated_diffusion_length
 
 !media comparison_mini_canister.py
   image_name=steel_only_conservation_of_mass.png
   style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
   id=fig:steel_conservation
-  caption=Conservation of mass check for the steel-only model: percent difference $\left|\,\mathrm{flux}/\mathrm{mass} - 1\,\right| \times 100\,\%$ between the accumulated boundary flux and the total H mass in the steel domain for $t>1$ day.
+Conservation of mass for the steel-only model: percent difference $\left|\,\mathrm{flux}/\mathrm{mass} - 1\,\right| \times 100\,\%$ between the accumulated boundary flux and the total H mass in the steel domain for $t>1$ day.
 
 #### Diffusion Front Verification
 
@@ -144,9 +150,6 @@ For a semi-infinite slab with a constant-concentration boundary condition, the d
   id=fig:diffusion_length
   caption=Comparison of the simulated and analytical ($\sqrt{\pi D_s t}$) diffusion front length in the steel wall over 0.25 years.
 
-!listing test/tests/mini_canister/steel_only.i link=false block=Postprocessors/exact_diffusion_length
-
-!listing test/tests/mini_canister/steel_only.i link=false block=Postprocessors/simulated_diffusion_length
 
 ## Gas-Steel Model
 
@@ -159,7 +162,7 @@ The gas-steel model resolves both the gas phase and steel simultaneously. In the
 \frac{\partial C_g}{\partial t} = \frac{\partial}{\partial x}\left(D_g \frac{\partial C_g}{\partial x} \right) + S(t),
 \end{equation}
 
-where $D_g$ is the diffusivity of H$_2$ in the He backfill gas [!citep](middha2002hydrogenhelium). In the steel wall ($r_i \leq r \leq r_i + \delta$), [eq:steel_diffusion] applies as before. The axisymmetric weighting is again applied automatically by MOOSE. At the symmetry axis ($r = 0$), no explicit boundary condition is required: MOOSE's natural boundary condition enforces zero diffusive flux.
+where $D_g$ is the diffusivity of H$_2$ in the He backfill gas [!citep](middha2002hydrogenhelium). In the steel wall ($r_i \leq r \leq r_i + \delta$), [eq:steel_diffusion] applies as before. The axisymmetric weighting is again applied automatically by MOOSE. At the symmetry axis ($r = 0$), MOOSE's natural boundary condition enforces zero diffusive flux.
 
 ### Hydrogen Generation Source Term
 
@@ -213,9 +216,9 @@ Because the interface is nonlinear, [gas_steel.i] uses `solve_type = Newton`. Bo
   image_name=gas_steel_conservation_of_mass.png
   style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
   id=fig:gas_steel_conservation
-  caption=Conservation of mass check for the gas-steel model: percent difference $\left|\,(\mathrm{flux}+\mathrm{source})/\mathrm{mass} - 1\,\right| \times 100\,\%$ between the accumulated boundary flux plus source term and the total H mass in the domain for $t>1$ day.
+  caption=Conservation of mass for the gas-steel model: percent difference $\left|\,(\mathrm{flux}+\mathrm{source})/\mathrm{mass} - 1\,\right| \times 100\,\%$ between the accumulated boundary flux plus source term and the total H mass in the domain for $t>1$ day.
 
-#### Gas-Phase Hydrogen Yield Validation
+#### Gas-Phase Hydrogen Yield Calculations
 
 !style halign=left
 [fig:gas_yield] compares the total atomic hydrogen mass in the gas phase (`inner_cylinder_total_mass_gas`) against the cumulative H$_2$ yield measured by SRNL [!citep](d'entremont2024aunfminicanister). Agreement between the simulation and experiment reflects the accuracy of the power-law source model ([eq:H2_yield]). It is important to note that we are comparing against data that is also fed into the model. Future work will include a more complex generation model independent of this data.
@@ -226,7 +229,7 @@ Because the interface is nonlinear, [gas_steel.i] uses `solve_type = Newton`. Bo
   id=fig:gas_yield
   caption=Comparison of TMAP8 total gas-phase hydrogen mass against SRNL experimental cumulative H$_2$ yield data.
 
-#### Partial Pressure Validation
+#### Partial Pressure Calculations
 
 !style halign=left
 [fig:partial_pressure] compares the simulated H$_2$ partial pressure at the gas-steel interface against pressure measurements from the SRNL irradiation experiment [!citep](d'entremont2024aunfminicanister). The partial pressure is computed from the gas-phase concentration at the interface using the ideal gas law via the `H_partial_pressure_interface` postprocessor.
@@ -248,6 +251,7 @@ Because the interface is nonlinear, [gas_steel.i] uses `solve_type = Newton`. Bo
   id=fig:model_comparison
   caption=Comparison of total H mass in the steel wall (left axis) and fraction of total H inventory in the steel (right axis, dashed) between the steel-only (SRNL pressure fit) and gas-steel simulations.
 
+The conclusion of this analysis is that only a small fraction of hydrogen permeates into the steel canister over the relevant time frame in these conditions. This observation is supported by both models. 
 
 ## Input File Structure
 
