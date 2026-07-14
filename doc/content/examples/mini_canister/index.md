@@ -10,7 +10,12 @@ Both models share the same 1D axisymmetric geometry and material parameters for 
 ## Canister Geometry and Mesh
 
 !style halign=left
-Both models represent the canister as a 1D axisymmetric domain in cylindrical coordinates ($r$, $z$), using `coord_type = RZ` with `rz_coord_axis = Y` so that the $x$-axis is the radial direction. The canister dimensions [!citep](d'entremont2024aunfminicanister) are listed in [tab:geometry].
+Both models represent the canister as a 1D axisymmetric domain in cylindrical coordinates ($r$, $z$), using `coord_type = RZ` with `rz_coord_axis = Y` so that the $x$-axis is the radial direction. The canister [!citep](d'entremont2024aunfminicanister) is visualized in [fig:geometry] with dimensions listed in [tab:geometry].
+
+!media examples/figures/mini_canister_geometry.png
+  id=fig:geometry
+  caption=Schematic of SRNL mini-canister.
+  style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto;
 
 !table id=tab:geometry caption=Canister geometry.
 | Parameter | Value | Units |
@@ -107,9 +112,9 @@ C_s(r_i + \delta, t) = 0.
 ### Solver
 
 !style halign=left
-Because the steel-only problem is linear (constant diffusivity, linear Sieverts' BC), [steel_only.i] uses `solve_type = LINEAR` for a direct LU factorization at each timestep.
+Because the steel-only problem is linear (constant diffusivity, linear Sieverts' BC), [steel_only.i] uses `solve_type = LINEAR` for a direct LU factorization at each timestep. The simulation runs for 0.25 years (≈ 91.3 days) using a [BDF2.md] time integration scheme.
 
-### Model Parameters and Simulation Conditions
+### Model Parameters
 
 !table id=tab:steel_only_params caption=Steel-only model parameters and simulation conditions.
 | Parameter | Description | Value | Units | Reference |
@@ -127,22 +132,24 @@ Because the steel-only problem is linear (constant diffusivity, linear Sieverts'
 !style halign=left
 As an internal consistency check, the total hydrogen mass integrated over the steel domain (`annular_cylinder_total_mass_steel`) is compared against the time-integrated net diffusive flux across the inner and outer boundaries (`annular_cylinder_time_integrated_flux`). Both integrals are weighted for the axisymmetric cylindrical geometry and then scaled by the canister height $h$ to represent 3D mass in $\mathrm{\mu}$mol H. [fig:steel_conservation] shows the percent difference between the two quantities, defined as $\left|\,\mathrm{flux}/\mathrm{mass} - 1\,\right| \times 100\,\%$. The metric is highly sensitive to the postprocessors' small values within the first few timesteps, but quickly converges to a small value, and can be further reduced by refining the mesh and timestep.
 
-In the input files, these two postprocessors are defined as:
-
-!listing test/tests/mini_canister/steel_only.i link=false block=Postprocessors/exact_diffusion_length
-
-!listing test/tests/mini_canister/steel_only.i link=false block=Postprocessors/simulated_diffusion_length
-
 !media comparison_mini_canister.py
   image_name=steel_only_conservation_of_mass.png
   style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
   id=fig:steel_conservation
+  caption= Steel-only conservation of mass.
+
 Conservation of mass for the steel-only model: percent difference $\left|\,\mathrm{flux}/\mathrm{mass} - 1\,\right| \times 100\,\%$ between the accumulated boundary flux and the total H mass in the steel domain for $t>1$ day.
 
 #### Diffusion Front Verification
 
 !style halign=left
 For a semi-infinite slab with a constant-concentration boundary condition, the diffusion front advances as $\ell(t) = \sqrt{\pi D_s t}$, providing a straightforward check that the numerical diffusion is correctly implemented. The simulated diffusion front is computed via the `simulated_diffusion_length` postprocessor as the $x$-intercept of the tangent line using the interface concentration and gradient. [fig:diffusion_length] shows the simulated diffusion front length, using the constant pressure $P_c$, compared to the analytical expression, which it matches.
+
+In the input files, these two postprocessors are defined as:
+
+!listing test/tests/mini_canister/steel_only.i link=false block=Postprocessors/exact_diffusion_length
+
+!listing test/tests/mini_canister/steel_only.i link=false block=Postprocessors/simulated_diffusion_length
 
 !media comparison_mini_canister.py
   image_name=diffusion_length.png
@@ -193,7 +200,7 @@ The `unit_scale_neighbor` parameter is set to $10^3$ to correct for the unit mis
 ### Solver
 
 !style halign=left
-Because the interface is nonlinear, [gas_steel.i] uses `solve_type = Newton`. Both models simulate 0.25 years (≈ 91.3 days) using a [BDF2.md] time integration scheme. This model is equipped with an [IterationAdaptiveDT.md] adaptive timestep that targets 5 Newton iterations per step.
+Because the interface is nonlinear, [gas_steel.i] uses `solve_type = Newton`. The simulation runs for 0.25 years (≈ 91.3 days) using a [BDF2.md] time integration scheme. This model is equipped with an [IterationAdaptiveDT.md] adaptive timestep that targets 5 Newton iterations per step.
 
 ### Model Parameters
 
@@ -221,7 +228,7 @@ Because the interface is nonlinear, [gas_steel.i] uses `solve_type = Newton`. Bo
 #### Gas-Phase Hydrogen Yield Calculations
 
 !style halign=left
-[fig:gas_yield] compares the total atomic hydrogen mass in the gas phase (`inner_cylinder_total_mass_gas`) against the cumulative H$_2$ yield measured by SRNL [!citep](d'entremont2024aunfminicanister). Agreement between the simulation and experiment reflects the accuracy of the power-law source model ([eq:H2_yield]). It is important to note that we are comparing against data that is also fed into the model. Future work will include a more complex generation model independent of this data.
+[fig:gas_yield] compares the total atomic hydrogen mass in the gas phase (`inner_cylinder_total_mass_gas`) against the cumulative H$_2$ yield measured by SRNL [!citep](d'entremont2024aunfminicanister). Agreement between the simulation and experiment reflects the accuracy of the power-law source model ([eq:H2_yield]). It is important to note that the simulation results are compared against data that is fed into the model. Future work will include a more complex generation model independent of this data.
 
 !media comparison_mini_canister.py
   image_name=gas_phase_validation.png
@@ -251,7 +258,7 @@ Because the interface is nonlinear, [gas_steel.i] uses `solve_type = Newton`. Bo
   id=fig:model_comparison
   caption=Comparison of total H mass in the steel wall (left axis) and fraction of total H inventory in the steel (right axis, dashed) between the steel-only (SRNL pressure fit) and gas-steel simulations.
 
-The conclusion of this analysis is that only a small fraction of hydrogen permeates into the steel canister over the relevant time frame in these conditions. This observation is supported by both models. 
+The conclusion of this analysis is that only a small fraction of hydrogen permeates into the steel canister over the relevant time frame in these conditions. This observation is supported by both models.
 
 ## Input File Structure
 
