@@ -46,5 +46,6 @@
     max_parallel = 1
     recover = false
     requirement = 'The system shall perform Bayesian optimization of TDS model parameters for Li2TiO3.'
+    capabilities = 'libtorch'
   []
 []
