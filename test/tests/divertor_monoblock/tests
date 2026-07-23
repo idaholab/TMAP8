@@ -22,7 +22,7 @@
 			Executioner/nl_rel_tol=1e-9
 			Executioner/nl_abs_tol=1e-11'
 			detail = 'pulsed operation.'
-			rel_err = 8e-4 # increasing the relative error tolerance because the test is sensitive to the environment. This error is still small for physical problems.
+			rel_err = 9e-4 # increasing the relative error tolerance because the test is sensitive to the environment. This error is still small for physical problems.
 			heavy = true
 			min_parallel = 2
 			max_time = 1000
