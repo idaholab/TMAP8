@@ -51,14 +51,8 @@ To model the interface, the input file employs the [InterfaceDiffusion.md] objec
 \frac{d C_s}{dt} = 0 = K (f_{at}(T,P) \rho - C_s),
 \end{equation}
 
-The results of the high pressure test for ($T$, $P$) =(598.15 K, $1 \times 10^{3}$ Pa), (623.15 K, $1 \times 10^{4}$ Pa), (648.15 K, $1 \times 10^{2}$ Pa), and (648.15 K, $1 \times 10^{5}$ Pa) are shown in [Zr2FeHx_PCT_fit_2D] and are a good fit.
+The results of the high pressure test for ($T$, $P$) =(598.15 K, $1 \times 10^{3}$ Pa), (623.15 K, $1 \times 10^{4}$ Pa), (648.15 K, $1 \times 10^{2}$ Pa), and (648.15 K, $1 \times 10^{5}$ Pa) are shown in [Zr2FeHx_PCT_combined] and are a good fit.
 
-
-!media comparison_Zr2FeHx_PCT.py
-       image_name=Zr2FeHx_PCT_fit_2D.png
-       style=width:80%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=Zr2FeHx_PCT_fit_2D
-       caption=PCT data for  $Zr_{2}FeH_{x}$ from [!cite](yang2025potential) implemented in TMAP8, and test results.
 
 
 ### Overall PCT Testing
@@ -69,12 +63,12 @@ The results of the high pressure test for ($T$, $P$) =(598.15 K, $1 \times 10^{3
 P = P_{\text{initial}} + t \frac{P_{\text{max}} - P_{\text{initial}}}{t_{\text{end}}}
 \end{equation}
 
-The testing conditions include ($T$, $P_{initial}$) = (598.15 K, $7$ Pa), (623.15 K, $7$ Pa), and (648.15 K, $7$ Pa). The [PCT_all_temperatures_experimental_vs_TMAP8_Zr2Fe] shows the PCT fit against the experimental data. Evidently, the fit exhibits moderate error, but the deviations remain within an acceptable range for modeling purposes.
+The testing conditions include ($T$, $P_{initial}$) = (598.15 K, $7$ Pa), (623.15 K, $7$ Pa), and (648.15 K, $7$ Pa). The [Zr2FeHx_PCT_combined] shows the PCT fit against the experimental data. Evidently, the fit exhibits moderate error, but the deviations remain within an acceptable range for modeling purposes.
 
 !media comparison_Zr2FeHx_PCT.py
-       image_name=PCT_all_temperatures_experimental_vs_TMAP8_Zr2Fe.png
+       image_name=Zr2FeHx_PCT_combined.png
        style=width:80%;margin-bottom:2%;margin-left:auto;margin-right:auto
-       id=PCT_all_temperatures_experimental_vs_TMAP8_Zr2Fe
+       id=Zr2FeHx_PCT_combined
        caption=PCT data for Zr$_{2}$FeH$_{x}$ from [!cite](yang2025potential) with fits implemented in TMAP8, and test results.
 
 
