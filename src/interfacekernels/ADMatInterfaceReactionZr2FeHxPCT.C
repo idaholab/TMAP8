@@ -125,7 +125,7 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 =======
 =======
 >>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
-  ADReal r = 0;
+    ADReal r = 0;
 =======
 >>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
 
@@ -174,21 +174,30 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
                                      log(max(neighbor_pressure - limit_pressure, 1e-10))));
 >>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
 =======
-  auto atomic_fraction =
+                                         auto atomic_fraction =
 <<<<<<< HEAD
-      4.30 - 1.81 / (0.5 + exp(5.41 - 1.36e-02 * _neighbor_temperature[_qp] +
+                                         4.30 -
+                                         1.81 / (0.5 +
+                                                 exp(5.41 - 1.36e-02 * _neighbor_temperature[_qp] +
 <<<<<<< HEAD
-                                 (2.32e-01 + 1.51e-04 * _neighbor_temperature[_qp]) *
-                                     log(max(neighbor_pressure - limit_pressure, 1.e-10))));
+                                                     (2.32e-01 +
+                                                      1.51e-04 * _neighbor_temperature[_qp]) *
+                                                         log(max(neighbor_pressure - limit_pressure,
+                                                                 1.e-10))));
 >>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
 =======
-                               (2.32e-01 + 1.51e-04 * _neighbor_temperature[_qp]) *
+                                         (2.32e-01 + 1.51e-04 * _neighbor_temperature[_qp]) *
 =======
-      5.0 - 8.32e-03 / (1e-03 + exp(-2.49 - 7.61e-03 * _neighbor_temperature[_qp] +
+                                         5.0 -
+                                         8.32e-03 /
+                                             (1e-03 +
+                                              exp(-2.49 - 7.61e-03 * _neighbor_temperature[_qp] +
 <<<<<<< HEAD
-                               (5.63e-02 + 1.72e-04 * _neighbor_temperature[_qp]) *
+                                                  (5.63e-02 +
+                                                   1.72e-04 * _neighbor_temperature[_qp]) *
 >>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
-                                   log(max(neighbor_pressure - limit_pressure, 1.e-10))));
+                                                      log(max(neighbor_pressure - limit_pressure,
+                                                              1.e-10))));
 >>>>>>> 79918106 (Applying python and source file formatting patches)
 =======
 =======
@@ -202,25 +211,29 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 =======
 >>>>>>> 1f824feb (Inserting git format clang)
 
-  // Convert to concentration
-  auto _surface_equilibrium_concentration = atomic_fraction * _density[_qp];
+                                    // Convert to concentration
+                                    auto _surface_equilibrium_concentration =
+                                        atomic_fraction * _density[_qp];
 
-  switch (type)
-  {
-    // Move all the terms to the LHS to get residual, for primary domain
-    // Residual = kf*u - kb*v
-    // Weak form for primary domain is: (test, kf*u - kb*v)
-    case Moose::Element:
-      r = _test[_i][_qp] * (_kf[_qp] * _u[_qp] - _kb[_qp] * _surface_equilibrium_concentration);
-      break;
+                                    switch (type)
+                                    {
+                                      // Move all the terms to the LHS to get residual, for primary
+                                      // domain Residual = kf*u - kb*v Weak form for primary domain
+                                      // is: (test, kf*u - kb*v)
+                                      case Moose::Element:
+                                        r = _test[_i][_qp] *
+                                            (_kf[_qp] * _u[_qp] -
+                                             _kb[_qp] * _surface_equilibrium_concentration);
+                                        break;
 
-    // Similarly, weak form for secondary domain is: -(test, kf*u - kb*v),
-    // flip the sign because the direction is opposite.
-    case Moose::Neighbor:
-      r = -_test_neighbor[_i][_qp] *
-          (_kf[_qp] * _u[_qp] - _kb[_qp] * _surface_equilibrium_concentration);
-      break;
-  }
+                                      // Similarly, weak form for secondary domain is: -(test, kf*u
+                                      // - kb*v), flip the sign because the direction is opposite.
+                                      case Moose::Neighbor:
+                                        r = -_test_neighbor[_i][_qp] *
+                                            (_kf[_qp] * _u[_qp] -
+                                             _kb[_qp] * _surface_equilibrium_concentration);
+                                        break;
+                                    }
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -236,5 +249,5 @@ ADMatInterfaceReactionZr2FeHxPCT::computeQpResidual(Moose::DGResidualType type)
 =======
 
 >>>>>>> 97a609b1 (Formatting modification and simplifiying python codes)
-  return r;
+                                    return r;
 }
