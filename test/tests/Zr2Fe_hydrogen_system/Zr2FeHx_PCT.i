@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
 ###########################################
 # Testing PCT Zr2FeHx modelling capability and performance
 # This input file works in two independent ways:
@@ -9,49 +5,19 @@
 # (B) : Evaluate the equilibrium of hydrogen and Zr2Fe at an increasing Pressure boundary and set Temperature
 ###########################################
 
-<<<<<<< HEAD
-=======
->>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
-=======
->>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
 # Physical constants
 R = '${units 8.31446261815324 J/mol/K}' # ideal gas constant from PhysicalConstants.h
 N_a = '${units 6.02214076e23 1/mol}' # Avogadro's number from PhysicalConstants.h
 boltzmann_constant = '${units 1.380649e-23 J/K}' # Boltzmann constant from PhysicalConstants.h
 
 # Simulation conditions and material properties
-<<<<<<< HEAD
-<<<<<<< HEAD
 temperature = '${units 598.15 K}'
 density_Zr2Fe = '${units 29375.60 mol/m^3}'
-<<<<<<< HEAD
 
 
 initial_pressure_H2_enclosure_1 = '${units 7 Pa}'
 initial_concentration_H_enclosure_1 = '${units ${fparse 2*initial_pressure_H2_enclosure_1 / (R*temperature)} mol/m^3}'
 initial_atomic_fraction= '${fparse 5.0 - 8.320e-03  / ( 1e-03 + exp(-2.4851 - 7.6091e-03 * temperature + (5.6264e-02 + 1.7197e-04 * temperature) * log(max(initial_pressure_H2_enclosure_1 - 5, 1e-10))))}'
-=======
-temperature = '${units 648.15 K}'
-=======
-temperature = '${units 598.15 K}'
->>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
-density_Zr2Fe = '${units 29590 mol/m^3}'
-=======
->>>>>>> 284d7cfb (Modification to Zr2FeHx PCT Modelling)
-
-
-initial_pressure_H2_enclosure_1 = '${units 7 Pa}'
-initial_concentration_H_enclosure_1 = '${units ${fparse 2*initial_pressure_H2_enclosure_1 / (R*temperature)} mol/m^3}'
-<<<<<<< HEAD
-<<<<<<< HEAD
-initial_atomic_fraction =  2 # (-)
->>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
-=======
-initial_atomic_fraction =  3.0 # (-)
->>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
-=======
-initial_atomic_fraction= '${fparse 5.0 - 8.320e-03  / ( 1e-03 + exp(-2.4851 - 7.6091e-03 * temperature + (5.6264e-02 + 1.7197e-04 * temperature) * log(max(initial_pressure_H2_enclosure_1 - 5, 1e-10))))}'
->>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
 initial_concentration_H_enclosure_2 = '${units ${fparse initial_atomic_fraction*density_Zr2Fe} mol/m^3}'
 
 # diffusivity from:
@@ -74,13 +40,6 @@ num_nodes = 50
 simulation_time = '${units 1e9 s}'
 dt_max = '${fparse simulation_time/100}'
 dt_init = '${units 1e-3 s}'
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-tau_constant_BC = '${fparse dt_init*2e-2}' # the smaller, the faster the up-ramp for the pressure BC
->>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
-=======
->>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
 
 # convergence parameters
 lower_value_threshold_concentration_enclosure_1 = -1e-20
@@ -168,15 +127,7 @@ output_file_base ='Zr2FeHx_PCT_out'
 [Functions]
   [function_BC_concentration_H_enclosure_1]
     type = ParsedFunction
-<<<<<<< HEAD
-<<<<<<< HEAD
     expression = 'exp(-${dt_init}*2e-2/t)* ${initial_concentration_H_enclosure_1}'
-=======
-    expression = 'exp(-${tau_constant_BC}/t)* ${initial_concentration_H_enclosure_1}'
->>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
-=======
-    expression = 'exp(-${dt_init}*2e-2/t)* ${initial_concentration_H_enclosure_1}'
->>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
   []
 []
 
@@ -371,15 +322,7 @@ output_file_base ='Zr2FeHx_PCT_out'
   nl_max_its = 16
   l_max_its = 30
   nl_rel_tol = 1e-2
-<<<<<<< HEAD
-<<<<<<< HEAD
   nl_abs_tol = 4e-15
-=======
-  nl_abs_tol = 4e-12
->>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
-=======
-  nl_abs_tol = 4e-15
->>>>>>> 30788c75 (Formatting modification and simplifiying python codes)
   scheme = 'bdf2'
   solve_type = 'Newton'
   petsc_options_iname = '-pc_type -pc_factor_mat_solver_type -snes_type'
@@ -401,18 +344,8 @@ output_file_base ='Zr2FeHx_PCT_out'
 [Outputs]
   file_base = ${output_file_base}
   csv = true
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
   [exodus]
     type = Exodus
     execute_on = 'timestep_end'
   []
-<<<<<<< HEAD
-=======
-  exodus = true
->>>>>>> 39e67609 (Zr2Fe Hydride PCT Modelling Files)
-=======
->>>>>>> be4c9427 (Corrections and additions to Zr2FeHx PCT modelling)
 []
