@@ -188,20 +188,16 @@ def compute_mape(ar_t, p_t, ar_e, p_e):
     return np.mean(np.abs((p_interp - p_e2) / p_e2)) * 100
 
 
-# ------------------------------------------------------------------------------
-# COMBINED FIGURE: everything on ONE set of axes.
-# All traces from Zr2FeHx_PCT_fit_2D.png (analytical fit + single-point TMAP8)
-# and PCT_all_temperatures_experimental_vs_TMAP8_Zr2Fe.png (low-to-high TMAP8
-# sweep vs experimental) are overlaid on the same graph.
-# Legend naming, markers, colors, and sizes are retained exactly as in the two
-# original standalone figures.
-# ------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
+# - Plots exp scatter vs TMAP8 dashed
+# - Calculates MAPE on overlapping atomic‑ratio range
+# ----------------------------------------------------------------------------
 base = Path(__file__).resolve().parent
 exp_dir = base / "PCT_data"
 
 fig, ax = plt.subplots(figsize=(12, 8))
 
-# ---- Content of Zr2FeHx_PCT_fit_2D.png ----
+
 rmse_by_temperature = {}
 for Tk in TEMPERATURES_K:
     df = data_by_temperature.get(Tk)
@@ -270,7 +266,7 @@ for Tk in TEMPERATURES_K:
         p_tmap[order],
         "--",
         lw=2,
-        label=f"TMAP {int(Tk)}.15 K (err={mape:.2f}%)",
+        label=f"TMAP8 {int(Tk)}.15 K (err={mape:.2f}%)",
     )
 
 ax.set_yscale("log")
@@ -289,9 +285,7 @@ def legend_rank(label):
         return 1
     if label.startswith("TMAP8") and "Pa" in label:  # single-point x markers
         return 2
-    if label.startswith("TMAP"):  # low-to-high sweep curves
-        return 3
-    return 4
+    return 3
 
 
 order = sorted(range(len(labels)), key=lambda i: legend_rank(labels[i]))
