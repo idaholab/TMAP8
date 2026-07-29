@@ -11,6 +11,8 @@ import os
 script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
 
+#  Must match val-2l.i: trap_per_free = ... (rescaling factor for trapped variable)
+trap_per_free = 1e4  # update this if val-2l.i changes
 
 # ================================= Functions ================================ #
 
@@ -110,35 +112,6 @@ def plot_conservation_of_mass(t, flux, mass, flux_label, title, filename):
     plt.savefig(filename, bbox_inches="tight", dpi=300)
     plt.close(fig)
 
-
-def plot_validation(t_sim, sim_data, t_exp, exp_data, ylabel, title, filename):
-    """Plot simulation results against SRNL experimental data with RMSPE annotation
-
-    Args:
-        t_sim (float, ndarray): simulation time array in days
-        sim_data (float, ndarray): simulation output values
-        t_exp (float, ndarray): experimental time array in days
-        exp_data (float, ndarray): experimental measurement values
-        ylabel (str): y-axis label
-        title (str): plot title
-        filename (str): output PNG filename
-    """
-    fig = plt.figure(figsize=(10, 6))
-    plt.plot(t_sim, sim_data, label="Simulation")
-    plt.plot(t_exp, exp_data, "ro", label="Experimental Data")
-    mapped = numerical_solution_on_experiment_input(t_exp, t_sim, sim_data)
-    annotate_rmspe(mapped, exp_data, t_sim[-1] / 2, sim_data[-1] / 4)
-    plt.ylabel(ylabel)
-    plt.xlabel("Time (Days)")
-    plt.title(title)
-    plt.xlim(0)
-    plt.ylim(0)
-    plt.legend()
-    plt.grid(True)
-    plt.savefig(filename, bbox_inches="tight", dpi=300)
-    plt.close(fig)
-
-
 def plot_diffusivity_vs_temperature(
     simulation_file="val-2l_out.csv",
     filename="val-2l_diffusivity_vs_temperature.png",
@@ -183,7 +156,7 @@ def plot_diffusivity_vs_temperature(
 def plot_unirradiated_desorption(
     experiment_file="unirradiated_data.csv",
     simulation_file="val-2l_out.csv",
-    simulation_flux_column="upstream_flux",
+    simulation_flux_column="deuterium_release_flux_total",
     experiment_plot="val-2l_experimental_desorption.png",
     simulation_plot="val-2l_simulated_desorption.png",
     comparison_plot="val-2l_comparison_desorption.png",
@@ -192,23 +165,18 @@ def plot_unirradiated_desorption(
 
     Produces three figures:
         1. The digitized experimental desorbed-flux history (Shimada 2010,
-           unirradiated / 0 dpa): time (s) versus desorbed flux (m^-2 s^-1), with
-           the y-axis written in scientific notation.
-        2. The raw TMAP8 simulated desorbed-flux history on its own time grid:
-           time (s) versus desorbed flux (m^-2 s^-1).
-        3. The TMAP8 simulated desorbed flux mapped onto the experimental time
-           points with numerical_solution_on_experiment_input, overlaid on the
-           experimental data and annotated with the RMSPE via annotate_rmspe.
-
-    The paper reports an areal desorption flux in m^-2 s^-1 (Shimada 2010,
-    Figs. 2-4), so the 1D model's areal flux is compared directly: the face area
-    cancels and no pi*r^2 scaling is needed (same convention as val-2d).
+           unirradiated / 0 dpa): temperature (K) versus desorbed flux (m^-2 s^-1).
+           Experimental times are mapped to temperatures via the simulation's T(t) ramp.
+        2. The raw TMAP8 simulated desorbed-flux history: temperature (K) versus
+           desorbed flux (m^-2 s^-1).
+        3. The TMAP8 simulated desorbed flux mapped onto the experimental temperature
+           points, overlaid on the experimental data and annotated with the RMSPE.
 
     Args:
         experiment_file (str): two-column, header-less CSV of
             (time [s], desorbed flux [m^-2 s^-1])
-        simulation_file (str): TMAP8 CSV output holding a "time" column and the
-            desorbed-flux column
+        simulation_file (str): TMAP8 CSV output holding "time", "temperature", and
+            the desorbed-flux column
         simulation_flux_column (str): name of the desorbed-flux column in
             simulation_file. TMAP8 reports it in at/mum^2/s; it is converted to
             at/m^2/s to match the experiment.
@@ -220,13 +188,30 @@ def plot_unirradiated_desorption(
     experiment = np.loadtxt(experiment_file, delimiter=",")
     experiment_time, experiment_flux = experiment[:, 0], experiment[:, 1]
 
+    # simulation data: time, temperature, and desorbed flux
+    simulation_time, simulation_temperature, simulation_flux = read_csv_from_TMAP8(
+        simulation_file, ["time", "temperature", simulation_flux_column]
+    )
+    # at/mum^2/s -> at/m^2/s (x1e12); atomic D flux -> molecular D2 flux (/2) to match the
+    # RGA, which detects D2 (mass 4) and HD (mass 3) -- same convention as val-2d
+    simulation_flux = simulation_flux * 1e12 / 2
+
+    # Map experimental times to temperatures using the simulation's T(t) ramp,
+    # then truncate to the simulation time range to avoid extrapolation.
+    in_sim_range = experiment_time <= simulation_time.max()
+    experiment_time = experiment_time[in_sim_range]
+    experiment_flux = experiment_flux[in_sim_range]
+    experiment_temperature = numerical_solution_on_experiment_input(
+        experiment_time, simulation_time, simulation_temperature
+    )
+
     # ---- Plot 1: experimental desorption history ----
     plt.figure(figsize=(10, 6))
-    plt.plot(experiment_time, experiment_flux, "ro", label="Experiment (Shimada 2010, 0 dpa)")
-    plt.xlabel("Time (s)")
+    plt.plot(experiment_temperature, experiment_flux, "ro", label="Experiment (Shimada 2010, 0 dpa)")
+    plt.xlabel("Temperature (K)")
     plt.ylabel(r"Desorbed flux (m$^{-2}$s$^{-1}$)")
     plt.title("Unirradiated deuterium desorption")
-    plt.xlim(0, experiment_time.max())
+    plt.xlim(experiment_temperature.min(), experiment_temperature.max())
     plt.ylim(0)
     plt.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
     plt.legend()
@@ -235,21 +220,13 @@ def plot_unirradiated_desorption(
     plt.savefig(experiment_plot, bbox_inches="tight", dpi=300)
     # plt.show()
 
-    # simulation desorbed rate, mapped onto experiment times
-    simulation_time, simulation_flux = read_csv_from_TMAP8(
-        simulation_file, ["time", simulation_flux_column]
-    )
-    # at/mum^2/s -> at/m^2/s (x1e12); atomic D flux -> molecular D2 flux (/2) to match the
-    # RGA, which detects D2 (mass 4) and HD (mass 3) -- same convention as val-2d
-    simulation_flux = simulation_flux * 1e12 / 2
-
     # ---- Plot 2: raw simulated desorption history ----
     plt.figure(figsize=(10, 6))
-    plt.plot(simulation_time, simulation_flux, "b-", label="TMAP8 (0 dpa)")
-    plt.xlabel("Time (s)")
+    plt.plot(simulation_temperature, simulation_flux, "b-", label="TMAP8 (0 dpa)")
+    plt.xlabel("Temperature (K)")
     plt.ylabel(r"Desorbed flux (m$^{-2}$s$^{-1}$)")
     plt.title("Unirradiated deuterium desorption: TMAP8")
-    plt.xlim(0, simulation_time.max())
+    plt.xlim(simulation_temperature.min(), simulation_temperature.max())
     plt.ylim(0)
     plt.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
     plt.legend()
@@ -258,21 +235,33 @@ def plot_unirradiated_desorption(
     plt.savefig(simulation_plot, bbox_inches="tight", dpi=300)
     # plt.show()
 
+    # Map simulated flux onto experimental temperature points for RMSPE
     mapped_simulation_flux = numerical_solution_on_experiment_input(
-        experiment_time, simulation_time, simulation_flux
+        experiment_temperature, simulation_temperature, simulation_flux
     )
+    tmin = 1000
+    tmax = 2600
+    rmspe_region = (experiment_time >= tmin) & (experiment_time <= tmax)
 
     # ---- Plot 3: simulation vs experiment with RMSPE ----
     plt.figure(figsize=(10, 6))
-    plt.plot(experiment_time, experiment_flux, "ro", label="Experiment (Shimada 2010, 0 dpa)")
-    plt.plot(simulation_time, simulation_flux, "b-", label="TMAP8")
-    annotate_rmspe(
-        mapped_simulation_flux, experiment_flux, experiment_time.max() / 2, experiment_flux.max() / 4
-    )
-    plt.xlabel("Time (s)")
+    plt.plot(experiment_temperature, experiment_flux, "ro", label="Experiment (Shimada 2010, 0 dpa)")
+    plt.plot(simulation_temperature, simulation_flux, "b-", label="TMAP8")
+    if rmspe_region.any():
+        plt.axvline(experiment_temperature[rmspe_region].min(), color="green", linestyle="--",
+                    linewidth=1.2, label="RMSPE region")
+        plt.axvline(experiment_temperature[rmspe_region].max(), color="green", linestyle="--",
+                    linewidth=1.2)
+        annotate_rmspe(
+            mapped_simulation_flux[rmspe_region],
+            experiment_flux[rmspe_region],
+            experiment_temperature.mean(),
+            experiment_flux.max() / 4,
+        )
+    plt.xlabel("Temperature (K)")
     plt.ylabel(r"Desorbed flux (m$^{-2}$s$^{-1}$)")
     plt.title("Unirradiated deuterium desorption: TMAP8 vs experiment")
-    plt.xlim(0, experiment_time.max())
+    plt.xlim(experiment_temperature.min(), experiment_temperature.max())
     plt.ylim(0)
     plt.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
     plt.legend()
@@ -299,12 +288,20 @@ mass_conservation_residual = simulation_TMAP8_data['deuterium_mass_conservation_
 initial_inventory = total_deuterium_retention.iloc[0]
 relative_mass_conservation_residual = mass_conservation_residual / initial_inventory
 
-# --- Total deuterium inventory with temperature history (cf. val-2k Fig. 8 / comparison_val-2k.py
-# Stage 5) --- Built from a list of (label, values, color) contributions stacked with fill_between, so
-# trapped-inventory series can be appended here once traps are added; for now mobile D is the only
-# contribution and equals the total.
+# --- Read individual mobile and trapped integrals for the stacked inventory plot ---
+# total_mobile_retention  : physical mobile inventory  (at/µm²), no scaling needed
+# total_trapped_retention : MOOSE stores the *rescaled* variable, so multiply by
+#                           trap_per_free to recover the physical trapped inventory.
+total_mobile_retention  = simulation_TMAP8_data["total_mobile_retention"]
+total_trapped_retention = simulation_TMAP8_data["total_trapped_retention"] * trap_per_free
+
+# --- Total deuterium inventory with temperature history ---
+# Add one entry per species to inventory_series. They are stacked bottom-up with
+# fill_between, so order matters: put the largest / most stable contribution first.
+# Append a new tuple here when additional trap populations are added.
 inventory_series = [
-    ("Mobile D", total_deuterium_retention, plt.get_cmap("viridis")(0.95)),
+    ("Trapped D (trap 1, 1.35 eV)", total_trapped_retention, plt.get_cmap("viridis")(0.45)),
+    ("Mobile D",                    total_mobile_retention,   plt.get_cmap("viridis")(0.95)),
 ]
 
 fig, ax = plt.subplots(figsize=(6.5, 5.5))
