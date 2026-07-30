@@ -194,7 +194,7 @@ def plot_unirradiated_desorption(
     )
     # at/mum^2/s -> at/m^2/s (x1e12); atomic D flux -> molecular D2 flux (/2) to match the
     # RGA, which detects D2 (mass 4) and HD (mass 3) -- same convention as val-2d
-    simulation_flux = simulation_flux * 1e12 / 2
+    simulation_flux = simulation_flux * 1e12 /2
 
     # Map experimental times to temperatures using the simulation's T(t) ramp,
     # then truncate to the simulation time range to avoid extrapolation.

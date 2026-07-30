@@ -21,7 +21,7 @@ import matplotlib.animation as animation
 
 # ── Must match val-2l.i ───────────────────────────────────────────────────── #
 TRAP_PER_FREE = 1
-FRAME_STRIDE  = 2
+FRAME_STRIDE  = 10
 TRAP_BOUNDARY = 0.7        # µm: spatial extent of 1.35 eV trap (TMAP fit A)
 
 # ── File paths ────────────────────────────────────────────────────────────── #

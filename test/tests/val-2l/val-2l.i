@@ -8,10 +8,10 @@ eV_to_J = '${units 1.602176634e-19 J/eV}' # Conversion coefficient from eV to Jo
 kb_eV = '${units ${fparse kb / eV_to_J} eV/K}' # Boltzmann constant eV/K
 
 # Temporal Parameters
-# simulation_time = '${units 2 h -> s}' # 2 h TDS with temperature ramp
-simulation_time = '${units 1 h -> s}' # Should be enough time to model unirradiated case
-dt_start = '${units 1 s}'
-dt_max = '${units 4 s}'
+simulation_time = '${units 2 h -> s}' # 2 h TDS with temperature ramp
+# simulation_time = '${units 1 h -> s}' # Should be enough time to model unirradiated case
+dt_start = '${units 0.25 s}'
+dt_max = '${units 1 s}'
 dt_min = '${units 1e-6 s}'
 
 # Geometry
@@ -74,28 +74,22 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
 
   # ── Element counts ─────────────────────────────────────────────────────────
   # nx_scale uniformly refines all segments. Per-segment multipliers set the
-  # relative resolution. Approximate element size at nx_scale = 1 shown below.
-  #   seg1: 0.7  mum / (7  * nx_scale) ~ 100  nm/element
-  #   seg2: 0.3  mum / (3  * nx_scale) ~ 100  nm/element
-  #   seg3: 0.2  mum / (2  * nx_scale) ~ 100  nm/element
-  #   seg4: 1.3  mum / (5  * nx_scale) ~ 260  nm/element
-  #   seg5: 4.5  mum / (5  * nx_scale) ~ 900  nm/element
-  #   seg6: 193  mum / (10 * nx_scale) ~ 19.3 mum/element
-  nx_scale = 10
+  # relative resolution.
+
+  nx_scale = 20
 
 [Mesh]
   [temp_mesh]
     type = CartesianMeshGenerator
     dim = 1
     dx = '${seg1}  ${seg2}  ${seg3}  ${seg4}  ${seg5}  ${seg6}'
-    ix = '${fparse 50  * ${nx_scale}}
+    ix = '${fparse 10  * ${nx_scale}}
           ${fparse 3  * ${nx_scale}}
           ${fparse 2  * ${nx_scale}}
           ${fparse 5  * ${nx_scale}}
           ${fparse 5  * ${nx_scale}}
           ${fparse 10 * ${nx_scale}}'
     # subdomain_id = '1  2  2  2  2  2'  # block 1 = trap region, block 2 = bulk
-
   []
   [tungsten_disc]
     type = RenameBoundaryGenerator
@@ -360,7 +354,6 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
     variable = mobile
     diffusivity = diffusivity_mat
     execute_on = 'TIMESTEP_END'
-    # outputs = csv
   []
 
   [downstream_flux]
@@ -369,7 +362,6 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
     variable = mobile
     diffusivity = diffusivity_mat
     execute_on = 'TIMESTEP_END'
-    # outputs = csv
   []
 
   # Total desorption rate through both faces (cf. val-2k deuterium_release_flux_total).
@@ -384,7 +376,7 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
   [deuterium_released_physical] # atoms / mum^2
     type = TimeIntegratedPostprocessor
     value = deuterium_release_flux_total
-    time_integration_scheme = IMPLICIT-EULER
+    time_integration_scheme = TRAPEZOIDAL-RULE
     execute_on = 'TIMESTEP_END'
     outputs = csv
   []
@@ -470,6 +462,12 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
       dt = ${dt_start}
       optimal_iterations = 5
       growth_factor = 1.1
-      cutback_factor_at_failure = 0.9
+      cutback_factor_at_failure = 0.5
+      # timestep_limiting_function = temperature_function
+      # max_function_change = 0.2
   []
+  # [TimeStepper]
+  #   type = ConstantDT
+  #   dt = ${dt_start}
+  # []
 []
