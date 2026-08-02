@@ -225,13 +225,13 @@
   [F_recombination]
     type = SideDiffusiveFluxAverage
     boundary = 'top'
-    diffusivity = ${diffusivity_fixed}
+    diffusivity = ${tritium_atomic_mass}
     variable = Sc_C_total_W
   []
   [F_permeation]
     type = SideDiffusiveFluxAverage
     boundary = '2to1'
-    diffusivity = ${diffusivity_fixed}
+    diffusivity = ${tritium_atomic_mass}
     variable = Sc_C_total_CuCrZr
   []
 

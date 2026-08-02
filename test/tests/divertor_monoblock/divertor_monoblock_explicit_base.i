@@ -42,7 +42,7 @@ C_mobile_CuCrZr_init = 1.0e-15 # at.fraction
   []
   [Scaled_Tritium_Flux]
     type = ParsedPostprocessor
-    expression = '${diffusivity_fixed} * Tritium_SideFluxIntegral'
+    expression = '${tritium_atomic_mass} * Tritium_SideFluxIntegral'
     pp_names = Tritium_SideFluxIntegral
     execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
   []

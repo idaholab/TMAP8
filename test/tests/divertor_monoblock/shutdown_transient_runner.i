@@ -78,7 +78,7 @@ Postprocessors/timestep_max_pp/execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
 # Continue using the steady-state dummy postprocessor, but add unused definitions
 # from the steady-state input.
 Postprocessors/unused_parameters/expression := '${num_sectors} + ${rings_H2O} + ${rings_CuCrZr} + ${rings_Cu} + ${rings_W} + ${temperature_coolant_max}
-                                                + ${plasma_max_heat} + ${plasma_min_heat} + ${plasma_max_retained_t_surface_flux} + ${plasma_min_retained_t_surface_flux}'
+                                                + ${plasma_max_heat} + ${plasma_min_heat} + ${plasma_max_retained_t_surface_flux} + ${plasma_min_retained_t_surface_flux} + ${number_cycles}'
 
 [Postprocessors]
   [time_max_T_W]

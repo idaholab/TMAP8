@@ -32,6 +32,8 @@ temperature_coolant_max = '${units 552.0 K}'
 plasma_max_heat = '${units 1.0e7 W/m^2}' # Heat flux of 10 MW/m^2 at steady state
 plasma_min_heat = '${units 0.0 W/m^2}' # no flux while the pulse is off.
 
+number_cycles = 50
+
 # Initial conditions
 C_trapping_init = 1.0e-15 # at.fraction
 
@@ -86,6 +88,7 @@ solubility_CuCrZr_Ea = '${units 4525.8 K}'
 
 # Maximum retained tritium surface flux at the top surface during operation.
 # plasma flux at steady state
+# from https://scipub.euro-fusion.org/wp-content/uploads/eurofusion/WPPFCCPR17_17993_submitted.pdf
 plasma_max_flux = ${units 1.0e24 at/m^2/s}
 # 50% of it corresponds to tritium in a DT plasma
 plasma_max_t_flux = ${fparse 50 / 100 * plasma_max_flux}
@@ -96,8 +99,10 @@ plasma_max_retained_t_surface_flux = '${fparse plasma_max_retained_t_flux / tung
 plasma_min_retained_t_surface_flux = '${units 0.0 m/s}'
 
 # For postprocessor scaling
-diffusivity_fixed = '${units 5.01e-24 g/m^2}' # (3.01604928)/(6.02e23)/[gram(T)/m^2]
-# diffusivity_fixed = ${units 5.508e-19 g/m^2}  # (1.0e3)*(1.0e3)/(6.02e23)/(3.01604928) [gram(T)/m^2] alternative
+tritium_molar_mass = ${units 3.01604928 g/mol}
+avogadro_number = ${units 6.02214076e23 at/mol}
+tritium_atomic_mass = '${fparse tritium_molar_mass / avogadro_number}' # g/at
+# tritium_atomic_mass_scaling = ${units 5.508e-19 g/m^2}  # (1.0e3)*(1.0e3)/(6.02e23)/(3.01604928) [gram(T)/at] alternative
 scaling_factor = '${units 3.491e10 g/m^2}' # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
 scaling_factor_2 = '${units 3.44e10 g/m^2}' # (1.0e3)*(1.0e3)*(${tungsten_atomic_density})/(6.02e23)/(3.01604928) [gram(T)/m^2]
 
@@ -264,7 +269,7 @@ scaling_factor_2 = '${units 3.44e10 g/m^2}' # (1.0e3)*(1.0e3)*(${tungsten_atomic
   petsc_options_value = 'lu NONZERO'
   nl_rel_tol = 1e-6 # 1e-8 works for 1 cycle
   nl_abs_tol = 1e-7 # 1e-11 works for 1 cycle
-  end_time = '${fparse 50 * plasma_cycle_time}' # 50 ITER shots
+  end_time = '${fparse number_cycles * plasma_cycle_time}'
   automatic_scaling = true
   line_search = 'none'
   dtmin = 1e-4

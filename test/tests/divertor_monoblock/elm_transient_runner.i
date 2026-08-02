@@ -74,7 +74,7 @@ Postprocessors/timestep_max_pp/execute_on = 'MULTIAPP_FIXED_POINT_END FINAL'
 # There is a lot of overlap with the divertor monoblock case, but the terms defined there for the temperature profile and tritium flux are unused here.
 # Add them to the dummy postprocessor so the parser does not complain.
 Postprocessors/unused_parameters/expression := '${plasma_max_retained_t_surface_flux} + ${plasma_min_retained_t_surface_flux} + ${temperature_initial} + ${temperature_coolant_max} + ${num_sectors}
- + ${rings_H2O} + ${rings_CuCrZr} + ${rings_Cu} + ${rings_W}'
+ + ${rings_H2O} + ${rings_CuCrZr} + ${rings_Cu} + ${rings_W} + ${number_cycles}'
 
 [Postprocessors]
   [time_max_T_W]
