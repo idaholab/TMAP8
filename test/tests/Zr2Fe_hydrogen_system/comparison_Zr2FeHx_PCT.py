@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
+from matplotlib.lines import Line2D
 
 # ------------------------------------------------------------------------------
 # Setup
@@ -99,7 +100,7 @@ for Tc, Tk in zip(TEMPERATURES_C, TEMPERATURES_K):
         print(f"Missing required columns in {f}")
         continue
 
-    # Convert units/values (bar→Pa, wt%→atomic ratio)
+    # Convert units/values (bar to Pa, wt% to atomic ratio)
     AR = atom_ratio_wtpct_to_atomic(df[COL_ATOM_RATIO_WTPCT])
     P = pressure_bar_to_pa(df[COL_PRESSURE_BAR])
 
@@ -122,8 +123,10 @@ for Tk in TEMPERATURES_K:
     plt.plot(df[COL_ATOM_RATIO], df[COL_PRESSURE_PA])
 
 plt.yscale("log")
-plt.xlabel("Atomic Ratio H/Zr₂Fe (-)")
-plt.ylabel("Partial Pressure (Pa)")
+plt.xlabel("Atomic Ratio H/Zr₂Fe (-)", fontsize=14)
+plt.ylabel("Partial Pressure (Pa)", fontsize=14)
+plt.xticks(fontsize=14)  # X-tick labels font size
+plt.yticks(fontsize=14)  # Y-tick labels font size
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
@@ -166,26 +169,26 @@ def overlay_tmap(dfp, ax):
 # ------------------------------------------------------------------------------
 # MAPE helper (for the TMAP8 low-to-high sweep panel)
 # ------------------------------------------------------------------------------
-def compute_mape(ar_t, p_t, ar_e, p_e):
+def compute_mape(atomic_ratio_TMAP, pressure_TMAP, atomic_ratio_exp, pressure_exp):
     # Sort the TMAP8 curve
-    ar_t = ar_t[np.argsort(ar_t)]
-    p_t = p_t[np.argsort(ar_t)]
+    atomic_ratio_TMAP = atomic_ratio_TMAP[np.argsort(atomic_ratio_TMAP)]
+    pressure_TMAP = pressure_TMAP[np.argsort(atomic_ratio_TMAP)]
     # Sort the Experimental curve
-    ar_e = ar_e[np.argsort(ar_e)]
-    p_e = p_e[np.argsort(p_e)]
+    atomic_ratio_exp = atomic_ratio_exp[np.argsort(atomic_ratio_exp)]
+    pressure_exp = pressure_exp[np.argsort(pressure_exp)]
 
     # Determine the overlapping x-range between the two curves
-    lo = max(ar_e.min(), ar_t.min())
-    hi = min(ar_e.max(), ar_t.max())
+    lo = max(atomic_ratio_exp.min(), atomic_ratio_TMAP.min())
+    hi = min(atomic_ratio_exp.max(), atomic_ratio_TMAP.max())
 
     # Keep only experimental points that fall within the overlapping range
-    mask = (ar_e >= lo) & (ar_e <= hi)
-    ar_e2 = ar_e[mask]
-    p_e2 = p_e[mask]
+    mask = (atomic_ratio_exp >= lo) & (atomic_ratio_exp <= hi)
+    atomic_ratio_exp2 = atomic_ratio_exp[mask]
+    pressure_exp2 = pressure_exp[mask]
 
     # Interpolate experimental curve values at the x-locations of TMAP8 curves
-    p_interp = np.interp(ar_e2, ar_t, p_t)
-    return np.mean(np.abs((p_interp - p_e2) / p_e2)) * 100
+    p_interp = np.interp(atomic_ratio_exp2, atomic_ratio_TMAP, pressure_TMAP)
+    return np.mean(np.abs((p_interp - pressure_exp2) / pressure_exp2)) * 100
 
 
 # ----------------------------------------------------------------------------
@@ -195,7 +198,7 @@ def compute_mape(ar_t, p_t, ar_e, p_e):
 base = Path(__file__).resolve().parent
 exp_dir = base / "PCT_data"
 
-fig, ax = plt.subplots(figsize=(12, 8))
+fig, ax = plt.subplots(figsize=(12, 9))
 
 
 rmse_by_temperature = {}
@@ -270,30 +273,58 @@ for Tk in TEMPERATURES_K:
     )
 
 ax.set_yscale("log")
-ax.set_xlabel("Atomic Ratio H/Zr₂Fe (-)")
-ax.set_ylabel("Partial Pressure (Pa)")
+ax.set_xlabel("Atomic Ratio H/Zr₂Fe (-)", fontsize=14)
+ax.set_ylabel("Partial Pressure (Pa)", fontsize=14)
 ax.grid(True, ls="--", alpha=0.6)
 
-# ---- Reorder legend: Data, Fit, TMAP8 single-point (x's), TMAP8 sweep curves ----
+
+# ---- Group into Data / Fit / TMAP8 ----
 handles, labels = ax.get_legend_handles_labels()
 
+data_h, data_l, fit_h, fit_l, tmap_h, tmap_l = [], [], [], [], [], []
 
-def legend_rank(label):
-    if "Data" in label:
-        return 0
-    if "Fit RMSE" in label:
-        return 1
-    if label.startswith("TMAP8") and "Pa" in label:  # single-point x markers
-        return 2
-    return 3
+for h, l in zip(handles, labels):
+    if "Data" in l:
+        data_h.append(h)
+        data_l.append(l)
+    elif "Fit RMSE" in l:
+        fit_h.append(h)
+        fit_l.append(l)
+    else:
+        tmap_h.append(h)
+        tmap_l.append(l)
+
+# ---- Pad shorter columns with invisible entries so columns align ----
+n_rows = max(len(data_h), len(fit_h), len(tmap_h))
 
 
-order = sorted(range(len(labels)), key=lambda i: legend_rank(labels[i]))
-handles = [handles[i] for i in order]
-labels = [labels[i] for i in order]
+def pad(hs, ls, n):
+    blank = Line2D([], [], color="none")
+    hs = hs + [blank] * (n - len(hs))
+    ls = ls + [""] * (n - len(ls))
+    return hs, ls
 
-ax.legend(handles, labels, bbox_to_anchor=(1.5, 1.02), fontsize=8)
 
+data_h, data_l = pad(data_h, data_l, n_rows)
+fit_h, fit_l = pad(fit_h, fit_l, n_rows)
+tmap_h, tmap_l = pad(tmap_h, tmap_l, n_rows)
+
+# Column-major concatenation: col1=Data, col2=Fit, col3=TMAP8
+handles = data_h + fit_h + tmap_h
+labels = data_l + fit_l + tmap_l
+
+ax.legend(
+    handles,
+    labels,
+    loc="upper center",
+    bbox_to_anchor=(0.5, -0.15),
+    ncol=3,
+    fontsize=14,
+    handletextpad=0.6,
+    columnspacing=1.2,
+)
+plt.xticks(fontsize=14)  # X-tick labels font size
+plt.yticks(fontsize=14)  # Y-tick labels font size
 fig.tight_layout()
-plt.savefig("Zr2FeHx_PCT_combined.png", dpi=FIG_DPI)
+plt.savefig("Zr2FeHx_PCT_combined.png", dpi=FIG_DPI, bbox_inches="tight")
 plt.close(fig)
