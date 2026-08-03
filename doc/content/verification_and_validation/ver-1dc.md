@@ -4,7 +4,7 @@
 
 ## Test Description
 
-This verification problem is taken from [!cite](ambrosek2008verification) and builds on the capabilities verified in [ver-1d](ver-1d.md). However, in the current case, there are three different types of traps. This case is simulated in [/ver-1dc.i].
+This verification problem is taken from [!cite](ambrosek2008verification) and builds on the capabilities verified in [ver-1d](ver-1d.md). However, in the current case, there are three different types of traps. This case is simulated in [!file](/ver-1dc.i).
 
 This problem models permeation through a membrane with a constant source in which three trap populations are present. We solve the following equations
 
@@ -156,13 +156,13 @@ The expected quadratic convergence rate of the $L_2$ error is observed, hence ve
 ## Input files
 
 This case contains several input files.
-For the verification using the comparison against the analytical solutions, the input file can be found at [/ver-1dc.i].
-For the verification using the MMS, the input file can be found at [/ver-1dc_mms.i].
-The [ver-1dc/test.py] script runs the MMS test using [/ver-1dc_mms.i].
-Note that both input files utilize the base input file [/ver-1dc_base.i], which contains all the objects that both verification approach share.
-Using a base input file such as [/ver-1dc_base.i] reduces redundancy, eases maintenance, and ensures consistency between the two verification set ups.
+For the verification using the comparison against the analytical solutions, the input file can be found at [!file](/ver-1dc.i).
+For the verification using the MMS, the input file can be found at [!file](/ver-1dc_mms.i).
+The [!file](ver-1dc/test.py) script runs the MMS test using [!file](/ver-1dc_mms.i).
+Note that both input files utilize the base input file [!file](/ver-1dc_base.i), which contains all the objects that both verification approach share.
+Using a base input file such as [!file](/ver-1dc_base.i) reduces redundancy, eases maintenance, and ensures consistency between the two verification set ups.
 
-Note that to limit the computational costs of the test cases, the tests run a version of [/ver-1dc.i] with a coarser mesh and fewer time steps.
-More information about the changes can be found in the test specification file for this case [/ver-1dc/tests].
+Note that to limit the computational costs of the test cases, the tests run a version of [!file](/ver-1dc.i) with a coarser mesh and fewer time steps.
+More information about the changes can be found in the test specification file for this case [!file](/ver-1dc/tests).
 
 !bibtex bibliography

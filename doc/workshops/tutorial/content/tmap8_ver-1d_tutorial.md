@@ -305,6 +305,7 @@ The output can then be visualized using ParaView, or by using the `comparison_ve
 
 !media comparison_ver-1dd.py
        image_name=ver-1dd_comparison_diffusion.png
+       alt=Verification case ver-1dd diffusion comparison plot
        style=display:block;box-shadow:none;width:55%;margin-left:auto;margin-right:auto;
 
 - Breakthrough time: $\tau_b = 0.05$ seconds (both analytical and TMAP8)
@@ -661,6 +662,7 @@ As a reminder, the trapping parameter $\zeta$ is the key discriminant to which r
 
 !media comparison_ver-1d.py
        image_name=ver-1d_comparison_diffusion.png
+       alt=Verification case ver-1d diffusion-limited comparison plot
        style=display:block;box-shadow:none;width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
 
 - Trapping slows but doesn't stop diffusion
@@ -672,6 +674,7 @@ As a reminder, the trapping parameter $\zeta$ is the key discriminant to which r
 
 !media comparison_ver-1d.py
        image_name=ver-1d_comparison_trapping.png
+       alt=Verification case ver-1d trap-limited comparison plot
        style=display:block;box-shadow:none;width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
 
 - Must fill traps before significant permeation
@@ -777,6 +780,7 @@ Three traps that are relatively weak are assumed to be active in the slab. Other
 
 !media comparison_ver-1dc.py
        image_name=ver-1dc_comparison_diffusion.png
+       alt=Verification case ver-1dc diffusion comparison plot
        style=display:block;box-shadow:none;width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
 
 - Breakthrough time: 4.04 s (analytical) vs 4.12 s (TMAP8)
@@ -818,6 +822,7 @@ Application of functions to Kernels/NodalKernels/BCs to "force" exact solution:
 
 !media spatial_mms.py
        image_name=ver-1dc-mms-spatial.png
+       alt=Verification case ver-1dc spatial MMS convergence plot
        style=display:block;box-shadow:none;width:60%;margin-bottom:2%;margin-left:auto;margin-right:auto
 
 - 10 levels of mesh refinement
@@ -836,6 +841,7 @@ All three cases use the same diffusivity for different traps.
 
 !media comparison_ver-1dd.py
        image_name=ver-1dd_comparison_diffusion.png
+       alt=Verification case ver-1dd diffusion comparison plot
        style=display:block;box-shadow:none;width:100%;margin-bottom:2%;margin-left:auto;margin-right:auto
        caption=Case 1: Diffusion only.
 
@@ -845,6 +851,7 @@ All three cases use the same diffusivity for different traps.
 
 !media comparison_ver-1d.py
        image_name=ver-1d_comparison_diffusion.png
+       alt=Verification case ver-1d diffusion-limited comparison plot
        style=display:block;box-shadow:none;width:100%;margin-bottom:2%;margin-left:auto;margin-right:auto
        caption=Case 2: One trap, \\ diffusion-limited regime.
 
@@ -854,6 +861,7 @@ All three cases use the same diffusivity for different traps.
 
 !media comparison_ver-1dc.py
        image_name=ver-1dc_comparison_diffusion.png
+       alt=Verification case ver-1dc diffusion comparison plot
        style=display:block;box-shadow:none;width:100%;margin-bottom:2%;margin-left:auto;margin-right:auto
        caption=Case 3: three traps, \\ diffusion-limited regime.
 

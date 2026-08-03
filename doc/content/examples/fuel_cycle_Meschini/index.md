@@ -166,7 +166,7 @@ The data file from [!cite](meschini2023modeling) for a 3 year simulation has a l
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/fuel_cycle_Meschini/fuel_cycle.i]. Similar to the [previous fuel cycle model](examples/fuel_cycle_Abdou/index.md), we initialize the tritium mass for all systems at 0 kg, except for the storage system, which is initialized with an `initial_inventory` of 1.14 kg.
+The input file for this case can be found at [!file](/fuel_cycle_Meschini/fuel_cycle.i). Similar to the [previous fuel cycle model](examples/fuel_cycle_Abdou/index.md), we initialize the tritium mass for all systems at 0 kg, except for the storage system, which is initialized with an `initial_inventory` of 1.14 kg.
 
 !listing test/tests/fuel_cycle_Meschini/fuel_cycle.i link=false block=Variables
 
@@ -174,7 +174,7 @@ In the [`ScalarKernels`](/syntax/ScalarKernels) block, the ODEs for the 11 syste
 
 !listing test/tests/fuel_cycle_Meschini/fuel_cycle.i link=false block=ScalarKernels
 
-In the [`Functions`](/syntax/Functions) block, we create functions to simulate the period influenced by the availability factor and ensures the time interval is shorter than this period. However, the input file used for testing considers an averaged tritium breeding ratio instead of a period to increase the time interval and reduce computational costs. During testing, the simulation uses the period to represent the availability factor before `initial_refinement_time` and switches to using the averaged value after `initial_refinement_time`. More information about the changes can be found in the test specification file at [/fuel_cycle_Meschini/tests].
+In the [`Functions`](/syntax/Functions) block, we create functions to simulate the period influenced by the availability factor and ensures the time interval is shorter than this period. However, the input file used for testing considers an averaged tritium breeding ratio instead of a period to increase the time interval and reduce computational costs. During testing, the simulation uses the period to represent the availability factor before `initial_refinement_time` and switches to using the averaged value after `initial_refinement_time`. More information about the changes can be found in the test specification file at [!file](/fuel_cycle_Meschini/tests).
 
 !listing test/tests/fuel_cycle_Meschini/fuel_cycle.i link=false block=Functions
 

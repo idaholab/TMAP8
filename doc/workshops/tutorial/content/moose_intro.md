@@ -7,7 +7,7 @@
 !row!
 !col! width=50%
 
-!media large_media/tutorials/darcy_thermo_mech/moose_intro.png
+!media large_media/tutorials/darcy_thermo_mech/moose_intro.png alt=MOOSE framework introduction diagram
 
 !col-end!
 
@@ -31,7 +31,7 @@
 !row!
 !col! width=50%
 
-!media large_media/tutorials/darcy_thermo_mech/moose_systems.png
+!media large_media/tutorials/darcy_thermo_mech/moose_systems.png alt=MOOSE framework systems diagram
 
 !col-end!
 
@@ -60,7 +60,7 @@
 
 # MOOSE Framework: Applications
 
-!media large_media/tutorials/darcy_thermo_mech/moose_herd_2022.png style=width:100%;margin-left:auto;margin-right:auto;display:block;
+!media large_media/tutorials/darcy_thermo_mech/moose_herd_2022.png alt=MOOSE workshop group photo style=width:100%;margin-left:auto;margin-right:auto;display:block;
 
 !---
 
@@ -110,7 +110,7 @@ Let's assume one wants to model hydrogen and tritium transport through the metal
 The model would include diffusion, decay, and reactions between diatomic molecules inside the pipe; surface reactions at the inner and outer walls; and diffusion, decay, and trapping for single atoms in the walls.
 The figure below illustrates the case and specifies how MOOSE's systems would apply when constructing the case in a MOOSE input file:
 
-!media figures/TMAP8_workshop_case_illustration.png style=display:block;margin-left:auto;margin-right:auto;width:80%;
+!media figures/TMAP8_workshop_case_illustration.png alt=TMAP8 workshop case illustration style=display:block;margin-left:auto;margin-right:auto;width:80%;
 
 !---
 
@@ -138,7 +138,7 @@ MOOSE solves PDEs using the Galerkin finite element method (the finite volume me
 
 # Example: Strong form, weak form, and implementation
 
-!media large_media/tutorials/darcy_thermo_mech/moose_code.png style=display:block;margin-left:auto;margin-right:auto;
+!media large_media/tutorials/darcy_thermo_mech/moose_code.png alt=MOOSE code example diagram style=display:block;margin-left:auto;margin-right:auto;
 
 !---
 

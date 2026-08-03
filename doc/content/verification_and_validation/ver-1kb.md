@@ -83,6 +83,6 @@ The kinetics observed in our results differ from those presented in TMAP7. We at
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/ver-1kb.i], which is also used as tests in TMAP8 at [/ver-1kb/tests].
+The input file for this case can be found at [!file](/ver-1kb.i), which is also used as tests in TMAP8 at [!file](/ver-1kb/tests).
 
 !bibtex bibliography

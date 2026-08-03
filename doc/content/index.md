@@ -2,7 +2,7 @@
 
 &nbsp;
 
-!media figures/TMAP8_logo/TMAP8_vertical_blue.png dark_src=figures/TMAP8_logo/TMAP8_vertical_white.png style=display:block;margin-left:auto;margin-right:auto;width:30%;
+!media figures/TMAP8_logo/TMAP8_vertical_blue.png dark_src=figures/TMAP8_logo/TMAP8_vertical_white.png alt=TMAP8 logo style=display:block;margin-left:auto;margin-right:auto;width:30%;
 
 # Tritium Migration Analysis Program, Version 8 class=center style=font-weight:200;font-size:200%
 
@@ -48,7 +48,7 @@ that permits the solution of coupled physics problems of varying size and dimens
 These can be solved using computer hardware appropriate for the model size, ranging from
 laptops and workstations to large high performance computers.
 
-!media large_media/framework/inl_blue.png style=float:right;width:20%;margin-left:30px;
+!media large_media/framework/inl_blue.png alt=Idaho National Laboratory logo style=float:right;width:20%;margin-left:30px;
 
 Code reliability is a central principle in code development, and this project
 employs a well-defined development and testing strategy.  Code changes are only

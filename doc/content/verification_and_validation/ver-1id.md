@@ -8,7 +8,7 @@ The [theory_manual.md] page describes the `surfdep` model and other surface mode
 
 ## General Case Description
 
-This verification problem is taken from [!cite](ambrosek2008verification) and builds on [ver-1ic](ver-1ic.md). The configuration and modeling parameters are the same as in [ver-1ic](ver-1ic.md), except that, in the current case, the reaction has a high barrier energy. The case is simulated in [/ver-1ic.i], but $E_x$ is set to 0.20 eV instead of 0.05 eV.
+This verification problem is taken from [!cite](ambrosek2008verification) and builds on [ver-1ic](ver-1ic.md). The configuration and modeling parameters are the same as in [ver-1ic](ver-1ic.md), except that, in the current case, the reaction has a high barrier energy. The case is simulated in [!file](/ver-1ic.i), but $E_x$ is set to 0.20 eV instead of 0.05 eV.
 
 ## Analytical solution
 
@@ -39,6 +39,6 @@ A comparison of the AB concentration as a function of time is plotted in [ver-1i
 ## Input files
 
 !style halign=left
-The input file for this case can be obtained by updating the adsorption barrier energy $E_x$ in [/ver-1ic.i], which is the approach used to create tests in TMAP8 at [/ver-1id/tests].
+The input file for this case can be obtained by updating the adsorption barrier energy $E_x$ in [!file](/ver-1ic.i), which is the approach used to create tests in TMAP8 at [!file](/ver-1id/tests).
 
 !bibtex bibliography

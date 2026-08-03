@@ -42,6 +42,6 @@ A comparison of the temperature calculated through TMAP8 and calculated analytic
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/ver-1fa.i], which is also used as test in TMAP8 at [/ver-1fa/tests].
+The input file for this case can be found at [!file](/ver-1fa.i), which is also used as test in TMAP8 at [!file](/ver-1fa/tests).
 
 !bibtex bibliography

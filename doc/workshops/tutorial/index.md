@@ -3,7 +3,7 @@
 !style halign=center fontsize=120%
 !datetime today format=%B %Y
 
-!media figures/TMAP8_logo/TMAP8_vertical_blue.png style=display:block;box-shadow:none;margin-left:auto;margin-right:auto;width:30%;
+!media figures/TMAP8_logo/TMAP8_vertical_blue.png alt=TMAP8 logo style=display:block;box-shadow:none;margin-left:auto;margin-right:auto;width:30%;
 
 !style halign=center
 [https://mooseframework.inl.gov/TMAP8/](https://mooseframework.inl.gov/TMAP8/)
@@ -87,4 +87,4 @@
 
 !---
 
-!media large_media/framework/inl_blue.png style=display:block;box-shadow:none;width:50%;margin-left:auto;margin-right:auto;
+!media large_media/framework/inl_blue.png alt=Idaho National Laboratory logo style=display:block;box-shadow:none;width:50%;margin-left:auto;margin-right:auto;
