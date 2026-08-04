@@ -158,7 +158,7 @@ and the darker lines are the results from the model. The agreement is quite good
 
 #### How to run
 
-This example can be run from three different driver input files, an [!file text=explicit model](tests/fuel_cycle_Abdou/fuel_cycle.i) using [`ParsedODEKernel`](scalarkernels/ParsedODEKernel.md) and two class-based models which leverage [`FuelCycleSystemScalarKernel`](scalarkernels/FuelCycleSystemScalarKernel.md), one [!file text=with](tests/fuel_cycle_Abdou/fuel_cycle_abdou_generic_AD.i) and one [!file text=without](tests/fuel_cycle_Abdou/fuel_cycle_abdou_generic.i) automatic differentiation. As there is significant overlap between the two models, they both use the `!include` syntax to import common terms from a [!file text=base file](tests/fuel_cycle_Abdou/fuel_cycle_abdou_base.i).
+This example can be run from three different driver input files: an explicit model, [!file](tests/fuel_cycle_Abdou/fuel_cycle.i), using [`ParsedODEKernel`](scalarkernels/ParsedODEKernel.md), and two class-based models which leverage [`FuelCycleSystemScalarKernel`](scalarkernels/FuelCycleSystemScalarKernel.md), one with automatic differentiation, [!file](tests/fuel_cycle_Abdou/fuel_cycle_abdou_generic_AD.i), and one without automatic differentiation, [!file](tests/fuel_cycle_Abdou/fuel_cycle_abdou_generic.i). As there is significant overlap between the two models, they both use the `!include` syntax to import common terms from the base file [!file](tests/fuel_cycle_Abdou/fuel_cycle_abdou_base.i).
 
 ### Python-based Interactive Script
 
