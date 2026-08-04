@@ -3,7 +3,7 @@
 TMAP8 is used to model hydrogen transport and permeation through an aluminum-clad used nuclear fuel (AUNF) mini-canister storage device from Savannah River National Laboratory (SRNL) [!citep](d'entremont2024aunfminicanister). The mini-canisters house irradiated AUNF assemblies where gamma and neutron radiation from the fuel drives radiolytic decomposition of water, generating H$_2$ gas. Over time, this hydrogen will dissociate and diffuse through the surrounding 304 stainless steel wall, raising concern for potential accumulation. This example demonstrates how TMAP8 can model these processes through two distinct input files with varying degrees of fidelity:
 
 1. [steel_only.i] — isolates hydrogen diffusion through the steel wall with an assumed boundary partial pressure. This simpler model permits verification against an analytical solution, assuming time-independent Dirichlet boundary conditions.
-2. [gas_steel.i] — simulates the full system: radiolytic H$_2$ generation, gas-phase transport inside the canister, and simultaneous permeation through the steel wall. This model is validated against SRNL experimental measurements [!citep](d'entremont2024aunfminicanister).
+2. [gas_steel.i] — simulates the full system: radiolytic H$_2$ generation, gas-phase transport inside the canister, and simultaneous permeation through the steel wall. This model is compared against SRNL experimental measurements [!citep](d'entremont2024aunfminicanister).
 
 Both models share the same 1D axisymmetric geometry and material parameters for the steel wall. The progression from [steel_only.i] to [gas_steel.i] illustrates the flexibility of TMAP8 in building complexity incrementally.
 
@@ -115,6 +115,8 @@ C_s(r_i + \delta, t) = 0.
 Because the steel-only problem is linear (constant diffusivity, linear Sieverts' BC), [steel_only.i] uses `solve_type = LINEAR` for a direct LU factorization at each timestep. The simulation runs for 0.25 years (≈ 91.3 days) using a [BDF2.md] time integration scheme.
 
 ### Model Parameters
+
+[tab:steel_only_params] lists the steel-only model parameters and simulation conditions. 
 
 !table id=tab:steel_only_params caption=Steel-only model parameters and simulation conditions.
 | Parameter | Description | Value | Units | Reference |
@@ -228,7 +230,7 @@ Because the interface is nonlinear, [gas_steel.i] uses `solve_type = Newton`. Th
 #### Gas-Phase Hydrogen Yield Calculations
 
 !style halign=left
-[fig:gas_yield] compares the total atomic hydrogen mass in the gas phase (`inner_cylinder_total_mass_gas`) against the cumulative H$_2$ yield measured by SRNL [!citep](d'entremont2024aunfminicanister). Agreement between the simulation and experiment reflects the accuracy of the power-law source model ([eq:H2_yield]). It is important to note that the simulation results are compared against data that is fed into the model. Future work will include a more complex generation model independent of this data.
+[fig:gas_yield] compares the total atomic hydrogen mass in the gas phase (`inner_cylinder_total_mass_gas`) against the cumulative H$_2$ yield measured by SRNL [!citep](d'entremont2024aunfminicanister). Agreement between the simulation and experiment reflects the accuracy of the power-law source model ([eq:H2_yield]). It is important to note that the simulation results are compared against data that is fed into the model, which does not enable this effort to be considered a validation. Future work will include a more complex generation model independent of this data.
 
 !media comparison_mini_canister.py
   image_name=gas_phase_validation.png
