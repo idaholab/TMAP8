@@ -22,7 +22,7 @@ estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}'
     nx = ${num_elements_steel}
     xmin = '${inner_radius}'
     xmax = '${total_radius}'
-    bias_x = 1.10
+    bias_x = 1.022
     subdomain_ids = '1'
   []
 []
