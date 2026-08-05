@@ -22,6 +22,7 @@ estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}'
     nx = ${num_elements_steel}
     xmin = '${inner_radius}'
     xmax = '${total_radius}'
+    bias_x = 1.10
     subdomain_ids = '1'
   []
 []
@@ -126,7 +127,7 @@ estimated_pressure_gas = '${units ${fparse 24*0.10} psi -> Pa}'
   [annulus_time_integrated_flux]
     type = TimeIntegratedPostprocessor
     value = annulus_flux_difference
-    time_integration_scheme = IMPLICIT-EULER
+    time_integration_scheme = TRAPEZOIDAL-RULE
     outputs = none
   []
 

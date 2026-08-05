@@ -24,7 +24,7 @@ Both models represent the canister as a 1D axisymmetric domain in cylindrical co
 | Steel wall thickness, $\mathbf{\delta}$ | $\mathbf{2.16}$ | mm |
 | Canister height, $\mathbf{h}$ | $\mathbf{179.3}$ | mm |
 
-In [steel_only.i], the 1D mesh spans only the steel wall, from $r_i$ to $r_i+\delta$, using a single [GeneratedMeshGenerator.md] with 1,500 elements (subdomain 1). In [gas_steel.i], a [CartesianMeshGenerator.md] produces two adjacent blocks: the gas block (subdomain 0) from $r = 0$ to $r = r_i$ with 250 elements, and the steel block (subdomain 1) from $r = r_i$ to $r = r_i + \delta$ with 1,500 elements. Two [SideSetsBetweenSubdomainsGenerator.md] steps then create the named interface sidesets `interface_gas_to_steel` and `interface_steel_to_gas` that are required for the [InterfaceSorption.md] kernel.
+In [steel_only.i], the 1D mesh spans only the steel wall, from $r_i$ to $r_i+\delta$, using a single [GeneratedMeshGenerator.md] with 300 elements (subdomain 1). A bias is applied so that elements closer to the gas-steel boundary are smaller while elements further away are larger. In [gas_steel.i], a [CartesianMeshGenerator.md] produces two adjacent blocks: the gas block (subdomain 0) from $r = 0$ to $r = r_i$ with 25 elements, and the steel block (subdomain 1) from $r = r_i$ to $r = r_i + \delta$ with 300 elements. Two [SideSetsBetweenSubdomainsGenerator.md] steps then create the named interface sidesets `interface_gas_to_steel` and `interface_steel_to_gas` that are required for the [InterfaceSorption.md] kernel.
 
 In [steel_only.i], the mesh is defined as:
 
@@ -89,7 +89,7 @@ K_s(T) = K_{s,0} \exp\!\left( - \frac{E_{K}}{RT} \right).
 \end{equation}
 
 !style halign=left
-The H$_2$ partial pressure $P$ is provided by a function selected via the `pressure_function` input parameter. A nonexhaustive set of implementations include: (1) a power-law fit to experimental SRNL pressure data (`SRNL_pressure`) calculated using a power-law least-squares fit, used as the default for validation (see [fig:partial_pressure] and [fig:gas_yield]) and for the conservation-of-mass check (see [fig:steel_conservation]):
+The H$_2$ partial pressure $P$ is provided by a function selected via the `pressure_function` input parameter. A nonexhaustive set of implementations include: (1) a power-law fit to experimental SRNL pressure data (`SRNL_pressure`) calculated using a power-law least-squares fit, used as the default for comparison to data (see [fig:partial_pressure] and [fig:gas_yield]) and for the conservation-of-mass check (see [fig:steel_conservation]):
 
 \begin{equation} \label{eq:srnl_pressure}
 P = P_{\text{SRNL}}\left(t\right) \coloneqq 376.7588 \, t^{0.6177} \quad \text{Pa},
@@ -112,11 +112,11 @@ C_s(r_i + \delta, t) = 0.
 ### Solver
 
 !style halign=left
-Because the steel-only problem is linear (constant diffusivity, linear Sieverts' BC), [steel_only.i] uses `solve_type = LINEAR` for a direct LU factorization at each timestep. The simulation runs for 0.25 years (≈ 91.3 days) using a [BDF2.md] time integration scheme.
+Because the steel-only problem is linear (constant diffusivity, linear Sieverts' BC), [steel_only.i] uses `solve_type = LINEAR` for a direct LU factorization at each timestep. The simulation runs for 0.25 years (≈ 91.3 days) using a [BDF2.md] time integration scheme equipped with an iterative timestepper [IterationAdaptiveDT.md].
 
 ### Model Parameters
 
-[tab:steel_only_params] lists the steel-only model parameters and simulation conditions. 
+[tab:steel_only_params] lists the steel-only model parameters and simulation conditions.
 
 !table id=tab:steel_only_params caption=Steel-only model parameters and simulation conditions.
 | Parameter | Description | Value | Units | Reference |
@@ -132,15 +132,13 @@ Because the steel-only problem is linear (constant diffusivity, linear Sieverts'
 #### Conservation of Mass
 
 !style halign=left
-As an internal consistency check, the total hydrogen mass integrated over the steel domain (`annular_cylinder_total_mass_steel`) is compared against the time-integrated net diffusive flux across the inner and outer boundaries (`annular_cylinder_time_integrated_flux`). Both integrals are weighted for the axisymmetric cylindrical geometry and then scaled by the canister height $h$ to represent 3D mass in $\mathrm{\mu}$mol H. [fig:steel_conservation] shows the percent difference between the two quantities, defined as $\left|\,\mathrm{flux}/\mathrm{mass} - 1\,\right| \times 100\,\%$. The metric is highly sensitive to the postprocessors' small values within the first few timesteps, but quickly converges to a small value, and can be further reduced by refining the mesh and timestep.
+As an internal consistency check, the total hydrogen mass integrated over the steel domain (`annular_cylinder_total_mass_steel`) is compared against the time-integrated net diffusive flux across the inner and outer boundaries (`annular_cylinder_time_integrated_flux`). Both integrals are weighted for the axisymmetric cylindrical geometry and then scaled by the canister height $h$ to represent 3D mass in $\mathrm{\mu}$mol H. [fig:steel_conservation] shows a two-panel conservation check. Before the accumulated H mass exceeds 1 percent of the total final hydrogen yield, absolute error $\left|\,\mathrm{flux}-\mathrm{mass}\,\right|$ is shown (top panel) to avoid noise from near-zero denominators at early times. Once the threshold is crossed, the relative percent difference between the two quantities, defined as $\left|\,\mathrm{flux}/\mathrm{mass} - 1\,\right| \times 100\,\%$ is calculated. The metric is highly sensitive to the postprocessors' small values within the first few timesteps, but quickly converges to a small value.
 
 !media comparison_mini_canister.py
   image_name=steel_only_conservation_of_mass.png
   style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
   id=fig:steel_conservation
-  caption= Steel-only conservation of mass.
-
-Conservation of mass for the steel-only model: percent difference $\left|\,\mathrm{flux}/\mathrm{mass} - 1\,\right| \times 100\,\%$ between the accumulated boundary flux and the total H mass in the steel domain for $t>1$ day.
+  caption= Conservation of mass for the steel-only model: percent difference $\left|\,\mathrm{flux}/\mathrm{mass} - 1\,\right| \times 100\,\%$. Absolute error is shown before the accumulated mass exceeds 1% of the total hydrogen yield (top); relative percent difference is shown thereafter (bottom).
 
 #### Diffusion Front Verification
 
@@ -219,13 +217,13 @@ Because the interface is nonlinear, [gas_steel.i] uses `solve_type = Newton`. Th
 #### Conservation of Mass
 
 !style halign=left
-[fig:gas_steel_conservation] verifies conservation of mass in the gas-steel model by comparing the total hydrogen mass in the domain (`cylinder_total_mass`, the sum of gas and steel masses) against the sum of the time-integrated boundary flux (`cylinder_time_integrated_flux`) and the cumulative source term (`cylinder_total_generation`). Throughout, all quantities are tracked in $\mathrm{\mu}$mol H atoms. The figure plots the percent difference between the two quantities, defined similarly to before as $\left|\,(\mathrm{flux}+\mathrm{source})/\mathrm{mass} - 1\,\right| \times 100\,\%$. The metric remains small, confirming that mass contributions from the coupled gas-generation, gas-phase transport, interface transfer, and steel diffusion are all consistently accounted for.
+[fig:gas_steel_conservation] verifies conservation of mass in the gas-steel model by comparing the total hydrogen mass in the gas and steel (`cylinder_total_mass`) against the sum of the time-integrated boundary flux (`cylinder_time_integrated_flux`) and the cumulative source term (`cylinder_total_generation`). Throughout, all quantities are tracked in $\mathrm{\mu}$mol H atoms. The figure plots the percent difference between the two quantities, defined as $\left|\,(\mathrm{flux}+\mathrm{source})/\mathrm{mass} - 1\,\right| \times 100\,\%$. Before the accumulated H mass exceeds 1 percent of the total final hydrogen yield, absolute error $\left|\,\mathrm{flux}+\mathrm{source}-\mathrm{mass}\,\right|$ is once again shown (top panel) to avoid noise from near-zero denominators at early times. Once the threshold is crossed, the relative percent difference between the two quantities is calculated. The metric remains small, confirming that mass contributions from the coupled gas-generation, gas-phase transport, interface transfer, and steel diffusion are all consistently accounted for.
 
 !media comparison_mini_canister.py
   image_name=gas_steel_conservation_of_mass.png
   style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
   id=fig:gas_steel_conservation
-  caption=Conservation of mass for the gas-steel model: percent difference $\left|\,(\mathrm{flux}+\mathrm{source})/\mathrm{mass} - 1\,\right| \times 100\,\%$ between the accumulated boundary flux plus source term and the total H mass in the domain for $t>1$ day.
+  caption=Conservation of mass for the gas-steel model: percent difference $\left|\,(\mathrm{flux}+\mathrm{source})/\mathrm{mass} - 1\,\right| \times 100\,\%$. Absolute error is shown before the accumulated mass exceeds 1% of the total hydrogen yield (top); relative percent difference is shown thereafter (bottom).
 
 #### Gas-Phase Hydrogen Yield Calculations
 
@@ -233,7 +231,7 @@ Because the interface is nonlinear, [gas_steel.i] uses `solve_type = Newton`. Th
 [fig:gas_yield] compares the total atomic hydrogen mass in the gas phase (`inner_cylinder_total_mass_gas`) against the cumulative H$_2$ yield measured by SRNL [!citep](d'entremont2024aunfminicanister). Agreement between the simulation and experiment reflects the accuracy of the power-law source model ([eq:H2_yield]). It is important to note that the simulation results are compared against data that is fed into the model, which does not enable this effort to be considered a validation. Future work will include a more complex generation model independent of this data.
 
 !media comparison_mini_canister.py
-  image_name=gas_phase_validation.png
+  image_name=gas_phase_comparison.png
   style=width:50%;margin-bottom:2%;margin-left:auto;margin-right:auto
   id=fig:gas_yield
   caption=Comparison of TMAP8 total gas-phase hydrogen mass against SRNL experimental cumulative H$_2$ yield data.

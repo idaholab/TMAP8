@@ -9,7 +9,7 @@ gas_volume = '${units ${fparse pi*inner_radius^2*height} mm^3}'
 # H2 diffusivity in He backfill
 diffusivity_H2_in_He = '${units 2.7 cm^2/s -> mm^2/day}'
 # Numerics
-num_elements_gas = 250
+num_elements_gas = 25
 
 # Shared objects between two models
 !include mini_canister_base.i
@@ -82,7 +82,7 @@ num_elements_gas = 250
 []
 
 [Functions]
-  [gas_generation_function] # Power model linear least sqaures fit to mumol vs days (assuming 124.7 Gy/min dosage rate from SRNL report)
+  [gas_generation_function] # Power model linear least sqaures fit to mumol vs days (assuming 124 Gy/min dosage rate from SRNL report)
     type = ParsedFunction
     expression = '69.7055*t^0.6808'
   []
@@ -150,7 +150,7 @@ num_elements_gas = 250
   [circle_time_integrated_flux]
     type = TimeIntegratedPostprocessor
     value = circle_flux_difference
-    time_integration_scheme = IMPLICIT-EULER
+    time_integration_scheme = TRAPEZOIDAL-RULE
     outputs = none
   []
 
