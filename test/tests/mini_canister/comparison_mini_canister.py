@@ -101,11 +101,16 @@ def plot_conservation_of_mass(t, flux, mass, filename):
     mass = np.asarray(mass, dtype=float)
 
     abs_err = np.abs(flux - mass)
-    rel_err = np.abs(
-        np.divide(flux, mass, out=np.full_like(mass, np.nan), where=mass > 0) - 1.0
-    ) * 100.00
+    rel_err = (
+        np.abs(
+            np.divide(flux, mass, out=np.full_like(mass, np.nan), where=mass > 0) - 1.0
+        )
+        * 100.00
+    )
 
-    threshold = 0.01 * mass[-1] # Switch to relative metric at the time 1% of total Hydrogen yield is achieved
+    threshold = (
+        0.01 * mass[-1]
+    )  # Switch to relative metric at the time 1% of total Hydrogen yield is achieved
     if not np.any(mass > threshold):
         raise ValueError("Hydrogen yield threshold is never achieved")
     t_switch = t[mass > threshold][0]
