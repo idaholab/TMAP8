@@ -59,6 +59,6 @@ As illustrated in [ver-1kc-1_comparison_time_k10], the pressure jump maintains a
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/ver-1kc-1.i]. To limit the computational costs of the test cases, the tests run a version of the file with a coarser mesh and less number of time steps. More information about the changes can be found in the test specification file for this case [/ver-1kc-1/tests].
+The input file for this case can be found at [!file](/ver-1kc-1.i). To limit the computational costs of the test cases, the tests run a version of the file with a coarser mesh and less number of time steps. More information about the changes can be found in the test specification file for this case [!file](/ver-1kc-1/tests).
 
 !bibtex bibliography

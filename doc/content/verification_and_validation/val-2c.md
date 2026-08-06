@@ -214,16 +214,16 @@ In both cases, the calibrated parameters are not on the extremes of the distribu
 ## Input files
 
 !style halign=left
-The input files for this case can be found at [/val-2c_immediate_injection.i] and [/val-2c_delay.i]. Note that both input files utilize a common base file [/val-2c_base.i] with the line `!include val-2c_base.i`. The base input file contains all the features and TMAP8 objects common to both cases, reducing duplication, and this allows the immediate injection and delayed injection inputs to focus on what is specific to each case. Note that both input files are also used as TMAP8 tests, outlined at [/val-2c/tests].
+The input files for this case can be found at [!file](/val-2c_immediate_injection.i) and [!file](/val-2c_delay.i). Note that both input files utilize a common base file [!file](/val-2c_base.i) with the line `!include val-2c_base.i`. The base input file contains all the features and TMAP8 objects common to both cases, reducing duplication, and this allows the immediate injection and delayed injection inputs to focus on what is specific to each case. Note that both input files are also used as TMAP8 tests, outlined at [!file](/val-2c/tests).
 
 !alert tip title=Input file include syntax information
 To learn more about the `!include` feature, refer to the [application_usage/input_syntax.md] page.
 
 For the calibration study, additional input files are provided.
 
-- [/val-2c_base_pss.i] provides key functions and postprocessor blocks necessary for the PSS study, including calculations of the multi-objective optimization metric (i.e., the time integral of $g$ defined in [eq:optimization_metric]).
-- [/val-2c_delay_pss.i] includes both [/val-2c_base_pss.i] and [/val-2c_delay.i] to generate the needed full input file for the simulation.
-- [/val-2c_pss_main.i] is the main input file for the PSS study. It defines what model parameters to vary and how, defines what approach to use, and initiates simulations using [/val-2c_delay_pss.i].
+- [!file](/val-2c_base_pss.i) provides key functions and postprocessor blocks necessary for the PSS study, including calculations of the multi-objective optimization metric (i.e., the time integral of $g$ defined in [eq:optimization_metric]).
+- [!file](/val-2c_delay_pss.i) includes both [!file](/val-2c_base_pss.i) and [!file](/val-2c_delay.i) to generate the needed full input file for the simulation.
+- [!file](/val-2c_pss_main.i) is the main input file for the PSS study. It defines what model parameters to vary and how, defines what approach to use, and initiates simulations using [!file](/val-2c_delay_pss.i).
 
 To run the PSS study in the terminal, users can perform:
 
@@ -235,8 +235,8 @@ mpirun -np 5 ~/projects/TMAP8/tmap8-opt -i val-2c_pss_main.i
 Note that this study is time consuming since a large number of simulations are being run.
 Modifying the PSS parameters can reduce the computational cost.
 
-Although a very short PSS study is simulated as a test in [/val-2c/tests] to ensure these files run properly, the full calibration study is not performed regularly in tests to limit computational costs within the TMAP8 testing suite. The gold files [/gold/val-2c_pss_results/val-2c_pss_main_out.json] and [/gold/calibrated_parameter_values.txt] are, therefore, not continuously tested, and the calibrated model parameters used in [/val-2c/tests] are not continuously updated.
+Although a very short PSS study is simulated as a test in [!file](/val-2c/tests) to ensure these files run properly, the full calibration study is not performed regularly in tests to limit computational costs within the TMAP8 testing suite. The gold files [!file](/gold/val-2c_pss_results/val-2c_pss_main_out.json) and [!file](/gold/calibrated_parameter_values.txt) are, therefore, not continuously tested, and the calibrated model parameters used in [!file](/val-2c/tests) are not continuously updated.
 
-In addition, this validation case includes tests using two time integration schemes. The `implicit-euler` scheme (first-order, single-step) provides higher stability and consistency of the solution across different operating systems and processor core counts, making it better suited for use in PSS optimization workflows where numerical stability is important. The `bdf2` scheme (second-order, multi-step) provides higher accuracy and is used for final results calculation. Both schemes are tested for this validation case in [/val-2f/tests].
+In addition, this validation case includes tests using two time integration schemes. The `implicit-euler` scheme (first-order, single-step) provides higher stability and consistency of the solution across different operating systems and processor core counts, making it better suited for use in PSS optimization workflows where numerical stability is important. The `bdf2` scheme (second-order, multi-step) provides higher accuracy and is used for final results calculation. Both schemes are tested for this validation case in [!file](/val-2f/tests).
 
 !bibtex bibliography

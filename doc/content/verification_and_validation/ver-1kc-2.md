@@ -126,6 +126,6 @@ As shown in [ver-1kc-2_mass_conservation_k10], mass is conserved between the two
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/ver-1kc-2.i].
+The input file for this case can be found at [!file](/ver-1kc-2.i).
 
 !bibtex bibliography

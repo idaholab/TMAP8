@@ -62,7 +62,7 @@ The jump between the low low high pressure occurs if the atomic fraction is equa
 
 ## Test
 
-[/ZrCoHx_PCT.i] tests the implantation of the ZrCoHx PCT curves in TMAP8.
+[!file](/ZrCoHx_PCT.i) tests the implantation of the ZrCoHx PCT curves in TMAP8.
 The domain contains two blocks: gas (left) and ZrCoHx (right) with an interface between the two blocks.
 The diffusion is for this test case is given by [!citep](yu2024hydrogen) and the surface reaction rate $K$ is taken from [!citep](jat2013hydrogen) ($K_f=K_b=K$). Note that the diffusion used is based on ZrH$_{1.58}$ hydride since there is not diffusion value on ZrCo hydride. This should not affect the end results of the test case since simulation time goes until equilibrium is achieved.
 To model the interface, the input file employs the [InterfaceDiffusion.md] object to model the flux of hydrogen at the surface, and `ADMatInterfaceReactionZrCoHxPCT` to model the steady-state condition for the hydrogen concentration at the surface $C_s$ defined by:

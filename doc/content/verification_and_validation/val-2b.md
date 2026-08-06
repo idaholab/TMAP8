@@ -98,10 +98,10 @@ To verify that the solubility ratio at the interface between the beryllium and i
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/val-2b.i].
-To achieve short regression tests (under 2 seconds walltime), the tests in [/val-2b/tests] run a version of the files with a shorter history, looser tolerance, and larger time step. More information about the changes can be found in the test specification file for this case, namely [/ver-1d/tests].
+The input file for this case can be found at [!file](/val-2b.i).
+To achieve short regression tests (under 2 seconds walltime), the tests in [!file](/val-2b/tests) run a version of the files with a shorter history, looser tolerance, and larger time step. More information about the changes can be found in the test specification file for this case, namely [!file](/ver-1d/tests).
 
 !alert note title=TMAP8 can run this case in one simulation.
-In TMAP4 and TMAP7, this case was divided in two simulations to accommodate the different model parameters used during charging and desorption (see [val-2b_parameters] ) [!citep](longhurst1992verification,ambrosek2008verification). In TMAP8, the full history is modeled in one simulation using [/val-2b.i].
+In TMAP4 and TMAP7, this case was divided in two simulations to accommodate the different model parameters used during charging and desorption (see [val-2b_parameters] ) [!citep](longhurst1992verification,ambrosek2008verification). In TMAP8, the full history is modeled in one simulation using [!file](/val-2b.i).
 
 !bibtex bibliography

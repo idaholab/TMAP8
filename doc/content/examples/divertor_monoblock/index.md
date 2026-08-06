@@ -296,7 +296,7 @@ their significance, the reader is referred to [!cite](Shimada2024114438).
   style=display:block;margin-left:auto;margin-right:auto;width:40%
 
 !alert warning title=The exodus file in `gold` is a smaller version of the output
-The input file [/divertor_monoblock.i] returns the outputs that were used in [!cite](Shimada2024114438). However, a slightly modified version of this input is run in [/divertor_monoblock/tests] as part of TMAP8's [Software Quality Assurance](sqa/index.md exact=True) process: It simulates only one pulse cycle, has a coarser mesh, and outputs the results less regularly to limit the file size. As a result, the exodus file in the test `gold` directory is a smaller version of the output generated when running the full input file.
+The input file [!file](/divertor_monoblock.i) returns the outputs that were used in [!cite](Shimada2024114438). However, a slightly modified version of this input is run in [!file](/divertor_monoblock/tests) as part of TMAP8's [Software Quality Assurance](sqa/index.md exact=True) process: It simulates only one pulse cycle, has a coarser mesh, and outputs the results less regularly to limit the file size. As a result, the exodus file in the test `gold` directory is a smaller version of the output generated when running the full input file.
 
 Note that the current model has been utilized in a follow up study to perform a sensitivity study on material properties and operation conditions, for which the documentation is available [here](examples/divertor_monoblock/sensitivity.md exact=True).
 
@@ -352,18 +352,18 @@ And the total area (2D volume) each material occupies
 
 This case is reproduced three times:
 
-- Once with the usual TMAP8 syntax for input files, which is done in [/divertor_monoblock.i],
-- Another time using the [Physics Syntax](syntax/Physics/index.md) to reproduce the same exact case, but with a simpler input file, which is shown in [/divertor_monoblock_physics.i], and
-- Last with a simpler model utilizing only two variables (mobile and trapped) for tritium concentration across the different materials instead of having different variables in each block. The input file also uses the [Physics Syntax](syntax/Physics/index.md) and is shown in [/divertor_monoblock_physics-single-variable.i].
+- Once with the usual TMAP8 syntax for input files, which is done in [!file](/divertor_monoblock.i),
+- Another time using the [Physics Syntax](syntax/Physics/index.md) to reproduce the same exact case, but with a simpler input file, which is shown in [!file](/divertor_monoblock_physics.i), and
+- Last with a simpler model utilizing only two variables (mobile and trapped) for tritium concentration across the different materials instead of having different variables in each block. The input file also uses the [Physics Syntax](syntax/Physics/index.md) and is shown in [!file](/divertor_monoblock_physics-single-variable.i).
 
 Note that since these input files have a lot of sections in common, we utilize the `!include` feature available in MOOSE/TMAP8 to template common parts of the input files. In this case:
 
-- [/divertor_monoblock_common_base.i] contains all the parts of the input files common to all three cases.
-- [/divertor_monoblock_mesh_base.i] contains parts related to the geometry and mesh for all three cases.
-- [/divertor_monoblock_multi_variable_base.i] contains the parts shared by both the [/divertor_monoblock.i] and [/divertor_monoblock_physics.i] cases.
-- [/divertor_monoblock_physics-single-variable.i] contains the parts equivalent to the ones in [/divertor_monoblock_multi_variable_base.i], but for the case in [/divertor_monoblock_physics-single-variable.i].
+- [!file](/divertor_monoblock_common_base.i) contains all the parts of the input files common to all three cases.
+- [!file](/divertor_monoblock_mesh_base.i) contains parts related to the geometry and mesh for all three cases.
+- [!file](/divertor_monoblock_multi_variable_base.i) contains the parts shared by both the [!file](/divertor_monoblock.i) and [!file](/divertor_monoblock_physics.i) cases.
+- [!file](/divertor_monoblock_physics-single-variable.i) contains the parts equivalent to the ones in [!file](/divertor_monoblock_multi_variable_base.i), but for the case in [!file](/divertor_monoblock_physics-single-variable.i).
 
-Below are the input files which [/divertor_monoblock.i] uses to model the scenario described above.
+Below are the input files which [!file](/divertor_monoblock.i) uses to model the scenario described above.
 This case can be run reliably with approximately 4 processor cores.
 Note that this input file has been optimized for showcasing capability rather than computational cost.
 

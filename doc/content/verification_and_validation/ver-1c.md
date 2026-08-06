@@ -70,7 +70,7 @@ The comparison of the values calculated with TMAP8 and analytically for the TMAP
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/ver-1c.i], which is also used as test in TMAP8 at [/ver-1c/tests]. The TMAP4 and TMAP7 verification tests use the same input file,
+The input file for this case can be found at [!file](/ver-1c.i), which is also used as test in TMAP8 at [!file](/ver-1c/tests). The TMAP4 and TMAP7 verification tests use the same input file,
 but different command line arguments for TMAP4.
 
 !listing /test/tests/ver-1c/tests line=NeumannBC

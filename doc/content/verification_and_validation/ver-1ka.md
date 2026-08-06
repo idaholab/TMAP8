@@ -40,6 +40,6 @@ A comparison of the TMAP8 results and the analytical solution is shown in
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/ver-1ka.i], which is also used as tests in TMAP8 at [/ver-1ka/tests].
+The input file for this case can be found at [!file](/ver-1ka.i), which is also used as tests in TMAP8 at [!file](/ver-1ka/tests).
 
 !bibtex bibliography

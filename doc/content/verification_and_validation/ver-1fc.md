@@ -5,7 +5,7 @@
 ## General Case Description
 
 This third heat transfer problem is taken from [!cite](ambrosek2008verification) and builds on the capabilities verified in [ver-1fa](ver-1fa.md) and [ver-1fb](ver-1fb.md).
-The configuration is the same as in [ver-1fb](ver-1fb.md), except that the current case is in a composite structure with constant surface temperature. This case is simulated in [/ver-1fc.i] with both transient and steady state solutions.
+The configuration is the same as in [ver-1fb](ver-1fb.md), except that the current case is in a composite structure with constant surface temperature. This case is simulated in [!file](/ver-1fc.i) with both transient and steady state solutions.
 
 The composite is a 40-cm-thick layer of copper (Cu) followed by a 40 cm layer of iron (Fe) ([!cite](ambrosek2008verification)). The temperature of both layers is initially 0 K, but at time $t = 0$ s, the outside face of the Cu is held at 600 K while the outside face of the Fe is maintained at 0 K.
 The thermal conductivities of Cu and Fe are set to 401 W/m/K and 80.2 W/m/K, respectively. The TMAP7 documentation does not specify the materials' density $\rho$ or the specific heat $C_p$, but the TMAP7 input file lists $\rho C_p = 3.4392 \times 10^6$ J$\cdot$m$^{-3}\cdot$K$^{-1}$ for Cu and $3.5179 \times 10^6$ J$\cdot$m$^{-3}\cdot$K$^{-1}$ for Fe ([!cite](ambrosek2008verification)). TMAP8 uses $\rho = 8960$ kg/m$^{3}$ and $C_p =  383.8$ J$\cdot$kg$^{-1}\cdot$K$^{-1}$ for Cu and $\rho = 7870$ kg/m$^{3}$ and $C_p = 447.0$ J$\cdot$kg$^{-1}\cdot$K$^{-1}$ for Fe. The densities are from [!cite](Haynes2015), and the specific heat capacities are calculated to match the $\rho C_p$ values from TMAP7 in [!cite](ambrosek2008verification), which closely match values from [!cite](Haynes2015) ($C_p =  385$ J$\cdot$kg$^{-1}\cdot$K$^{-1}$ for Cu and $C_p =  449$ J$\cdot$kg$^{-1}\cdot$K$^{-1}$ for Fe).
@@ -76,6 +76,6 @@ $t = 0$ s to $t = 150$ s. These results can be seen in [ver-1fc_comparison_tempe
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/ver-1fc.i], which is also used as test in TMAP8 at [/ver-1fc/tests].
+The input file for this case can be found at [!file](/ver-1fc.i), which is also used as test in TMAP8 at [!file](/ver-1fc/tests).
 
 !bibtex bibliography
