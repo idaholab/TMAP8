@@ -111,6 +111,6 @@ T(x) = T_{\mathrm{wall}} + \frac{\dot{q}_J}{\kappa}\!\left(\ell x - \frac{x^2}{2
 ## Input Files
 
 !style halign=left
-The input file for this case can be found at [/ver-1o.i]. More information about how this is used as a TMAP8 test can be found in the test specification file for this case [/ver-1o/tests].
+The input file for this case can be found at [!file](/ver-1o.i). More information about how this is used as a TMAP8 test can be found in the test specification file for this case [!file](/ver-1o/tests).
 
 !bibtex bibliography

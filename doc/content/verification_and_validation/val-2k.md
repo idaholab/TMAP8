@@ -364,11 +364,11 @@ The current oxygen diffusivity and D$_2$ and D$_2$O release parameters are, ther
 !style halign=left
 The input files for this case are structured as follows:
 
-- The four cases, i.e., natural oxide, 5 nm, 10 nm, and 15 nm oxide thickness samples, are simulated using the [/val-2k_natural_oxide.i], [/val-2k_5nm_oxide.i], [/val-2k_10nm_oxide.i], and [/val-2k_15nm_oxide.i] inputs, respectively.
-- Their shared geometry, history, and material properties are listed in [/parameters_val-2k_common.params], while the case-specific oxide thickness, output file names, and profile-output subfolder paths are defined directly in the wrapper input files.
-- The shared models are organized using [/val-2k_base.i], [/val-2k_layer.i], [/val-2k_traps.i], and [/val-2k_surface.i].
+- The four cases, i.e., natural oxide, 5 nm, 10 nm, and 15 nm oxide thickness samples, are simulated using the [!file](/val-2k_natural_oxide.i), [!file](/val-2k_5nm_oxide.i), [!file](/val-2k_10nm_oxide.i), and [!file](/val-2k_15nm_oxide.i) inputs, respectively.
+- Their shared geometry, history, and material properties are listed in [!file](/parameters_val-2k_common.params), while the case-specific oxide thickness, output file names, and profile-output subfolder paths are defined directly in the wrapper input files.
+- The shared models are organized using [!file](/val-2k_base.i), [!file](/val-2k_layer.i), [!file](/val-2k_traps.i), and [!file](/val-2k_surface.i).
 
-The associated tests are defined in [/val-2k/tests].
+The associated tests are defined in [!file](/val-2k/tests).
 
 !alert note title=Not optimized for performance
 The input files used in this study are not optimized for performance. The solver and preconditioner type, mesh size, and time stepper could be optimized to reduce computational costs and memory needs.

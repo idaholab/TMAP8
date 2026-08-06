@@ -110,6 +110,6 @@ A comparison of the concentration of AB as a function of time is plotted in [ver
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/ver-1ia.i], which is also used as tests in TMAP8 at [/ver-1ia/tests].
+The input file for this case can be found at [!file](/ver-1ia.i), which is also used as tests in TMAP8 at [!file](/ver-1ia/tests).
 
 !bibtex bibliography

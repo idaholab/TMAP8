@@ -128,6 +128,6 @@ The data reproduced from [!cite](huang01102000) does not match with the analytic
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/ver-1m.i], which is also used as test in TMAP8 at [/ver-1m/tests].
+The input file for this case can be found at [!file](/ver-1m.i), which is also used as test in TMAP8 at [!file](/ver-1m/tests).
 
 !bibtex bibliography

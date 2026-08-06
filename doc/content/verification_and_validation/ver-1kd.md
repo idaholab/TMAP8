@@ -124,6 +124,6 @@ The concentration ratios for T$_2$, H$_2$, and HT between enclosures 1 and 2, sh
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/ver-1kd.i].
+The input file for this case can be found at [!file](/ver-1kd.i).
 
 !bibtex bibliography

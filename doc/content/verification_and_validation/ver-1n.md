@@ -91,6 +91,6 @@ As a second check, [ver-1n_comparison_location] compares the concentration as a 
 ## Input Files
 
 !style halign=left
-The input file for this case can be found at [/ver-1n.i]. More information about how this is used as a TMAP8 test can be found in the test specification file for this case [/ver-1n/tests].
+The input file for this case can be found at [!file](/ver-1n.i). More information about how this is used as a TMAP8 test can be found in the test specification file for this case [!file](/ver-1n/tests).
 
 !bibtex bibliography

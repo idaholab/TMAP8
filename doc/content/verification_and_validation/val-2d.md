@@ -173,6 +173,6 @@ One reason the measured signal falls off after $\approx$ 6300 s while the comput
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/val-2d.i]. The input file is different from the input file used as test in TMAP8. To limit the computational costs of the test case, the test runs a version of the file with a coarser mesh and fewer time steps. More information about the changes can be found in the test specification file for this case, namely [/val-2d/tests].
+The input file for this case can be found at [!file](/val-2d.i). The input file is different from the input file used as test in TMAP8. To limit the computational costs of the test case, the test runs a version of the file with a coarser mesh and fewer time steps. More information about the changes can be found in the test specification file for this case, namely [!file](/val-2d/tests).
 
 !bibtex bibliography

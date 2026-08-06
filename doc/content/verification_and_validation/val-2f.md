@@ -251,17 +251,17 @@ It is important to mention here that the mesh for the infinite recombination rat
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/val-2f.i]. To minimize the length of the input file and organize it, it is divided into several parts:
+The input file for this case can be found at [!file](/val-2f.i). To minimize the length of the input file and organize it, it is divided into several parts:
 
-- [/parameters_val-2f.params] lists the key values and model parameters used in this simulation
-- [/val-2f_trapping_intrinsic.i] provides the blocks necessary to introduce the intrinsic traps in the simulation
-- [/val-2f_trapping_1.i], [/val-2f_trapping_2.i], [/val-2f_trapping_3.i], [/val-2f_trapping_4.i], [/val-2f_trapping_5.i] provide the blocks necessary to introduce the trapping sites 1, 2, 3, 4, and 5, respectively, in the simulation.
+- [!file](/parameters_val-2f.params) lists the key values and model parameters used in this simulation
+- [!file](/val-2f_trapping_intrinsic.i) provides the blocks necessary to introduce the intrinsic traps in the simulation
+- [!file](/val-2f_trapping_1.i), [!file](/val-2f_trapping_2.i), [!file](/val-2f_trapping_3.i), [!file](/val-2f_trapping_4.i), [!file](/val-2f_trapping_5.i) provide the blocks necessary to introduce the trapping sites 1, 2, 3, 4, and 5, respectively, in the simulation.
 
-To combine them into one input file when running the simulation, [/val-2f.i] uses the `!include` feature.
+To combine them into one input file when running the simulation, [!file](/val-2f.i) uses the `!include` feature.
 
 !alert tip title=Input file include syntax information
 To learn more about the `!include` feature, refer to the [application_usage/input_syntax.md] page.
 
-Note that both surface conditions can be modeled using [/val-2f.i]. By running it as is, the recombination condition with the updated recombination rate is utilized. [/val-2f/tests] used `cli_args` to modify [/val-2f.i] into using the effectively infinite recombination rate at the surface and impose a null concentration at the surfaces.
+Note that both surface conditions can be modeled using [!file](/val-2f.i). By running it as is, the recombination condition with the updated recombination rate is utilized. [!file](/val-2f/tests) used `cli_args` to modify [!file](/val-2f.i) into using the effectively infinite recombination rate at the surface and impose a null concentration at the surfaces.
 
-To limit the computational costs of the test case, the test runs a version of the file with a smaller and coarser mesh, and fewer time steps. In addition, this validation case includes tests using two time integration schemes. The `implicit-euler` scheme (first-order, single-step) provides higher stability and consistency of the solution across different operating systems and processor core counts, making it better suited for use in Bayesian optimization workflows where numerical stability is important. The `bdf2` scheme (second-order, multi-step) provides higher accuracy and is used for final results calculation. Both schemes are tested for this validation case in [/val-2f/tests]. More information about the changes can be found in the test specification file for this case, namely [/val-2f/tests].
+To limit the computational costs of the test case, the test runs a version of the file with a smaller and coarser mesh, and fewer time steps. In addition, this validation case includes tests using two time integration schemes. The `implicit-euler` scheme (first-order, single-step) provides higher stability and consistency of the solution across different operating systems and processor core counts, making it better suited for use in Bayesian optimization workflows where numerical stability is important. The `bdf2` scheme (second-order, multi-step) provides higher accuracy and is used for final results calculation. Both schemes are tested for this validation case in [!file](/val-2f/tests). More information about the changes can be found in the test specification file for this case, namely [!file](/val-2f/tests).

@@ -97,7 +97,7 @@ cd ~/projects/TMAP8/test/tests/pore_scale_transport/
 mpirun -np 4 ~/projects/TMAP8/tmap8-opt -i 2D_microstructure_reader_smoothing_base.i pore_structure_open.params
 ```
 
-Note that the [pore_structure_closed.params](pore_structure_closed.params) and [pore_structure_open.params](pore_structure_open.params) files complement the base input file [2D_microstructure_reader_smoothing_base.i](2D_microstructure_reader_smoothing_base.i) by providing input and output names.
+Note that [!file](pore_structure_closed.params) and [!file](pore_structure_open.params) complement the base input file [!file](2D_microstructure_reader_smoothing_base.i) by providing input and output names.
 
 
 #### Resulting smooth pore microstructures
@@ -281,7 +281,7 @@ and to model tritium transport in the microstructure with open pores, run:
 mpirun -np 4 ~/projects/TMAP8/tmap8-opt -i 2D_absorption_base.i pore_structure_open_absorption.params
 ```
 
-Note that [pore_structure_closed_absorption.params](pore_structure_closed_absorption.params) and [pore_structure_open_absorption.params](pore_structure_open_absorption.params) complement the base input file [2D_absorption_base.i](2D_absorption_base.i) by providing input and output names.
+Note that [!file](pore_structure_closed_absorption.params) and [!file](pore_structure_open_absorption.params) complement the base input file [!file](2D_absorption_base.i) by providing input and output names.
 
 ### Results and Discussion
 

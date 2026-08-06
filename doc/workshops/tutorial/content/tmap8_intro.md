@@ -1,6 +1,6 @@
 # Introduction to TMAP8
 
-!media figures/TMAP8_logo/TMAP8_vertical_blue.png style=display:block;box-shadow:none;margin-left:auto;margin-right:auto;width:30%;
+!media figures/TMAP8_logo/TMAP8_vertical_blue.png alt=TMAP8 logo style=display:block;box-shadow:none;margin-left:auto;margin-right:auto;width:30%;
 
 !---
 
@@ -25,7 +25,7 @@ TMAP8 directly inherits all of MOOSE's features, including:
 !row!
 !col! width=50%
 
-!media figures/TMAP8_features.png style=width:100%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
+!media figures/TMAP8_features.png alt=Summary of TMAP8 features style=width:100%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
 
 !col-end!
 
@@ -70,7 +70,7 @@ Ongoing efforts are using the MultiApp system to concurrently perform component-
 
 !col! width=50%
 
-!media examples/figures/plot_comparison.py image_name=fuel_cycle_abdou_03.png style=width:100%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
+!media examples/figures/plot_comparison.py image_name=fuel_cycle_abdou_03.png alt=Fuel cycle Abdou comparison plot style=width:100%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
 
 !style halign=center
 Figure from the [fuel cycle example from Abdou et al](examples/fuel_cycle_Abdou/index.md).
@@ -99,7 +99,7 @@ The integration of the [stochastic tools module](stochastic_tools/index.md) in T
 
 !col! width=50%
 
-!media verification_and_validation/figures/comparison_val-2c.py image_name=val-2c_comparison_TMAP8_Exp_HTO_Ci.png style=width:100%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
+!media verification_and_validation/figures/comparison_val-2c.py image_name=val-2c_comparison_TMAP8_Exp_HTO_Ci.png alt=Validation case val-2c TMAP8 and experiment HTO comparison plot style=width:100%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
 
 !style halign=center
 Figure from the [val-2c validation case calibration](val-2c.md).
@@ -111,7 +111,7 @@ Figure from the [val-2c validation case calibration](val-2c.md).
 
 # TMAP8 key capabilities \\ pore-scale transport
 
-!media examples/figures/pore_scale_process_illustration_2.png style=width:70%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
+!media examples/figures/pore_scale_process_illustration_2.png alt=Pore-scale tritium transport process illustration style=width:70%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
 
 !style halign=center
 Figure from the [pore-scale tritium transport example](examples/pore_scale_transport/index.md).
@@ -119,7 +119,7 @@ Figure from the [pore-scale tritium transport example](examples/pore_scale_trans
 !row!
 !col! width=50%
 
-!media examples/figures/3D_microstructure_example.png style=width:90%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
+!media examples/figures/3D_microstructure_example.png alt=Three-dimensional microstructure example style=width:90%;margin-left:auto;margin-right:auto;display:block;box-shadow:none;
 
 !col-end!
 

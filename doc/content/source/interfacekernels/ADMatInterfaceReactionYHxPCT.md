@@ -50,7 +50,7 @@ If `silence_warnings = true`, then TMAP8 will let the simulation continue withou
 
 ## Test
 
-[/YHx_PCT.i] tests the implantation of the YHx PCT curves in TMAP8.
+[!file](/YHx_PCT.i) tests the implantation of the YHx PCT curves in TMAP8.
 The domain contains two blocks: gas (left) and YHx (right) with an interface between the two blocks.
 The diffusion is given by [!citep](MAJER2002438) and the surface reaction rate $K$ is taken from [!citep](FISHER19841536) ($K_f=K_b=K$).
 To model the interface, the input file employs the [InterfaceDiffusion.md] object to model the flux of hydrogen at the surface, and `ADMatInterfaceReactionYHxPCT` to model the steady-state condition for the hydrogen concentration at the surface $C_s$ defined by:
