@@ -31,7 +31,7 @@ COL_TMAP_T = "temperature"
 COL_TMAP_P = "pressure_H2_enclosure_1_at_interface"
 COL_TMAP_AF = "atomic_fraction_H_enclosure_2_at_interface"
 
-# Molar masses for wt% → atomic ratio conversion
+# Molar masses for wt% to atomic ratio conversion
 MOLAR_MASS_ZR2FE = 2 * 91.22 + 55.85  # 238.29 g/mol
 MOLAR_MASS_H = 1.008  # g/mol
 
