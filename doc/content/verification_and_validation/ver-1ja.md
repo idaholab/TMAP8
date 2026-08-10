@@ -66,6 +66,6 @@ The TMAP8 predictions match the analytical solution, with root mean square perce
 ### Input file
 
 !style halign=left
-The input file for this case can be found at [/ver-1ja.i], which is also used as test in TMAP8 at [/ver-1ja/tests].
+The input file for this case can be found at [!file](/ver-1ja.i), which is also used as test in TMAP8 at [!file](/ver-1ja/tests).
 
 !bibtex bibliography

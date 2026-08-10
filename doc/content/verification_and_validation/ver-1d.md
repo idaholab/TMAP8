@@ -134,6 +134,6 @@ It therefore reduces numerical oscillations without affecting the expected solut
 ## Input files
 
 !style halign=left
-The input files for the cases where diffusion and trapping are the rate limiting processes can be found at [/ver-1d-diffusion.i] and [/ver-1d-trapping.i], respectively. These input files are different from the input files used as tests in TMAP8. To limit the computational costs of the test cases, the tests run a version of the files with a coarser mesh and fewer time steps. More information about the changes can be found in the test specification file for this case, namely [/ver-1d/tests].
+The input files for the cases where diffusion and trapping are the rate limiting processes can be found at [!file](/ver-1d-diffusion.i) and [!file](/ver-1d-trapping.i), respectively. These input files are different from the input files used as tests in TMAP8. To limit the computational costs of the test cases, the tests run a version of the files with a coarser mesh and fewer time steps. More information about the changes can be found in the test specification file for this case, namely [!file](/ver-1d/tests).
 
 !bibtex bibliography

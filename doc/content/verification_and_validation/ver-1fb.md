@@ -4,7 +4,7 @@
 
 ## General Case Description
 
-This heat transfer verification problem is taken from [!cite](longhurst1992verification) and [!cite](ambrosek2008verification) and builds on the capabilities verified in [ver-1fa](ver-1fa.md). It has been updated and extended in [!cite](Simon2025). The configuration is the same as in [ver-1fa](ver-1fa.md), except that, in the current case, there are no heat source in the slab and both ends with fixed temperature. This case is simulated in [/ver-1fb.i].
+This heat transfer verification problem is taken from [!cite](longhurst1992verification) and [!cite](ambrosek2008verification) and builds on the capabilities verified in [ver-1fa](ver-1fa.md). It has been updated and extended in [!cite](Simon2025). The configuration is the same as in [ver-1fa](ver-1fa.md), except that, in the current case, there are no heat source in the slab and both ends with fixed temperature. This case is simulated in [!file](/ver-1fb.i).
 
 The heat conduction in the one-dimensional model is described as:
 
@@ -51,6 +51,6 @@ A comparison of the temperature distribution in the slab, computed through TMAP8
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/ver-1fb.i], which is also used as test in TMAP8 at [/ver-1fb/tests].
+The input file for this case can be found at [!file](/ver-1fb.i), which is also used as test in TMAP8 at [!file](/ver-1fb/tests).
 
 !bibtex bibliography

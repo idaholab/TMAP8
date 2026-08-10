@@ -4,7 +4,7 @@
 
 ## Test Description
 
-This verification problem is taken from [!cite](ambrosek2008verification) and builds on the capabilities verified in [ver-1d](ver-1d.md) and [ver-1dc](ver-1dc.md). The configuration and modeling parameters are the same as in [ver-1d](ver-1d.md), except that, in the current case, there are no traps in the membrane. This case is simulated in [/ver-1dd.i].
+This verification problem is taken from [!cite](ambrosek2008verification) and builds on the capabilities verified in [ver-1d](ver-1d.md) and [ver-1dc](ver-1dc.md). The configuration and modeling parameters are the same as in [ver-1d](ver-1d.md), except that, in the current case, there are no traps in the membrane. This case is simulated in [!file](/ver-1dd.i).
 
 This problem models permeation through a membrane with a constant source in which no trap presented. We solve
 
@@ -44,6 +44,6 @@ The analytical solution for the permeation transient is compared with TMAP8 resu
 
 ## Input files
 
-The input file for this case can be found at [/ver-1dd.i], which is also used as test in TMAP8 at [/ver-1dd/tests].
+The input file for this case can be found at [!file](/ver-1dd.i), which is also used as test in TMAP8 at [!file](/ver-1dd/tests).
 
 !bibtex bibliography

@@ -70,6 +70,6 @@ where $\text{erfc}$ is the error function.
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/ver-1l.i], which is also used as test in TMAP8 at [/ver-1l/tests].
+The input file for this case can be found at [!file](/ver-1l.i), which is also used as test in TMAP8 at [!file](/ver-1l/tests).
 
 !bibtex bibliography

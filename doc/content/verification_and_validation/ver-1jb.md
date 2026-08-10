@@ -134,7 +134,7 @@ tritium after 45 years, and the distribution of $^3$He at the end of that time p
 
 ### Input file
 
-The input file for this case can be found at [/ver-1jb.i], which is also used as test in TMAP8 at [/ver-1jb/tests]. The case with equivalent mobile and trapped tritium initial concentrations was based on [/ver-1jb.i] with slight modifications made in [/ver-1jb/tests] to adjust the initial mobile tritium concentration.
+The input file for this case can be found at [!file](/ver-1jb.i), which is also used as test in TMAP8 at [!file](/ver-1jb/tests). The case with equivalent mobile and trapped tritium initial concentrations was based on [!file](/ver-1jb.i) with slight modifications made in [!file](/ver-1jb/tests) to adjust the initial mobile tritium concentration.
 
 !bibtex bibliography
 

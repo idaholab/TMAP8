@@ -8,7 +8,7 @@ The [theory_manual.md] page describes the `surfdep` model and other surface mode
 
 ## General Case Description
 
-This verification problem is taken from [!cite](ambrosek2008verification) and builds on [ver-1ia](ver-1ia.md). The configuration and modeling parameters are similar to [ver-1ia](ver-1ia.md), except that, in the current case, the reaction is in surfdep conditions. The case is simulated in [/ver-1ic.i].
+This verification problem is taken from [!cite](ambrosek2008verification) and builds on [ver-1ia](ver-1ia.md). The configuration and modeling parameters are similar to [ver-1ia](ver-1ia.md), except that, in the current case, the reaction is in surfdep conditions. The case is simulated in [!file](/ver-1ic.i).
 
 The problem considers the reaction between two isotopic species, A$_2$ and B$_2$, on a surface in surfdep conditions. The reaction between AB, A$_2$, and B$_2$ is the same as in [ver-1ia](ver-1ia.md). Therefore, the partial pressure of AB in equilibrium is depends on the initial partial pressures of A$_2$ and B$_2$:
 
@@ -122,6 +122,6 @@ A comparison of the AB concentration as a function of time is plotted in [ver-1i
 ## Input files
 
 !style halign=left
-The input file for this case can be found at [/ver-1ic.i], which is also used as tests in TMAP8 at [/ver-1ic/tests].
+The input file for this case can be found at [!file](/ver-1ic.i), which is also used as tests in TMAP8 at [!file](/ver-1ic/tests).
 
 !bibtex bibliography

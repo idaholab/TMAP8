@@ -169,10 +169,10 @@ The objective function evaluates the root mean square percentage error (RMSPE) b
 !style halign=left
 The input files for this validation case are:
 
-- [/val-2j_base.i]: Contains the shared simulation blocks (mesh, variables, kernels, materials, etc.) used by all val-2j cases.
-- [/val-2j.i]: Simulates tritium transport in Li$_2$TiO$_3$ spherical sample with reference parameters. [/optimal_bayesian_params.i] overrides with Bayesian-optimized parameters.
-- [/bayesian_main_val2j.i] and [/val-2j_bayesian.i]: The optimization main and sub input files, respectively, for Bayesian parameter optimization.
+- [!file](/val-2j_base.i): Contains the shared simulation blocks (mesh, variables, kernels, materials, etc.) used by all val-2j cases.
+- [!file](/val-2j.i): Simulates tritium transport in Li$_2$TiO$_3$ spherical sample with reference parameters. [!file](/optimal_bayesian_params.i) overrides with Bayesian-optimized parameters.
+- [!file](/bayesian_main_val2j.i) and [!file](/val-2j_bayesian.i): The optimization main and sub input files, respectively, for Bayesian parameter optimization.
 
-More information about these tests can be found in the test specification file for this case, namely [/val-2j/tests].
+More information about these tests can be found in the test specification file for this case, namely [!file](/val-2j/tests).
 
 !bibtex bibliography
