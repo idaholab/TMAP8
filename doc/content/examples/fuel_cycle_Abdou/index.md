@@ -92,7 +92,7 @@ their own ODE and tritium inventory:
        style=width:100%;margin-bottom:2%;margin-left:auto;margin-right:auto
        id=fc_diagram
        caption=Dependency diagram of the fuel cycle system.
-
+[fc_diagram] illustrates the fuel cycle and shows the dependencies between systems.
 For an interpretation of these equations and explanations about the notations, readers should refer to [!cite](Abdou2021) (Appendix).
 We instantiate the variables in the typical [`Variables`](/syntax/Variables) block, making sure to set the [!param](/Variables/family) attribute to `SCALAR` for each variable.
 The default initial condition is zero.
