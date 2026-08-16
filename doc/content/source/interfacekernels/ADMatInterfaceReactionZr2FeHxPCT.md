@@ -43,7 +43,7 @@ The validity of this present fit is between:
 
 ## Test
 
-[/Zr2FeHx_PCT.i] tests the implantation of the Zr$_{2}$FeH$_{x}$ PCT curves in TMAP8 using constant testing conditions, i.e pressure and temperature.
+[!file](/Zr2FeHx_PCT.i) tests the implantation of the Zr$_{2}$FeH$_{x}$ PCT curves in TMAP8 using constant testing conditions, i.e pressure and temperature.
 The domain contains two blocks: gas (left) and Zr$_{2}$FeH$_{x}$(right) with an interface between the two blocks.
 The diffusion is given by [!cite](yu2024hydrogen) and the surface reaction rate $K$ is taken from [!cite](yang2025potential) ($K_f=K_b=K$). Note that the diffusion is for ZrH$_{1.8}$ because no diffusion data exist for Zr$_{2}$FeH$_{x}$.
 To model the interface, the input file employs the [InterfaceDiffusion.md] object to model the flux of hydrogen at the surface, and `ADMatInterfaceReactionZr2FeHxPCT` to model the steady-state condition for the hydrogen concentration at the surface $C_s$ defined by:
@@ -57,7 +57,7 @@ The results of the high pressure test for ($T$, $P$) =(598.15 K, $1 \times 10^{3
 
 ### Overall PCT Testing
 
-[/Zr2FeHx_PCT.i] can also test the entire PCT modelling capabilities in TMAP8. The model follows the same structure as the previoius section, but has an arbitrarily high diffusion value to acheive steady-state quickly. The model also includes a linear pressure increase to cover the entire PCT curve.
+[!file](/Zr2FeHx_PCT.i) can also test the entire PCT modelling capabilities in TMAP8. The model follows the same structure as the previoius section, but has an arbitrarily high diffusion value to acheive steady-state quickly. The model also includes a linear pressure increase to cover the entire PCT curve.
 
 \begin{equation}
 P = P_{\text{initial}} + t \frac{P_{\text{max}} - P_{\text{initial}}}{t_{\text{end}}}.
