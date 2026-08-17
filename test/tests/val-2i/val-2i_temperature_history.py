@@ -33,15 +33,6 @@ os.chdir(script_folder)
 
 # Necessary parameters
 initial_temperature = [673, 873, 973]  # K
-hold_time = [7183, 6341, 5952]  # s
-cooling_time_constant = 1200  # s
-temperature_room = 293  # K
-temperature_min = 300  # K
-TDS_start = 12000  # s
-TDS_ramp_end = 17238  # s
-TDS_end = 19038  # s
-final_temperature = 1173  # K
-temperature_ramp_rate = 10 / 60  # K/s
 
 file_base = "val-2i_temperature_history"
 
