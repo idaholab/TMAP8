@@ -14,6 +14,8 @@ os.chdir(script_folder)
 #  Must match val-2l.i: trap_per_free = ... (rescaling factor for trapped variable)
 trap_per_free = 1e4  # update this if val-2l.i changes
 
+# Geometry
+disc_area = np.pi*(3e3)**2 # 6 mm diameter gives 3e3 mum radius
 # ================================= Functions ================================ #
 
 
@@ -195,9 +197,8 @@ def plot_unirradiated_desorption(
     simulation_time, simulation_temperature, simulation_flux = read_csv_from_TMAP8(
         simulation_file, ["time", "temperature", simulation_flux_column]
     )
-    # at/mum^2/s -> at/m^2/s (x1e12); atomic D flux -> molecular D2 flux (/2) to match the
-    # RGA, which detects D2 (mass 4) and HD (mass 3) -- same convention as val-2d
-    simulation_flux = simulation_flux * 1e12 / 2
+    # at/mum^2/s -> at/m^2/s (x1e12);
+    simulation_flux = simulation_flux * 1e12
 
     # Map experimental times to temperatures using the simulation's T(t) ramp,
     # then truncate to the simulation time range to avoid extrapolation.
@@ -314,12 +315,12 @@ initial_inventory = total_deuterium_retention.iloc[0]
 relative_mass_conservation_residual = mass_conservation_residual / initial_inventory
 
 # --- Read individual mobile and trapped integrals for the stacked inventory plot ---
-# total_mobile_retention  : physical mobile inventory  (at/µm²), no scaling needed
+# total_mobile_retention  : physical mobile inventory  (at/µm²), so scale by disc cross-sectional area
 # total_trapped_retention : MOOSE stores the *rescaled* variable, so multiply by
-#                           trap_per_free to recover the physical trapped inventory.
-total_mobile_retention = simulation_TMAP8_data["total_mobile_retention"]
+#                           trap_per_free and the cross-sectional area to recover the physical trapped inventory.
+total_mobile_retention = simulation_TMAP8_data["total_mobile_retention"] * disc_area
 total_trapped_retention = (
-    simulation_TMAP8_data["total_trapped_retention"] * trap_per_free
+    simulation_TMAP8_data["total_trapped_retention"] * trap_per_free * disc_area
 )
 
 # --- Total deuterium inventory with temperature history ---
@@ -372,7 +373,7 @@ temperature_handle = ax_temperature.plot(
 )[0]
 
 ax.set_xlabel("Time (s)")
-ax.set_ylabel(r"Deuterium inventory (atoms/$\mu m^2$)")
+ax.set_ylabel(r"Deuterium inventory (atoms)")
 ax.set_xlim(0, simulation_time_TMAP8.max())
 ax.set_ylim(bottom=0)
 ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
