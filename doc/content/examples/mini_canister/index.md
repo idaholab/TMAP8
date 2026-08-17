@@ -2,10 +2,10 @@
 
 TMAP8 is used to model hydrogen transport and permeation through an aluminum-clad used nuclear fuel (AUNF) mini-canister storage device from Savannah River National Laboratory (SRNL) [!citep](d'entremont2024aunfminicanister). The mini-canisters house irradiated AUNF assemblies where gamma and neutron radiation from the fuel drives radiolytic decomposition of water, generating H$_2$ gas. Over time, this hydrogen will dissociate and diffuse through the surrounding 304 stainless steel wall, raising concern for potential accumulation. This example demonstrates how TMAP8 can model these processes through two distinct input files with varying degrees of fidelity:
 
-1. [steel_only.i] — isolates hydrogen diffusion through the steel wall with an assumed boundary partial pressure. This simpler model permits verification against an analytical solution, assuming time-independent Dirichlet boundary conditions.
-2. [gas_steel.i] — simulates the full system: radiolytic H$_2$ generation, gas-phase transport inside the canister, and simultaneous permeation through the steel wall. This model is compared against SRNL experimental measurements [!citep](d'entremont2024aunfminicanister).
+1. [!file](steel_only.i) — isolates hydrogen diffusion through the steel wall with an assumed boundary partial pressure. This simpler model permits verification against an analytical solution, assuming time-independent Dirichlet boundary conditions.
+2. [!file](gas_steel.i) — simulates the full system: radiolytic H$_2$ generation, gas-phase transport inside the canister, and simultaneous permeation through the steel wall. This model is compared against SRNL experimental measurements [!citep](d'entremont2024aunfminicanister).
 
-Both models share the same 1D axisymmetric geometry and material parameters for the steel wall. The progression from [steel_only.i] to [gas_steel.i] illustrates the flexibility of TMAP8 in building complexity incrementally.
+Both models share the same 1D axisymmetric geometry and material parameters for the steel wall. The progression from [!file](steel_only.i) to [!file](gas_steel.i) illustrates the flexibility of TMAP8 in building complexity incrementally.
 
 ## Canister Geometry and Mesh
 
@@ -24,13 +24,13 @@ Both models represent the canister as a 1D axisymmetric domain in cylindrical co
 | Steel wall thickness, $\mathbf{\delta}$ | $\mathbf{2.16}$ | mm |
 | Canister height, $\mathbf{h}$ | $\mathbf{179.3}$ | mm |
 
-In [steel_only.i], the 1D mesh spans only the steel wall, from $r_i$ to $r_i+\delta$, using a single [GeneratedMeshGenerator.md] with 300 elements (subdomain 1). A bias is applied so that elements closer to the gas-steel boundary are smaller while elements further away are larger. In [gas_steel.i], a [CartesianMeshGenerator.md] produces two adjacent blocks: the gas block (subdomain 0) from $r = 0$ to $r = r_i$ with 25 elements, and the steel block (subdomain 1) from $r = r_i$ to $r = r_i + \delta$ with 300 elements. Two [SideSetsBetweenSubdomainsGenerator.md] steps then create the named interface sidesets `interface_gas_to_steel` and `interface_steel_to_gas` that are required for the [InterfaceSorption.md] kernel.
+In [!file](steel_only.i), the 1D mesh spans only the steel wall, from $r_i$ to $r_i+\delta$, using a single [GeneratedMeshGenerator.md] with 300 elements (subdomain 1). A bias is applied so that elements closer to the gas-steel boundary are smaller while elements further away are larger. In [!file](gas_steel.i), a [CartesianMeshGenerator.md] produces two adjacent blocks: the gas block (subdomain 0) from $r = 0$ to $r = r_i$ with 25 elements, and the steel block (subdomain 1) from $r = r_i$ to $r = r_i + \delta$ with 300 elements. Two [SideSetsBetweenSubdomainsGenerator.md] steps then create the named interface sidesets `interface_gas_to_steel` and `interface_steel_to_gas` that are required for the [InterfaceSorption.md] kernel.
 
-In [steel_only.i], the mesh is defined as:
+In [!file](steel_only.i), the mesh is defined as:
 
 !listing test/tests/mini_canister/steel_only.i link=false block=Mesh
 
-In [gas_steel.i], the mesh is defined as:
+In [!file](gas_steel.i), the mesh is defined as:
 
 !listing test/tests/mini_canister/gas_steel.i link=false block=Mesh
 
@@ -103,7 +103,7 @@ P = P_c = 0.10 \times 24 \text{ psi} \approx 16{,}547 \text{ Pa},
 
 which assumes 10% of the 24 psi He-backfilled canister pressure is attributable to H$_2$ [!citep](d'entremont2024aunfminicanister,hlushko2024aunf).
 
-At the outer steel surface ($r = r_i + \delta$), hydrogen is released to the ambient environment, and the concentration is set to zero by a [DirichletBC.md] (defined in [mini_canister_base.i]):
+At the outer steel surface ($r = r_i + \delta$), hydrogen is released to the ambient environment, and the concentration is set to zero by a [DirichletBC.md] (defined in [!file](mini_canister_base.i)):
 
 \begin{equation} \label{eq:outer_bc}
 C_s(r_i + \delta, t) = 0.
@@ -112,7 +112,7 @@ C_s(r_i + \delta, t) = 0.
 ### Solver
 
 !style halign=left
-Because the steel-only problem is linear (constant diffusivity, linear Sieverts' BC), [steel_only.i] uses `solve_type = LINEAR` for a direct LU factorization at each timestep. The simulation runs for 0.25 years (≈ 91.3 days) using a [BDF2.md] time integration scheme equipped with an iterative timestepper [IterationAdaptiveDT.md].
+Because the steel-only problem is linear (constant diffusivity, linear Sieverts' BC), [!file](steel_only.i) uses `solve_type = LINEAR` for a direct LU factorization at each timestep. The simulation runs for 0.25 years (≈ 91.3 days) using a [BDF2.md] time integration scheme equipped with an iterative timestepper [IterationAdaptiveDT.md].
 
 ### Model Parameters
 
@@ -157,7 +157,6 @@ In the input files, these two postprocessors are defined as:
   id=fig:diffusion_length
   caption=Comparison of the simulated and analytical ($\sqrt{\pi D_s t}$) diffusion front length in the steel wall over 0.25 years.
 
-
 ## Gas-Steel Model
 
 ### Governing Equations
@@ -200,7 +199,7 @@ The `unit_scale_neighbor` parameter is set to $10^3$ to correct for the unit mis
 ### Solver
 
 !style halign=left
-Because the interface is nonlinear, [gas_steel.i] uses `solve_type = Newton`. The simulation runs for 0.25 years (≈ 91.3 days) using a [BDF2.md] time integration scheme. This model is equipped with an [IterationAdaptiveDT.md] adaptive timestep that targets 5 Newton iterations per step.
+Because the interface is nonlinear, [!file](gas_steel.i) uses `solve_type = Newton`. The simulation runs for 0.25 years (≈ 91.3 days) using a [BDF2.md] time integration scheme. This model is equipped with an [IterationAdaptiveDT.md] adaptive timestep that targets 5 Newton iterations per step.
 
 ### Model Parameters
 
@@ -265,15 +264,15 @@ The conclusion of this analysis is that only a small fraction of hydrogen permea
 !style halign=left
 Both models are structured around two shared files that are incorporated via the `!include` capability:
 
-- [mini_canister.params] — defines all shared model parameters (geometry, material properties, numerics).
-- [mini_canister_base.i] — defines the MOOSE objects shared by both models: the steel variable and kernels, temperature auxiliary variable, outer Dirichlet boundary condition, steel-domain postprocessors, and the executioner.
+- [!file](mini_canister.params) — defines all shared model parameters (geometry, material properties, numerics).
+- [!file](mini_canister_base.i) — defines the MOOSE objects shared by both models: the steel variable and kernels, temperature auxiliary variable, outer Dirichlet boundary condition, steel-domain postprocessors, and the executioner.
 
 Each top-level input file adds only the objects that are specific to its model. This structure keeps the shared physics in one place and avoids duplication.
 
 ## Input Files
 
 !style halign=left
-The input files for this example are [/steel_only.i] and [/gas_steel.i], together with the shared [/mini_canister_base.i] and [/mini_canister.params]. All files are also used as tests in TMAP8 at [/mini_canister/tests].
+The input files for this example are [!file](/steel_only.i) and [!file](/gas_steel.i), together with the shared [!file](/mini_canister_base.i) and [!file](/mini_canister.params). All files are also used as tests in TMAP8 at [!file](/mini_canister/tests).
 
 !listing test/tests/mini_canister/mini_canister_base.i link=false
 
