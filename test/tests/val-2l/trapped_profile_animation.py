@@ -21,32 +21,33 @@ import matplotlib.animation as animation
 
 # ── Must match val-2l.i ───────────────────────────────────────────────────── #
 TRAP_PER_FREE = 1
-FRAME_STRIDE  = 10
-TRAP_BOUNDARY = 0.7        # µm: spatial extent of 1.35 eV trap (TMAP fit A)
+FRAME_STRIDE = 10
+TRAP_BOUNDARY = 0.7  # µm: spatial extent of 1.35 eV trap (TMAP fit A)
 
 # ── File paths ────────────────────────────────────────────────────────────── #
-MOBILE_DIR  = "deuterium_mobile_concentration_profile"
+MOBILE_DIR = "deuterium_mobile_concentration_profile"
 TRAPPED_DIR = "deuterium_trapped_concentration_profile"
-MOBILE_COL  = "mobile"
+MOBILE_COL = "mobile"
 TRAPPED_COL = "trapped_1"
-MAIN_CSV    = "val-2l_out.csv"
+MAIN_CSV = "val-2l_out.csv"
 OUTPUT_FILE = "val-2l_profile_animation.gif"
 
 # ── Panel definitions ─────────────────────────────────────────────────────── #
 # Each entry: (row, col, species, label, x_min, x_max)
 PANELS = [
-    (0, 0, "mobile",  "Mobile – whole domain",  0.0, 200.0),
-    (0, 1, "mobile",  "Mobile – near surface",  0.0,   1.0),
-    (1, 0, "trapped", "Trapped – bulk & near surface", 0.0,   7.0),
-    (1, 1, "trapped", "Trapped – near surface",  0.0,   1.0),
+    (0, 0, "mobile", "Mobile – whole domain", 0.0, 200.0),
+    (0, 1, "mobile", "Mobile – near surface", 0.0, 1.0),
+    (1, 0, "trapped", "Trapped – bulk & near surface", 0.0, 7.0),
+    (1, 1, "trapped", "Trapped – near surface", 0.0, 1.0),
 ]
 
-COLOR_MOBILE        = "steelblue"
-COLOR_TRAPPED       = "darkorange"
+COLOR_MOBILE = "steelblue"
+COLOR_TRAPPED = "darkorange"
 COLOR_TRAP_BOUNDARY = "dimgray"
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────── #
+
 
 def detect_value_column(df, hint):
     cols = list(df.columns)
@@ -93,9 +94,10 @@ def region_mask(x, x_min, x_max):
 
 # ── Main ──────────────────────────────────────────────────────────────────── #
 
+
 def build_animation(show=False):
     # ── Scalar CSV for time / temperature ────────────────────────────────── #
-    main_df   = pd.read_csv(MAIN_CSV)
+    main_df = pd.read_csv(MAIN_CSV)
     all_times = main_df["time"].values
     all_temps = main_df["temperature"].values
 
@@ -106,29 +108,30 @@ def build_animation(show=False):
         return all_times[row], all_temps[row]
 
     # ── Load profile series ───────────────────────────────────────────────── #
-    mob_xs, mob_cs = load_profile_series(MOBILE_DIR,  MOBILE_COL,  scale=1.0)
+    mob_xs, mob_cs = load_profile_series(MOBILE_DIR, MOBILE_COL, scale=1.0)
     trp_xs, trp_cs = load_profile_series(TRAPPED_DIR, TRAPPED_COL, scale=TRAP_PER_FREE)
-    n_frames      = min(len(mob_xs), len(trp_xs))
+    n_frames = min(len(mob_xs), len(trp_xs))
     frame_indices = range(0, n_frames, FRAME_STRIDE)
 
     series = {
-        "mobile":  (mob_xs, mob_cs, COLOR_MOBILE),
+        "mobile": (mob_xs, mob_cs, COLOR_MOBILE),
         "trapped": (trp_xs, trp_cs, COLOR_TRAPPED),
     }
 
     # ── Figure: temperature ramp on top, 2x2 panels below ────────────────── #
     fig = plt.figure(figsize=(12, 9))
     # Reserve top 15% for temperature axes, bottom 85% for the 2x2 grid
-    temp_ax   = fig.add_axes([0.10, 0.88, 0.82, 0.09])
-    gs        = fig.add_gridspec(2, 2, left=0.10, right=0.92,
-                                 top=0.82, bottom=0.07,
-                                 hspace=0.45, wspace=0.35)
+    temp_ax = fig.add_axes([0.10, 0.88, 0.82, 0.09])
+    gs = fig.add_gridspec(
+        2, 2, left=0.10, right=0.92, top=0.82, bottom=0.07, hspace=0.45, wspace=0.35
+    )
     axes = gs.subplots()
 
     # ── Temperature ramp axes ─────────────────────────────────────────────── #
     temp_ax.plot(all_times, all_temps, color="firebrick", linewidth=1.5)
-    temp_marker, = temp_ax.plot(all_times[0], all_temps[0], "o",
-                                color="firebrick", markersize=6, zorder=5)
+    (temp_marker,) = temp_ax.plot(
+        all_times[0], all_temps[0], "o", color="firebrick", markersize=6, zorder=5
+    )
     temp_ax.set_xlim(0, all_times[-1])
     temp_ax.set_ylim(all_temps.min() * 0.95, all_temps.max() * 1.05)
     temp_ax.set_xlabel("Time (s)", fontsize=8)
@@ -157,12 +160,14 @@ def build_animation(show=False):
         ax.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
 
         if xlo <= TRAP_BOUNDARY <= xhi:
-            ax.axvline(TRAP_BOUNDARY, color=COLOR_TRAP_BOUNDARY,
-                       linestyle=":", linewidth=1.1,
-                       label=f"Trap edge ({TRAP_BOUNDARY} µm)")
+            ax.axvline(
+                TRAP_BOUNDARY,
+                color=COLOR_TRAP_BOUNDARY,
+                linestyle=":",
+                linewidth=1.1,
+                label=f"Trap edge ({TRAP_BOUNDARY} µm)",
+            )
             ax.legend(fontsize=7, loc="upper right")
-
-
 
     # ── Animation update ──────────────────────────────────────────────────── #
     def update(frame):
@@ -177,7 +182,8 @@ def build_animation(show=False):
         return list(lines.values()) + [temp_marker]
 
     ani = animation.FuncAnimation(
-        fig, update,
+        fig,
+        update,
         frames=frame_indices,
         interval=50,
         blit=True,
@@ -197,7 +203,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Animate mobile and trapped D profiles from val-2l TMAP8 output."
     )
-    parser.add_argument("--show", action="store_true",
-                        help="Preview interactively instead of saving to file.")
+    parser.add_argument(
+        "--show",
+        action="store_true",
+        help="Preview interactively instead of saving to file.",
+    )
     args = parser.parse_args()
     build_animation(show=args.show)

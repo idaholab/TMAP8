@@ -9,10 +9,12 @@ os.chdir(script_folder)
 
 # LineValueSampler output lives in a directory named after the VectorPostprocessor
 # (val-2l.i: [VectorPostprocessors]/deuterium_mobile_concentration_profile).
-profile_files = sorted(glob.glob(
-    "deuterium_mobile_concentration_profile/"
-    "val-2l_out_deuterium_mobile_concentration_profile_*.csv"
-))
+profile_files = sorted(
+    glob.glob(
+        "deuterium_mobile_concentration_profile/"
+        "val-2l_out_deuterium_mobile_concentration_profile_*.csv"
+    )
+)
 near_surface_limit_um = 20.0  # depth (um) shown in the lower zoom subplot
 frame_stride = 5  # show every Nth timestep — keeps the movie fast to encode and compact
 
@@ -31,7 +33,9 @@ for i, f in enumerate(profile_files):
     df = pd.read_csv(f, skipinitialspace=True)
     if df.shape[0] == 0:
         continue
-    frames.append((df["x"].values, df["deuterium_mobile_concentration"].values, times[i]))
+    frames.append(
+        (df["x"].values, df["deuterium_mobile_concentration"].values, times[i])
+    )
 if not frames:
     raise FileNotFoundError("No non-empty concentration profile CSV files found.")
 
@@ -46,11 +50,21 @@ fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8), constrained_layout=True)
 # Markers sit on each mesh node (the NodalValueSampler points), so they reveal the
 # graded element layout: dense at the surface, sparse in the bulk.
 lines = []
-for ax, xlim, color in ((ax1, x_max_um, "steelblue"),
-                        (ax2, near_surface_limit_um, "darkorange")):
-    (line,) = ax.plot([], [], color=color, linewidth=1.5,
-                      marker="o", markersize=4, markerfacecolor="white",
-                      markeredgecolor=color, markeredgewidth=1.0)
+for ax, xlim, color in (
+    (ax1, x_max_um, "steelblue"),
+    (ax2, near_surface_limit_um, "darkorange"),
+):
+    (line,) = ax.plot(
+        [],
+        [],
+        color=color,
+        linewidth=1.5,
+        marker="o",
+        markersize=4,
+        markerfacecolor="white",
+        markeredgecolor=color,
+        markeredgewidth=1.0,
+    )
     ax.set_xlim(0, xlim)
     ax.set_ylim(0, c_max)
     ax.set_xlabel(r"Depth ($\mu$m)")

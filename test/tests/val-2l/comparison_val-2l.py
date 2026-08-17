@@ -112,6 +112,7 @@ def plot_conservation_of_mass(t, flux, mass, flux_label, title, filename):
     plt.savefig(filename, bbox_inches="tight", dpi=300)
     plt.close(fig)
 
+
 def plot_diffusivity_vs_temperature(
     simulation_file="val-2l_out.csv",
     filename="val-2l_diffusivity_vs_temperature.png",
@@ -143,7 +144,9 @@ def plot_diffusivity_vs_temperature(
     reciprocal_temperature = 1000.0 / temperature  # 1000/T (1/K)
 
     fig, ax = plt.subplots(figsize=(8, 5))
-    ax.semilogy(reciprocal_temperature, diffusivity_m2_s, color="steelblue", linewidth=2)
+    ax.semilogy(
+        reciprocal_temperature, diffusivity_m2_s, color="steelblue", linewidth=2
+    )
     ax.set_xlabel(r"Reciprocal temperature 1000/T (K$^{-1}$)")
     ax.set_ylabel(r"Diffusivity (m$^2$/s)")
     ax.set_title("Deuterium diffusivity in tungsten TMAP8 Material")
@@ -194,7 +197,7 @@ def plot_unirradiated_desorption(
     )
     # at/mum^2/s -> at/m^2/s (x1e12); atomic D flux -> molecular D2 flux (/2) to match the
     # RGA, which detects D2 (mass 4) and HD (mass 3) -- same convention as val-2d
-    simulation_flux = simulation_flux * 1e12 /2
+    simulation_flux = simulation_flux * 1e12 / 2
 
     # Map experimental times to temperatures using the simulation's T(t) ramp,
     # then truncate to the simulation time range to avoid extrapolation.
@@ -207,7 +210,12 @@ def plot_unirradiated_desorption(
 
     # ---- Plot 1: experimental desorption history ----
     plt.figure(figsize=(10, 6))
-    plt.plot(experiment_temperature, experiment_flux, "ro", label="Experiment (Shimada 2010, 0 dpa)")
+    plt.plot(
+        experiment_temperature,
+        experiment_flux,
+        "ro",
+        label="Experiment (Shimada 2010, 0 dpa)",
+    )
     plt.xlabel("Temperature (K)")
     plt.ylabel(r"Desorbed flux (m$^{-2}$s$^{-1}$)")
     plt.title("Unirradiated deuterium desorption")
@@ -245,13 +253,27 @@ def plot_unirradiated_desorption(
 
     # ---- Plot 3: simulation vs experiment with RMSPE ----
     plt.figure(figsize=(10, 6))
-    plt.plot(experiment_temperature, experiment_flux, "ro", label="Experiment (Shimada 2010, 0 dpa)")
+    plt.plot(
+        experiment_temperature,
+        experiment_flux,
+        "ro",
+        label="Experiment (Shimada 2010, 0 dpa)",
+    )
     plt.plot(simulation_temperature, simulation_flux, "b-", label="TMAP8")
     if rmspe_region.any():
-        plt.axvline(experiment_temperature[rmspe_region].min(), color="green", linestyle="--",
-                    linewidth=1.2, label="RMSPE region")
-        plt.axvline(experiment_temperature[rmspe_region].max(), color="green", linestyle="--",
-                    linewidth=1.2)
+        plt.axvline(
+            experiment_temperature[rmspe_region].min(),
+            color="green",
+            linestyle="--",
+            linewidth=1.2,
+            label="RMSPE region",
+        )
+        plt.axvline(
+            experiment_temperature[rmspe_region].max(),
+            color="green",
+            linestyle="--",
+            linewidth=1.2,
+        )
         annotate_rmspe(
             mapped_simulation_flux[rmspe_region],
             experiment_flux[rmspe_region],
@@ -270,6 +292,7 @@ def plot_unirradiated_desorption(
     plt.savefig(comparison_plot, bbox_inches="tight", dpi=300)
     # plt.show()
 
+
 # =========================== TMAP8 simulation data extraction ========================== #
 
 csv_folder = "val-2l_out.csv"
@@ -282,9 +305,11 @@ simulation_time_TMAP8 = simulation_TMAP8_data["time"]
 # plots the relative residual over time. We follow the same recipe here. M(0) is read from the t=0 row
 # of total_deuterium_retention, which runs on INITIAL (cf. val-2k reading
 # deuterium_inventory_in_sample_physical.iloc[0]).
-total_deuterium_retention = simulation_TMAP8_data['total_deuterium_retention']
-temperature_history = simulation_TMAP8_data['temperature']
-mass_conservation_residual = simulation_TMAP8_data['deuterium_mass_conservation_residual']
+total_deuterium_retention = simulation_TMAP8_data["total_deuterium_retention"]
+temperature_history = simulation_TMAP8_data["temperature"]
+mass_conservation_residual = simulation_TMAP8_data[
+    "deuterium_mass_conservation_residual"
+]
 initial_inventory = total_deuterium_retention.iloc[0]
 relative_mass_conservation_residual = mass_conservation_residual / initial_inventory
 
@@ -292,35 +317,59 @@ relative_mass_conservation_residual = mass_conservation_residual / initial_inven
 # total_mobile_retention  : physical mobile inventory  (at/µm²), no scaling needed
 # total_trapped_retention : MOOSE stores the *rescaled* variable, so multiply by
 #                           trap_per_free to recover the physical trapped inventory.
-total_mobile_retention  = simulation_TMAP8_data["total_mobile_retention"]
-total_trapped_retention = simulation_TMAP8_data["total_trapped_retention"] * trap_per_free
+total_mobile_retention = simulation_TMAP8_data["total_mobile_retention"]
+total_trapped_retention = (
+    simulation_TMAP8_data["total_trapped_retention"] * trap_per_free
+)
 
 # --- Total deuterium inventory with temperature history ---
 # Add one entry per species to inventory_series. They are stacked bottom-up with
 # fill_between, so order matters: put the largest / most stable contribution first.
 # Append a new tuple here when additional trap populations are added.
 inventory_series = [
-    ("Trapped D (trap 1, 1.35 eV)", total_trapped_retention, plt.get_cmap("viridis")(0.45)),
-    ("Mobile D",                    total_mobile_retention,   plt.get_cmap("viridis")(0.95)),
+    (
+        "Trapped D (trap 1, 1.35 eV)",
+        total_trapped_retention,
+        plt.get_cmap("viridis")(0.45),
+    ),
+    ("Mobile D", total_mobile_retention, plt.get_cmap("viridis")(0.95)),
 ]
 
 fig, ax = plt.subplots(figsize=(6.5, 5.5))
 inventory_bottom = np.zeros_like(total_deuterium_retention)
 legend_patches = []
 for label, values, color in inventory_series:
-    ax.fill_between(simulation_time_TMAP8, inventory_bottom, inventory_bottom + values,
-                    color=color, alpha=0.3)
-    ax.plot(simulation_time_TMAP8, inventory_bottom + values, color=color, linewidth=1.0)
+    ax.fill_between(
+        simulation_time_TMAP8,
+        inventory_bottom,
+        inventory_bottom + values,
+        color=color,
+        alpha=0.3,
+    )
+    ax.plot(
+        simulation_time_TMAP8, inventory_bottom + values, color=color, linewidth=1.0
+    )
     inventory_bottom = inventory_bottom + values
     legend_patches.append(Patch(color=color, alpha=0.5, label=label))
 
 total_inventory = inventory_bottom
-total_handle = ax.plot(simulation_time_TMAP8, total_inventory, color="tab:green", linewidth=1.5,
-                       label="Total D inventory")[0]
+total_handle = ax.plot(
+    simulation_time_TMAP8,
+    total_inventory,
+    color="tab:green",
+    linewidth=1.5,
+    label="Total D inventory",
+)[0]
 
 ax_temperature = ax.twinx()
-temperature_handle = ax_temperature.plot(simulation_time_TMAP8, temperature_history, linestyle="-",
-                                         color="k", linewidth=1.5, label="TMAP8 temperature history")[0]
+temperature_handle = ax_temperature.plot(
+    simulation_time_TMAP8,
+    temperature_history,
+    linestyle="-",
+    color="k",
+    linewidth=1.5,
+    label="TMAP8 temperature history",
+)[0]
 
 ax.set_xlabel("Time (s)")
 ax.set_ylabel(r"Deuterium inventory (atoms/$\mu m^2$)")
@@ -328,7 +377,9 @@ ax.set_xlim(0, simulation_time_TMAP8.max())
 ax.set_ylim(bottom=0)
 ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
 ax_temperature.set_ylabel("Temperature (K)")
-ax.legend(handles=[total_handle, temperature_handle] + legend_patches[::-1], loc="lower right")
+ax.legend(
+    handles=[total_handle, temperature_handle] + legend_patches[::-1], loc="lower right"
+)
 ax.minorticks_on()
 plt.savefig("val-2l_inventory.png", bbox_inches="tight", dpi=300)
 # plt.show()
@@ -336,7 +387,12 @@ plt.close(fig)
 
 # --- Relative deuterium mass-balance residual over time (cf. comparison_val-2k.py Stage 6) ---
 fig, ax = plt.subplots(figsize=(6.5, 4.8))
-ax.plot(simulation_time_TMAP8, relative_mass_conservation_residual, color="tab:blue", linewidth=1.8)
+ax.plot(
+    simulation_time_TMAP8,
+    relative_mass_conservation_residual,
+    color="tab:blue",
+    linewidth=1.8,
+)
 ax.axhline(0.0, color="0.35", linewidth=1.0, linestyle="--")
 ax.set_xlabel("Time (s)")
 ax.set_ylabel("Deuterium mass-balance residual / initial inventory (-)")
