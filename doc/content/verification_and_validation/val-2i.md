@@ -5,7 +5,7 @@
 ## Case Description
 
 !style halign=left
-This case reproduces, in updated form, the analysis published in [!cite](Shimada2018). 
+This case reproduces, in updated form, the analysis published in [!cite](Shimada2018).
 In the original study, a modified form of the TMAP4 code (updated to include multiple trapping sites, though only one is used in this study) was utilized to explore deuterium retention and trapping within neutron-irradiated single-crystal tungsten samples.
 Samples were first irradiated in the [High Flux Isotope Reactor (HFIR)](https://neutrons.ornl.gov/hfir) facility at Oak Ridge National Laboratory and then exposed to a deuterium plasma within the [Tritium Plasma Experiment (TPE)](https://inl.gov/fusion-safety/star/) at Idaho National Laboratory. This was undertaken as part of the US-Japan Technological Assessment of Plasma Facing Components for DEMO Reactors (PHENIX) project [!citep](Katoh2017phenix, Shimada2017phenix).
 
@@ -73,6 +73,20 @@ The model includes a single trapping site to capture deuterium retention effects
 
 where $N$ is the lattice site density, and $C_T^{\text{empty}} = \chi N - C_T$ is the empty trap concentration with $\chi$ being the trap site fraction. $N$ is assumed to be the atomic density of tungsten.
 
+For a robust coupled nonlinear solve, TMAP8 does not solve directly for $C_T$. Instead, following the scaling approach described in [TrappingNodalKernel.md] and [getting_started/tmap8_user_notes.md#scaling exact=True], the finite-element trapped-species degree of freedom that TMAP8 actually solves for, $\hat{C}_T$, is related to the physical trapped concentration by
+
+\begin{equation}
+C_T = \text{trap\_per\_free} \cdot \hat{C}_T,
+\end{equation}
+
+where `trap_per_free` is a scaling factor chosen so that the numerical magnitude of $\hat{C}_T$ is comparable to that of the mobile concentration $C_M$. Substituting this relation into the equation for $C_T$ above and dividing through by `trap_per_free` gives the equation that is actually solved for $\hat{C}_T$:
+
+\begin{equation}
+\frac{\partial \hat{C}_T}{\partial t} = \frac{\alpha_t}{\text{trap\_per\_free}} \frac{\left(\chi N - \text{trap\_per\_free} \cdot \hat{C}_T\right) C_M}{N} - \alpha_r \hat{C}_T.
+\end{equation}
+
+In the [/val-2i.i] input file, this scaling is set through the `trap_per_free` parameter, with a value of $1 \times 10^6$.
+
 The trapping and release rate coefficients follow Arrhenius relationships:
 
 \begin{equation}
@@ -116,7 +130,7 @@ As mentioned previously, the reflection coefficient $R_{ref}$ was adjusted as a 
 ## Case and Model Parameters
 
 !style halign=left
-[val-2i_diffusion_parameters] summarizes the detail of sample and experimental conditions from [!cite](Shimada2018), as well as the model parameters from TODO, TODO, and estimated from validation cases in TMAP8. Where there are different parameters for each case, these are listed in order by specimen: W53A, W55A, and W26A. [val-2i_trapping_parameters] includes the trapping parameters from Karmonik et al. [!citep](karmonik1995proton) and estimated based on existing validation cases in TMAP8.
+[val-2i_diffusion_parameters] summarizes the detail of sample and experimental conditions from [!cite](Shimada2018), as well as the model parameters from [!cite](frauenfelder1969solution), [!cite](Causey2002), and estimated from validation cases in TMAP8. Where there are different parameters for each case, these are listed in order by specimen: W53A, W55A, and W26A. [val-2i_trapping_parameters] includes the trapping parameters from Karmonik et al. [!citep](karmonik1995proton) and estimated based on existing validation cases in TMAP8.
 
 !table id=val-2i_diffusion_parameters caption=Experimental set up and diffusion parameters from Shimada et al. [!citep](Shimada2018) for deuterium transport in neutron-irradiated single-crystal tungsten. Multiple parameter values correspond to [W53A, W55A, W26A].
 | Parameter | Description | Value | Units | Reference |
@@ -166,13 +180,12 @@ Using the model described here and in [!cite](Shimada2018), the output from TMAP
 ## Input files
 
 !style halign=left
-The input file for this validation case is:
+The input file for this validation case as described above is [/val-2i.i]. It shows the parameters
+specific to the 673 K (W53A) case. The other cases are run in testing using command line arguments
+to adjust the trapping site fraction, the plasma exposure temperature, the binding energy, and the
+reflection coefficient on-the-fly.
 
-- [/val-2i.i]: Simulates deuterium transport in neutron-irradiated single-crystal tungsten with
-  trapping effects using the parameters and model configuration described in this text.
-
-The base input file shows the parameters specific to the 673 K (W53A) case. The other cases are run in testing using command line arguments to adjust the trapping site fraction, the plasma exposure temperature, the binding energy, and the reflection coefficient on-the-fly.
-
-More information about these tests can be found in the test specification file for this case, namely [/val-2i/tests].
+More information about these tests can be found in the test specification file for this case, namely
+[/val-2i/tests].
 
 !bibtex bibliography

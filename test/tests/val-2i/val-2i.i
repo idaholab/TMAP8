@@ -34,13 +34,12 @@ E_a = '${units 0.39 eV -> J}'
 N = '${units 6.323e28 at/m^3 -> at/mum^3}'
 trapping_energy = '${fparse ${units 0.39 eV -> J} / ${kB}}'
 binding_energy = '${fparse ${units 1.41 eV -> J} / ${kB}}'
-detrapping_energy_1 = '${fparse ${trapping_energy} + ${binding_energy}}' # (K)
+detrapping_energy = '${fparse ${trapping_energy} + ${binding_energy}}' # (K)
 W_lattice_constant = '${units 3.16e-10 m -> mum}'
-trapping_site_fraction_1 = 0.002 # (-)
+trapping_site_fraction = 0.002 # (-)
 trapping_rate_prefactor = '${fparse ${diffusivity_coefficient} / ${W_lattice_constant}^2}' # (1/s)
 release_rate_prefactor = '${units 1e13 1/s}'
-trap_per_free_1 = 1e6 # (-)
-
+trap_per_free = 1e6 # (-)
 
 # Thermal parameters
 temperature_exposure = '${units 673 K}'
@@ -73,29 +72,28 @@ temperature_min = '${units 300 K}'
   [concentration_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy
-    bounded_variable = concentration
+    bounded_variable = mobile
     bound_type = lower
     bound_value = ${bound_value_min}
   []
-  [trapped_1_lower_bound]
+  [trapped_lower_bound]
     type = ConstantBounds
     variable = bounds_dummy
-    bounded_variable = trapped_1
+    bounded_variable = trapped
     bound_type = lower
     bound_value = ${bound_value_min}
   []
 []
 
 [Variables]
-  [concentration]
+  [mobile]
     order = FIRST
     family = LAGRANGE
     initial_condition = ${initial_concentration}
   []
-  [trapped_1]
+  [trapped]
     order = FIRST
     family = LAGRANGE
-    outputs = none
   []
 []
 
@@ -128,54 +126,53 @@ temperature_min = '${units 300 K}'
 [Kernels]
   [time_diffusion_implantation]
     type = ADTimeDerivative
-    variable = concentration
+    variable = mobile
     extra_vector_tags = ref
   []
   [diffusion_implantation]
     type = ADMatDiffusion
-    variable = concentration
+    variable = mobile
     diffusivity = diffusivity
     extra_vector_tags = ref
   []
   [source]
     type = ADBodyForce
-    variable = concentration
+    variable = mobile
     function = concentration_source_normal_function
   []
 
   # Trapping kernel
-  [coupled_time_trap_1]
+  [coupled_time_trap]
     type = ADCoefCoupledTimeDerivative
-    variable = concentration
-    v = trapped_1
-    coef = ${trap_per_free_1}
+    variable = mobile
+    v = trapped
+    coef = ${trap_per_free}
     extra_vector_tags = ref
   []
 []
 
 [NodalKernels]
-  # First traps
-  [time_1]
+  [time]
     type = TimeDerivativeNodalKernel
-    variable = trapped_1
+    variable = trapped
   []
-  [trapping_1]
+  [trapping]
     type = TrappingNodalKernel
-    variable = trapped_1
-    mobile_concentration = concentration
+    variable = trapped
+    mobile_concentration = mobile
     alpha_t = '${trapping_rate_prefactor}'
     trapping_energy = '${trapping_energy}'
     N = '${N}'
-    Ct0 = '${trapping_site_fraction_1}'
+    Ct0 = '${trapping_site_fraction}'
     temperature = 'temperature'
-    trap_per_free = ${trap_per_free_1}
+    trap_per_free = ${trap_per_free}
     extra_vector_tags = ref
   []
-  [release_1]
+  [release]
     type = ReleasingNodalKernel
-    variable = trapped_1
+    variable = trapped
     alpha_r = '${release_rate_prefactor}'
-    detrapping_energy = '${detrapping_energy_1}'
+    detrapping_energy = '${detrapping_energy}'
     temperature = 'temperature'
   []
 []
@@ -183,13 +180,13 @@ temperature_min = '${units 300 K}'
 [BCs]
   [left]
     type = ADDirichletBC
-    variable = concentration
+    variable = mobile
     boundary = left
     value = 0
   []
   [right]
     type = ADDirichletBC
-    variable = concentration
+    variable = mobile
     boundary = right
     value = 0
   []
@@ -253,7 +250,7 @@ temperature_min = '${units 300 K}'
   []
   [flux_surface_left] # (D / mum^2 / s)
     type = SideDiffusiveFluxIntegral
-    variable = concentration
+    variable = mobile
     diffusivity = 'diffusivity_nonAD'
     boundary = 'left'
     outputs = none
@@ -266,7 +263,7 @@ temperature_min = '${units 300 K}'
   []
   [flux_surface_right] # (D / mum^2 / s)
     type = SideDiffusiveFluxIntegral
-    variable = concentration
+    variable = mobile
     diffusivity = 'diffusivity_nonAD'
     boundary = 'right'
     outputs = none

@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib.patheffects as path_effects
 import numpy as np
 from matplotlib import gridspec
 import pandas as pd
@@ -72,7 +73,7 @@ ax.semilogy(
     linestyle="-",
     label=r"673 K",
     c="blue",
-    linewidth=3.0,
+    linewidth=3.0, path_effects=[path_effects.withStroke(linewidth=5, foreground="black")]
 )
 ax.semilogy(
     simulation_time_873,
@@ -80,7 +81,7 @@ ax.semilogy(
     linestyle="-",
     label=r"873 K",
     c="red",
-    linewidth=3.0,
+    linewidth=3.0, path_effects=[path_effects.withStroke(linewidth=5, foreground="black")]
 )
 ax.semilogy(
     simulation_time_973,
@@ -88,7 +89,7 @@ ax.semilogy(
     linestyle="-",
     label=r"973 K",
     c="green",
-    linewidth=3.0,
+    linewidth=3.0, path_effects=[path_effects.withStroke(linewidth=5, foreground="black")]
 )
 
 # TMAP4
@@ -99,7 +100,7 @@ ax.semilogy(
     label=r"TMAP4 - 673 K",
     c="blue",
     linewidth=3.0,
-    alpha=0.7,
+    alpha=0.7, path_effects=[path_effects.withStroke(linewidth=5, foreground="black")]
 )
 ax.semilogy(
     simulation_time_TMAP4,
@@ -108,7 +109,7 @@ ax.semilogy(
     label=r"TMAP4 - 873 K",
     c="red",
     linewidth=3.0,
-    alpha=0.7,
+    alpha=0.7, path_effects=[path_effects.withStroke(linewidth=5, foreground="black")]
 )
 ax.semilogy(
     simulation_time_TMAP4,
@@ -117,7 +118,7 @@ ax.semilogy(
     label=r"TMAP4 - 973 K",
     c="green",
     linewidth=3.0,
-    alpha=0.7,
+    alpha=0.7, path_effects=[path_effects.withStroke(linewidth=5, foreground="black")]
 )
 
 # Experimental Data
@@ -129,7 +130,7 @@ ax.scatter(
     s=s,
     label=r"Exp - 673 K",
     c="blue",
-    alpha=0.3,
+    alpha=0.3
 )
 ax.scatter(
     experiment_time,
@@ -138,7 +139,7 @@ ax.scatter(
     s=s,
     label=r"Exp - 873 K",
     c="red",
-    alpha=0.3,
+    alpha=0.3
 )
 ax.scatter(
     experiment_time,
@@ -147,7 +148,7 @@ ax.scatter(
     s=s,
     label=r"Exp - 973 K",
     c="green",
-    alpha=0.3,
+    alpha=0.3
 )
 
 
@@ -175,7 +176,7 @@ tmap_flux_for_rmspe = numerical_solution_on_experiment_input(
 RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe - experiment_flux_673) ** 2))
 RMSPE = RMSE * 100 / np.mean(experiment_flux_673)
 ax.text(
-    7500.0, 0.85e18, "RMSPE (TMAP4 - 673 K) = %.2f " % RMSPE + "%", fontweight="bold"
+    7500.0, 0.85e18, "RMSPE (TMAP4 - 673 K) = %.2f " % RMSPE + "%", fontweight="bold", color="blue"
 )
 
 # RMSPE (TMAP4 - 873 K)
@@ -185,7 +186,7 @@ tmap_flux_for_rmspe = numerical_solution_on_experiment_input(
 RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe - experiment_flux_873) ** 2))
 RMSPE = RMSE * 100 / np.mean(experiment_flux_873)
 ax.text(
-    7500.0, 0.65e18, "RMSPE (TMAP4 - 873 K) = %.2f " % RMSPE + "%", fontweight="bold"
+    7500.0, 0.65e18, "RMSPE (TMAP4 - 873 K) = %.2f " % RMSPE + "%", fontweight="bold", color="red"
 )
 
 # RMSPE (TMAP4 - 973 K)
@@ -195,7 +196,7 @@ tmap_flux_for_rmspe = numerical_solution_on_experiment_input(
 RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe - experiment_flux_973) ** 2))
 RMSPE = RMSE * 100 / np.mean(experiment_flux_973)
 ax.text(
-    7500.0, 0.5e18, "RMSPE (TMAP4 - 973 K) = %.2f " % RMSPE + "%", fontweight="bold"
+    7500.0, 0.5e18, "RMSPE (TMAP4 - 973 K) = %.2f " % RMSPE + "%", fontweight="bold", color="green"
 )
 
 # RMSPE (TMAP8 - 673 K)
@@ -205,7 +206,7 @@ tmap_flux_for_rmspe = numerical_solution_on_experiment_input(
 RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe - experiment_flux_673) ** 2))
 RMSPE = RMSE * 100 / np.mean(experiment_flux_673)
 ax.text(
-    7500.0, 0.17e18, "RMSPE (TMAP8 - 673 K) = %.2f " % RMSPE + "%", fontweight="bold"
+    7500.0, 0.17e18, "RMSPE (TMAP8 - 673 K) = %.2f " % RMSPE + "%", fontweight="bold", color="blue"
 )
 
 # RMSPE (TMAP8 - 873 K)
@@ -215,7 +216,7 @@ tmap_flux_for_rmspe = numerical_solution_on_experiment_input(
 RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe - experiment_flux_873) ** 2))
 RMSPE = RMSE * 100 / np.mean(experiment_flux_873)
 ax.text(
-    7500.0, 0.13e18, "RMSPE (TMAP8 - 873 K) = %.2f " % RMSPE + "%", fontweight="bold"
+    7500.0, 0.13e18, "RMSPE (TMAP8 - 873 K) = %.2f " % RMSPE + "%", fontweight="bold", color="red"
 )
 
 # RMSPE (TMAP8 - 973 K)
@@ -224,7 +225,7 @@ tmap_flux_for_rmspe = numerical_solution_on_experiment_input(
 )
 RMSE = np.sqrt(np.mean((tmap_flux_for_rmspe - experiment_flux_973) ** 2))
 RMSPE = RMSE * 100 / np.mean(experiment_flux_973)
-ax.text(7500.0, 1e17, "RMSPE (TMAP8 - 973 K) = %.2f " % RMSPE + "%", fontweight="bold")
+ax.text(7500.0, 1e17, "RMSPE (TMAP8 - 973 K) = %.2f " % RMSPE + "%", fontweight="bold", color="green")
 
 ax.tick_params(
     axis="both",
