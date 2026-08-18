@@ -3,12 +3,30 @@
 !style halign=center fontsize=120%
 !datetime today format=%B %Y
 
-!media figures/TMAP8_logo/TMAP8_vertical_blue.png alt=TMAP8 logo style=display:block;box-shadow:none;margin-left:auto;margin-right:auto;width:30%;
+!row!
+
+!col! width=50%
+
+!media figures/TMAP8_logo/TMAP8_vertical_blue.png alt=TMAP8 logo style=display:block;box-shadow:none;margin-left:auto;margin-right:auto;width:55%;
 
 !style halign=center
-[https://mooseframework.inl.gov/TMAP8/](https://mooseframework.inl.gov/TMAP8/)
+[TMAP8 Website](https://mooseframework.inl.gov/TMAP8/)
+
+!col-end!
+
+!col! width=50%
+
+!media figures/RD100_2026_Winner_Logo_scaled.png alt=2026 R&D 100 Award Winner logo style=display:block;box-shadow:none;margin-left:auto;margin-right:auto;width:40%;
+
+!style halign=center
+[R&D 100 Award Winners](https://www.rdworldonline.com/presenting-the-2026-rd-100-awards-winners/)
+
+!col-end!
+
+!row-end!
 
 !---
+
 
 # Outline of the workshop slides
 
