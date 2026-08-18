@@ -1,3 +1,11 @@
+# This is the main comparison script for val-2l, and computes the following plots:
+
+# 1: plot_temperature_history() shows the temperature profile over the entire time of experiment, as well as an inlet graph that zooms in on temperature anomolies observed during the experiment
+# 2: plot_mass_conservation() shows the evolution of the mass conservation residual relative to the initial mass at the start of the TDS experiment
+# 3: plot_inventory() shows the deuterium present in traps and as a mobile concentration
+# 4: plot_diffusivity_vs_temperature() shows the diffusivity as a function of reciprocal temperature, which should be linear
+# 5: plot_unirradiated_desorption() plots the simulated against experimental desorbed flux from the upstream and downstream surfaces, performing RMSPE calculations to measure the goodness of fit
+
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import gridspec
@@ -11,11 +19,13 @@ import os
 script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
 
-#  Must match val-2l.i: trap_per_free = ... (rescaling factor for trapped variable)
-trap_per_free = 1e4  # update this if val-2l.i changes
+# Read trap_per_free directly from the simulation output (ConstantPostprocessor,
+# execute_on = 'initial'), so this script stays in sync with val-2l.i automatically.
+trap_per_free = pd.read_csv("val-2l_out.csv")["trap_per_free"].iloc[0]
 
 # Geometry
-disc_area = np.pi*(3e3)**2 # 6 mm diameter gives 3e3 mum radius
+disc_area = np.pi * (3e3) ** 2  # 6 mm diameter gives 3e3 mum radius
+
 # ================================= Functions ================================ #
 
 
@@ -31,9 +41,7 @@ def read_csv_from_TMAP8(file_name, parameter_names):
     """
     if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
         csv_folder = f"../../../../test/tests/val-2l/gold/{file_name}"
-
     else:  # if in test folder
-        # csv_folder = f"./gold/{file_name}"
         csv_folder = f"./{file_name}"
     simulation_data = pd.read_csv(csv_folder)
     return np.array([simulation_data[name] for name in parameter_names])
@@ -89,28 +97,159 @@ def annotate_rmspe(simulated, reference, x_pos, y_pos):
     plt.text(x_pos, y_pos, "RMSPE = %.2f %%" % RMSPE, fontweight="bold")
 
 
-def plot_conservation_of_mass(t, flux, mass, flux_label, title, filename):
-    """Plot accumulated boundary flux against total mass to verify conservation
+def plot_temperature_history(
+    simulation_file="val-2l_out.csv",
+    filename="val-2l_temperature_history.png",
+    zoom_end=350,
+    zoom_ylim=(270, 370),
+):
+    """Plot the simulated temperature ramp versus time with a zoomed inset
+
+    The inset is placed in the lower-right corner of the main axes and shows
+    the first zoom_end seconds with fixed y-limits to highlight the early-time
+    deviation from the analytic ramp.
 
     Args:
-        t (float, ndarray): time array in days
-        flux (float, ndarray): accumulated boundary flux in µmol H
-        mass (float, ndarray): total H mass in domain in µmol H
-        flux_label (str): legend label for the flux line
-        title (str): plot title
+        simulation_file (str): TMAP8 CSV with "time" (s) and "temperature" (K) columns
+        filename (str): output PNG filename
+        zoom_end (float): upper time limit (s) for the inset
+        zoom_ylim (tuple): (y_min, y_max) in K for the inset y-axis
+    """
+    time, temperature = read_csv_from_TMAP8(simulation_file, ["time", "temperature"])
+
+    # ---- Full history ----
+    fig, ax = plt.subplots(figsize=(6.5, 4.8))
+    ax.plot(
+        time,
+        temperature,
+        color="tab:red",
+        linewidth=1.8,
+        label="TMAP8 temperature ramp",
+    )
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Temperature (K)")
+    ax.set_xlim(0, time.max())
+    ax.set_ylim(bottom=0)
+    ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
+    ax.minorticks_on()
+    ax.legend()
+
+    # ---- Inset: lower-right, first zoom_end seconds ----
+    # Coordinates are in axes-fraction space: [left, bottom, width, height]
+    ax_inset = ax.inset_axes([0.55, 0.05, 0.42, 0.42])
+    mask = time <= zoom_end
+    ax_inset.plot(time[mask], temperature[mask], color="tab:red", linewidth=1.2)
+    ax_inset.set_xlim(0, zoom_end)
+    ax_inset.set_ylim(*zoom_ylim)
+    ax_inset.set_xlabel("Time (s)", fontsize=7)
+    ax_inset.set_ylabel("Temperature (K)", fontsize=7)
+    ax_inset.tick_params(labelsize=7)
+    ax_inset.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
+
+    plt.tight_layout()
+    plt.savefig(filename, bbox_inches="tight", dpi=300)
+    plt.close(fig)
+
+
+def plot_mass_conservation(
+    simulation_file="val-2l_out.csv",
+    filename="val-2l_mass_conservation.png",
+):
+    """Plot the relative deuterium mass-balance residual over time
+
+    The residual (inventory_change + released) is normalized by the initial inventory
+    M(0) and should remain close to zero if mass is conserved (cf. val-2k Stage 6).
+
+    Args:
+        simulation_file (str): TMAP8 CSV with "time", "total_deuterium_retention", and
+            "deuterium_mass_conservation_residual" columns
         filename (str): output PNG filename
     """
-    fig = plt.figure(figsize=(10, 6))
-    plt.plot(t, flux, label=flux_label)
-    plt.plot(t, mass, label="H Total Mass")
-    annotate_rmspe(flux, mass, t[-1] / 2, mass[-1] / 4)
-    plt.xlabel("Time (Days)")
-    plt.ylabel(r"$\mu$mol H")
-    plt.title(title)
-    plt.xlim(0, t.max())
-    plt.ylim(0)
-    plt.legend()
-    plt.grid(True)
+    time, total_retention, residual = read_csv_from_TMAP8(
+        simulation_file,
+        ["time", "total_deuterium_retention", "deuterium_mass_conservation_residual"],
+    )
+    initial_inventory = total_retention[0]
+    relative_residual = residual / initial_inventory
+
+    fig, ax = plt.subplots(figsize=(6.5, 4.8))
+    ax.plot(time, relative_residual, color="tab:blue", linewidth=1.8)
+    ax.axhline(0.0, color="0.35", linewidth=1.0, linestyle="--")
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Deuterium mass-balance residual / initial inventory (-)")
+    ax.set_xlim(0, time.max())
+    ax.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
+    ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
+    ax.minorticks_on()
+    plt.tight_layout()
+    plt.savefig(filename, bbox_inches="tight", dpi=300)
+    plt.close(fig)
+
+
+def plot_inventory(
+    simulation_file="val-2l_out.csv",
+    filename="val-2l_inventory.png",
+):
+    """Plot the stacked deuterium inventory (mobile + trapped) with temperature history
+
+    The MOOSE postprocessors output surface densities (at/µm²). The mobile retention
+    is converted to atoms by multiplying by disc_area. The trapped variable is stored
+    rescaled by 1/trap_per_free in MOOSE, so it is multiplied by both trap_per_free
+    and disc_area to recover the physical atom count.
+
+    Args:
+        simulation_file (str): TMAP8 CSV with "time", "temperature",
+            "total_mobile_retention", and "total_trapped_retention" columns
+        filename (str): output PNG filename
+    """
+    time, temperature, mobile_raw, trapped_raw = read_csv_from_TMAP8(
+        simulation_file,
+        ["time", "temperature", "total_mobile_retention", "total_trapped_retention"],
+    )
+    mobile = mobile_raw * disc_area
+    trapped = trapped_raw * trap_per_free * disc_area
+
+    # Stacked bottom-up: largest / most stable contribution first
+    inventory_series = [
+        ("Trapped D (trap 1, 1.35 eV)", trapped, plt.get_cmap("viridis")(0.45)),
+        ("Mobile D", mobile, plt.get_cmap("viridis")(0.95)),
+    ]
+
+    fig, ax = plt.subplots(figsize=(6.5, 5.5))
+    bottom = np.zeros_like(time)
+    legend_patches = []
+    for label, values, color in inventory_series:
+        ax.fill_between(time, bottom, bottom + values, color=color, alpha=0.3)
+        ax.plot(time, bottom + values, color=color, linewidth=1.0)
+        bottom = bottom + values
+        legend_patches.append(Patch(color=color, alpha=0.5, label=label))
+
+    total_handle = ax.plot(
+        time, bottom, color="tab:green", linewidth=1.5, label="Total D inventory"
+    )[0]
+
+    ax_T = ax.twinx()
+    temperature_handle = ax_T.plot(
+        time,
+        temperature,
+        linestyle="-",
+        color="k",
+        linewidth=1.5,
+        label="TMAP8 temperature history",
+    )[0]
+
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel(r"Deuterium inventory (atoms)")
+    ax.set_xlim(0, time.max())
+    ax.set_ylim(bottom=0)
+    ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
+    ax_T.set_ylabel("Temperature (K)")
+    ax.legend(
+        handles=[total_handle, temperature_handle] + legend_patches[::-1],
+        loc="lower right",
+    )
+    ax.minorticks_on()
+    plt.tight_layout()
     plt.savefig(filename, bbox_inches="tight", dpi=300)
     plt.close(fig)
 
@@ -142,7 +281,6 @@ def plot_diffusivity_vs_temperature(
     order = np.argsort(temperature)
     temperature, diffusivity = temperature[order], diffusivity[order]
     diffusivity_m2_s = diffusivity * 1e-12  # µm²/s -> m²/s
-
     reciprocal_temperature = 1000.0 / temperature  # 1000/T (1/K)
 
     fig, ax = plt.subplots(figsize=(8, 5))
@@ -197,7 +335,7 @@ def plot_unirradiated_desorption(
     simulation_time, simulation_temperature, simulation_flux = read_csv_from_TMAP8(
         simulation_file, ["time", "temperature", simulation_flux_column]
     )
-    # at/mum^2/s -> at/m^2/s (x1e12);
+    # at/mum^2/s -> at/m^2/s (x1e12)
     simulation_flux = simulation_flux * 1e12
 
     # Map experimental times to temperatures using the simulation's T(t) ramp,
@@ -227,7 +365,6 @@ def plot_unirradiated_desorption(
     plt.grid(True)
     plt.tight_layout()
     plt.savefig(experiment_plot, bbox_inches="tight", dpi=300)
-    # plt.show()
 
     # ---- Plot 2: raw simulated desorption history ----
     plt.figure(figsize=(10, 6))
@@ -242,14 +379,14 @@ def plot_unirradiated_desorption(
     plt.grid(True)
     plt.tight_layout()
     plt.savefig(simulation_plot, bbox_inches="tight", dpi=300)
-    # plt.show()
 
-    # Map simulated flux onto experimental temperature points for RMSPE
-    mapped_simulation_flux = numerical_solution_on_experiment_input(
-        experiment_temperature, simulation_temperature, simulation_flux
+    # Map simulated flux onto experimental time points for RMSPE.
+    # Interpolating over time (strictly monotone) rather than temperature avoids
+    # failures caused by flat holds or steps in the modified temperature profile.
+    mapped_simulation_flux = np.interp(
+        experiment_time, simulation_time, simulation_flux
     )
-    tmin = 1000
-    tmax = 2600
+    tmin, tmax = 1000, 2600
     rmspe_region = (experiment_time >= tmin) & (experiment_time <= tmax)
 
     # ---- Plot 3: simulation vs experiment with RMSPE ----
@@ -291,126 +428,12 @@ def plot_unirradiated_desorption(
     plt.grid(True)
     plt.tight_layout()
     plt.savefig(comparison_plot, bbox_inches="tight", dpi=300)
-    # plt.show()
 
 
-# =========================== TMAP8 simulation data extraction ========================== #
+# ========================== Plot calls ========================== #
 
-csv_folder = "val-2l_out.csv"
-simulation_TMAP8_data = pd.read_csv(csv_folder)
-simulation_time_TMAP8 = simulation_TMAP8_data["time"]
-
-### Conservation of Mass (replicating val-2k) ###
-# val-2k computes the conservation residual in MOOSE (deuterium_mass_conservation_residual =
-# inventory_change + released), then in Python normalizes it by the fixed initial inventory M(0) and
-# plots the relative residual over time. We follow the same recipe here. M(0) is read from the t=0 row
-# of total_deuterium_retention, which runs on INITIAL (cf. val-2k reading
-# deuterium_inventory_in_sample_physical.iloc[0]).
-total_deuterium_retention = simulation_TMAP8_data["total_deuterium_retention"]
-temperature_history = simulation_TMAP8_data["temperature"]
-mass_conservation_residual = simulation_TMAP8_data[
-    "deuterium_mass_conservation_residual"
-]
-initial_inventory = total_deuterium_retention.iloc[0]
-relative_mass_conservation_residual = mass_conservation_residual / initial_inventory
-
-# --- Read individual mobile and trapped integrals for the stacked inventory plot ---
-# total_mobile_retention  : physical mobile inventory  (at/µm²), so scale by disc cross-sectional area
-# total_trapped_retention : MOOSE stores the *rescaled* variable, so multiply by
-#                           trap_per_free and the cross-sectional area to recover the physical trapped inventory.
-total_mobile_retention = simulation_TMAP8_data["total_mobile_retention"] * disc_area
-total_trapped_retention = (
-    simulation_TMAP8_data["total_trapped_retention"] * trap_per_free * disc_area
-)
-
-# --- Total deuterium inventory with temperature history ---
-# Add one entry per species to inventory_series. They are stacked bottom-up with
-# fill_between, so order matters: put the largest / most stable contribution first.
-# Append a new tuple here when additional trap populations are added.
-inventory_series = [
-    (
-        "Trapped D (trap 1, 1.35 eV)",
-        total_trapped_retention,
-        plt.get_cmap("viridis")(0.45),
-    ),
-    ("Mobile D", total_mobile_retention, plt.get_cmap("viridis")(0.95)),
-]
-
-fig, ax = plt.subplots(figsize=(6.5, 5.5))
-inventory_bottom = np.zeros_like(total_deuterium_retention)
-legend_patches = []
-for label, values, color in inventory_series:
-    ax.fill_between(
-        simulation_time_TMAP8,
-        inventory_bottom,
-        inventory_bottom + values,
-        color=color,
-        alpha=0.3,
-    )
-    ax.plot(
-        simulation_time_TMAP8, inventory_bottom + values, color=color, linewidth=1.0
-    )
-    inventory_bottom = inventory_bottom + values
-    legend_patches.append(Patch(color=color, alpha=0.5, label=label))
-
-total_inventory = inventory_bottom
-total_handle = ax.plot(
-    simulation_time_TMAP8,
-    total_inventory,
-    color="tab:green",
-    linewidth=1.5,
-    label="Total D inventory",
-)[0]
-
-ax_temperature = ax.twinx()
-temperature_handle = ax_temperature.plot(
-    simulation_time_TMAP8,
-    temperature_history,
-    linestyle="-",
-    color="k",
-    linewidth=1.5,
-    label="TMAP8 temperature history",
-)[0]
-
-ax.set_xlabel("Time (s)")
-ax.set_ylabel(r"Deuterium inventory (atoms)")
-ax.set_xlim(0, simulation_time_TMAP8.max())
-ax.set_ylim(bottom=0)
-ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
-ax_temperature.set_ylabel("Temperature (K)")
-ax.legend(
-    handles=[total_handle, temperature_handle] + legend_patches[::-1], loc="lower right"
-)
-ax.minorticks_on()
-plt.savefig("val-2l_inventory.png", bbox_inches="tight", dpi=300)
-# plt.show()
-plt.close(fig)
-
-# --- Relative deuterium mass-balance residual over time (cf. comparison_val-2k.py Stage 6) ---
-fig, ax = plt.subplots(figsize=(6.5, 4.8))
-ax.plot(
-    simulation_time_TMAP8,
-    relative_mass_conservation_residual,
-    color="tab:blue",
-    linewidth=1.8,
-)
-ax.axhline(0.0, color="0.35", linewidth=1.0, linestyle="--")
-ax.set_xlabel("Time (s)")
-ax.set_ylabel("Deuterium mass-balance residual / initial inventory (-)")
-ax.set_xlim(0, simulation_time_TMAP8.max())
-ax.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
-ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
-ax.minorticks_on()
-plt.savefig("val-2l_mass_conservation.png", bbox_inches="tight", dpi=300)
-# plt.show()
-plt.close(fig)
-
-TMAP8_file_base = "val-2l_comparison"
-
-############################ diffusivity vs temperature ############################
-# D(T) over the simulated TDS ramp, read from the temperature/diffusivity postprocessors
+plot_temperature_history()
+plot_mass_conservation()
+plot_inventory()
 plot_diffusivity_vs_temperature()
-
-############################ desorption: experiment + TMAP8 comparison ############################
-# Shimada 2010, unirradiated / 0 dpa (unirradiated_data.csv)
 plot_unirradiated_desorption()

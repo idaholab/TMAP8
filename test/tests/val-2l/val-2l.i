@@ -1,82 +1,6 @@
-# Validation Problem #2l from TMAP4/TMAP7 V&V document
+# This input file serves as the main phyiscs model of deuterium permeation in neutron-irradiated tungsten.
 
-# !include val-2l.params
-
-# Physical constants
-kb = '${units 1.380649e-23 J/K}' # Boltzmann constant J/K - from PhysicalConstants.h
-eV_to_J = '${units 1.602176634e-19 J/eV}' # Conversion coefficient from eV to Joules - from PhysicalConstants.h
-kb_eV = '${units ${fparse kb / eV_to_J} eV/K}' # Boltzmann constant eV/K
-
-# Temporal Parameters
-simulation_time = '${units 2 h -> s}' # 2 h TDS with temperature ramp
-# simulation_time = '${units 1 h -> s}' # Should be enough time to model unirradiated case
-dt_start = '${units 0.25 s}'
-dt_max = '${units 1 s}'
-dt_min = '${units 1e-6 s}'
-
-# Geometry
-tungsten_thickness = '${units 0.2 mm -> mum}' # Tungsten disc thickness, Shimada et al. 2010 (p. S667, Section 2.1)
-
-# Gaussian-hill initial condition (diagnostic profile; not from Shimada et al. 2010).
-gaussian_amplitude = '${units 1e26 at/m^3 -> at/mum^3}' # Peak concentration at the center (= 1 at/mum^3)
-gaussian_center = '${fparse ${tungsten_thickness} / 5}' # Hill center
-gaussian_sigma = '${fparse ${tungsten_thickness} / 20}' # Hill standard deviation
-
-# Temperature-dependent deuterium diffusivity used by Shimada et al. 2010 (p. S668, Section 3)
-diffusivity_preexponential_factor = '${units 2.9e-7 m^2/s -> mum^2/s}' # D0 prefactor, Shimada et al. 2010 (p. S668)
-diffusivity_activation_energy = '${units 0.39 eV}' # Diffusion activation energy, Shimada et al. 2010 (p. S668)
-
-# Recombination parameters: Shimada et al. 2010 (p. S668)
-recombination_preexponential_factor = '${units 3.2e-15 m^4/at/s -> mum^4/at/s}'
-recombination_energy = '${units 1.16 eV}'
-
-# Thermal parameters
-temperature_tds_start = '${units 300 K}' # TDS ramp start (room temperature), Shimada et al. 2010 (p. S668, Figs. 2-4)
-temperature_tds_end = '${units 1173 K}' # TDS ramp peak temperature, Shimada et al. 2010 (p. S668, Fig. 1)
-temperature_rate = '${units ${fparse 10 / 60} K/s}' # TDS ramp rate of 10 K/min, Shimada et al. 2010 (p. S668, Fig. 1)
-
-# Trapping Parameters
-trap_depth = '${units 0.7 mum}'
-tungsten_density = '${units 6.25e28 at/m^3 -> at/mum^3}' # Ambrosek and Longhurst 2008
-trap_fraction = 0.04
-trap_site_density = '${fparse ${trap_fraction} * ${tungsten_density}}'
-alpha_t_0 = '${units 9.1316e12 1/s}' # Pulled from val-2d since it is a similar example
-trapping_energy = '${units ${fparse 0.39 / kb_eV} K}' # pulled from val-2d
-trap_per_free = 1e4 # User specified
-
-# Detrapping Parameters
-alpha_r_0 = '${units 8.4e12 1/s}' # val-2d
-detrapping_energy = '${units ${fparse 1.35 / kb_eV} K}' # Unclear if Shimida 2011 means trapping or detrapping energy
-
-# TMAP7 fit A Trapping Parameters
-
-# Mesh Parameters (Ensure that all trap endpoints have a node)
-depth_A  = '${units 0.7 mum}'   # TMAP fit A trap boundary
-depth_C  = '${units 1.2 mum}'   # TMAP fit C trap boundary (near-surface region end)
-depth_E  = '${units 2.5 mum}'   # TMAP fit E trap boundary (neutron-irradiated)
-near_end = '${units 1.0 mum}'   # near-surface / bulk interface
-bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B trap boundary
-
-# ── Segment widths (derived — do not edit directly) ────────────────────────
-# Segment layout:
-#   [0,       depth_A ] : near-surface fine        (0.7  mum)
-#   [depth_A, near_end] : near-surface remainder   (0.3  mum)
-#   [near_end, depth_C] : bulk start               (0.2  mum)
-#   [depth_C, depth_E ] : bulk middle              (1.3  mum)
-#   [depth_E, bulk_end] : bulk end                 (4.5  mum)
-#   [bulk_end, W_thick] : deep material            (193  mum)
-  seg1 = '${fparse ${depth_A}}'
-  seg2 = '${fparse ${near_end} - ${depth_A}}'
-  seg3 = '${fparse ${depth_C}  - ${near_end}}'
-  seg4 = '${fparse ${depth_E}  - ${depth_C}}'
-  seg5 = '${fparse ${bulk_end} - ${depth_E}}'
-  seg6 = '${fparse ${tungsten_thickness} - ${bulk_end}}'
-
-  # ── Element counts ─────────────────────────────────────────────────────────
-  # nx_scale uniformly refines all segments. Per-segment multipliers set the
-  # relative resolution.
-
-  nx_scale = 20
+!include val-2l.params
 
 [Mesh]
   [temp_mesh]
@@ -89,7 +13,6 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
           ${fparse 5  * ${nx_scale}}
           ${fparse 5  * ${nx_scale}}
           ${fparse 10 * ${nx_scale}}'
-    # subdomain_id = '1  2  2  2  2  2'  # block 1 = trap region, block 2 = bulk
   []
   [tungsten_disc]
     type = RenameBoundaryGenerator
@@ -108,12 +31,6 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
 []
 
 [ICs]
-  # # Gaussian hill centered on the sample midplane (diagnostic, see header).
-  # [mobile_ic]
-  #   type = FunctionIC
-  #   variable = mobile
-  #   function = gaussian_hill_initial_condition
-  # []
   [trapped_ic]
     type = FunctionIC
     function = trapped_initial_condition
@@ -170,8 +87,7 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
   [release_1]
     type = ReleasingNodalKernel
     variable = trapped_1
-    # alpha_r = '${alpha_r_0}'
-    alpha_r = '${alpha_r_0}' # Trapping is restricted to trapped region, so this variable beyond the trapped region will have no deuterium to release.
+    alpha_r = '${alpha_r_0}'
     detrapping_energy = '${detrapping_energy}'
     temperature = 'temperature'
   []
@@ -179,7 +95,6 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
 
 [AuxVariables]
   [temperature]
-    initial_condition = ${temperature_tds_start}
   []
 []
 
@@ -195,7 +110,6 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
 
 [BCs]
   active = 'left_recombination_flux right_recombination_flux'
-  # active = 'left right'
 
   # Infinite recombination
   [left]
@@ -264,19 +178,13 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
 []
 
 [Functions]
-  # Gaussian hill, peak gaussian_amplitude at gaussian_center, standard deviation gaussian_sigma:
-  #   c(x) = A * exp(-(x - x0)^2 / (2 sigma^2))
-  [gaussian_hill_initial_condition]
-    type = ParsedFunction
-    expression = '${gaussian_amplitude} * exp(-(x - ${gaussian_center})^2 / (2 * ${gaussian_sigma}^2))'
-  []
 
-  # Linear TDS ramp from temperature_tds_start to temperature_tds_end and hold until end of simulation
   [temperature_function]
-    type = ParsedFunction
-    expression = 'if(t<(${temperature_tds_end} - ${temperature_tds_start}) /
-                        ${temperature_rate},  ${temperature_tds_start} + ${temperature_rate} * t,
-                                              ${temperature_tds_end})'
+    type = PiecewiseLinear
+    data_file = temperature_data.csv
+    x_title = time
+    y_title = temperature
+    format = columns
   []
 
   [trapped_initial_condition]
@@ -284,7 +192,6 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
     expression = 'if(x < ${trap_depth}, ${trap_site_density} / ${trap_per_free}, 0.0)'
   []
 
-  # Fed to TrappingNodalKernel
   [trap_distribution_function]
     type = ParsedFunction
     expression = 'if(x < ${trap_depth}, ${trap_fraction}, 0.0)'
@@ -294,33 +201,36 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
 
 [Postprocessors]
 
-  [trap_region]
+  [trap_depth]
     type = ConstantPostprocessor
     value = ${trap_depth}
     execute_on = 'initial'
     outputs = csv
   []
 
-  ### Temperature ramp and resulting diffusivity (for post-processing/plots) ###
+  [trap_per_free]
+    type = ConstantPostprocessor
+    value = ${trap_per_free}
+    execute_on = 'initial'
+    outputs = csv
+  []
 
-  [temperature] # K
+  [temperature]
     type = FunctionValuePostprocessor
     function = temperature_function
     outputs = csv
     execute_on = 'INITIAL TIMESTEP_END'
   []
 
-  [diffusivity_pp] # mum^2/s; uniform in space, depends only on temperature
+  [diffusivity_pp]
     type = ADElementAverageMaterialProperty
     mat_prop = diffusivity_mat
     outputs = csv
   []
 
-  ### Conservation of Mass (replicates val-2k_base.i: residual computed in MOOSE) ###
+  ### Conservation of Mass ###
 
-  # Total deuterium inventory currently in the sample, M(t) (cf. val-2k deuterium_inventory_in_sample).
-  # Runs on INITIAL so its t=0 row is the initial inventory M(0), which the comparison script reads to
-  # normalize the residual.
+  # Total deuterium inventory currently in the sample, M(t)
 
   [total_mobile_retention]
     type = ElementIntegralVariablePostprocessor
@@ -328,15 +238,12 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
     execute_on = 'INITIAL TIMESTEP_END'
   []
 
-  [total_trapped_retention]
+  [total_trapped_retention] # Physical concentration = variable * trap_per_free
     type = ElementIntegralVariablePostprocessor
     variable = trapped_1
-    # Physical concentration = variable * trap_per_free
-    # Handle scaling in post-processing script, or use ParsedPostprocessor to multiply.
     execute_on = 'INITIAL TIMESTEP_END'
   []
 
-  # Replace old total_deuterium_retention:
   [total_deuterium_retention]
     type = ParsedPostprocessor
     expression = 'total_mobile_retention + total_trapped_retention * ${trap_per_free}'
@@ -345,9 +252,17 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
     outputs = csv
   []
 
-  # Desorption flux through each face (upstream_flux is also used for the experimental desorption
-  # comparison). With c = 0 Dirichlet faces and c > 0 inside, -D grad(c).n is positive (outward) on
-  # each face, so the two are the per-face desorption rates.
+  # Change in domain inventory relative to the initial mass, M(t) - M(0).
+  [deuterium_inventory_change] # atoms / mum^2
+    type = ChangeOverTimePostprocessor
+    postprocessor = total_deuterium_retention
+    change_with_respect_to_initial = true
+    execute_on = 'INITIAL TIMESTEP_END'
+    outputs = none
+  []
+
+  # Desorption flux through upstream and downstream surfaces
+
   [upstream_flux]
     type = ADSideDiffusiveFluxIntegral
     boundary = 'upstream'
@@ -364,15 +279,14 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
     execute_on = 'TIMESTEP_END'
   []
 
-  # Total desorption rate through both faces (cf. val-2k deuterium_release_flux_total).
-  [deuterium_release_flux_total] # atoms / mum^2 / s
+  [deuterium_release_flux_total]
     type = SumPostprocessor
     values = 'upstream_flux downstream_flux'
     execute_on = 'TIMESTEP_END'
     outputs = csv
   []
 
-  # Cumulative deuterium released through both faces (time-integrated release rate), = M(0) - M(t).
+  # Cumulative deuterium released through both surfaces
   [deuterium_released_physical] # atoms / mum^2
     type = TimeIntegratedPostprocessor
     value = deuterium_release_flux_total
@@ -381,25 +295,12 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
     outputs = csv
   []
 
-  # Change in domain inventory relative to the initial state, M(t) - M(0).
-  [deuterium_inventory_change] # atoms / mum^2
-    type = ChangeOverTimePostprocessor
-    postprocessor = total_deuterium_retention
-    change_with_respect_to_initial = true
-    execute_on = 'INITIAL TIMESTEP_END'
-    outputs = none
-  []
-
-  # Conservation residual = (M(t) - M(0)) + released; ideally 0 at all times. The comparison script
-  # divides this by the initial inventory M(0) to report the relative mass-balance residual (cf.
-  # val-2k deuterium_mass_conservation_residual). The decomposition generalizes directly to
-  # trapped + mobile once traps land: sum them into total_deuterium_retention.
+  # Conservation residual = (M(t) - M(0)) + released; ideally 0 at all times.
   [deuterium_mass_conservation_residual] # atoms / mum^2
-    type = ParsedPostprocessor
-    expression = 'deuterium_inventory_change + deuterium_released_physical'
-    pp_names = 'deuterium_inventory_change deuterium_released_physical'
+    type = SumPostprocessor
+    values = 'deuterium_inventory_change deuterium_released_physical'
     execute_on = 'TIMESTEP_END'
-    outputs = 'csv'
+    outputs = csv
   []
 []
 
@@ -463,11 +364,5 @@ bulk_end = '${units 7.0 mum}'   # bulk / deep-material interface and TMAP fit B 
       optimal_iterations = 5
       growth_factor = 1.1
       cutback_factor_at_failure = 0.5
-      # timestep_limiting_function = temperature_function
-      # max_function_change = 0.2
   []
-  # [TimeStepper]
-  #   type = ConstantDT
-  #   dt = ${dt_start}
-  # []
 []

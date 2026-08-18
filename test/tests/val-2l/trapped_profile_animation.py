@@ -1,14 +1,14 @@
 """
-animate_profiles_val-2l.py
-Animates mobile and trapped deuterium concentration profiles over the TDS ramp.
+This script animates mobile and trapped deuterium concentration profiles over the TDS ramp.
 
-Layout (2 x 2):
+Current Layout (2 x 2):
   [0,0] Mobile  – whole domain (0–200 µm)
   [0,1] Mobile  – near surface (0–1 µm)
   [1,0] Trapped – bulk & near surface (0–7 µm)
   [1,1] Trapped – near surface (0–1 µm)
 
 A temperature-ramp axes sits above the panels; a marker tracks the current frame.
+This script is modular, so add and remove panels as traps are changed and added.
 """
 
 import os
@@ -19,10 +19,11 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-# ── Must match val-2l.i ───────────────────────────────────────────────────── #
-TRAP_PER_FREE = 1
-FRAME_STRIDE = 10
-TRAP_BOUNDARY = 0.7  # µm: spatial extent of 1.35 eV trap (TMAP fit A)
+# ── Trap information from val-2l.i ───────────────────────────────────────────────────── #
+trap_per_free = pd.read_csv("val-2l_out.csv")["trap_per_free"].iloc[0]
+TRAP_BOUNDARY = pd.read_csv("val-2l_out.csv")["trap_depth"].iloc[0]
+FRAME_STRIDE = 25  # Add frame to animation every "FRAME_STRIDE"th timestep
+
 
 # ── File paths ────────────────────────────────────────────────────────────── #
 MOBILE_DIR = "deuterium_mobile_concentration_profile"
@@ -109,7 +110,7 @@ def build_animation(show=False):
 
     # ── Load profile series ───────────────────────────────────────────────── #
     mob_xs, mob_cs = load_profile_series(MOBILE_DIR, MOBILE_COL, scale=1.0)
-    trp_xs, trp_cs = load_profile_series(TRAPPED_DIR, TRAPPED_COL, scale=TRAP_PER_FREE)
+    trp_xs, trp_cs = load_profile_series(TRAPPED_DIR, TRAPPED_COL, scale=trap_per_free)
     n_frames = min(len(mob_xs), len(trp_xs))
     frame_indices = range(0, n_frames, FRAME_STRIDE)
 
