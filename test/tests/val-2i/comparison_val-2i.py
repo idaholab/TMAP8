@@ -10,12 +10,13 @@ script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
 
 # Read TMAP8 simulation data
+# (time series data is shifted by 12,000 s to align with desorption time series from experiment and TMAP4)
 if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
     csv_folder = "../../../../test/tests/val-2i/gold/val-2i_673_out.csv"
 else:  # if in test folder
     csv_folder = "./gold/val-2i_673_out.csv"
 simulation_673_data = pd.read_csv(csv_folder)
-simulation_time_673 = simulation_673_data["time"]
+simulation_time_673 = simulation_673_data["time"] - 12000
 simulation_flux_left_673 = simulation_673_data["scaled_flux_surface_left"]
 
 if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
@@ -23,7 +24,7 @@ if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
 else:  # if in test folder
     csv_folder = "./gold/val-2i_873_out.csv"
 simulation_873_data = pd.read_csv(csv_folder)
-simulation_time_873 = simulation_873_data["time"]
+simulation_time_873 = simulation_873_data["time"] - 12000
 simulation_flux_left_873 = simulation_873_data["scaled_flux_surface_left"]
 
 if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
@@ -31,7 +32,7 @@ if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
 else:  # if in test folder
     csv_folder = "./gold/val-2i_973_out.csv"
 simulation_973_data = pd.read_csv(csv_folder)
-simulation_time_973 = simulation_973_data["time"]
+simulation_time_973 = simulation_973_data["time"] - 12000
 simulation_flux_left_973 = simulation_973_data["scaled_flux_surface_left"]
 
 # Read TMAP4 simulation data
@@ -66,7 +67,7 @@ ax = fig.add_subplot(gs[0])
 
 # TMAP8
 ax.semilogy(
-    simulation_time_673 - 12000,
+    simulation_time_673,
     simulation_flux_left_673,
     linestyle="-",
     label=r"673 K",
@@ -74,7 +75,7 @@ ax.semilogy(
     linewidth=3.0,
 )
 ax.semilogy(
-    simulation_time_873 - 12000,
+    simulation_time_873,
     simulation_flux_left_873,
     linestyle="-",
     label=r"873 K",
@@ -82,7 +83,7 @@ ax.semilogy(
     linewidth=3.0,
 )
 ax.semilogy(
-    simulation_time_973 - 12000,
+    simulation_time_973,
     simulation_flux_left_973,
     linestyle="-",
     label=r"973 K",
