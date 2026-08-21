@@ -243,8 +243,18 @@ doc/content/verification_and_validation/figures/val-2b_ratio.png
 doc/content/verification_and_validation/figures/val-2f_implantation_distribution.png
 doc/content/verification_and_validation/figures/val-2f_trap_induced_density.png
 doc/content/verification_and_validation/figures/val-2g_environment_history.png
+doc/content/verification_and_validation/figures/val-2j_*.png
+doc/content/verification_and_validation/figures/val-2k_natural_oxide_*.png
+doc/content/examples/figures/diffusion_length.png
+doc/content/examples/figures/divertor_monoblock_sensitivity_figures
 doc/content/examples/figures/fuel_cycle_*.png
+doc/content/examples/figures/gas_phase_comparison.png
+doc/content/examples/figures/gas_steel_conservation_of_mass.png
+doc/content/examples/figures/hydrogen_yield_in_steel.png
+doc/content/examples/figures/partial_pressure_comparison.png
+doc/content/examples/figures/steel_only_conservation_of_mass.png
 doc/content/source/interfacekernels/figures/YHx_PCT_*.png
+doc/content/source/interfacekernels/figures/Zr2FeHx_PCT_*.png
 doc/content/source/interfacekernels/figures/ZrCoHx_PCT_*.png
 
 # temporary testharness_time files
