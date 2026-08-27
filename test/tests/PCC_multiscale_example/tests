@@ -1,0 +1,40 @@
+# NOTE on testing the coupled run:
+# The full multiscale fuel-cycle run (dir_pcc_fuel_cycle.i) solves one fuel-cycle model with two
+# PCC membrane sub-applications at each fuel-cycle time step. It is intentionally not a CSVDiff
+# test because the production run is expensive and creates large output files. CI covers input
+# validity and the documentation figure scripts, which read compact committed reference CSVs.
+
+[Tests]
+  design = 'FullSolveMultiApp.md MultiAppPostprocessorTransfer.md ParsedODEKernel.md'
+  issues = '#429'
+  [check_input]
+    type = RunApp
+    input = 'dir_pcc_fuel_cycle.i'
+    check_input = True
+    capabilities = 'method=opt'
+    requirement = "The system shall provide a valid input coupling the system-level tritium fuel "
+                  "cycle to component-level proton-conducting-ceramic membrane sub-apps via "
+                  "MultiApps that exchange DIR upstream pressure and recovered permeation rates."
+  []
+  [residence_time_fit]
+    type = RunCommand
+    command = 'python fit_residence_time.py'
+    requirement = "The system shall generate the two-parameter residence-time fit for the "
+                  "PCC-enhanced tritium permeation membrane from the component-level flux data."
+    required_python_packages = 'matplotlib numpy pandas scipy os'
+  []
+  [dir_fraction_pressure]
+    type = RunCommand
+    command = 'python plot_dir_fraction_pressure.py'
+    requirement = "The system shall generate the system-level DIR pressure and recovery-fraction "
+                  "plot for the coupled PCC-enhanced VP and FCU membrane loops."
+    required_python_packages = 'matplotlib numpy pandas os'
+  []
+  [inventory_comparison]
+    type = RunCommand
+    command = 'python plot_inventory_comparison.py'
+    requirement = "The system shall generate the inventory comparison plot between the baseline "
+                  "fuel-cycle model and the PCC-enhanced multiscale fuel-cycle model."
+    required_python_packages = 'matplotlib numpy pandas os'
+  []
+[]

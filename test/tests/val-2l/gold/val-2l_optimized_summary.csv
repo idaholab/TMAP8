@@ -1,0 +1,11 @@
+case,source_file,temperature_K,voltage_V,flux_atoms_m2_s
+optimized_no_joule,nojoule_773K_flux.csv,773,0.252856106447267,4.342616798621200e+21
+optimized_no_joule,nojoule_773K_flux.csv,773,0.88369488093245,2.718614991862900e+22
+optimized_no_joule,nojoule_773K_flux.csv,773,1.36390343848907,5.158106473350300e+22
+optimized_no_joule,nojoule_773K_flux.csv,773,1.66712507872729,6.930280916286200e+22
+optimized_no_joule,nojoule_773K_flux.csv,773,1.9633469661094,8.810597967999700e+22
+optimized_no_joule,compare_phase2_sub5.csv,973,0.033327488502953,7.255889511278300e+21
+optimized_no_joule,compare_phase2_sub6.csv,973,0.20215275729873,2.898145318454500e+22
+optimized_no_joule,compare_phase2_sub7.csv,973,0.48071205974479,6.389884327129200e+22
+optimized_no_joule,compare_phase2_sub8.csv,973,0.73033945180805,9.694986917216500e+22
+optimized_no_joule,compare_phase2_sub9.csv,973,1.0092335036304,1.340913599769100e+23
