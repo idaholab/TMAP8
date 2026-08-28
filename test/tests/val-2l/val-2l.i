@@ -38,32 +38,21 @@
   []
 []
 
-# [Problem]
-#   # Reference-based convergence: compare each variable's residual to the magnitude of the physical
-#   # terms (diffusion + time derivative + source, tagged 'ref') rather than to the initial residual
-#   type = ReferenceResidualProblem
-#   extra_tag_vectors = 'ref'
-#   reference_vector = 'ref'
-# []
-
 [Kernels]
   [mobile_time_derivative]
     type = ADTimeDerivative
     variable = mobile
-    # extra_vector_tags = 'ref'
   []
   [mobile_diffusion]
     type = ADMatDiffusion
     variable = mobile
     diffusivity = diffusivity_mat
-    # extra_vector_tags = 'ref'
   []
   [coupled_time]
     type = ADCoefCoupledTimeDerivative
     variable = mobile
     v = trapped_1
     coef = ${trap_per_free}
-    # extra_vector_tags = 'ref'
   []
 []
 
@@ -82,7 +71,6 @@
     Ct0 = 'trap_distribution_function'
     temperature = 'temperature'
     trap_per_free = ${trap_per_free}
-    # extra_vector_tags = ref
   []
   [release_1]
     type = ReleasingNodalKernel
@@ -111,7 +99,6 @@
 [BCs]
   active = 'left_recombination_flux right_recombination_flux'
 
-  # Infinite recombination
   [left]
     type = ADDirichletBC
     boundary = upstream
@@ -125,14 +112,12 @@
     variable = mobile
   []
 
-  # Finite recombination
   [left_recombination_flux]
     type = ADMatNeumannBC
     variable = mobile
     boundary = upstream
     value = 1
     boundary_material = flux_recombination_surface
-    # extra_vector_tags = 'ref'
   []
 
    [right_recombination_flux]
@@ -141,13 +126,11 @@
     boundary = downstream
     value = 1
     boundary_material = flux_recombination_surface
-    # extra_vector_tags = 'ref'
   []
 []
 
 [Materials]
 
-  # Temperature-dependent deuterium diffusivity in tungsten
   [diffusivity_mat]
     type = ADDerivativeParsedMaterial
     property_name = 'diffusivity_mat'
@@ -158,7 +141,6 @@
     outputs = 'exodus'
   []
 
-  # Temperature-dependent recombination coefficient
   [recombination_rate_surface]
     type = ADDerivativeParsedMaterial
     property_name = 'Kr'
@@ -167,7 +149,6 @@
     expression = '${recombination_preexponential_factor} * exp(- ${recombination_energy} / ${kb_eV} / temperature)'
   []
 
-  # Finite recombination Boundary Material
   [flux_recombination_surface]
     type = ADDerivativeParsedMaterial
     coupled_variables = 'mobile'
@@ -236,17 +217,13 @@
     outputs = csv
   []
 
-  ### Conservation of Mass ###
-
-  # Total deuterium inventory currently in the sample, M(t)
-
   [total_mobile_retention]
     type = ElementIntegralVariablePostprocessor
     variable = mobile
     execute_on = 'INITIAL TIMESTEP_END'
   []
 
-  [total_trapped_retention] # Physical concentration = variable * trap_per_free
+  [total_trapped_retention]
     type = ElementIntegralVariablePostprocessor
     variable = trapped_1
     execute_on = 'INITIAL TIMESTEP_END'
@@ -260,16 +237,13 @@
     outputs = csv
   []
 
-  # Change in domain inventory relative to the initial mass, M(t) - M(0).
-  [deuterium_inventory_change] # atoms / mum^2
+  [deuterium_inventory_change]
     type = ChangeOverTimePostprocessor
     postprocessor = total_deuterium_retention
     change_with_respect_to_initial = true
     execute_on = 'INITIAL TIMESTEP_END'
     outputs = none
   []
-
-  # Desorption flux through upstream and downstream surfaces
 
   [upstream_flux]
     type = ADSideDiffusiveFluxIntegral
@@ -294,8 +268,7 @@
     outputs = csv
   []
 
-  # Cumulative deuterium released through both surfaces
-  [deuterium_released_physical] # atoms / mum^2
+  [deuterium_released_physical]
     type = TimeIntegratedPostprocessor
     value = deuterium_release_flux_total
     time_integration_scheme = TRAPEZOIDAL-RULE
@@ -303,8 +276,7 @@
     outputs = csv
   []
 
-  # Conservation residual = (M(t) - M(0)) + released; ideally 0 at all times.
-  [deuterium_mass_conservation_residual] # atoms / mum^2
+  [deuterium_mass_conservation_residual]
     type = SumPostprocessor
     values = 'deuterium_inventory_change deuterium_released_physical'
     execute_on = 'TIMESTEP_END'
@@ -335,7 +307,6 @@
   perf_graph = true
   [exodus]
     type = Exodus
-    # output_material_properties = true
   []
   [profile_csv]
     type = CSV
