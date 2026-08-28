@@ -38,7 +38,7 @@ def read_csv_from_TMAP8(file_name, parameter_names):
     if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
         csv_folder = f"../../../../test/tests/val-2l/gold/{file_name}"
     else:  # if in test folder
-        csv_folder = f"./{file_name}"
+        csv_folder = f"./gold/{file_name}"
     simulation_data = pd.read_csv(csv_folder)
     return np.array([simulation_data[name] for name in parameter_names])
 
@@ -127,6 +127,7 @@ def plot_temperature_history(
     ax.set_xlim(0, time.max())
     ax.set_ylim(bottom=0)
     ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
+    ax.set_title("Unirradiated Sample: TDS Temperature History")
     ax.minorticks_on()
     ax.legend()
 
@@ -177,6 +178,7 @@ def plot_mass_conservation(
     ax.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
     ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
     ax.minorticks_on()
+    ax.set_title("Unirradiated Sample: Conservation of Mass")
     plt.tight_layout()
     plt.savefig(filename, bbox_inches="tight", dpi=300)
     plt.close(fig)
@@ -244,6 +246,7 @@ def plot_inventory(
     ax.set_ylabel(r"Deuterium inventory (atoms)")
     ax.set_xlim(0, time.max())
     ax.set_ylim(bottom=0)
+    ax.set_title("Unirradiated Sample: Deuterium Inventory")
     ax.grid(visible=True, which="major", color="0.65", linestyle="--", alpha=0.3)
     ax_T.set_ylabel("Temperature (K)")
     ax.legend(
@@ -291,7 +294,7 @@ def plot_diffusivity_vs_temperature(
     )
     ax.set_xlabel(r"Reciprocal temperature 1000/T (K$^{-1}$)")
     ax.set_ylabel(r"Diffusivity (m$^2$/s)")
-    ax.set_title("Deuterium diffusivity in tungsten TMAP8 Material")
+    ax.set_title("Deuterium Diffusivity in Tungsten")
     ax.grid(True, which="both", linestyle="--", alpha=0.4)
     plt.tight_layout()
     plt.savefig(filename, bbox_inches="tight", dpi=300)
@@ -371,7 +374,7 @@ def plot_unirradiated_desorption(
         )
     plt.xlabel("Temperature (K)")
     plt.ylabel(r"Desorbed flux (m$^{-2}$s$^{-1}$)")
-    plt.title("Unirradiated deuterium desorption: TMAP8 vs experiment")
+    plt.title("Unirradiated Sample: Deuterium Desorption: TMAP8 vs Experiment")
     plt.xlim(experiment_temperature.min(), experiment_temperature.max())
     plt.ylim(0)
     plt.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
@@ -387,4 +390,9 @@ plot_temperature_history()
 plot_mass_conservation()
 plot_inventory()
 plot_diffusivity_vs_temperature()
-plot_unirradiated_desorption()
+if "/tmap8/doc/" in script_folder.lower():  # if in documentation folder
+    unirradiated_data_file = "../../../../test/tests/val-2l/gold/unirradiated_data.csv"
+else:  # if in test folder
+    unirradiated_data_file = "./gold/unirradiated_data.csv"
+
+plot_unirradiated_desorption(experiment_file=unirradiated_data_file)
