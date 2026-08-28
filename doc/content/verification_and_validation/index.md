@@ -58,6 +58,6 @@ TMAP8 also contains [example cases](examples/tmap_index.md), which showcase how 
 | val-2e | [Co-permeation of H$_2$ and D$_2$ through Pd](val-2e.md) |
 | val-2f | [Modelling Self-damaged Tungsten Effects on Deuterium Transport](val-2f.md) |
 | val-2g | [Deuterium Transport in Proton-Conducting Ceramics](val-2g.md) |
+| val-2j | [Tritium TDS from Li$_2$TiO$_3$ Solid Breeder](val-2j.md) |
 | val-2k | [Oxide Effects on Deuterium Release from Self-irradiated Tungsten](val-2k.md) |
 | val-2l | [Deuterium Retention in Neutron-irradiated Tungsten](val-2l.md) |
-| val-2j | [Tritium TDS from Li$_2$TiO$_3$ Solid Breeder](val-2j.md) |
