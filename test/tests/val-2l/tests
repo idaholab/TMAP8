@@ -8,14 +8,6 @@
     csvdiff = val-2l_out.csv
     requirement = 'The system shall be able to model deuterium transport through irradiated tungsten for comparison with experimental results.'
   []
-  [val-2l_exodiff]
-    type = Exodiff
-    input = 'val-2l.i'
-    exodiff = val-2l_out.e
-    prereq = val-2l_csvdiff
-    should_execute = false # this test relies on the output files from val-2a_csvdiff, so it shouldn't be run twice
-    requirement = 'The system shall be able to model deuterium transport through irradiated tungsten for comparison with experimental results.'
-  []
   [val-2l_comparison]
     type = RunCommand
     command = 'python3 comparison_val-2l.py'

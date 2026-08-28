@@ -197,6 +197,14 @@
     expression = 'if(x < ${trap_depth}, ${trap_fraction}, 0.0)'
   []
 
+  [timestep_limiting_function]
+    type = ParsedFunction
+    expression = 'if(T >= 450 & T <= 750, dt_fine, dt_max)'
+    symbol_names  = 'T            dt_fine      dt_max'
+    symbol_values = 'temperature_function
+                     ${dt_fine}
+                     ${dt_max}'
+  []
 []
 
 [Postprocessors]
@@ -324,9 +332,10 @@
 [Outputs]
   file_base = 'val-2l_out'
   csv = true
+  perf_graph = true
   [exodus]
     type = Exodus
-    output_material_properties = true
+    # output_material_properties = true
   []
   [profile_csv]
     type = CSV
@@ -358,11 +367,17 @@
   automatic_scaling = true
   dtmin = ${dt_min}
   dtmax = ${dt_max}
-  [TimeStepper]
+  [TimeSteppers]
+    [iteration_dt]
       type = IterationAdaptiveDT
       dt = ${dt_start}
       optimal_iterations = 5
       growth_factor = 1.1
       cutback_factor_at_failure = 0.5
+    []
+    [limiting_dt]
+      type = FunctionDT
+      function = timestep_limiting_function
+    []
   []
 []

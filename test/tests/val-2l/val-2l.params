@@ -7,9 +7,10 @@ kb_eV = '${units ${fparse kb / eV_to_J} eV/K}' # Boltzmann constant eV/K
 
 # Temporal Parameters
 simulation_time = '${units 2 h -> s}'
-dt_start = '${units 0.25 s}'
-dt_max = '${units 1 s}'
-dt_min = '${units 1e-6 s}'
+dt_start = '${units 60 s}'
+dt_max = '${units 300 s}'
+dt_min = '${units 1e-4 s}'
+dt_fine = '${units 10 s}'
 
 # Geometry
 tungsten_thickness = '${units 0.2 mm -> mum}' # Tungsten disc sample thickness, Shimada et al. 2010 (p. S667, Section 2.1)

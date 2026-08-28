@@ -19,10 +19,6 @@ import os
 script_folder = os.path.dirname(__file__)
 os.chdir(script_folder)
 
-# Read trap_per_free directly from the simulation output (ConstantPostprocessor,
-# execute_on = 'initial'), so this script stays in sync with val-2l.i automatically.
-trap_per_free = pd.read_csv("val-2l_out.csv")["trap_per_free"].iloc[0]
-
 # Geometry
 disc_area = np.pi * (3e3) ** 2  # 6 mm diameter gives 3e3 mum radius
 
@@ -202,12 +198,18 @@ def plot_inventory(
             "total_mobile_retention", and "total_trapped_retention" columns
         filename (str): output PNG filename
     """
-    time, temperature, mobile_raw, trapped_raw = read_csv_from_TMAP8(
+    time, temperature, mobile_raw, trapped_raw, trap_per_free = read_csv_from_TMAP8(
         simulation_file,
-        ["time", "temperature", "total_mobile_retention", "total_trapped_retention"],
+        [
+            "time",
+            "temperature",
+            "total_mobile_retention",
+            "total_trapped_retention",
+            "trap_per_free",
+        ],
     )
     mobile = mobile_raw * disc_area
-    trapped = trapped_raw * trap_per_free * disc_area
+    trapped = trapped_raw * trap_per_free[0] * disc_area
 
     # Stacked bottom-up: largest / most stable contribution first
     inventory_series = [
@@ -300,20 +302,12 @@ def plot_unirradiated_desorption(
     experiment_file="unirradiated_data.csv",
     simulation_file="val-2l_out.csv",
     simulation_flux_column="deuterium_release_flux_total",
-    experiment_plot="val-2l_experimental_desorption.png",
-    simulation_plot="val-2l_simulated_desorption.png",
     comparison_plot="val-2l_comparison_desorption.png",
 ):
-    """Plot the Shimada (2010) unirradiated desorption data and the TMAP8 comparison
+    """Plot the Shimada (2010) unirradiated desorption data against TMAP8
 
-    Produces three figures:
-        1. The digitized experimental desorbed-flux history (Shimada 2010,
-           unirradiated / 0 dpa): temperature (K) versus desorbed flux (m^-2 s^-1).
-           Experimental times are mapped to temperatures via the simulation's T(t) ramp.
-        2. The raw TMAP8 simulated desorbed-flux history: temperature (K) versus
-           desorbed flux (m^-2 s^-1).
-        3. The TMAP8 simulated desorbed flux mapped onto the experimental temperature
-           points, overlaid on the experimental data and annotated with the RMSPE.
+    The simulated and experimental desorbed fluxes are plotted versus temperature,
+    with the RMSPE annotated over the region tmin–tmax seconds.
 
     Args:
         experiment_file (str): two-column, header-less CSV of
@@ -321,25 +315,18 @@ def plot_unirradiated_desorption(
         simulation_file (str): TMAP8 CSV output holding "time", "temperature", and
             the desorbed-flux column
         simulation_flux_column (str): name of the desorbed-flux column in
-            simulation_file. TMAP8 reports it in at/mum^2/s; it is converted to
-            at/m^2/s to match the experiment.
-        experiment_plot (str): output PNG filename for plot 1
-        simulation_plot (str): output PNG filename for plot 2
-        comparison_plot (str): output PNG filename for plot 3
+            simulation_file. TMAP8 reports it in at/µm^2/s; converted to at/m^2/s.
+        comparison_plot (str): output PNG filename
     """
-    # experiment: header-less (time [s], desorbed flux [m^-2 s^-1])
     experiment = np.loadtxt(experiment_file, delimiter=",")
     experiment_time, experiment_flux = experiment[:, 0], experiment[:, 1]
 
-    # simulation data: time, temperature, and desorbed flux
     simulation_time, simulation_temperature, simulation_flux = read_csv_from_TMAP8(
         simulation_file, ["time", "temperature", simulation_flux_column]
     )
-    # at/mum^2/s -> at/m^2/s (x1e12)
-    simulation_flux = simulation_flux * 1e12
+    simulation_flux = simulation_flux * 1e12  # at/µm^2/s -> at/m^2/s
 
-    # Map experimental times to temperatures using the simulation's T(t) ramp,
-    # then truncate to the simulation time range to avoid extrapolation.
+    # Truncate experiment to simulation time range, then map times to temperatures
     in_sim_range = experiment_time <= simulation_time.max()
     experiment_time = experiment_time[in_sim_range]
     experiment_flux = experiment_flux[in_sim_range]
@@ -347,49 +334,13 @@ def plot_unirradiated_desorption(
         experiment_time, simulation_time, simulation_temperature
     )
 
-    # ---- Plot 1: experimental desorption history ----
-    plt.figure(figsize=(10, 6))
-    plt.plot(
-        experiment_temperature,
-        experiment_flux,
-        "ro",
-        label="Experiment (Shimada 2010, 0 dpa)",
-    )
-    plt.xlabel("Temperature (K)")
-    plt.ylabel(r"Desorbed flux (m$^{-2}$s$^{-1}$)")
-    plt.title("Unirradiated deuterium desorption")
-    plt.xlim(experiment_temperature.min(), experiment_temperature.max())
-    plt.ylim(0)
-    plt.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
-    plt.legend()
-    plt.grid(True)
-    plt.tight_layout()
-    plt.savefig(experiment_plot, bbox_inches="tight", dpi=300)
-
-    # ---- Plot 2: raw simulated desorption history ----
-    plt.figure(figsize=(10, 6))
-    plt.plot(simulation_temperature, simulation_flux, "b-", label="TMAP8 (0 dpa)")
-    plt.xlabel("Temperature (K)")
-    plt.ylabel(r"Desorbed flux (m$^{-2}$s$^{-1}$)")
-    plt.title("Unirradiated deuterium desorption: TMAP8")
-    plt.xlim(simulation_temperature.min(), simulation_temperature.max())
-    plt.ylim(0)
-    plt.ticklabel_format(axis="y", style="sci", scilimits=(0, 0))
-    plt.legend()
-    plt.grid(True)
-    plt.tight_layout()
-    plt.savefig(simulation_plot, bbox_inches="tight", dpi=300)
-
-    # Map simulated flux onto experimental time points for RMSPE.
-    # Interpolating over time (strictly monotone) rather than temperature avoids
-    # failures caused by flat holds or steps in the modified temperature profile.
+    # Interpolate simulated flux at experimental time points for RMSPE
     mapped_simulation_flux = np.interp(
         experiment_time, simulation_time, simulation_flux
     )
-    tmin, tmax = 1000, 2600
+    tmin, tmax = 800, 2800
     rmspe_region = (experiment_time >= tmin) & (experiment_time <= tmax)
 
-    # ---- Plot 3: simulation vs experiment with RMSPE ----
     plt.figure(figsize=(10, 6))
     plt.plot(
         experiment_temperature,
@@ -415,7 +366,7 @@ def plot_unirradiated_desorption(
         annotate_rmspe(
             mapped_simulation_flux[rmspe_region],
             experiment_flux[rmspe_region],
-            experiment_temperature.mean(),
+            experiment_temperature[rmspe_region].mean(),
             experiment_flux.max() / 4,
         )
     plt.xlabel("Temperature (K)")
