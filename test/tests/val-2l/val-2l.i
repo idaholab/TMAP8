@@ -159,10 +159,9 @@
 []
 
 [Functions]
-
   [temperature_function]
     type = PiecewiseLinear
-    data_file = temperature_data.csv
+    data_file = 'gold/temperature_data.csv'
     x_title = time
     y_title = temperature
     format = columns
@@ -178,17 +177,35 @@
     expression = 'if(x < ${trap_depth}, ${trap_fraction}, 0.0)'
   []
 
-  [timestep_limiting_function]
-    type = ParsedFunction
-    expression = 'if(T >= 450 & T <= 750, dt_fine, dt_max)'
-    symbol_names  = 'T            dt_fine      dt_max'
-    symbol_values = 'temperature_function
-                     ${dt_fine}
-                     ${dt_max}'
-  []
+  # [timestep_limiting_function]
+  #   type = ParsedFunction
+  #   expression = 'min(if(t < 100, dt_max, if(t < 350, dt_fine, dt_max)), if(abs(flux) > flux_threshold, dt_fine, dt_max))'
+  #   symbol_names = 'flux dt_max dt_fine flux_threshold'
+  #   symbol_values = 'deuterium_release_flux_total ${dt_max} ${dt_fine} ${flux_threshold}'
+  # []
+  # [timestep_limiting_function]
+  #   type = ParsedFunction
+  #   expression = 'if(T >= 450 & T <= 750, dt_fine, dt_max)'
+  #   symbol_names  = 'T            dt_fine      dt_max'
+  #   symbol_values = 'temperature_function
+  #                    ${dt_fine}
+  #                    ${dt_max}'
+  # []
 []
 
 [Postprocessors]
+
+  [dt]
+    type = TimestepSize
+    execute_on = 'TIMESTEP_END'
+  []
+
+  [flux_threshold]
+    type = ConstantPostprocessor
+    value = ${flux_threshold}
+    execute_on = 'initial'
+    outputs = csv
+  []
 
   [trap_depth]
     type = ConstantPostprocessor
@@ -268,6 +285,18 @@
     outputs = csv
   []
 
+  [dt_limit]
+    type = ParsedPostprocessor
+    expression = 'min(if(t < 350, dt_fine, dt_max), if(abs(flux) > flux_threshold, dt_fine, dt_max))'
+    pp_names = 'deuterium_release_flux_total'
+    pp_symbols = 'flux'
+    constant_names = 'dt_max dt_fine flux_threshold'
+    constant_expressions = '${dt_max} ${dt_fine} ${flux_threshold}'
+    use_t = true
+    execute_on = 'TIMESTEP_END'
+    outputs = csv
+[]
+
   [deuterium_released_physical]
     type = TimeIntegratedPostprocessor
     value = deuterium_release_flux_total
@@ -305,9 +334,8 @@
   file_base = 'val-2l_out'
   csv = true
   perf_graph = true
-  [exodus]
-    type = Exodus
-  []
+  sync_times = '100 350'
+  exodus = true
   [profile_csv]
     type = CSV
     file_base = 'deuterium_mobile_concentration_profile/val-2l_out'
@@ -336,19 +364,34 @@
   petsc_options_value = 'lu'
   end_time = ${simulation_time}
   automatic_scaling = true
+  compute_scaling_once = 'false'
   dtmin = ${dt_min}
   dtmax = ${dt_max}
-  [TimeSteppers]
-    [iteration_dt]
-      type = IterationAdaptiveDT
-      dt = ${dt_start}
-      optimal_iterations = 5
-      growth_factor = 1.1
-      cutback_factor_at_failure = 0.5
-    []
-    [limiting_dt]
-      type = FunctionDT
-      function = timestep_limiting_function
-    []
+  [TimeStepper]
+    type = IterationAdaptiveDT
+    dt = ${dt_max}
+    growth_factor = 1.1
+    cutback_factor_at_failure = 0.5
+    timestep_limiting_postprocessor = dt_limit
+    reject_large_step = true
+    reject_large_step_threshold = 0.9
   []
+  # [TimeStepper]
+  #   type = FunctionDT
+  #   function = timestep_limiting_function
+  #   # growth_factor = 2
+  # []
+  # [TimeSteppers]
+  #   [iteration_dt]
+  #     type = IterationAdaptiveDT
+  #     dt = ${dt_start}
+  #     optimal_iterations = 5
+  #     growth_factor = 1.1
+  #     cutback_factor_at_failure = 0.5
+  #   []
+  #   [limiting_dt]
+  #     type = FunctionDT
+  #     function = timestep_limiting_function
+  #   []
+  # []
 []
