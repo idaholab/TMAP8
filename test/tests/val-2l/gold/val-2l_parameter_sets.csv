@@ -1,0 +1,15 @@
+parameter,group,description,initial,optimized,manuscript_table_optimized,units
+delta_H_T2O,Reaction thermodynamics,enthalpy for H2O reaction,-1.622000000000e+05,-1.544152110000e+05,-1.253430390000e+05,J/mol
+delta_S_T2O,Reaction thermodynamics,entropy for H2O reaction,-1.667000000000e+02,-1.671875850000e+02,-1.010439380000e+02,J/mol/K
+delta_H_T2,Reaction thermodynamics,enthalpy for H2 reaction,-1.121770320000e+05,-5.460376630000e+04,-5.121752170000e+04,J/mol
+delta_S_T2,Reaction thermodynamics,entropy for H2 reaction,-3.699260580000e+01,-3.369294060000e+01,-3.332022110000e+01,J/mol/K
+T2O_reaction_forward_energy,Reaction kinetics,activation energy for H2O forward reaction,1.000000000000e+04,-7.315954740000e+03,1.159394500000e+04,J/mol
+T2O_reaction_forward_mol_exponent,Reaction kinetics,exponent for H2O forward pre-exponential,-7.000000000000e+00,-1.197925920000e+01,-1.289195690000e+01,-
+T2_reaction_forward_energy,Reaction kinetics,activation energy for H2 forward reaction,1.000000000000e+04,5.133854780000e+03,5.293511290000e+03,J/mol
+T2_reaction_forward_mol_exponent,Reaction kinetics,exponent for H2 forward pre-exponential,-4.000000000000e+00,-4.059982970000e+00,-2.575016120000e+00,-
+diffusivity_OT_energy,Transport properties,activation energy for hydroxyl diffusivity,6.848023000000e+04,8.658800790000e+03,2.450201750000e+04,J/mol
+diffusivity_OT_prefactor_exponent,Transport properties,exponent for hydroxyl diffusivity pre-exponential,-6.000000000000e+00,-1.260001190000e+01,-1.211547210000e+01,-
+diffusivity_V_O_energy,Transport properties,activation energy for oxygen vacancy diffusivity,5.208355000000e+04,5.876589260000e+04,8.195202040000e+04,J/mol
+diffusivity_V_O_prefactor_exponent,Transport properties,exponent for oxygen vacancy diffusivity pre-exponential,-6.000000000000e+00,-5.330843750000e+00,-4.008936870000e+00,-
+electron_concentration_initial_expo,Electron concentration,initial electron concentration exponent,-4.100000000000e+00,4.940966860000e-01,-3.167926130000e+00,-
+electron_concentration_initial_energy,Electron concentration,electron concentration activation energy,0.000000000000e+00,5.908461060000e+04,-9.448531390000e+03,J/mol
