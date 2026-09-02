@@ -18,7 +18,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import brentq
 
-
 SCRIPT_FOLDER = Path(os.path.abspath(__file__)).parent
 os.chdir(SCRIPT_FOLDER)
 
@@ -54,9 +53,7 @@ def get_numeric_parameter(parameter_name: str) -> float:
                 raw_value = raw_value.split("#", maxsplit=1)[0].strip()
                 return float(raw_value)
 
-    raise KeyError(
-        f"Could not find parameter {parameter_name!r} in {input_file}"
-    )
+    raise KeyError(f"Could not find parameter {parameter_name!r} in {input_file}")
 
 
 # Model parameters read from ver-1p.i
@@ -85,12 +82,7 @@ def locate_gold_csv() -> Path:
     """Return the location of the ver-1p gold CSV file."""
     candidates = [SCRIPT_FOLDER / "gold" / "ver-1p_out.csv"]
     candidates.extend(
-        parent
-        / "test"
-        / "tests"
-        / "ver-1p"
-        / "gold"
-        / "ver-1p_out.csv"
+        parent / "test" / "tests" / "ver-1p" / "gold" / "ver-1p_out.csv"
         for parent in SCRIPT_FOLDER.parents
     )
 
@@ -99,9 +91,7 @@ def locate_gold_csv() -> Path:
             return candidate
 
     searched = "\n  ".join(str(path) for path in candidates)
-    raise FileNotFoundError(
-        f"Could not find ver-1p gold CSV. Searched:\n  {searched}"
-    )
+    raise FileNotFoundError(f"Could not find ver-1p gold CSV. Searched:\n  {searched}")
 
 
 def surface_concentration(
@@ -110,19 +100,9 @@ def surface_concentration(
     radial_resistance: float,
 ) -> float:
     """Return the vanadium concentration at the vacuum-facing surface."""
-    radical = (
-        1.0
-        + 4.0
-        * radial_resistance
-        * K_R_INNER
-        * partition_ratio
-        * c_bulk
-    )
+    radical = 1.0 + 4.0 * radial_resistance * K_R_INNER * partition_ratio * c_bulk
 
-    return (
-        2.0 * partition_ratio * c_bulk
-        / (1.0 + math.sqrt(radical))
-    )
+    return 2.0 * partition_ratio * c_bulk / (1.0 + math.sqrt(radical))
 
 
 def analytical_solution() -> dict[str, object]:
@@ -147,12 +127,8 @@ def analytical_solution() -> dict[str, object]:
 
     # Radial transport parameters
     partition_ratio = k_s / k_l
-    membrane_resistance = (
-        R_I * math.log(R_O / R_I) / d_s
-    )
-    radial_resistance = (
-        partition_ratio / k_t + membrane_resistance
-    )
+    membrane_resistance = R_I * math.log(R_O / R_I) / d_s
+    radial_resistance = partition_ratio / k_t + membrane_resistance
 
     y_in = surface_concentration(
         C_IN,
@@ -164,19 +140,8 @@ def analytical_solution() -> dict[str, object]:
         return (
             1.0 / y
             - 1.0 / y_in
-            - 2.0
-            * radial_resistance
-            * K_R_INNER
-            * math.log(y / y_in)
-            - (
-                2.0
-                * math.pi
-                * R_I
-                * partition_ratio
-                * K_R_INNER
-                / q_pbli
-            )
-            * z
+            - 2.0 * radial_resistance * K_R_INNER * math.log(y / y_in)
+            - (2.0 * math.pi * R_I * partition_ratio * K_R_INNER / q_pbli) * z
         )
 
     concentrations = []
@@ -193,9 +158,7 @@ def analytical_solution() -> dict[str, object]:
             rtol=1.0e-14,
         )
 
-        c_bulk = (
-            y + radial_resistance * K_R_INNER * y**2
-        ) / partition_ratio
+        c_bulk = (y + radial_resistance * K_R_INNER * y**2) / partition_ratio
 
         concentrations.append(c_bulk)
 
@@ -204,9 +167,7 @@ def analytical_solution() -> dict[str, object]:
 
     # Average flux on the inner surface
     total_inner_area = 2.0 * math.pi * R_I * L_TUBE
-    average_flux = (
-        q_pbli * (C_IN - c_out) / total_inner_area
-    )
+    average_flux = q_pbli * (C_IN - c_out) / total_inner_area
 
     return {
         "concentrations": concentrations,
@@ -230,9 +191,7 @@ def read_last_csv_row(path: Path) -> dict[str, str]:
 def value(row: dict[str, str], name: str) -> float:
     """Return a named CSV value as a float."""
     if name not in row:
-        raise KeyError(
-            f"Column {name!r} is missing from the TMAP8 CSV"
-        )
+        raise KeyError(f"Column {name!r} is missing from the TMAP8 CSV")
 
     return float(row[name])
 
@@ -258,22 +217,13 @@ def make_plot(
 
     tmap8 = np.array(
         [value(actual, "C00_inlet")]
-        + [
-            value(actual, f"C{index:02d}_pp")
-            for index in range(1, N_SEGMENTS + 1)
-        ]
+        + [value(actual, f"C{index:02d}_pp") for index in range(1, N_SEGMENTS + 1)]
     )
 
-    analytical = np.array(
-        [C_IN] + list(expected["concentrations"])
-    )
+    analytical = np.array([C_IN] + list(expected["concentrations"]))
 
-    relative_difference = (
-        (tmap8 - analytical) / analytical
-    )
-    rmspe = float(
-        np.sqrt(np.mean(relative_difference**2)) * 100.0
-    )
+    relative_difference = (tmap8 - analytical) / analytical
+    rmspe = float(np.sqrt(np.mean(relative_difference**2)) * 100.0)
 
     plt.figure(figsize=(8, 5.4))
 
@@ -362,68 +312,33 @@ def main() -> int:
     )
 
     print(f"Gold CSV: {gold_csv}")
-    print(
-        "Analytical outlet concentration: "
-        f"{analytical['outlet']:.12e} mol/m^3"
-    )
-    print(
-        "TMAP8 outlet concentration:       "
-        f"{tmap8_outlet:.12e} mol/m^3"
-    )
-    print(
-        "Outlet relative error:             "
-        f"{outlet_error:.6f}%"
-    )
-    print(
-        "Analytical extraction efficiency: "
-        f"{analytical['efficiency']:.12e}"
-    )
-    print(
-        "TMAP8 extraction efficiency:       "
-        f"{tmap8_efficiency:.12e}"
-    )
-    print(
-        "Efficiency relative error:         "
-        f"{efficiency_error:.6f}%"
-    )
+    print("Analytical outlet concentration: " f"{analytical['outlet']:.12e} mol/m^3")
+    print("TMAP8 outlet concentration:       " f"{tmap8_outlet:.12e} mol/m^3")
+    print("Outlet relative error:             " f"{outlet_error:.6f}%")
+    print("Analytical extraction efficiency: " f"{analytical['efficiency']:.12e}")
+    print("TMAP8 extraction efficiency:       " f"{tmap8_efficiency:.12e}")
+    print("Efficiency relative error:         " f"{efficiency_error:.6f}%")
     print(
         "Analytical average permeation flux: "
         f"{analytical['average_flux']:.12e} mol/m^2/s"
     )
-    print(
-        "TMAP8 average permeation flux:       "
-        f"{tmap8_flux:.12e} mol/m^2/s"
-    )
-    print(
-        "Flux relative error:                 "
-        f"{flux_error:.6f}%"
-    )
-    print(
-        "Concentration profile RMSPE:         "
-        f"{rmspe:.6f}%"
-    )
+    print("TMAP8 average permeation flux:       " f"{tmap8_flux:.12e} mol/m^2/s")
+    print("Flux relative error:                 " f"{flux_error:.6f}%")
+    print("Concentration profile RMSPE:         " f"{rmspe:.6f}%")
 
     failures = []
 
     if rmspe > MAX_ERROR_PERCENT:
-        failures.append(
-            f"profile RMSPE = {rmspe:.6f}%"
-        )
+        failures.append(f"profile RMSPE = {rmspe:.6f}%")
 
     if outlet_error > MAX_ERROR_PERCENT:
-        failures.append(
-            f"outlet error = {outlet_error:.6f}%"
-        )
+        failures.append(f"outlet error = {outlet_error:.6f}%")
 
     if efficiency_error > MAX_ERROR_PERCENT:
-        failures.append(
-            f"efficiency error = {efficiency_error:.6f}%"
-        )
+        failures.append(f"efficiency error = {efficiency_error:.6f}%")
 
     if flux_error > MAX_ERROR_PERCENT:
-        failures.append(
-            f"average flux error = {flux_error:.6f}%"
-        )
+        failures.append(f"average flux error = {flux_error:.6f}%")
 
     if failures:
         print(
