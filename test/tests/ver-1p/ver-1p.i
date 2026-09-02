@@ -23,7 +23,7 @@
 # -----------------------------------------------------------------------------
 T = 673.15                   # 400 C [K]
 R = 8.31446261815324         # gas constant [J/(mol K)]
-C_in = 1.0                 # dissolved H-isotope concentration [mol/m^3 PbLi]
+C_in = 1.0                   # dissolved H-isotope concentration [mol/m^3 PbLi]
 Re = 1e5                     # Reynolds number
 
 L_tube = 5.00                # active permeator length [m]
@@ -36,23 +36,23 @@ PI = 3.14159265358979323846
 # Nominal properties
 # ============================================================
 
-D_L = ${fparse 8.30e-9*exp(-7.37e3/(R*T))}
+D_L = ${fparse 8.30e-9*exp(-7.37e3/(R*T))}  # [m^2/s]
 
-rho_PbLi = ${fparse 10520.35 - 1.19051*T}
+rho_PbLi = ${fparse 10520.35 - 1.19051*T} # [kg/m^3]
 
 M_PbLi_atom = 0.1731558   # kg/mol
-C_PbLi_atoms = ${fparse rho_PbLi/M_PbLi_atom}
+C_PbLi_atoms = ${fparse rho_PbLi/M_PbLi_atom} # [mol/m^3]
 
 K_L_table_base = 4.32e-7  # Pa^-0.5, Table II in the paper
 
-K_L = ${fparse K_L_table_base*C_PbLi_atoms}
+K_L = ${fparse K_L_table_base*C_PbLi_atoms} # [mol/(m^3 Pa^(1/2))]
 
-D_S = ${fparse 2.90e-8*exp(-4.2e3/(R*T))}
-K_S = ${fparse 0.138*exp(29.0e3/(R*T))}
+D_S = ${fparse 2.90e-8*exp(-4.2e3/(R*T))} # [m^2/s]
+K_S = ${fparse 0.138*exp(29.0e3/(R*T))}  # [mol/(m^3 Pa^(1/2))]
 
-K_R = 3.1582e-9
+K_R = 3.1582e-9 # [m^4/(mol s)]
 area_ratio = ${fparse r_o/r_i}
-K_R_inner = ${fparse area_ratio*K_R}
+K_R_inner = ${fparse area_ratio*K_R} # [m^4/(mol s)]
 
 # -----------------------------------------------------------------------------
 # Properties from inputs
@@ -102,8 +102,8 @@ K_T = ${fparse Sh*D_L/D_h}                 # [m/s]
 #     2*a*C / [1 + sqrt(1 + 4*b*K_R_inner*a*C)].
 
 partition_ratio = ${fparse K_S/K_L}
-R_mem = ${fparse r_i*log(r_o/r_i)/D_S}
-radial_B = ${fparse partition_ratio/K_T+R_mem}
+R_mem = ${fparse r_i*log(r_o/r_i)/D_S}     #  [s/m]
+radial_B = ${fparse partition_ratio/K_T+R_mem} #  [s/m]
 
 # -----------------------------------------------------------------------------
 # Control volumes (axial direction)
@@ -115,7 +115,7 @@ segment_factor = ${fparse A_segment/Q_PbLi}  # [s/m]
 
 # Pressure drop
 f_Darcy = ${fparse 0.3164/(Re^0.25)}
-delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
+delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0} # [Pa]
 
 
 # -----------------------------------------------------------------------------
