@@ -1,1 +1,0 @@
-../../../../test/tests/TEX/comparison_tex.py

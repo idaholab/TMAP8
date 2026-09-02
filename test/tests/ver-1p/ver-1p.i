@@ -51,7 +51,8 @@ D_S = ${fparse 2.90e-8*exp(-4.2e3/(R*T))}
 K_S = ${fparse 0.138*exp(29.0e3/(R*T))}
 
 K_R = 3.1582e-9
-
+area_ratio = ${fparse r_o/r_i}
+K_R_inner = ${fparse area_ratio*K_R}
 
 # -----------------------------------------------------------------------------
 # Properties from inputs
@@ -74,17 +75,35 @@ K_T = ${fparse Sh*D_L/D_h}                 # [m/s]
 # -----------------------------------------------------------------------------
 # Radial equations
 # -----------------------------------------------------------------------------
-# Liquid:         J = K_T (C_bulk - C_L2)
-# Interface partition: C_S1 = (K_S/K_L) C_L2
-# Cylindrical diffusion in metal:       J = D_S(C_S1-C_S2)/(r_i ln(r_o/r_i))
-# Vacuum surface:      J = K_R C_S2^2   (p_vac = 0)
 #
-# Define a = K_S/K_L and b = a/K_T + r_i ln(r_o/r_i)/D_S.
-# Then C_S2 = a*C_bulk - b*J and the physical positive root is
-#   C_S2(C) = 2*a*C / [1 + sqrt(1 + 4*b*K_R*a*C)].
+# Liquid flux on the inner area:
+#   J_i = K_T (C_bulk - C_L2)
+#
+# Interface partition:
+#   C_S1 = (K_S/K_L) C_L2
+#
+# Cylindrical diffusion expressed on the inner area:
+#   J_i = D_S (C_S1 - C_S2) / (r_i ln(r_o/r_i))
+#
+# Recombination occurs on the outer vacuum surface:
+#   J_o = K_R C_S2^2
+#
+# Conservation of permeation rate requires
+#   2*pi*r_i*J_i = 2*pi*r_o*J_o,
+#
+# so the equivalent recombination flux on the inner area is
+#   J_i = (r_o/r_i) K_R C_S2^2 = K_R_inner C_S2^2.
+#
+# Define a = K_S/K_L and
+#   b = a/K_T + r_i ln(r_o/r_i)/D_S.
+#
+# Then the physical positive root is
+#   C_S2(C) =
+#     2*a*C / [1 + sqrt(1 + 4*b*K_R_inner*a*C)].
+
 partition_ratio = ${fparse K_S/K_L}
-R_mem = ${fparse r_i*log(r_o/r_i)/D_S}    # [s/m]
-radial_B = ${fparse partition_ratio/K_T+R_mem}  # [s/m]
+R_mem = ${fparse r_i*log(r_o/r_i)/D_S}
+radial_B = ${fparse partition_ratio/K_T+R_mem}
 
 # -----------------------------------------------------------------------------
 # Control volumes (axial direction)
@@ -120,115 +139,96 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
 
   [C02]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C03]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C04]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C05]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C06]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C07]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C08]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C09]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C10]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C11]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C12]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C13]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C14]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C15]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C16]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C17]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C18]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C19]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 
   [C20]
     family = SCALAR
-
     initial_condition = ${C_in}
   []
 []
@@ -246,9 +246,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
   [segment_01]
     type = ParsedODEKernel
     variable = C01
-    expression = 'C01 - C0 + segment_factor*K_R*(2.0*a*C0/(1.0+sqrt(1.0+4.0*b*K_R*a*C0)))^2'
-    constant_names = 'C0 segment_factor K_R a b'
-    constant_expressions = '${C_in} ${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C01 - C0 + segment_factor*K_R_inner*(2.0*a*C0/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C0)))^2'
+    constant_names = 'C0 segment_factor K_R_inner a b'
+    constant_expressions = '${C_in} ${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -256,9 +256,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C02
     coupled_variables = 'C01'
-    expression = 'C02 - C01 + segment_factor*K_R*(2.0*a*C01/(1.0+sqrt(1.0+4.0*b*K_R*a*C01)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C02 - C01 + segment_factor*K_R_inner*(2.0*a*C01/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C01)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -266,9 +266,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C03
     coupled_variables = 'C02'
-    expression = 'C03 - C02 + segment_factor*K_R*(2.0*a*C02/(1.0+sqrt(1.0+4.0*b*K_R*a*C02)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C03 - C02 + segment_factor*K_R_inner*(2.0*a*C02/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C02)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -276,9 +276,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C04
     coupled_variables = 'C03'
-    expression = 'C04 - C03 + segment_factor*K_R*(2.0*a*C03/(1.0+sqrt(1.0+4.0*b*K_R*a*C03)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C04 - C03 + segment_factor*K_R_inner*(2.0*a*C03/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C03)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -286,9 +286,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C05
     coupled_variables = 'C04'
-    expression = 'C05 - C04 + segment_factor*K_R*(2.0*a*C04/(1.0+sqrt(1.0+4.0*b*K_R*a*C04)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C05 - C04 + segment_factor*K_R_inner*(2.0*a*C04/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C04)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -296,9 +296,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C06
     coupled_variables = 'C05'
-    expression = 'C06 - C05 + segment_factor*K_R*(2.0*a*C05/(1.0+sqrt(1.0+4.0*b*K_R*a*C05)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C06 - C05 + segment_factor*K_R_inner*(2.0*a*C05/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C05)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -306,9 +306,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C07
     coupled_variables = 'C06'
-    expression = 'C07 - C06 + segment_factor*K_R*(2.0*a*C06/(1.0+sqrt(1.0+4.0*b*K_R*a*C06)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C07 - C06 + segment_factor*K_R_inner*(2.0*a*C06/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C06)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -316,9 +316,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C08
     coupled_variables = 'C07'
-    expression = 'C08 - C07 + segment_factor*K_R*(2.0*a*C07/(1.0+sqrt(1.0+4.0*b*K_R*a*C07)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C08 - C07 + segment_factor*K_R_inner*(2.0*a*C07/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C07)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -326,9 +326,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C09
     coupled_variables = 'C08'
-    expression = 'C09 - C08 + segment_factor*K_R*(2.0*a*C08/(1.0+sqrt(1.0+4.0*b*K_R*a*C08)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C09 - C08 + segment_factor*K_R_inner*(2.0*a*C08/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C08)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -336,9 +336,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C10
     coupled_variables = 'C09'
-    expression = 'C10 - C09 + segment_factor*K_R*(2.0*a*C09/(1.0+sqrt(1.0+4.0*b*K_R*a*C09)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C10 - C09 + segment_factor*K_R_inner*(2.0*a*C09/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C09)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -346,9 +346,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C11
     coupled_variables = 'C10'
-    expression = 'C11 - C10 + segment_factor*K_R*(2.0*a*C10/(1.0+sqrt(1.0+4.0*b*K_R*a*C10)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C11 - C10 + segment_factor*K_R_inner*(2.0*a*C10/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C10)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -356,9 +356,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C12
     coupled_variables = 'C11'
-    expression = 'C12 - C11 + segment_factor*K_R*(2.0*a*C11/(1.0+sqrt(1.0+4.0*b*K_R*a*C11)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C12 - C11 + segment_factor*K_R_inner*(2.0*a*C11/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C11)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -366,9 +366,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C13
     coupled_variables = 'C12'
-    expression = 'C13 - C12 + segment_factor*K_R*(2.0*a*C12/(1.0+sqrt(1.0+4.0*b*K_R*a*C12)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C13 - C12 + segment_factor*K_R_inner*(2.0*a*C12/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C12)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -376,9 +376,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C14
     coupled_variables = 'C13'
-    expression = 'C14 - C13 + segment_factor*K_R*(2.0*a*C13/(1.0+sqrt(1.0+4.0*b*K_R*a*C13)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C14 - C13 + segment_factor*K_R_inner*(2.0*a*C13/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C13)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -386,9 +386,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C15
     coupled_variables = 'C14'
-    expression = 'C15 - C14 + segment_factor*K_R*(2.0*a*C14/(1.0+sqrt(1.0+4.0*b*K_R*a*C14)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C15 - C14 + segment_factor*K_R_inner*(2.0*a*C14/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C14)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -396,9 +396,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C16
     coupled_variables = 'C15'
-    expression = 'C16 - C15 + segment_factor*K_R*(2.0*a*C15/(1.0+sqrt(1.0+4.0*b*K_R*a*C15)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C16 - C15 + segment_factor*K_R_inner*(2.0*a*C15/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C15)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -406,9 +406,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C17
     coupled_variables = 'C16'
-    expression = 'C17 - C16 + segment_factor*K_R*(2.0*a*C16/(1.0+sqrt(1.0+4.0*b*K_R*a*C16)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C17 - C16 + segment_factor*K_R_inner*(2.0*a*C16/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C16)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -416,9 +416,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C18
     coupled_variables = 'C17'
-    expression = 'C18 - C17 + segment_factor*K_R*(2.0*a*C17/(1.0+sqrt(1.0+4.0*b*K_R*a*C17)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C18 - C17 + segment_factor*K_R_inner*(2.0*a*C17/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C17)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -426,9 +426,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C19
     coupled_variables = 'C18'
-    expression = 'C19 - C18 + segment_factor*K_R*(2.0*a*C18/(1.0+sqrt(1.0+4.0*b*K_R*a*C18)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C19 - C18 + segment_factor*K_R_inner*(2.0*a*C18/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C18)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 
@@ -436,9 +436,9 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
     type = ParsedODEKernel
     variable = C20
     coupled_variables = 'C19'
-    expression = 'C20 - C19 + segment_factor*K_R*(2.0*a*C19/(1.0+sqrt(1.0+4.0*b*K_R*a*C19)))^2'
-    constant_names = 'segment_factor K_R a b'
-    constant_expressions = '${segment_factor} ${K_R} ${partition_ratio} ${radial_B}'
+    expression = 'C20 - C19 + segment_factor*K_R_inner*(2.0*a*C19/(1.0+sqrt(1.0+4.0*b*K_R_inner*a*C19)))^2'
+    constant_names = 'segment_factor K_R_inner a b'
+    constant_expressions = '${segment_factor} ${K_R_inner} ${partition_ratio} ${radial_B}'
     evalerror_behavior = error
   []
 []
@@ -616,7 +616,7 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0}
 
   [csv]
     type = CSV
-    file_base = tex_out
+    file_base = ver-1p_out
     precision = 16
     scientific_notation = true
   []

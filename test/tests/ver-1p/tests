@@ -13,7 +13,7 @@
   [ver-1p_analytical_comparison]
     type = RunCommand
     command = 'python3 comparison_ver-1p.py'
-    requirement = 'The system shall generate a comparison between the TMAP8 gold solution and an independent implementation of the paper analytical permeation expression and 20-segment axial mass balance.'
-    required_python_packages = 'matplotlib numpy os'
+    requirement = 'The system shall compare the 20-segment TMAP8 solution with an independent analytical solution of the PAV radial transport and axial concentration equations.'
+    required_python_packages = 'matplotlib numpy scipy'
   []
 []
