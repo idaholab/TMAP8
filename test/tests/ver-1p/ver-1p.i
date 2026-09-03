@@ -598,10 +598,7 @@ delta_p_straight = ${fparse f_Darcy*(L_tube/D_h)*rho_PbLi*u_PbLi^2/2.0} # [Pa]
     constant_expressions = '${Q_PbLi} ${C_in} ${A_total}'
     execute_on = 'timestep_end'
   []
-
 []
-
-
 
 [Executioner]
   type = Steady

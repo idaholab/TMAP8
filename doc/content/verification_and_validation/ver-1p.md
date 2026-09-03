@@ -25,13 +25,12 @@ The geometry and operating parameters are summarized in [ver_1p_set_up_values].
 | $C_{\mathrm{in}}$ | Inlet dissolved-isotope concentration | 1.0 | mol/m$^3$ |
 | $u$ | PbLi velocity | 1.78 | m/s |
 | $Re$ | Reynolds number | $1.0\times10^5$ | - |
-| $K_R$ | Recombination coefficient | $3.1582\times10^{-9}$ | m$^4$/(mol s) |
 
-The gas constant is $R=8.31446261815324$ J/(mol K), consistent with [PhysicalConstants](source/utils/TMAP8PhysicalConstants.md). The vanadium recombination coefficient $K_R$ is based on [!cite](FUERST2021118949).
+The gas constant is $R=8.31446261815324$ J/(mol K), consistent with [PhysicalConstants](source/utils/TMAP8PhysicalConstants.md).
 
 ### Material properties and liquid mass transfer
 
-The PbLi hydrogen isotope diffusivity is [!cite](S.Fukada2013MG201203)
+The PbLi hydrogen isotope diffusivity is [!citep](S.Fukada2013MG201203)
 
 \begin{equation}
 D_L=D_{L,0}\exp\left(-\frac{E_{D,L}}{RT}\right),
@@ -49,7 +48,7 @@ The effective PbLi molar concentration is
 C_{\mathrm{PbLi}}=\frac{\rho_{\mathrm{PbLi}}}{M_{\mathrm{PbLi}}},
 \end{equation}
 
-where $M_{\mathrm{PbLi}}=0.1731558$ kg/mol. The PbLi solubility coefficient used in the model is based on [!cite](AIELLO2006639)
+where $M_{\mathrm{PbLi}}=0.1731558$ kg/mol.
 
 The PbLi solubility coefficient uses the coefficient
 reported by [!cite](fuerst2023parametric) based on [!cite](AIELLO2006639):
@@ -78,7 +77,7 @@ The hydraulic diameter is
 D_h=2r_i.
 \end{equation}
 
-Using the specified Reynolds number, the kinematic visc osity and Schmidt number are
+Using the specified Reynolds number, the kinematic viscosity and Schmidt number are
 
 \begin{equation}
 \nu_{\mathrm{PbLi}}=\frac{uD_h}{Re},
@@ -117,6 +116,8 @@ transport quantities used in the reference implementation are summarized in
 | $E_{D,S}$ | Vanadium diffusivity activation energy | $4.20\times10^3$ | J/mol | [!cite](VOLKL1975231) |
 | $K_{S,0}$ | Vanadium solubility pre-exponential factor | 0.138 | mol/(m$^3$ Pa$^{1/2}$) | [!cite](10.1021/j100723a033) |
 | $E_{K,S}$ | Vanadium solubility exponential coefficient | $29.0\times10^3$ | J/mol | [!cite](10.1021/j100723a033) |
+| $K_R$ | Vanadium surface recombination coefficient | $3.1582\times10^{-9}$ | m$^4$/(mol s) | [!cite](FUERST2021118949) |
+| Parameters at 673.15 K |  |  |  |  |
 | $D_L$ | Isotope diffusivity in PbLi | $2.22432\times10^{-9}$ | m$^2$/s | Calculated |
 | $\rho_{\mathrm{PbLi}}$ | PbLi density | $9.71896\times10^3$ | kg/m$^3$ | Calculated |
 | $K_L$ | PbLi solubility coefficient | $2.42475\times10^{-2}$ | mol/(m$^3$ Pa$^{1/2}$) | Calculated |
@@ -231,16 +232,21 @@ where
 y_0=\frac{2aC_{\mathrm{in}}}{1+\sqrt{1+4b \frac{r_o}{r_i} K_RaC_{\mathrm{in}}}}.
 \end{equation}
 
-The Python comparison solves this scalar analytical relation at the same axial locations used by the TMAP8 control volume model and recovers the bulk concentration from
+To compare TMAP8 predictions to the analytical solution, we solves this scalar analytical relation at the same axial locations used by the TMAP8 control volume model and recovers the bulk concentration from
 
 \begin{equation}
 C(z)=\frac{y(z)+b \frac{r_o}{r_i} K_Ry(z)^2}{a}.
 \end{equation}
 
+The extraction efficiency is calculated as
+
+\begin{equation}
+\eta=1-\frac{C_{\mathrm{out}}}{C_{\mathrm{in}}}.
+\end{equation}
 
 ## Results
 
-[ver-1p_comparison_analytical_concentration.png] compares the 20 segment TMAP8 solution with the continuous analytical reference. The concentration profile root mean square percentage error (RMSPE) is approximately 0.127 %.
+[ver-1p_comparison_analytical_concentration.png] compares the 20 segment TMAP8 solution with the continuous analytical reference. The concentration profile root mean square percentage error (RMSPE) is approximately 0.127 %, which signals good agreement. As shown in [ver-1p_comparison_analytical_concentration.png], TMAP8 starts to slightly underestimate the analytical solution at higher axial positions, which can be alleviated by increasing the number of axial control volume and therefore better approximate the continuous solution.
 
 !media comparison_ver-1p.py
        image_name=ver-1p_comparison_analytical_concentration.png
@@ -248,7 +254,7 @@ C(z)=\frac{y(z)+b \frac{r_o}{r_i} K_Ry(z)^2}{a}.
        id=ver-1p_comparison_analytical_concentration.png
        caption=Comparison of the 20 segment TMAP8 bulk concentration profile with the continuous analytical PAV reference solution.
 
-The numerical comparison is summarized in [ver_1p_results].
+The numerical comparison is summarized in [ver_1p_results], which shows acceptable performance for this verification.
 
 !table id=ver_1p_results caption=Comparison of the TMAP8 solution with the analytical reference.
 | Quantity | TMAP8 | Analytical | Relative error |
@@ -257,11 +263,6 @@ The numerical comparison is summarized in [ver_1p_results].
 | Extraction efficiency | 0.240725 | 0.239096 | 0.681 % |
 | Average permeation flux, mol/(m$^2$ s) | $2.03533\times10^{-4}$ | $2.02156\times10^{-4}$ | 0.681 % |
 
-The extraction efficiency is calculated as
-
-\begin{equation}
-\eta=1-\frac{C_{\mathrm{out}}}{C_{\mathrm{in}}},
-\end{equation}
 
 ## Input files
 
