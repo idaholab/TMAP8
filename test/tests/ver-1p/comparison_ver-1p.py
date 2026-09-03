@@ -25,6 +25,7 @@ os.chdir(SCRIPT_FOLDER)
 
 _NUMERIC_LITERAL = re.compile(r"^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?")
 
+
 def locate_input_file() -> Path:
     """Return the location of the ver-1p input file."""
     candidates = [SCRIPT_FOLDER / "ver-1p.i"]
@@ -77,6 +78,7 @@ def get_numeric_parameter(parameter_name: str) -> float:
 
     raise KeyError(f"Could not find parameter {parameter_name!r} in {input_file}")
 
+
 # Model parameters read from ver-1p.i
 TEMPERATURE = get_numeric_parameter("temperature")
 GAS_CONSTANT = get_numeric_parameter("gas_constant")
@@ -98,7 +100,6 @@ RECOMBINATION_COEFFICIENT_INNER_AREA = (
 
 # Verification criterion for the 20 segment solution
 MAX_ERROR_PERCENT = 1.0
-
 
 
 def locate_gold_csv() -> Path:
@@ -129,40 +130,29 @@ def surface_concentration(
         * radial_transport_coefficient
         * RECOMBINATION_COEFFICIENT_INNER_AREA
         * partition_ratio
-        * concentration_bulk)
-    return (2.0* partition_ratio* concentration_bulk/ (1.0 + math.sqrt(radical)))
+        * concentration_bulk
+    )
+    return 2.0 * partition_ratio * concentration_bulk / (1.0 + math.sqrt(radical))
 
 
 def analytical_solution() -> dict[str, object]:
     """Return the continuous analytical axial concentration solution."""
     # PbLi properties.
-    diffusivity_pbli = 8.30e-9 * math.exp(
-        -7.37e3 / (GAS_CONSTANT * TEMPERATURE)
-    )
+    diffusivity_pbli = 8.30e-9 * math.exp(-7.37e3 / (GAS_CONSTANT * TEMPERATURE))
     density_pbli = 10520.35 - 1.19051 * TEMPERATURE
     atomic_concentration_pbli = density_pbli / MOLAR_MASS_PBLI_ATOM
     solubility_pbli = SOLUBILITY_FACTOR_PBLI * atomic_concentration_pbli
 
     # Vanadium properties.
-    diffusivity_vanadium = 2.90e-8 * math.exp(
-        -4.2e3 / (GAS_CONSTANT * TEMPERATURE)
-    )
-    solubility_vanadium = 0.138 * math.exp(
-        29.0e3 / (GAS_CONSTANT * TEMPERATURE)
-    )
+    diffusivity_vanadium = 2.90e-8 * math.exp(-4.2e3 / (GAS_CONSTANT * TEMPERATURE))
+    solubility_vanadium = 0.138 * math.exp(29.0e3 / (GAS_CONSTANT * TEMPERATURE))
 
     # Liquid mass transfer.
     hydraulic_diameter = 2.0 * RADIUS_INNER_WALL
-    volumetric_flow_rate_pbli = (
-        VELOCITY_PBLI * math.pi * RADIUS_INNER_WALL**2
-    )
-    kinematic_viscosity_pbli = (
-        VELOCITY_PBLI * hydraulic_diameter / REYNOLDS_NUMBER
-    )
+    volumetric_flow_rate_pbli = VELOCITY_PBLI * math.pi * RADIUS_INNER_WALL**2
+    kinematic_viscosity_pbli = VELOCITY_PBLI * hydraulic_diameter / REYNOLDS_NUMBER
     schmidt_number = kinematic_viscosity_pbli / diffusivity_pbli
-    sherwood_number = (
-        0.023 * REYNOLDS_NUMBER**0.83 * schmidt_number ** (1.0 / 3.0)
-    )
+    sherwood_number = 0.023 * REYNOLDS_NUMBER**0.83 * schmidt_number ** (1.0 / 3.0)
     mass_transfer_coefficient_pbli = (
         sherwood_number * diffusivity_pbli / hydraulic_diameter
     )
@@ -229,9 +219,7 @@ def analytical_solution() -> dict[str, object]:
     efficiency = 1.0 - concentration_outlet / CONCENTRATION_INLET
 
     # Average flux on the inner surface.
-    total_permeation_area = (
-        2.0 * math.pi * RADIUS_INNER_WALL * TUBE_LENGTH
-    )
+    total_permeation_area = 2.0 * math.pi * RADIUS_INNER_WALL * TUBE_LENGTH
     average_permeation_flux = (
         volumetric_flow_rate_pbli
         * (CONCENTRATION_INLET - concentration_outlet)
@@ -244,7 +232,6 @@ def analytical_solution() -> dict[str, object]:
         "efficiency": efficiency,
         "average_flux": average_permeation_flux,
     }
-
 
 
 def read_last_csv_row(path: Path) -> dict[str, str]:
@@ -400,9 +387,7 @@ def make_schematic() -> None:
     # ------------------------------------------------------------------
     selected_segment = NUMBER_AXIAL_SEGMENTS // 2
 
-    selected_bottom = (
-        pipe_bottom + selected_segment * segment_height
-    )
+    selected_bottom = pipe_bottom + selected_segment * segment_height
     selected_top = selected_bottom + segment_height
     selected_center = (selected_bottom + selected_top) / 2.0
 
@@ -457,11 +442,7 @@ def make_schematic() -> None:
     axis.text(
         relationship_x,
         selected_center + 0.20,
-        (
-            r"$C_i-C_{i-1}"
-            r"+\frac{A_{\mathrm{seg}}}{Q}"
-            r"J(C_{i-1})=0$"
-        ),
+        (r"$C_i-C_{i-1}" r"+\frac{A_{\mathrm{seg}}}{Q}" r"J(C_{i-1})=0$"),
         ha="center",
         va="center",
         fontsize=10,
@@ -470,15 +451,13 @@ def make_schematic() -> None:
     axis.text(
         relationship_x,
         selected_center - 0.45,
-        "Outlet of segment $i-1$\n"
-        "is the inlet of segment $i$",
+        "Outlet of segment $i-1$\n" "is the inlet of segment $i$",
         ha="center",
         va="center",
         fontsize=8.5,
     )
 
     segment_length = TUBE_LENGTH / NUMBER_AXIAL_SEGMENTS
-
 
     # ------------------------------------------------------------------
     # Symmetric radial permeation from the selected axial segment
@@ -616,17 +595,11 @@ def make_schematic() -> None:
     )
 
     # Region centers.
-    pbli_center = (
-        pbli_left + radius_inner_location
-    ) / 2.0
+    pbli_center = (pbli_left + radius_inner_location) / 2.0
 
-    membrane_center = (
-        radius_inner_location + radius_outer_location
-    ) / 2.0
+    membrane_center = (radius_inner_location + radius_outer_location) / 2.0
 
-    vacuum_center = (
-        radius_outer_location + vacuum_right
-    ) / 2.0
+    vacuum_center = (radius_outer_location + vacuum_right) / 2.0
 
     # ------------------------------------------------------------------
     # Region titles
@@ -676,7 +649,6 @@ def make_schematic() -> None:
         ha="center",
         fontsize=9,
     )
-
 
     transport_y = 3.22
 
@@ -739,7 +711,6 @@ def make_schematic() -> None:
         fontsize=9,
     )
 
-
     axis.text(
         radius_inner_location - 0.18,
         1.32,
@@ -780,6 +751,7 @@ def make_schematic() -> None:
         bbox_inches="tight",
     )
     plt.close(figure)
+
 
 def make_plot(
     actual: dict[str, str],
@@ -883,26 +855,17 @@ def main() -> int:
     )
 
     print(f"Gold CSV: {gold_csv}")
-    print(
-        "Analytical outlet concentration: "
-        f"{analytical['outlet']:.12e} mol/m^3"
-    )
+    print("Analytical outlet concentration: " f"{analytical['outlet']:.12e} mol/m^3")
     print(f"TMAP8 outlet concentration:       {tmap8_outlet:.12e} mol/m^3")
     print(f"Outlet relative error:             {outlet_error:.6f}%")
-    print(
-        "Analytical extraction efficiency: "
-        f"{analytical['efficiency']:.12e}"
-    )
+    print("Analytical extraction efficiency: " f"{analytical['efficiency']:.12e}")
     print(f"TMAP8 extraction efficiency:       {tmap8_efficiency:.12e}")
     print(f"Efficiency relative error:         {efficiency_error:.6f}%")
     print(
         "Analytical average permeation flux: "
         f"{analytical['average_flux']:.12e} mol/m^2/s"
     )
-    print(
-        "TMAP8 average permeation flux:       "
-        f"{tmap8_flux:.12e} mol/m^2/s"
-    )
+    print("TMAP8 average permeation flux:       " f"{tmap8_flux:.12e} mol/m^2/s")
     print(f"Flux relative error:                 {flux_error:.6f}%")
     print(f"Concentration profile RMSPE:         {rmspe:.6f}%")
 
