@@ -117,6 +117,8 @@ properties and transport quantities evaluated at 673.15 K are summarized in
 | --- | --- | ---: | --- | --- |
 | $D_{L,0}$ | PbLi diffusivity pre-exponential factor | $8.30\times10^{-9}$ | m$^2$/s | [!cite](S.Fukada2013MG201203) |
 | $E_{D,L}$ | PbLi diffusivity activation energy | $7.37\times10^3$ | J/mol | [!cite](S.Fukada2013MG201203) |
+| $\rho_0$ | PbLi density constant | 10520.35 | kg/m$^3$ | [!cite](fuerst2023parametric) |
+| $a_{\rho}$ | PbLi density linear coefficient | 1.19051 | kg/(m$^3$ K) | [!cite](fuerst2023parametric) |
 | $K_{L,\mathrm{base}}$ | PbLi solubility coefficient factor | $4.32\times10^{-7}$ | Pa$^{-1/2}$ | [!cite](fuerst2023parametric) |
 | $D_{S,0}$ | Vanadium diffusivity pre-exponential factor | $2.90\times10^{-8}$ | m$^2$/s | [!cite](VOLKL1975231) |
 | $E_{D,S}$ | Vanadium diffusivity activation energy | $4.20\times10^3$ | J/mol | [!cite](VOLKL1975231) |
@@ -346,7 +348,7 @@ which is the permeator efficiency expression derived by Humrickhouse and Merrill
 ## Results
 
 
-[ver-1p_comparison_analytical_concentration.png] compares the 20 segment TMAP8 solution with the continuous analytical reference. The concentration profile root mean square percentage error (RMSPE) is approximately 0.127 %, which signals good agreement. As shown in [ver-1p_comparison_analytical_concentration.png], TMAP8 starts to slightly underestimate the analytical solution at higher axial positions, which can be alleviated by increasing the number of axial control volume and therefore better approximate the continuous solution.
+[ver-1p_comparison_analytical_concentration.png] compares the 20 segment TMAP8 solution with the continuous analytical reference. The concentration profile root mean square percentage error (RMSPE) is approximately 0.127 %, which signals good agreement. As shown in [ver-1p_comparison_analytical_concentration.png], TMAP8 starts to slightly underestimate the analytical solution at higher axial positions, which can be alleviated by increasing the number of axial control volumes and therefore better approximate the continuous solution.
 
 !media comparison_ver-1p.py
        image_name=ver-1p_comparison_analytical_concentration.png
